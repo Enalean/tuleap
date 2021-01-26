@@ -28,6 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
@@ -37,6 +38,7 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
 
 class BotApiTokenUpdaterTest extends TestCase
@@ -67,6 +69,14 @@ class BotApiTokenUpdaterTest extends TestCase
      * @var BotApiTokenUpdater
      */
     private $updater;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookCreator
+     */
+    private $webhook_creator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
 
     protected function setUp(): void
     {
@@ -75,6 +85,8 @@ class BotApiTokenUpdaterTest extends TestCase
         $this->project_retriever      = Mockery::mock(GitlabRepositoryProjectRetriever::class);
         $this->permissions_manager    = Mockery::mock(GitPermissionsManager::class);
         $this->bot_api_token_inserter = Mockery::mock(GitlabBotApiTokenInserter::class);
+        $this->webhook_creator        = Mockery::mock(WebhookCreator::class);
+        $this->logger                 = Mockery::mock(LoggerInterface::class);
 
         $this->updater = new BotApiTokenUpdater(
             $this->repository_factory,
@@ -82,6 +94,8 @@ class BotApiTokenUpdaterTest extends TestCase
             $this->project_retriever,
             $this->permissions_manager,
             $this->bot_api_token_inserter,
+            $this->webhook_creator,
+            $this->logger,
         );
     }
 
@@ -210,6 +224,8 @@ class BotApiTokenUpdaterTest extends TestCase
             )
             ->andThrow(Mockery::spy(GitlabRequestException::class));
 
+        $this->logger->shouldReceive('error')->once();
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
 
@@ -276,13 +292,15 @@ class BotApiTokenUpdaterTest extends TestCase
             )
             ->andThrow(Mockery::spy(GitlabResponseAPIException::class));
 
+        $this->logger->shouldReceive('error')->once();
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(500);
 
         $this->updater->update($patch, $user);
     }
 
-    public function testItSavesTheNewTokenIfGitlabServerAcceptsTheNewToken(): void
+    public function test400IfGitlabServerAcceptsTheNewTokenButNotTheCreationOfTheWebhook(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
@@ -329,17 +347,98 @@ class BotApiTokenUpdaterTest extends TestCase
             ->with($user, $project_b)
             ->andReturnTrue();
 
+        $expected_credentials = Mockery::on(
+            function (Credentials $credentials) use ($token) {
+                return $credentials->getBotApiToken()->isIdenticalTo($token)
+                    && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
+            }
+        );
+
         $this->project_builder
             ->shouldReceive('getProjectFromGitlabAPI')
-            ->with(
-                Mockery::on(
-                    function (Credentials $credentials) use ($token) {
-                        return $credentials->getBotApiToken()->isIdenticalTo($token)
-                            && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
-                    }
-                ),
-                123
+            ->with($expected_credentials, 123);
+
+        $this->webhook_creator
+            ->shouldReceive('generateWebhookInGitlabProject')
+            ->with($expected_credentials, $repository)
+            ->once()
+            ->andThrow(Mockery::spy(GitlabRequestException::class));
+
+        $this->bot_api_token_inserter
+            ->shouldReceive('insertToken')
+            ->with($repository, $token)
+            ->never();
+
+        $this->logger->shouldReceive('error')->once();
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->updater->update($patch, $user);
+    }
+
+    public function testItSavesTheNewTokenIfGitlabServerAcceptsTheNewTokenAndTheCreationOfTheWebhook(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+
+        $token = new ConcealedString('My New Token');
+        $patch = new ConcealedBotApiTokenPatchRepresentation(
+            123,
+            'https://gitlab.example.com/repo/full_url',
+            $token,
+        );
+
+        $repository = Mockery::mock(
+            GitlabRepository::class,
+            [
+                'getGitlabRepositoryId' => 123,
+                'getGitlabServerUrl'    => 'https://gitlab.example.com',
+            ]
+        );
+
+        $this->repository_factory
+            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
+            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->andReturn($repository);
+
+        $project_a = Mockery::mock(Project::class);
+        $project_b = Mockery::mock(Project::class);
+
+        $this->project_retriever
+            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
+            ->with($repository)
+            ->andReturn(
+                [
+                    $project_a,
+                    $project_b,
+                ]
             );
+
+        $this->permissions_manager
+            ->shouldReceive('userIsGitAdmin')
+            ->with($user, $project_a)
+            ->andReturnFalse();
+
+        $this->permissions_manager
+            ->shouldReceive('userIsGitAdmin')
+            ->with($user, $project_b)
+            ->andReturnTrue();
+
+        $expected_credentials = Mockery::on(
+            function (Credentials $credentials) use ($token) {
+                return $credentials->getBotApiToken()->isIdenticalTo($token)
+                    && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
+            }
+        );
+
+        $this->project_builder
+            ->shouldReceive('getProjectFromGitlabAPI')
+            ->with($expected_credentials, 123);
+
+        $this->webhook_creator
+            ->shouldReceive('generateWebhookInGitlabProject')
+            ->with($expected_credentials, $repository)
+            ->once();
 
         $this->bot_api_token_inserter
             ->shouldReceive('insertToken')
