@@ -40,6 +40,11 @@ class UserTestBuilder
         return new self();
     }
 
+    public static function anActiveUser(): self
+    {
+        return (new self())->withId(10001)->withStatus(\PFUser::STATUS_ACTIVE);
+    }
+
     public static function anAnonymousUser(): self
     {
         return (new self())->withId(0);
