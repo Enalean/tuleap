@@ -616,7 +616,7 @@ msgstr ""
 "d'éléments ici."
 
 msgid ""
-"The post actions cannot be saved because this tracker not a top backlog "
+"The post actions cannot be saved because this tracker is not a top backlog "
 "tracker and a \"AddToTopBacklog\" is defined."
 msgstr ""
 "Les post actions ne peuvent être enregistrées car ce tracker n'est pas "

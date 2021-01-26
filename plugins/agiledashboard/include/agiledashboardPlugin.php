@@ -1847,7 +1847,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
             $this->getScriptAssetByName('artifact-additional-action.js'),
-            new PlanningTrackerBacklogChecker($this->getPlanningFactory())
+            new PlanningTrackerBacklogChecker($this->getPlanningFactory()),
+            EventManager::instance()
         );
 
         $action = $builder->buildArtifactAction($artifact, $user);
@@ -1862,7 +1863,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $builder = new \Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionBuilder(
             new ExplicitBacklogDao(),
             $this->getPlanningFactory(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/masschange')
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/masschange'),
+            EventManager::instance()
         );
 
         $additional_action = $builder->buildMasschangeAction($event->getTracker(), $event->getUser());
@@ -1881,7 +1883,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $processor = new AdditionalMasschangeActionProcessor(
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
-            $this->getUnplannedArtifactsAdder()
+            $this->getUnplannedArtifactsAdder(),
+            EventManager::instance()
         );
 
         $processor->processAction(
@@ -2034,7 +2037,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getCurrentUser()
         );
 
-        if (! $is_agile_dashboard_used || ! $is_explicit_backlog_used || ! $is_tracker_backlog_of_root_planning) {
+        if (! $is_agile_dashboard_used || ! $is_explicit_backlog_used || ! $is_tracker_backlog_of_root_planning || ! $this->isScrumAccessBlocked($tracker->getProject())) {
             return;
         }
 
@@ -2054,14 +2057,17 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         foreach ($external_post_actions as $post_action) {
             if (
                 $post_action instanceof AddToTopBacklogValue &&
-                ! $planning_tracker_backlog_checker->isTrackerBacklogOfProjectRootPlanning(
-                    $tracker,
-                    $this->getCurrentUser(),
+                (
+                    ! $planning_tracker_backlog_checker->isTrackerBacklogOfProjectRootPlanning(
+                        $tracker,
+                        $this->getCurrentUser(),
+                    ) ||
+                    $this->isScrumAccessBlocked($tracker->getProject())
                 )
             ) {
                 $message = dgettext(
                     'tuleap-agiledashboard',
-                    'The post actions cannot be saved because this tracker not a top backlog tracker and a "AddToTopBacklog" is defined.'
+                    'The post actions cannot be saved because this tracker is not a top backlog tracker and a "AddToTopBacklog" is defined.'
                 );
 
                 $event->setErrorMessage($message);
@@ -2146,5 +2152,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function getTemplateRenderer()
     {
         return TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+    }
+
+    private function isScrumAccessBlocked(Project $project): bool
+    {
+        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($project);
+        EventManager::instance()->dispatch($block_scrum_access);
+        return ! $block_scrum_access->isScrumAccessEnabled();
     }
 }

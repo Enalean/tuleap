@@ -25,6 +25,7 @@ namespace Tuleap\AgileDashboard\Masschange;
 use Codendi_Request;
 use Feedback;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
@@ -47,15 +48,21 @@ class AdditionalMasschangeActionProcessor
      * @var UnplannedArtifactsAdder
      */
     private $unplanned_artifacts_adder;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlannedArtifactDao $planned_artifact_dao,
-        UnplannedArtifactsAdder $unplanned_artifacts_adder
+        UnplannedArtifactsAdder $unplanned_artifacts_adder,
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
         $this->planned_artifact_dao              = $planned_artifact_dao;
         $this->unplanned_artifacts_adder         = $unplanned_artifacts_adder;
+        $this->event_dispatcher                  = $event_dispatcher;
     }
 
     public function processAction(
@@ -65,6 +72,12 @@ class AdditionalMasschangeActionProcessor
         array $masschange_aids
     ): void {
         if (! $tracker->userIsAdmin($user)) {
+            return;
+        }
+
+        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($tracker->getProject());
+        $this->event_dispatcher->dispatch($block_scrum_access);
+        if (! $block_scrum_access->isScrumAccessEnabled()) {
             return;
         }
 
