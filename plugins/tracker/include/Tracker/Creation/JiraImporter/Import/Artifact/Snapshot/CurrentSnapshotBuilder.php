@@ -79,7 +79,7 @@ class CurrentSnapshotBuilder
             $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
 
             if ($mapping !== null && $value !== null) {
-                $field_value       = $this->getBoundValue($mapping, $value);
+                $field_value       = $this->getBoundValue($mapping, $value, $issue_api_representation->getFields());
                 $field_snapshots[] = new FieldSnapshot(
                     $mapping,
                     $field_value,
@@ -107,7 +107,8 @@ class CurrentSnapshotBuilder
      */
     private function getBoundValue(
         FieldMapping $mapping,
-        $value
+        $value,
+        array $all_fields
     ) {
         if (
             $mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE &&
@@ -143,6 +144,10 @@ class CurrentSnapshotBuilder
             $value = $this->creation_state_list_value_formatter->formatMultiUserListValues(
                 $selected_users_ids
             );
+        }
+
+        if ($mapping->getType() === \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS) {
+            return new ArtifactLinkValue($value, $all_fields[AlwaysThereFieldsExporter::JIRA_SUB_TASKS_NAME]);
         }
 
         return $value;

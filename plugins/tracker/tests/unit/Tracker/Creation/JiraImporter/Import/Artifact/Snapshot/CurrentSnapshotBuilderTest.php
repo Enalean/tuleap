@@ -27,7 +27,10 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
@@ -178,5 +181,58 @@ class CurrentSnapshotBuilderTest extends TestCase
         );
 
         return $collection;
+    }
+
+    public function testItAddsSubTasksToIssueLinksForArtifactLinks(): void
+    {
+        $jira_field_mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $jira_field_mapping_collection->addMapping(
+            new ScalarFieldMapping(
+                AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
+                'F001',
+                'Links',
+                Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+            )
+        );
+
+        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
+        $builder               = new CurrentSnapshotBuilder(
+            new NullLogger(),
+            new CreationStateListValueFormatter(),
+            $jira_author_retriever
+        );
+
+        $snapshot_owner = UserTestBuilder::aUser()->build();
+
+        $snapshot = $builder->buildCurrentSnapshot(
+            $snapshot_owner,
+            $this->buildIssueAPIResponseWithLinksAndSubTasks(),
+            $jira_field_mapping_collection
+        );
+
+        $fields = $snapshot->getAllFieldsSnapshot();
+        self::assertCount(1, $fields);
+        self::assertEquals(new ArtifactLinkValue(['issue links representation'], ['subtask representation']), $fields[0]->getValue());
+    }
+
+    private function buildIssueAPIResponseWithLinksAndSubTasks(): IssueAPIRepresentation
+    {
+        return IssueAPIRepresentation::buildFromAPIResponse(
+            [
+                'id'             => '10042',
+                'self'           => 'https://jira_instance/rest/api/latest/issue/10042',
+                'key'            => 'key01',
+                'fields'         => [
+                    'updated' => '2020-04-25T14:10:10.823+0100',
+                    'issuelinks' => [
+                        'issue links representation'
+                    ],
+                    'subtasks'   => [
+                        'subtask representation'
+                    ]
+                ],
+                'renderedFields' => []
+            ]
+        );
     }
 }
