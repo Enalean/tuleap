@@ -235,7 +235,7 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-mass-emailing": "./scripts/site-admin/massmail.js",
         "site-admin-most-recent-logins": "./scripts/site-admin/most-recent-logins.ts",
         "site-admin-pending-users": "./scripts/site-admin/pending-users.ts",
-        "site-admin-permission-delegation": "./scripts/site-admin/permission-delegation.js",
+        "site-admin-permission-delegation": "./scripts/site-admin/permission-delegation.ts",
         "site-admin-project-configuration": "./scripts/site-admin/project-configuration.ts",
         "site-admin-project-history": "./scripts/site-admin/project-history.js",
         "site-admin-project-list": "./scripts/site-admin/project-list.ts",
