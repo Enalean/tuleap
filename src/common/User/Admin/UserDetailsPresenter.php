@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\Admin;
 
+use DateTimeImmutable;
 use ForgeConfig;
 use PFUser;
 
@@ -95,7 +96,7 @@ class UserDetailsPresenter
         $this->name   = $user->getRealName();
         $this->login  = $user->getUnixName();
         $this->email  = $user->getEmail();
-        $this->expiry = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getExpiryDate());
+        $this->expiry = (new DateTimeImmutable())->setTimestamp((int) $user->getExpiryDate())->format('Y-m-d');
 
         $this->has_avatar = $user->hasAvatar();
         $this->avatar_url = $user->getAvatarUrl();
