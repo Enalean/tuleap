@@ -18,10 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    getUploadImageOptions,
-    initiateUploadImage,
-} from "../tuleap/ckeditor/get-upload-image-options.js";
+import { getUploadImageOptions, initiateUploadImage } from "@tuleap/ckeditor-image-upload-form";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 import TurndownService from "turndown";

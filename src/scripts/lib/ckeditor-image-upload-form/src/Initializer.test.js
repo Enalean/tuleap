@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as element_adapter from "./element-adapter.js";
-import * as gettext_factory from "../gettext/gettext-factory.js";
 import { MaxSizeUploadExceededError, UploadError } from "@tuleap/ckeditor-image-upload";
 import * as image_upload from "@tuleap/ckeditor-image-upload";
+import { Initializer } from "./Initializer";
 import * as form_adapter from "./form-adapter.js";
 import * as consistent_uploaded_files_before_submit_checker from "./consistent-uploaded-files-before-submit-checker.js";
-import { getUploadImageOptions, initiateUploadImage } from "./get-upload-image-options.js";
+import { UploadEnabledDetector } from "./UploadEnabledDetector";
+import { HelpBlockTranslator } from "./HelpBlockTranslator";
 
 jest.mock("@tuleap/ckeditor-image-upload", () => {
     const actual_module = jest.requireActual("@tuleap/ckeditor-image-upload");
@@ -35,43 +35,46 @@ jest.mock("@tuleap/ckeditor-image-upload", () => {
     };
 });
 
-describe(`get-upload-image-options`, () => {
-    let isUploadEnabled,
-        gettext_provider = {
-            gettext: () => "",
-        };
+function createDocument() {
+    return document.implementation.createHTMLDocument();
+}
+
+describe(`Initializer`, () => {
+    let doc, initializer, gettext_provider, detector, translator;
 
     beforeEach(() => {
-        isUploadEnabled = jest
-            .spyOn(element_adapter, "isUploadEnabled")
-            .mockImplementation(() => true);
-        jest.spyOn(gettext_factory, "initGettext").mockImplementation(() => gettext_provider);
+        doc = createDocument();
+        gettext_provider = {
+            gettext: (english) => english,
+        };
     });
 
-    describe(`initiateUploadImage()`, () => {
-        let ckeditor_instance;
-        const options = {};
+    describe(`init()`, () => {
+        let ckeditor_instance, textarea;
 
         beforeEach(() => {
             ckeditor_instance = {
                 on: jest.fn(),
                 showNotification: jest.fn(),
             };
+            textarea = doc.createElement("textarea");
+            doc.body.append(textarea);
+            detector = new UploadEnabledDetector(doc, textarea);
+            translator = new HelpBlockTranslator(doc, textarea, gettext_provider);
+            initializer = new Initializer(doc, gettext_provider, detector, translator);
         });
 
         it(`when upload is disabled, it will disable paste of images
-            and show a notification`, async () => {
-            isUploadEnabled.mockReturnValue(false);
-            const element = {
-                dataset: { uploadUrl: "https://example.com/disprobabilize/gavyuti" },
-            };
+            and show a notification`, () => {
+            jest.spyOn(detector, "isUploadEnabled").mockReturnValue(false);
+            textarea.dataset.uploadUrl = "https://example.com/disprobabilize/gavyuti";
             let triggerPaste;
             ckeditor_instance.on.mockImplementation((event_name, handler) => {
                 triggerPaste = handler;
             });
             jest.spyOn(image_upload, "isThereAnImageWithDataURI").mockReturnValue(true);
 
-            await initiateUploadImage(ckeditor_instance, options, element);
+            initializer.init(ckeditor_instance, textarea);
 
             const event = {
                 cancel: jest.fn(),
@@ -84,14 +87,14 @@ describe(`get-upload-image-options`, () => {
         });
 
         describe(`when upload is enabled`, () => {
-            let form, element;
+            let form;
             beforeEach(() => {
                 form = {
                     querySelectorAll: jest.fn(),
                     addEventListener: jest.fn(),
                     appendChild: jest.fn(),
                 };
-                element = {
+                textarea = {
                     dataset: {
                         uploadUrl: "https://example.com/disprobabilize/gavyuti",
                         uploadFieldName: "satrapess",
@@ -99,23 +102,24 @@ describe(`get-upload-image-options`, () => {
                     },
                     form,
                 };
+                jest.spyOn(detector, "isUploadEnabled").mockReturnValue(true);
             });
 
-            it(`informs users that they can paste images`, async () => {
+            it(`informs users that they can paste images`, () => {
                 const informUsersThatTheyCanPasteImagesInEditor = jest.spyOn(
-                    element_adapter,
+                    translator,
                     "informUsersThatTheyCanPasteImagesInEditor"
                 );
 
-                await initiateUploadImage(ckeditor_instance, options, element);
+                initializer.init(ckeditor_instance, textarea);
 
                 expect(informUsersThatTheyCanPasteImagesInEditor).toHaveBeenCalled();
             });
 
-            it(`builds the file upload handler and registers it on the CKEditor instance`, async () => {
+            it(`builds the file upload handler and registers it on the CKEditor instance`, () => {
                 const buildFileUploadHandler = jest.spyOn(image_upload, "buildFileUploadHandler");
 
-                await initiateUploadImage(ckeditor_instance, options, element);
+                initializer.init(ckeditor_instance, textarea);
 
                 const expected_options = {
                     ckeditor_instance,
@@ -127,7 +131,7 @@ describe(`get-upload-image-options`, () => {
                 expect(buildFileUploadHandler).toHaveBeenCalledWith(expected_options);
             });
 
-            it(`when the upload starts, it disables form submits`, async () => {
+            it(`when the upload starts, it disables form submits`, () => {
                 let triggerStart;
                 jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
                     ({ onStartCallback }) => {
@@ -138,7 +142,7 @@ describe(`get-upload-image-options`, () => {
                     .spyOn(form_adapter, "disableFormSubmit")
                     .mockImplementation(() => {});
 
-                await initiateUploadImage(ckeditor_instance, options, element);
+                initializer.init(ckeditor_instance, textarea);
                 triggerStart();
 
                 expect(disableFormSubmit).toHaveBeenCalled();
@@ -146,7 +150,7 @@ describe(`get-upload-image-options`, () => {
 
             describe(`when the upload succeeds`, () => {
                 let triggerSuccess, enableFormSubmit;
-                beforeEach(async () => {
+                beforeEach(() => {
                     jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
                         ({ onSuccessCallback }) => {
                             triggerSuccess = onSuccessCallback;
@@ -156,7 +160,7 @@ describe(`get-upload-image-options`, () => {
                     enableFormSubmit = jest
                         .spyOn(form_adapter, "enableFormSubmit")
                         .mockImplementation(() => {});
-                    await initiateUploadImage(ckeditor_instance, options, element);
+                    initializer.init(ckeditor_instance, textarea);
                     triggerSuccess(182, "http://example.com/scenary");
                 });
 
@@ -176,7 +180,7 @@ describe(`get-upload-image-options`, () => {
 
             describe(`when the upload fails`, () => {
                 let triggerError, enableFormSubmit;
-                beforeEach(async () => {
+                beforeEach(() => {
                     jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
                         ({ onErrorCallback }) => {
                             triggerError = onErrorCallback;
@@ -186,7 +190,7 @@ describe(`get-upload-image-options`, () => {
                         .spyOn(form_adapter, "enableFormSubmit")
                         .mockImplementation(() => {});
 
-                    await initiateUploadImage(ckeditor_instance, options, element);
+                    initializer.init(ckeditor_instance, textarea);
                 });
 
                 it(`enables back form submits`, () => {
@@ -212,39 +216,14 @@ describe(`get-upload-image-options`, () => {
                 });
             });
 
-            it(`registers the CKEditor instance to clear unused uploaded files`, async () => {
+            it(`registers the CKEditor instance to clear unused uploaded files`, () => {
                 const addInstance = jest.spyOn(
                     consistent_uploaded_files_before_submit_checker,
                     "addInstance"
                 );
-                await initiateUploadImage(ckeditor_instance, options, element);
+                initializer.init(ckeditor_instance, textarea);
 
                 expect(addInstance).toHaveBeenCalledWith(form, ckeditor_instance, "satrapess");
-            });
-        });
-    });
-
-    describe(`getUploadImageOptions()`, () => {
-        let element;
-
-        it(`when upload is disabled, it returns an empty object`, () => {
-            isUploadEnabled.mockReturnValue(false);
-
-            expect(getUploadImageOptions(element)).toEqual({});
-        });
-
-        it(`when upload is enabled, it returns CKEditor options`, () => {
-            element = {
-                dataset: {
-                    uploadUrl: "https://example.com/disprobabilize/gavyuti",
-                },
-            };
-
-            const result = getUploadImageOptions(element);
-
-            expect(result).toEqual({
-                extraPlugins: "uploadimage",
-                uploadUrl: "https://example.com/disprobabilize/gavyuti",
             });
         });
     });
