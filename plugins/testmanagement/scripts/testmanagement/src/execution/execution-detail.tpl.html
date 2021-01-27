@@ -16,7 +16,11 @@
 </div>
 
 <section id="test" class="tlp-pane current-test" ng-class="execution.status" data-test="current-test">
-    <div class="tlp-pane-container">
+    <div class="tlp-pane-container"
+         role="tabpanel"
+         id="{{ execution.definition.id }}-tabpanel"
+         aria-labelledby="{{ execution.definition.id }}-tab"
+    >
         <section class="tlp-pane-header current-test-header">
             <div class="loader" ng-if="! execution.id"></div>
             <h1 class="current-test-header-title" data-test="current-test-header-title">

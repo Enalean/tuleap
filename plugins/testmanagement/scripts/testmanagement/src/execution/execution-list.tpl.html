@@ -115,7 +115,10 @@
                 </section>
 
                 <nav class="tlp-pane-section tests-list-section">
-                    <ol class="tests-list">
+                    <ol class="tests-list"
+                        role="tablist"
+                        aria-orientation="vertical"
+                    >
                         <li ng-repeat="category in categories"
                             ng-if="canCategoryBeDisplayed(category)">
                             <p class="tests-list-category">{{ category.label }}</p>
@@ -133,6 +136,13 @@
                                        ng-click="viewTestExecution(execution)"
                                        ng-class="{active: checkActiveClassOnExecution(execution)}"
                                        data-exec-id="{{ execution.id }}"
+
+                                       role="tab"
+                                       aria-controls="{{ execution.definition.id }}-tabpanel"
+                                       aria-selected="{{ checkActiveClassOnExecution(execution) }}"
+                                       tabindex="{{ checkActiveClassOnExecution(execution) ? 0 : -1 }}"
+                                       data-test-tab-index="{{ $parent.$parent.$index + $index }}"
+                                       data-shortcut-navigation
                                     >
                                         <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
                                              data-tlp-tooltip="{{ presence.real_name }}"
@@ -143,7 +153,10 @@
                                                  onerror="this.src='/themes/common/images/avatar_default.png'"
                                                  alt="avatar">
                                         </div>
-                                        <span class="tests-list-test-title" data-test="test-title">
+                                        <span class="tests-list-test-title"
+                                              data-test="test-title"
+                                              id="{{ execution.definition.id}}-tab"
+                                        >
                                             <span class="tests-list-test-id">
                                                 #{{ execution.definition.id }}
                                             </span>
