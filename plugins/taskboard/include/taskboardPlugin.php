@@ -304,6 +304,6 @@ class taskboardPlugin extends Plugin
 
     private function isIE11(): bool
     {
-        return DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE11();
+        return DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE();
     }
 }

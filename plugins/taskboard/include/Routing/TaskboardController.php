@@ -110,7 +110,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
                 )
             );
         }
-        if (DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE11()) {
+        if (DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE()) {
             $layout->redirect(
                 '/plugins/agiledashboard/?' . http_build_query(
                     [

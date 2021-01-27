@@ -57,7 +57,7 @@ final class BrowserDeprecationMessage
 
     public static function fromDetectedBrowser(DetectedBrowser $detected_browser): ?self
     {
-        if ($detected_browser->isIE11() || $detected_browser->isIEBefore11()) {
+        if ($detected_browser->isIE()) {
             return new self(
                 _('Your web browser is not supported'),
                 _('Internet Explorer is not supported. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.'),
@@ -69,6 +69,18 @@ final class BrowserDeprecationMessage
             return new self(
                 _('Your web browser is not supported'),
                 _('Edge Legacy is not supported. Please upgrade to the latest version of Edge or use another modern alternative such as Firefox or Chrome.'),
+                true,
+            );
+        }
+
+        if ($detected_browser->isAnOutdatedBrowser()) {
+            $browser_name = $detected_browser->getName() ?? '';
+            return new self(
+                _('Your web browser is not supported'),
+                sprintf(
+                    _('You are using an outdated version of %s. You might encounter issues if you continue.'),
+                    $browser_name,
+                ),
                 true,
             );
         }

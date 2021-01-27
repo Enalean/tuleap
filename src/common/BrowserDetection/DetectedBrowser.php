@@ -29,6 +29,8 @@ final class DetectedBrowser
 {
     private const INTERNET_EXPLORER = 'Internet Explorer';
     private const EDGE_LEGACY       = 'Edge Legacy';
+    private const FIREFOX           = 'Firefox';
+    private const CHROME            = 'Chrome';
     // Based on https://github.com/matomo-org/device-detector/blob/3.12.6/regexes/client/browsers.yml
     private const BROWSER_REGEXES = [
         self::INTERNET_EXPLORER => [
@@ -45,15 +47,21 @@ final class DetectedBrowser
         'Edge' => [
             'Edg[ /](\d+[\.\d]+)' => null,
         ],
-        'Firefox' => [
+        self::FIREFOX => [
             '.*Servo.*Firefox(?:/(\d+[\.\d]+))?' => null,
             'Firefox(?:/(\d+[\.\d]+))?'          => null,
         ],
-        'Chrome' => [
+        self::CHROME => [
             'Chromium(?:/(\d+[\.\d]+))?'       => null,
             'Chrome(?!book)(?:/(\d+[\.\d]+))?' => null
         ]
     ];
+    // Only the latest version of these browsers is supported.
+    // Versions considered "very old" are very likely to break in some ways when using Tuleap.
+    // Everything older than current ESR (as of January 21 2021) is Really Old
+    // Shall be updated when we start to see that Old Browsers pops up too often in support channel
+    private const REALLY_OLD_FIREFOX_VERSION = 77;
+    private const REALLY_OLD_CHROME_VERSION  = 83;
 
     /**
      * @var string|null
@@ -87,19 +95,28 @@ final class DetectedBrowser
         return new self($request->getFromServer('HTTP_USER_AGENT') ?: '');
     }
 
-    public function isIE11(): bool
+    public function isIE(): bool
     {
-        return $this->name === self::INTERNET_EXPLORER && $this->version !== null && $this->version >= 11.0;
-    }
-
-    public function isIEBefore11(): bool
-    {
-        return $this->name === self::INTERNET_EXPLORER && ! $this->isIE11();
+        return $this->name === self::INTERNET_EXPLORER;
     }
 
     public function isEdgeLegacy(): bool
     {
         return $this->name === self::EDGE_LEGACY;
+    }
+
+    public function isAnOutdatedBrowser(): bool
+    {
+        if ($this->isIE() || $this->isEdgeLegacy()) {
+            return true;
+        }
+
+        if ($this->version === null) {
+            return false;
+        }
+
+        return ($this->name === self::CHROME && $this->version <= self::REALLY_OLD_CHROME_VERSION) ||
+               ($this->name === self::FIREFOX && $this->version <= self::REALLY_OLD_FIREFOX_VERSION);
     }
 
     /**

@@ -149,7 +149,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
             $expand_backlog_item_id,
             $highlight_test_definition_id
         );
-        if ($detected_browser->isIE11()) {
+        if ($detected_browser->isIE()) {
             $this->renderer->renderToPage('test-plan-unsupported-browser-ie11', $presenter);
         } else {
             if ($detected_browser->isEdgeLegacy()) {

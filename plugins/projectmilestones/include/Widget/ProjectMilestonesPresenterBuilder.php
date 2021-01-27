@@ -225,7 +225,7 @@ class ProjectMilestonesPresenterBuilder
      */
     public function getProjectMilestonePresenter(?Project $project, ?Planning $root_planning): ProjectMilestonesPresenter
     {
-        if (DetectedBrowser::detectFromTuleapHTTPRequest($this->request)->isIE11()) {
+        if (DetectedBrowser::detectFromTuleapHTTPRequest($this->request)->isIE()) {
             throw ProjectMilestonesException::buildBrowserIsIE11();
         }
 
