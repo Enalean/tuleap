@@ -2037,7 +2037,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getCurrentUser()
         );
 
-        if (! $is_agile_dashboard_used || ! $is_explicit_backlog_used || ! $is_tracker_backlog_of_root_planning || ! $this->isScrumAccessBlocked($tracker->getProject())) {
+        if (! $is_agile_dashboard_used || ! $is_explicit_backlog_used || ! $is_tracker_backlog_of_root_planning || $this->isScrumAccessBlocked($tracker->getProject())) {
             return;
         }
 
