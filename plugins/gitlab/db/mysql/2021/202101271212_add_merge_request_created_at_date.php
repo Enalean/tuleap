@@ -20,50 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Reference\MergeRequest;
-
-use DateTimeImmutable;
-
-/**
- * @psalm-immutable
- */
-final class GitlabMergeRequest
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202101271212_add_merge_request_created_at_date extends ForgeUpgrade_Bucket
 {
-    /**
-     * @var string
-     */
-    private $title;
-    /**
-     * @var string
-     */
-    private $state;
-    /**
-     * @var DateTimeImmutable
-     */
-    private $created_at;
-
-    public function __construct(
-        string $title,
-        string $state,
-        DateTimeImmutable $created_at
-    ) {
-        $this->title      = $title;
-        $this->state      = $state;
-        $this->created_at = $created_at;
+    public function description(): string
+    {
+        return 'Add created_at date in plugin_gitlab_merge_request_info table';
     }
 
-    public function getTitle(): string
+    public function preUp(): void
     {
-        return $this->title;
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function getState(): string
+    public function up(): void
     {
-        return $this->state;
-    }
-
-    public function getCreatedAtDate(): DateTimeImmutable
-    {
-        return $this->created_at;
+        $this->db->alterTable(
+            'plugin_gitlab_merge_request_info',
+            'tuleap',
+            'created_at',
+            'ALTER TABLE plugin_gitlab_merge_request_info
+                ADD COLUMN created_at INT(11) NOT NULL'
+        );
     }
 }

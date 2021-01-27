@@ -56,6 +56,7 @@ class GitlabMergeRequestReferenceRetriever
         return new GitlabMergeRequest(
             $row['title'],
             $row['state'],
+            (new \DateTimeImmutable())->setTimestamp($row['created_at'])
         );
     }
 }

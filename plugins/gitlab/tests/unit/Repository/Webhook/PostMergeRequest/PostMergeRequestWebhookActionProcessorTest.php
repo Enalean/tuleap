@@ -118,6 +118,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->merge_request_reference_dao
@@ -137,7 +138,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened')
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112)
             ->once();
 
         $this->reference_manager
@@ -258,6 +259,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->merge_request_reference_dao
@@ -282,7 +284,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened')
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112)
             ->once();
 
         $this->reference_manager
@@ -402,6 +404,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->merge_request_reference_dao
@@ -426,7 +429,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666', 'opened')
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666', 'opened', 1611315112)
             ->once();
 
         $this->reference_manager
@@ -544,6 +547,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             '',
             'closed',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->merge_request_reference_dao
@@ -563,7 +567,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', '', 'closed')
+            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112)
             ->once();
 
         $this->reference_manager
@@ -640,6 +644,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title",
             '',
             'closed',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->merge_request_reference_dao
@@ -692,6 +697,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title",
             '',
             'closed',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->gitlab_repository_project_retriever
@@ -721,7 +727,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title', '', 'closed')
+            ->with(1, 2, 'My Title', '', 'closed', 1611315112)
             ->once();
 
         $this->logger

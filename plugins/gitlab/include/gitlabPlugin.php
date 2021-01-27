@@ -342,6 +342,7 @@ class gitlabPlugin extends Plugin
             ),
             new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao()),
             ProjectManager::instance(),
+            new TlpRelativeDatePresenterBuilder()
         );
         $gitlab_organizer->organizeGitLabReferences($organizer);
     }
