@@ -27,7 +27,6 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\InstanceBaseURLBuilder;
 
@@ -53,10 +52,15 @@ class WebhookCreator
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var WebhookDeletor
+     */
+    private $webhook_deletor;
 
     public function __construct(
         KeyFactory $key_factory,
         WebhookDao $dao,
+        WebhookDeletor $webhook_deletor,
         ClientWrapper $gitlab_api_client,
         InstanceBaseURLBuilder $instance_base_url,
         LoggerInterface $logger
@@ -64,6 +68,7 @@ class WebhookCreator
         $this->gitlab_api_client = $gitlab_api_client;
         $this->key_factory       = $key_factory;
         $this->dao               = $dao;
+        $this->webhook_deletor   = $webhook_deletor;
         $this->instance_base_url = $instance_base_url;
         $this->logger            = $logger;
     }
@@ -75,7 +80,7 @@ class WebhookCreator
      */
     public function generateWebhookInGitlabProject(Credentials $credentials, GitlabRepository $gitlab_repository): void
     {
-        $this->deletePreviousGitlabWebhook($credentials, $gitlab_repository);
+        $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($gitlab_repository);
         $this->createNewGitlabWebhook($credentials, $gitlab_repository);
     }
 
@@ -130,42 +135,11 @@ class WebhookCreator
         );
         \sodium_memzero($webhook_configuration['token']);
 
-
         if (! is_array($webhook) || ! isset($webhook['id'])) {
             $this->logger->error("Received response payload seems invalid");
             throw new WebhookCreationException();
         }
 
         return (int) $webhook['id'];
-    }
-
-    private function deletePreviousGitlabWebhook(
-        Credentials $credentials,
-        GitlabRepository $gitlab_repository
-    ): void {
-        $row = $this->dao->getGitlabRepositoryWebhook($gitlab_repository->getId());
-        if (! $row) {
-            return;
-        }
-
-        $previous_webhook_id = $row['gitlab_webhook_id'];
-        if (! $previous_webhook_id) {
-            return;
-        }
-
-        $this->logger->info("Deleting previous hook for " . $gitlab_repository->getGitlabRepositoryUrl());
-
-        $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
-        try {
-            $this->gitlab_api_client->deleteUrl(
-                $credentials,
-                "/projects/$gitlab_repository_id/hooks/$previous_webhook_id"
-            );
-            $this->dao->deleteGitlabRepositoryWebhook($gitlab_repository->getId());
-        } catch (GitlabRequestException $e) {
-            // Ignore errors. It is not big deal if we cannot remove the hook.
-            // Maybe it has already been manually deleted on GitLab side?
-            $this->logger->info("Unable to delete the hook. Ignoring error: " . $e->getMessage());
-        }
     }
 }
