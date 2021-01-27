@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 
-final class NoDuckTypedMatchingValueException extends \RuntimeException implements FieldSynchronizationException
+final class UserCanNotAccessToProgramException extends \Exception implements PlanTrackerException
 {
-    public function __construct(string $source_value_label, int $team_status_field_id, int $tracker_id)
+    public function __construct(int $program_id, int $user_id, string $message)
     {
-        parent::__construct(
-            sprintf(
-                'No matching value found for value %s in field #%d of tracker #%d by duck typing.',
-                $source_value_label,
-                $team_status_field_id,
-                $tracker_id
-            )
-        );
+        parent::__construct("Program #$program_id is not accessible by user #$user_id: $message");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\PlanningCheck;
+namespace Tuleap\ScaledAgile\Program\Backlog\Plan;
 
-interface PlanningCheckException extends \Throwable
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
+
+interface BuildPlanProgramIncrementConfiguration
 {
+    /**
+     * @throws PlanTrackerException
+     * @throws ProgramTrackerNotFoundException
+     * @throws PlanCheckException
+     */
+    public function buildProgramIncrementFromProjectId(int $project_id, \PFUser $user): ScaledAgileTracker;
 }

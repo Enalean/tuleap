@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\PlanningCheck;
+namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 
-interface PlanningCheckException extends \Throwable
+final class ProgramNotFoundException extends \Exception implements PlanTrackerException
 {
+    public function __construct(int $id)
+    {
+        parent::__construct("Program tracker #$id is not found");
+    }
 }

@@ -56,7 +56,8 @@ final class StatusValueMapper implements MapStatusByValue
             if ($matching_value === null) {
                 throw new NoDuckTypedMatchingValueException(
                     $status_value->getLabel(),
-                    (int) $field_status_data->getId()
+                    $field_status_data->getId(),
+                    $field_status_data->getFullField()->getTrackerId()
                 );
             }
             $matching_values[] = (int) $matching_value->getId();

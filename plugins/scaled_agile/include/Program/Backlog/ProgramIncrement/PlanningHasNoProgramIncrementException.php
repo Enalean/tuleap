@@ -20,12 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\PlanningCheck;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement;
 
-final class UserCanNotAccessToProgramException extends \Exception implements PlanningCheckException
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
+
+final class PlanningHasNoProgramIncrementException extends \RuntimeException implements ProgramIncrementTrackerRetrievalException
 {
-    public function __construct(int $program_id, int $user_id, string $message)
+    public function __construct(int $planning_id)
     {
-        parent::__construct("Program #$program_id is not accessible by user #$user_id: $message");
+        parent::__construct("Planning with id $planning_id has no program increment tracker");
     }
 }

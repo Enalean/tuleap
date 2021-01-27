@@ -48,21 +48,21 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsA
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\ScaledAgileHierarchyDAO;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanProgramAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanProgramIncrementConfigurationBuilder;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\ConfigurationUserCanNotSeeProgramException;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\PlanningProgramAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\ProgramNotFoundException;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\UserCanNotAccessToProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
+use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\DisplayProgramBacklogController;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
-use Tuleap\ScaledAgile\Program\Backlog\PlanningCheck\ConfigurationChecker;
+use Tuleap\ScaledAgile\Program\Backlog\Plan\ConfigurationChecker;
+use Tuleap\ScaledAgile\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
@@ -219,8 +219,8 @@ final class scaled_agilePlugin extends Plugin
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
         $artifact_creator_checker = new ArtifactCreatorChecker(
-            $this->getPlanningAdapter(),
-            $this->getProjectIncrementCreatorChecker()
+            $this->getProjectIncrementCreatorChecker(),
+            $this->getPlanConfigurationBuilder()
         );
 
         $tracker_data = new ScaledAgileTracker($can_submit_new_artifact->getTracker());
@@ -259,7 +259,7 @@ final class scaled_agilePlugin extends Plugin
             $program_dao,
             $this->getProgramIncrementRunner(),
             new PendingArtifactCreationDao(),
-            $this->getPlanningAdapter()
+            $this->getPlanConfigurationBuilder()
         );
         $handler->handle($event);
     }
@@ -332,21 +332,22 @@ final class scaled_agilePlugin extends Plugin
 
     public function configurationCheckDelegation(ConfigurationCheckDelegation $configuration_check_delegation): void
     {
-        $planning_program_adapter = new PlanningProgramAdapter(
-            TrackerFactory::instance(),
+        $plan_program_builder = new PlanProgramAdapter(
             ProjectManager::instance(),
             new URLVerification(),
-            new PlanDao(),
-            new ProgramDao(),
             new TeamDao()
         );
-        $configuration_checker    = new ConfigurationChecker($planning_program_adapter);
+
+        $configuration_checker = new ConfigurationChecker(
+            $plan_program_builder,
+            $this->getPlanConfigurationBuilder()
+        );
         try {
             $configuration_checker->getProgramIncrementTracker(
                 $configuration_check_delegation->getUser(),
                 $configuration_check_delegation->getProject()
             );
-        } catch (ConfigurationUserCanNotSeeProgramException | ProgramNotFoundException | UserCanNotAccessToProgramException | ProjectIsNotAProgramException $e) {
+        } catch (PlanTrackerException | ProgramTrackerException | PlanCheckException $e) {
             $configuration_check_delegation->disablePlanning();
             $this->getLogger()->debug($e->getMessage());
         }
@@ -435,6 +436,14 @@ final class scaled_agilePlugin extends Plugin
                 Tracker_Artifact_ChangesetFactoryBuilder::build()
             ),
             new TaskBuilder()
+        );
+    }
+
+    private function getPlanConfigurationBuilder(): PlanProgramIncrementConfigurationBuilder
+    {
+        return new PlanProgramIncrementConfigurationBuilder(
+            new PlanDao(),
+            TrackerFactory::instance()
         );
     }
 }

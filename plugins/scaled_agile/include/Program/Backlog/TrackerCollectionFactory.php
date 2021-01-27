@@ -55,7 +55,7 @@ class TrackerCollectionFactory
         );
         $trackers = [];
         foreach ($projects as $project) {
-            $trackers[] = $this->getProgramIncrementTracker($user, $project);
+            $trackers[] = $this->getPlannableTracker($user, $project);
         }
         return new SourceTrackerCollection($trackers);
     }
@@ -69,7 +69,7 @@ class TrackerCollectionFactory
     ): ProgramIncrementsTrackerCollection {
         $trackers = [];
         foreach ($team_projects_collection->getTeamProjects() as $team_projects) {
-            $trackers[] = $this->getProgramIncrementTracker($user, $team_projects);
+            $trackers[] = $this->getPlannableTracker($user, $team_projects);
         }
         return new ProgramIncrementsTrackerCollection($trackers);
     }
@@ -77,7 +77,7 @@ class TrackerCollectionFactory
     /**
      * @throws TopPlanningNotFoundInProjectException
      */
-    private function getProgramIncrementTracker(\PFUser $user, Project $project): ScaledAgileTracker
+    private function getPlannableTracker(\PFUser $user, Project $project): ScaledAgileTracker
     {
         $root_planning = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
         return $root_planning->getPlanningTracker();

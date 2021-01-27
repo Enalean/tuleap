@@ -31,8 +31,6 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
-use Tuleap\ScaledAgile\Project;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
@@ -95,18 +93,12 @@ final class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsTrueIfAllStatusSemanticAreWellConfigured(): void
     {
-        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new Planning(
-            new ScaledAgileTracker($top_planning_tracker),
-            1,
-            'Release Planning',
-            [],
-            new Project(1, "my_project", "My project")
-        );
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->with($top_planning_tracker)
+            ->with($tracker)
             ->andReturn($top_planning_tracker_semantic_status);
 
         $list_field = Mockery::mock(Tracker_FormElement_Field_List::class);
@@ -139,9 +131,9 @@ final class StatusSemanticCheckerTest extends TestCase
             ->once()
             ->andReturn(['open', 'in progress', 'review']);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->checker->isStatusWellConfigured(
-                $top_planning,
+                $program_increment_tracker,
                 $this->collection
             )
         );
@@ -149,26 +141,20 @@ final class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfProgramTrackerDoesNotHaveStatusSemantic(): void
     {
-        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new Planning(
-            new ScaledAgileTracker($top_planning_tracker),
-            1,
-            'Release Planning',
-            [],
-            new Project(1, "my_project", "My project")
-        );
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->with($top_planning_tracker)
+            ->with($tracker)
             ->andReturn($top_planning_tracker_semantic_status);
 
         $top_planning_tracker_semantic_status->shouldReceive('getField')
             ->andReturnNull();
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->isStatusWellConfigured(
-                $top_planning,
+                $program_increment_tracker,
                 $this->collection
             )
         );
@@ -176,18 +162,12 @@ final class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfSomeCTeamTrackersDoNotHaveSemanticStatusDefined(): void
     {
-        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new Planning(
-            new ScaledAgileTracker($top_planning_tracker),
-            1,
-            'Release Planning',
-            [],
-            new Project(1, "my_project", "My project")
-        );
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->with($top_planning_tracker)
+            ->with($tracker)
             ->andReturn($top_planning_tracker_semantic_status);
 
         $list_field = Mockery::mock(Tracker_FormElement_Field_List::class);
@@ -198,9 +178,9 @@ final class StatusSemanticCheckerTest extends TestCase
             ->with([123, 124])
             ->andReturn(1);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->isStatusWellConfigured(
-                $top_planning,
+                $program_increment_tracker,
                 $this->collection
             )
         );
@@ -208,18 +188,12 @@ final class StatusSemanticCheckerTest extends TestCase
 
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoNotContainTheProgramOpenValue(): void
     {
-        $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new Planning(
-            new ScaledAgileTracker($top_planning_tracker),
-            1,
-            'Release Planning',
-            [],
-            new Project(1, "my_project", "My project")
-        );
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->with($top_planning_tracker)
+            ->with($tracker)
             ->andReturn($top_planning_tracker_semantic_status);
 
         $list_field = Mockery::mock(Tracker_FormElement_Field_List::class);
@@ -243,9 +217,9 @@ final class StatusSemanticCheckerTest extends TestCase
             ->once()
             ->andReturn(['open']);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->isStatusWellConfigured(
-                $top_planning,
+                $program_increment_tracker,
                 $this->collection
             )
         );

@@ -24,11 +24,10 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Planning;
 use Project;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ScaledAgile\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -38,12 +37,12 @@ final class ArtifactCreatorCheckerTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PlanningFactory
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildPlanProgramIncrementConfiguration
      */
-    private $planning_factory;
+    private $build_plan_configuration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CheckProgramIncrementCanBeCreated
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactCreatorChecker
      */
     private $milestone_creator_checker;
 
@@ -54,26 +53,24 @@ final class ArtifactCreatorCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->planning_factory          = \Mockery::mock(\PlanningFactory::class);
-        $planning_adapter                = new PlanningAdapter($this->planning_factory);
         $this->milestone_creator_checker = \Mockery::mock(ProgramIncrementArtifactCreatorChecker::class);
+        $this->build_plan_configuration  = \Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
 
         $this->artifact_creator_checker = new ArtifactCreatorChecker(
-            $planning_adapter,
-            $this->milestone_creator_checker
+            $this->milestone_creator_checker,
+            $this->build_plan_configuration
         );
     }
 
     public function testDisallowArtifactCreationWhenItIsAMilestoneTrackerAndMilestoneCannotBeCreated(): void
     {
-        $project  = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
-        $tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning = new Planning(43, 'Planning', '', $project->getID(), '', [302, 504]);
-        $planning->setPlanningTracker($tracker);
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
-        $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->andReturn(false);
+        $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
+        $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+            ->andReturn(new ScaledAgileTracker($tracker));
+        $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->once()->andReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
                 new ScaledAgileTracker($tracker),
@@ -82,16 +79,16 @@ final class ArtifactCreatorCheckerTest extends TestCase
         );
     }
 
-    public function testAllowArtifactCreationWhenNoVirtualTopMilestoneCanBeFound(): void
+    public function testAllowArtifactCreationWhenProgramNotFound(): void
     {
         $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(\Project::buildForTest())->build();
 
-        $this->planning_factory->shouldReceive('getRootPlanning')->andThrow(
-            new TopPlanningNotFoundInProjectException($project->getID())
-        );
+        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+            ->andThrow(new class extends \Exception implements PlanCheckException {
+            });
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
                 new ScaledAgileTracker($tracker),
@@ -102,15 +99,13 @@ final class ArtifactCreatorCheckerTest extends TestCase
 
     public function testAllowArtifactCreationWhenTrackerDoesNotCreateMilestone(): void
     {
-        $project  = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
-        $tracker  = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
-        $planning = new Planning(43, 'Planning', '', $project->getID(), '', [302, 504]);
-        $planning->setPlanningTracker($tracker);
-
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
+        $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
+        $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
+        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+            ->andReturn(new ScaledAgileTracker($tracker));
         $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->andReturn(true);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
                 new ScaledAgileTracker($tracker),

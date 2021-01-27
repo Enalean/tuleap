@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ScaledAgile\Program\Backlog\Plan;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
-
-final class NoProgramIncrementException extends \RuntimeException implements ProgramIncrementTrackerRetrievalException
+interface PlanCheckException extends \Throwable
 {
-    public function __construct(int $planning_id)
-    {
-        parent::__construct("Planning with id $planning_id has no program increment tracker");
-    }
 }

@@ -43,7 +43,6 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -147,8 +146,11 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+
+        $program = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -162,23 +164,27 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->workflow_checker->shouldReceive('areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers')
             ->andReturnTrue();
 
-        $this->assertTrue($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertTrue($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsTrueWhenAProjectHasNoTeamProjects(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')->andReturn([]);
 
-        $this->assertTrue($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertTrue($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfOneProjectDoesNotHaveARootPlanningWithAMilestoneTracker(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $planning = new \Planning(1, 'Incorrect', $this->project->getID(), '', '');
         $planning->setPlanningTracker(new \NullTracker());
@@ -194,37 +200,43 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
             ->once()
             ->andReturn($first_team_project);
 
-        $this->assertFalse($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfSemanticsAreNotWellConfigured(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnFalse();
 
-        $this->assertFalse($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfUserCannotSubmitArtifact(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->mockTeamMilestoneTrackers($this->project, false);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
 
-        $this->assertFalse($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfFieldsCantBeExtractedFromMilestoneTrackers(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -233,13 +245,15 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->fields_adapter->shouldReceive('build')
             ->andThrow(new FieldRetrievalException(1, 'title'));
 
-        $this->assertFalse($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfUserCantSubmitOneArtifactLink(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -247,13 +261,15 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
         $this->buildSynchronizedFields(false);
 
-        $this->assertFalse($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfTrackersHaveRequiredFieldsThatCannotBeSynchronized(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -265,13 +281,15 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->required_field_checker->shouldReceive('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->andReturnFalse();
 
-        $this->assertFalse($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfTeamTrackersAreUsingSynchronizedFieldsInWorkflowRules(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_milestone = $this->getPlanningData();
+        $user                      = UserTestBuilder::aUser()->build();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
+        $program_increment_tracker = new ScaledAgileTracker($tracker);
+        $program                   = new \Tuleap\ScaledAgile\Project(101, 'my_project', "My project");
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -285,7 +303,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->workflow_checker->shouldReceive('areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers')
             ->andReturnFalse();
 
-        $this->assertFalse($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
+        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
     private function mockTeamMilestoneTrackers(Project $project, bool $user_can_submit_artifact = true): void
@@ -319,13 +337,6 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $planning->setPlanningTracker($first_milestone_tracker);
 
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
-    }
-
-    private function getPlanningData(): Planning
-    {
-        $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
-
-        return new Planning(new ScaledAgileTracker($tracker), 1, 'Release Planning', [], $this->project_data);
     }
 
     private function buildSynchronizedFields(bool $submitable): void

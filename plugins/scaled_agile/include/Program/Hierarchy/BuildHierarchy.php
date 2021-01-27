@@ -23,23 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Hierarchy;
 
 use PFUser;
-use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerMustBeInPlannableTopBacklogException;
-use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
-use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\HierarchyException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Program\Program;
 
 interface BuildHierarchy
 {
     /**
-     * @throws TeamTrackerMustBeInPlannableTopBacklogException
-     * @throws TeamTrackerNotFoundException
-     * @throws TrackerDoesNotBelongToTeamException
-     * @throws PlanTrackerException
-     * @throws \Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException
-     * @throws \Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException
-     *
      * @param int[] $team_backlog_ids
+     *
+     * @throws \Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException
+     * @throws HierarchyException
+     * @throws PlanTrackerException
      */
     public function buildHierarchy(
         PFUser $user,

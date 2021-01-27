@@ -24,13 +24,14 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\Project;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 class ProgramIncrementArtifactCreatorChecker
 {
@@ -82,9 +83,9 @@ class ProgramIncrementArtifactCreatorChecker
         $this->logger                   = $logger;
     }
 
-    public function canProgramIncrementBeCreated(Planning $planning, PFUser $user): bool
+    public function canProgramIncrementBeCreated(ScaledAgileTracker $tracker_data, Project $project_data, PFUser $user): bool
     {
-        $program_project = $planning->getProjectData();
+        $program_project = $project_data;
         $this->logger->debug(
             "Checking if program increment can be created in top planning of project " . $program_project->getName() .
             " by user " . $user->getName() . ' (#' . $user->getId() . ')'
@@ -107,11 +108,11 @@ class ProgramIncrementArtifactCreatorChecker
                 $team_projects_collection,
                 $user
             );
-        } catch (TopPlanningNotFoundInProjectException | NoProgramIncrementException $exception) {
+        } catch (TopPlanningNotFoundInProjectException | PlanningHasNoProgramIncrementException $exception) {
             $this->logger->error("Cannot retrieve all the program increments", ['exception' => $exception]);
             return false;
         }
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($planning, $program_and_program_increment_trackers)) {
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_and_program_increment_trackers)) {
             $this->logger->error("Semantics are not well configured.");
 
             return false;
