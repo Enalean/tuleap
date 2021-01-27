@@ -25,8 +25,6 @@ export default function SharedPropertiesService() {
         milestone_id: undefined,
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
-        create_milestone_allowed: undefined,
-        add_item_in_backlog_allowed: undefined,
         is_list_picker_enabled: false,
         trackers_disabling_list_picker: [],
     };
@@ -44,10 +42,6 @@ export default function SharedPropertiesService() {
         setIsInExplicitTopBacklogManagement,
         setAllowedAdditionalPanesToDisplay,
         getAllowedAdditionalPanesToDisplay,
-        setCreateMilestoneAllowed,
-        getCreateMilestoneAllowed,
-        setAddItemInBacklogAllowed,
-        getAddItemInBacklogAllowed,
         setEnableListPicker,
         isListPickerEnabledForTracker,
         setTrackersDisablingListPicker,
@@ -99,22 +93,6 @@ export default function SharedPropertiesService() {
 
     function getAllowedAdditionalPanesToDisplay() {
         return property.allowed_additional_panes_to_display;
-    }
-
-    function setCreateMilestoneAllowed(create_milestone_allowed) {
-        property.create_milestone_allowed = create_milestone_allowed;
-    }
-
-    function getCreateMilestoneAllowed() {
-        return property.create_milestone_allowed;
-    }
-
-    function setAddItemInBacklogAllowed(add_item_in_backlog_allowed) {
-        property.add_item_in_backlog_allowed = add_item_in_backlog_allowed;
-    }
-
-    function getAddItemInBacklogAllowed() {
-        return property.add_item_in_backlog_allowed;
     }
 
     function setEnableListPicker(is_list_picker_enabled) {

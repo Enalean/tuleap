@@ -33,7 +33,6 @@ use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
-use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
@@ -200,15 +199,6 @@ class HeaderOptionsForPlanningProviderTest extends TestCase
             )
             ->getMock();
 
-        $event = Mockery::mock(DisplayTopPlanningAppEvent::class)
-            ->shouldReceive(['canUserCreateMilestone' => true])
-            ->getMock();
-        $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->with(Mockery::type(DisplayTopPlanningAppEvent::class))
-            ->once()
-            ->andReturn($event);
-
         $options = [];
         $this->provider->addPlanningOptions($user, $this->theTopBacklogMilestone($sprint_tracker), $options);
 
@@ -218,35 +208,6 @@ class HeaderOptionsForPlanningProviderTest extends TestCase
         self::assertEquals('Top backlog', $new_dropdown_current_context_section->label);
         self::assertCount(1, $new_dropdown_current_context_section->links);
         self::assertEquals('New sprint', $new_dropdown_current_context_section->links[0]->label);
-    }
-
-    public function testItDoesNotAddSubmilestoneTrackerForTopBacklogInNewDropdownCurrentSectionIfUserCannotSubmitArtifacts(): void
-    {
-        $user           = Mockery::mock(PFUser::class);
-        $sprint_tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
-                    'getItemName'           => 'sprint',
-                    'userCanSubmitArtifact' => true,
-                ]
-            )
-            ->getMock();
-
-        $event = Mockery::mock(DisplayTopPlanningAppEvent::class)
-            ->shouldReceive(['canUserCreateMilestone' => false])
-            ->getMock();
-        $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->with(Mockery::type(DisplayTopPlanningAppEvent::class))
-            ->once()
-            ->andReturn($event);
-
-        $options = [];
-        $this->provider->addPlanningOptions($user, $this->theTopBacklogMilestone($sprint_tracker), $options);
-
-        self::assertFalse(isset($options['new_dropdown_current_context_section']));
     }
 
     /**

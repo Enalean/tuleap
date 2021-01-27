@@ -85,7 +85,6 @@ function controller(
         show_closed_view_key: "show-closed-view",
         hide_closed_view_key: "hide-closed-view",
         loading_modal: NewTuleapArtifactModalService.loading,
-        user_can_create_milestone: true,
 
         getRestError: RestErrorService.getError,
         getNumberOfSelectedBacklogItem: BacklogItemSelectedService.getNumberOfSelectedBacklogItem,
@@ -115,7 +114,6 @@ function controller(
         self.user_id = SharedPropertiesService.getUserId();
         self.project_id = SharedPropertiesService.getProjectId();
         self.milestone_id = parseInt(SharedPropertiesService.getMilestoneId(), 10);
-        self.user_can_create_milestone = SharedPropertiesService.getCreateMilestoneAllowed();
 
         initViewModes(SharedPropertiesService.getViewMode());
         self.loadInitialMilestones();
@@ -376,11 +374,7 @@ function controller(
     }
 
     function canUserCreateMilestone() {
-        return (
-            self.backlog.submilestone_type &&
-            self.backlog.user_can_move_cards &&
-            self.user_can_create_milestone
-        );
+        return self.backlog.submilestone_type && self.backlog.user_can_move_cards;
     }
 
     function hasOriginalProject() {

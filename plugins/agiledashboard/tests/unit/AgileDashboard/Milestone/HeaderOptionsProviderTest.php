@@ -31,7 +31,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
-use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
@@ -313,15 +312,6 @@ class HeaderOptionsProviderTest extends TestCase
                 ]
             )->getMock();
         $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => [$epic, $top_requirement]]);
-
-        $event = Mockery::mock(DisplayTopPlanningAppEvent::class)
-            ->shouldReceive(['canBacklogItemsBeAdded' => true])
-            ->getMock();
-        $this->event_dispatcher
-            ->shouldReceive('dispatch')
-            ->with(Mockery::type(DisplayTopPlanningAppEvent::class))
-            ->once()
-            ->andReturn($event);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $top_milestone, 'details');
         self::assertEquals('Top backlog', $header_options['new_dropdown_current_context_section']->label);

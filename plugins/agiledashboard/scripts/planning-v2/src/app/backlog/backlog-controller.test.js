@@ -1140,25 +1140,7 @@ describe("BacklogController -", () => {
     });
 
     describe("soloButtonCanBeDisplayed()", () => {
-        it("button is not displayed if shared property 'AddItemInBacklogAllowed' is false", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(
-                false
-            );
-            jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(true);
-            BacklogController.details = {
-                accepted_types: {
-                    content: [{ id: 104 }],
-                    parent_trackers: [],
-                },
-            };
-
-            var result = BacklogController.soloButtonCanBeDisplayed();
-
-            expect(result).toBe(false);
-        });
-
         it("button is not displayed if user cannot move cards", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(true);
             jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(false);
             BacklogController.details = {
                 accepted_types: {
@@ -1173,7 +1155,6 @@ describe("BacklogController -", () => {
         });
 
         it("button is not displayed if there are multiple trackers", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(true);
             jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(true);
             BacklogController.details = {
                 accepted_types: {
@@ -1188,7 +1169,6 @@ describe("BacklogController -", () => {
         });
 
         it("button is not displayed if there is at least one parent tracker", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(true);
             jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(true);
             BacklogController.details = {
                 accepted_types: {
@@ -1203,7 +1183,6 @@ describe("BacklogController -", () => {
         });
 
         it("button is displayed if there is only one element, shared property is set to true and user can move cards", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(true);
             jest.spyOn(BacklogController, "canUserMoveCards").mockReturnValue(true);
             BacklogController.details = {
                 accepted_types: {
@@ -1219,27 +1198,7 @@ describe("BacklogController -", () => {
     });
 
     describe("addItemButtonCanBeDisplayed()", () => {
-        it("button is not displayed if shared property 'AddItemInBacklogAllowed' is false", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(
-                false
-            );
-
-            BacklogController.details = {
-                accepted_types: {
-                    content: [{ id: 104 }, { id: 105 }],
-                    parent_trackers: [{ id: 101 }],
-                },
-                user_can_move_cards: true,
-            };
-
-            var result = BacklogController.addItemButtonCanBeDisplayed();
-
-            expect(result).toBe(false);
-        });
-
         it("button is not displayed if user cannot move cards", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(true);
-
             BacklogController.details = {
                 accepted_types: {
                     content: [{ id: 104 }, { id: 105 }],
@@ -1254,8 +1213,6 @@ describe("BacklogController -", () => {
         });
 
         it("button is not displayed if there is no tracker", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(true);
-
             BacklogController.details = {
                 accepted_types: {
                     content: [],
@@ -1270,8 +1227,6 @@ describe("BacklogController -", () => {
         });
 
         it("button is displayed if there are elements, shared property is set to true and user can move cards", function () {
-            jest.spyOn(SharedPropertiesService, "getAddItemInBacklogAllowed").mockReturnValue(true);
-
             BacklogController.details = {
                 accepted_types: {
                     content: [{ id: 104 }, { id: 105 }],

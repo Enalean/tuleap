@@ -27,7 +27,6 @@ use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
@@ -103,12 +102,6 @@ class HeaderOptionsForPlanningProvider
         PFUser $user,
         array &$header_options
     ): void {
-        $event = $this->event_dispatcher->dispatch(new DisplayTopPlanningAppEvent($top_milestone, $user));
-        assert($event instanceof DisplayTopPlanningAppEvent);
-        if (! $event->canUserCreateMilestone()) {
-            return;
-        }
-
         $this->header_options_inserter->addLinkToCurrentContextSection(
             dgettext('tuleap-agiledashboard', 'Top backlog'),
             $this->presenter_builder->build($top_milestone->getPlanning()->getPlanningTracker()),

@@ -24,7 +24,6 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
-use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\Layout\ServiceUrlCollector;
@@ -99,7 +98,6 @@ final class scaled_agilePlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(RootPlanningEditionEvent::NAME);
-        $this->addHook(DisplayTopPlanningAppEvent::NAME);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
         $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES, 'trackerAddSystemNatures');
@@ -190,39 +188,6 @@ final class scaled_agilePlugin extends Plugin
     {
         $handler = new RootPlanningEditionHandler(new \Tuleap\ScaledAgile\Adapter\Team\TeamDao());
         $handler->handle($event);
-    }
-
-    public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
-    {
-        $virtual_top_milestone   = $event->getTopMilestone();
-        $project_data            = ProjectAdapter::build($virtual_top_milestone->getProject());
-        $team_project_collection = $this->getTeamProjectCollectionBuilder()->getTeamProjectForAGivenProgramProject(
-            $project_data
-        );
-
-        if ($team_project_collection->isEmpty() === true || $virtual_top_milestone->getPlanning()->getId() === null) {
-            return;
-        }
-
-        $event->setBacklogItemsCannotBeAdded();
-
-        $project_increment_creator_checker = $this->getProjectIncrementCreatorChecker();
-
-        if (! $event->canUserCreateMilestone()) {
-            return;
-        }
-
-        $planning_adapter = $this->getPlanningAdapter();
-        $scaled_planning  = $planning_adapter->buildFromPlanning($virtual_top_milestone->getPlanning());
-
-        $user_can_create_project_increment = $project_increment_creator_checker->canProgramIncrementBeCreated(
-            $scaled_planning,
-            $event->getUser()
-        );
-
-        if (! $user_can_create_project_increment) {
-            $event->setUserCannotCreateMilestone();
-        }
     }
 
     /**

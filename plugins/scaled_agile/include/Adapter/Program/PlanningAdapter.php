@@ -55,21 +55,17 @@ final class PlanningAdapter implements BuildPlanning
             throw new TopPlanningNotFoundInProjectException($project_id);
         }
 
-        return $this->buildFromPlanning($root_planning);
-    }
 
-    public static function buildFromPlanning(\Planning $planning): Planning
-    {
-        if ($planning->getPlanningTracker() instanceof \NullTracker) {
-            throw new NoProgramIncrementException($planning->getId());
+        if ($root_planning->getPlanningTracker() instanceof \NullTracker) {
+            throw new NoProgramIncrementException($root_planning->getId());
         }
-        $project_data = ProjectAdapter::build($planning->getPlanningTracker()->getProject());
+        $project_data = ProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
 
         return new Planning(
-            new ScaledAgileTracker($planning->getPlanningTracker()),
-            $planning->getId(),
-            $planning->getName(),
-            $planning->getBacklogTrackersIds(),
+            new ScaledAgileTracker($root_planning->getPlanningTracker()),
+            $root_planning->getId(),
+            $root_planning->getName(),
+            $root_planning->getBacklogTrackersIds(),
             $project_data
         );
     }
