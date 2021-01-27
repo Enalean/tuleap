@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use SodiumException;
 use Tracker_Exception;
@@ -32,6 +31,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
@@ -46,6 +46,10 @@ class JiraRunner
      * @var QueueFactory
      */
     private $queue_factory;
+    /**
+     * @var WorkerAvailability
+     */
+    private $worker_availability;
     /**
      * @var LoggerInterface
      */
@@ -70,11 +74,11 @@ class JiraRunner
      * @var KeyFactory
      */
     private $key_factory;
+
     /**
      * @var UserManager
      */
     private $user_manager;
-
     /**
      * @var JiraUserOnTuleapCache
      */
@@ -83,6 +87,7 @@ class JiraRunner
     public function __construct(
         LoggerInterface $logger,
         QueueFactory $queue_factory,
+        WorkerAvailability $worker_availability,
         KeyFactory $key_factory,
         FromJiraTrackerCreator $tracker_creator,
         PendingJiraImportDao $dao,
@@ -93,6 +98,7 @@ class JiraRunner
     ) {
         $this->logger                    = $logger;
         $this->queue_factory             = $queue_factory;
+        $this->worker_availability       = $worker_availability;
         $this->key_factory               = $key_factory;
         $this->tracker_creator           = $tracker_creator;
         $this->dao                       = $dao;
@@ -104,7 +110,7 @@ class JiraRunner
 
     public function canBeProcessedAsynchronously(): bool
     {
-        if (ForgeConfig::getInt('sys_nb_backend_workers') <= 0) {
+        if (! $this->worker_availability->canProcessAsyncTasks()) {
             return false;
         }
 

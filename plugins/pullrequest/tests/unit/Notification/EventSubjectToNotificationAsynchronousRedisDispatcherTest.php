@@ -24,19 +24,22 @@ namespace Tuleap\PullRequest\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerAvailability;
 
 final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|QueueFactory
      */
     private $queue_factory;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|WorkerAvailability
+     */
+    private $worker_availability;
     /**
      * @var EventSubjectToNotificationAsynchronousRedisDispatcher
      */
@@ -44,9 +47,10 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends Te
 
     protected function setUp(): void
     {
-        $this->queue_factory = \Mockery::mock(QueueFactory::class);
+        $this->queue_factory       = \Mockery::mock(QueueFactory::class);
+        $this->worker_availability = \Mockery::mock(WorkerAvailability::class);
 
-        $this->dispatcher = new EventSubjectToNotificationAsynchronousRedisDispatcher($this->queue_factory);
+        $this->dispatcher = new EventSubjectToNotificationAsynchronousRedisDispatcher($this->queue_factory, $this->worker_availability);
     }
 
     public function testEventGetsDispatchedIntoAPersistentQueue(): void
@@ -64,7 +68,7 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends Te
             }
         };
 
-        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
 
         $queue = \Mockery::mock(PersistentQueue::class);
         $this->queue_factory->shouldReceive('getPersistentQueue')->andReturn($queue);
@@ -89,7 +93,7 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends Te
             }
         };
 
-        \ForgeConfig::set('sys_nb_backend_workers', 0);
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
 
         $this->queue_factory->shouldNotReceive('getPersistentQueue');
 

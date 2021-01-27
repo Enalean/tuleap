@@ -214,6 +214,7 @@ $CLI_command_collector->addCommand(
         return new WorkerSupervisorCommand(
             new ProcessFactory(),
             new LockFactory(new SemaphoreStore()),
+            new \Tuleap\Queue\WorkerAvailability()
         );
     }
 );
@@ -223,6 +224,7 @@ $CLI_command_collector->addCommand(
     static function (): WorkerSystemCtlCommand {
         return new WorkerSystemCtlCommand(
             new ProcessFactory(),
+            new \Tuleap\Queue\WorkerAvailability()
         );
     }
 );

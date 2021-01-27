@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\Command;
 
-use ForgeConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\Queue\WorkerAvailability;
 use TuleapCfg\Command\ProcessFactory;
 
 class WorkerSystemCtlCommand extends Command
@@ -37,11 +37,16 @@ class WorkerSystemCtlCommand extends Command
      * @var ProcessFactory
      */
     private $process_factory;
+    /**
+     * @var WorkerAvailability
+     */
+    private $worker_availability;
 
-    public function __construct(ProcessFactory $process_factory)
+    public function __construct(ProcessFactory $process_factory, WorkerAvailability $worker_availability)
     {
         parent::__construct(self::NAME);
-        $this->process_factory = $process_factory;
+        $this->process_factory     = $process_factory;
+        $this->worker_availability = $worker_availability;
     }
 
     protected function configure()
@@ -57,7 +62,7 @@ class WorkerSystemCtlCommand extends Command
     {
         switch ($input->getArgument('action')) {
             case 'start':
-                return $this->start($output);
+                return $this->start();
 
             case 'stop':
                 return $this->stop($output);
@@ -68,9 +73,9 @@ class WorkerSystemCtlCommand extends Command
         }
     }
 
-    private function start(OutputInterface $output): int
+    private function start(): int
     {
-        for ($i = 0; $i < $this->getBackendWorkerCount(); $i++) {
+        for ($i = 0; $i < $this->worker_availability->getWorkerCount(); $i++) {
             $this->process_factory->getProcess(['/usr/bin/systemctl', 'start', sprintf('tuleap-worker@%d.service', $i)])->mustRun();
         }
         return 0;
@@ -81,17 +86,6 @@ class WorkerSystemCtlCommand extends Command
         foreach ($this->getTuleapWorkers() as $worker_name) {
             $output->writeln("<info>Stopping $worker_name</info>");
             $this->process_factory->getProcess(['/usr/bin/systemctl', 'stop', $worker_name])->mustRun();
-        }
-        return 0;
-    }
-
-    private function getBackendWorkerCount()
-    {
-        if (ForgeConfig::get('sys_nb_backend_workers') !== false) {
-            return abs((int) ForgeConfig::get('sys_nb_backend_workers'));
-        }
-        if (ForgeConfig::get('sys_async_emails') !== false) {
-            return 1;
         }
         return 0;
     }

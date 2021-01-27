@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,19 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerAvailability;
 
-class ActionsRunnerTest extends TestCase
+final class ActionsRunnerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var MockInterface
@@ -41,17 +42,16 @@ class ActionsRunnerTest extends TestCase
      * @var MockInterface
      */
     private $dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|MockInterface|WorkerAvailability
+     */
+    private $worker_availability;
 
     protected function setUp(): void
     {
-        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->dao    = \Mockery::mock(ActionsRunnerDao::class);
-        \ForgeConfig::store();
-    }
-
-    protected function tearDown(): void
-    {
-        \ForgeConfig::restore();
+        $this->logger              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->dao                 = \Mockery::mock(ActionsRunnerDao::class);
+        $this->worker_availability = \Mockery::mock(WorkerAvailability::class);
     }
 
     public function testAllPostCreationTasksAreExecuted(): void
@@ -59,7 +59,9 @@ class ActionsRunnerTest extends TestCase
         $task_1 = \Mockery::mock(PostCreationTask::class);
         $task_2 = \Mockery::mock(PostCreationTask::class);
 
-        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $task_1, $task_2);
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $this->worker_availability, $task_1, $task_2);
+
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
@@ -78,7 +80,7 @@ class ActionsRunnerTest extends TestCase
         $queue->shouldReceive('pushSinglePersistentMessage')->once();
         $queue_factory->shouldReceive('getPersistentQueue')->andReturn($queue);
 
-        $actions_runner = new ActionsRunner($this->logger, $this->dao, $queue_factory, $task);
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, $queue_factory, $this->worker_availability, $task);
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getId');
@@ -86,7 +88,7 @@ class ActionsRunnerTest extends TestCase
         $artifact->shouldReceive('getId')->andReturn(753);
         $changeset->shouldReceive('getArtifact')->andReturn($artifact);
 
-        \ForgeConfig::set('sys_async_emails', 'all');
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
 
         $this->dao->shouldReceive('addNewPostCreationEvent')->once();
         $this->dao->shouldNotReceive('addEndDate');
@@ -99,12 +101,12 @@ class ActionsRunnerTest extends TestCase
     {
         $task = \Mockery::mock(PostCreationTask::class);
 
-        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $task);
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $this->worker_availability, $task);
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getId');
 
-        \ForgeConfig::set('sys_async_emails', 'all');
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
 
         $this->dao->shouldReceive('addNewPostCreationEvent')->once();
         $this->dao->shouldReceive('addEndDate')->once();
@@ -121,7 +123,9 @@ class ActionsRunnerTest extends TestCase
         $task_2 = \Mockery::mock(PostCreationTask::class);
         $task_3 = \Mockery::mock(PostCreationTask::class);
 
-        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $task_1, $task_2, $task_3);
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $this->worker_availability, $task_1, $task_2, $task_3);
+
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 

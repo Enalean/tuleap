@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,8 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Queue\WorkerAvailability;
 use WrapperLogger;
-use ForgeConfig;
 
 class AsynchronousSupervisor
 {
@@ -39,22 +39,27 @@ class AsynchronousSupervisor
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var WorkerAvailability
+     */
+    private $worker_availability;
 
-    public function __construct(LoggerInterface $logger, ActionsRunnerDao $dao)
+    public function __construct(LoggerInterface $logger, ActionsRunnerDao $dao, WorkerAvailability $worker_availability)
     {
-        $this->logger = new WrapperLogger($logger, self::class);
-        $this->dao    = $dao;
+        $this->logger              = new WrapperLogger($logger, self::class);
+        $this->dao                 = $dao;
+        $this->worker_availability = $worker_availability;
     }
 
-    public function runSystemCheck()
+    public function runSystemCheck(): void
     {
-        if (ForgeConfig::get('sys_async_emails') !== false) {
+        if ($this->worker_availability->canProcessAsyncTasks()) {
             $this->warnWhenToMuchDelay();
             $this->purgeOldLogs();
         }
     }
 
-    private function warnWhenToMuchDelay()
+    private function warnWhenToMuchDelay(): void
     {
         $last_end_date     = $this->dao->getLastEndDate();
         $nb_pending_events = $this->dao->searchPostCreationEventsAfter($last_end_date + self::ACCEPTABLE_PROCESS_DELAY);
@@ -63,7 +68,7 @@ class AsynchronousSupervisor
         }
     }
 
-    private function purgeOldLogs()
+    private function purgeOldLogs(): void
     {
         $this->dao->deleteLogsOlderThan(self::ONE_WEEK_IN_SECONDS);
     }

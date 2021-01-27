@@ -35,6 +35,7 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 use Symfony\Component\Process\Process;
 use Tuleap\Queue\Worker;
+use Tuleap\Queue\WorkerAvailability;
 use TuleapCfg\Command\ProcessFactory;
 
 class WorkerSupervisorCommand extends Command
@@ -61,12 +62,20 @@ class WorkerSupervisorCommand extends Command
      * @var LockInterface
      */
     private $lock;
+    /**
+     * @var WorkerAvailability
+     */
+    private $worker_availability;
 
-    public function __construct(ProcessFactory $process_factory, LockFactory $lock_factory)
-    {
+    public function __construct(
+        ProcessFactory $process_factory,
+        LockFactory $lock_factory,
+        WorkerAvailability $worker_availability
+    ) {
         parent::__construct(self::NAME);
-        $this->process_factory = $process_factory;
-        $this->lock_factory    = $lock_factory;
+        $this->process_factory     = $process_factory;
+        $this->lock_factory        = $lock_factory;
+        $this->worker_availability = $worker_availability;
     }
 
     protected function configure()
@@ -112,7 +121,7 @@ class WorkerSupervisorCommand extends Command
 
         file_put_contents(self::PID_FILE_PATH, getmypid());
 
-        $worker_count = $this->getBackendWorkerCount();
+        $worker_count = $this->worker_availability->getWorkerCount();
         if ($worker_count < 1) {
             $output->writeln('<info>Platform is not configured to use workers</info>');
             return 0;
@@ -202,7 +211,7 @@ class WorkerSupervisorCommand extends Command
 
     private function status(OutputInterface $output): int
     {
-        $worker_count = $this->getBackendWorkerCount();
+        $worker_count = $this->worker_availability->getWorkerCount();
         for ($i = 0; $i < $worker_count; $i++) {
             if (! Worker::isWorkerRunning($i)) {
                 $output->writeln(sprintf('<error>Worker %d (pid %d) is not running, try to restart</error>', $i, Worker::getWorkerPid($i)));
@@ -234,17 +243,6 @@ class WorkerSupervisorCommand extends Command
         }
 
         $output->writeln('<info>Supervisor stopped</info>');
-        return 0;
-    }
-
-    private function getBackendWorkerCount(): int
-    {
-        if (ForgeConfig::get('sys_nb_backend_workers') !== false) {
-            return abs((int) ForgeConfig::get('sys_nb_backend_workers'));
-        }
-        if (ForgeConfig::get('sys_async_emails') !== false) {
-            return 1;
-        }
         return 0;
     }
 }

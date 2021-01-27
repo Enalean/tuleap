@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use ConfigNotificationAssignedTo;
 use ConfigNotificationAssignedToDao;
 use Exception;
-use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
@@ -36,6 +35,7 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
@@ -71,6 +71,10 @@ class ActionsRunner
      */
     private $queue_factory;
     /**
+     * @var WorkerAvailability
+     */
+    private $worker_availability;
+    /**
      * @var PostCreationTask[]
      */
     private $post_creation_tasks;
@@ -79,11 +83,13 @@ class ActionsRunner
         LoggerInterface $logger,
         ActionsRunnerDao $actions_runner_dao,
         QueueFactory $queue_factory,
+        WorkerAvailability $worker_availability,
         PostCreationTask ...$post_creation_tasks
     ) {
         $this->logger              = new WrapperLogger($logger, self::class);
         $this->actions_runner_dao  = $actions_runner_dao;
         $this->queue_factory       = $queue_factory;
+        $this->worker_availability = $worker_availability;
         $this->post_creation_tasks = $post_creation_tasks;
     }
 
@@ -97,6 +103,7 @@ class ActionsRunner
             $logger,
             new ActionsRunnerDao(),
             new QueueFactory($logger),
+            new WorkerAvailability(),
             new ClearArtifactChangesetCacheTask(),
             new EmailNotificationTask(
                 new MailLogger(),
@@ -149,7 +156,7 @@ class ActionsRunner
      */
     public function executePostCreationActions(Tracker_Artifact_Changeset $changeset)
     {
-        if ($this->useAsyncNotifications($changeset)) {
+        if ($this->worker_availability->canProcessAsyncTasks()) {
             $this->queuePostCreationEvent($changeset);
         } else {
             $this->processPostCreationActions($changeset);
@@ -167,28 +174,6 @@ class ActionsRunner
         $this->actions_runner_dao->addEndDate($changeset->getId());
     }
 
-    private function useAsyncNotifications(Tracker_Artifact_Changeset $changeset)
-    {
-        $async_emails = ForgeConfig::get('sys_async_emails');
-        switch ($async_emails) {
-            case 'all':
-                return true;
-            case false:
-                return false;
-            default:
-                $project_ids = array_map(
-                    function ($val) {
-                        return (int) trim($val);
-                    },
-                    explode(',', $async_emails)
-                );
-                if (in_array($changeset->getTracker()->getProject()->getID(), $project_ids)) {
-                    return true;
-                }
-        }
-        return false;
-    }
-
     private function queuePostCreationEvent(Tracker_Artifact_Changeset $changeset)
     {
         try {
@@ -202,7 +187,7 @@ class ActionsRunner
                 ]
             );
         } catch (Exception $exception) {
-            $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif");
+            $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif", ['exception' => $exception]);
             $this->processPostCreationActions($changeset);
             $this->actions_runner_dao->addEndDate($changeset->getId());
         }

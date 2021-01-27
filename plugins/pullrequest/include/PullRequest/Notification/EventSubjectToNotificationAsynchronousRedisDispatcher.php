@@ -26,6 +26,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
+use Tuleap\Queue\WorkerAvailability;
 
 final class EventSubjectToNotificationAsynchronousRedisDispatcher implements EventDispatcherInterface
 {
@@ -35,10 +36,15 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcher implements Eve
      * @var QueueFactory
      */
     private $queue_factory;
+    /**
+     * @var WorkerAvailability
+     */
+    private $worker_availability;
 
-    public function __construct(QueueFactory $queue_factory)
+    public function __construct(QueueFactory $queue_factory, WorkerAvailability $worker_availability)
     {
-        $this->queue_factory = $queue_factory;
+        $this->queue_factory       = $queue_factory;
+        $this->worker_availability = $worker_availability;
     }
 
     /**
@@ -50,7 +56,7 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcher implements Eve
             return $event;
         }
 
-        if (\ForgeConfig::getInt('sys_nb_backend_workers') <= 0) {
+        if (! $this->worker_availability->canProcessAsyncTasks()) {
             throw new NoWorkerAvailableToProcessTheQueueException();
         }
 
