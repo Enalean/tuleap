@@ -47,12 +47,6 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         SharedPropertiesService.setAllowedAdditionalPanesToDisplay(
             JSON.parse(planning_init_data.allowedAdditionalPanesToDisplay)
         );
-        SharedPropertiesService.setCreateMilestoneAllowed(
-            JSON.parse(planning_init_data.createMilestoneAllowed)
-        );
-        SharedPropertiesService.setAddItemInBacklogAllowed(
-            JSON.parse(planning_init_data.backlogAddItemAllowed)
-        );
 
         const is_list_picker_enabled = Boolean(JSON.parse(planning_init_data.isListPickerEnabled));
         SharedPropertiesService.setEnableListPicker(is_list_picker_enabled);

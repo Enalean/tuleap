@@ -30,7 +30,6 @@ use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
-use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
@@ -150,11 +149,6 @@ class HeaderOptionsProvider
         array &$header_options,
         string $pane_identifier
     ): void {
-        $event = $this->event_dispatcher->dispatch(new DisplayTopPlanningAppEvent($milestone, $user));
-        assert($event instanceof DisplayTopPlanningAppEvent);
-        if (! $event->canBacklogItemsBeAdded()) {
-            return;
-        }
         $this->createCurrentContextSectionFromTrackers(
             $milestone,
             $milestone->getPlanning()->getBacklogTrackers(),

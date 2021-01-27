@@ -570,7 +570,6 @@ function BacklogController(
 
     function soloButtonCanBeDisplayed() {
         return (
-            SharedPropertiesService.getAddItemInBacklogAllowed() &&
             self.canUserMoveCards() &&
             "content" in self.details.accepted_types &&
             self.details.accepted_types.content.length === 1 &&
@@ -581,7 +580,6 @@ function BacklogController(
 
     function addItemButtonCanBeDisplayed() {
         return (
-            SharedPropertiesService.getAddItemInBacklogAllowed() &&
             "content" in self.details.accepted_types &&
             "parent_trackers" in self.details.accepted_types &&
             (self.details.accepted_types.content.length > 1 ||

@@ -24,7 +24,6 @@ use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
-use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 
 /**
  * I build panes for a Planning_Milestone
@@ -133,13 +132,6 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
         $project = $this->request->getProject();
         $user    = $this->request->getCurrentUser();
 
-        assert($milestone instanceof Planning_VirtualTopMilestone);
-        $display_pv2_event = new DisplayTopPlanningAppEvent(
-            $milestone,
-            $user
-        );
-        $this->event_manager->processEvent($display_pv2_event);
-
         $configuration_check = new ConfigurationCheckDelegation($user, $project);
         $this->event_manager->processEvent($configuration_check);
 
@@ -151,8 +143,6 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
                 $milestone_artifact_id,
                 $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()),
                 $allowed_additional_panes_to_display_collector->getIdentifiers(),
-                $display_pv2_event->canUserCreateMilestone(),
-                $display_pv2_event->canBacklogItemsBeAdded(),
                 $configuration_check->isPlanningAvailable()
             )
         );

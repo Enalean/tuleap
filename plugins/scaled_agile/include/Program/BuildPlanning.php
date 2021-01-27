@@ -31,6 +31,4 @@ interface BuildPlanning
      * @throws TopPlanningNotFoundInProjectException
      */
     public function buildRootPlanning(\PFUser $user, int $project_id): Planning;
-
-    public static function buildFromPlanning(\Planning $planning): Planning;
 }
