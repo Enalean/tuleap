@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
+
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand;
 use Tuleap\Tracker\Artifact\Artifact;
 
-/**
- * Execute the various command during a postSaveNewChangeset
- */
-
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
+class PostSaveNewChangesetLinkParentArtifact implements
+    Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
 {
+    /**
+     * @var ParentLinkAction
+     */
+    private $parent_link_action;
 
-    /** @var Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand[] */
-    private $queue = [];
-
-    public function add(Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand $command)
+    public function __construct(ParentLinkAction $parent_link_action)
     {
-        $this->queue[] = $command;
+        $this->parent_link_action = $parent_link_action;
     }
 
     public function execute(
@@ -42,9 +44,11 @@ class Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
         Tracker_Artifact_Changeset $new_changeset,
         array $fields_data,
         ?Tracker_Artifact_Changeset $previous_changeset = null
-    ) {
-        foreach ($this->queue as $command) {
-            $command->execute($artifact, $submitter, $new_changeset, $fields_data, $previous_changeset);
-        }
+    ): void {
+        $this->parent_link_action->linkParent(
+            $artifact,
+            $submitter,
+            $fields_data
+        );
     }
 }

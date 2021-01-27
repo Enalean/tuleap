@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tracker_Artifact_Changeset;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class PostSaveNewChangesetTest extends TestCase
 {
@@ -32,16 +36,29 @@ final class PostSaveNewChangesetTest extends TestCase
 
     public function testExecutesProcessChildrenTriggersCommand(): void
     {
-        $artifact           = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $user               = \Mockery::mock(\PFUser::class);
-        $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $artifact           = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user               = Mockery::mock(\PFUser::class);
+        $new_changeset      = Mockery::spy(\Tracker_Artifact_Changeset::class);
         $previous_changeset = null;
-        $command            = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class);
-        $field              = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $command            = Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class);
+        $field              = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getProcessChildrenTriggersCommand')->andReturn($command);
+        $field->shouldReceive('getPostSaveNewChangesetLinkParentArtifact')->andReturn(
+            new class (Mockery::mock(ParentLinkAction::class)) extends PostSaveNewChangesetLinkParentArtifact {
+                public function execute(
+                    Artifact $artifact,
+                    PFUser $submitter,
+                    Tracker_Artifact_Changeset $new_changeset,
+                    array $fields_data,
+                    ?Tracker_Artifact_Changeset $previous_changeset = null
+                ): void {
+                    return;
+                }
+            }
+        );
 
-        $command->shouldReceive('execute')->with($artifact, $user, $new_changeset, $previous_changeset)->once();
+        $command->shouldReceive('execute')->with($artifact, $user, $new_changeset, [], $previous_changeset)->once();
 
-        $field->postSaveNewChangeset($artifact, $user, $new_changeset, $previous_changeset);
+        $field->postSaveNewChangeset($artifact, $user, $new_changeset, [], $previous_changeset);
     }
 }

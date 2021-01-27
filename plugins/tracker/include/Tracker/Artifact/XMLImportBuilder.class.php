@@ -77,7 +77,10 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             ReferenceManager::instance(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
-            ArtifactChangesetSaver::build()
+            ArtifactChangesetSaver::build(),
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
+                $artifact_factory
+            )
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

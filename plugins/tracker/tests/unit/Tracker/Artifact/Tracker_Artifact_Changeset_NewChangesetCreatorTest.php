@@ -27,6 +27,7 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_AfterSaveException;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_NewChangesetCreator;
@@ -34,6 +35,7 @@ use Tracker_Artifact_Changeset_Null;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 
 final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -77,6 +79,11 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
      */
     private $creator;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ParentLinkAction
+     */
+    private $parent_link_action;
+
     protected function setUp(): void
     {
         $this->fields_data = [];
@@ -106,6 +113,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
         $comment_dao = Mockery::mock(\Tracker_Artifact_Changeset_CommentDao::class);
         $comment_dao->shouldReceive('createNewVersion')->andReturn(true);
 
+        $this->parent_link_action = Mockery::mock(ParentLinkAction::class);
+
         $field_initializator = Mockery::mock(Tracker_Artifact_Changeset_ChangesetDataInitializator::class);
         $field_initializator->shouldReceive('process')->andReturn([]);
         $field_retriever = Mockery::mock(FieldsToBeSavedInSpecificOrderRetriever::class);
@@ -121,7 +130,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             \Mockery::spy(\ReferenceManager::class),
             $field_initializator,
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-            $this->changeset_saver
+            $this->changeset_saver,
+            $this->parent_link_action
         );
     }
 
@@ -134,6 +144,36 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
 
         $this->creator->create(
             $this->artifact,
+            $this->fields_data,
+            '',
+            $this->submitter,
+            $this->submitted_on,
+            false,
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
+            new TrackerNoXMLImportLoggedConfig()
+        );
+    }
+
+    public function testItCallsTheParentLinkActionIfNoChangesDetected(): void
+    {
+        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('hasChanges')->andReturnFalse();
+
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $artifact->shouldReceive('getId')->andReturn(154);
+        $artifact->shouldReceive('getXRef')->andReturn('xRef');
+
+        $this->changeset_dao->shouldNotReceive('create');
+        $this->artifact_factory->shouldNotReceive('save');
+        $this->workflow->shouldNotReceive('after');
+        $this->changeset_saver->shouldNotReceive('saveChangeset');
+
+        $this->parent_link_action->shouldReceive('linkParent')->once()->andReturnTrue();
+
+        $this->creator->create(
+            $artifact,
             $this->fields_data,
             '',
             $this->submitter,

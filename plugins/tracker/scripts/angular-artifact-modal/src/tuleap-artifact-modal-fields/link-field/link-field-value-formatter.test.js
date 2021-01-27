@@ -53,11 +53,13 @@ describe(`link-field-value-formatter -`, () => {
                 permissions: ["read", "update", "create"],
                 links: [{ id: 18 }],
                 unformatted_links: "text,650, 673",
+                parent: { id: 19 },
             };
             const result = formatLinkFieldValue(field_value);
             expect(result).toEqual({
                 field_id: 162,
                 links: [{ id: 18 }, { id: 650 }, { id: 673 }],
+                parent: { id: 19 },
             });
         });
 

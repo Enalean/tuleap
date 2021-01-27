@@ -77,7 +77,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
             \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory::class
         );
         $this->nature_factory->shouldReceive('getFromShortname')->andReturns(
-            new NaturePresenter('', '', '', true, true)
+            new NaturePresenter('', '', '', true)
         );
 
         $this->field->shouldReceive('getTracker')->andReturn($tracker);
@@ -117,7 +117,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
 
         $this->trigger_rules_manager->shouldReceive('processChildrenTriggers')->with($this->artifact)->once();
 
-        $this->command->execute($this->artifact, $this->user, $new_changeset, $previous_changeset);
+        $this->command->execute($this->artifact, $this->user, $new_changeset, [], $previous_changeset);
     }
 
     public function testItCallsNothingWhenThereAreNotAnyChanges(): void
@@ -146,7 +146,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
 
         $this->trigger_rules_manager->shouldReceive('processChildrenTriggers')->with($this->artifact)->never();
 
-        $this->command->execute($this->artifact, $this->user, $new_changeset, $previous_changeset);
+        $this->command->execute($this->artifact, $this->user, $new_changeset, [], $previous_changeset);
     }
 
     public function testItDoesntFailWhenPreviousChangesetHasNoValue(): void
@@ -169,7 +169,7 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
 
         $this->trigger_rules_manager->shouldReceive('processChildrenTriggers')->with($this->artifact)->once();
 
-        $this->command->execute($this->artifact, $this->user, $new_changeset, $previous_changeset);
+        $this->command->execute($this->artifact, $this->user, $new_changeset, [], $previous_changeset);
     }
 
     public function testItCallsProcessChildrenTriggersWhenNoPreviousChangeset(): void
@@ -189,6 +189,6 @@ final class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersComman
 
         $this->trigger_rules_manager->shouldReceive('processChildrenTriggers')->with($this->artifact)->once();
 
-        $this->command->execute($this->artifact, $this->user, $new_changeset, $previous_changeset);
+        $this->command->execute($this->artifact, $this->user, $new_changeset, [], $previous_changeset);
     }
 }

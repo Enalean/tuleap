@@ -34,6 +34,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\RequestDataAugmentor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
@@ -45,6 +48,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public const NEW_VALUES_KEY          = 'new_values';
     public const NATURE_IS_CHILD         = '_is_child';
     public const NO_NATURE               = '';
+    public const FIELDS_DATA_PARENT_KEY  = 'parent';
 
     /**
      * Display some information at the top of the artifact link field value
@@ -232,14 +236,27 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
+        if (
+            ! array_key_exists('parent', $value) &&
+            (! array_key_exists('links', $value) || ! is_array($value['links']))
+        ) {
+            throw new Tracker_FormElement_InvalidFieldValueException(
+                'Value should be \'links\' and an array of {"id": integer, ["type": string]} and/or \'parent\' with {"id": integer}'
+            );
+        }
+
+        $fields_data = [];
         if (array_key_exists('links', $value) && is_array($value['links'])) {
             $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromArray($value['links']);
 
-            return $this->getDataLikeWebUI($submitted_ids, $value['links'], $artifact);
+            $fields_data = $this->getDataLikeWebUI($submitted_ids, $value['links'], $artifact);
         }
-        throw new Tracker_FormElement_InvalidFieldValueException(
-            'Value should be \'links\' and an array of {"id": integer, ["type": string]}'
-        );
+
+        if (array_key_exists('parent', $value) && isset($value[self::FIELDS_DATA_PARENT_KEY]['id'])) {
+            $fields_data[self::FIELDS_DATA_PARENT_KEY] = $value[self::FIELDS_DATA_PARENT_KEY]['id'];
+        }
+
+        return $fields_data;
     }
 
     public function getFieldDataFromRESTValueByField($value, ?Artifact $artifact = null)
@@ -272,8 +289,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return array
      */
-    private function getDataLikeWebUI(array $submitted_ids, array $submitted_values, ?Artifact $artifact = null)
-    {
+    private function getDataLikeWebUI(
+        array $submitted_ids,
+        array $submitted_values,
+        ?Artifact $artifact = null
+    ) {
         $existing_links = $this->getArtifactLinkIdsOfLastChangeset($artifact);
         $new_values     = array_diff($submitted_ids, $existing_links);
         $removed_values = array_diff($existing_links, $submitted_ids);
@@ -357,6 +377,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         }
         return '';
     }
+
+    /**
+     * @var string
+     */
     protected $pattern = '[+\-]*[0-9]+';
     protected function cast($value)
     {
@@ -1323,7 +1347,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * @return array
+     * @var array
      */
     protected $artifact_links_by_changeset = [];
 
@@ -1552,16 +1576,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
+        array $fields_data,
         ?Tracker_Artifact_Changeset $previous_changeset = null
-    ) {
+    ): void {
         $queue = $this->getPostNewChangesetQueue();
-        $queue->execute($artifact, $submitter, $new_changeset, $previous_changeset);
+        $queue->execute($artifact, $submitter, $new_changeset, $fields_data, $previous_changeset);
     }
 
-    private function getPostNewChangesetQueue()
+    private function getPostNewChangesetQueue(): Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
     {
         $queue = new Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue();
         $queue->add($this->getProcessChildrenTriggersCommand());
+        $queue->add($this->getPostSaveNewChangesetLinkParentArtifact());
 
         EventManager::instance()->processEvent(
             self::GET_POST_SAVE_NEW_CHANGESET_QUEUE,
@@ -1577,11 +1603,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * @protected for testing purpose
      */
-    protected function getProcessChildrenTriggersCommand()
+    protected function getProcessChildrenTriggersCommand(): Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand
     {
         return new Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand(
             $this,
             $this->getWorkflowFactory()->getTriggerRulesManager()
+        );
+    }
+
+    /**
+     * @protected for testing purpose
+     */
+    protected function getPostSaveNewChangesetLinkParentArtifact(): PostSaveNewChangesetLinkParentArtifact
+    {
+        return new PostSaveNewChangesetLinkParentArtifact(
+            new ParentLinkAction(
+                $this->getArtifactFactory(),
+            )
         );
     }
 
@@ -1741,61 +1779,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * If request come with a 'parent', it should be automagically transformed as
-     * 'new_values'.
+     * If request come with a 'parent', it should be store in a cache
+     * that will be called after the artifact update to create the
+     * right _is_child link
+     *
      * Please note that it only work on artifact creation.
      *
-     * @param type $fields_data
+     * @param array $fields_data
      */
     public function augmentDataFromRequest(&$fields_data)
     {
-        $new_values = [];
-
-        if ($this->getTracker()->isProjectAllowedToUseNature()) {
-            $this->addNewValuesInNaturesArray($fields_data);
-        }
-
-        if (! empty($fields_data[$this->getId()]['parent'])) {
-            $parent = intval($fields_data[$this->getId()]['parent']);
-            if ($parent > 0) {
-                if (isset($fields_data[$this->getId()]['new_values'])) {
-                    $new_values = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
-                }
-                $new_values[]                              = $parent;
-                $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
-            }
-        }
-
-        EventManager::instance()->processEvent(
-            self::AFTER_AUGMENT_DATA_FROM_REQUEST,
-            [
-                'fields_data' => &$fields_data,
-                'field'       => $this
-            ]
+        $request_data_augmentor = new RequestDataAugmentor(
+            $this->getArtifactFactory(),
+            EventManager::instance()
         );
-    }
 
-    private function addNewValuesInNaturesArray(&$fields_data)
-    {
-        if (! isset($fields_data[$this->getId()]['new_values'])) {
-            return;
-        }
-
-        $new_values = $fields_data[$this->getId()]['new_values'];
-
-        if (! isset($fields_data[$this->getId()]['nature'])) {
-            $fields_data[$this->getId()]['nature'] = self::NO_NATURE;
-        }
-
-        if (trim($new_values) != '') {
-            $art_id_array = explode(',', $new_values);
-            foreach ($art_id_array as $artifact_id) {
-                $artifact_id = trim($artifact_id);
-                if (! isset($fields_data[$this->getId()]['natures'][$artifact_id])) {
-                    $fields_data[$this->getId()]['natures'][$artifact_id] = $fields_data[$this->getId()]['nature'];
-                }
-            }
-        }
+        $request_data_augmentor->augmentDataFromRequest(
+            $this,
+            $fields_data
+        );
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor)

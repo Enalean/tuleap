@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-/**
- * Execute something during a postSaveNewChangeset
- */
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-interface Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
+class LinkToParentWithoutCurrentArtifactChangeException extends \Tracker_Exception
 {
-    /**
-     * Do the real stuff
-     */
-    public function execute(
-        Artifact $artifact,
-        PFUser $submitter,
-        Tracker_Artifact_Changeset $new_changeset,
-        array $fields_data,
-        ?Tracker_Artifact_Changeset $previous_changeset = null
-    );
 }

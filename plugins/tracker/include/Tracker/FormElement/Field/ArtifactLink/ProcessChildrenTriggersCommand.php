@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ use Tuleap\Tracker\Artifact\Artifact;
  * Update the link direction in order to ensure that it is correct resp. the
  * association definition.
  */
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand implements
     Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
 {
@@ -49,6 +51,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
         Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
+        array $fields_data,
         ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         if ($this->hasChanges($new_changeset, $previous_changeset)) {

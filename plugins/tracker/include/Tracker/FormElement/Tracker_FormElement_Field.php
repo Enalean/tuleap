@@ -36,6 +36,8 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
  * The base class for fields in trackers. From int and string to selectboxes.
  * Composite fields are excluded.
  */
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor
 {
 
@@ -1530,6 +1532,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
+        array $fields_data,
         ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
     }

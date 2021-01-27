@@ -3178,7 +3178,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             ReferenceManager::instance(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
             new DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
-            ArtifactChangesetSaver::build()
+            ArtifactChangesetSaver::build(),
+            new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
+                $this->getTrackerArtifactFactory()
+            )
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
