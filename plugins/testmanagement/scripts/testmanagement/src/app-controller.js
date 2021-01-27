@@ -1,4 +1,5 @@
 import { moveBreadCrumbs } from "./move-breadcrumb.js";
+import { setupTestManagementShortcuts } from "./keyboard-navigation/setup-shortcuts";
 
 export default TestManagementCtrl;
 
@@ -56,5 +57,7 @@ function TestManagementCtrl(
         gettextCatalog.setCurrentLanguage(language);
 
         moveBreadCrumbs(project_public_name, project_url, ttm_admin_url, ttm_admin_label);
+
+        setupTestManagementShortcuts(gettextCatalog);
     };
 }

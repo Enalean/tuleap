@@ -31,6 +31,7 @@ ExecutionListCtrl.$inject = [
     "$state",
     "$filter",
     "$element",
+    "$timeout",
     "gettextCatalog",
     "ExecutionService",
     "CampaignService",
@@ -44,6 +45,7 @@ function ExecutionListCtrl(
     $state,
     $filter,
     $element,
+    $timeout,
     gettextCatalog,
     ExecutionService,
     CampaignService,
@@ -206,6 +208,11 @@ function ExecutionListCtrl(
                 ExecutionService.removeAllViewTestExecution();
                 if ($scope.execution_id) {
                     updateViewTestExecution($scope.execution_id, "").then(scrollToCurrentTest);
+                } else {
+                    $timeout(function () {
+                        const first_test_tab = document.querySelector("[data-shortcut-navigation]");
+                        first_test_tab.setAttribute("tabindex", "0");
+                    }, 0);
                 }
 
                 ExecutionService.executions_loaded = true;

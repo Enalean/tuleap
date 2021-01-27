@@ -196,6 +196,13 @@ msgstr "Charger les campagnes fermées"
 msgid "Milestone tests"
 msgstr "Tests du jalon"
 
+msgid "Navigation in Test Management"
+msgstr "Navigation dans Test Management"
+
+msgid ""
+"Navigation shortcuts are available when a test is selected in tests list"
+msgstr "Les raccourcis de navigation sont disponibles lorsqu'un test est sélectionné dans la liste"
+
 msgid "New campaign"
 msgstr "Nouvelle campagne"
 
@@ -225,6 +232,18 @@ msgstr "Recharger le test"
 
 msgid "Save changes"
 msgstr "Enregistrer les changements"
+
+msgid "Select first test tab from test list"
+msgstr "Sélectionne le premier onglet de test de la liste"
+
+msgid "Select last test tab from test list"
+msgstr "Sélectionne le dernier onglet de test de la liste"
+
+msgid "Select next test tab from test list"
+msgstr "Sélectionne l'onglet de test suivant dans la liste"
+
+msgid "Select previous test tab from test list"
+msgstr "Sélectionne l'onglet de test précédent dans la liste"
 
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
