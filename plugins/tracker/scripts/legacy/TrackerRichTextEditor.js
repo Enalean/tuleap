@@ -30,17 +30,6 @@ document.observe("dom:loaded", function () {
         html_by_default = true;
     }
 
-    var newFollowup = $("tracker_followup_comment_new");
-    if (newFollowup) {
-        new tuleap.textarea.RTE(newFollowup, {
-            toggle: true,
-            default_in_html: false,
-            id: "new",
-            full_width: true,
-            htmlFormat: html_by_default,
-        });
-    }
-
     var massChangeFollowup = $("artifact_masschange_followup_comment");
     if (massChangeFollowup) {
         new tuleap.textarea.RTE(massChangeFollowup, {

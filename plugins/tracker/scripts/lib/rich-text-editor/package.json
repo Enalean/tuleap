@@ -1,0 +1,29 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-rich-text-editor",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/rich-text-editor.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
+    "marked": "^1.2.5",
+    "turndown": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/ckeditor": "^4.9.10",
+    "@types/marked": "^1.2.1",
+    "@types/turndown": "^5.0.0"
+  },
+  "config": {
+    "bin": "../../../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+  }
+}

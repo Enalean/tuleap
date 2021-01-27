@@ -150,8 +150,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             '/assets/trackers'
         );
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('text-follow-up.js'));
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tracker-email-copy-paste-fp.js'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
         ListPickerIncluder::includeListPickerAssets($request, $this->tracker->getId());
 
