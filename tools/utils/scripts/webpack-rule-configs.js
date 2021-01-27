@@ -246,6 +246,20 @@ const rule_css_assets = {
     ],
 };
 
+//Workaround to fix the image display in vue, see: https://github.com/vuejs/vue-loader/issues/1612
+const rule_vue_images = {
+    test: /(\.(webp|png|gif|svg))$/,
+    use: [
+        {
+            loader: "file-loader",
+            options: {
+                esModule: false,
+                name: "css-assets/[name]-[sha256:hash:hex:16].[ext]",
+            },
+        },
+    ],
+};
+
 module.exports = {
     configureBabelRule,
     configureTypescriptRules,
@@ -264,4 +278,5 @@ module.exports = {
     rule_scss_loader,
     rule_css_assets,
     rule_file_loader_images,
+    rule_vue_images,
 };

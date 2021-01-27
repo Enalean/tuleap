@@ -23,16 +23,19 @@
             {{ label }}
             <i v-if="required" class="fa fa-asterisk artifact-modal-text-asterisk"></i>
         </label>
-        <select
-            v-model="format"
-            v-bind:disabled="disabled"
-            class="tlp-select tlp-select-small tlp-select-adjusted"
-            data-test="format"
-        >
-            <option v-bind:value="text_format">Text</option>
-            <option v-bind:value="html_format">HTML</option>
-            <option v-bind:value="commonmark_format">Markdown</option>
-        </select>
+        <div class="artifact-modal-text-label-with-format-and-helper-container">
+            <select
+                v-model="format"
+                v-bind:disabled="disabled"
+                class="tlp-select tlp-select-small tlp-select-adjusted"
+                data-test="format"
+            >
+                <option v-bind:value="text_format">Text</option>
+                <option v-bind:value="html_format">HTML</option>
+                <option v-bind:value="commonmark_format">Markdown</option>
+            </select>
+            <commonmark-syntax-helper v-if="is_commonmark_format" />
+        </div>
     </div>
 </template>
 <script>
@@ -41,9 +44,11 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "../../../constants/fields-constants.js";
+import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
 
 export default {
     name: "FormatSelector",
+    components: { CommonmarkSyntaxHelper },
     props: {
         id: String,
         label: String,
@@ -64,6 +69,9 @@ export default {
             set(new_format) {
                 this.$emit("input", new_format);
             },
+        },
+        is_commonmark_format() {
+            return this.value === TEXT_FORMAT_COMMONMARK;
         },
         text_format() {
             return TEXT_FORMAT_TEXT;

@@ -149,6 +149,29 @@ fieldset {
     margin: 0 0 5px;
 }
 
+.artifact-modal-text-label-with-format-and-helper-container {
+    display: flex;
+    align-items: center;
+}
+
+.artifact-modal-helper-popover-button {
+    margin: 0 0 0 5px;
+}
+
+.popover-code-block-indentation {
+    white-space: pre-line;
+}
+
+.popover-h1-indentation,
+.popover-h2-indentation,
+.popover-blockquote-indentation {
+    display: inline;
+}
+
+.popover-image-indentation {
+    display: block;
+}
+
 .artifact-modal-text-label {
     margin: 0 5px 0 0;
 
