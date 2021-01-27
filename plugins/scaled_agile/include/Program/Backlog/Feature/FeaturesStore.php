@@ -26,5 +26,8 @@ use Tuleap\ScaledAgile\Program\Program;
 
 interface FeaturesStore
 {
+    /**
+     * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
+     */
     public function searchPlannableFeatures(Program $program): array;
 }
