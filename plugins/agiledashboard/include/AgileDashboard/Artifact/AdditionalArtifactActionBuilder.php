@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard\Artifact;
 use PFUser;
 use PlanningFactory;
 use PlanningPermissionsManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
@@ -67,6 +68,10 @@ class AdditionalArtifactActionBuilder
      * @var PlanningTrackerBacklogChecker
      */
     private $planning_tracker_backlog_checker;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
@@ -75,7 +80,8 @@ class AdditionalArtifactActionBuilder
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlannedArtifactDao $planned_artifact_dao,
         JavascriptAsset $include_assets,
-        PlanningTrackerBacklogChecker $planning_tracker_backlog_checker
+        PlanningTrackerBacklogChecker $planning_tracker_backlog_checker,
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->planning_factory                  = $planning_factory;
@@ -84,6 +90,7 @@ class AdditionalArtifactActionBuilder
         $this->planned_artifact_dao              = $planned_artifact_dao;
         $this->include_assets                    = $include_assets;
         $this->planning_tracker_backlog_checker  = $planning_tracker_backlog_checker;
+        $this->event_dispatcher                  = $event_dispatcher;
     }
 
     public function buildArtifactAction(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
@@ -95,6 +102,12 @@ class AdditionalArtifactActionBuilder
         $artifact_id = (int) $artifact->getId();
 
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
+            return null;
+        }
+
+        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($project);
+        $this->event_dispatcher->dispatch($block_scrum_access);
+        if (! $block_scrum_access->isScrumAccessEnabled()) {
             return null;
         }
 

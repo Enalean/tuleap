@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Artifact;
 
 use Mockery;
@@ -28,7 +30,9 @@ use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
+use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
@@ -90,6 +94,10 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningTrackerBacklogChecker
      */
     private $planning_tracker_backlog_checker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     protected function setUp(): void
     {
@@ -101,6 +109,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
         $this->artifacts_explicit_backlog_dao   = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->planned_artifact_dao             = Mockery::mock(PlannedArtifactDao::class);
         $this->planning_tracker_backlog_checker = Mockery::mock(PlanningTrackerBacklogChecker::class);
+        $this->event_dispatcher                 = Mockery::mock(EventDispatcherInterface::class);
 
         $this->builder = new AdditionalArtifactActionBuilder(
             $this->explicit_backlog_dao,
@@ -109,7 +118,8 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             $this->artifacts_explicit_backlog_dao,
             $this->planned_artifact_dao,
             new JavascriptAsset(Mockery::mock(IncludeAssets::class)->shouldReceive('getFileURL')->getMock(), 'mock.js'),
-            $this->planning_tracker_backlog_checker
+            $this->planning_tracker_backlog_checker,
+            $this->event_dispatcher
         );
 
         $project = Mockery::mock(Project::class);
@@ -146,6 +156,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->once()
             ->with(101)
             ->andReturnTrue();
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
@@ -155,12 +166,29 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
         $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
+    public function testItReturnsNullScrumAccessIsBlockedForThisProject(): void
+    {
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->once()
+            ->with(101)
+            ->andReturnTrue();
+        $this->event_dispatcher->shouldReceive('dispatch')->andReturnUsing(function (object $event) {
+            if ($event instanceof BlockScrumAccess) {
+                $event->disableScrumAccess();
+            }
+            return $event;
+        });
+
+        self::assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
+    }
+
     public function testItReturnsNullIfArtifactNotInBacklogTrackerOfRootPlanning(): void
     {
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
             ->with(101)
             ->andReturnTrue();
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
@@ -180,6 +208,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->once()
             ->with(101)
             ->andReturnTrue();
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
@@ -204,6 +233,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->once()
             ->with(101)
             ->andReturnTrue();
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
@@ -233,6 +263,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             ->once()
             ->with(101)
             ->andReturnTrue();
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()

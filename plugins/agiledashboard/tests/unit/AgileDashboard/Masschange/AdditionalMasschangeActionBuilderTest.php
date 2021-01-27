@@ -29,8 +29,10 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tracker;
+use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 
 final class AdditionalMasschangeActionBuilderTest extends TestCase
@@ -58,6 +60,11 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
     private $template_renderer;
 
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
+     */
+    private $event_dispatcher;
+
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $tracker;
@@ -66,7 +73,6 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
     private $user;
-
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
      */
@@ -79,11 +85,13 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
         $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
         $this->planning_factory     = Mockery::mock(PlanningFactory::class);
         $this->template_renderer    = Mockery::mock(TemplateRenderer::class);
+        $this->event_dispatcher     = Mockery::mock(EventDispatcherInterface::class);
 
         $this->builder = new AdditionalMasschangeActionBuilder(
             $this->explicit_backlog_dao,
             $this->planning_factory,
-            $this->template_renderer
+            $this->template_renderer,
+            $this->event_dispatcher
         );
 
         $this->tracker = Mockery::mock(Tracker::class);
@@ -96,9 +104,11 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
         $this->root_planning = Mockery::mock(Planning::class);
     }
 
-    public function testItRendersTheMasschangeAdditionalAction()
+    public function testItRendersTheMasschangeAdditionalAction(): void
     {
         $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
+
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->with(101)
@@ -131,9 +141,11 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
         $this->assertNull($additional_action);
     }
 
-    public function testItReturnsNullIfProjectDoesNotUseExplicitBacklog()
+    public function testItReturnsNullIfProjectDoesNotUseExplicitBacklog(): void
     {
         $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
+
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->with(101)
@@ -146,9 +158,11 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
         $this->assertNull($additional_action);
     }
 
-    public function testItReturnsNullIfProjectDoesNotHaveARootPlanning()
+    public function testItReturnsNullIfProjectDoesNotHaveARootPlanning(): void
     {
         $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
+
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->with(101)
@@ -166,9 +180,11 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
         $this->assertNull($additional_action);
     }
 
-    public function testItReturnsNullIfTrackerNotABacklogTracker()
+    public function testItReturnsNullIfTrackerNotABacklogTracker(): void
     {
         $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
+
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->with(101)
@@ -188,5 +204,21 @@ final class AdditionalMasschangeActionBuilderTest extends TestCase
 
         $additional_action = $this->builder->buildMasschangeAction($this->tracker, $this->user);
         $this->assertNull($additional_action);
+    }
+
+    public function testReturnsNullWhenScrumAccessIsBlocked(): void
+    {
+        $this->tracker->shouldReceive('userIsAdmin')->once()->andReturnTrue();
+
+        $this->event_dispatcher->shouldReceive('dispatch')->andReturnUsing(function (object $event) {
+            if ($event instanceof BlockScrumAccess) {
+                $event->disableScrumAccess();
+            }
+            return $event;
+        });
+
+        $additional_action = $this->builder->buildMasschangeAction($this->tracker, $this->user);
+
+        self::assertNull($additional_action);
     }
 }

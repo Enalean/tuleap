@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\Masschange;
 
 use PFUser;
 use PlanningFactory;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -44,15 +45,21 @@ class AdditionalMasschangeActionBuilder
      * @var TemplateRenderer
      */
     private $template_renderer;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         PlanningFactory $planning_factory,
-        TemplateRenderer $template_renderer
+        TemplateRenderer $template_renderer,
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->explicit_backlog_dao = $explicit_backlog_dao;
         $this->planning_factory     = $planning_factory;
         $this->template_renderer    = $template_renderer;
+        $this->event_dispatcher     = $event_dispatcher;
     }
 
     public function buildMasschangeAction(Tracker $tracker, PFUser $user): ?string
@@ -61,7 +68,15 @@ class AdditionalMasschangeActionBuilder
             return null;
         }
 
-        $project_id = (int) $tracker->getProject()->getID();
+        $project = $tracker->getProject();
+
+        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($project);
+        $this->event_dispatcher->dispatch($block_scrum_access);
+        if (! $block_scrum_access->isScrumAccessEnabled()) {
+            return null;
+        }
+
+        $project_id = (int) $project->getID();
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
             return null;
         }
