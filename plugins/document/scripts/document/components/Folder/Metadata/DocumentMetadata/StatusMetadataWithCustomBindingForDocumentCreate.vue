@@ -28,7 +28,7 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
-import { transformItemMetadataForCreation } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
+import { transformItemMetadataForCreation } from "../../../../helpers/metadata-helpers/data-transformatter-helper";
 import StatusMetadata from "../StatusMetadata.vue";
 
 export default {

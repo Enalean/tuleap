@@ -53,7 +53,7 @@ import {
     doesDocumentNameAlreadyExist,
     doesFolderNameAlreadyExist,
     doesFolderAlreadyExistsAtUpdate,
-} from "../../../helpers/metadata-helpers/check-item-title.js";
+} from "../../../helpers/metadata-helpers/check-item-title";
 
 export default {
     props: {

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,19 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getStatusMetadata(all_metadata) {
+import { Metadata } from "../../type";
+
+export function getStatusMetadata(all_metadata: Array<Metadata>): Metadata | undefined {
     return all_metadata.find((metadata) => metadata.short_name === "status");
 }
 
-export function getStatusFromMapping(value) {
-    const status_mapping = {
+interface StatusMappingById {
+    [key: number]: string;
+}
+
+export function getStatusFromMapping(value: number): string {
+    const status_mapping: StatusMappingById = {
         100: "none",
         101: "draft",
         102: "approved",
         103: "rejected",
     };
 
-    const status_string = status_mapping[parseInt(value, 10)];
+    const status_string = status_mapping[value];
     if (status_string) {
         return status_string;
     }
@@ -37,8 +43,12 @@ export function getStatusFromMapping(value) {
     return "none";
 }
 
-export function getStatusIdFromName(value) {
-    const status_mapping = {
+interface StatusMappingByLabel {
+    [key: string]: number;
+}
+
+export function getStatusIdFromName(value: string): number {
+    const status_mapping: StatusMappingByLabel = {
         none: 100,
         draft: 101,
         approved: 102,

@@ -22,7 +22,7 @@ import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import PasteItem from "./PasteItem.vue";
 import EventBus from "../../../helpers/event-bus.js";
-import * as check_item_title from "../../../helpers/metadata-helpers/check-item-title.js";
+import * as check_item_title from "../../../helpers/metadata-helpers/check-item-title";
 import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers";
 import {
     TYPE_FOLDER,

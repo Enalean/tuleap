@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,38 +24,39 @@ import {
     doesDocumentNameAlreadyExist,
     doesFolderNameAlreadyExist,
     doesFolderAlreadyExistsAtUpdate,
-} from "./check-item-title.js";
+} from "./check-item-title";
+import { Folder, Item, ItemFile } from "../../type";
 
 describe("doesFolderNameAlreadyExist", () => {
     it("Title already exists when folder name already exists", () => {
         const item_title = "my existing folder";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
                 type: TYPE_FOLDER,
-            },
+            } as Folder,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(true);
     });
 
     it("Title does not already exist when no other folder have the same name", () => {
         const item_title = "my new folder";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: "other folder name",
                 parent_id: 3,
                 type: TYPE_FOLDER,
-            },
+            } as Folder,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
             false
         );
@@ -65,17 +66,17 @@ describe("doesFolderNameAlreadyExist", () => {
 describe("doesDocumentNameAlreadyExist", () => {
     it("Title already exists when file name already exists", () => {
         const item_title = "my existing file";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
                 type: TYPE_FILE,
-            },
+            } as ItemFile,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
             true
         );
@@ -83,17 +84,17 @@ describe("doesDocumentNameAlreadyExist", () => {
 
     it("Title does not already exist when no other item have the same name", () => {
         const item_title = "my new document";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: "other file name",
                 parent_id: 3,
                 type: TYPE_FILE,
-            },
+            } as ItemFile,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
             false
         );
@@ -103,20 +104,20 @@ describe("doesDocumentNameAlreadyExist", () => {
 describe("doesDocumentAlreadyExistsAtUpdate", () => {
     it("Title already exists when file name already exists", () => {
         const item_title = "my existing document";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
                 type: TYPE_FILE,
-            },
+            } as ItemFile,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         const item_to_update = {
             id: 300,
-        };
+        } as Item;
         expect(
             doesDocumentAlreadyExistsAtUpdate(
                 item_title,
@@ -129,20 +130,20 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
 
     it("Title does not already exist when file has no update on title", () => {
         const item_title = "my existing folder";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
                 type: TYPE_FILE,
-            },
+            } as ItemFile,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         const item_to_update = {
             id: 25,
-        };
+        } as Item;
         expect(
             doesDocumentAlreadyExistsAtUpdate(
                 item_title,
@@ -155,20 +156,20 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
 
     it("Title does not already exist when no other file have the same name", () => {
         const item_title = "my new document";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: "other file name",
                 parent_id: 3,
                 type: TYPE_FILE,
-            },
+            } as ItemFile,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         const item_to_update = {
             id: 25,
-        };
+        } as Item;
         expect(
             doesDocumentAlreadyExistsAtUpdate(
                 item_title,
@@ -181,20 +182,20 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
 
     it("The folder title has not the same name of an other existing folder", () => {
         const item_title = "my new folder";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: "other folder name",
                 parent_id: 3,
                 type: TYPE_FOLDER,
-            },
+            } as Folder,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         const item_to_update = {
             id: 25,
-        };
+        } as Item;
         expect(
             doesFolderAlreadyExistsAtUpdate(
                 item_title,
@@ -206,20 +207,20 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
     });
     it("The folder title has the same name of an other existing folder", () => {
         const item_title = "my existing folder";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
                 type: TYPE_FOLDER,
-            },
+            } as Folder,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         const item_to_update = {
             id: 300,
-        };
+        } as Item;
         expect(
             doesFolderAlreadyExistsAtUpdate(
                 item_title,
@@ -232,20 +233,20 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
 
     it("The folder title has the same name of itself", () => {
         const item_title = "my existing folder";
-        const folder_content = [
+        const folder_content: Array<Folder | Item> = [
             {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
                 type: TYPE_FOLDER,
-            },
+            } as Folder,
         ];
         const parent_folder = {
             id: 3,
-        };
+        } as Folder;
         const item_to_update = {
             id: 25,
-        };
+        } as Item;
         expect(
             doesFolderAlreadyExistsAtUpdate(
                 item_title,

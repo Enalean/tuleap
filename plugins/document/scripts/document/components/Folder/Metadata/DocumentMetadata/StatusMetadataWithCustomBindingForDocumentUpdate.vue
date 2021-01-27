@@ -29,7 +29,7 @@
 <script>
 import { mapState } from "vuex";
 import StatusMetadata from "../StatusMetadata.vue";
-import { transformDocumentMetadataForUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
+import { transformDocumentMetadataForUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForDocumentUpdate",
