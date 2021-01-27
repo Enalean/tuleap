@@ -37,6 +37,10 @@ CREATE TABLE plugin_scaled_agile_plan(
     PRIMARY KEY (program_increment_tracker_id, plannable_tracker_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_scaled_agile_explicit_top_backlog(
+    artifact_id INT(11) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB;
+
 -- Create service for all projects (but disabled)
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)
 SELECT DISTINCT group_id , 'plugin_scaled_agile:service_lbl_key', 'plugin_scaled_agile:service_desc_key', 'plugin_scaled_agile', NULL, 1 , 0 , 'system',  153
