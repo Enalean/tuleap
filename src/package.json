@@ -28,7 +28,7 @@
     "dompurify": "^2.2.6",
     "dragula": "^3.7.2",
     "get-dataset": "^0.0.4",
-    "hotkeys-js": "^3.8.1",
+    "hotkeys-js": "^3.8.2",
     "marked": "^1.2.5",
     "moment": "^2.29.1",
     "mustache": "^4.1.0",
