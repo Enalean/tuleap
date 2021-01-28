@@ -79,7 +79,7 @@ final class FeatureElementsRetriever implements RetrieveFeatures
 
         $elements = [];
         foreach ($to_be_planned_artifacts as $artifact) {
-            $full_artifact = $this->artifact_factory->getArtifactById((int) $artifact['artifact_id']);
+            $full_artifact = $this->artifact_factory->getArtifactById($artifact['artifact_id']);
 
             if (! $full_artifact || ! $full_artifact->userCanView($user)) {
                 continue;
@@ -91,7 +91,7 @@ final class FeatureElementsRetriever implements RetrieveFeatures
             }
 
             $elements[] = new FeatureRepresentation(
-                (int) $artifact['artifact_id'],
+                $artifact['artifact_id'],
                 $artifact['artifact_title'],
                 $full_artifact->getXRef(),
                 MinimalTrackerRepresentation::build($full_artifact->getTracker()),
