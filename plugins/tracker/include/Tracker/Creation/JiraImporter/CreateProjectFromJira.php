@@ -34,6 +34,7 @@ use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
@@ -70,7 +71,10 @@ final class CreateProjectFromJira
      * @var XML_SimpleXMLCDATAFactory
      */
     private $cdata_section_factory;
-
+    /**
+     * @var ArtifactLinkTypeImporter
+     */
+    private $artifact_link_type_importer;
 
     public function __construct(
         UserManager $user_manager,
@@ -78,14 +82,16 @@ final class CreateProjectFromJira
         XMLFileContentRetriever $xml_file_content_retriever,
         IFindUserFromXMLReference $user_finder,
         JiraTrackerBuilder $jira_tracker_builder,
-        XML_SimpleXMLCDATAFactory $cdata_section_factory
+        XML_SimpleXMLCDATAFactory $cdata_section_factory,
+        ArtifactLinkTypeImporter $artifact_link_type_importer
     ) {
-        $this->user_manager               = $user_manager;
-        $this->user_finder                = $user_finder;
-        $this->template_factory           = $template_factory;
-        $this->xml_file_content_retriever = $xml_file_content_retriever;
-        $this->jira_tracker_builder       = $jira_tracker_builder;
-        $this->cdata_section_factory      = $cdata_section_factory;
+        $this->user_manager                = $user_manager;
+        $this->user_finder                 = $user_finder;
+        $this->template_factory            = $template_factory;
+        $this->xml_file_content_retriever  = $xml_file_content_retriever;
+        $this->jira_tracker_builder        = $jira_tracker_builder;
+        $this->cdata_section_factory       = $cdata_section_factory;
+        $this->artifact_link_type_importer = $artifact_link_type_importer;
     }
 
     public function create(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname): \Project
@@ -126,6 +132,8 @@ final class CreateProjectFromJira
         if (count($jira_trackers) === 0) {
             throw new \RuntimeException("There are no Jira issue types to import");
         }
+
+        $this->artifact_link_type_importer->import($jira_client);
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         assert($import_user !== null);

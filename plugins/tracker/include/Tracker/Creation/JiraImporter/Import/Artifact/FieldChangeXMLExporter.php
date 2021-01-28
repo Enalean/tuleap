@@ -226,7 +226,7 @@ class FieldChangeXMLExporter
             $field_values = [];
             foreach ($value->issuelinks as $link) {
                 if (isset($link['outwardIssue'])) {
-                    $field_values[] = new ArtifactLinkChange((int) $link['outwardIssue']['id']);
+                    $field_values[] = new ArtifactLinkChange((int) $link['outwardIssue']['id'], $link['type']['name']);
                 }
             }
             foreach ($value->subtasks as $link) {

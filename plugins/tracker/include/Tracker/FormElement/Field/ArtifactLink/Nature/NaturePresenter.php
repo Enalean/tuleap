@@ -55,4 +55,9 @@ class NaturePresenter
         $this->reverse_label = $reverse_label;
         $this->is_visible    = $is_visible;
     }
+
+    public static function buildVisibleNature(string $shortname, string $forward_label, string $reverse_label): self
+    {
+        return new self($shortname, $forward_label, $reverse_label, true);
+    }
 }

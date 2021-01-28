@@ -108,6 +108,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
@@ -2187,6 +2188,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             CreateProjectFromJiraCommand::NAME,
             static function (): CreateProjectFromJiraCommand {
                 $user_manager = UserManager::instance();
+
+                $nature_dao              = new NatureDao();
+                $nature_validator        = new NatureValidator($nature_dao);
+                $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+
                 return new CreateProjectFromJiraCommand(
                     $user_manager,
                     new JiraProjectBuilder(),
@@ -2197,6 +2203,16 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                         new XMLImportHelper($user_manager),
                         new JiraTrackerBuilder(),
                         new XML_SimpleXMLCDATAFactory(),
+                        new ArtifactLinkTypeImporter(
+                            new NaturePresenterFactory(
+                                $nature_dao,
+                                $artifact_link_usage_dao,
+                            ),
+                            new NatureCreator(
+                                $nature_dao,
+                                $nature_validator,
+                            ),
+                        )
                     )
                 );
             }

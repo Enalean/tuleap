@@ -31,7 +31,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-class ClientWrapper
+class ClientWrapper implements JiraClient
 {
     /**
      * @var ClientInterface

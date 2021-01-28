@@ -26,7 +26,7 @@ use Project;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
-class NaturePresenterFactory
+class NaturePresenterFactory implements AllNaturesRetriever
 {
     /**
      * Add new artifact link natures
@@ -37,7 +37,7 @@ class NaturePresenterFactory
     public const EVENT_GET_ARTIFACTLINK_NATURES = 'event_get_artifactlink_natures';
 
     /**
-     * Return presneter from nature shortname
+     * Return presenter from nature shortname
      *
      * Parameters:
      *  - nature: input nature shortname
@@ -60,7 +60,7 @@ class NaturePresenterFactory
     }
 
     /** @return NaturePresenter[] */
-    public function getAllNatures()
+    public function getAllNatures(): array
     {
         $natures = $this->getDefaultNatures();
         $natures = array_merge($natures, $this->getPluginsNatures());

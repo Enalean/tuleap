@@ -497,6 +497,7 @@ class FieldChangeXMLExporterTest extends TestCase
         self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
         self::assertCount(1, $field_change_node->value);
         self::assertSame('10089', (string) $field_change_node->value[0]);
+        self::assertSame('Relates', (string) $field_change_node->value[0]['nature']);
     }
 
     public function testItExportsTheSubTasksAsChildren(): void
