@@ -43,6 +43,7 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\CrossReferenceFromMergeRequestCreator;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
@@ -222,9 +223,6 @@ class gitlabPlugin extends Plugin
                     )
                 ),
                 new PostMergeRequestWebhookActionProcessor(
-                    $references_from_merge_request_data_extractor,
-                    $tuleap_reference_retriever,
-                    ReferenceManager::instance(),
                     $merge_request_reference_dao,
                     new GitlabRepositoryProjectRetriever(
                         new GitlabRepositoryProjectDao(),
@@ -242,6 +240,12 @@ class gitlabPlugin extends Plugin
                         $references_from_merge_request_data_extractor,
                         $tuleap_reference_retriever,
                         $merge_request_reference_dao,
+                    ),
+                    new CrossReferenceFromMergeRequestCreator(
+                        $references_from_merge_request_data_extractor,
+                        $tuleap_reference_retriever,
+                        ReferenceManager::instance(),
+                        $logger,
                     )
                 ),
                 $logger,

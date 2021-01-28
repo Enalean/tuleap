@@ -20,13 +20,7 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use CrossReference;
-use Project;
 use Psr\Log\LoggerInterface;
-use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
-use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
-use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
-use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
@@ -37,14 +31,6 @@ class PostMergeRequestWebhookActionProcessor
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var TuleapReferenceRetriever
-     */
-    private $tuleap_reference_retriever;
-    /**
-     * @var \ReferenceManager
-     */
-    private $reference_manager;
     /**
      * @var MergeRequestTuleapReferenceDao
      */
@@ -58,32 +44,28 @@ class PostMergeRequestWebhookActionProcessor
      */
     private $commenter;
     /**
-     * @var TuleapReferencesFromMergeRequestDataExtractor
-     */
-    private $references_from_merge_request_data_extractor;
-    /**
      * @var PreviouslySavedReferencesRetriever
      */
     private $previously_saved_references_retriever;
+    /**
+     * @var CrossReferenceFromMergeRequestCreator
+     */
+    private $cross_reference_creator;
 
     public function __construct(
-        TuleapReferencesFromMergeRequestDataExtractor $references_from_merge_request_data_extractor,
-        TuleapReferenceRetriever $tuleap_reference_retriever,
-        \ReferenceManager $reference_manager,
         MergeRequestTuleapReferenceDao $merge_request_reference_dao,
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         LoggerInterface $logger,
         PostMergeRequestBotCommenter $commenter,
-        PreviouslySavedReferencesRetriever $previously_saved_references_retriever
+        PreviouslySavedReferencesRetriever $previously_saved_references_retriever,
+        CrossReferenceFromMergeRequestCreator $cross_reference_creator
     ) {
-        $this->references_from_merge_request_data_extractor = $references_from_merge_request_data_extractor;
-        $this->tuleap_reference_retriever                   = $tuleap_reference_retriever;
-        $this->reference_manager                            = $reference_manager;
-        $this->merge_request_reference_dao                  = $merge_request_reference_dao;
-        $this->gitlab_repository_project_retriever          = $gitlab_repository_project_retriever;
-        $this->logger                                       = $logger;
-        $this->commenter                                    = $commenter;
-        $this->previously_saved_references_retriever        = $previously_saved_references_retriever;
+        $this->merge_request_reference_dao           = $merge_request_reference_dao;
+        $this->gitlab_repository_project_retriever   = $gitlab_repository_project_retriever;
+        $this->logger                                = $logger;
+        $this->commenter                             = $commenter;
+        $this->previously_saved_references_retriever = $previously_saved_references_retriever;
+        $this->cross_reference_creator               = $cross_reference_creator;
     }
 
     public function process(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $webhook_data): void
@@ -96,7 +78,11 @@ class PostMergeRequestWebhookActionProcessor
             $webhook_data,
             $gitlab_repository
         );
-        $new_references = $this->createCrossReferencesFromMergeRequest($webhook_data, $gitlab_repository, $projects);
+        $new_references = $this->cross_reference_creator->createCrossReferencesFromMergeRequest(
+            $webhook_data,
+            $gitlab_repository,
+            $projects
+        );
 
         if ($this->shouldWeSaveMergeRequestData($new_references, $gitlab_repository, $webhook_data)) {
             $this->saveMergeRequestData($gitlab_repository, $webhook_data);
@@ -104,33 +90,6 @@ class PostMergeRequestWebhookActionProcessor
 
         if ($this->shouldWeAddCommentOnMergeRequest($old_references, $new_references)) {
             $this->commenter->addCommentOnMergeRequest($webhook_data, $gitlab_repository, $new_references);
-        }
-    }
-
-    /**
-     * @param Project[] $projects
-     */
-    private function saveReferenceInEachIntegratedProject(
-        GitlabRepository $gitlab_repository,
-        WebhookTuleapReference $tuleap_reference,
-        PostMergeRequestWebhookData $merge_request_webhook_data,
-        \Reference $external_reference,
-        array $projects
-    ): void {
-        foreach ($projects as $project) {
-            $cross_reference = new CrossReference(
-                $this->getGitlabMergeRequestReferenceId($gitlab_repository, $merge_request_webhook_data),
-                $project->getID(),
-                GitlabMergeRequestReference::NATURE_NAME,
-                GitlabMergeRequestReference::REFERENCE_NAME,
-                $tuleap_reference->getId(),
-                $external_reference->getGroupId(),
-                $external_reference->getNature(),
-                $external_reference->getKeyword(),
-                0
-            );
-
-            $this->reference_manager->insertCrossReference($cross_reference);
         }
     }
 
@@ -150,13 +109,6 @@ class PostMergeRequestWebhookActionProcessor
         );
 
         $this->logger->info("Merge request data for $merge_request_id saved in database");
-    }
-
-    private function getGitlabMergeRequestReferenceId(
-        GitlabRepository $gitlab_repository,
-        PostMergeRequestWebhookData $merge_request_webhook_data
-    ): string {
-        return $gitlab_repository->getName() . '/' . $merge_request_webhook_data->getMergeRequestId();
     }
 
     /**
@@ -179,62 +131,6 @@ class PostMergeRequestWebhookActionProcessor
         $is_merge_request_already_saved = ! empty($already_saved_merge_request_row);
 
         return $is_merge_request_already_saved;
-    }
-
-    /**
-     * @param Project[] $projects
-     *
-     * @return WebhookTuleapReference[]
-     */
-    private function createCrossReferencesFromMergeRequest(
-        PostMergeRequestWebhookData $webhook_data,
-        GitlabRepository $gitlab_repository,
-        array $projects
-    ): array {
-        $references_collection = $this->references_from_merge_request_data_extractor->extract(
-            $webhook_data->getTitle(),
-            $webhook_data->getDescription(),
-        );
-
-        $good_references = [];
-
-        $nb_found_references = count($references_collection->getTuleapReferences());
-
-        $this->logger->info(
-            $nb_found_references . " Tuleap references found in merge request " . $webhook_data->getMergeRequestId()
-        );
-
-        foreach ($references_collection->getTuleapReferences() as $tuleap_reference) {
-            $this->logger->info(
-                "|_ Reference to Tuleap artifact #{$tuleap_reference->getId()} found, cross-reference will be added for each project the GitLab repository is integrated in."
-            );
-
-            try {
-                $external_reference = $this->tuleap_reference_retriever->retrieveTuleapReference(
-                    $tuleap_reference->getId()
-                );
-
-                assert($external_reference instanceof \Reference);
-
-                $this->logger->info(
-                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found"
-                );
-
-                $this->saveReferenceInEachIntegratedProject(
-                    $gitlab_repository,
-                    $tuleap_reference,
-                    $webhook_data,
-                    $external_reference,
-                    $projects
-                );
-
-                $good_references[] = $tuleap_reference;
-            } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $reference_exception) {
-                $this->logger->error($reference_exception->getMessage());
-            }
-        }
-
-        return $good_references;
     }
 
     /**

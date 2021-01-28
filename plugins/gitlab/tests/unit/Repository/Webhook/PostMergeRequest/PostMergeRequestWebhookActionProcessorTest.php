@@ -84,9 +84,6 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         );
 
         $this->processor = new PostMergeRequestWebhookActionProcessor(
-            $references_from_merge_request_data_extractor,
-            $this->tuleap_reference_retriever,
-            $this->reference_manager,
             $this->merge_request_reference_dao,
             $this->gitlab_repository_project_retriever,
             $this->logger,
@@ -95,6 +92,12 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
                 $references_from_merge_request_data_extractor,
                 $this->tuleap_reference_retriever,
                 $this->merge_request_reference_dao,
+            ),
+            new CrossReferenceFromMergeRequestCreator(
+                $references_from_merge_request_data_extractor,
+                $this->tuleap_reference_retriever,
+                $this->reference_manager,
+                $this->logger,
             )
         );
     }
