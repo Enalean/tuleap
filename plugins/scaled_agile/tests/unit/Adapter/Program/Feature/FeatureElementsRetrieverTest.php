@@ -94,8 +94,8 @@ class FeatureElementsRetrieverTest extends TestCase
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(202));
         $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [
-                ['tracker_name' => 'User stories', 'artifact_id' => '1', 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],
-                ['tracker_name' => 'Features', 'artifact_id' => '2', 'artifact_title' => 'Artifact 2', 'field_title_id' => 1],
+                ['tracker_name' => 'User stories', 'artifact_id' => 1, 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],
+                ['tracker_name' => 'Features', 'artifact_id' => 2, 'artifact_title' => 'Artifact 2', 'field_title_id' => 1],
             ]
         );
 
