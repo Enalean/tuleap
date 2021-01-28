@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { extractApprovalTableData } from "../../../helpers/approval-table-helper.js";
+import { extractApprovalTableData } from "../../../helpers/approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants";
 
 export default {
@@ -50,11 +50,11 @@ export default {
             return this.item.approval_table;
         },
         translated_approval_states_map() {
-            const approval_states_map = {};
+            const approval_states_map = new Map();
 
-            approval_states_map[this.$gettext("Approved")] = APPROVAL_APPROVED;
-            approval_states_map[this.$gettext("Not yet")] = APPROVAL_NOT_YET;
-            approval_states_map[this.$gettext("Rejected")] = APPROVAL_REJECTED;
+            approval_states_map.set(this.$gettext("Approved"), APPROVAL_APPROVED);
+            approval_states_map.set(this.$gettext("Not yet"), APPROVAL_NOT_YET);
+            approval_states_map.set(this.$gettext("Rejected"), APPROVAL_REJECTED);
 
             return approval_states_map;
         },

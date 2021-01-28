@@ -19,17 +19,23 @@
 
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
 
+export interface ApprovalTableBadge {
+    icon_badge: string;
+    badge_label: string;
+    badge_class: string;
+}
+
 export function extractApprovalTableData(
-    translated_approval_states_map,
-    approval_table_state,
-    is_in_folder_content_row
-) {
+    translated_approval_states_map: Map<string, string>,
+    approval_table_state: string,
+    is_in_folder_content_row: boolean
+): ApprovalTableBadge {
     let additional_class = "";
     if (is_in_folder_content_row) {
         additional_class = "document-tree-item-toggle-quicklook-approval-badge";
     }
 
-    const state = translated_approval_states_map[approval_table_state];
+    const state = translated_approval_states_map.get(approval_table_state);
 
     switch (state) {
         case APPROVAL_NOT_YET:
