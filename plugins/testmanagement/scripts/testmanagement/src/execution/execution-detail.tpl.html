@@ -43,13 +43,21 @@
                         <i class="fa fa-fw fa-bug"></i>
                     </button>
                     <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
-                        <button class="tlp-dropdown-menu-item" role="menuitem" ng-if="canCreateIssue"
-                           ng-click="showLinkToNewBugModal()">
+                        <button class="tlp-dropdown-menu-item"
+                                role="menuitem"
+                                ng-if="canCreateIssue"
+                                ng-click="showLinkToNewBugModal()"
+                                data-shortcut-new-bug
+                        >
                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i>
                             <span translate>Create a new bug</span>
                         </button>
-                        <button class="tlp-dropdown-menu-item" role="menuitem" ng-if="canLinkIssue"
-                           ng-click="showLinkToExistingBugModal()">
+                        <button class="tlp-dropdown-menu-item"
+                                role="menuitem"
+                                ng-if="canLinkIssue"
+                                ng-click="showLinkToExistingBugModal()"
+                                data-shortcut-link-bug
+                        >
                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link"></i>
                             <span translate>Link to an existing bug</span>
                         </button>
@@ -72,9 +80,10 @@
                 </div>
 
                 <button class="current-test-header-action tlp-button-secondary"
-                   ng-if="! linkMenuIsVisible && canCreateIssue"
-                   ng-click="showLinkToNewBugModal()"
-                   title="{{ 'Create a new bug' | translate }}"
+                        ng-if="! linkMenuIsVisible && canCreateIssue"
+                        ng-click="showLinkToNewBugModal()"
+                        title="{{ 'Create a new bug' | translate }}"
+                        data-shortcut-new-bug
                 >
                     <i class="fa fa-fw fa-bug"></i>
                 </button>
@@ -83,11 +92,14 @@
                     <i class="fas fa-fw fa-pencil-alt"
                        data-test="current-test-edit"
                        ng-click="showEditArtifactModal($event, execution.definition)"
-                       title="{{ 'Edit this test' | translate }}"></i>
+                       title="{{ 'Edit this test' | translate }}"
+                       data-shortcut-edit-test
+                    ></i>
                 </a>
                 <button class="current-test-header-action tlp-button-secondary"
-                      ng-click="showArtifactLinksGraphModal(execution)"
-                      title="{{ 'Show dependencies graph for this test' | translate }}"
+                        ng-click="showArtifactLinksGraphModal(execution)"
+                        title="{{ 'Show dependencies graph for this test' | translate }}"
+                        data-shortcut-dependency-graph
                 >
                     <i class="fa fa-tlp-dependencies-graph"></i>
                 </button>
@@ -151,13 +163,19 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
                 <div class="current-test-results-container">
-                    <div class="current-test-comment" id="execution_{{execution.id}}" data-test="current-test-comment">
+                    <div class="current-test-comment"
+                         id="execution_{{execution.id}}"
+                         data-test="current-test-comment"
+                         data-shortcut-current-test-comment
+                    >
                     </div>
                     <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
                         <button id="test-result-passed" type="button"
                                 data-test="mark-test-as-passed"
                                 class="current-test-result tlp-button-large tlp-button-success"
-                                title="{{ 'Passed' | translate }}" ng-click="pass(execution)"
+                                title="{{ 'Passed' | translate }}"
+                                ng-click="pass(execution)"
+                                data-shortcut-passed
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-check-circle"></i>
                         </button>
@@ -172,13 +190,17 @@
                                 data-test="mark-test-as-blocked"
                                 class="current-test-result tlp-button-large tlp-button-info"
                                 title="{{ 'Blocked' | translate }}"
-                                ng-click="block(execution)" ng-disabled="execution.saving">
+                                ng-click="block(execution)"
+                                data-shortcut-blocked
+                                ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-exclamation-circle"></i>
                         </button>
                         <button id="test-result-notrun" type="button"
                                 data-test="mark-test-as-notrun"
                                 class="current-test-result tlp-button-large tlp-button-secondary"
-                                title="{{ 'Not run' | translate }}" ng-click="notrun(execution)"
+                                title="{{ 'Not run' | translate }}"
+                                ng-click="notrun(execution)"
+                                data-shortcut-not-run
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-question-circle"></i>
                         </button>

@@ -34,6 +34,7 @@
                             placeholder="{{ 'Id, summary, category…' | translate }}"
                             ng-model="search"
                             aria-label="{{ 'Filter tests by ID, summary, category…' | translate }}"
+                            data-shortcut-search-filter
                         >
                         <div class="tlp-dropdown tests-filters-dropdown">
                             <button id="toggle-filters-dropdown"
@@ -95,7 +96,12 @@
                                         {{ 'Automated' | translate }}
                                     </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-automated" class="tlp-switch-checkbox" ng-click="toggleAutomatedTests()">
+                                        <input type="checkbox"
+                                               id="status-filter-automated"
+                                               class="tlp-switch-checkbox"
+                                               ng-click="toggleAutomatedTests()"
+                                               data-shortcut-filter-automated
+                                        >
                                         <label for="status-filter-automated" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>

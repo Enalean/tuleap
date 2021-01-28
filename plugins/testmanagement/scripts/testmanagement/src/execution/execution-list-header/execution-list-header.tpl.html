@@ -9,6 +9,7 @@
             ng-if="$ctrl.campaign_state.campaign.user_can_update"
             title="{{ ::'Edit campaign' | translate }}"
             data-test="edit-campaign-button"
+            data-shortcut-edit-campaign
     >
         <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ 'Edit' | translate }}
     </button>
@@ -36,7 +37,9 @@
     <button class="test-campaign-header-trophy"
             title="{{ 'Show test campaign scores' | translate }}"
             ng-if="$ctrl.isRealtimeEnabled()"
-            ng-click="$ctrl.showPresencesModal()">
+            ng-click="$ctrl.showPresencesModal()"
+            data-shortcut-campaign-scores
+    >
         <i class="fa fa-trophy"></i>
     </button>
 </div>
