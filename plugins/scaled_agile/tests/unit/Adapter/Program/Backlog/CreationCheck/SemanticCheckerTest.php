@@ -26,7 +26,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckStatus;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -78,7 +78,7 @@ final class SemanticCheckerTest extends TestCase
 
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->once()
@@ -112,7 +112,7 @@ final class SemanticCheckerTest extends TestCase
 
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(1);
@@ -129,7 +129,7 @@ final class SemanticCheckerTest extends TestCase
 
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);
@@ -147,7 +147,7 @@ final class SemanticCheckerTest extends TestCase
         $program_increment_tracker    = new ScaledAgileTracker($tracker);
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);
@@ -170,7 +170,7 @@ final class SemanticCheckerTest extends TestCase
 
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);
@@ -195,7 +195,7 @@ final class SemanticCheckerTest extends TestCase
 
         $first_tracker                = $this->buildTestTracker(1024);
         $second_tracker               = $this->buildTestTracker(2048);
-        $milestone_tracker_collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
+        $milestone_tracker_collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
 
         $this->title_dao->shouldReceive('getNbOfTrackerWithoutSemanticTitleDefined')
             ->andReturn(0);

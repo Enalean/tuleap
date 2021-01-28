@@ -112,7 +112,7 @@ class ProgramIncrementArtifactCreatorChecker
             $this->logger->error("Cannot retrieve all the program increments", ['exception' => $exception]);
             return false;
         }
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_and_program_increment_trackers)) {
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_increment_trackers)) {
             $this->logger->error("Semantics are not well configured.");
 
             return false;

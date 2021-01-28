@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckStatus;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 final class StatusSemanticChecker implements CheckStatus
@@ -50,7 +50,7 @@ final class StatusSemanticChecker implements CheckStatus
 
     public function isStatusWellConfigured(
         ScaledAgileTracker $tracker,
-        SourceTrackerCollection $source_tracker_collection
+        ProgramIncrementsTrackerCollection $source_tracker_collection
     ): bool {
         $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker(
             $tracker->getFullTracker()
@@ -69,7 +69,7 @@ final class StatusSemanticChecker implements CheckStatus
 
         $program_open_values_labels = $program_tracker_status_semantic->getOpenLabels();
 
-        foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
+        foreach ($source_tracker_collection->getProgramIncrementTrackers() as $source_tracker) {
             $status_semantic = $this->semantic_status_factory->getByTracker($source_tracker->getFullTracker());
             if (count(array_diff($program_open_values_labels, $status_semantic->getOpenLabels())) > 0) {
                 return false;
