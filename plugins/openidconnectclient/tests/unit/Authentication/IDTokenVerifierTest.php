@@ -32,7 +32,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class IDTokenVerifierTest extends TestCase
+final class IDTokenVerifierTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -102,6 +102,7 @@ class IDTokenVerifierTest extends TestCase
         );
 
         $this->expectException(MalformedIDTokenException::class);
+        $this->expectExceptionMessage('sub claim is not present or malformed (got NULL)');
         $this->id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
@@ -114,12 +115,14 @@ class IDTokenVerifierTest extends TestCase
 
         $id_token = $this->buildIDToken(
             (new Builder())
+                ->withClaim('nonce', $nonce)
                 ->issuedBy('example.com')
                 ->permittedFor('evil_client_id')
                 ->relatedTo('123')
         );
 
         $this->expectException(MalformedIDTokenException::class);
+        $this->expectExceptionMessage('audience claim is not valid');
         $this->id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
@@ -140,6 +143,7 @@ class IDTokenVerifierTest extends TestCase
         );
 
         $this->expectException(MalformedIDTokenException::class);
+        $this->expectExceptionMessage('issuer claim is not valid');
         $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
@@ -159,6 +163,28 @@ class IDTokenVerifierTest extends TestCase
         );
 
         $this->expectException(MalformedIDTokenException::class);
+        $this->expectExceptionMessage('nonce is not valid');
+        $this->id_token_verifier->validate($provider, $nonce, $id_token);
+    }
+
+    public function testRejectsIDTokenOutsideItsExpectedValidityPeriod(): void
+    {
+        $provider = Mockery::mock(Provider::class);
+        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
+        $provider->shouldReceive('getClientId')->andReturns('client_id');
+        $nonce = 'random_string';
+
+        $id_token = $this->buildIDToken(
+            (new Builder())
+                ->withClaim('nonce', $nonce)
+                ->issuedBy('evil.example.com')
+                ->permittedFor('client_id')
+                ->relatedTo('123')
+                ->issuedAt(new \DateTimeImmutable('+1 hour'))
+        );
+
+        $this->expectException(MalformedIDTokenException::class);
+        $this->expectExceptionMessage('the token is outside its validity period');
         $this->id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
@@ -180,6 +206,7 @@ class IDTokenVerifierTest extends TestCase
         $this->jwks_key_fetcher->shouldReceive('fetchKey')->andReturn([$key_details['key']]);
 
         $this->expectException(MalformedIDTokenException::class);
+        $this->expectExceptionMessage('ID token signature is not valid');
         $this->id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
