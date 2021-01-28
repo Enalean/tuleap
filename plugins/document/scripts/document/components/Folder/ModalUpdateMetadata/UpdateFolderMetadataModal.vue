@@ -58,9 +58,9 @@ import FolderGlobalMetadataForUpdate from "../Metadata/FolderMetadata/FolderGlob
 import {
     transformCustomMetadataForItemUpdate,
     transformFolderMetadataForRecursionAtUpdate,
-} from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
+} from "../../../helpers/metadata-helpers/data-transformatter-helper";
 import EventBus from "../../../helpers/event-bus.js";
-import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
+import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
 
 export default {
     name: "UpdateFolderMetadataModal",

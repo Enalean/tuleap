@@ -21,11 +21,15 @@ import {
     getStatusFromMapping,
     getStatusMetadata,
     getStatusIdFromName,
-} from "./hardcoded-metadata-mapping-helper.js";
+} from "./hardcoded-metadata-mapping-helper";
+import { Metadata } from "../../type";
 
 describe("getStatusMetadata", () => {
     it("Given metadata has a status, then its return the corresponding metadata", () => {
-        const all_metadata = [{ short_name: "test" }, { short_name: "status" }];
+        const all_metadata = [
+            { short_name: "test" } as Metadata,
+            { short_name: "status" } as Metadata,
+        ];
 
         expect(getStatusMetadata(all_metadata)).toEqual({ short_name: "status" });
     });

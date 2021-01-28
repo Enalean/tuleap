@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getStatusFromMapping, getStatusMetadata } from "./hardcoded-metadata-mapping-helper.js";
+import { getStatusFromMapping, getStatusMetadata } from "./hardcoded-metadata-mapping-helper";
 import moment from "moment";
 
 export function transformFolderMetadataForRecursionAtUpdate(item) {

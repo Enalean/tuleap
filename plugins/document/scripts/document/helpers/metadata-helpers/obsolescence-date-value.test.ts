@@ -18,7 +18,7 @@
  *
  */
 
-import { getObsolescenceDateValueInput } from "./obsolescence-date-value.js";
+import { getObsolescenceDateValueInput } from "./obsolescence-date-value";
 import moment from "moment/moment";
 
 describe("getObsolescenceDateValueInput", () => {

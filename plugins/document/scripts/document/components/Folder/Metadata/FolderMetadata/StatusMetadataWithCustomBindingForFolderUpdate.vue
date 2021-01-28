@@ -29,8 +29,8 @@
 <script>
 import { mapState } from "vuex";
 import StatusMetadata from "../StatusMetadata.vue";
-import { getStatusIdFromName } from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
-import { transformFolderMetadataForRecursionAtUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
+import { getStatusIdFromName } from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper";
+import { transformFolderMetadataForRecursionAtUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForFolderUpdate",

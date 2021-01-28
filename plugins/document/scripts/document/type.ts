@@ -52,13 +52,14 @@ export interface Item {
     lock_info: LockInfo;
     metadata: Array<Metadata>;
     parent_id: number | null;
+    type: string;
 }
 
 export interface Folder extends Item {
     is_expanded: boolean;
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;
-    type: "Folder";
+    type: "folder";
 }
 
 export interface ApprovableDocument extends Item {
@@ -70,25 +71,25 @@ export interface ApprovableDocument extends Item {
 export interface ItemFile extends Item, ApprovableDocument {
     parent_id: number;
     file_properties: FileProperties;
-    type: "File";
+    type: "file";
 }
 
 export interface Link extends Item, ApprovableDocument {
     parent_id: number;
     link_properties: LinkProperties;
-    type: "Link";
+    type: "link";
 }
 
 export interface Embedded extends Item, ApprovableDocument {
     parent_id: number;
     embedded_file_properties: EmbeddedProperties;
-    type: "Embedded";
+    type: "embedded";
 }
 
 export interface Wiki extends Item {
     parent_id: number;
     wiki_properties: WikiProperties;
-    type: "Wiki";
+    type: "wiki";
 }
 
 export interface Empty extends Item {

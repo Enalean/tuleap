@@ -48,7 +48,7 @@ import { TYPE_FOLDER, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 import {
     doesFolderNameAlreadyExist,
     doesDocumentNameAlreadyExist,
-} from "../../../helpers/metadata-helpers/check-item-title.js";
+} from "../../../helpers/metadata-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
 
 export default {

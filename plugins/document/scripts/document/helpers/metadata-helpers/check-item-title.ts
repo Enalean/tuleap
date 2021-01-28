@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,29 +19,38 @@
  */
 
 import { TYPE_FOLDER } from "../../constants";
+import { Folder, Item } from "../../type";
 
-function doesTitleAlreadyExists(text_value, item, parent_folder) {
+function doesTitleAlreadyExists(text_value: string, item: Item, parent_folder: Folder): boolean {
     return item.title === text_value && item.parent_id === parent_folder.id;
 }
 
-export function doesFolderNameAlreadyExist(text_value, folder_content, parent_folder) {
-    return folder_content.some((item) => {
+export function doesFolderNameAlreadyExist(
+    text_value: string,
+    folder_content: Array<Item>,
+    parent_folder: Folder
+): boolean {
+    return folder_content.some((item: Item) => {
         return doesTitleAlreadyExists(text_value, item, parent_folder) && item.type === TYPE_FOLDER;
     });
 }
 
-export function doesDocumentNameAlreadyExist(text_value, folder_content, parent_folder) {
+export function doesDocumentNameAlreadyExist(
+    text_value: string,
+    folder_content: Array<Item>,
+    parent_folder: Folder
+): boolean {
     return folder_content.some((item) => {
         return doesTitleAlreadyExists(text_value, item, parent_folder) && item.type !== TYPE_FOLDER;
     });
 }
 
 export function doesDocumentAlreadyExistsAtUpdate(
-    text_value,
-    folder_content,
-    item_to_update,
-    parent_folder
-) {
+    text_value: string,
+    folder_content: Array<Item>,
+    item_to_update: Item,
+    parent_folder: Folder
+): boolean {
     return folder_content.some((item) => {
         return (
             doesTitleAlreadyExists(text_value, item, parent_folder) &&
@@ -52,11 +61,11 @@ export function doesDocumentAlreadyExistsAtUpdate(
 }
 
 export function doesFolderAlreadyExistsAtUpdate(
-    text_value,
-    folder_content,
-    item_to_update,
-    parent_folder
-) {
+    text_value: string,
+    folder_content: Array<Item>,
+    item_to_update: Item,
+    parent_folder: Folder
+): boolean {
     return folder_content.some((item) => {
         return (
             doesTitleAlreadyExists(text_value, item, parent_folder) &&

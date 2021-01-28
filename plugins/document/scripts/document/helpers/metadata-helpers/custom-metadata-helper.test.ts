@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,19 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getCustomMetadata } from "./custom-metadata-helper.js";
+import { getCustomMetadata } from "./custom-metadata-helper";
+import { Metadata } from "../../type";
 
 describe("getCustomMetadata", () => {
     it("only returns custom metadata", () => {
         const metadata = [
-            { short_name: "title" },
-            { short_name: "description" },
-            { short_name: "owner" },
-            { short_name: "create_date" },
-            { short_name: "update_date" },
-            { short_name: "field_1" },
-            { short_name: "field_2" },
-            { short_name: "field_3" },
+            { short_name: "title" } as Metadata,
+            { short_name: "description" } as Metadata,
+            { short_name: "owner" } as Metadata,
+            { short_name: "create_date" } as Metadata,
+            { short_name: "update_date" } as Metadata,
+            { short_name: "field_1" } as Metadata,
+            { short_name: "field_2" } as Metadata,
+            { short_name: "field_3" } as Metadata,
         ];
 
         expect(getCustomMetadata(metadata)).toEqual([
