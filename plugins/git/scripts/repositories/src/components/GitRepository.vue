@@ -87,8 +87,23 @@
                                 ref="edit_access_token_gitlab_repository"
                                 data-test="edit-access-token-gitlab-repository"
                             >
-                                <i class="fas fa-fw fa-key" aria-hidden="true"></i>
+                                <i
+                                    class="fas fa-fw fa-key tlp-dropdown-menu-item-icon"
+                                    aria-hidden="true"
+                                ></i>
                                 {{ edit_access_token_repository_title }}
+                            </div>
+                            <div
+                                class="tlp-dropdown-menu-item"
+                                role="menuitem"
+                                ref="regenerate_gitlab_webhook"
+                                data-test="regenerate-webhook-gitlab-repository"
+                            >
+                                <i
+                                    class="fas fa-arrow-circle-right fa-fw tlp-dropdown-menu-item-icon"
+                                    aria-hidden="true"
+                                ></i>
+                                {{ regenerate_gitlab_webhook_title }}
                             </div>
                             <div
                                 class="tlp-dropdown-menu-item unlink-repository-gitlab"
@@ -177,6 +192,9 @@ export default {
         unlink_repository_title() {
             return this.$gettext("Unlink the repository");
         },
+        regenerate_gitlab_webhook_title() {
+            return this.$gettext("Regenerate the GitLab webhook");
+        },
         edit_access_token_repository_title() {
             return this.$gettext("Edit access token");
         },
@@ -225,6 +243,15 @@ export default {
                 });
             }
 
+            const button_regenerate_gitlab_webhook = this.$refs.regenerate_gitlab_webhook;
+
+            if (button_regenerate_gitlab_webhook) {
+                button_regenerate_gitlab_webhook.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    this.showRegenerateGitlabWebhookModal(this.repository);
+                });
+            }
+
             const button_gitlab_administration = this.$refs.gitlab_administration;
             const dropdown_gitlab_administration = this.$refs.dropdown_gitlab_administration;
 
@@ -243,6 +270,7 @@ export default {
         ...mapActions([
             "showDeleteGitlabRepositoryModal",
             "showEditAccessTokenGitlabRepositoryModal",
+            "showRegenerateGitlabWebhookModal",
         ]),
     },
 };

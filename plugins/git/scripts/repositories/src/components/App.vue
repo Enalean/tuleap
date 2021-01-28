@@ -37,6 +37,7 @@
             <repository-list-spinner />
             <filter-empty-state />
             <no-repository-empty-state />
+            <regenerate-gitlab-webhook />
         </div>
     </div>
 </template>
@@ -59,11 +60,13 @@ import GitlabRepositoryModal from "./GitlabModal/CreateGitlabLinkModal/GitlabRep
 import EditAccessTokenGitlabModal from "./GitlabModal/EditAccessTokenGitlabModal/EditAccessTokenGitlabModal.vue";
 import UnlinkRepositoryGitlabModal from "./GitlabModal/UnlinkGitlabRepositoryModal/UnlinkRepositoryGitlabModal.vue";
 import SuccessMessage from "./SuccessMessage";
+import RegenerateGitlabWebhook from "./GitlabModal/RegenerateGitlabWebhookModal/RegenerateGitlabWebhook";
 
 export default {
     name: "App",
     store,
     components: {
+        RegenerateGitlabWebhook,
         SuccessMessage,
         GitlabRepositoryModal,
         UnlinkRepositoryGitlabModal,
