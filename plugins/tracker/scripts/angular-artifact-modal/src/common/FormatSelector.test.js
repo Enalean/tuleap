@@ -20,6 +20,7 @@
 import localVue from "../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FormatSelector from "./FormatSelector.vue";
+import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
 
 let value, disabled, required;
 
@@ -83,6 +84,21 @@ describe(`FormatSelector`, () => {
             const wrapper = getInstance();
 
             expect(wrapper.find(".fa-asterisk").exists()).toBe(true);
+        });
+    });
+    describe("commonmark helper button", () => {
+        it.each([["html"], ["text"]])(
+            `does not displays the help button if the chosen format is %s`,
+            (format) => {
+                value = format;
+                const wrapper = getInstance();
+                expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBeFalsy();
+            }
+        );
+        it(`displays the help button if the chosen format is 'Markdown'`, () => {
+            value = "commonmark";
+            const wrapper = getInstance();
+            expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBeTruthy();
         });
     });
 });
