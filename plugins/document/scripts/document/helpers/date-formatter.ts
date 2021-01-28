@@ -20,16 +20,15 @@
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
-export function formatDateUsingPreferredUserFormat(date, user_preferred_format) {
+export function formatDateUsingPreferredUserFormat(
+    date: string,
+    user_preferred_format: string
+): string {
     return moment(date).format(formatFromPhpToMoment(user_preferred_format));
 }
 
-export function getElapsedTimeFromNow(date) {
-    return moment(date).fromNow();
-}
+export const isDateValid = (date: string): boolean => moment(date).isValid();
 
-export const isDateValid = (date) => moment(date).isValid();
-
-export function isToday(date) {
+export function isToday(date: string): boolean {
     return moment().diff(date, "days") === 0;
 }

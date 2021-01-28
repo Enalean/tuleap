@@ -61,7 +61,7 @@ import {
     formatDateUsingPreferredUserFormat,
     isDateValid,
     isToday,
-} from "../../../helpers/date-formatter.js";
+} from "../../../helpers/date-formatter";
 import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants";
 import {
     relativeDatePlacement,
