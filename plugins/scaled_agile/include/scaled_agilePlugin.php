@@ -46,6 +46,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapt
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\ScaledAgileHierarchyDAO;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanProgramAdapter;
@@ -74,6 +75,7 @@ use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\Workspace\ComponentInvolvedVerifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -103,6 +105,8 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES, 'trackerAddSystemNatures');
         $this->addHook(CanSubmitNewArtifact::NAME);
         $this->addHook(ArtifactCreated::NAME);
+        $this->addHook(ArtifactUpdated::NAME);
+        $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE, 'trackerArtifactDeleted');
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(PlanningAdministrationDelegation::NAME);
@@ -247,13 +251,17 @@ final class scaled_agilePlugin extends Plugin
         $program_dao = new ProgramDao();
         $logger      = $this->getLogger();
 
+        $artifact = $event->getArtifact();
+
         $logger->debug(
             sprintf(
                 "Store program create with #%d by user #%d",
-                (int) $event->getArtifact()->getId(),
+                $artifact->getId(),
                 (int) $event->getUser()->getId()
             )
         );
+
+        $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($artifact);
 
         $handler = new ArtifactCreatedHandler(
             $program_dao,
@@ -262,6 +270,24 @@ final class scaled_agilePlugin extends Plugin
             $this->getPlanConfigurationBuilder()
         );
         $handler->handle($event);
+    }
+
+    public function trackerArtifactUpdated(ArtifactUpdated $event): void
+    {
+        $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event->getArtifact());
+    }
+
+    private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(\Tuleap\Tracker\Artifact\Artifact $artifact): void
+    {
+        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactsPlannedInAProgramIncrement($artifact->getId());
+    }
+
+    public function trackerArtifactDeleted(array $params): void
+    {
+        $artifact = $params['artifact'];
+        assert($artifact instanceof \Tuleap\Tracker\Artifact\Artifact);
+
+        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactFromExplicitTopBacklog($artifact->getID());
     }
 
     /**

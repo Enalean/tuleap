@@ -29,13 +29,14 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
 {
     public function dropUnusedComponents(): void
     {
-        $sql = 'DELETE plugin_scaled_agile_plan.*, plugin_scaled_agile_team_projects.*, plugin_scaled_agile_pending_mirrors.*
+        $sql = 'DELETE plugin_scaled_agile_plan.*, plugin_scaled_agile_team_projects.*, plugin_scaled_agile_pending_mirrors.*, plugin_scaled_agile_explicit_top_backlog.*
                 FROM `groups`
                 LEFT JOIN tracker ON (tracker.group_id = `groups`.group_id)
                 LEFT JOIN plugin_scaled_agile_plan ON (plugin_scaled_agile_plan.program_increment_tracker_id = tracker.group_id OR plugin_scaled_agile_plan.plannable_tracker_id = tracker.group_id)
                 LEFT JOIN plugin_scaled_agile_team_projects ON (plugin_scaled_agile_team_projects.team_project_id = `groups`.group_id OR plugin_scaled_agile_team_projects.program_project_id = `groups`.group_id)
                 LEFT JOIN tracker_artifact ON (tracker_artifact.tracker_id = tracker.id)
                 LEFT JOIN plugin_scaled_agile_pending_mirrors ON (plugin_scaled_agile_pending_mirrors.program_artifact_id = tracker_artifact.id)
+                LEFT JOIN plugin_scaled_agile_explicit_top_backlog ON (plugin_scaled_agile_explicit_top_backlog.artifact_id = tracker_artifact.id)
                 WHERE `groups`.status = "D"';
 
         $this->getDB()->run($sql);

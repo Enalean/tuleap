@@ -49,6 +49,13 @@ final class PlanDao extends DataAccessObject implements PlanStore
             }
 
             $this->getDB()->insertMany('plugin_scaled_agile_plan', $insert);
+
+            $sql_top_backlog_clean_up = 'DELETE plugin_scaled_agile_explicit_top_backlog.*
+                FROM plugin_scaled_agile_explicit_top_backlog
+                JOIN tracker_artifact ON (tracker_artifact.id = plugin_scaled_agile_explicit_top_backlog.artifact_id)
+                JOIN tracker ON (tracker.id = tracker_artifact.tracker_id)
+                JOIN plugin_scaled_agile_plan ON (plugin_scaled_agile_plan.plannable_tracker_id != tracker.id)';
+            $this->getDB()->run($sql_top_backlog_clean_up);
         });
     }
 
