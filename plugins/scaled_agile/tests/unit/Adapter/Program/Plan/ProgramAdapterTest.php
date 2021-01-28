@@ -24,7 +24,6 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\ScaledAgile\Program\ProgramStore;
@@ -47,18 +46,13 @@ final class ProgramAdapterTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectManager
      */
     private $project_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
 
     protected function setUp(): void
     {
-        $this->project_manager      = \Mockery::mock(\ProjectManager::class);
-        $this->program_store        = \Mockery::mock(ProgramStore::class);
-        $this->explicit_backlog_dao = \Mockery::mock(ExplicitBacklogDao::class);
+        $this->project_manager = \Mockery::mock(\ProjectManager::class);
+        $this->program_store   = \Mockery::mock(ProgramStore::class);
 
-        $this->adapter = new ProgramAdapter($this->project_manager, $this->program_store, $this->explicit_backlog_dao);
+        $this->adapter = new ProgramAdapter($this->project_manager, $this->program_store);
 
         $_SERVER['REQUEST_URI'] = '/';
     }
@@ -117,7 +111,7 @@ final class ProgramAdapterTest extends TestCase
 
         $expected = new Program($project_id);
 
-        $this->assertEquals($expected, $this->adapter->buildExistingProgramProject($project_id, $user));
+        self::assertEquals($expected, $this->adapter->buildExistingProgramProject($project_id, $user));
     }
 
     public function testItThrowsErrorWhenUserIsNotProjectAdminForNewPject(): void
@@ -149,27 +143,8 @@ final class ProgramAdapterTest extends TestCase
         $user->shouldReceive('isAnonymous')->andReturnFalse();
         $user->shouldReceive('isSuperUser')->andReturnTrue();
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(true);
-
         $expected = new ToBeCreatedProgram($project_id);
 
-        $this->assertEquals($expected, $this->adapter->buildNewProgramProject($project_id, $user));
-    }
-
-    public function testNewProgramCannotBeBuiltWhenProjectDoesNotUseTheExplicitBacklogMode(): void
-    {
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id, 'status' => 'A']);
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
-
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false);
-
-        $this->expectException(ProgramMustHaveExplicitBacklogEnabledException::class);
-        $this->adapter->buildNewProgramProject($project_id, $user);
+        self::assertEquals($expected, $this->adapter->buildNewProgramProject($project_id, $user));
     }
 }

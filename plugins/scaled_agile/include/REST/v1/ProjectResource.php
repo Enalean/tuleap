@@ -34,7 +34,6 @@ use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramMustHaveExplicitBacklogEnabledException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\Program\Feature\BackgroundColorRetriever;
@@ -89,7 +88,7 @@ final class ProjectResource extends AuthenticatedResource
         $project_manager      = \ProjectManager::instance();
         $program_dao          = new ProgramDao();
         $explicit_backlog_dao = new ExplicitBacklogDao();
-        $build_program        = new ProgramAdapter($project_manager, $program_dao, $explicit_backlog_dao);
+        $build_program        = new ProgramAdapter($project_manager, $program_dao);
         $this->plan_creator   = new PlanCreator($build_program, $tracker_adapter, $plan_dao);
 
         $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
@@ -182,7 +181,7 @@ final class ProjectResource extends AuthenticatedResource
                 $id,
                 $representation->team_ids
             );
-        } catch (TeamException | ProgramMustHaveExplicitBacklogEnabledException $e) {
+        } catch (TeamException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());

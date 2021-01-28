@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\HierarchyAdapter;
@@ -62,8 +61,7 @@ final class ScaledAgileResource extends AuthenticatedResource
         $this->hierarchy_creator = new HierarchyCreator(
             new ProgramAdapter(
                 \ProjectManager::instance(),
-                new ProgramDao(),
-                new ExplicitBacklogDao()
+                new ProgramDao()
             ),
             new HierarchyAdapter(
                 new TeamTrackerAdapter($tracker_factory, new TeamDao(), new PlanningAdapter(\PlanningFactory::build())),
