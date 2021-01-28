@@ -139,6 +139,12 @@ msgstr "Résultats attendus"
 msgid "Failed"
 msgstr "Échoué"
 
+msgid "Filter tests by ID, summary, category…"
+msgstr "Filtrer les tests par Id, résumé, catégorie…"
+
+msgid "Filter tests by status"
+msgstr "Filtrer les tests par statut"
+
 msgid "Focus graph"
 msgstr "Recentrer le graphe"
 

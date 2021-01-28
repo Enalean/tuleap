@@ -27,73 +27,76 @@
             <div class="tlp-pane-container">
                 <section class="tlp-pane-section tests-list-filters ">
                     <div class="tests-filter-bar tlp-search tlp-search-small">
-                        <i class="fas fa-sliders-h tests-search-bar-icon"></i>
+                        <i class="fas fa-sliders-h tests-search-bar-icon" aria-hidden="true"></i>
                         <input
                             type="search"
                             class="tests-list-filter-search"
                             placeholder="{{ 'Id, summary, category…' | translate }}"
                             ng-model="search"
+                            aria-label="{{ 'Filter tests by ID, summary, category…' | translate }}"
                         >
                         <div class="tlp-dropdown tests-filters-dropdown">
                             <button id="toggle-filters-dropdown"
                                     class="tests-toggle-filters"
                                     title="{{ 'Toggle filters dropdown' | translate }}"
+                                    aria-label="{{ 'Toggle filters dropdown' | translate }}"
+                                    aria-haspopup="menu"
                             >
-                                <i class="fa fa-check-circle test-status-icon passed" ng-class="{'filtered-status': isStatusHidden('passed')}"></i>
-                                <i class="fa fa-times-circle test-status-icon failed" ng-class="{'filtered-status': isStatusHidden('failed')}"></i>
-                                <i class="fa fa-exclamation-circle test-status-icon blocked" ng-class="{'filtered-status': isStatusHidden('blocked')}"></i>
-                                <i class="fa fa-question-circle test-status-icon notrun" ng-class="{'filtered-status': isStatusHidden('notrun')}"></i>
-                                <i class="fa fa-tlp-robot test-status-icon test-status-icon notrun" ng-class="{'filtered-status': are_automated_tests_shown === false}"></i>
+                                <i class="fa fa-check-circle test-status-icon passed" ng-class="{'filtered-status': isStatusHidden('passed')}" aria-hidden="true"></i>
+                                <i class="fa fa-times-circle test-status-icon failed" ng-class="{'filtered-status': isStatusHidden('failed')}" aria-hidden="true"></i>
+                                <i class="fa fa-exclamation-circle test-status-icon blocked" ng-class="{'filtered-status': isStatusHidden('blocked')}" aria-hidden="true"></i>
+                                <i class="fa fa-question-circle test-status-icon notrun" ng-class="{'filtered-status': isStatusHidden('notrun')}" aria-hidden="true"></i>
+                                <i class="fa fa-tlp-robot test-status-icon test-status-icon notrun" ng-class="{'filtered-status': are_automated_tests_shown === false}" aria-hidden="true"></i>
                             </button>
-                            <div id="filters-dropdown-menu" class="tlp-dropdown-menu" role="menu">
+                            <div id="filters-dropdown-menu" class="tlp-dropdown-menu" role="menu" aria-label="{{ 'Filter tests by status' | translate }}">
                                 <div class="tests-filter-option">
-                                    <div class="tests-filter-option-title">
-                                        <i class="fa fa-fw fa-check-circle test-status-icon passed"></i>
+                                    <label class="tests-filter-option-title tlp-label" for="status-filter-passed">
+                                        <i class="fa fa-fw fa-check-circle test-status-icon passed" aria-hidden="true"></i>
                                         {{ 'Passed' | translate }}
-                                    </div>
+                                    </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-passed" class="tlp-switch-checkbox" checked>
-                                        <label for="status-filter-passed" class="tlp-switch-button" ng-click="toggleStatus('passed')"></label>
+                                        <input type="checkbox" id="status-filter-passed" class="tlp-switch-checkbox" ng-click="toggleStatus('passed')" checked>
+                                        <label for="status-filter-passed" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
-                                    <div class="tests-filter-option-title">
-                                        <i class="fa fa-fw fa-times-circle test-status-icon failed"></i>
+                                    <label class="tests-filter-option-title tlp-label" for="status-filter-failed">
+                                        <i class="fa fa-fw fa-times-circle test-status-icon failed" aria-hidden="true"></i>
                                         {{ 'Failed' | translate }}
-                                    </div>
+                                    </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-failed" class="tlp-switch-checkbox" checked>
-                                        <label for="status-filter-failed" class="tlp-switch-button" ng-click="toggleStatus('failed')"></label>
+                                        <input type="checkbox" id="status-filter-failed" class="tlp-switch-checkbox" ng-click="toggleStatus('failed')" checked>
+                                        <label for="status-filter-failed" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
-                                    <div class="tests-filter-option-title">
-                                        <i class="fa fa-fw fa-exclamation-circle test-status-icon blocked"></i>
+                                    <label class="tests-filter-option-title tlp-label" for="status-filter-blocked">
+                                        <i class="fa fa-fw fa-exclamation-circle test-status-icon blocked" aria-hidden="true"></i>
                                         {{ 'Blocked' | translate }}
-                                    </div>
+                                    </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-blocked" class="tlp-switch-checkbox" checked>
-                                        <label for="status-filter-blocked" class="tlp-switch-button" ng-click="toggleStatus('blocked')"></label>
+                                        <input type="checkbox" id="status-filter-blocked" class="tlp-switch-checkbox" ng-click="toggleStatus('blocked')" checked>
+                                        <label for="status-filter-blocked" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
-                                    <div class="tests-filter-option-title">
-                                        <i class="fa fa-fw fa-question-circle test-status-icon notrun"></i>
+                                    <label class="tests-filter-option-title tlp-label" for="status-filter-notrun">
+                                        <i class="fa fa-fw fa-question-circle test-status-icon notrun" aria-hidden="true"></i>
                                         {{ 'Not run' | translate }}
-                                    </div>
+                                    </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-notrun" class="tlp-switch-checkbox" checked>
-                                        <label for="status-filter-notrun" class="tlp-switch-button" ng-click="toggleStatus('notrun')"></label>
+                                        <input type="checkbox" id="status-filter-notrun" class="tlp-switch-checkbox" ng-click="toggleStatus('notrun')" checked>
+                                        <label for="status-filter-notrun" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
                                 <div class="tests-filter-option">
-                                    <div class="tests-filter-option-title">
-                                        <i class="fa fa-fw fa-tlp-robot test-status-icon notrun"></i>
+                                    <label class="tests-filter-option-title tlp-label" for="status-filter-automated">
+                                        <i class="fa fa-fw fa-tlp-robot test-status-icon notrun" aria-hidden="true"></i>
                                         {{ 'Automated' | translate }}
-                                    </div>
+                                    </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-automated" class="tlp-switch-checkbox">
-                                        <label for="status-filter-automated" class="tlp-switch-button" ng-click="toggleAutomatedTests()"></label>
+                                        <input type="checkbox" id="status-filter-automated" class="tlp-switch-checkbox" ng-click="toggleAutomatedTests()">
+                                        <label for="status-filter-automated" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
                             </div>
@@ -105,6 +108,7 @@
                         ng-click="scrollToCurrentTest()"
                         ng-disabled="isScrollToTestButtonDisabled()"
                         title="{{ 'Auto scroll to current test' | translate }}"
+                        aria-label="{{ 'Auto scroll to current test' | translate }}"
                     >
                         <i class="fa fa-tlp-go-to-user scroll-to-current-test-button-icon" aria-hidden="true"></i>
                     </button>
