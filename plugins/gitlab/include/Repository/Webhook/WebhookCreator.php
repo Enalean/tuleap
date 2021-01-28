@@ -80,7 +80,7 @@ class WebhookCreator
      */
     public function generateWebhookInGitlabProject(Credentials $credentials, GitlabRepository $gitlab_repository): void
     {
-        $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($gitlab_repository);
+        $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($credentials, $gitlab_repository);
         $this->createNewGitlabWebhook($credentials, $gitlab_repository);
     }
 

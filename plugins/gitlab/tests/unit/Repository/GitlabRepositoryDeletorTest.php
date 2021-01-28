@@ -29,8 +29,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
@@ -95,6 +98,10 @@ class GitlabRepositoryDeletorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookDeletor
      */
     private $webhook_deletor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     */
+    private $credentials_retriever;
 
     protected function setUp(): void
     {
@@ -108,6 +115,7 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_bot_api_token_dao      = Mockery::mock(GitlabBotApiTokenDao::class);
         $this->commit_tuleap_reference_dao   = Mockery::mock(CommitTuleapReferenceDao::class);
         $this->merge_request_dao             = Mockery::mock(MergeRequestTuleapReferenceDao::class);
+        $this->credentials_retriever         = Mockery::mock(CredentialsRetriever::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
             $this->git_permissions_manager,
@@ -117,7 +125,8 @@ class GitlabRepositoryDeletorTest extends TestCase
             $this->gitlab_repository_dao,
             $this->gitlab_bot_api_token_dao,
             $this->commit_tuleap_reference_dao,
-            $this->merge_request_dao
+            $this->merge_request_dao,
+            $this->credentials_retriever
         );
 
         $this->gitlab_repository = new GitlabRepository(
@@ -228,10 +237,17 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_repository_project_dao->shouldReceive('removeGitlabRepositoryIntegrationInProject')
             ->once();
 
+        $credentials = new Credentials("full_ur", new ConcealedString("My Token"));
+
+        $this->credentials_retriever
+            ->shouldReceive('getCredentials')
+            ->andReturn($credentials)
+            ->once();
+
         $this->webhook_deletor
             ->shouldReceive('deleteGitlabWebhookFromGitlabRepository')
             ->once()
-            ->with($this->gitlab_repository);
+            ->with($credentials, $this->gitlab_repository);
 
         $this->gitlab_repository_dao->shouldReceive('deleteGitlabRepository')->once();
         $this->gitlab_bot_api_token_dao->shouldReceive('deleteGitlabBotToken')->once();

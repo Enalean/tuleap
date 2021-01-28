@@ -156,12 +156,6 @@ final class GitlabRepositoryResource
                     new WebhookDeletor(
                         new WebhookDao(),
                         $gitlab_api_client,
-                        new CredentialsRetriever(
-                            new GitlabBotApiTokenRetriever(
-                                new GitlabBotApiTokenDao(),
-                                new KeyFactory()
-                            ),
-                        ),
                         BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
                     ),
                     $gitlab_api_client,
@@ -272,12 +266,6 @@ final class GitlabRepositoryResource
                     new WebhookDeletor(
                         new WebhookDao(),
                         $gitlab_api_client,
-                        new CredentialsRetriever(
-                            new GitlabBotApiTokenRetriever(
-                                new GitlabBotApiTokenDao(),
-                                new KeyFactory()
-                            ),
-                        ),
                         BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
                     ),
                     $gitlab_api_client,
@@ -319,12 +307,6 @@ final class GitlabRepositoryResource
                     new WebhookDeletor(
                         new WebhookDao(),
                         $gitlab_api_client,
-                        new CredentialsRetriever(
-                            new GitlabBotApiTokenRetriever(
-                                new GitlabBotApiTokenDao(),
-                                new KeyFactory()
-                            ),
-                        ),
                         BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
                     ),
                     $gitlab_api_client,
@@ -398,18 +380,13 @@ final class GitlabRepositoryResource
             new WebhookDeletor(
                 new WebhookDao(),
                 $gitlab_api_client,
-                new CredentialsRetriever(
-                    new GitlabBotApiTokenRetriever(
-                        new GitlabBotApiTokenDao(),
-                        new KeyFactory()
-                    ),
-                ),
                 BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
             ),
             new GitlabRepositoryDao(),
             new GitlabBotApiTokenDao(),
             new CommitTuleapReferenceDao(),
-            new MergeRequestTuleapReferenceDao()
+            new MergeRequestTuleapReferenceDao(),
+            new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory()))
         );
 
         try {
