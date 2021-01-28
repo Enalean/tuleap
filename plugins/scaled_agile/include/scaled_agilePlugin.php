@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 use Tuleap\AgileDashboard\BlockScrumAccess;
-use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
@@ -177,8 +176,7 @@ final class scaled_agilePlugin extends Plugin
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             new ProgramAdapter(
                 ProjectManager::instance(),
-                new ProgramDao(),
-                new ExplicitBacklogDao()
+                new ProgramDao()
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates")
         );
