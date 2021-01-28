@@ -60,7 +60,8 @@ $tlp-fontawesome-icons: (
     robot: '\f029',
     robot-happy: '\f030',
     robot-unhappy: '\f031',
-    go-to-user: '\f032'
+    go-to-user: '\f032',
+    webhooks: '\f033'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
