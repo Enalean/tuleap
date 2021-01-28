@@ -20,12 +20,13 @@
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use EventManager;
 use PFUser;
 use ProjectHistoryDao;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_ArtifactDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 
 class ArtifactDeletor
 {
@@ -47,9 +48,8 @@ class ArtifactDeletor
      * @var AsynchronousArtifactsDeletionActionsRunner
      */
     private $asynchronous_actions_runner;
-
     /**
-     * @var EventManager
+     * @var EventDispatcherInterface
      */
     private $event_manager;
 
@@ -58,7 +58,7 @@ class ArtifactDeletor
         ProjectHistoryDao $project_history_dao,
         PendingArtifactRemovalDao $pending_artifact_removal_dao,
         AsynchronousArtifactsDeletionActionsRunner $asynchronous_actions_runner,
-        EventManager $event_manager
+        EventDispatcherInterface $event_manager
     ) {
         $this->dao                          = $dao;
         $this->project_history_dao          = $project_history_dao;
@@ -102,13 +102,8 @@ class ArtifactDeletor
         );
     }
 
-    private function processEvent(Artifact $artifact)
+    private function processEvent(Artifact $artifact): void
     {
-        $this->event_manager->processEvent(
-            TRACKER_EVENT_ARTIFACT_DELETE,
-            [
-                'artifact' => $artifact,
-            ]
-        );
+        $this->event_manager->dispatch(new ArtifactDeleted($artifact));
     }
 }

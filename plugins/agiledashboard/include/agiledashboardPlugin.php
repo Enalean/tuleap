@@ -108,6 +108,7 @@ use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
@@ -244,7 +245,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(MessageFetcherAdditionalWarnings::NAME);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE);
+            $this->addHook(ArtifactDeleted::NAME);
             $this->addHook(MoveArtifactGetExternalSemanticCheckers::NAME);
             $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
@@ -1603,15 +1604,15 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function tracker_event_artifact_delete(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void
     {
         $burnup_cache_dao = new BurnupCacheDao();
-        $artifact         = $params['artifact'];
+        $artifact         = $artifact_deleted->getArtifact();
 
         $burnup_cache_dao->deleteArtifactCacheValue($artifact->getId());
 
         $artifact_explicit_backlog_dao = new ArtifactsInExplicitBacklogDao();
-        $artifact_explicit_backlog_dao->removeArtifactFromExplicitBacklog((int) $artifact->getId());
+        $artifact_explicit_backlog_dao->removeArtifactFromExplicitBacklog($artifact->getId());
     }
 
     private function doesSemanticDoneUsesSemanticStatus(Tracker $tracker)
