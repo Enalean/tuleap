@@ -37,6 +37,22 @@ export interface Metadata {
     is_required: boolean;
     is_multiple_value_allowed: boolean;
     is_used: boolean;
+    list_value: Array<number> | Array<ListValue> | null | [];
+    value: number | string | null;
+}
+
+/**
+ * Note of metadata usage:
+ *
+ * For single and multiple list when data comes from rest route, list_value has Array<ListValue>
+ * For single metadata, after transformation, list_value is null, value is a number (chosen option)
+ * For multiple value metadata, after transformation, value is null, list value is and Array<number>
+ *
+ * Please also note that value is used for dates/string
+ */
+export interface ListValue {
+    id: number;
+    value: string | number;
 }
 
 export interface Item {
@@ -53,6 +69,7 @@ export interface Item {
     metadata: Array<Metadata>;
     parent_id: number | null;
     type: string;
+    status: string;
 }
 
 export interface Folder extends Item {

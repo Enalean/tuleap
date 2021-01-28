@@ -28,8 +28,8 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
-import { transformItemMetadataForCreation } from "../../../../helpers/metadata-helpers/data-transformatter-helper";
 import StatusMetadata from "../StatusMetadata.vue";
+import { transformItemMetadataForCreation } from "../../../../helpers/metadata-helpers/creation-data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForDocumentCreate",

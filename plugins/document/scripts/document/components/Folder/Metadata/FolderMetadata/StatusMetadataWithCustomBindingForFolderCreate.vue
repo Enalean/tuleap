@@ -29,7 +29,7 @@
 <script>
 import { mapState } from "vuex";
 import StatusMetadata from "../StatusMetadata.vue";
-import { transformItemMetadataForCreation } from "../../../../helpers/metadata-helpers/data-transformatter-helper";
+import { transformItemMetadataForCreation } from "../../../../helpers/metadata-helpers/creation-data-transformatter-helper";
 
 export default {
     name: "StatusMetadataWithCustomBindingForFolderCreate",
