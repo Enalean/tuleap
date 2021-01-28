@@ -29,6 +29,7 @@ use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementCrea
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
@@ -81,7 +82,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     {
         try {
             $this->create($replication_data);
-        } catch (ProgramIncrementTrackerRetrievalException | ProgramIncrementCreationException | FieldRetrievalException $exception) {
+        } catch (ProgramIncrementTrackerRetrievalException | ProgramIncrementCreationException | FieldRetrievalException | FieldSynchronizationException $exception) {
             $this->logger->error('Error during creation of project increments ', ['exception' => $exception]);
         }
     }
@@ -90,6 +91,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      * @throws ProgramIncrementCreationException
      * @throws ProgramIncrementTrackerRetrievalException
      * @throws FieldRetrievalException
+     * @throws FieldSynchronizationException
      */
     private function create(ReplicationData $replication_data): void
     {

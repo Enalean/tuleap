@@ -40,7 +40,6 @@ use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Adapter\Team\TeamTrackerAdapter;
 use Tuleap\ScaledAgile\Program\Hierarchy\HierarchyCreator;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 final class ScaledAgileResource extends AuthenticatedResource
@@ -110,7 +109,7 @@ final class ScaledAgileResource extends AuthenticatedResource
             );
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());
-        } catch (PlanTrackerException | HierarchyException | TopPlanningNotFoundInProjectException | ProgramTrackerException $e) {
+        } catch (PlanTrackerException | HierarchyException | ProgramTrackerException $e) {
             throw new RestException(400, $e->getMessage());
         }
     }

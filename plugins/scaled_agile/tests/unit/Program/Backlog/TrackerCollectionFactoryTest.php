@@ -29,7 +29,7 @@ use Planning;
 use Project;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -127,7 +127,7 @@ final class TrackerCollectionFactoryTest extends TestCase
             ->with($user, $this->project_data->getId())
             ->andReturn($malformed_planning);
 
-        $this->expectException(NoProgramIncrementException::class);
+        $this->expectException(PlanningHasNoProgramIncrementException::class);
         $this->builder->buildFromProgramProjectAndItsTeam($this->program_project_data, $teams, $user);
     }
 
@@ -147,7 +147,7 @@ final class TrackerCollectionFactoryTest extends TestCase
             ->with($user, $this->first_team_project_data->getId())
             ->andReturn($malformed_planning);
 
-        $this->expectException(NoProgramIncrementException::class);
+        $this->expectException(PlanningHasNoProgramIncrementException::class);
         $this->builder->buildFromProgramProjectAndItsTeam($this->program_project_data, $teams, $user);
     }
 

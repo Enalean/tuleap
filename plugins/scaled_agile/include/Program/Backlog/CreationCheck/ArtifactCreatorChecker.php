@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Tuleap\ScaledAgile\Program\BuildPlanning;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ScaledAgile\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ScaledAgile\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ScaledAgile\Project;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
 
@@ -35,33 +37,32 @@ class ArtifactCreatorChecker
      */
     private $program_increment_artifact_creator_checker;
     /**
-     * @var BuildPlanning
+     * @var BuildPlanProgramIncrementConfiguration
      */
-    private $build_planning;
+    private $build_plan_configuration;
 
     public function __construct(
-        BuildPlanning $build_planning,
-        ProgramIncrementArtifactCreatorChecker $program_increment_artifact_creator_checker
+        ProgramIncrementArtifactCreatorChecker $program_increment_artifact_creator_checker,
+        BuildPlanProgramIncrementConfiguration $build_plan_configuration
     ) {
         $this->program_increment_artifact_creator_checker = $program_increment_artifact_creator_checker;
-        $this->build_planning                             = $build_planning;
+        $this->build_plan_configuration                   = $build_plan_configuration;
     }
 
     public function canCreateAnArtifact(PFUser $user, ScaledAgileTracker $tracker_data, Project $project_data): bool
     {
         try {
-            $root_planning = $this->build_planning->buildRootPlanning(
-                $user,
-                $project_data->getId()
+            $program_increment_tracker = $this->build_plan_configuration->buildProgramIncrementFromProjectId(
+                $project_data->getId(),
+                $user
             );
-        } catch (TopPlanningNotFoundInProjectException $e) {
+        } catch (PlanCheckException | PlanTrackerException | ProgramTrackerException $e) {
+            return true;
+        }
+        if ($program_increment_tracker->getTrackerId() !== $tracker_data->getTrackerId()) {
             return true;
         }
 
-        if ($root_planning->getPlanningTracker()->getTrackerId() !== $tracker_data->getTrackerId()) {
-            return true;
-        }
-
-        return $this->program_increment_artifact_creator_checker->canProgramIncrementBeCreated($root_planning, $user);
+        return $this->program_increment_artifact_creator_checker->canProgramIncrementBeCreated($tracker_data, $project_data, $user);
     }
 }

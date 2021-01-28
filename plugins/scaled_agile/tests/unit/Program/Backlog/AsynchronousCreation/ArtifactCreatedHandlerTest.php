@@ -25,10 +25,9 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Planning;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ScaledAgile\Program\ProgramStore;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -39,12 +38,12 @@ final class ArtifactCreatedHandlerTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\PlanningFactory
+     * @var M\LegacyMockInterface|M\MockInterface|BuildPlanProgramIncrementConfiguration
      */
-    private $planning_factory;
+    private $build_plan_configuration;
 
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|CreateProgramIncrementsRunner
+     * @var M\LegacyMockInterface|M\MockInterface|RunProgramIncrementCreation
      */
     private $asyncronous_runner;
 
@@ -65,15 +64,14 @@ final class ArtifactCreatedHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->program_store                   = M::mock(ProgramStore::class);
-        $this->planning_factory                = M::mock(\PlanningFactory::class);
-        $planning_adapter                      = new PlanningAdapter($this->planning_factory);
+        $this->build_plan_configuration        = M::mock(BuildPlanProgramIncrementConfiguration::class);
         $this->pending_artifact_creation_store = M::mock(PendingArtifactCreationStore::class);
         $this->asyncronous_runner              = M::mock(RunProgramIncrementCreation::class);
         $this->handler                         = new ArtifactCreatedHandler(
             $this->program_store,
             $this->asyncronous_runner,
             $this->pending_artifact_creation_store,
-            $planning_adapter
+            $this->build_plan_configuration
         );
     }
 
@@ -87,9 +85,8 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $artifact->setTracker($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
 
-        $planning = new Planning(7, 'Irrelevant', $project->getID(), '', []);
-        $planning->setPlanningTracker($tracker);
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
+        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+            ->andReturn(new ScaledAgileTracker($tracker));
 
         $this->pending_artifact_creation_store->shouldReceive('addArtifactToPendingCreation')
             ->withArgs([$artifact->getId(), $current_user->getId(), $changeset->getId()])
@@ -111,45 +108,6 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $current_user = UserTestBuilder::aUser()->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
         $artifact->setTracker($tracker);
-        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
-
-        $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
-
-        $this->asyncronous_runner->shouldNotHaveReceived('executeMirrorsCreation');
-    }
-
-    public function testHandleDoesNotReactWhenNoPlanningException(): void
-    {
-        $project = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
-        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-        $this->program_store->shouldReceive('isProjectAProgramProject')->andReturnTrue();
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->andThrow(new TopPlanningNotFoundInProjectException(102));
-
-        $current_user = UserTestBuilder::aUser()->build();
-        $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
-        $artifact->setTracker($tracker);
-        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
-
-        $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
-
-        $this->asyncronous_runner->shouldNotHaveReceived('executeMirrorsCreation');
-    }
-
-    public function testHandleReactsOnlyToTopMilestones(): void
-    {
-        $project     = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
-        $top_tracker = TrackerTestBuilder::aTracker()->withId(404)->withProject($project)->build();
-        $this->program_store->shouldReceive('isProjectAProgramProject')->andReturnTrue();
-
-        $other_tracker = TrackerTestBuilder::aTracker()->withId(12)->withProject($project)->build();
-        $planning      = new Planning(7, 'Irrelevant', $project->getID(), '', []);
-        $planning->setPlanningTracker($other_tracker);
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
-
-        $current_user = UserTestBuilder::aUser()->build();
-        $artifact     = new Artifact(1, $top_tracker->getId(), $current_user->getId(), 12345678, false);
-        $artifact->setTracker($top_tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
 
         $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));

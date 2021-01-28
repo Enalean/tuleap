@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\BuildPlanning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
@@ -57,7 +57,7 @@ final class PlanningAdapter implements BuildPlanning
 
 
         if ($root_planning->getPlanningTracker() instanceof \NullTracker) {
-            throw new NoProgramIncrementException($root_planning->getId());
+            throw new PlanningHasNoProgramIncrementException($root_planning->getId());
         }
         $project_data = ProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\PlanningCheck;
+namespace Tuleap\ScaledAgile\Program\Backlog\Plan;
 
-final class ConfigurationUserCanNotSeeProgramException extends \Exception implements PlanningCheckException
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ScaledAgile\Program\Program;
+
+interface BuildPlanProgramConfiguration
 {
-    public function __construct(int $user_id, int $tracker_id)
-    {
-        parent::__construct("User #$user_id can not view the the tracker #$tracker_id");
-    }
+    /**
+     * @throws PlanTrackerException
+     */
+    public function buildProgramTrackerFromTeamProject(\Project $project, \PFUser $user): ?Program;
 }

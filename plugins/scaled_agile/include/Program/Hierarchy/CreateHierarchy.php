@@ -25,18 +25,14 @@ namespace Tuleap\ScaledAgile\Program\Hierarchy;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\HierarchyException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 interface CreateHierarchy
 {
     /**
-     * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     * @throws TopPlanningNotFoundInProjectException
      * @throws HierarchyException
      * @throws PlanTrackerException
+     * @throws ProgramAccessException
      * @throws ProgramTrackerException
      */
     public function create(\PFUser $user, int $program_id, int $program_tracker_id, array $team_tracker_ids): void;

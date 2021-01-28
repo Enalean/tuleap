@@ -20,14 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\PlanningCheck;
+namespace Tuleap\ScaledAgile\Program\Backlog\Plan;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\ScaledAgile\Program\Plan\ProgramIncrementTracker;
 use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ConfigurationCheckerTest extends TestCase
 {
@@ -35,30 +36,32 @@ final class ConfigurationCheckerTest extends TestCase
 
     public function testItBuildAProgramIncrementTracker(): void
     {
-        $adapter = Mockery::mock(BuildPlanningConfiguration::class);
-        $checker = new ConfigurationChecker($adapter);
+        $planning_adapter = Mockery::mock(BuildPlanProgramConfiguration::class);
+        $plan_adapter     = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
+        $checker          = new ConfigurationChecker($planning_adapter, $plan_adapter);
 
         $program           = new Program(1);
-        $program_increment = new ProgramIncrementTracker(100);
-        $adapter->shouldReceive('buildProgramFromTeamProject')->andReturn($program);
-        $adapter->shouldReceive('buildProgramIncrementFromProjectId')->andReturn($program_increment);
+        $program_increment = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->build());
+        $planning_adapter->shouldReceive('buildProgramTrackerFromTeamProject')->andReturn($program);
+        $plan_adapter->shouldReceive('buildProgramIncrementFromProjectId')->andReturn($program_increment);
 
         $user    = UserTestBuilder::aUser()->build();
         $project = new Project(['group_id' => 1]);
 
-        $this->assertEquals($program_increment, $checker->getProgramIncrementTracker($user, $project));
+        self::assertEquals($program_increment, $checker->getProgramIncrementTracker($user, $project));
     }
 
     public function testItReturnsNullWhenThereIsNOProgram(): void
     {
-        $adapter = Mockery::mock(BuildPlanningConfiguration::class);
-        $checker = new ConfigurationChecker($adapter);
+        $planning_adapter = Mockery::mock(BuildPlanProgramConfiguration::class);
+        $plan_adapter     = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
+        $checker          = new ConfigurationChecker($planning_adapter, $plan_adapter);
 
-        $adapter->shouldReceive('buildProgramFromTeamProject')->andReturn(null);
+        $planning_adapter->shouldReceive('buildProgramTrackerFromTeamProject')->andReturn(null);
 
         $user    = UserTestBuilder::aUser()->build();
         $project = new Project(['group_id' => 1]);
 
-        $this->assertNull($checker->getProgramIncrementTracker($user, $project));
+        self::assertNull($checker->getProgramIncrementTracker($user, $project));
     }
 }

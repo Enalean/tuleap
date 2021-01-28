@@ -28,6 +28,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 
@@ -65,6 +66,7 @@ class ProgramIncrementsCreator
     /**
      * @throws ProgramIncrementArtifactCreationException
      * @throws FieldRetrievalException
+     * @throws FieldSynchronizationException
      */
     public function createProgramIncrements(
         SourceChangesetValuesCollection $copied_values,
@@ -75,8 +77,7 @@ class ProgramIncrementsCreator
             function () use ($copied_values, $program_increments_tracker_collection, $current_user) {
                 foreach ($program_increments_tracker_collection->getProgramIncrementTrackers() as $program_increment_tracker) {
                     $synchronized_fields = $this->synchronized_fields_adapter->build($program_increment_tracker);
-
-                    $mapped_status = $this->status_mapper
+                    $mapped_status       = $this->status_mapper
                         ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getStatusField());
 
                     $fields_data = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(

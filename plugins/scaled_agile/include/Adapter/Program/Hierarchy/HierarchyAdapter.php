@@ -50,14 +50,11 @@ final class HierarchyAdapter implements BuildHierarchy
     }
 
     /**
-     * @throws TeamTrackerMustBeInPlannableTopBacklogException
-     * @throws TeamTrackerNotFoundException
-     * @throws TrackerDoesNotBelongToTeamException
-     * @throws PlanTrackerException
-     * @throws \Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException
-     * @throws \Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException
-     *
      * @param int[] $team_backlog_ids
+     *
+     * @throws PlanTrackerException
+     * @throws \Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException
+     * @throws HierarchyException
      */
     public function buildHierarchy(
         PFUser $user,
