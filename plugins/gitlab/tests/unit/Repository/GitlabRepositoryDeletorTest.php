@@ -29,14 +29,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class GitlabRepositoryDeletorTest extends TestCase
@@ -237,7 +236,7 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_repository_project_dao->shouldReceive('removeGitlabRepositoryIntegrationInProject')
             ->once();
 
-        $credentials = new Credentials("full_ur", new ConcealedString("My Token"));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')

@@ -32,6 +32,7 @@ use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
@@ -99,7 +100,10 @@ class BotApiTokenUpdater
             throw new RestException(404);
         }
 
-        $credentials = new Credentials($repository->getGitlabServerUrl(), $patch_representation->gitlab_bot_api_token);
+        $credentials = new Credentials(
+            $repository->getGitlabServerUrl(),
+            GitlabBotApiToken::buildBrandNewToken($patch_representation->gitlab_bot_api_token)
+        );
 
         try {
             $this->project_builder->getProjectFromGitlabAPI($credentials, $repository->getGitlabRepositoryId());

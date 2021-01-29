@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\API;
 
+use Http\Client\Common\PluginClient;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\LegacyMockInterface;
@@ -34,8 +35,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Http\Client\Common\PluginClient;
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 final class ClientWrapperTest extends TestCase
 {
@@ -73,7 +73,7 @@ final class ClientWrapperTest extends TestCase
      */
     public function testDeleteUrl(int $status_code, string $reason): void
     {
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $client_interface = Mockery::mock(ClientInterface::class);
         $client           = new PluginClient($client_interface);
@@ -118,7 +118,7 @@ final class ClientWrapperTest extends TestCase
      */
     public function testDeleteUrlThrowsExceptionIfStatusCodeIsNotSuccess(int $status_code, string $reason): void
     {
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $client_interface = Mockery::mock(ClientInterface::class);
         $client           = new PluginClient($client_interface);
@@ -159,7 +159,7 @@ final class ClientWrapperTest extends TestCase
 
     public function testDeleteUrlThrowsExceptionIfClientCannotSendTheRequest(): void
     {
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $client_interface = Mockery::mock(ClientInterface::class);
         $client           = new PluginClient($client_interface);

@@ -25,6 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 
 class CredentialsRetrieverTest extends TestCase
@@ -59,13 +60,13 @@ class CredentialsRetrieverTest extends TestCase
             ->andReturn("https://www.example.com/")
             ->once();
 
-        $token = new ConcealedString("My_Token123");
+        $bot_api_token = GitlabBotApiToken::buildBrandNewToken(new ConcealedString("My_Token123"));
 
-        $this->token_retriever->shouldReceive("getBotAPIToken")->with($gitlab_repository)->andReturn($token);
+        $this->token_retriever->shouldReceive("getBotAPIToken")->with($gitlab_repository)->andReturn($bot_api_token);
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
-        $this->assertEquals($token, $credentials->getBotApiToken());
+        $this->assertEquals($bot_api_token, $credentials->getBotApiToken());
         $this->assertEquals("https://www.example.com/", $credentials->getGitlabServerUrl());
     }
 

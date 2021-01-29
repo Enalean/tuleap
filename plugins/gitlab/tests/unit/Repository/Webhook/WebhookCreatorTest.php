@@ -26,13 +26,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Gitlab\API\ClientWrapper;
-use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 
 class WebhookCreatorTest extends TestCase
@@ -90,7 +89,7 @@ class WebhookCreatorTest extends TestCase
 
     public function testItGeneratesAWebhookForRepository(): void
     {
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My Secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $repository = new GitlabRepository(
             1,
@@ -123,14 +122,16 @@ class WebhookCreatorTest extends TestCase
             ->with(
                 $credentials,
                 '/projects/2/hooks',
-                Mockery::on(function (array $config) {
-                    return count(array_keys($config)) === 5
-                        && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
-                        && is_string($config['token'])
-                        && $config['push_events'] === true
-                        && $config['merge_requests_events'] === true
-                        && $config['enable_ssl_verification'] === true;
-                })
+                Mockery::on(
+                    function (array $config) {
+                        return count(array_keys($config)) === 5
+                            && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
+                            && is_string($config['token'])
+                            && $config['push_events'] === true
+                            && $config['merge_requests_events'] === true
+                            && $config['enable_ssl_verification'] === true;
+                    }
+                )
             )
             ->once()
             ->andReturn(
@@ -154,7 +155,7 @@ class WebhookCreatorTest extends TestCase
 
     public function testItGeneratesAWebhookForRepositoryAndRemoveTheOldOne(): void
     {
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My Secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $repository = new GitlabRepository(
             1,
@@ -198,14 +199,16 @@ class WebhookCreatorTest extends TestCase
             ->with(
                 $credentials,
                 '/projects/2/hooks',
-                Mockery::on(function (array $config) {
-                    return count(array_keys($config)) === 5
-                        && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
-                        && is_string($config['token'])
-                        && $config['push_events'] === true
-                        && $config['merge_requests_events'] === true
-                        && $config['enable_ssl_verification'] === true;
-                })
+                Mockery::on(
+                    function (array $config) {
+                        return count(array_keys($config)) === 5
+                            && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
+                            && is_string($config['token'])
+                            && $config['push_events'] === true
+                            && $config['merge_requests_events'] === true
+                            && $config['enable_ssl_verification'] === true;
+                    }
+                )
             )
             ->once()
             ->andReturn(
@@ -234,7 +237,7 @@ class WebhookCreatorTest extends TestCase
 
     public function testItDoesNotSaveAnythingIfGitlabDidNotCreateTheWebhook(): void
     {
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My Secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $repository = new GitlabRepository(
             1,
@@ -256,14 +259,16 @@ class WebhookCreatorTest extends TestCase
             ->with(
                 $credentials,
                 "/projects/2/hooks",
-                Mockery::on(function (array $config) {
-                    return count(array_keys($config)) === 5
-                        && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
-                        && is_string($config['token'])
-                        && $config['push_events'] === true
-                        && $config['merge_requests_events'] === true
-                        && $config['enable_ssl_verification'] === true;
-                })
+                Mockery::on(
+                    function (array $config) {
+                        return count(array_keys($config)) === 5
+                            && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
+                            && is_string($config['token'])
+                            && $config['push_events'] === true
+                            && $config['merge_requests_events'] === true
+                            && $config['enable_ssl_verification'] === true;
+                    }
+                )
             )
             ->once()
             ->andThrow(Mockery::mock(GitlabRequestException::class));
@@ -284,7 +289,7 @@ class WebhookCreatorTest extends TestCase
 
     public function testItThrowsExceptionIfWebhookCreationReturnsUnexpectedPayload(): void
     {
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My Secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $repository = new GitlabRepository(
             1,
@@ -306,14 +311,16 @@ class WebhookCreatorTest extends TestCase
             ->with(
                 $credentials,
                 "/projects/2/hooks",
-                Mockery::on(function (array $config) {
-                    return count(array_keys($config)) === 5
-                        && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
-                        && is_string($config['token'])
-                        && $config['push_events'] === true
-                        && $config['merge_requests_events'] === true
-                        && $config['enable_ssl_verification'] === true;
-                })
+                Mockery::on(
+                    function (array $config) {
+                        return count(array_keys($config)) === 5
+                            && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
+                            && is_string($config['token'])
+                            && $config['push_events'] === true
+                            && $config['merge_requests_events'] === true
+                            && $config['enable_ssl_verification'] === true;
+                    }
+                )
             )
             ->once()
             ->andReturn([]);
