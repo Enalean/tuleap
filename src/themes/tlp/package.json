@@ -1,11 +1,12 @@
 {
   "author": "Enalean Team",
   "name": "@tuleap/tlp",
-  "description": "Tuleap CSS framework",
+  "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
-  "main": "index.js",
-  "types": "./src/index.d.ts",
+  "description": "Tuleap CSS framework",
   "private": true,
+  "version": "0.0.0",
+  "module": "./src/js/index.ts",
   "dependencies": {
     "@tuleap/tlp-fetch": "file://../../scripts/lib/tlp-fetch",
     "flatpickr": "^4.6.6",
@@ -18,6 +19,7 @@
     "bin": "../../../node_modules/.bin"
   },
   "scripts": {
+    "build": "echo 'I exist only to make lerna build things that depend on me in the right order'",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }

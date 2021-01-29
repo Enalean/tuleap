@@ -91,7 +91,7 @@
 import { mapState } from "vuex";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
-import BreadcrumbPrivacy from "@tuleap/core/scripts/vue-components/breadcrumb-privacy/dist/breadcrumb-privacy";
+import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
 export default {
     name: "DocumentBreadcrumb",

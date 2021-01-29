@@ -44,10 +44,7 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { Project } from "../../../type";
-import {
-    getProjectPrivacyIcon,
-    ProjectPrivacy,
-} from "../../../../../project/privacy/project-privacy-helper";
+import { getProjectPrivacyIcon, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 import { Action, State } from "vuex-class";
 import { sprintf } from "sprintf-js";
 import { FocusFromProjectPayload } from "../../../store/type";

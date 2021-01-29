@@ -17,13 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import BreadcrumbPrivacy from "./BreadcrumbPrivacy.vue";
-import { ProjectPrivacy } from "../../project/privacy/project-privacy-helper";
+import { ProjectPrivacy } from "./project-privacy-helper";
+
+// Mock TLP as it is an "externals" in webpack
+jest.mock("@tuleap/tlp", () => {
+    return {
+        createPopover: (): void => {
+            //Do nothing
+        },
+    };
+});
 
 describe("BreadcrumbPrivacy", () => {
     it("displays the project name, the privacy icon and a basic popover", () => {
         const wrapper = shallowMount(BreadcrumbPrivacy, {
+            localVue: createLocalVue(),
             propsData: {
                 project_flags: [],
                 privacy: {
@@ -40,6 +50,7 @@ describe("BreadcrumbPrivacy", () => {
 
     it("displays project flags", () => {
         const wrapper = shallowMount(BreadcrumbPrivacy, {
+            localVue: createLocalVue(),
             propsData: {
                 project_flags: [
                     { label: "Confidentiel", description: "Description de confidentiel" },

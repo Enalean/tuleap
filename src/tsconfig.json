@@ -13,7 +13,6 @@
         "scripts/project/registration/**/*",
         "scripts/site-admin/project-widgets-configuration/**/*",
         "scripts/tuleap/**/*",
-        "scripts/vue-components/breadcrumb-privacy/**/*",
         "themes/tlp/src/**/*"
     ],
     "exclude": ["node_modules", "scripts/lib"]
