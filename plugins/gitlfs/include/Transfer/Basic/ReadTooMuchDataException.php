@@ -21,8 +21,9 @@
 namespace Tuleap\GitLFS\Transfer\Basic;
 
 use Tuleap\GitLFS\GitLFSException;
+use Tuleap\Request\CodeIsAValidHTTPStatus;
 
-final class ReadTooMuchDataException extends GitLFSException
+final class ReadTooMuchDataException extends GitLFSException implements CodeIsAValidHTTPStatus
 {
     public function __construct($maximum_expected_size)
     {

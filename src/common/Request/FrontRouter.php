@@ -89,7 +89,7 @@ class FrontRouter
                 case FastRoute\Dispatcher::NOT_FOUND:
                     throw new NotFoundException(_('The page you are looking for does not exist'));
                 case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                    throw new \RuntimeException('This route does not support ' . $_SERVER['REQUEST_METHOD'], 405);
+                    throw new UnsupportedMethodException('This route does not support ' . $_SERVER['REQUEST_METHOD']);
                 case FastRoute\Dispatcher::FOUND:
                     if (is_callable($route_info[1])) {
                         $handler = $route_info[1]();
@@ -145,7 +145,7 @@ class FrontRouter
         } catch (\Exception $exception) {
             $code           = 500;
             $exception_code = (int) $exception->getCode();
-            if ($exception_code !== 0) {
+            if ($exception instanceof CodeIsAValidHTTPStatus) {
                 $code = $exception_code;
             }
             $this->request_instrumentation->increment($code, DetectedBrowser::detectFromTuleapHTTPRequest($request));

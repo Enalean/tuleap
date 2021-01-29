@@ -22,6 +22,7 @@
 namespace Tuleap\Git\GitPHP;
 
 use Exception;
+use Tuleap\Request\CodeIsAValidHTTPStatus;
 
 /**
  * GitPHP Message exception
@@ -33,7 +34,7 @@ use Exception;
 /**
  * Message Exception
  */
-class MessageException extends Exception
+class MessageException extends Exception implements CodeIsAValidHTTPStatus
 {
 
     public $Error;

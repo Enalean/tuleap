@@ -20,7 +20,9 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-final class LFSBasicTransferObjectOutOfBoundSizeException extends LFSBasicTransferException
+use Tuleap\Request\CodeIsAValidHTTPStatus;
+
+final class LFSBasicTransferObjectOutOfBoundSizeException extends LFSBasicTransferException implements CodeIsAValidHTTPStatus
 {
     public function __construct()
     {

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tus;
 
-final class CannotReadIncomingFileException extends TusServerException
+use Tuleap\Request\CodeIsAValidHTTPStatus;
+
+final class CannotReadIncomingFileException extends TusServerException implements CodeIsAValidHTTPStatus
 {
     public function __construct()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tus;
+declare(strict_types=1);
 
-use Tuleap\Request\CodeIsAValidHTTPStatus;
+namespace Tuleap\Request;
 
-final class TusServerIncompatibleVersionException extends TusServerException implements CodeIsAValidHTTPStatus
+class NotAcceptableException extends \RuntimeException implements CodeIsAValidHTTPStatus
 {
-    public function __construct($expected_version)
+    public function __construct(string $message)
     {
-        parent::__construct('Expected version of the tus.io protocol is ' . $expected_version, 412);
+        parent::__construct($message, 406);
     }
 }

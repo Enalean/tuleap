@@ -384,4 +384,104 @@ class FrontRouterTest extends TestCase
 
         $this->router->route($this->request);
     }
+
+    public function testHttpStatusCodeIsEqualToExceptionCodeIfTheExceptionImplementsCodeIsAValidHTTPStatus(): void
+    {
+        $exception = new class ("Conflict", 409) extends \Exception implements CodeIsAValidHTTPStatus {
+        };
+
+        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
+        $handler->shouldReceive('process')->andThrow($exception);
+
+        $this->route_collector->shouldReceive('collect')->with(
+            Mockery::on(
+                function (FastRoute\RouteCollector $r) use ($handler) {
+                    $r->get(
+                        '/stuff',
+                        function () use ($handler) {
+                            return $handler;
+                        }
+                    );
+
+                    return true;
+                }
+            )
+        );
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->request_instrumentation->shouldReceive('increment')->with(
+            409,
+            Mockery::type(DetectedBrowser::class)
+        )->once();
+
+        $this->logger
+            ->shouldReceive('error')
+            ->with('Caught exception', ['exception' => $exception])
+            ->once();
+
+        $this->error_rendering
+            ->shouldReceive('rendersErrorWithException')
+            ->with(
+                Mockery::any(),
+                Mockery::any(),
+                409,
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+            )->once();
+
+        $this->router->route($this->request);
+    }
+
+    public function testHttpStatusCodeIs500IfTheExceptionDoesNotImplementCodeIsAValidHTTPStatus(): void
+    {
+        $exception = new class ("Conflict", 409) extends \Exception {
+        };
+
+        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
+        $handler->shouldReceive('process')->andThrow($exception);
+
+        $this->route_collector->shouldReceive('collect')->with(
+            Mockery::on(
+                function (FastRoute\RouteCollector $r) use ($handler) {
+                    $r->get(
+                        '/stuff',
+                        function () use ($handler) {
+                            return $handler;
+                        }
+                    );
+
+                    return true;
+                }
+            )
+        );
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->request_instrumentation->shouldReceive('increment')->with(
+            500,
+            Mockery::type(DetectedBrowser::class)
+        )->once();
+
+        $this->logger
+            ->shouldReceive('error')
+            ->with('Caught exception', ['exception' => $exception])
+            ->once();
+
+        $this->error_rendering
+            ->shouldReceive('rendersErrorWithException')
+            ->with(
+                Mockery::any(),
+                Mockery::any(),
+                500,
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+            )->once();
+
+        $this->router->route($this->request);
+    }
 }

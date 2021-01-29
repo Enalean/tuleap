@@ -25,7 +25,7 @@ namespace Tuleap\Request;
 
 use Throwable;
 
-final class ForbiddenException extends \Exception
+final class ForbiddenException extends \Exception implements CodeIsAValidHTTPStatus
 {
     public function __construct(?string $message = null, ?Throwable $previous = null)
     {

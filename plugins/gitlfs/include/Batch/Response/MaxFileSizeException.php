@@ -21,7 +21,8 @@
 namespace Tuleap\GitLFS\Batch\Response;
 
 use Tuleap\GitLFS\GitLFSException;
+use Tuleap\Request\CodeIsAValidHTTPStatus;
 
-final class MaxFileSizeException extends GitLFSException
+final class MaxFileSizeException extends GitLFSException implements CodeIsAValidHTTPStatus
 {
 }

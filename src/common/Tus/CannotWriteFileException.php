@@ -20,7 +20,9 @@
 
 namespace Tuleap\Tus;
 
-final class CannotWriteFileException extends TusServerException
+use Tuleap\Request\CodeIsAValidHTTPStatus;
+
+final class CannotWriteFileException extends TusServerException implements CodeIsAValidHTTPStatus
 {
     public function __construct()
     {
