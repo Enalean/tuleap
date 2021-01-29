@@ -16,7 +16,7 @@
  */
 
 import { datePicker, select2 } from "tlp";
-import { autocomplete_users_for_select2 as autocomplete } from "../tuleap/autocomplete-for-select2.js";
+import { autocomplete_users_for_select2 } from "../tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", () => {
     const sub_events_panels = document.querySelectorAll(
@@ -29,14 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
         displayCurrentSubEventsPanel();
 
         events.addEventListener("change", () => {
-            [].forEach.call(sub_events_panels, (panel) => {
+            [].forEach.call(sub_events_panels, (panel: HTMLElement) => {
                 const box = panel.querySelector("select");
-
-                panel.style.display = "none";
-                box.disabled = true;
-                [].forEach.call(box.options, (option) => {
-                    option.selected = false;
-                });
+                if (box) {
+                    panel.style.display = "none";
+                    box.disabled = true;
+                    [].forEach.call(box.options, (option: HTMLOptionElement) => {
+                        option.selected = false;
+                    });
+                }
             });
 
             displayCurrentSubEventsPanel();
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (by_filter) {
-        autocomplete(by_filter, { internal_users_only: 1 });
+        autocomplete_users_for_select2(by_filter, { internal_users_only: 1 });
     }
 
     const datepickers = document.querySelectorAll(".tlp-input-date");
@@ -52,20 +53,31 @@ document.addEventListener("DOMContentLoaded", () => {
         datePicker(element);
     });
 
-    function displayCurrentSubEventsPanel() {
-        const panel = document.getElementById(events.options[events.selectedIndex].dataset.target);
+    function displayCurrentSubEventsPanel(): void {
+        if (!events || !(events instanceof HTMLSelectElement) || !events.options) {
+            return;
+        }
+
+        const target = events.options[events.selectedIndex].dataset.target;
+        if (!target) {
+            return;
+        }
+        const panel = document.getElementById(target);
         if (!panel) {
             return;
         }
 
         const box = panel.querySelector("select");
+        if (!box) {
+            return;
+        }
 
         panel.style.display = "block";
         box.disabled = false;
         initSelect2(box);
     }
 
-    function initSelect2(box) {
+    function initSelect2(box: HTMLSelectElement): void {
         select2(box, {
             placeholder: box.dataset.placeholder,
             allowClear: true,
