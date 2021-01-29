@@ -468,6 +468,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %description plugin-scaled_agile
 %{summary}.
 
+%package plugin-jira-import
+Summary: Import Jira Projects
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
+%description plugin-jira-import
+%{summary}.
+
 %endif
 
 #
@@ -566,6 +573,7 @@ done
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/scaled_agile
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/scaled_agile
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -1445,6 +1453,10 @@ fi
 %{APP_DIR}/src/www/assets/scaled_agile
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_scaled_agile
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_scaled_agile
+
+%files plugin-jira-import
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/jira_import
 
 %endif
 
