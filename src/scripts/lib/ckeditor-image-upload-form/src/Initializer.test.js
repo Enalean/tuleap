@@ -23,7 +23,6 @@ import { Initializer } from "./Initializer";
 import * as form_adapter from "./form-adapter.js";
 import * as consistent_uploaded_files_before_submit_checker from "./consistent-uploaded-files-before-submit-checker.js";
 import { UploadEnabledDetector } from "./UploadEnabledDetector";
-import { HelpBlockTranslator } from "./HelpBlockTranslator";
 
 jest.mock("@tuleap/ckeditor-image-upload", () => {
     const actual_module = jest.requireActual("@tuleap/ckeditor-image-upload");
@@ -35,33 +34,30 @@ jest.mock("@tuleap/ckeditor-image-upload", () => {
     };
 });
 
-function createDocument() {
-    return document.implementation.createHTMLDocument();
-}
+const createDocument = () => document.implementation.createHTMLDocument();
 
 describe(`Initializer`, () => {
-    let doc, initializer, gettext_provider, detector, translator;
+    let doc, textarea, initializer, gettext_provider, detector;
 
     beforeEach(() => {
         doc = createDocument();
         gettext_provider = {
             gettext: (english) => english,
         };
+        textarea = doc.createElement("textarea");
+        doc.body.append(textarea);
+        detector = new UploadEnabledDetector(doc, textarea);
+        initializer = new Initializer(doc, gettext_provider, detector);
     });
 
     describe(`init()`, () => {
-        let ckeditor_instance, textarea;
+        let ckeditor_instance;
 
         beforeEach(() => {
             ckeditor_instance = {
                 on: jest.fn(),
                 showNotification: jest.fn(),
             };
-            textarea = doc.createElement("textarea");
-            doc.body.append(textarea);
-            detector = new UploadEnabledDetector(doc, textarea);
-            translator = new HelpBlockTranslator(doc, textarea, gettext_provider);
-            initializer = new Initializer(doc, gettext_provider, detector, translator);
         });
 
         it(`when upload is disabled, it will disable paste of images
@@ -103,17 +99,6 @@ describe(`Initializer`, () => {
                     form,
                 };
                 jest.spyOn(detector, "isUploadEnabled").mockReturnValue(true);
-            });
-
-            it(`informs users that they can paste images`, () => {
-                const informUsersThatTheyCanPasteImagesInEditor = jest.spyOn(
-                    translator,
-                    "informUsersThatTheyCanPasteImagesInEditor"
-                );
-
-                initializer.init(ckeditor_instance, textarea);
-
-                expect(informUsersThatTheyCanPasteImagesInEditor).toHaveBeenCalled();
             });
 
             it(`builds the file upload handler and registers it on the CKEditor instance`, () => {
