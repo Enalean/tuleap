@@ -28,6 +28,8 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinkToParentWithoutCurrentArtifactChangeException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
@@ -53,6 +55,11 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      */
     private $artifact_changeset_saver;
 
+    /**
+     * @var ParentLinkAction
+     */
+    private $parent_link_action;
+
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
@@ -63,7 +70,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         ReferenceManager $reference_manager,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
         DBTransactionExecutor $transaction_executor,
-        ArtifactChangesetSaver $artifact_changeset_saver
+        ArtifactChangesetSaver $artifact_changeset_saver,
+        ParentLinkAction $parent_link_action
     ) {
         parent::__construct(
             $fields_validator,
@@ -78,6 +86,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $this->reference_manager        = $reference_manager;
         $this->transaction_executor     = $transaction_executor;
         $this->artifact_changeset_saver = $artifact_changeset_saver;
+        $this->parent_link_action       = $parent_link_action;
     }
 
     /**
@@ -182,6 +191,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                     return $new_changeset;
                 } catch (Tracker_NoChangeException $exception) {
                     throw $exception;
+                } catch (LinkToParentWithoutCurrentArtifactChangeException $exception) {
+                    return null;
                 } catch (Tracker_Exception $exception) {
                     throw $exception;
                 }
@@ -293,7 +304,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $comment,
         PFUser $submitter,
         $email
-    ): bool {
+    ): void {
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
             $message = dgettext('tuleap-tracker', 'You are not logged in.');
             throw new Tracker_Exception($message);
@@ -315,6 +326,9 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $last_changeset = $artifact->getLastChangeset();
 
         if (! $comment && ! $last_changeset->hasChanges($fields_data)) {
+            if ($this->parent_link_action->linkParent($artifact, $submitter, $fields_data)) {
+                throw new LinkToParentWithoutCurrentArtifactChangeException();
+            }
             throw new Tracker_NoChangeException($artifact->getId(), $artifact->getXRef());
         }
 
@@ -327,7 +341,5 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
          */
         $workflow->before($fields_data, $submitter, $artifact);
         $workflow->checkGlobalRules($fields_data);
-
-        return true;
     }
 }

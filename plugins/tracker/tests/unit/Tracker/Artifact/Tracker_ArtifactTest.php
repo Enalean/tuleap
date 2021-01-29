@@ -39,6 +39,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use UserXMLExporter;
 use Workflow;
 
@@ -227,7 +228,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             $reference_manager,
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-            $artifact_saver
+            $artifact_saver,
+            Mockery::mock(ParentLinkAction::class)
         );
 
         $creator->create(

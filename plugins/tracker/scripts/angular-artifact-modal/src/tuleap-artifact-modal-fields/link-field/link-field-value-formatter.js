@@ -26,7 +26,7 @@ export function formatLinkFieldValue(field_value) {
 }
 
 function buildLinks(field) {
-    let { field_id, links: all_links } = field;
+    let { field_id, links: all_links, parent } = field;
     // Merge the text field with the selectbox to create the list of links
     if (typeof field.unformatted_links === "string") {
         const ids = field.unformatted_links.split(",");
@@ -38,5 +38,5 @@ function buildLinks(field) {
     // Then, filter out all the invalid id values (null, undefined, etc)
     const links = all_links.filter((link) => Boolean(link.id));
 
-    return { field_id, links };
+    return { field_id, links, parent };
 }

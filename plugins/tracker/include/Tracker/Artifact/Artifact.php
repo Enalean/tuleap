@@ -1780,11 +1780,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @param int    $linked_artifact_id The id of the artifact to link
      * @param PFUser $current_user       The user who made the link
-     *
-     * @return bool true if success false otherwise
      */
-    public function linkArtifact($linked_artifact_id, PFUser $current_user)
-    {
+    public function linkArtifact(
+        $linked_artifact_id,
+        PFUser $current_user,
+        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+    ): bool {
         $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
         if (count($artlink_fields)) {
             $comment       = '';
@@ -1799,7 +1800,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
             if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                $fields_data[$artlink_field->getId()]['natures'] = $this->getNoNatureForLink($linked_artifact_id);
+                $fields_data[$artlink_field->getId()]['natures'] = $this->getTypeForLink(
+                    $linked_artifact_id,
+                    $artifact_link_type
+                );
             }
 
             try {
@@ -1823,6 +1827,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'
                 )
             );
+
+            return false;
         }
     }
 
@@ -2283,7 +2289,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this->getReferenceManager(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
             $this->getTransactionExecutor(),
-            $this->getChangesetSaver()
+            $this->getChangesetSaver(),
+            new Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
+                $this->getArtifactFactory()
+            )
         );
     }
 
@@ -2301,12 +2310,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $this->transaction_executor = $transaction_executor;
     }
 
-    private function getNoNatureForLink($linked_artifact_id)
+    private function getTypeForLink($linked_artifact_id, string $artifact_link_type): array
     {
         $types                     = [];
         $linked_artifact_ids_array = explode(',', $linked_artifact_id);
         foreach ($linked_artifact_ids_array as $linked_artifact_id) {
-            $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+            $types[$linked_artifact_id] = $artifact_link_type;
         }
 
         return $types;

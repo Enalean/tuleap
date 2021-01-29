@@ -23,11 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_ArtifactLink;
 
-final class AugmentDataFromRequestTest extends TestCase
+final class RequestDataAugmentorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -43,6 +44,21 @@ final class AugmentDataFromRequestTest extends TestCase
      * @var Tracker_FormElement_Field_ArtifactLink
      */
     private $field;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    /**
+     * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $event_manager;
+
+    /**
+     * @var RequestDataAugmentor
+     */
+    private $augmentor;
 
     protected function setUp(): void
     {
@@ -63,6 +79,14 @@ final class AugmentDataFromRequestTest extends TestCase
             1
         );
         $this->field->setTracker($this->tracker);
+
+        $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->event_manager    = Mockery::mock(\EventManager::class);
+
+        $this->augmentor = new RequestDataAugmentor(
+            $this->artifact_factory,
+            $this->event_manager
+        );
     }
 
     public function testDoesNothingWhenThereAreNoParentsInRequest(): void
@@ -75,46 +99,11 @@ final class AugmentDataFromRequestTest extends TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->event_manager->shouldReceive('processEvent');
 
-        $this->field->augmentDataFromRequest($fields_data);
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
         $this->assertEquals($new_values, $fields_data[$this->art_link_id]['new_values']);
-    }
-
-    public function testSetsParentAsNewValues(): void
-    {
-        $new_values  = '';
-        $parent_id   = '657';
-        $fields_data = [
-            $this->art_link_id => [
-                'new_values' => $new_values,
-                'parent'     => $parent_id
-            ]
-        ];
-
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
-
-        $this->field->augmentDataFromRequest($fields_data);
-
-        $this->assertEquals($parent_id, $fields_data[$this->art_link_id]['new_values']);
-    }
-
-    public function testAppendsParentToNewValues(): void
-    {
-        $new_values  = '356';
-        $parent_id   = '657';
-        $fields_data = [
-            $this->art_link_id => [
-                'new_values' => $new_values,
-                'parent'     => $parent_id
-            ]
-        ];
-
-        $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
-
-        $this->field->augmentDataFromRequest($fields_data);
-
-        $this->assertEquals("$new_values,$parent_id", $fields_data[$this->art_link_id]['new_values']);
     }
 
     public function testDoesntAppendPleaseChooseOption(): void
@@ -147,8 +136,9 @@ final class AugmentDataFromRequestTest extends TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
+        $this->event_manager->shouldReceive('processEvent');
 
-        $this->field->augmentDataFromRequest($fields_data);
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
         $this->assertEquals($new_values, $fields_data[$this->art_link_id]['new_values']);
     }
@@ -165,8 +155,9 @@ final class AugmentDataFromRequestTest extends TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent');
 
-        $this->field->augmentDataFromRequest($fields_data);
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
         $this->assertEquals(['356' => '_is_child'], $fields_data[$this->art_link_id]['natures']);
     }
@@ -176,8 +167,9 @@ final class AugmentDataFromRequestTest extends TestCase
         $fields_data = [];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent');
 
-        $this->field->augmentDataFromRequest($fields_data);
+        $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
         $this->assertEmpty($fields_data);
     }

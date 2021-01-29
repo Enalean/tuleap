@@ -44,6 +44,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
     public const LOG_IDENTIFIER = 'burndown_syslog';
@@ -617,6 +618,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
+        array $fields_data,
         ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         try {

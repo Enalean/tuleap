@@ -26,7 +26,7 @@
     >Select parent</label>
     <select class="tlp-select"
         id="{{ ::('tracker_field_' + field.field_id + '_parent') }}"
-        ng-model="link_field.value_model.links[0].id"
+        ng-model="link_field.value_model.parent.id"
         ng-disabled="::link_field.isDisabled(field)"
     >
         <option value="" selected translate>Please choose a parent…</option>

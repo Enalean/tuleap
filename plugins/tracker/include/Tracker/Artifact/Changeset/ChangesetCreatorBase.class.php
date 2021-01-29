@@ -78,7 +78,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase
     ): bool {
         if ($this->artifact_factory->save($artifact)) {
             foreach ($this->fields_retriever->getFields($artifact) as $field) {
-                $field->postSaveNewChangeset($artifact, $submitter, $new_changeset, $previous_changeset);
+                $field->postSaveNewChangeset($artifact, $submitter, $new_changeset, $fields_data, $previous_changeset);
             }
 
             $artifact->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
