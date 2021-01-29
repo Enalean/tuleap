@@ -53,13 +53,28 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
         );
     }
 
+    public function setAuthorData(int $repository_id, int $merge_request_id, string $author_name, ?string $author_email): void
+    {
+        $this->getDB()->update(
+            'plugin_gitlab_merge_request_info',
+            [
+                'author_name'  => $author_name,
+                'author_email' => $author_email,
+            ],
+            [
+                'repository_id'    => $repository_id,
+                'merge_request_id' => $merge_request_id
+            ]
+        );
+    }
+
     /**
-     * @psalm-return array{title: string, state: string, description: string, created_at: int}
+     * @psalm-return array{title: string, state: string, description: string, created_at: int, author_name: ?string, author_email: ?string}
      */
     public function searchMergeRequestInRepositoryWithId(int $repository_id, int $merge_request_id): ?array
     {
         $sql = "
-            SELECT title, state, description, created_at
+            SELECT title, state, description, created_at, author_name, author_email
             FROM plugin_gitlab_merge_request_info
             WHERE repository_id = ?
                 AND merge_request_id = ?

@@ -36,6 +36,7 @@ use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CreationMetadataPresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
+use Tuleap\Reference\Metadata\CreatedByPresenter;
 
 class GitlabCrossReferenceOrganizer
 {
@@ -63,6 +64,14 @@ class GitlabCrossReferenceOrganizer
      * @var TlpRelativeDatePresenterBuilder
      */
     private $relative_date_builder;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
+    /**
+     * @var \UserHelper
+     */
+    private $user_helper;
 
     public function __construct(
         GitlabRepositoryFactory $gitlab_repository_factory,
@@ -70,7 +79,9 @@ class GitlabCrossReferenceOrganizer
         GitlabCommitCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
         GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever,
         \ProjectManager $project_manager,
-        TlpRelativeDatePresenterBuilder $relative_date_builder
+        TlpRelativeDatePresenterBuilder $relative_date_builder,
+        \UserManager $user_manager,
+        \UserHelper $user_helper
     ) {
         $this->gitlab_repository_factory                = $gitlab_repository_factory;
         $this->gitlab_commit_factory                    = $gitlab_commit_factory;
@@ -78,6 +89,8 @@ class GitlabCrossReferenceOrganizer
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
         $this->project_manager                          = $project_manager;
         $this->relative_date_builder                    = $relative_date_builder;
+        $this->user_manager                             = $user_manager;
+        $this->user_helper                              = $user_helper;
     }
 
     public function organizeGitLabReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -193,7 +206,7 @@ class GitlabCrossReferenceOrganizer
             $cross_reference_presenter
                 ->withTitle($gitlab_merge_request->getTitle(), null)
                 ->withCreationMetadata(
-                    CreationMetadataPresenter::NO_CREATED_BY_PRESENTER,
+                    $this->getCreatedByPresenter($gitlab_merge_request),
                     $this->getCreatedOnPresenter($gitlab_merge_request, $user)
                 )
                 ->withAdditionalBadges($additional_badge_presenters),
@@ -232,6 +245,40 @@ class GitlabCrossReferenceOrganizer
         return $this->relative_date_builder->getTlpRelativeDatePresenterInInlineContext(
             $gitlab_merge_request->getCreatedAtDate(),
             $user
+        );
+    }
+
+    private function getCreatedByPresenter(GitlabMergeRequest $gitlab_merge_request): ?CreatedByPresenter
+    {
+        $author_email = $gitlab_merge_request->getAuthorEmail() ?? "";
+        $author_name  = $gitlab_merge_request->getAuthorName() ?? "";
+
+        if (! $author_email && ! $author_name) {
+            return CreationMetadataPresenter::NO_CREATED_BY_PRESENTER;
+        }
+
+        if (! $author_email) {
+            return new CreatedByPresenter(
+                $author_name,
+                false,
+                ''
+            );
+        }
+
+        $tuleap_user = $this->user_manager->getUserByEmail($author_email);
+
+        if ($tuleap_user === null) {
+            return new CreatedByPresenter(
+                $author_name,
+                false,
+                ''
+            );
+        }
+
+        return new CreatedByPresenter(
+            trim($this->user_helper->getDisplayNameFromUser($tuleap_user) ?? ''),
+            $tuleap_user->hasAvatar(),
+            $tuleap_user->getAvatarUrl()
         );
     }
 }

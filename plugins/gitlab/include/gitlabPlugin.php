@@ -48,6 +48,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\CrossReferenceFromMergeReq
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookAuthorDataRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PreviouslySavedReferencesRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
@@ -272,7 +273,13 @@ class gitlabPlugin extends Plugin
                         $tuleap_reference_retriever,
                         ReferenceManager::instance(),
                         $logger,
-                    )
+                    ),
+                    new PostMergeRequestWebhookAuthorDataRetriever(
+                        $logger,
+                        $gitlab_api_client,
+                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory()))
+                    ),
+                    new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
                 ),
                 $logger,
             ),
@@ -372,7 +379,9 @@ class gitlabPlugin extends Plugin
             ),
             new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao()),
             ProjectManager::instance(),
-            new TlpRelativeDatePresenterBuilder()
+            new TlpRelativeDatePresenterBuilder(),
+            UserManager::instance(),
+            UserHelper::instance()
         );
         $gitlab_organizer->organizeGitLabReferences($organizer);
     }

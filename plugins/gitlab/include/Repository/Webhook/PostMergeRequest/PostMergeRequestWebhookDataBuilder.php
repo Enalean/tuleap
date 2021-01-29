@@ -32,6 +32,7 @@ class PostMergeRequestWebhookDataBuilder
     private const MERGE_REQUEST_DESCRIPTION_KEY = "description";
     private const MERGE_REQUEST_STATE_KEY       = 'state';
     private const MERGE_REQUEST_CREATED_AT_KEY  = 'created_at';
+    private const MERGE_REQUEST_AUTHOR_ID_KEY   = 'author_id';
 
     /**
      * @var LoggerInterface
@@ -55,6 +56,7 @@ class PostMergeRequestWebhookDataBuilder
         $title            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_TITLE_KEY];
         $description      = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_DESCRIPTION_KEY];
         $state            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_STATE_KEY];
+        $author_id        = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_AUTHOR_ID_KEY];
 
         $created_at = new DateTimeImmutable(
             $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_CREATED_AT_KEY]
@@ -72,7 +74,8 @@ class PostMergeRequestWebhookDataBuilder
             $title,
             $description,
             $state,
-            $created_at
+            $created_at,
+            $author_id
         );
     }
 
@@ -91,6 +94,7 @@ class PostMergeRequestWebhookDataBuilder
             self::MERGE_REQUEST_DESCRIPTION_KEY,
             self::MERGE_REQUEST_STATE_KEY,
             self::MERGE_REQUEST_CREATED_AT_KEY,
+            self::MERGE_REQUEST_AUTHOR_ID_KEY
         ];
 
         foreach ($required_keys as $required_key) {
