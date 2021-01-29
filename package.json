@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "file:../../src",
     "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
+    "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
     "node-htmldiff": "^0.9.3",

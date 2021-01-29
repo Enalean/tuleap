@@ -62,7 +62,7 @@
 import { mapState } from "vuex";
 import Notification from "./Notification.vue";
 import Modal from "./layout/Modal.vue";
-import BreadcrumbPrivacy from "@tuleap/core/scripts/vue-components/breadcrumb-privacy/dist/breadcrumb-privacy";
+import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
 export default {
     name: "App",
