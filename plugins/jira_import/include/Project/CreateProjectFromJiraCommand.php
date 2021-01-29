@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\JiraImport\Project;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -34,6 +34,9 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
+use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use UserManager;
 
 final class CreateProjectFromJiraCommand extends Command
@@ -117,7 +120,7 @@ final class CreateProjectFromJiraCommand extends Command
         $tuleap_username = $this->getStringOption($input, self::OPT_TULEAP_USER);
 
         $user = $this->user_manager->forceLogin($tuleap_username);
-        if (! $user || ! $user->isAlive()) {
+        if (! $user->isAlive()) {
             throw new InvalidArgumentException('invalid user');
         }
 

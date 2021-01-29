@@ -20,7 +20,22 @@
 
 declare(strict_types=1);
 
+use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
+use Tuleap\JiraImport\Project\CreateProjectFromJira;
+use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
+use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
+
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../tracker/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class jira_importPlugin extends Plugin
@@ -37,5 +52,54 @@ final class jira_importPlugin extends Plugin
             $this->pluginInfo = new \Tuleap\JiraImport\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(CLICommandsCollector::NAME);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function getDependencies(): array
+    {
+        return ['tracker'];
+    }
+
+    public function collectCLICommands(CLICommandsCollector $commands_collector): void
+    {
+        $commands_collector->addCommand(
+            CreateProjectFromJiraCommand::NAME,
+            static function (): CreateProjectFromJiraCommand {
+                $user_manager = UserManager::instance();
+
+                $nature_dao              = new NatureDao();
+                $nature_validator        = new NatureValidator($nature_dao);
+                $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+
+                return new CreateProjectFromJiraCommand(
+                    $user_manager,
+                    new JiraProjectBuilder(),
+                    new CreateProjectFromJira(
+                        $user_manager,
+                        TemplateFactory::build(),
+                        new XMLFileContentRetriever(),
+                        new XMLImportHelper($user_manager),
+                        new JiraTrackerBuilder(),
+                        new XML_SimpleXMLCDATAFactory(),
+                        new ArtifactLinkTypeImporter(
+                            new NaturePresenterFactory(
+                                $nature_dao,
+                                $artifact_link_usage_dao,
+                            ),
+                            new NatureCreator(
+                                $nature_dao,
+                                $nature_validator,
+                            ),
+                        )
+                    )
+                );
+            }
+        );
     }
 }

@@ -21,24 +21,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\JiraImport\Project;
 
 use Project;
 use ProjectCreationData;
 use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
+use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\ArtifactLinkType\ArtifactLinkTypeImporter;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
+use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use User\XML\Import\IFindUserFromXMLReference;

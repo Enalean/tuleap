@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\ArtifactLinkType;
+namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllNaturesRetriever;

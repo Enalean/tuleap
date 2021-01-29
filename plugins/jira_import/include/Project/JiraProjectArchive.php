@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\JiraImport\Project;
 
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
