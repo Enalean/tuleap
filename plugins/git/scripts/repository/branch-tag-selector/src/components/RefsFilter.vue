@@ -34,9 +34,9 @@ import { Prop } from "vue-property-decorator";
 
 export default class RefsFilter extends Vue {
     @Prop()
-    readonly value!: string;
+    readonly value: string = "";
     @Prop()
-    readonly placeholder!: string;
+    readonly placeholder: string = "";
 
     mounted(): void {
         if (this.$refs.filter instanceof HTMLInputElement) {
