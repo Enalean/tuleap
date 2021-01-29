@@ -100,7 +100,7 @@
                                 data-test="regenerate-webhook-gitlab-repository"
                             >
                                 <i
-                                    class="fas fa-arrow-circle-right fa-fw tlp-dropdown-menu-item-icon"
+                                    class="fas fa-tlp-webhooks fa-fw tlp-dropdown-menu-item-icon"
                                     aria-hidden="true"
                                 ></i>
                                 {{ regenerate_gitlab_webhook_title }}
