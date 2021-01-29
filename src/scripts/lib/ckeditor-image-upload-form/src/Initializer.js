@@ -29,11 +29,10 @@ import { disableFormSubmit, enableFormSubmit } from "./form-adapter";
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker";
 
 export class Initializer {
-    constructor(doc, gettext_provider, detector, translator) {
+    constructor(doc, gettext_provider, detector) {
         this.doc = doc;
         this.gettext_provider = gettext_provider;
         this.detector = detector;
-        this.translator = translator;
     }
 
     init(ckeditor_instance, textarea) {
@@ -45,8 +44,6 @@ export class Initializer {
         const form = textarea.form;
         const field_name = textarea.dataset.uploadFieldName;
         const max_size_upload = parseInt(textarea.dataset.uploadMaxSize, 10);
-
-        this.translator.informUsersThatTheyCanPasteImagesInEditor();
 
         const onStartCallback = () => disableFormSubmit(form);
         const onErrorCallback = (error) => {

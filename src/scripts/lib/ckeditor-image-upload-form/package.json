@@ -6,6 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist/index.js",
+  "types": "src/ckeditor-image-upload-form.d.ts",
   "dependencies": {
     "@tuleap/ckeditor-image-upload": "file:../ckeditor-image-upload",
     "@tuleap/gettext": "file:../gettext",

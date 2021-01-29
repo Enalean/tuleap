@@ -17,30 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class HelpBlockTranslator {
-    constructor(doc, textarea, gettext_provider) {
+import { HelpBlock } from "./HelpBlock";
+
+export class HelpBlockFactory {
+    constructor(doc, gettext_provider, textarea) {
         this.doc = doc;
-        this.textarea = textarea;
         this.gettext_provider = gettext_provider;
+        this.textarea = textarea;
     }
 
-    informUsersThatTheyCanPasteImagesInEditor() {
-        if (typeof this.textarea.dataset.helpId === "undefined") {
-            return;
+    createHelpBlock(textarea) {
+        if (typeof textarea.dataset.helpId === "undefined") {
+            return null;
         }
-        const help_block = this.doc.getElementById(this.textarea.dataset.helpId);
-        if (!help_block) {
-            return;
+        const help_block_element = this.doc.getElementById(textarea.dataset.helpId);
+        if (!help_block_element) {
+            return null;
         }
 
-        if (help_block.textContent) {
-            return;
+        if (help_block_element.textContent) {
+            return null;
         }
 
         const p = this.doc.createElement("p");
         p.textContent = this.gettext_provider.gettext(
             "You can drag 'n drop or paste image directly in the editor."
         );
-        help_block.appendChild(p);
+        help_block_element.appendChild(p);
+
+        return new HelpBlock(help_block_element);
     }
 }

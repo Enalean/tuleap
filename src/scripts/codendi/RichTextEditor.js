@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2010. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getUploadImageOptions, initiateUploadImage } from "@tuleap/ckeditor-image-upload-form";
+import { getUploadImageOptions, UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 import TurndownService from "turndown";
@@ -57,11 +57,14 @@ codendi.RTE = Class.create({
     },
 
     init_rte: function () {
+        const locale = document.body.dataset.userLocale;
         var replace_options = {
             resize_enabled: true,
-            language: document.body.dataset.userLocale,
+            language: locale,
             disableNativeSpellChecker: false,
         };
+
+        const image_upload_factory = new UploadImageFormFactory(document, locale);
 
         if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
             CKEDITOR.instances[this.element.id].destroy(true);
@@ -153,7 +156,7 @@ codendi.RTE = Class.create({
             ...getUploadImageOptions(this.element),
         });
         this.rte = CKEDITOR.replace(this.element.id, replace_options);
-        initiateUploadImage(this.rte, replace_options, this.element);
+        image_upload_factory.initiateImageUpload(this.rte, this.element);
 
         /*CKEDITOR filters HTML tags
               So, if your default text is like <blabla>, this will not be displayed.

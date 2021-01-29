@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - Present. All rights reserved
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { UploadImageFormFactory } from "./UploadImageFormFactory";
-export { getUploadImageOptions } from "./ckeditor-options";
+const SHOWN_CLASSNAME = "shown";
+
+export class HelpBlock {
+    constructor(element) {
+        this.element = element;
+    }
+
+    onFormatChange(new_format) {
+        if (new_format === "html") {
+            this.element.classList.add(SHOWN_CLASSNAME);
+            return;
+        }
+
+        this.element.classList.remove(SHOWN_CLASSNAME);
+    }
+}
