@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../tests/jest/jest.base.config.js");
+const base_config = require("../../../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,
-    displayName: "tracker",
-    setupFiles: ["./scripts/angular-artifact-modal/tests/jest.setup.js"],
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy",
-        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
-    },
+    displayName: "tracker/workflow-transitions",
 };
