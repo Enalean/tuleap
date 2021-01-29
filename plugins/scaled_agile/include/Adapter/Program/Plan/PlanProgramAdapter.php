@@ -29,7 +29,6 @@ use Project_AccessRestrictedException;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\ScaledAgile\Program\Backlog\Plan\BuildPlanProgramConfiguration;
 use Tuleap\ScaledAgile\Program\Program;
-use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\Team\Creation\TeamStore;
 
 final class PlanProgramAdapter implements BuildPlanProgramConfiguration
@@ -38,10 +37,6 @@ final class PlanProgramAdapter implements BuildPlanProgramConfiguration
      * @var \ProjectManager
      */
     private $project_manager;
-    /**
-     * @var ProgramStore
-     */
-    private $program_store;
     /**
      * @var \URLVerification
      */

@@ -80,7 +80,6 @@ class HeaderOptionsProviderTest extends TestCase
             new AgileDashboard_PaneInfoIdentifier(),
             new TrackerNewDropdownLinkPresenterBuilder(),
             $this->header_options_for_planning_provider,
-            $this->event_dispatcher,
             $this->parent_retriever,
             new CurrentContextSectionToHeaderOptionsInserter(),
         );

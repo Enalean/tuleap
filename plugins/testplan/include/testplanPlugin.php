@@ -215,10 +215,8 @@ final class testplanPlugin extends Plugin
                             $mono_milestone_checker,
                         ),
                         $tracker_new_dropdown_link_presenter_builder,
-                        $event_manager,
                         $header_options_inserter,
                     ),
-                    $event_manager,
                     new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
                         $planning_factory,
                     ),

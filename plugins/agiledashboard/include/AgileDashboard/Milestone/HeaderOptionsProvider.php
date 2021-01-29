@@ -28,7 +28,6 @@ use Layout;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -52,10 +51,6 @@ class HeaderOptionsProvider
      */
     private $backlog_factory;
     /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
      * @var ParentTrackerRetriever
      */
     private $parent_tracker_retriever;
@@ -69,7 +64,6 @@ class HeaderOptionsProvider
         AgileDashboard_PaneInfoIdentifier $pane_info_identifier,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
         HeaderOptionsForPlanningProvider $header_options_for_planning_provider,
-        EventDispatcherInterface $event_dispatcher,
         ParentTrackerRetriever $parent_tracker_retriever,
         CurrentContextSectionToHeaderOptionsInserter $header_options_inserter
     ) {
@@ -77,7 +71,6 @@ class HeaderOptionsProvider
         $this->pane_info_identifier                 = $pane_info_identifier;
         $this->presenter_builder                    = $presenter_builder;
         $this->header_options_for_planning_provider = $header_options_for_planning_provider;
-        $this->event_dispatcher                     = $event_dispatcher;
         $this->parent_tracker_retriever             = $parent_tracker_retriever;
         $this->header_options_inserter              = $header_options_inserter;
     }

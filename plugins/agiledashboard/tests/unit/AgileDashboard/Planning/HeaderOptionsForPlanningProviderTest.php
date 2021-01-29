@@ -31,7 +31,6 @@ use Planning;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
@@ -50,20 +49,14 @@ class HeaderOptionsForPlanningProviderTest extends TestCase
      * @var HeaderOptionsForPlanningProvider
      */
     private $provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
-     */
-    private $event_dispatcher;
 
     protected function setUp(): void
     {
         $this->submilestone_finder = Mockery::mock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
-        $this->event_dispatcher    = Mockery::mock(EventDispatcherInterface::class);
 
         $this->provider = new HeaderOptionsForPlanningProvider(
             $this->submilestone_finder,
             new TrackerNewDropdownLinkPresenterBuilder(),
-            $this->event_dispatcher,
             new CurrentContextSectionToHeaderOptionsInserter(),
         );
     }
