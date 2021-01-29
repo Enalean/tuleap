@@ -29,6 +29,8 @@ let project_flags: Array<ProjectFlag>;
 let id_program: number;
 let user_with_accessibility_mode: boolean;
 let locale: string;
+let does_user_can_create_increments: boolean;
+let tracker_program_incrment_id: number;
 
 export function build(
     public_name: string,
@@ -37,7 +39,9 @@ export function build(
     flags: Array<ProjectFlag>,
     program_id: number,
     accessibility: boolean,
-    user_locale: string
+    user_locale: string,
+    can_create_program_increment: boolean,
+    program_increment_id: number
 ): void {
     project_public_name = public_name;
     project_short_name = short_name;
@@ -46,6 +50,8 @@ export function build(
     id_program = program_id;
     user_with_accessibility_mode = accessibility;
     locale = user_locale;
+    does_user_can_create_increments = can_create_program_increment;
+    tracker_program_incrment_id = program_increment_id;
 }
 
 export function getProjectPublicName(): string {
@@ -74,4 +80,12 @@ export function userHasAccessibilityMode(): boolean {
 
 export function getUserLocale(): string {
     return locale;
+}
+
+export function canCreateProgramIncrement(): boolean {
+    return does_user_can_create_increments;
+}
+
+export function programIncrementId(): number {
+    return tracker_program_incrment_id;
 }

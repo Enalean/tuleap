@@ -104,4 +104,58 @@ describe("ProgramIncrementList", () => {
         expect(wrapper.find("[data-test=program-increments]").exists()).toBe(true);
         expect(wrapper.find("[data-test=program-increment-error]").exists()).toBe(false);
     });
+
+    it("User can see the button when he can create program incrmenent", async () => {
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
+        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
+        jest.spyOn(configuration, "canCreateProgramIncrement").mockImplementation(() => true);
+
+        const wrapper = shallowMount(ProgramIncrementList, {
+            localVue: await createScaledAgileLocalVue(),
+            data(): DefaultData<ProgramIncrementList> {
+                return {
+                    program_increments: [
+                        {
+                            id: 1,
+                            title: "PI 1",
+                            status: '"To be Planned',
+                            start_date: null,
+                            end_date: null,
+                        } as ProgramIncrement,
+                    ],
+                    is_loading: false,
+                    has_error: false,
+                };
+            },
+        });
+
+        expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(true);
+    });
+
+    it("No button is displayed when user can not add program increments", async () => {
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
+        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
+        jest.spyOn(configuration, "canCreateProgramIncrement").mockImplementation(() => false);
+
+        const wrapper = shallowMount(ProgramIncrementList, {
+            localVue: await createScaledAgileLocalVue(),
+            data(): DefaultData<ProgramIncrementList> {
+                return {
+                    program_increments: [
+                        {
+                            id: 1,
+                            title: "PI 1",
+                            status: '"To be Planned',
+                            start_date: null,
+                            end_date: null,
+                        } as ProgramIncrement,
+                    ],
+                    is_loading: false,
+                    has_error: false,
+                };
+            },
+        });
+
+        expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(false);
+    });
 });

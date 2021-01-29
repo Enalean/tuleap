@@ -63,10 +63,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const program_id = parseInt(vue_mount_point.dataset.programId, 10);
 
+    if (!vue_mount_point.dataset.programIncrementTrackerId) {
+        throw new Error("Missing program_increment_tracker_id dataset");
+    }
+    const program_increment_tracker_id = parseInt(
+        vue_mount_point.dataset.programIncrementTrackerId,
+        10
+    );
+
     if (!vue_mount_point.dataset.userWithAccessibilityMode) {
         throw new Error("Missing accessiblity dataset");
     }
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
+
+    const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
 
     build(
         project_name,
@@ -75,7 +85,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_flags,
         program_id,
         accessibility,
-        locale.replace("_", "-")
+        locale.replace("_", "-"),
+        can_create_program_increment,
+        program_increment_tracker_id
     );
 
     await initVueGettext(

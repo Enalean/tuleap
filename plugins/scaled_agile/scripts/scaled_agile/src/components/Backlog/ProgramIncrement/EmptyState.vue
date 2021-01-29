@@ -23,6 +23,16 @@
         <p v-translate class="empty-page-text" data-test="scaled-empty-state">
             There are no iterations yet
         </p>
+        <form v-bind:action="create_new_program_increment" method="post">
+            <button
+                class="tlp-button-primary program-increment-title-button-icon"
+                data-test="create-program-increment-button"
+                v-if="can_create_program_increment"
+            >
+                <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
+                <span v-translate>Create the first program increment</span>
+            </button>
+        </form>
     </div>
 </template>
 
@@ -30,9 +40,19 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import EmptySvg from "./EmptySvg.vue";
+import { canCreateProgramIncrement, programIncrementId } from "../../../configuration";
+import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
 
 @Component({
     components: { EmptySvg },
 })
-export default class EmptyState extends Vue {}
+export default class EmptyState extends Vue {
+    get can_create_program_increment(): boolean {
+        return canCreateProgramIncrement();
+    }
+
+    get create_new_program_increment(): string {
+        return buildCreateNewProgramIncrement(programIncrementId());
+    }
+}
 </script>

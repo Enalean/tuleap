@@ -20,18 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\Plan;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
-use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
-use Tuleap\ScaledAgile\ScaledAgileTracker;
-
-interface BuildPlanProgramIncrementConfiguration
+/**
+ * @psalm-immutable
+ */
+final class ProgramIncrementTrackerConfiguration
 {
     /**
-     * @throws PlanTrackerException
-     * @throws ProgramTrackerNotFoundException
-     * @throws PlanCheckException
+     * @var bool
      */
-    public function buildTrackerProgramIncrementFromProjectId(int $project_id, \PFUser $user): ScaledAgileTracker;
+    public $can_create_program_increment;
+    /**
+     * @var int
+     */
+    private $program_increment_tracker_id;
+
+    public function __construct(int $program_increment_tracker_id, bool $can_create_program_increment)
+    {
+        $this->can_create_program_increment = $can_create_program_increment;
+        $this->program_increment_tracker_id = $program_increment_tracker_id;
+    }
+
+    public function canCreateProgramIncrement(): bool
+    {
+        return $this->can_create_program_increment;
+    }
+
+    public function getProgramIncrementTrackerId(): int
+    {
+        return $this->program_increment_tracker_id;
+    }
 }

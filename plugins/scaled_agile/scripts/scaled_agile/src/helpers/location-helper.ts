@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
@@ -18,20 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+export function buildCreateNewProgramIncrement(tracker_id: number): string {
+    const url_params = new URLSearchParams({
+        program_increment: "create",
+        tracker: String(tracker_id),
+        func: "new-artifact",
+    });
 
-namespace Tuleap\ScaledAgile\Program\Backlog\Plan;
-
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
-use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
-use Tuleap\ScaledAgile\ScaledAgileTracker;
-
-interface BuildPlanProgramIncrementConfiguration
-{
-    /**
-     * @throws PlanTrackerException
-     * @throws ProgramTrackerNotFoundException
-     * @throws PlanCheckException
-     */
-    public function buildTrackerProgramIncrementFromProjectId(int $project_id, \PFUser $user): ScaledAgileTracker;
+    return `/plugins/tracker/?${url_params.toString()}`;
 }

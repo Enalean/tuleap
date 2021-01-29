@@ -66,7 +66,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
     {
         $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
             ->andReturn(new ScaledAgileTracker($tracker));
         $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->once()->andReturn(false);
 
@@ -84,7 +84,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
         $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(\Project::buildForTest())->build();
 
-        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
             ->andThrow(new class extends \Exception implements PlanCheckException {
             });
 
@@ -101,7 +101,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
     {
         $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
-        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
             ->andReturn(new ScaledAgileTracker($tracker));
         $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->andReturn(true);
 

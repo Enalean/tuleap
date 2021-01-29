@@ -78,7 +78,7 @@ class ArtifactCreatedHandler
             return;
         }
 
-        $program_increment = $this->build_plan_configuration->buildProgramIncrementFromProjectId((int) $source_project->getID(), $current_user);
+        $program_increment = $this->build_plan_configuration->buildTrackerProgramIncrementFromProjectId((int) $source_project->getID(), $current_user);
         if ($source_tracker->getId() !== $program_increment->getTrackerId()) {
             return;
         }

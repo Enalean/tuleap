@@ -26,16 +26,17 @@
         >
             <span class="tlp-pane-title program-increment-header-label">
                 <i
-                    class="tlp-pane-title-icon fa fa-fw"
+                    class="tlp-pane-title-icon fas fa-fw"
                     v-bind:class="[is_open ? 'fa-caret-down' : 'fa-caret-right']"
                     data-test="program-increment-toggle-icon"
+                    aria-hidden="true"
                 />
                 {{ increment.title }}
             </span>
             <div class="program-increment-header-spacer"></div>
             <span class="program-increment-header-dates" v-if="increment.start_date !== null">
                 {{ formatDate(increment.start_date) }}
-                <i class="fas fa-long-arrow-alt-right"></i>
+                <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
                 {{ formatDate(increment.end_date) }}
             </span>
             <span class="tlp-badge-outline tlp-badge-primary">{{ increment.status }}</span>
@@ -50,7 +51,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-mini"
                 v-bind:title="$gettext('Edit')"
             >
-                <i class="fas fa-pencil-alt tlp-button-icon"></i>
+                <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i>
                 <span v-translate>Edit</span>
             </a>
         </div>

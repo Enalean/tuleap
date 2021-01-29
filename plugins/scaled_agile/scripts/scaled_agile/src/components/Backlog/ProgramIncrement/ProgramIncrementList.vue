@@ -19,7 +19,19 @@
 
 <template>
     <div>
-        <h2 v-translate class="program-increment-title">Program Increment</h2>
+        <form v-bind:action="create_new_program_increment" method="post">
+            <div class="program-increment-title-with-button">
+                <h2 v-translate class="program-increment-title">Program Increment</h2>
+                <button
+                    class="tlp-button-primary tlp-button-outline tlp-button-small program-increment-title-button"
+                    v-if="can_create_program_increment"
+                    data-test="create-program-increment-button"
+                >
+                    <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
+                    <span v-translate>Add a program increment</span>
+                </button>
+            </div>
+        </form>
 
         <empty-state
             v-if="program_increments.length === 0 && !is_loading && !has_error"
@@ -55,8 +67,9 @@ import {
     getProgramIncrements,
     ProgramIncrement,
 } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import { programId } from "../../../configuration";
+import { programId, canCreateProgramIncrement, programIncrementId } from "../../../configuration";
 import ProgramIncrementSkeleton from "./ProgramIncrementSkeleton.vue";
+import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
 
 @Component({
     components: { ProgramIncrementSkeleton, ProgramIncrementCard, EmptyState },
@@ -80,6 +93,14 @@ export default class ProgramIncrementList extends Vue {
         } finally {
             this.is_loading = false;
         }
+    }
+
+    get can_create_program_increment(): boolean {
+        return canCreateProgramIncrement() && this.program_increments.length > 0;
+    }
+
+    get create_new_program_increment(): string {
+        return buildCreateNewProgramIncrement(programIncrementId());
     }
 }
 </script>

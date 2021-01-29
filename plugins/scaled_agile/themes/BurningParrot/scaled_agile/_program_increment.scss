@@ -25,6 +25,14 @@
     margin: 0 0 $tlp-large-spacing 0;
 }
 
+.program-increment-title-with-button {
+    display: flex;
+}
+
+.program-increment-title-button {
+    margin: 0 0 0 $tlp-large-spacing;
+}
+
 .program-increment-header {
     display: flex;
     position: sticky;
