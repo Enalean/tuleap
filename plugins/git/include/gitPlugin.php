@@ -62,6 +62,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\GitService;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
@@ -2685,7 +2686,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function serviceUrlCollector(ServiceUrlCollector $collector)
     {
         if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl(GIT_BASE_URL . "/" . urlencode($collector->getProject()->getUnixNameLowerCase()));
+            $collector->setUrl(GitService::getServiceUrlForProject($collector->getProject()));
         }
     }
 

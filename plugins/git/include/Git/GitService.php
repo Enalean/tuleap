@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
+use Project;
 use Service;
 
 class GitService extends Service
@@ -51,5 +52,10 @@ class GitService extends Service
         }
 
         return $description;
+    }
+
+    public static function getServiceUrlForProject(Project $project): string
+    {
+        return GIT_BASE_URL . "/" . urlencode($project->getUnixNameLowerCase());
     }
 }

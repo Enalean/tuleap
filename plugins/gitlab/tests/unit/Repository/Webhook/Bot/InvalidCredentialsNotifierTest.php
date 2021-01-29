@@ -131,16 +131,24 @@ class InvalidCredentialsNotifierTest extends TestCase
             ->withEmail('cypher@example.com')
             ->build();
 
-        $git_service_1 = Mockery::mock(GitService::class, ['getUrl' => '/plugin/git?group_id=101']);
-        $git_service_2 = Mockery::mock(GitService::class, ['getUrl' => '/plugin/git?group_id=102']);
+        $git_service_1 = Mockery::mock(GitService::class);
+        $git_service_2 = Mockery::mock(GitService::class);
 
         $project_1 = Mockery::mock(
             Project::class,
-            ['getService' => $git_service_1, 'getAdmins' => [$admin_1, $admin_2]]
+            [
+                'getService'           => $git_service_1,
+                'getAdmins'            => [$admin_1, $admin_2],
+                'getUnixNameLowerCase' => 'reloaded',
+            ]
         );
         $project_2 = Mockery::mock(
             Project::class,
-            ['getService' => $git_service_2, 'getAdmins' => [$admin_1, $admin_3, $admin_4]]
+            [
+                'getService'           => $git_service_2,
+                'getAdmins'            => [$admin_1, $admin_3, $admin_4],
+                'getUnixNameLowerCase' => 'revolution',
+            ]
         );
 
         $project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
@@ -159,8 +167,8 @@ class InvalidCredentialsNotifierTest extends TestCase
                     function (Notification $notification) {
                         return $notification->getEmails() === ['morpheus@example.com', 'neo@example.com']
                             && $notification->getSubject() === 'Invalid GitLab credentials'
-                            && $notification->getTextBody() === 'It appears that the access token for the_full_url is invalid. Tuleap cannot perform actions on it. Please check configuration on https://tuleap.example.com/plugin/git?group_id=101'
-                            && $notification->getGotoLink() === 'https://tuleap.example.com/plugin/git?group_id=101'
+                            && $notification->getTextBody() === 'It appears that the access token for the_full_url is invalid. Tuleap cannot perform actions on it. Please check configuration on https://tuleap.example.com/plugins/git/reloaded'
+                            && $notification->getGotoLink() === 'https://tuleap.example.com/plugins/git/reloaded'
                             && $notification->getServiceName() === 'Git';
                     }
                 ),
@@ -175,8 +183,8 @@ class InvalidCredentialsNotifierTest extends TestCase
                     function (Notification $notification) {
                         return $notification->getEmails() === ['morpheus@example.com', 'trinity@example.com']
                             && $notification->getSubject() === 'Invalid GitLab credentials'
-                            && $notification->getTextBody() === 'It appears that the access token for the_full_url is invalid. Tuleap cannot perform actions on it. Please check configuration on https://tuleap.example.com/plugin/git?group_id=102'
-                            && $notification->getGotoLink() === 'https://tuleap.example.com/plugin/git?group_id=102'
+                            && $notification->getTextBody() === 'It appears that the access token for the_full_url is invalid. Tuleap cannot perform actions on it. Please check configuration on https://tuleap.example.com/plugins/git/revolution'
+                            && $notification->getGotoLink() === 'https://tuleap.example.com/plugins/git/revolution'
                             && $notification->getServiceName() === 'Git';
                     }
                 ),

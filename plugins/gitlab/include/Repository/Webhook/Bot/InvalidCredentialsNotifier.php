@@ -95,7 +95,7 @@ class InvalidCredentialsNotifier
                 )
             );
 
-            $url = $this->instance_base_url->build() . $git_service->getUrl();
+            $url = $this->instance_base_url->build() . GitService::getServiceUrlForProject($project);
 
             $body = sprintf(
                 'It appears that the access token for %s is invalid. Tuleap cannot perform actions on it. Please check configuration on %s',
