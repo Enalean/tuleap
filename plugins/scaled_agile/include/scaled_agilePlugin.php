@@ -74,6 +74,7 @@ use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\Workspace\ComponentInvolvedVerifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
@@ -105,7 +106,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(CanSubmitNewArtifact::NAME);
         $this->addHook(ArtifactCreated::NAME);
         $this->addHook(ArtifactUpdated::NAME);
-        $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE, 'trackerArtifactDeleted');
+        $this->addHook(ArtifactDeleted::NAME);
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(PlanningAdministrationDelegation::NAME);
@@ -280,12 +281,9 @@ final class scaled_agilePlugin extends Plugin
         (new ArtifactsExplicitTopBacklogDAO())->removeArtifactsPlannedInAProgramIncrement($artifact->getId());
     }
 
-    public function trackerArtifactDeleted(array $params): void
+    public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void
     {
-        $artifact = $params['artifact'];
-        assert($artifact instanceof \Tuleap\Tracker\Artifact\Artifact);
-
-        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactFromExplicitTopBacklog($artifact->getID());
+        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactFromExplicitTopBacklog($artifact_deleted->getArtifact()->getID());
     }
 
     /**

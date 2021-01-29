@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectHistoryDao;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_ArtifactDao;
+use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 
-class ArtifactDeletorTest extends TestCase
+final class ArtifactDeletorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testArtifactBecomePendingDeletionOnDelete()
+    public function testArtifactBecomePendingDeletionOnDelete(): void
     {
         $artifact_id = 101;
 
@@ -41,14 +42,14 @@ class ArtifactDeletorTest extends TestCase
         $project_history_dao          = Mockery::mock(ProjectHistoryDao::class);
         $pending_artifact_removal_dao = Mockery::mock(PendingArtifactRemovalDao::class);
         $artifact_runnner             = Mockery::mock(AsynchronousArtifactsDeletionActionsRunner::class);
-        $event_manager                = Mockery::mock(EventManager::class);
+        $event_dispatcher             = Mockery::mock(EventDispatcherInterface::class);
 
         $artifact_deletor = new ArtifactDeletor(
             $dao,
             $project_history_dao,
             $pending_artifact_removal_dao,
             $artifact_runnner,
-            $event_manager
+            $event_dispatcher
         );
 
         $tracker = Mockery::mock(\Tracker::class);
@@ -72,7 +73,7 @@ class ArtifactDeletorTest extends TestCase
 
         $project_history_dao->shouldReceive("groupAddHistory");
 
-        $event_manager->shouldReceive('processEvent')->once();
+        $event_dispatcher->shouldReceive('dispatch')->with(ArtifactDeleted::class)->once();
 
         $artifact_deletor->delete($artifact, $user);
     }
