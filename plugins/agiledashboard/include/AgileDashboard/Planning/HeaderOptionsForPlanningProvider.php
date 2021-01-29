@@ -26,7 +26,6 @@ use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use PFUser;
 use Planning_Milestone;
 use Planning_VirtualTopMilestone;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
@@ -41,10 +40,6 @@ class HeaderOptionsForPlanningProvider
      */
     private $presenter_builder;
     /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
      * @var CurrentContextSectionToHeaderOptionsInserter
      */
     private $header_options_inserter;
@@ -52,12 +47,10 @@ class HeaderOptionsForPlanningProvider
     public function __construct(
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
-        EventDispatcherInterface $event_dispatcher,
         CurrentContextSectionToHeaderOptionsInserter $header_options_inserter
     ) {
         $this->submilestone_finder     = $submilestone_finder;
         $this->presenter_builder       = $presenter_builder;
-        $this->event_dispatcher        = $event_dispatcher;
         $this->header_options_inserter = $header_options_inserter;
     }
 
