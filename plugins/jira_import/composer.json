@@ -1,0 +1,16 @@
+{
+  "name": "tuleap/jira-import-plugin",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\JiraImport\\": "include/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\JiraImport\\Test\\": ["./tests/unit/Test"]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
