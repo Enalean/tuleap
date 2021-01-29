@@ -54,10 +54,6 @@ class WebhookDeletorTest extends TestCase
      */
     private $deletor;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
-     */
-    private $credentials_retriever;
-    /**
      * @var Credentials
      */
     private $credentials;
@@ -74,7 +70,6 @@ class WebhookDeletorTest extends TestCase
         $this->deletor = new WebhookDeletor(
             $this->dao,
             $this->gitlab_api_client,
-            $this->credentials_retriever,
             $this->logger
         );
     }
@@ -90,10 +85,6 @@ class WebhookDeletorTest extends TestCase
             new \DateTimeImmutable(),
         );
 
-        $this->credentials_retriever
-            ->shouldReceive('getCredentials')
-            ->never();
-
         $this->dao
             ->shouldReceive('getGitlabRepositoryWebhook')
             ->with(1)
@@ -108,7 +99,7 @@ class WebhookDeletorTest extends TestCase
 
         $this->logger->shouldReceive('info')->never();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
     }
 
     public function testItDoesNotDeleteIfNoOldWebhookId(): void
@@ -122,10 +113,6 @@ class WebhookDeletorTest extends TestCase
             new \DateTimeImmutable(),
         );
 
-        $this->credentials_retriever
-            ->shouldReceive('getCredentials')
-            ->never();
-
         $this->dao
             ->shouldReceive('getGitlabRepositoryWebhook')
             ->with(1)
@@ -138,7 +125,7 @@ class WebhookDeletorTest extends TestCase
 
         $this->logger->shouldReceive('info')->never();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
     }
 
     public function testItOnlyDeleteDBIfNoCredentials(): void
@@ -151,11 +138,6 @@ class WebhookDeletorTest extends TestCase
             'the_full_url',
             new \DateTimeImmutable(),
         );
-
-        $this->credentials_retriever
-            ->shouldReceive('getCredentials')
-            ->once()
-            ->andReturn(null);
 
         $this->dao
             ->shouldReceive('getGitlabRepositoryWebhook')
@@ -171,7 +153,7 @@ class WebhookDeletorTest extends TestCase
 
         $this->logger->shouldReceive('info')->never();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository(null, $repository);
     }
 
     public function testItRemovesOldWebhookFromServerAndDb(): void
@@ -184,11 +166,6 @@ class WebhookDeletorTest extends TestCase
             'the_full_url',
             new \DateTimeImmutable(),
         );
-
-        $this->credentials_retriever
-            ->shouldReceive('getCredentials')
-            ->once()
-            ->andReturn($this->credentials);
 
         $this->dao
             ->shouldReceive('getGitlabRepositoryWebhook')
@@ -210,7 +187,7 @@ class WebhookDeletorTest extends TestCase
 
         $this->logger->shouldReceive('info')->with("Deleting previous hook for the_full_url")->once();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
     }
 
     public function testItThrowsExceptionIfWebhookCreationReturnsUnexpectedPayload(): void
@@ -223,11 +200,6 @@ class WebhookDeletorTest extends TestCase
             'the_full_url',
             new \DateTimeImmutable(),
         );
-
-        $this->credentials_retriever
-            ->shouldReceive('getCredentials')
-            ->once()
-            ->andReturn($this->credentials);
 
         $this->dao
             ->shouldReceive('getGitlabRepositoryWebhook')
@@ -258,6 +230,6 @@ class WebhookDeletorTest extends TestCase
             ->with('Unable to delete the hook. Ignoring error: Error returned by the GitLab server: Not found')
             ->once();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
     }
 }

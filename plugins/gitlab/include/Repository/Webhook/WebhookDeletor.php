@@ -24,9 +24,9 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
+use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 
 class WebhookDeletor
 {
@@ -42,24 +42,19 @@ class WebhookDeletor
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var CredentialsRetriever
-     */
-    private $credentials_retriever;
 
     public function __construct(
         WebhookDao $dao,
         ClientWrapper $gitlab_api_client,
-        CredentialsRetriever $credentials_retriever,
         LoggerInterface $logger
     ) {
-        $this->gitlab_api_client     = $gitlab_api_client;
-        $this->dao                   = $dao;
-        $this->credentials_retriever = $credentials_retriever;
-        $this->logger                = $logger;
+        $this->gitlab_api_client = $gitlab_api_client;
+        $this->dao               = $dao;
+        $this->logger            = $logger;
     }
 
     public function deleteGitlabWebhookFromGitlabRepository(
+        ?Credentials $credentials,
         GitlabRepository $gitlab_repository
     ): void {
         $row = $this->dao->getGitlabRepositoryWebhook($gitlab_repository->getId());
@@ -72,7 +67,6 @@ class WebhookDeletor
             return;
         }
 
-        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
         if (! $credentials) {
             $this->dao->deleteGitlabRepositoryWebhook($gitlab_repository->getId());
             return;
