@@ -69,6 +69,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifact
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ScaledAgile\RedirectParameterInjector;
 use Tuleap\ScaledAgile\REST\ResourcesInjector;
 use Tuleap\ScaledAgile\ScaledAgileService;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
@@ -405,7 +406,8 @@ final class scaled_agilePlugin extends Plugin
             return;
         }
 
-        $event->getRedirect()->query_parameters['program_increment'] = "create";
+        $redirect = new RedirectParameterInjector();
+        $redirect->injectAndInformUserAboutProgramItem($event->getRedirect(), $GLOBALS['Response']);
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker
