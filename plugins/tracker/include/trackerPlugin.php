@@ -53,14 +53,12 @@ use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
-use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -108,12 +106,9 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\CreateProjectFromJira;
-use Tuleap\Tracker\Creation\JiraImporter\CreateProjectFromJiraCommand;
 use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCleaner;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
@@ -2181,39 +2176,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new NotificationLevelExtractor(),
                     $this->getTrackerFactory(),
                     new TrackerDao()
-                );
-            }
-        );
-        $commands_collector->addCommand(
-            CreateProjectFromJiraCommand::NAME,
-            static function (): CreateProjectFromJiraCommand {
-                $user_manager = UserManager::instance();
-
-                $nature_dao              = new NatureDao();
-                $nature_validator        = new NatureValidator($nature_dao);
-                $artifact_link_usage_dao = new ArtifactLinksUsageDao();
-
-                return new CreateProjectFromJiraCommand(
-                    $user_manager,
-                    new JiraProjectBuilder(),
-                    new CreateProjectFromJira(
-                        $user_manager,
-                        TemplateFactory::build(),
-                        new XMLFileContentRetriever(),
-                        new XMLImportHelper($user_manager),
-                        new JiraTrackerBuilder(),
-                        new XML_SimpleXMLCDATAFactory(),
-                        new ArtifactLinkTypeImporter(
-                            new NaturePresenterFactory(
-                                $nature_dao,
-                                $artifact_link_usage_dao,
-                            ),
-                            new NatureCreator(
-                                $nature_dao,
-                                $nature_validator,
-                            ),
-                        )
-                    )
                 );
             }
         );
