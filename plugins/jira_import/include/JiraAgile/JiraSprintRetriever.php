@@ -19,42 +19,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\JiraImport\JiraAgile;
 
-/**
- * @psalm-immutable
- */
-final class JiraBoard
+interface JiraSprintRetriever
 {
     /**
-     * @var int
+     * @return JiraSprint[]
      */
-    public $id;
-    /**
-     * @var string
-     */
-    public $url;
-    /**
-     * @var int
-     */
-    public $project_id;
-    /**
-     * @var string
-     */
-    public $project_key;
-
-    public function __construct(int $id, string $url, int $project_id, string $project_key)
-    {
-        $this->id          = $id;
-        $this->url         = $url;
-        $this->project_id  = $project_id;
-        $this->project_key = $project_key;
-    }
-
-    public static function buildFakeBoard(): self
-    {
-        return new self(1, 'https://example.com/rest/agile/latest/board/1', 10000, 'FOO');
-    }
+    public function getAllSprints(JiraBoard $board): array;
 }
