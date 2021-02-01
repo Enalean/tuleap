@@ -21,6 +21,8 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use Git_Exec;
+
 /**
  * Project class
  *
@@ -263,9 +265,10 @@ class Project
      */
     protected $compat = null;
 
-/*}}}1*/
-
-/* class methods {{{1*/
+    /**
+     * @var Git_Exec
+     */
+    private $git_exec;
 
     /**
      * __construct
@@ -277,10 +280,11 @@ class Project
      * @param string $project project
      * @throws \Exception if project is invalid or outside of projectroot
      */
-    public function __construct($projectRoot, $project)
+    public function __construct($projectRoot, $project, Git_Exec $git_exec)
     {
         $this->projectRoot = Util::AddSlash($projectRoot);
         $this->SetProject($project);
+        $this->git_exec = $git_exec;
     }
 
 /*}}}1*/
@@ -961,8 +965,7 @@ class Project
      */
     private function GetTagsRaw($count = 0) // @codingStandardsIgnoreLine
     {
-        $tags = $this->tags;
-        usort($tags, [Tag::class, 'CompareCreationEpoch']);
+        $tags = $this->git_exec->getAllTagsSortedByCreationDate();
 
         if (($count > 0) && (count($tags) > $count)) {
             $tags = array_slice($tags, 0, $count);
@@ -1049,8 +1052,7 @@ class Project
      */
     private function GetHeadsRaw($count = 0) // @codingStandardsIgnoreLine
     {
-        $heads = $this->heads;
-        usort($heads, [Head::class, 'CompareAge']);
+        $heads = $this->git_exec->getAllBranchesSortedByCreationDate();
 
         if (($count > 0) && (count($heads) > $count)) {
             $heads = array_slice($heads, 0, $count);
