@@ -1,29 +1,31 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-scaled-agile",
+  "name": "@tuleap/vue-breadcrumb-privacy",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "version": "0.0.0",
+  "main": "dist/breadcrumb-privacy.js",
+  "types": "dist/scripts/lib/vue-breadcrumb-privacy/src/index.d.ts",
   "dependencies": {
-    "@tuleap/core": "file://../../src",
-    "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
-    "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
-    "vue": "^2.6.12",
-    "vuex": "^3.6.0",
-    "vuex-class": "^0.3.2"
+    "@tuleap/tlp": "file:../../../themes/tlp"
+  },
+  "peerDependencies": {
+    "vue": "^2.0.0"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.1.2",
+    "vue": "^2.6.12",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"
   },
   "config": {
-    "bin": "../../node_modules/.bin/"
+    "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

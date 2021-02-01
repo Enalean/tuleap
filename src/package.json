@@ -13,6 +13,7 @@
     "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
     "@tuleap/list-picker": "file://./scripts/lib/list-picker",
     "@tuleap/tlp-fetch": "file://./scripts/lib/tlp-fetch",
+    "@tuleap/vue-breadcrumb-privacy": "file:scripts/lib/vue-breadcrumb-privacy",
     "@webcomponents/custom-elements": "^1.4.1",
     "ckeditor4": "^4.14.1",
     "core-js": "^3.6.5",

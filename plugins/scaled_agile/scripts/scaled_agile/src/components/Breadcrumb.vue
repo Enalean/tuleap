@@ -40,11 +40,7 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import BreadcrumbPrivacy from "@tuleap/core/scripts/vue-components/breadcrumb-privacy/BreadcrumbPrivacy.vue";
-import {
-    ProjectFlag,
-    ProjectPrivacy,
-} from "@tuleap/core/scripts/project/privacy/project-privacy-helper";
+import { BreadcrumbPrivacy, ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
 @Component({ components: { BreadcrumbPrivacy } })
 export default class Breadcrumb extends Vue {
