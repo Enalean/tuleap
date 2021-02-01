@@ -29,7 +29,7 @@ use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
-use Tuleap\JiraImport\JiraAgile\JiraProjectBoardRetriever;
+use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -44,9 +44,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Widget\ProjectHeartbeat;
+use Tuleap\Tracker\XML\XMLTracker;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
@@ -141,15 +141,12 @@ final class CreateProjectFromJira
 
         $this->artifact_link_type_importer->import($jira_client);
 
-        $jira_board_retriever = new JiraProjectBoardRetriever(
+        $jira_agile_importer = new JiraAgileImporter(
             new JiraBoardsRetrieverFromAPI(
                 $jira_client,
                 $logger,
             ),
         );
-        if ($jira_board_retriever->hasScrum($jira_project)) {
-            $logger->info('Project has Agile configuration to import');
-        }
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         assert($import_user !== null);
@@ -185,20 +182,13 @@ final class CreateProjectFromJira
             $tracker_fullname = $jira_tracker['name'];
             $tracker_itemname = str_replace('-', '_', $jira_tracker['name']);
 
-            $tracker_xml = $trackers_xml->addChild('tracker');
-            $tracker_xml->addAttribute('instantiate_for_new_projects', '0');
-            $tracker_xml->addAttribute('id', "T" . $jira_tracker['id']);
-            $tracker_xml->addAttribute('parent_id', "0");
-
-            $this->cdata_section_factory->insert($tracker_xml, 'name', $tracker_fullname);
-            $this->cdata_section_factory->insert($tracker_xml, 'item_name', $tracker_itemname);
-            $this->cdata_section_factory->insert($tracker_xml, 'description', '');
-            $this->cdata_section_factory->insert($tracker_xml, 'color', TrackerColor::fromName('inca-silver')->getName());
-
-            $tracker_xml->addChild('cannedResponses');
+            $tracker     = (new XMLTracker($jira_tracker['id'], $tracker_itemname))->withName($tracker_fullname);
+            $tracker_xml = $tracker->export($trackers_xml);
 
             $jira_exporter->exportJiraToXml($tracker_xml, $jira_credentials->getJiraUrl(), $jira_project, $jira_tracker['id'], $field_id_generator);
         }
+
+        $jira_agile_importer->exportScrum($logger, $xml_element, $jira_project, $field_id_generator);
 
         return $this->addWidgetOnDashboard($xml_element, [ProjectHeartbeat::NAME]);
     }

@@ -22,6 +22,8 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
 use Tuleap\Tracker\FormElement\FormElementTypeUpdater;
+use Tuleap\Tracker\FormElement\XML\XMLFormElement;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementImpl;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**
@@ -56,11 +58,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * The field id
+     * @var int
      */
     public $id;
 
     /**
      * The tracker id
+     * @var int
      */
     public $tracker_id;
 
@@ -71,6 +75,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * Id of the fieldcomposite this field belongs to
+     * @var int
      */
     public $parent_id;
 
@@ -82,7 +87,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public $name;
 
     /**
-     * The label
+     * @var string
      */
     public $label;
 
@@ -95,28 +100,33 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * Is the field used?
+     *
+     * @var bool
      */
     public $use_it;
 
     /**
      * The scope of the field: S: system or P:project
+     * @var string
      */
     public $scope;
 
     /**
      * Is the field is required?
+     * @var bool
      */
     public $required;
 
     /**
      * Is the field has notifications
+     * @var bool
      */
     public $notifications;
 
     /**
      * The rank
      *
-     * @var string $rank
+     * @var int|string $rank
      */
     public $rank;
 
@@ -133,32 +143,47 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Base constructor
      *
-     * @param int    $id                          The id of the field
-     * @param int    $tracker_id                  The id of the tracker this field belongs to
-     * @param int    $parent_id                   The id of the parent element
+     * @param int|string    $id                          The id of the field
+     * @param int|string    $tracker_id                  The id of the tracker this field belongs to
+     * @param int|string    $parent_id                   The id of the parent element
      * @param string $name                        The short name of the field
      * @param string $label                       The label of the element
      * @param string $description                 The description of the element
-     * @param bool   $use_it                      Is the element used?
+     * @param int|bool|null|string $use_it        Is the element used?
      * @param string $scope                       The scope of the plugin 'S' | 'P'
-     * @param bool   $required                    Is the element required? Todo: move this in field?
-     * @param int    $rank                        The rank of the field (in the parent)
+     * @param int|bool|null|string   $required                    Is the element required? Todo: move this in field?
+     * @param int|string    $rank                        The rank of the field (in the parent)
      * @param Tracker_FormElement $original_field The field the current field is refering to (null if no references)
      *
      * @return void
      */
     public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, ?Tracker_FormElement $original_field = null)
     {
-        $this->id             = $id;
-        $this->tracker_id     = $tracker_id;
-        $this->parent_id      = $parent_id;
-        $this->name           = $name;
-        $this->label          = $label;
-        $this->description    = $description;
-        $this->use_it         = $use_it;
-        $this->scope          = $scope;
-        $this->required       = $required;
-        $this->notifications  = $notifications;
+        $this->id          = (int) $id;
+        $this->tracker_id  = (int) $tracker_id;
+        $this->parent_id   = (int) $parent_id;
+        $this->name        = $name;
+        $this->label       = $label;
+        $this->description = $description;
+        $this->use_it      = false;
+        if (is_bool($use_it)) {
+            $this->use_it = $use_it;
+        } elseif ($use_it === '1' || $use_it === 1) {
+            $this->use_it = true;
+        }
+        $this->scope    = $scope;
+        $this->required = false;
+        if (is_bool($required)) {
+            $this->required = $required;
+        } elseif ($required === '1' || $required === 1) {
+            $this->required = true;
+        }
+        $this->notifications = false;
+        if (is_bool($notifications)) {
+            $this->notifications = $notifications;
+        } elseif ($notifications === '1' || $notifications === 1) {
+            $this->notifications = true;
+        }
         $this->rank           = $rank;
         $this->original_field = $original_field;
     }
@@ -176,28 +201,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $this->rank;
     }
 
-    /**
-     *  Return true if the field is used
-     *
-     * @return bool
-     */
-    public function isUsed()
+    public function isUsed(): bool
     {
-        return( $this->use_it );
+        return $this->use_it;
     }
 
-    /**
-     * @return array
-     */
-    public function getFormElementDataForCreation($parent_id)
+    public function getFormElementDataForCreation($parent_id): array
     {
-        $form_element_data = [
+        return [
             'name'          => $this->name,
             'label'         => $this->label,
             'parent_id'     => $parent_id,
             'description'   => $this->description,
-            'label'         => $this->label,
-            'use_it'        => $this->use_it,
+            'use_it'        => $this->use_it ? 1 : 0,
             'scope'         => $this->scope,
             'required'      => $this->required,
             'notifications' => $this->notifications,
@@ -205,8 +221,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             'permissions'   => $this->getPermissionsByUgroupId(),
             'specific_properties' => $this->getFlattenPropertiesValues()
         ];
-
-        return $form_element_data;
     }
 
     public function isCSVImportable(): bool
@@ -243,19 +257,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             case 'admin-formElement-remove':
                 if ($this->isUsedInTrigger()) {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You cannot remove a field used in a trigger. Please update trigger rules before deleting field.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
                 }
 
                 if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
                     $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field removed'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
                 break;
             case 'admin-formElement-delete':
                 if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
                     $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field deleted'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
                 break;
@@ -310,7 +324,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $redirect = true;
         }
         if ($redirect) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_id . '&func=admin-formElements');
         }
     }
 
@@ -835,15 +849,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         if (isset($properties['label']) && ! trim($properties['label'])) {
             return false;
         }
-        $this->parent_id     = isset($properties['parent_id'])     ? $properties['parent_id']               : $this->parent_id;
-        $this->name          = isset($properties['name'])          ? $properties['name']                    : $this->name;
-        $this->label         = isset($properties['label'])         ? $properties['label']                   : $this->label;
-        $this->description   = isset($properties['description'])   ? $properties['description']             : $this->description;
-        $this->use_it        = isset($properties['use_it'])        ? ($properties['use_it'] ? 1 : 0)        : $this->use_it;
-        $this->scope         = isset($properties['scope'])         ? $properties['scope']                   : $this->scope;
-        $this->required      = isset($properties['required'])      ? ($properties['required'] ? 1 : 0)      : $this->required;
-        $this->notifications = isset($properties['notifications']) ? ($properties['notifications'] ? 1 : 0) : $this->notifications;
-        $this->rank          = isset($properties['rank'])          ? $properties['rank']                    : $this->rank;
+        $this->parent_id     = isset($properties['parent_id'])     ? (int) $properties['parent_id']                : $this->parent_id;
+        $this->name          = isset($properties['name'])          ? $properties['name']                           : $this->name;
+        $this->label         = isset($properties['label'])         ? $properties['label']                          : $this->label;
+        $this->description   = isset($properties['description'])   ? $properties['description']                    : $this->description;
+        $this->use_it        = isset($properties['use_it'])        ? ($properties['use_it'] ? true : false)        : $this->use_it;
+        $this->scope         = isset($properties['scope'])         ? $properties['scope']                          : $this->scope;
+        $this->required      = isset($properties['required'])      ? ($properties['required'] ? true : false)      : $this->required;
+        $this->notifications = isset($properties['notifications']) ? ($properties['notifications'] ? true : false) : $this->notifications;
+        $this->rank          = isset($properties['rank'])          ? $properties['rank']                           : $this->rank;
         return $this->updateSpecificProperties($properties);
     }
 
@@ -890,51 +904,34 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return TRACKER_BASE_URL . '/?tracker=' . (int) $this->getTracker()->getId() . '&amp;func=admin-formElement-update&amp;formElement=' . $this->id;
     }
 
+    protected function getXMLInternalRepresentation(): XMLFormElement
+    {
+        return new XMLFormElementImpl(
+            $this->getXMLId(),
+            Tracker_FormElementFactory::instance()->getType($this),
+            $this->getName(),
+        );
+    }
+
     /**
      * Transforms FormElement into a SimpleXMLElement
      */
     public function exportToXml(
-        SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        SimpleXMLElement $parent_node,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter
-    ) {
-        $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
+    ): SimpleXMLElement {
+        $root = $this->getXMLInternalRepresentation()->fromFormElement($this)->export($parent_node);
 
-        $root->addAttribute('type', Tracker_FormElementFactory::instance()->getType($this));
         // this id is internal to XML
-        $ID              = $this->getXMLId();
-        $xmlMapping[$ID] = $this->id;
-        $root->addAttribute('ID', $ID);
-        $root->addAttribute('rank', $this->rank);
-        $root->addAttribute('id', $this->id);
-        $root->addAttribute('tracker_id', $this->tracker_id);
-        $root->addAttribute('parent_id', $this->parent_id);
-        // ony add if values are different from default
-        if (! $this->use_it) {
-            $root->addAttribute('use_it', $this->use_it);
-        }
-        // TODO: decide which scope is default P or S
-        if (($this->scope) && ($this->scope != 'P')) {
-            $root->addAttribute('scope', $this->scope);
-        }
-        if ($this->required) {
-            $root->addAttribute('required', $this->required);
-        }
-        if ($this->notifications) {
-            $root->addAttribute('notifications', $this->notifications);
-        }
+        $xmlMapping[$this->getXMLId()] = $this->id;
 
-        $cdata = new XML_SimpleXMLCDATAFactory();
-        $cdata->insert($root, 'name', $this->name);
-        $cdata_section_factory->insert($root, 'label', $this->label);
-        // only add if not empty
-        if ($this->description) {
-            $cdata_section_factory->insert($root, 'description', $this->description);
-        }
         if ($this->getProperties()) {
             $this->exportPropertiesToXML($root);
         }
+
+        return $root;
     }
 
     public function getXMLId()
@@ -1097,11 +1094,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
-     *  Get the description attribute value
-     *
-     * @return string
+     * @psalm-mutation-free
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -1466,11 +1461,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     abstract public function getDefaultRESTValue();
-
-    public function getTagNameForXMLExport(): string
-    {
-        return self::XML_TAG;
-    }
 
     public function isCollapsed(): bool
     {

@@ -62,7 +62,7 @@ final class BurndownCalculatorTest extends \PHPUnit\Framework\TestCase
             1587049512,
             true,
             'effort',
-            "12",
+            12,
             $already_seen
         );
 
@@ -87,7 +87,7 @@ final class BurndownCalculatorTest extends \PHPUnit\Framework\TestCase
             1587049512,
             true,
             'effort',
-            "12",
+            12,
             $already_seen
         );
 
@@ -115,7 +115,7 @@ final class BurndownCalculatorTest extends \PHPUnit\Framework\TestCase
             1587049512,
             true,
             'effort',
-            "12",
+            12,
             $already_seen
         );
 

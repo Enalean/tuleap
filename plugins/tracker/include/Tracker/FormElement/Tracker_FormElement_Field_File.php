@@ -33,6 +33,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 {
     public function getCriteriaFrom($criteria)
@@ -274,7 +275,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 if (isset($submitted_value['tus-uploaded-id'])) {
                     $html .= '<input
                         type="hidden"
-                        name="artifact[' . (int) $this->id . '][][tus-uploaded-id]"
+                        name="artifact[' . $this->id . '][][tus-uploaded-id]"
                         value="' . (int) $submitted_value['tus-uploaded-id'] . '">';
                 }
             }

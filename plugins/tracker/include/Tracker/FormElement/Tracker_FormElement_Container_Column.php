@@ -20,8 +20,10 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
+use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
-class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
+class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     /**
@@ -243,5 +245,10 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     {
         $html = '';
         return $html;
+    }
+
+    protected function getXMLInternalRepresentation(): XMLFormElement
+    {
+        return new XMLColumn($this->getXMLId(), $this->getName());
     }
 }

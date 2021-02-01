@@ -94,6 +94,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\Tracker\XML\XMLTracker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
 class Tracker implements Tracker_Dispatchable_Interface
@@ -2051,18 +2052,12 @@ class Tracker implements Tracker_Dispatchable_Interface
         array &$xmlMapping,
         $project_export_context
     ) {
-        $xmlElem->addAttribute('id', $this->getXMLId());
-
-        $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
-
-        $parent_id = $this->getParentId();
-        if ($parent_id && ! $project_export_context) {
-            $parent_id = "T" . $parent_id;
+        if ($project_export_context) {
+            $xml_tracker = XMLTracker::fromTracker($this);
         } else {
-            $parent_id = "0";
+            $xml_tracker = XMLTracker::fromTrackerInProjectContext($this);
         }
-
-        $xmlElem->addAttribute('parent_id', (string) $parent_id);
+        $xmlElem = $xml_tracker->exportTracker($xmlElem);
 
         // only add attributes which are different from the default value
         if ($this->enable_emailgateway) {
@@ -2085,36 +2080,15 @@ class Tracker implements Tracker_Dispatchable_Interface
             $xmlElem->addAttribute('is_displayed_in_new_dropdown', (string) true);
         }
 
-        // these will not be used at the import
-        $cdata_section_factory->insert($xmlElem, 'name', $this->getName());
-        $cdata = new XML_SimpleXMLCDATAFactory();
-        $cdata->insert($xmlElem, 'item_name', $this->getItemName());
-        $cdata_section_factory->insert($xmlElem, 'description', $this->getDescription());
-        $cdata->insert($xmlElem, 'color', $this->getColor()->getName());
-
-        // add only if not empty
-        if ($this->submit_instructions) {
-            $cdata_section_factory->insert($xmlElem, 'submit_instructions', $this->submit_instructions);
-        }
-        if ($this->browse_instructions) {
-            $cdata_section_factory->insert($xmlElem, 'browse_instructions', $this->browse_instructions);
-        }
-
-        $child = $xmlElem->addChild('cannedResponses');
         if ($responses = $this->getCannedResponseFactory()->getCannedResponses($this)) {
             foreach ($responses as $response) {
-                $grandchild = $child->addChild('cannedResponse');
+                $grandchild = $xmlElem->cannedResponses->addChild('cannedResponse');
                 $response->exportToXML($grandchild);
             }
         }
 
-        $child = $xmlElem->addChild('formElements');
-        // association between ids in database and ids in xml
-
-
         foreach ($this->getFormElementFactory()->getUsedFormElementForTracker($this) as $formElement) {
-            $grandchild = $child->addChild($formElement->getTagNameForXMLExport());
-            $formElement->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
+            $formElement->exportToXML($xmlElem->formElements, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
 
         // semantic

@@ -479,9 +479,9 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * Get all formElements by parent id
      * @param int parent_id
-     * @return array
+     * @return Tracker_FormElement[]
      */
-    public function getAllFormElementsByParentId($parent_id)
+    public function getAllFormElementsByParentId($parent_id): array
     {
         $all = [];
         foreach ($this->getDao()->searchByParentId($parent_id) as $row) {
@@ -1396,7 +1396,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $success = false;
         if ($form_element = $this->getFormElementById($form_element_id)) {
             //Don't use anymore the field
-            $form_element->use_it = 0;
+            $form_element->use_it = false;
             //remove the field from its container
             $form_element->parent_id = 0;
             $success                 = $this->getDao()->save($form_element);
@@ -1412,7 +1412,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     {
         $success = false;
         if ($form_element = $this->getFormElementById($form_element_id)) {
-            $form_element->use_it = 1;
+            $form_element->use_it = true;
             $form_element->rank   = 'beginning';
 
             if ($success = $this->getDao()->save($form_element)) {
@@ -1754,7 +1754,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      * Creates new Tracker_Form element in the database
      *
      * @param Tracker $tracker of the created tracker
-     * @param Object $form_element
+     * @param Tracker_FormElement $form_element
      * @param int $parent_id the id of the newly created parent formElement (0 when no parent)
      *
      * @return mixed the id of the newly created FormElement

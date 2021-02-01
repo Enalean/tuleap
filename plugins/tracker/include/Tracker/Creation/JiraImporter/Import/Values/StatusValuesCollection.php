@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Values;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\IDGenerator;
+use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 
 class StatusValuesCollection

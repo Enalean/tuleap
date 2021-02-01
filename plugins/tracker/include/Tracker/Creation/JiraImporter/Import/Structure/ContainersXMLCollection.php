@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use SimpleXMLElement;
+use Tuleap\Tracker\XML\IDGenerator;
 
 class ContainersXMLCollection
 {

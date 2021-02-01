@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,20 +21,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
+namespace Tuleap\TestManagement\Step\Definition\Field\XML;
 
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\XML\IDGenerator;
 
-final class FieldAndValueIDGenerator implements IDGenerator
+final class XMLStepDefinition extends XMLFormElement
 {
     /**
-     * @var int
+     * @param string|IDGenerator $id
      */
-    private $id = 0;
-
-    public function getNextId(): int
+    public function __construct($id, string $name)
     {
-        $this->id++;
-        return $this->id;
+        parent::__construct($id, StepDefinition::TYPE, $name);
+    }
+
+    protected function getXMLTagName(): string
+    {
+        return \Tracker_FormElement::XML_TAG_EXTERNAL_FIELD;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,20 +21,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
+namespace Tuleap\Tracker\FormElement\XML;
 
-use Tuleap\Tracker\XML\IDGenerator;
-
-final class FieldAndValueIDGenerator implements IDGenerator
+/**
+ * This class is supposed to be temporary only (I guess one will have a good laugh when they will read that in 3 years)
+ * It's there to transition from the XML export done internally to Tracker_FormElement class to a dedicated set of
+ * objects.
+ *
+ * The alternative would have been for `XMLFormElement` not to be abstract. However the goal is to set more solid
+ * fondations with this refactoring, hence to mark as clearly as possible the architecture.
+ *
+ * Until all fields have their equivalent in XML... form, we need this java-ish implementation.
+ */
+final class XMLFormElementImpl extends XMLFormElement
 {
-    /**
-     * @var int
-     */
-    private $id = 0;
-
-    public function getNextId(): int
-    {
-        $this->id++;
-        return $this->id;
-    }
 }

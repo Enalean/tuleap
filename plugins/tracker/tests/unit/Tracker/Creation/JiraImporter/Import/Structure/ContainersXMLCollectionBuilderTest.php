@@ -43,7 +43,6 @@ class ContainersXMLCollectionBuilderTest extends TestCase
         $this->assertEquals("fieldset", $details_fieldset['type']);
         $this->assertEquals("F1", $details_fieldset['ID']);
         $this->assertEquals("1", $details_fieldset['rank']);
-        $this->assertEquals("1", $details_fieldset['use_it']);
 
         $form_element_name = $details_fieldset->name;
         $this->assertNotNull($form_element_name);
@@ -56,7 +55,6 @@ class ContainersXMLCollectionBuilderTest extends TestCase
         $this->assertEquals("fieldset", $custom_fieldset['type']);
         $this->assertEquals("F2", $custom_fieldset['ID']);
         $this->assertEquals("2", $custom_fieldset['rank']);
-        $this->assertEquals("1", $custom_fieldset['use_it']);
 
         $form_element_name = $custom_fieldset->name;
         $this->assertNotNull($form_element_name);
@@ -79,7 +77,6 @@ class ContainersXMLCollectionBuilderTest extends TestCase
         $this->assertEquals("fieldset", $attachment_fieldset['type']);
         $this->assertEquals("F3", $attachment_fieldset['ID']);
         $this->assertEquals("3", $attachment_fieldset['rank']);
-        $this->assertEquals("1", $attachment_fieldset['use_it']);
 
         $form_element_name = $attachment_fieldset->name;
         $this->assertNotNull($form_element_name);
@@ -91,7 +88,6 @@ class ContainersXMLCollectionBuilderTest extends TestCase
         $links_fieldset = $parent_node->formElement[3];
         self::assertEquals('fieldset', $links_fieldset['type']);
         self::assertEquals("4", $links_fieldset['rank']);
-        self::assertEquals("1", $links_fieldset['use_it']);
         self::assertEquals('Links', (string) $links_fieldset->label);
     }
 }

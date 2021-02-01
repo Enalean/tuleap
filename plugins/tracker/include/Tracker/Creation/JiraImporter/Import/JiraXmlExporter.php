@@ -60,7 +60,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectio
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\IDGenerator;
+use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
@@ -354,8 +354,9 @@ class JiraXmlExporter
     ): void {
         $this->logger->debug("Start export Jira to XML: " . $jira_issue_type_id);
 
-        $this->logger->debug("Add root formelement");
-        $root_form_elements = $node_tracker->addChild('formElements');
+        if (! isset($node_tracker->formElements)) {
+            throw new \RuntimeException('XML node should have a `formElements` child');
+        }
 
         $containers_collection         = new ContainersXMLCollection($field_id_generator);
         $jira_field_mapping_collection = new FieldMappingCollection($field_id_generator);
@@ -365,7 +366,7 @@ class JiraXmlExporter
         );
 
         $this->containers_xml_collection_builder->buildCollectionOfJiraContainersXML(
-            $root_form_elements,
+            $node_tracker->formElements,
             $containers_collection,
         );
 

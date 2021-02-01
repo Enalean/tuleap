@@ -25,7 +25,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
@@ -34,7 +36,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
-class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container
+class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Process the request
@@ -322,5 +324,10 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     private function isFieldsetUsedInPostAction(): bool
     {
         return $this->getHiddenFieldsetsDao()->isFieldsetUsedInPostAction((int) $this->getID());
+    }
+
+    protected function getXMLInternalRepresentation(): XMLFormElement
+    {
+        return new XMLFieldset($this->getXMLId(), $this->getName());
     }
 }

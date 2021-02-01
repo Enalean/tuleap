@@ -28,7 +28,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
  * A composite is a component which contain other component.
  * See DesignPattern Composite for more details.
  */
-abstract class Tracker_FormElement_Container extends Tracker_FormElement
+abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * The formElements of this container
@@ -46,6 +46,9 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return $this->formElements;
     }
 
+    /**
+     * @return Tracker_FormElement[]
+     */
     public function getAllFormElements()
     {
         return Tracker_FormElementFactory::instance()->getAllFormElementsByParentId($this->id);
@@ -165,18 +168,16 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
      * Transforms FormElement into a SimpleXMLElement
      */
     public function exportToXml(
-        SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        SimpleXMLElement $parent_node,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter
-    ) {
-        parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
-        $subfields = $this->getAllFormElements();
-        $child     = $root->addChild('formElements');
-        foreach ($subfields as $subfield) {
-            $grandchild = $child->addChild($subfield->getTagNameForXMLExport());
-            $subfield->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
+    ): SimpleXMLElement {
+        $node = parent::exportToXML($parent_node, $xmlMapping, $project_export_context, $user_xml_exporter);
+        foreach ($this->getAllFormElements() as $subfield) {
+            $subfield->exportToXML($node->formElements, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
+        return $node;
     }
 
     public function exportPermissionsToXML(SimpleXMLElement $node_perms, array $ugroups, &$xmlMapping)
