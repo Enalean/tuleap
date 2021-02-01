@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,18 +25,11 @@ namespace Tuleap\ScaledAgile\REST\v1;
 /**
  * @psalm-immutable
  */
-final class ProjectResourcePutPlanRepresentation
+final class PlanPutPermissions
 {
     /**
-     * @var int {@required true}
+     * @var string[] {@required true} {@min 1} {@type string}
+     * @psalm-var non-empty-list<string>
      */
-    public $program_increment_tracker_id;
-    /**
-     * @var array {@type int}
-     */
-    public $plannable_tracker_ids;
-    /**
-     * @var PlanPutPermissions {@type \Tuleap\ScaledAgile\REST\v1\PlanPutPermissions} {@required true}
-     */
-    public $permissions;
+    public $can_prioritize_features;
 }

@@ -26,6 +26,7 @@ use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -39,6 +40,7 @@ use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ScaledAgile\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ScaledAgile\Adapter\Program\Feature\FeatureElementsRetriever;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramUserGroupBuildAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamAdapter;
@@ -48,6 +50,7 @@ use Tuleap\ScaledAgile\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
 use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
+use Tuleap\ScaledAgile\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ScaledAgile\Program\Plan\PlanCreator;
 use Tuleap\ScaledAgile\Team\Creation\TeamCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -89,7 +92,12 @@ final class ProjectResource extends AuthenticatedResource
         $program_dao          = new ProgramDao();
         $explicit_backlog_dao = new ExplicitBacklogDao();
         $build_program        = new ProgramAdapter($project_manager, $program_dao);
-        $this->plan_creator   = new PlanCreator($build_program, $tracker_adapter, $plan_dao);
+        $this->plan_creator   = new PlanCreator(
+            $build_program,
+            $tracker_adapter,
+            new ProgramUserGroupBuildAdapter(new UserGroupRetriever(new \UGroupManager())),
+            $plan_dao
+        );
 
         $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
         $team_dao           = new TeamDao();
@@ -149,9 +157,10 @@ final class ProjectResource extends AuthenticatedResource
                 $user,
                 $id,
                 $representation->program_increment_tracker_id,
-                $representation->plannable_tracker_ids
+                $representation->plannable_tracker_ids,
+                $representation->permissions->can_prioritize_features
             );
-        } catch (ProjectIsNotAProgramException | CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException $e) {
+        } catch (ProjectIsNotAProgramException | CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());

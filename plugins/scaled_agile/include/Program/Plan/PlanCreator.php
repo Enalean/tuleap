@@ -41,37 +41,59 @@ final class PlanCreator implements CreatePlan
      * @var PlanStore
      */
     private $plan_store;
+    /**
+     * @var BuildProgramUserGroup
+     */
+    private $build_program_user_group;
 
-    public function __construct(BuildProgram $program_build, BuildTracker $build_tracker, PlanStore $plan_store)
-    {
-        $this->program_build = $program_build;
-        $this->build_tracker = $build_tracker;
-        $this->plan_store    = $plan_store;
+    public function __construct(
+        BuildProgram $program_build,
+        BuildTracker $build_tracker,
+        BuildProgramUserGroup $build_program_user_group,
+        PlanStore $plan_store
+    ) {
+        $this->program_build            = $program_build;
+        $this->build_tracker            = $build_tracker;
+        $this->build_program_user_group = $build_program_user_group;
+        $this->plan_store               = $plan_store;
     }
 
     /**
+     * @param int[] $trackers_id
+     * @param non-empty-list<string> $can_possibly_prioritize_ugroups
+     *
      * @throws CannotPlanIntoItselfException
      * @throws PlanTrackerException
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
      * @throws ProgramTrackerException
+     * @throws InvalidProgramUserGroup
      */
-    public function create(\PFUser $user, int $project_id, int $program_increment_id, array $trackers_id): void
-    {
-        if (in_array($program_increment_id, $trackers_id)) {
+    public function create(
+        \PFUser $user,
+        int $project_id,
+        int $program_increment_id,
+        array $trackers_id,
+        array $can_possibly_prioritize_ugroups
+    ): void {
+        if (in_array($program_increment_id, $trackers_id, true)) {
             throw new CannotPlanIntoItselfException();
         }
-        $program_project       = $this->program_build->buildExistingProgramProject($project_id, $user);
-        $program_tracker       = $this->build_tracker->buildProgramIncrementTracker(
+        $program_project            = $this->program_build->buildExistingProgramProject($project_id, $user);
+        $program_tracker            = $this->build_tracker->buildProgramIncrementTracker(
             $program_increment_id,
             $program_project->getId()
         );
-        $plannable_tracker_ids = $this->build_tracker->buildPlannableTrackerList(
+        $plannable_tracker_ids      = $this->build_tracker->buildPlannableTrackerList(
             $trackers_id,
             $program_project->getId()
         );
+        $can_prioritize_user_groups = $this->build_program_user_group->buildProgramUserGroups(
+            $program_project,
+            $can_possibly_prioritize_ugroups
+        );
 
-        $plan = new Plan($program_tracker, $plannable_tracker_ids);
+        $plan = new Plan($program_tracker, $plannable_tracker_ids, $can_prioritize_user_groups);
         $this->plan_store->save($plan);
     }
 }

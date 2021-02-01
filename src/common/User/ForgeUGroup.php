@@ -44,7 +44,7 @@ class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.Class
     /**
      * @psalm-mutation-free
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

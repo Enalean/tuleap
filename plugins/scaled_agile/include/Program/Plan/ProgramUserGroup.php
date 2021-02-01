@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\REST\v1;
+namespace Tuleap\ScaledAgile\Program\Plan;
+
+use Tuleap\ScaledAgile\Program\Program;
 
 /**
  * @psalm-immutable
  */
-final class ProjectResourcePutPlanRepresentation
+final class ProgramUserGroup
 {
     /**
-     * @var int {@required true}
+     * @var Program
      */
-    public $program_increment_tracker_id;
+    public $program;
     /**
-     * @var array {@type int}
+     * @var int
      */
-    public $plannable_tracker_ids;
-    /**
-     * @var PlanPutPermissions {@type \Tuleap\ScaledAgile\REST\v1\PlanPutPermissions} {@required true}
-     */
-    public $permissions;
+    public $id;
+
+    public function __construct(Program $program, int $id)
+    {
+        $this->program = $program;
+        $this->id      = $id;
+    }
 }

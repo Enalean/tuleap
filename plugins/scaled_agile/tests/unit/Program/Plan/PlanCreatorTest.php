@@ -35,6 +35,7 @@ final class PlanCreatorTest extends TestCase
     {
         $program_adapter = \Mockery::mock(BuildProgram::class);
         $tracker_adapter = \Mockery::mock(BuildTracker::class);
+        $build_ugroups   = \Mockery::mock(BuildProgramUserGroup::class);
 
         $project_id                   = 101;
         $program_increment_tracker_id = 1;
@@ -42,27 +43,30 @@ final class PlanCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
+        $program = new Program($project_id);
         $program_adapter->shouldReceive('buildExistingProgramProject')
             ->with($project_id, $user)->once()
-            ->andReturn(new Program($project_id));
+            ->andReturn($program);
         $tracker_adapter->shouldReceive('buildProgramIncrementTracker')
             ->with($program_increment_tracker_id, $project_id)->once()
             ->andReturn(new ProgramIncrementTracker($program_increment_tracker_id));
         $tracker_adapter->shouldReceive('buildPlannableTrackerList')
             ->with([$plannable_tracker_id], $project_id)->once()
             ->andReturn([$plannable_tracker_id => new ProgramIncrementTracker($plannable_tracker_id)]);
+        $build_ugroups->shouldReceive('buildProgramUserGroups')->andReturn([$program]);
 
         $plan_dao = \Mockery::mock(PlanStore::class);
         $plan_dao->shouldReceive('save')->with(\Mockery::type(Plan::class))->once();
 
-        $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $plan_dao);
-        $plan_adapter->create($user, $project_id, $program_increment_tracker_id, [$plannable_tracker_id]);
+        $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);
+        $plan_adapter->create($user, $project_id, $program_increment_tracker_id, [$plannable_tracker_id], ['102_4']);
     }
 
     public function testItThrowsAnExceptionWhenProgramIncrementTrackerIsInPlannableTracker(): void
     {
         $program_adapter = \Mockery::mock(BuildProgram::class);
         $tracker_adapter = \Mockery::mock(BuildTracker::class);
+        $build_ugroups   = \Mockery::mock(BuildProgramUserGroup::class);
         $plan_dao        = \Mockery::mock(PlanStore::class);
 
         $user = UserTestBuilder::aUser()->build();
@@ -73,7 +77,7 @@ final class PlanCreatorTest extends TestCase
 
         $this->expectException(CannotPlanIntoItselfException::class);
 
-        $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $plan_dao);
-        $plan_adapter->create($user, $project_id, $program_increment_tracker_id, [$plannable_tracker_id]);
+        $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);
+        $plan_adapter->create($user, $project_id, $program_increment_tracker_id, [$plannable_tracker_id], ['101_4']);
     }
 }
