@@ -25,12 +25,12 @@ import {
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH,
     ANONYMOUS_USER_ID,
-} from "../constants.js";
+} from "../constants";
 import {
     setDisplayMode,
     getAsyncRepositoryList,
     changeRepositories,
-    getGitlabRepositoryList,
+    getGitlabProjectList,
     getGitlabRepositoryFromId,
     showEditAccessTokenGitlabRepositoryModal,
     updateBotApiTokenGitlab,
@@ -313,7 +313,7 @@ describe("Store actions", () => {
         });
     });
 
-    describe("getGitlabRepositoryList", () => {
+    describe("getGitlabProjectList", () => {
         let context;
         beforeEach(() => {
             context = {
@@ -342,7 +342,7 @@ describe("Store actions", () => {
                 token: "azerty1234",
             };
 
-            expect(await getGitlabRepositoryList(context, credentials)).toEqual([{ id: 10 }]);
+            expect(await getGitlabProjectList(context, credentials)).toEqual([{ id: 10 }]);
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url:
                     "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
@@ -371,7 +371,7 @@ describe("Store actions", () => {
                 token: "azerty1234",
             };
 
-            expect(await getGitlabRepositoryList(context, credentials)).toEqual([
+            expect(await getGitlabProjectList(context, credentials)).toEqual([
                 { id: 10 },
                 { id: 10 },
             ]);
@@ -395,9 +395,7 @@ describe("Store actions", () => {
                 token: "azerty1234",
             };
 
-            await expect(getGitlabRepositoryList(context, credentials)).rejects.toEqual(
-                new Error()
-            );
+            await expect(getGitlabProjectList(context, credentials)).rejects.toEqual(new Error());
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url:
                     "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",

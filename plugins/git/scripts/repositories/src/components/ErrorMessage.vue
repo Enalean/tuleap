@@ -24,7 +24,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants.js";
+import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants";
 
 export default {
     name: "ErrorMessage",

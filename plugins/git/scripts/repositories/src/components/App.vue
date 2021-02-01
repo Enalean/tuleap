@@ -53,7 +53,7 @@ import RepositoryList from "./RepositoryList.vue";
 import ErrorMessage from "./ErrorMessage.vue";
 import RepositoryListSpinner from "./RepositoryListSpinner.vue";
 import FolderRepositoryList from "./folders/FolderRepositoryList.vue";
-import { PROJECT_KEY } from "../constants.js";
+import { PROJECT_KEY } from "../constants";
 import { getExternalPlugins } from "../repository-list-presenter";
 import JenkinsServers from "./ActionBar/JenkinsServers.vue";
 import GitlabRepositoryModal from "./GitlabModal/CreateGitlabLinkModal/GitlabRepositoryModal.vue";

@@ -22,7 +22,7 @@ import {
     PROJECT_KEY,
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH,
-} from "../constants.js";
+} from "../constants";
 
 describe("Store mutations", () => {
     describe("setDisplayMode", () => {

@@ -19,7 +19,7 @@
 
 import * as getters from "./getters.js";
 import initial_state from "./state.js";
-import { PROJECT_KEY } from "../constants.js";
+import { PROJECT_KEY } from "../constants";
 
 describe("Store getters", () => {
     let state, mock_getters;

@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../constants.js";
+import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../constants";
 import { formatRepository } from "../gitlab/gitlab-repository-formatter";
 
 export default {
