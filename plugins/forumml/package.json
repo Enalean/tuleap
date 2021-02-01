@@ -4,13 +4,23 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "@tuleap/core": "file:../../src",
+    "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^1.1.2",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2",
+    "vuex-class": "^0.3.2"
+  },
   "config": {
     "bin": "../../node_modules/.bin"
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

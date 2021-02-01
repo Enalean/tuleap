@@ -21,6 +21,7 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 const entry = {
+    "new-thread": "./scripts/new-thread.ts",
     style: "./themes/css/style.scss",
     null: "null_entry",
 };
@@ -41,16 +42,34 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/forumml/"),
             "/assets/forumml/"
         ),
+        externals: {
+            tlp: "tlp",
+        },
+        resolve: {
+            extensions: [".ts", ".js", ".vue"],
+        },
         module: {
-            rules: [webpack_configurator.rule_scss_loader],
+            rules: [
+                ...webpack_configurator.configureTypescriptRules(
+                    webpack_configurator.babel_options_ie11
+                ),
+                webpack_configurator.rule_easygettext_loader,
+                webpack_configurator.rule_vue_loader,
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
+            webpack_configurator.getVueLoaderPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(false),
             ...webpack_configurator.getCSSExtractionPlugins(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "forumml.js": ["./scripts/forumml.js", "./scripts/cc_attach.js"],
             }),
             webpack_configurator.getManifestPlugin(),
         ],
+        resolveLoader: {
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
     },
 ];

@@ -521,7 +521,7 @@ function plugin_forumml_process_mail($reply = false)
             $continue = false;
         } else {
         // add list of cc users to mail mime
-            $mail->setCc($cc_array, true);
+            $mail->setCc(implode(',', $cc_array), true);
         }
     }
 

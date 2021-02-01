@@ -395,6 +395,11 @@ class ThreadsControllerTest extends TestCase
             ->shouldReceive('getPath')
             ->andReturn('/whatever');
 
+        $this->include_assets
+            ->shouldReceive('getFileUrl')
+            ->with('new-thread.js')
+            ->andReturn('new-thread.js');
+
         $service
             ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
             ->once();
@@ -462,6 +467,11 @@ class ThreadsControllerTest extends TestCase
         $this->include_assets
             ->shouldReceive('getPath')
             ->andReturn('/whatever');
+
+        $this->include_assets
+            ->shouldReceive('getFileUrl')
+            ->with('new-thread.js')
+            ->andReturn('new-thread.js');
 
         $service
             ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
