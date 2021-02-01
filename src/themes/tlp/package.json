@@ -14,7 +14,9 @@
     "popper.js": "^1.16.1",
     "select2": "^4.0.13"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/jquery": "^3.5.5"
+  },
   "config": {
     "bin": "../../../node_modules/.bin"
   },
