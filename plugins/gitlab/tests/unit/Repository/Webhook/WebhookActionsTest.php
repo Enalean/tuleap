@@ -143,7 +143,8 @@ final class WebhookActionsTest extends TestCase
             'TULEAP-123',
             '',
             'closed',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $now = new DateTimeImmutable();

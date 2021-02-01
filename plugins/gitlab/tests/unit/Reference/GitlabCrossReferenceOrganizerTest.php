@@ -74,6 +74,14 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TlpRelativeDatePresenterBuilder
      */
     private $relative_date_builder;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
+     */
+    private $user_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserHelper
+     */
+    private $user_helper;
 
     protected function setUp(): void
     {
@@ -83,6 +91,8 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->gitlab_merge_request_reference_retriever = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
         $this->project_manager                          = Mockery::mock(ProjectManager::class);
         $this->relative_date_builder                    = new TlpRelativeDatePresenterBuilder();
+        $this->user_manager                             = Mockery::mock(\UserManager::class);
+        $this->user_helper                              = Mockery::mock(\UserHelper::class);
 
         $GLOBALS['Language']
             ->shouldReceive('getText')
@@ -96,6 +106,8 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             $this->gitlab_merge_request_reference_retriever,
             $this->project_manager,
             $this->relative_date_builder,
+            $this->user_manager,
+            $this->user_helper
         );
     }
 
@@ -336,7 +348,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
 
-    public function testItOrganizesGitlabMergeRequestCrossReferencesInTheirRespectiveRepositorySection(): void
+    public function testItOrganizesGitlabMergeRequestCrossReferencesInTheirRespectiveRepositorySectionWithoutAuthor(): void
     {
         $project = Mockery::mock(Project::class)
             ->shouldReceive('getUnixNameLowercase')
@@ -388,13 +400,17 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $john_snow_merge_request = new GitlabMergeRequest(
             'The title of the MR 14',
             'merged',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            null,
+            null
         );
 
         $samwell_tarly_merge_request = new GitlabMergeRequest(
             'The title of MR #26',
             'closed',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            null,
+            null
         );
 
         $this->gitlab_merge_request_reference_retriever
@@ -421,6 +437,9 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->withProjectId(2)
             ->build();
 
+        $this->user_manager->shouldReceive('getUserByEmail')->never();
+        $this->user_helper->shouldReceive('getDisplayNameFromUser')->never();
+
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
         $user->shouldReceive('getLocale')->andReturn("en_US");
@@ -437,6 +456,235 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->twice();
+
+        $this->organizer->organizeGitLabReferences($by_nature_organizer);
+    }
+
+    public function testItOrganizesGitlabMergeRequestCrossReferencesInTheirRespectiveRepositorySectionWithAuthorMatchingTuleapUser(): void
+    {
+        $project = Mockery::mock(Project::class)
+            ->shouldReceive('getUnixNameLowercase')
+            ->andReturn('thenightwatch')
+            ->getMock();
+
+        $this->project_manager
+            ->shouldReceive('getProject')
+            ->with(1)
+            ->andReturn($project);
+
+        $repository = new GitlabRepository(
+            1,
+            2,
+            'winter-is-coming',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new DateTimeImmutable()
+        );
+
+        $this->gitlab_repository_factory
+            ->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->with($project, 'john-snow/winter-is-coming')
+            ->andReturn($repository);
+
+        $john_snow_merge_request = new GitlabMergeRequest(
+            'The title of the MR 14',
+            'merged',
+            new DateTimeImmutable(),
+            'John Snow',
+            'jsnow@thewall.fr'
+        );
+
+        $this->gitlab_merge_request_reference_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($repository, 14)
+            ->andReturn($john_snow_merge_request)
+            ->once();
+
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_mr')
+            ->withValue('john-snow/winter-is-coming/14')
+            ->withProjectId(1)
+            ->build();
+
+        $author = Mockery::mock(PFUser::class, ['hasAvatar' => true, 'getAvatarUrl' => "my_avatar"]);
+
+        $this->user_manager
+            ->shouldReceive('getUserByEmail')
+            ->once()
+            ->andReturn($author);
+
+        $this->user_helper
+            ->shouldReceive('getDisplayNameFromUser')
+            ->with($author)
+            ->andReturn('John')
+            ->once();
+
+
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
+        $user->shouldReceive('getLocale')->andReturn("en_US");
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(
+                [
+                    'getCrossReferencePresenters' => [$a_ref],
+                    'getCurrentUser' => $user
+                ]
+            )->getMock();
+
+        $by_nature_organizer->shouldReceive('removeCrossReferenceToSection')->never();
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->once();
+
+        $this->organizer->organizeGitLabReferences($by_nature_organizer);
+    }
+
+    public function testItOrganizesGitlabMergeRequestCrossReferencesInTheirRespectiveRepositorySectionWithAuthorDontMatchingTuleapUser(): void
+    {
+        $project = Mockery::mock(Project::class)
+            ->shouldReceive('getUnixNameLowercase')
+            ->andReturn('thenightwatch')
+            ->getMock();
+
+        $this->project_manager
+            ->shouldReceive('getProject')
+            ->with(1)
+            ->andReturn($project);
+
+        $repository = new GitlabRepository(
+            1,
+            2,
+            'winter-is-coming',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new DateTimeImmutable()
+        );
+
+        $this->gitlab_repository_factory
+            ->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->with($project, 'john-snow/winter-is-coming')
+            ->andReturn($repository);
+
+        $john_snow_merge_request = new GitlabMergeRequest(
+            'The title of the MR 14',
+            'merged',
+            new DateTimeImmutable(),
+            'John Snow',
+            'jsnow@thewall.fr'
+        );
+
+        $this->gitlab_merge_request_reference_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($repository, 14)
+            ->andReturn($john_snow_merge_request)
+            ->once();
+
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_mr')
+            ->withValue('john-snow/winter-is-coming/14')
+            ->withProjectId(1)
+            ->build();
+
+        $this->user_manager
+            ->shouldReceive('getUserByEmail')
+            ->once()
+            ->andReturn(null);
+
+        $this->user_helper
+            ->shouldReceive('getDisplayNameFromUser')
+            ->never();
+
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
+        $user->shouldReceive('getLocale')->andReturn("en_US");
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(
+                [
+                    'getCrossReferencePresenters' => [$a_ref],
+                    'getCurrentUser' => $user
+                ]
+            )->getMock();
+
+        $by_nature_organizer->shouldReceive('removeCrossReferenceToSection')->never();
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->once();
+
+        $this->organizer->organizeGitLabReferences($by_nature_organizer);
+    }
+
+    public function testItOrganizesGitlabMergeRequestCrossReferencesInTheirRespectiveRepositorySectionWithOnlyAuthorName(): void
+    {
+        $project = Mockery::mock(Project::class)
+            ->shouldReceive('getUnixNameLowercase')
+            ->andReturn('thenightwatch')
+            ->getMock();
+
+        $this->project_manager
+            ->shouldReceive('getProject')
+            ->with(1)
+            ->andReturn($project);
+
+        $repository = new GitlabRepository(
+            1,
+            2,
+            'winter-is-coming',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new DateTimeImmutable()
+        );
+
+        $this->gitlab_repository_factory
+            ->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->with($project, 'john-snow/winter-is-coming')
+            ->andReturn($repository);
+
+        $john_snow_merge_request = new GitlabMergeRequest(
+            'The title of the MR 14',
+            'merged',
+            new DateTimeImmutable(),
+            'John Snow',
+            null
+        );
+
+        $this->gitlab_merge_request_reference_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($repository, 14)
+            ->andReturn($john_snow_merge_request)
+            ->once();
+
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_mr')
+            ->withValue('john-snow/winter-is-coming/14')
+            ->withProjectId(1)
+            ->build();
+
+        $this->user_manager
+            ->shouldReceive('getUserByEmail')
+            ->never();
+
+        $this->user_helper
+            ->shouldReceive('getDisplayNameFromUser')
+            ->never();
+
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
+        $user->shouldReceive('getLocale')->andReturn("en_US");
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(
+                [
+                    'getCrossReferencePresenters' => [$a_ref],
+                    'getCurrentUser' => $user
+                ]
+            )->getMock();
+
+        $by_nature_organizer->shouldReceive('removeCrossReferenceToSection')->never();
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->once();
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }

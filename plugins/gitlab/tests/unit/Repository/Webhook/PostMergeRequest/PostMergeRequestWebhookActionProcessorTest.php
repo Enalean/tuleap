@@ -27,6 +27,9 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Reference;
+use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
@@ -67,6 +70,14 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestBotCommenter
      */
     private $bot_commenter;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestWebhookAuthorDataRetriever
+     */
+    private $author_retriever;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabMergeRequestReferenceRetriever
+     */
+    private $merge_request_retriever;
 
     protected function setUp(): void
     {
@@ -78,6 +89,8 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         $this->merge_request_reference_dao         = Mockery::mock(MergeRequestTuleapReferenceDao::class);
         $this->gitlab_repository_project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
         $this->bot_commenter                       = Mockery::mock(PostMergeRequestBotCommenter::class);
+        $this->author_retriever                    = Mockery::mock(PostMergeRequestWebhookAuthorDataRetriever::class);
+        $this->merge_request_retriever             = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
 
         $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
             new WebhookTuleapReferencesParser()
@@ -98,7 +111,9 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
                 $this->tuleap_reference_retriever,
                 $this->reference_manager,
                 $this->logger,
-            )
+            ),
+            $this->author_retriever,
+            $this->merge_request_retriever
         );
     }
 
@@ -121,13 +136,19 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $this->merge_request_reference_dao
             ->shouldReceive('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
             ->andReturn([]);
+
+        $this->merge_request_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($gitlab_repository, 2)
+            ->andReturn(null);
 
         $this->gitlab_repository_project_retriever
             ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
@@ -228,6 +249,32 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->once();
 
         $this->logger
+            ->shouldReceive('info')
+            ->with('Try to get author data of merge request #2')
+            ->once();
+
+        $this->author_retriever
+            ->shouldReceive('retrieveAuthorData')
+            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->once()
+            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author name of merge request #2 is: John')
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author has been saved in database')
+            ->once();
+
+        $this->logger
             ->shouldReceive('debug')
             ->with('Some references are added, a comment should be added');
 
@@ -262,7 +309,8 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $this->merge_request_reference_dao
@@ -270,10 +318,23 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->with(1, 2)
             ->andReturn(
                 [
-                    'title'       => 'My Title TULEAP-58',
-                    'description' => 'TULEAP-666 TULEAP-45'
+                    'title'        => 'My Title TULEAP-58',
+                    'description'  => 'TULEAP-666 TULEAP-45',
+                    'author_name'  => null,
+                    'author_email' => null,
                 ]
             );
+
+        $this->merge_request_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($gitlab_repository, 2)
+            ->andReturn(new GitlabMergeRequest(
+                'My Title TULEAP-58',
+                'TULEAP-666 TULEAP-45',
+                new DateTimeImmutable(),
+                null,
+                null
+            ));
 
         $this->gitlab_repository_project_retriever
             ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
@@ -381,6 +442,32 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->with('Merge request data for 2 saved in database')
             ->once();
 
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Try to get author data of merge request #2')
+            ->once();
+
+        $this->author_retriever
+            ->shouldReceive('retrieveAuthorData')
+            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->once()
+            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author name of merge request #2 is: John')
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author has been saved in database')
+            ->once();
+
         $this->bot_commenter
             ->shouldReceive('addCommentOnMergeRequest')
             ->never();
@@ -407,7 +494,8 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666',
             'opened',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $this->merge_request_reference_dao
@@ -415,10 +503,23 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->with(1, 2)
             ->andReturn(
                 [
-                    'title'       => 'My Title TULEAP-58',
-                    'description' => 'TULEAP-666 TULEAP-45'
+                    'title'        => 'My Title TULEAP-58',
+                    'description'  => 'TULEAP-666 TULEAP-45',
+                    'author_name'  => null,
+                    'author_email' => null
                 ]
             );
+
+        $this->merge_request_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($gitlab_repository, 2)
+            ->andReturn(new GitlabMergeRequest(
+                'My Title TULEAP-58',
+                'TULEAP-666 TULEAP-45',
+                new DateTimeImmutable(),
+                null,
+                null
+            ));
 
         $this->gitlab_repository_project_retriever
             ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
@@ -516,6 +617,32 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->once();
 
         $this->logger
+            ->shouldReceive('info')
+            ->with('Try to get author data of merge request #2')
+            ->once();
+
+        $this->author_retriever
+            ->shouldReceive('retrieveAuthorData')
+            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->once()
+            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author name of merge request #2 is: John')
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author has been saved in database')
+            ->once();
+
+        $this->logger
             ->shouldReceive('debug')
             ->with('Some references are removed, a comment should be added');
 
@@ -550,13 +677,19 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title TULEAP-58",
             '',
             'closed',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $this->merge_request_reference_dao
             ->shouldReceive('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
             ->andReturn([]);
+
+        $this->merge_request_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($gitlab_repository, 2)
+            ->andReturn(null);
 
         $this->gitlab_repository_project_retriever
             ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
@@ -618,6 +751,157 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->once();
 
         $this->logger
+            ->shouldReceive('info')
+            ->with('Try to get author data of merge request #2')
+            ->once();
+
+        $this->author_retriever
+            ->shouldReceive('retrieveAuthorData')
+            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->once()
+            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author name of merge request #2 is: John')
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author has been saved in database')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with('Some references are added, a comment should be added');
+
+        $this->bot_commenter
+            ->shouldReceive('addCommentOnMergeRequest')
+            ->once();
+
+        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+    }
+
+    public function testItProcessesActionsForPostMergeRequestWebhookAlreadyIntegratedAndLogErrorIfCantGetAuthor(): void
+    {
+        $gitlab_repository = new GitlabRepository(
+            1,
+            123654,
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
+            new DateTimeImmutable()
+        );
+
+        $merge_request_webhook_data = new PostMergeRequestWebhookData(
+            'merge_request',
+            123,
+            'https://example.com',
+            2,
+            "My Title TULEAP-58",
+            '',
+            'closed',
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
+        );
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->with(1, 2)
+            ->andReturn([]);
+
+        $this->merge_request_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($gitlab_repository, 2)
+            ->andReturn(null);
+
+        $this->gitlab_repository_project_retriever
+            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
+            ->with($gitlab_repository)
+            ->andReturn(
+                [
+                    Project::buildForTest()
+                ]
+            )
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112)
+            ->once();
+
+        $this->reference_manager
+            ->shouldReceive('insertCrossReference')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('1 Tuleap references found in merge request 2')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with(
+                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+            )
+            ->once();
+
+        $this->tuleap_reference_retriever
+            ->shouldReceive('retrieveTuleapReference')
+            ->with(58)
+            ->andReturn(
+                new Reference(
+                    58,
+                    'key',
+                    'desc',
+                    'link',
+                    'P',
+                    'service_short_name',
+                    'nature',
+                    1,
+                    100
+                )
+            )
+            ->once();
+
+        $this->logger
+            ->shouldReceive("info")
+            ->with('|  |_ Tuleap artifact #58 found')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Merge request data for 2 saved in database')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Try to get author data of merge request #2')
+            ->once();
+
+        $exception = new GitlabRequestException(404, "Unauthorized");
+
+        $this->author_retriever
+            ->shouldReceive('retrieveAuthorData')
+            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->andThrow($exception)
+            ->once();
+
+        $this->logger
+            ->shouldReceive('error')
+            ->with("| |_Can't get data on author of merge request #2", ['exception' => $exception])
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('setAuthorData')
+            ->never();
+
+        $this->logger
             ->shouldReceive('debug')
             ->with('Some references are added, a comment should be added');
 
@@ -647,13 +931,19 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title",
             '',
             'closed',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $this->merge_request_reference_dao
             ->shouldReceive('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
             ->andReturn([]);
+
+        $this->merge_request_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($gitlab_repository, 2)
+            ->andReturn(null);
 
         $this->gitlab_repository_project_retriever
             ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
@@ -700,7 +990,8 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             "My Title",
             '',
             'closed',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $this->gitlab_repository_project_retriever
@@ -722,11 +1013,24 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->shouldReceive('searchMergeRequestInRepositoryWithId')
             ->andReturn(
                 [
-                    'title'       => 'Previous title',
-                    'state'       => 'opened',
-                    'description' => 'Previous descripition',
+                    'title'        => 'Previous title',
+                    'state'        => 'opened',
+                    'description'  => 'Previous descripition',
+                    'author_name'  => 'John',
+                    'author_email' => 'john@thewall.fr',
                 ]
             );
+
+        $this->merge_request_retriever
+            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->with($gitlab_repository, 2)
+            ->andReturn(new GitlabMergeRequest(
+                'My Title TULEAP-58',
+                'TULEAP-666 TULEAP-45',
+                new DateTimeImmutable(),
+                'John',
+                'john@thewall.fr'
+            ));
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
@@ -737,6 +1041,31 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             ->shouldReceive('info')
             ->with('Merge request data for 2 saved in database')
             ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Try to get author data of merge request #2')
+            ->never();
+
+        $this->author_retriever
+            ->shouldReceive('retrieveAuthorData')
+            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->never();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author name of merge request #2 is: John')
+            ->never();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr')
+            ->never();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Author has been saved in database')
+            ->never();
 
         $this->bot_commenter
             ->shouldReceive('addCommentOnMergeRequest')

@@ -57,6 +57,10 @@ class PostMergeRequestWebhookData implements WebhookData
      * @var DateTimeImmutable
      */
     private $created_at;
+    /**
+     * @var int
+     */
+    private $author_id;
 
     public function __construct(
         string $event_name,
@@ -66,7 +70,8 @@ class PostMergeRequestWebhookData implements WebhookData
         string $title,
         string $description,
         string $state,
-        DateTimeImmutable $created_at
+        DateTimeImmutable $created_at,
+        int $author_id
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;
@@ -76,6 +81,7 @@ class PostMergeRequestWebhookData implements WebhookData
         $this->merge_request_id  = $merge_request_id;
         $this->state             = $state;
         $this->created_at        = $created_at;
+        $this->author_id         = $author_id;
     }
 
     public function getEventName(): string
@@ -116,5 +122,10 @@ class PostMergeRequestWebhookData implements WebhookData
     public function getCreatedAtDate(): DateTimeImmutable
     {
         return $this->created_at;
+    }
+
+    public function getAuthorId(): int
+    {
+        return $this->author_id;
     }
 }

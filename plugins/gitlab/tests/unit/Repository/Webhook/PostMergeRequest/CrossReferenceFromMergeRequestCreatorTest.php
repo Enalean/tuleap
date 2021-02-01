@@ -88,7 +88,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends TestCase
             "My title",
             'My description',
             'opened',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $projects = [Mockery::mock(Project::class)];
@@ -124,7 +125,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends TestCase
             "My title tuleap-42",
             'My description',
             'opened',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $projects = [Mockery::mock(Project::class)];
@@ -177,7 +179,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends TestCase
             "My title tuleap-42",
             'My description',
             'opened',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $projects = [Mockery::mock(Project::class)];
@@ -228,7 +231,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends TestCase
             "My title tuleap-42",
             'My description tuleap-66',
             'opened',
-            (new \DateTimeImmutable())->setTimestamp(1611315112)
+            (new \DateTimeImmutable())->setTimestamp(1611315112),
+            10
         );
 
         $project_1 = Mockery::mock(Project::class, ['getID' => 111]);

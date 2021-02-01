@@ -101,6 +101,23 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
     }
 
+    public function testItThrowsAnExceptionIfMergeRequestAuthorIdKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage("key author_id in object_attributes is missing");
+
+        $webhook_content = [
+            'object_attributes' => [
+                'iid'         => 1,
+                'title'       => 'My Title',
+                'description' => 'My description',
+                'state'       => 'closed',
+                'created_at'  => '2021-01-12 13:49:35 UTC'
+            ],
+        ];
+        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+    }
+
     public function testItReturnsPostMergeRequestWebhookData(): void
     {
         $webhook_content = [
@@ -109,7 +126,8 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
                 'title'       => 'My Title',
                 'description' => 'My description',
                 'state'       => 'closed',
-                'created_at'  => '2021-01-12 13:49:35 UTC'
+                'created_at'  => '2021-01-12 13:49:35 UTC',
+                'author_id'   => 10
             ],
         ];
 

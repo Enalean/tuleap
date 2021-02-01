@@ -56,7 +56,9 @@ class GitlabMergeRequestReferenceRetriever
         return new GitlabMergeRequest(
             $row['title'],
             $row['state'],
-            (new \DateTimeImmutable())->setTimestamp($row['created_at'])
+            (new \DateTimeImmutable())->setTimestamp($row['created_at']),
+            $row['author_name'],
+            $row['author_email'],
         );
     }
 }

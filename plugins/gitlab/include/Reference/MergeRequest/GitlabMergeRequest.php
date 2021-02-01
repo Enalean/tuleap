@@ -41,15 +41,27 @@ final class GitlabMergeRequest
      * @var DateTimeImmutable
      */
     private $created_at;
+    /**
+     * @var string|null
+     */
+    private $author_name;
+    /**
+     * @var string|null
+     */
+    private $author_email;
 
     public function __construct(
         string $title,
         string $state,
-        DateTimeImmutable $created_at
+        DateTimeImmutable $created_at,
+        ?string $author_name,
+        ?string $author_email
     ) {
-        $this->title      = $title;
-        $this->state      = $state;
-        $this->created_at = $created_at;
+        $this->title        = $title;
+        $this->state        = $state;
+        $this->created_at   = $created_at;
+        $this->author_name  = $author_name;
+        $this->author_email = $author_email;
     }
 
     public function getTitle(): string
@@ -65,5 +77,20 @@ final class GitlabMergeRequest
     public function getCreatedAtDate(): DateTimeImmutable
     {
         return $this->created_at;
+    }
+
+    public function getAuthorName(): ?string
+    {
+        return $this->author_name;
+    }
+
+    public function getAuthorEmail(): ?string
+    {
+        return $this->author_email;
+    }
+
+    public function isAuthorAlreadyFetched(): bool
+    {
+        return $this->author_name !== null;
     }
 }
