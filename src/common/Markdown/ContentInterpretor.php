@@ -22,7 +22,18 @@ namespace Tuleap\Markdown;
 
 interface ContentInterpretor
 {
+    /**
+     * Interpret source content and return HTML, without references.
+     */
     public function getInterpretedContent(string $content): string;
 
+    /**
+     * Interpret source content and convert Tuleap references to HTML links. Return HTML.
+     */
     public function getInterpretedContentWithReferences(string $content, int $project_id): string;
+
+    /**
+     * Interpret source content and then strip HTML tags. Return plain text.
+     */
+    public function getContentStrippedOfTags(string $content): string;
 }

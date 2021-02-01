@@ -119,8 +119,12 @@ class Tracker_Artifact_Changeset_Comment
     /**
      * @return string the cleaned body to be included in a text/plain context
      */
-    public function getPurifiedBodyForText()
+    public function getPurifiedBodyForText(): string
     {
+        if ($this->bodyFormat === self::COMMONMARK_COMMENT) {
+            $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+            return $content_interpretor->getContentStrippedOfTags($this->body);
+        }
         $level = self::$PURIFIER_LEVEL_IN_TEXT[$this->bodyFormat];
         return $this->purifyBody($level);
     }
@@ -129,6 +133,13 @@ class Tracker_Artifact_Changeset_Comment
     {
         if ($this->bodyFormat === self::HTML_COMMENT) {
             return $this->purifyHTMLBody();
+        }
+        if ($this->bodyFormat === self::COMMONMARK_COMMENT) {
+            $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+            return $content_interpretor->getInterpretedContentWithReferences(
+                $this->body,
+                (int) $this->changeset->getTracker()->getGroupId()
+            );
         }
 
         $level = self::$PURIFIER_LEVEL_IN_HTML[$this->bodyFormat];
@@ -185,12 +196,6 @@ class Tracker_Artifact_Changeset_Comment
             $html .= '<div class="tracker_artifact_followup_comment_body">';
             if ($this->parent_id && ! trim($this->body)) {
                 $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
-            } elseif ($this->bodyFormat === self::COMMONMARK_COMMENT) {
-                $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
-                $html               .= $content_interpretor->getInterpretedContentWithReferences(
-                    $this->body,
-                    (int) $this->changeset->getTracker()->getGroupId()
-                );
             } else {
                 $html .= $this->getPurifiedBodyForHTML();
             }
