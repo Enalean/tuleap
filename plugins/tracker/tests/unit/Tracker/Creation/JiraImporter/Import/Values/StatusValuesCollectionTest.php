@@ -69,7 +69,7 @@ class StatusValuesCollectionTest extends TestCase
 
         $this->logger->shouldReceive('debug');
 
-        $this->wrapper->shouldReceive('getUrl')->with('project/key/statuses')->andReturn($this->getAPIResponse());
+        $this->wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/key/statuses')->andReturn($this->getAPIResponse());
 
         $this->collection->initCollectionForProjectAndIssueType(
             $jira_project_key,

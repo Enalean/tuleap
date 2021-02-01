@@ -93,7 +93,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
         $this->field_mapping_collection = new FieldMappingCollection($field_id_generator);
 
         $wrapper = Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with("project/TEST/statuses")->once()->andReturn(
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/TEST/statuses")->once()->andReturn(
             $this->getStatusesAPIResponse()
         );
 

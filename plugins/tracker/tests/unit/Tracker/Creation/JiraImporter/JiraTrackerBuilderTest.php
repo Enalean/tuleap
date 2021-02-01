@@ -43,7 +43,7 @@ final class JiraTrackerBuilderTest extends TestCase
 
         $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
 
-        $wrapper->shouldReceive('getUrl')->with("/project/" . $project_key)->andReturn($project_details);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . $project_key)->andReturn($project_details);
 
         $expected_tracker_list = [
             ['id' => 'epic', 'name' => 'Epics'],
@@ -68,7 +68,7 @@ final class JiraTrackerBuilderTest extends TestCase
 
         $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
 
-        $wrapper->shouldReceive('getUrl')->with("/project/" . $project_key)->andReturn($project_details);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . $project_key)->andReturn($project_details);
 
         $this->expectException(\LogicException::class);
         $builder->build($wrapper, $project_key);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class JiraConnectionException extends \Exception
@@ -68,7 +69,7 @@ class JiraConnectionException extends \Exception
         );
     }
 
-    public static function responseIsNotOk(ResponseInterface $response): self
+    public static function responseIsNotOk(RequestInterface $request, ResponseInterface $response): self
     {
         $jira_errors   = [];
         $jira_warnings = [];
@@ -83,9 +84,10 @@ class JiraConnectionException extends \Exception
         } catch (\JsonException $exception) {
             return new self(
                 sprintf(
-                    'Query was not successful (code: %d, message: "%s"). Error response cannot be read, invalid json',
+                    'Query was not successful (code: %d, message: "%s"). Error response cannot be read, invalid json for %s',
                     $response->getStatusCode(),
                     $response->getReasonPhrase(),
+                    (string) $request->getUri(),
                 ),
                 ''
             );
@@ -102,10 +104,10 @@ class JiraConnectionException extends \Exception
         );
     }
 
-    public static function connectionToServerFailed(int $error_code, string $message): self
+    public static function connectionToServerFailed(int $error_code, string $message, RequestInterface $request): self
     {
         return new self(
-            "Error can't connect to server :" .  $error_code . " " . $message,
+            "Error can't connect to server :" .  $error_code . " " . $message . "" . $request->getUri(),
             sprintf(
                 dgettext(
                     'tuleap-tracker',

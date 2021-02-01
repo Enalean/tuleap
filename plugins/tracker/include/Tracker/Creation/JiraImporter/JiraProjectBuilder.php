@@ -31,7 +31,7 @@ class JiraProjectBuilder
      */
     public function build(ClientWrapper $wrapper): array
     {
-        $jira_projects = $wrapper->getUrl('/project/search');
+        $jira_projects = $wrapper->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search');
 
         $project_collection = new JiraProjectCollection();
 
@@ -48,7 +48,7 @@ class JiraProjectBuilder
             $offset      = $jira_projects['maxResults'] * $count;
 
             $jira_projects = $wrapper->getUrl(
-                "/project/search?&startAt=" . urlencode((string) $offset) . "&maxResults=" .
+                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode((string) $offset) . "&maxResults=" .
                 urlencode((string) $max_results)
             );
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllNaturesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreatorInterface;
@@ -58,7 +59,7 @@ final class ArtifactLinkTypeImporter
             $existing_type_names[$type->shortname] = true;
         }
 
-        $issue_link_types = $jira_client->getUrl(self::ISSUE_LINK_TYPE_URL);
+        $issue_link_types = $jira_client->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/' . self::ISSUE_LINK_TYPE_URL);
 
         if (! isset($issue_link_types['issueLinkTypes']) || ! is_array($issue_link_types['issueLinkTypes'])) {
             throw new \RuntimeException('Payload returned by Jira ' . self::ISSUE_LINK_TYPE_URL . ' endpoint was not expected `issueLinkTypes` must be present and must be an array');
