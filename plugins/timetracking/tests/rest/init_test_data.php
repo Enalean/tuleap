@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,7 +24,8 @@
 
 use Tuleap\Timetracking\REST\TimetrackingDataBuilder;
 
-require_once dirname(__FILE__) . '/TimetrackingDataBuilder.php';
+require_once __DIR__ . '/../../include/timetrackingPlugin.php';
+require_once __DIR__ . '/TimetrackingDataBuilder.php';
 
 $data_builder = new TimetrackingDataBuilder();
 $data_builder->setUp();

@@ -92,6 +92,28 @@
                     </changeset>
                 </artifact>
             </artifacts>
+            <timetracking is_enabled="true">
+              <permissions>
+                <read>
+                    <ugroup>project_admins</ugroup>
+                </read>
+                <write>
+                    <ugroup>project_members</ugroup>
+                </write>
+              </permissions>
+              <time artifact_id="1">
+                <user format="username">rest_api_timetracking_1</user>
+                <minutes>600</minutes>
+                <step>test</step>
+                <day format="ISO8601">2018-04-01T16:05:35+01:00</day>
+              </time>
+              <time artifact_id="2">
+                <user format="username">rest_api_timetracking_1</user>
+                <minutes>600</minutes>
+                <step>test</step>
+                <day format="ISO8601">2018-04-01T16:06:35+01:00</day>
+              </time>
+          </timetracking>
         </tracker>
         <tracker id="T104" parent_id="0" instantiate_for_new_projects="1">
             <name>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="timetracking">
+    <attribute name="is_enabled">
+      <data type="boolean"/>
+    </attribute>
+    <element name="permissions">
+      <interleave>
+        <optional>
+          <element name="read">
+            <zeroOrMore>
+              <element name="ugroup">
+                <data type="string"/>
+              </element>
+            </zeroOrMore>
+          </element>
+        </optional>
+        <optional>
+          <element name="write">
+            <zeroOrMore>
+              <element name="ugroup">
+                <data type="string"/>
+              </element>
+            </zeroOrMore>
+          </element>
+        </optional>
+      </interleave>
+    </element>
+    <zeroOrMore>
+      <element name="time">
+        <interleave>
+          <attribute name="artifact_id">
+            <data type="long"/>
+          </attribute>
+          <element name="user">
+            <ref name="time_user_content"/>
+          </element>
+          <element name="minutes">
+            <data type="long"/>
+          </element>
+          <element name="step">
+            <data type="string"/>
+          </element>
+          <element name="day">
+            <ref name="time_date_content"/>
+          </element>
+        </interleave>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="time_user_content">
+    <attribute name="format">
+      <choice>
+        <value>username</value>
+        <value>ldap</value>
+        <value>id</value>
+      </choice>
+    </attribute>
+    <data type="string"/>
+  </define>
+  <define name="time_date_content">
+    <attribute name="format">
+      <value>ISO8601</value>
+    </attribute>
+    <data type="string"/>
+  </define>
+</grammar>

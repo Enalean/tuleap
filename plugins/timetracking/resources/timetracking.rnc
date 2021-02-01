@@ -1,0 +1,7 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+    include "timetracking-definition.rnc"
+
+    start = element timetracking { timetracking }?
+}

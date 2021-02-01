@@ -368,16 +368,18 @@ class TrackerXmlImport
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             [
-                'project'              => $project,
-                'xml_content'          => $xml_input,
-                'mapping'              => $created_trackers_mapping,
-                'field_mapping'        => $this->xml_fields_mapping,
-                'mappings_registery'   => $registery,
-                'artifact_id_mapping'  => $artifacts_id_mapping,
-                'changeset_id_mapping' => $changeset_id_mapping,
-                'extraction_path'      => $extraction_path,
-                'logger'               => $this->logger,
-                'value_mapping'        => $xml_mapping
+                'project'                 => $project,
+                'xml_content'             => $xml_input,
+                'mapping'                 => $created_trackers_mapping,
+                'field_mapping'           => $this->xml_fields_mapping,
+                'mappings_registery'      => $registery,
+                'artifact_id_mapping'     => $artifacts_id_mapping,
+                'changeset_id_mapping'    => $changeset_id_mapping,
+                'extraction_path'         => $extraction_path,
+                'logger'                  => $this->logger,
+                'value_mapping'           => $xml_mapping,
+                'user_finder'             => $this->user_finder,
+                'created_tracker_objects' => $created_trackers_objects
             ]
         );
 
@@ -385,8 +387,10 @@ class TrackerXmlImport
             Event::IMPORT_COMPAT_REF_XML,
             [
                 'logger'          => $this->logger,
-                'created_refs'    => ['tracker'  => $created_trackers_mapping,
-                                           'artifact' => $artifacts_id_mapping->getMapping()],
+                'created_refs'    => [
+                    'tracker'  => $created_trackers_mapping,
+                    'artifact' => $artifacts_id_mapping->getMapping()
+                ],
                 'service_name'    => 'tracker',
                 'xml_content'     => $xml_input->trackers->references,
                 'project'         => $project,

@@ -1449,6 +1449,72 @@
     </oneOrMore>
   </define>
 </div></div>
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="timetracking">
+    <attribute name="is_enabled">
+      <data type="boolean" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+    </attribute>
+    <element name="permissions">
+      <interleave>
+        <optional>
+          <element name="read">
+            <zeroOrMore>
+              <element name="ugroup">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </element>
+            </zeroOrMore>
+          </element>
+        </optional>
+        <optional>
+          <element name="write">
+            <zeroOrMore>
+              <element name="ugroup">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </element>
+            </zeroOrMore>
+          </element>
+        </optional>
+      </interleave>
+    </element>
+    <zeroOrMore>
+      <element name="time">
+        <interleave>
+          <attribute name="artifact_id">
+            <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+          <element name="user">
+            <ref name="time_user_content"/>
+          </element>
+          <element name="minutes">
+            <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+          <element name="step">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+          <element name="day">
+            <ref name="time_date_content"/>
+          </element>
+        </interleave>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="time_user_content">
+    <attribute name="format">
+      <choice>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">username</value>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ldap</value>
+        <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">id</value>
+      </choice>
+    </attribute>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+  <define name="time_date_content">
+    <attribute name="format">
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ISO8601</value>
+    </attribute>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+  </define>
+</div></div>
   <define name="trackers">
     <optional>
       <attribute name="use-natures">
@@ -1751,6 +1817,11 @@
     <optional>
       <element name="artifacts">
         <ref name="artifacts"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="timetracking">
+        <ref name="timetracking"/>
       </element>
     </optional>
   </define>
