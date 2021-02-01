@@ -94,7 +94,7 @@
 <script>
 import prettyBytes from "pretty-bytes-es5";
 import { mapState } from "vuex";
-import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter.js";
+import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter";
 import UserBadge from "../../User/UserBadge.vue";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
