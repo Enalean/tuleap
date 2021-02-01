@@ -1,9 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,11 +45,6 @@ final class RequestDataAugmentorTest extends TestCase
     private $field;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
      * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $event_manager;
@@ -80,11 +74,9 @@ final class RequestDataAugmentorTest extends TestCase
         );
         $this->field->setTracker($this->tracker);
 
-        $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->event_manager    = Mockery::mock(\EventManager::class);
+        $this->event_manager = Mockery::mock(\EventManager::class);
 
         $this->augmentor = new RequestDataAugmentor(
-            $this->artifact_factory,
             $this->event_manager
         );
     }

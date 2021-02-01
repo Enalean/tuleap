@@ -23,27 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use EventManager;
-use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 
 class RequestDataAugmentor
 {
     /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
      * @var EventManager
      */
     private $event_manager;
 
-    public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-        EventManager $event_manager
-    ) {
-        $this->artifact_factory = $artifact_factory;
-        $this->event_manager    = $event_manager;
+    public function __construct(EventManager $event_manager)
+    {
+        $this->event_manager = $event_manager;
     }
 
     public function augmentDataFromRequest(
