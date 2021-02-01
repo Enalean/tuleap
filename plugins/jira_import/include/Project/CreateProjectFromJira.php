@@ -28,6 +28,8 @@ use ProjectCreationData;
 use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
+use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
+use Tuleap\JiraImport\JiraAgile\JiraProjectBoardRetriever;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -137,6 +139,16 @@ final class CreateProjectFromJira
         }
 
         $this->artifact_link_type_importer->import($jira_client);
+
+        $jira_board_retriever = new JiraProjectBoardRetriever(
+            new JiraBoardsRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
+        );
+        if ($jira_board_retriever->hasScrum($jira_project)) {
+            $logger->info('Project has Agile configuration to import');
+        }
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         assert($import_user !== null);

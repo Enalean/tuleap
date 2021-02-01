@@ -223,7 +223,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
             ->andReturn(
                 [
                     'startAt'    => 0,
@@ -274,7 +274,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/issue/key01/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -284,7 +284,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/issue/key02/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -335,7 +335,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
             ->andReturn(
                 [
                     'startAt'    => 0,
@@ -378,7 +378,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1&maxResults=1')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1&maxResults=1')
             ->andReturn(
                 [
                     'startAt'    => 1,
@@ -410,7 +410,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/issue/key01/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -420,7 +420,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/issue/key02/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -443,7 +443,7 @@ class ArtifactsXMLExporterTest extends TestCase
     {
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/issue/key01/changelog')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog')
             ->andReturn([
                 "maxResults" => 100,
                 "startAt"    => 0,
@@ -457,7 +457,7 @@ class ArtifactsXMLExporterTest extends TestCase
     {
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with('/issue/key02/changelog')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog')
             ->andReturn([
                 "maxResults" => 100,
                 "startAt"    => 0,

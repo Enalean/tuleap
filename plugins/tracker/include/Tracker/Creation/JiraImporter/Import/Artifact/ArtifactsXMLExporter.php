@@ -165,7 +165,7 @@ class ArtifactsXMLExporter
             $params['maxResults'] = $max_results;
         }
 
-        $url = '/search?' . http_build_query($params);
+        $url = ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
         $this->logger->debug($url);
 
         return $url;

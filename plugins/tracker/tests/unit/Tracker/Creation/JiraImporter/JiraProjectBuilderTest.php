@@ -49,7 +49,7 @@ final class JiraProjectBuilderTest extends TestCase
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with('/project/search')->andReturn($result);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search')->andReturn($result);
 
         $project_two = [
             'key'  => "TU",
@@ -64,7 +64,7 @@ final class JiraProjectBuilderTest extends TestCase
         ];
 
         $wrapper->shouldReceive('getUrl')->with(
-            "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
+            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
         )->andReturn($other_result);
 
         $expected_collection = new JiraProjectCollection();
@@ -102,10 +102,10 @@ final class JiraProjectBuilderTest extends TestCase
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with('/project/search')->andReturn($result);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search')->andReturn($result);
 
         $wrapper->shouldReceive('getUrl')->with(
-            "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
+            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
         )->andReturn(null);
 
         $this->expectException(JiraConnectionException::class);
@@ -130,10 +130,10 @@ final class JiraProjectBuilderTest extends TestCase
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with('/project/search')->andReturn($result);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search')->andReturn($result);
 
         $wrapper->shouldReceive('getUrl')->with(
-            "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
+            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
         )->andReturn(null);
 
         $this->expectException(\LogicException::class);

@@ -70,6 +70,6 @@ class JiraUserInfoQuerier
     private function getUserUrl(string $account_id): string
     {
         $params = ['accountId' => $account_id];
-        return '/user?' . http_build_query($params);
+        return ClientWrapper::JIRA_CORE_BASE_URL . '/user?' . http_build_query($params);
     }
 }

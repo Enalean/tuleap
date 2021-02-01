@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -67,7 +68,7 @@ final class ClientWrapperTest extends \PHPUnit\Framework\TestCase
         $this->factory->shouldReceive('createRequest')
             ->withArgs(['GET', "https://example.com/rest/api/latest/project"])->once();
         $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
-        $this->wrapper->getUrl("project");
+        $this->wrapper->getUrl("/rest/api/latest/project");
     }
 
     public function testItThrowsAnExceptionIfStatusCodeIsNot200(): void
@@ -78,10 +79,10 @@ final class ClientWrapperTest extends \PHPUnit\Framework\TestCase
         $response->shouldReceive('getBody')->andReturn('');
         $response->shouldReceive('getReasonPhrase')->andReturn("Forbidden")->once();
         $this->factory->shouldReceive('createRequest')
-            ->withArgs(['GET', "https://example.com/rest/api/latest/project"])->once();
+            ->withArgs(['GET', "https://example.com/rest/api/latest/project"])->once()->andReturn(\Mockery::spy(RequestInterface::class));
         $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
 
         $this->expectException(JiraConnectionException::class);
-        $this->wrapper->getUrl("project");
+        $this->wrapper->getUrl("/rest/api/latest/project");
     }
 }

@@ -107,7 +107,7 @@ class CommentValuesBuilder
             $params['maxResults'] = $max_results;
         }
 
-        $url = '/issue/' . urlencode($jira_issue_key) . '/comment?' . http_build_query($params);
+        $url = ClientWrapper::JIRA_CORE_BASE_URL . '/issue/' . urlencode($jira_issue_key) . '/comment?' . http_build_query($params);
         $this->logger->debug("  GET " .  $url);
 
         return $url;

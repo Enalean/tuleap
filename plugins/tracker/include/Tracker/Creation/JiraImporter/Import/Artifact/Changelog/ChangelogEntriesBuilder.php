@@ -107,9 +107,9 @@ class ChangelogEntriesBuilder
         }
 
         $this->logger->debug(
-            "  GET /issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params)
+            "  GET " . ClientWrapper::JIRA_CORE_BASE_URL . "/issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params)
         );
 
-        return "/issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params);
+        return ClientWrapper::JIRA_CORE_BASE_URL . "/issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params);
     }
 }

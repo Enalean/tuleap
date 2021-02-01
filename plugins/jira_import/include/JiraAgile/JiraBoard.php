@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,12 +21,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\JiraImport\JiraAgile;
 
-interface JiraClient
+/**
+ * @psalm-immutable
+ */
+final class JiraBoard
 {
     /**
-     * @throws JiraConnectionException|\JsonException
+     * @var int
      */
-    public function getUrl(string $url): ?array;
+    public $id;
+    /**
+     * @var string
+     */
+    public $url;
+    /**
+     * @var int
+     */
+    public $project_id;
+    /**
+     * @var string
+     */
+    public $project_key;
+
+    public function __construct(int $id, string $url, int $project_id, string $project_key)
+    {
+        $this->id          = $id;
+        $this->url         = $url;
+        $this->project_id  = $project_id;
+        $this->project_key = $project_key;
+    }
 }

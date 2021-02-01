@@ -33,6 +33,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 class ClientWrapper implements JiraClient
 {
+    public const JIRA_CORE_BASE_URL = '/rest/api/latest';
+
     /**
      * @var ClientInterface
      */
@@ -50,7 +52,7 @@ class ClientWrapper implements JiraClient
     {
         $this->client   = $client;
         $this->factory  = $factory;
-        $this->base_url = $base_url . "/rest/api/latest/";
+        $this->base_url = $base_url;
     }
 
     public static function build(JiraCredentials $jira_credentials): self
@@ -67,7 +69,7 @@ class ClientWrapper implements JiraClient
     }
 
     /**
-     * @throws JiraConnectionException
+     * @throws JiraConnectionException|\JsonException
      */
     public function getUrl(string $url): ?array
     {
@@ -76,12 +78,12 @@ class ClientWrapper implements JiraClient
         try {
             $response = $this->client->sendRequest($request);
             if ((int) $response->getStatusCode() !== 200) {
-                throw JiraConnectionException::responseIsNotOk($response);
+                throw JiraConnectionException::responseIsNotOk($request, $response);
             }
         } catch (ClientExceptionInterface $e) {
-            throw JiraConnectionException::connectionToServerFailed((int) $e->getCode(), $e->getMessage());
+            throw JiraConnectionException::connectionToServerFailed((int) $e->getCode(), $e->getMessage(), $request);
         }
 
-        return json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY & JSON_THROW_ON_ERROR);
     }
 }

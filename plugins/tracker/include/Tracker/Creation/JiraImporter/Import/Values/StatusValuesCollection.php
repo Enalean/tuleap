@@ -65,7 +65,7 @@ class StatusValuesCollection
     public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): void
     {
         $this->logger->debug("Build status collection ...");
-        $statuses_url = "project/" . urlencode($jira_project_key) . "/statuses";
+        $statuses_url = ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . urlencode($jira_project_key) . "/statuses";
 
         $this->logger->debug("  GET " . $statuses_url);
         $statuses_content = $this->wrapper->getUrl($statuses_url);
@@ -91,7 +91,7 @@ class StatusValuesCollection
     private function addStatusInCollections(array $status, IDGenerator $id_generator): void
     {
         $status_representation = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses($status, $id_generator);
-        $this->logger->debug('Generate ' . $status_representation->getXMLId() . ' out of ' . print_r($status, true));
+
         $this->all_values[] = $status_representation;
 
         if (! isset($status['statusCategory']['key'])) {

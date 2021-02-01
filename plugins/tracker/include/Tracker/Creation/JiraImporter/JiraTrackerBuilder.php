@@ -31,7 +31,7 @@ class JiraTrackerBuilder
      */
     public function build(ClientWrapper $wrapper, string $project_key): array
     {
-        $project_details = $wrapper->getUrl('/project/' . urlencode($project_key));
+        $project_details = $wrapper->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/project/' . urlencode($project_key));
 
         $tracker_list = [];
         if (! $project_details || ! $project_details['issueTypes']) {

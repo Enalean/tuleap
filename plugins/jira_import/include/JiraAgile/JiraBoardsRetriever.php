@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,14 +19,9 @@
  *
  */
 
-declare(strict_types=1);
+namespace Tuleap\JiraImport\JiraAgile;
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
-
-interface JiraClient
+interface JiraBoardsRetriever
 {
-    /**
-     * @throws JiraConnectionException|\JsonException
-     */
-    public function getUrl(string $url): ?array;
+    public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard;
 }
