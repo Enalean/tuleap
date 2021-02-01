@@ -81,26 +81,58 @@ window.show_references_to = show_references_to;
 function delete_ref(id, message) {
     //eslint-disable-next-line no-alert
     if (confirm(message)) {
-        var opt = {
+        const opt = {
             method: "get",
             onComplete: function () {
-                var is_the_deleted_reference_the_last_one = $(id).siblings().length === 1;
-                var is_the_full_cross_references_section_empty = $(id).up().siblings().length === 0;
-                var is_the_full_cross_references_section_non_empty =
-                    $(id).up().siblings().length > 0;
+                const is_the_deleted_reference_the_last_one = isTheDeletedReferenceTheLastOne();
+                const is_the_full_cross_references_section_empty = isTheFullCrossReferencesSectionEmpty();
 
                 if (
                     is_the_deleted_reference_the_last_one &&
-                    is_the_full_cross_references_section_empty
+                    !is_the_full_cross_references_section_empty
                 ) {
                     $(id).up().hide();
                 } else if (
                     is_the_deleted_reference_the_last_one &&
-                    is_the_full_cross_references_section_non_empty
+                    is_the_full_cross_references_section_empty
                 ) {
                     $(id).up(".nature").hide();
                 } else {
                     $(id).remove();
+                }
+
+                function isTheFullCrossReferencesSectionEmpty() {
+                    if ($(id).up().siblings().length === 0) {
+                        return true;
+                    }
+
+                    if ($(id).up().siblings().length > 1) {
+                        return false;
+                    }
+
+                    return $(id).up().siblings().first().tagName.toLowerCase() === "div";
+                }
+
+                function isTheDeletedReferenceTheLastOne() {
+                    if ($(id).siblings().length === 0) {
+                        return true;
+                    }
+
+                    if ($(id).siblings().length > 1) {
+                        return false;
+                    }
+
+                    // New cross references can have a section label
+                    // If there is a one sibling of the deleted element and it's h2 element,
+                    // then that was the last element
+                    if ($(id).tagName.toLowerCase() === "div") {
+                        return $(id).siblings().first().tagName.toLowerCase() === "h2";
+                    }
+
+                    // In legacy cross references, icon is a sibling of the deleted element
+                    // If there is only one sibling of deleted element and it's icon,
+                    // then that was the last element
+                    return $(id).siblings().first().tagName.toLowerCase() === "img";
                 }
             },
         };
