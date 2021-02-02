@@ -28,7 +28,7 @@
         </div>
         <a
             v-for="branch in filtered_branches"
-            v-bind:key="branch.commit.id"
+            v-bind:key="branch.commit.id + branch.name"
             v-bind:href="url(branch.name)"
             class="tlp-dropdown-menu-item"
             role="menuitem"

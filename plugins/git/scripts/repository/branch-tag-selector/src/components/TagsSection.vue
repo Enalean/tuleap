@@ -28,7 +28,7 @@
         </div>
         <a
             v-for="tag in filtered_tags"
-            v-bind:key="tag.commit.id"
+            v-bind:key="tag.commit.id + tag.name"
             v-bind:href="url(tag.name)"
             class="tlp-dropdown-menu-item"
             role="menuitem"

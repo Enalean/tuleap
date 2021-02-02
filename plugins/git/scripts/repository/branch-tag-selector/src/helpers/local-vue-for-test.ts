@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,31 +14,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-export interface URLParameter {
-    a: string;
-    f: string;
-    s: string;
-    st: string;
-    m: string;
-}
+import { Vue } from "vue/types/vue";
+import { createLocalVue } from "@vue/test-utils";
+import { initVueGettext } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 
-interface Commit {
-    id: string;
-}
+export async function createBranchTagSelectorLocalVue(): Promise<typeof Vue> {
+    const local_vue = createLocalVue();
+    await initVueGettext(local_vue, () => {
+        throw new Error("Fallback to default");
+    });
 
-export interface Branch {
-    name: string;
-    commit: Commit;
-}
-
-export interface Tag {
-    name: string;
-    commit: Commit;
-}
-
-export interface EncodeDataParameters extends URLParameter {
-    hb: string;
+    return local_vue;
 }
