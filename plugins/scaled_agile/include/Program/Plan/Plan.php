@@ -35,14 +35,23 @@ final class Plan
      * @var ProgramPlannableTracker[]
      */
     private $plannable_trackers;
+    /**
+     * @var non-empty-list<ProgramUserGroup>
+     */
+    private $can_prioritize;
 
     /**
      * @param ProgramPlannableTracker[] $plannable_trackers
+     * @param non-empty-list<ProgramUserGroup> $can_prioritize
      */
-    public function __construct(ProgramIncrementTracker $program_increment_tracker, array $plannable_trackers)
-    {
+    public function __construct(
+        ProgramIncrementTracker $program_increment_tracker,
+        array $plannable_trackers,
+        array $can_prioritize
+    ) {
         $this->program_increment_tracker = $program_increment_tracker;
         $this->plannable_trackers        = $plannable_trackers;
+        $this->can_prioritize            = $can_prioritize;
     }
 
     public function getProgramIncrementTracker(): ProgramIncrementTracker
@@ -61,5 +70,13 @@ final class Plan
             },
             $this->plannable_trackers
         );
+    }
+
+    /**
+     * @return non-empty-list<ProgramUserGroup>
+     */
+    public function getCanPrioritize(): array
+    {
+        return $this->can_prioritize;
     }
 }

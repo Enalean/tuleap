@@ -27,7 +27,7 @@ interface User_UGroup
     /**
      * @psalm-mutation-free
      */
-    public function getId();
+    public function getId(): int;
 
     public function getDescription();
 }

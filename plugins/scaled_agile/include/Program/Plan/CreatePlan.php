@@ -30,11 +30,21 @@ use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 interface CreatePlan
 {
     /**
+     * @param int[] $trackers_id
+     * @param non-empty-list<string> $can_possibly_prioritize_ugroups
+     *
      * @throws CannotPlanIntoItselfException
      * @throws PlanTrackerException
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
      * @throws ProgramTrackerException
+     * @throws InvalidProgramUserGroup
      */
-    public function create(\PFUser $user, int $project_id, int $program_increment_id, array $trackers_id): void;
+    public function create(
+        \PFUser $user,
+        int $project_id,
+        int $program_increment_id,
+        array $trackers_id,
+        array $can_possibly_prioritize_ugroups
+    ): void;
 }

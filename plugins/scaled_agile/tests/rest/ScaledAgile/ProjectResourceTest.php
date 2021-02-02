@@ -61,7 +61,8 @@ class ProjectResourceTest extends \RestBase
         $plan_definition = json_encode(
             [
                   "program_increment_tracker_id" => $this->tracker_ids[$project_id]['rel'],
-                  "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['story']]
+                  "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['story']],
+                  "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
             ]
         );
 
@@ -70,7 +71,7 @@ class ProjectResourceTest extends \RestBase
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     /**

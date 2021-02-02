@@ -37,6 +37,12 @@ CREATE TABLE plugin_scaled_agile_plan(
     PRIMARY KEY (program_increment_tracker_id, plannable_tracker_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_scaled_agile_can_prioritize_features(
+    program_increment_tracker_id INT(11) NOT NULL,
+    user_group_id INT(11) NOT NULL,
+    PRIMARY KEY (program_increment_tracker_id, user_group_id)
+) ENGINE=InnoDB;
+
 CREATE TABLE plugin_scaled_agile_explicit_top_backlog(
     artifact_id INT(11) NOT NULL PRIMARY KEY
 ) ENGINE=InnoDB;

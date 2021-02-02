@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\ScaledAgile\Adapter\Program;
 
-namespace Tuleap\ScaledAgile\REST\v1;
+use Tuleap\ScaledAgile\Program\Plan\InvalidProgramUserGroup;
 
-/**
- * @psalm-immutable
- */
-final class ProjectResourcePutPlanRepresentation
+final class ProgramUserGroupDoesNotExistException extends \RuntimeException implements InvalidProgramUserGroup
 {
-    /**
-     * @var int {@required true}
-     */
-    public $program_increment_tracker_id;
-    /**
-     * @var array {@type int}
-     */
-    public $plannable_tracker_ids;
-    /**
-     * @var PlanPutPermissions {@type \Tuleap\ScaledAgile\REST\v1\PlanPutPermissions} {@required true}
-     */
-    public $permissions;
+    public function __construct(string $raw_user_group_id)
+    {
+        parent::__construct(sprintf("The user group %s does not exist in the program", $raw_user_group_id));
+    }
 }
