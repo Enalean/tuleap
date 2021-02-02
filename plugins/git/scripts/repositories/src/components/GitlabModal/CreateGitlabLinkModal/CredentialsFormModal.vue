@@ -37,7 +37,7 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_server">
                     <translate>GitLab server URL</translate>
-                    <i class="fas fa-asterisk"></i>
+                    <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
                     type="text"
@@ -55,10 +55,10 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_project_token">
                     <translate>GitLab token (personal or project)</translate>
-                    <i class="fas fa-asterisk"></i>
+                    <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
-                    type="text"
+                    type="password"
                     class="tlp-input"
                     id="gitlab_project_token"
                     required
