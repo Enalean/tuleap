@@ -77,6 +77,14 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch()
     {
+        if ($this->artifact->userCanUpdate($this->user)) {
+            $include_assets = new \Tuleap\Layout\IncludeAssets(
+                __DIR__ . '/../../../../../../src/www/assets/trackers',
+                '/assets/trackers'
+            );
+            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
+        }
+
         $html  = '';
         $html .= '<div class="tracker_artifact">';
 

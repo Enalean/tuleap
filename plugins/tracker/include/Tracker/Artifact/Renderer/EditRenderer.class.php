@@ -144,13 +144,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             )
         ];
 
-
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../../../src/www/assets/trackers',
-            '/assets/trackers'
-        );
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
         ListPickerIncluder::includeListPickerAssets($request, $this->tracker->getId());
 
