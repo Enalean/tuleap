@@ -52,7 +52,7 @@
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
-                    type="text"
+                    type="password"
                     class="tlp-input"
                     id="gitlab_new_token"
                     required
