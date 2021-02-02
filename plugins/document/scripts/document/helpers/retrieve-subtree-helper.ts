@@ -18,11 +18,15 @@
  */
 
 import { TYPE_FOLDER } from "../constants";
+import { Item } from "../type";
 
-export function getFolderSubtree(folder_content, subtree_root_folder_id) {
+export function getFolderSubtree(
+    folder_content: Array<Item>,
+    subtree_root_folder_id: number
+): Array<Item> {
     const children = folder_content.filter((item) => item.parent_id === subtree_root_folder_id);
 
-    const undirect_children = [];
+    const undirect_children: Array<Item> = [];
 
     children.forEach((child) => {
         if (child.type === TYPE_FOLDER) {

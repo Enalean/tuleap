@@ -72,6 +72,9 @@ export interface ItemFile extends Item, ApprovableDocument {
     parent_id: number;
     file_properties: FileProperties;
     type: "file";
+    is_uploading_in_collapsed_folder: boolean;
+    is_uploading: boolean;
+    is_uploading_new_version: boolean;
 }
 
 export interface Link extends Item, ApprovableDocument {

@@ -22,62 +22,63 @@ import {
     isItemUploadingInQuickLookMode,
     isItemUploadingInTreeView,
     hasNoUploadingContent,
-} from "./uploading-status-helper.js";
+} from "./uploading-status-helper";
+import { ItemFile } from "../type";
 
 describe("FolderContentRow", () => {
     describe("hasNoUploadingContent", () => {
         it(`Item is not uploading
             When item has no on going upload`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading: false,
                 is_uploading_new_version: false,
-            };
+            } as ItemFile;
 
             expect(hasNoUploadingContent(item)).toBe(true);
         });
 
         it(`Item is uploading
             When item is uploading in a collapsed folder`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: true,
                 is_uploading: false,
                 is_uploading_new_version: false,
-            };
+            } as ItemFile;
 
             expect(hasNoUploadingContent(item)).toBe(false);
         });
 
         it(`Item is uploading
             When item is uploading`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading: true,
                 is_uploading_new_version: false,
-            };
+            } as ItemFile;
 
             expect(hasNoUploadingContent(item)).toBe(false);
         });
 
         it(`Item is uploading
             When item has a new version uploading`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading: false,
                 is_uploading_new_version: true,
-            };
+            } as ItemFile;
 
             expect(hasNoUploadingContent(item)).toBe(false);
         });
@@ -86,13 +87,13 @@ describe("FolderContentRow", () => {
     describe("is_item_uploading_in_quick look_mode", () => {
         it(`Item is uploading in quick look mode
             When item is uploading in a collapsed folder in quick look mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: true,
                 is_uploading_new_version: false,
-            };
+            } as ItemFile;
 
             const quick_look_mode = true;
 
@@ -101,13 +102,13 @@ describe("FolderContentRow", () => {
 
         it(`Item is uploading in quick look mode
             When item has a new version uploading in quick look mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading_new_version: true,
-            };
+            } as ItemFile;
 
             const quick_look_mode = true;
 
@@ -116,11 +117,11 @@ describe("FolderContentRow", () => {
 
         it(`Item is not uploading in quick look mode
             When user is on tree view mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
-            };
+            } as ItemFile;
 
             const quick_look_mode = false;
 
@@ -131,13 +132,13 @@ describe("FolderContentRow", () => {
     describe("isItemUploadingInTreeView", () => {
         it(`Item is uploading in tree view mode
             When item is uploading in a collapsed folder in tree view mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: true,
                 is_uploading_new_version: false,
-            };
+            } as ItemFile;
 
             const quick_look_mode = false;
 
@@ -146,13 +147,13 @@ describe("FolderContentRow", () => {
 
         it(`Item is uploading in tree view mode
             When item has a new version uploading in tree view mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading_new_version: true,
-            };
+            } as ItemFile;
 
             const quick_look_mode = false;
 
@@ -161,11 +162,11 @@ describe("FolderContentRow", () => {
 
         it(`Item is not uploading in tree view mode
             When item is uploading in a collapsed folder in quick look mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
-            };
+            } as ItemFile;
 
             const quick_look_mode = true;
 
@@ -176,11 +177,11 @@ describe("FolderContentRow", () => {
     describe("isItemInTreeViewWithoutUpload", () => {
         it(`Item is not in tree view
             When it is in quick look mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
-            };
+            } as ItemFile;
 
             const quick_look_mode = true;
 
@@ -189,12 +190,12 @@ describe("FolderContentRow", () => {
 
         it(`Item has an on going upload
             When item has an ongoing upload in tree view mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_new_version: true,
-            };
+            } as ItemFile;
 
             const quick_look_mode = false;
 
@@ -203,12 +204,12 @@ describe("FolderContentRow", () => {
 
         it(`Item has an on going version upload
             When item has an on going version upload in quick look mode`, () => {
-            const item = {
+            const item: ItemFile = {
                 id: 1,
                 title: "my item title",
                 type: "file",
                 is_uploading_new_version: true,
-            };
+            } as ItemFile;
 
             const quick_look_mode = true;
 

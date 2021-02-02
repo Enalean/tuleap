@@ -68,7 +68,7 @@ import {
     TYPE_WIKI,
     TYPE_EMPTY,
 } from "../../../constants";
-import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
+import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";

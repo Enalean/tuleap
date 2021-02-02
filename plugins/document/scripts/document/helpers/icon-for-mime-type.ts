@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 import { ICON_EMPTY } from "../constants";
 
-function iconForMimeType(mime_type) {
+function iconForMimeType(mime_type: string): string {
     const mime_type_lower = mime_type.toLowerCase();
     const parts = mime_type_lower.split("/");
     let icon;

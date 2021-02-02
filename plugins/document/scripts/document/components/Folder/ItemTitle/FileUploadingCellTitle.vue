@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This item is a part of Tuleap.
   -
@@ -31,7 +31,7 @@
 <script>
 import { mapState } from "vuex";
 import FakeCaret from "./FakeCaret.vue";
-import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
+import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
 import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
 
 export default {

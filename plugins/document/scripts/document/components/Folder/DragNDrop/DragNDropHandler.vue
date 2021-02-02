@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -36,7 +36,7 @@
 import { mapGetters, mapState } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
-import { highlightItem } from "../../../helpers/highlight-items-helper.js";
+import { highlightItem } from "../../../helpers/highlight-items-helper";
 import EventBus from "./../../../helpers/event-bus.js";
 
 export default {

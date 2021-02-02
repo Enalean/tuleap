@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
+import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
 import { ICON_EMPTY } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 

@@ -108,7 +108,7 @@ import {
     isItemUploadingInQuickLookMode,
     isItemUploadingInTreeView,
     isItemInTreeViewWithoutUpload,
-} from "../../helpers/uploading-status-helper.js";
+} from "../../helpers/uploading-status-helper";
 import EventBus from "../../helpers/event-bus.js";
 import UserBadge from "../User/UserBadge.vue";
 import QuickLookButton from "./ActionsQuickLookButton/QuickLookButton.vue";

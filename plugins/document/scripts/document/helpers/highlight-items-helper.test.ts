@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { highlightItem } from "./highlight-items-helper.js";
+import { highlightItem } from "./highlight-items-helper";
 import { TYPE_FILE, TYPE_FOLDER } from "../constants";
+import { Folder, ItemFile } from "../type";
 
 describe("highlight-items-helper", () => {
     describe("Highlight preview pane", () => {
-        it("When the hovered item is the peview of a file, then it should highlight it", () => {
-            const item = {
+        it("When the hovered item is the preview of a file, then it should highlight it", () => {
+            const item: ItemFile = {
                 user_can_write: true,
                 type: TYPE_FILE,
-            };
+            } as ItemFile;
 
             const closest_row = document.createElement("div");
             closest_row.classList.add("document-quick-look-pane");
@@ -38,10 +39,10 @@ describe("highlight-items-helper", () => {
         });
 
         it("When the hovered item is the preview of a folder, then it should highlight it", () => {
-            const item = {
+            const item: Folder = {
                 user_can_write: true,
                 type: TYPE_FOLDER,
-            };
+            } as Folder;
 
             const closest_row = document.createElement("div");
             closest_row.classList.add("document-quick-look-pane");
@@ -55,10 +56,10 @@ describe("highlight-items-helper", () => {
 
     describe("Highlight a row in the tree view", () => {
         it("should highlight the file in the tree view", () => {
-            const item = {
+            const item: ItemFile = {
                 user_can_write: true,
                 type: TYPE_FILE,
-            };
+            } as ItemFile;
 
             const closest_row = document.createElement("div");
             closest_row.classList.add("document-tree-item");
@@ -70,10 +71,10 @@ describe("highlight-items-helper", () => {
         });
 
         it("should highlight the folder in the tree view", () => {
-            const item = {
+            const item: Folder = {
                 user_can_write: true,
                 type: TYPE_FOLDER,
-            };
+            } as Folder;
 
             const closest_row = document.createElement("div");
             closest_row.classList.add("document-tree-item");
@@ -87,10 +88,10 @@ describe("highlight-items-helper", () => {
 
     describe("when user does not have the permission to write the item", () => {
         it("should apply the 'forbiden' class on tree view items", () => {
-            const item = {
+            const item: Folder = {
                 user_can_write: false,
                 type: TYPE_FOLDER,
-            };
+            } as Folder;
 
             const closest_row = document.createElement("div");
             closest_row.classList.add("document-tree-item");
@@ -104,10 +105,10 @@ describe("highlight-items-helper", () => {
         });
 
         it("should apply the 'forbidden' class on quick look pane", () => {
-            const item = {
+            const item: Folder = {
                 user_can_write: false,
                 type: TYPE_FOLDER,
-            };
+            } as Folder;
 
             const closest_row = document.createElement("div");
             closest_row.classList.add("document-quick-look-pane");
