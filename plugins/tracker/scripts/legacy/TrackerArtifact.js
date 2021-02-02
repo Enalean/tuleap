@@ -35,10 +35,16 @@ codendi.tracker.artifact.editor = {
     },
 
     warnOnPageLeave: function () {
-        var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
+        if (
+            "tracker" in tuleap &&
+            "artifact" in tuleap.tracker &&
+            "editionSwitcher" in tuleap.tracker.artifact
+        ) {
+            var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
 
-        if (edition_switcher.submissionBarIsAlreadyActive()) {
-            return codendi.locales.tracker_formelement_admin.lose_follows;
+            if (edition_switcher.submissionBarIsAlreadyActive()) {
+                return codendi.locales.tracker_formelement_admin.lose_follows;
+            }
         }
     },
 };
