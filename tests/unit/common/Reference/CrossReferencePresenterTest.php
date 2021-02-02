@@ -61,7 +61,7 @@ class CrossReferencePresenterTest extends TestCase
 
         $new_ref = $a_ref->withAdditionalBadges(
             [
-                new AdditionalBadgePresenter('riri', false, false),
+                AdditionalBadgePresenter::buildSecondary('riri'),
             ]
         );
 

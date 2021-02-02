@@ -219,25 +219,16 @@ class GitlabCrossReferenceOrganizer
      */
     private function getMergeRequestAdditionalBadges(GitlabMergeRequest $gitlab_merge_request): array
     {
-        $status_label = '';
         switch ($gitlab_merge_request->getState()) {
             case 'opened':
-                $status_label = dgettext('tuleap-gitlab', 'Open');
-                break;
+                return [AdditionalBadgePresenter::buildSecondary(dgettext('tuleap-gitlab', 'Open'))];
             case 'merged':
-                $status_label = dgettext('tuleap-gitlab', 'Merged');
-                break;
+                return [AdditionalBadgePresenter::buildSuccess(dgettext('tuleap-gitlab', 'Merged'))];
             case 'closed':
-                $status_label = dgettext('tuleap-gitlab', 'Closed');
-                break;
+                return [AdditionalBadgePresenter::buildDanger(dgettext('tuleap-gitlab', 'Closed'))];
         }
 
-        $additional_badge_presenters = [];
-        if ($status_label) {
-            $additional_badge_presenters[] = new AdditionalBadgePresenter($status_label, false, false);
-        }
-
-        return $additional_badge_presenters;
+        return [];
     }
 
     private function getCreatedOnPresenter(GitlabMergeRequest $gitlab_merge_request, \PFUser $user): TlpRelativeDatePresenter

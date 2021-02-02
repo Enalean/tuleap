@@ -193,24 +193,18 @@ class CrossReferencePullRequestOrganizer
         $additional_badges = [];
         switch ($pull_request->getStatus()) {
             case PullRequest::STATUS_ABANDONED:
-                $additional_badges[] = new AdditionalBadgePresenter(
+                $additional_badges[] = AdditionalBadgePresenter::buildDanger(
                     dgettext('tuleap-pullrequest', 'Abandonned'),
-                    false,
-                    false
                 );
                 break;
             case PullRequest::STATUS_MERGED:
-                $additional_badges[] = new AdditionalBadgePresenter(
+                $additional_badges[] = AdditionalBadgePresenter::buildSuccess(
                     dgettext('tuleap-pullrequest', 'Merged'),
-                    false,
-                    false
                 );
                 break;
             case PullRequest::STATUS_REVIEW:
-                $additional_badges[] = new AdditionalBadgePresenter(
+                $additional_badges[] = AdditionalBadgePresenter::buildSecondary(
                     dgettext('tuleap-pullrequest', 'Review'),
-                    false,
-                    false
                 );
                 break;
             default:

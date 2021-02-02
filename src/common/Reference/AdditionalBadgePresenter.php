@@ -27,6 +27,11 @@ namespace Tuleap\Reference;
  */
 final class AdditionalBadgePresenter
 {
+    private const STATE_PRIMARY   = 'primary';
+    private const STATE_SECONDARY = 'secondary';
+    private const STATE_DANGER    = 'danger';
+    private const STATE_SUCCESS   = 'success';
+
     /**
      * @var string
      */
@@ -34,16 +39,59 @@ final class AdditionalBadgePresenter
     /**
      * @var bool
      */
+    public $is_secondary;
+    /**
+     * @var bool
+     */
     public $is_primary;
+    /**
+     * @var bool
+     */
+    public $is_danger;
+    /**
+     * @var bool
+     */
+    public $is_success;
     /**
      * @var bool
      */
     public $is_plain;
 
-    public function __construct(string $label, bool $is_primary, bool $is_plain)
+    /**
+     * @psalm-param "primary" | "secondary" | "danger" | "success" $state
+     */
+    private function __construct(string $label, string $state, bool $is_plain)
     {
-        $this->label      = $label;
-        $this->is_primary = $is_primary;
-        $this->is_plain   = $is_plain;
+        $this->label        = $label;
+        $this->is_secondary = $state === self::STATE_SECONDARY;
+        $this->is_primary   = $state === self::STATE_PRIMARY;
+        $this->is_danger    = $state === self::STATE_DANGER;
+        $this->is_success   = $state === self::STATE_SUCCESS;
+        $this->is_plain     = $is_plain;
+    }
+
+    public static function buildPrimary(string $label): self
+    {
+        return new self($label, self::STATE_PRIMARY, false);
+    }
+
+    public static function buildPrimaryPlain(string $label): self
+    {
+        return new self($label, self::STATE_PRIMARY, true);
+    }
+
+    public static function buildSecondary(string $label): self
+    {
+        return new self($label, self::STATE_SECONDARY, false);
+    }
+
+    public static function buildDanger(string $label): self
+    {
+        return new self($label, self::STATE_DANGER, false);
+    }
+
+    public static function buildSuccess(string $label): self
+    {
+        return new self($label, self::STATE_SUCCESS, false);
     }
 }
