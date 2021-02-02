@@ -50,18 +50,24 @@ const webpack_config_for_burndown_chart = {
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
-const webpack_config_for_ts = {
+const config_for_flaming_parrot = {
     entry: {
         "cross-references-fields": "./scripts/form-element/src/cross-references-fields.ts",
         "edit-view": "./scripts/artifact/edit-view.ts",
         "list-fields": "./scripts/artifact/list-fields.ts",
-        "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
+        "tracker-admin": "./scripts/tracker-admin/index.js",
+        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
+        "tracker-email-copy-paste-fp": "./scripts/artifact/tracker-email-copy-paste-fp.ts",
+        "tracker-report-expert-mode": "./scripts/report/index.js",
+        "tracker-semantic-timeframe-option-selector":
+            "./scripts/semantic-timeframe-option-selector.js",
     },
     context,
     output,
     externals: {
-        tlp: "tlp",
         CKEDITOR: "CKEDITOR",
+        codendi: "codendi",
+        jquery: "jQuery",
     },
     resolve: {
         extensions: [".js", ".ts"],
@@ -71,28 +77,15 @@ const webpack_config_for_ts = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11), // gettext-init.js needs Babel
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files,
         ],
     },
     plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
 };
 
-const webpack_config_for_vue = {
+const config_for_vue_flaming_parrot = {
     entry: {
-        "admin-nature": "./scripts/admin-nature.js",
-        "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
-        "global-admin-trackers": "./scripts/global-admin/trackers.ts",
-        "tracker-admin": "./scripts/tracker-admin/index.js",
-        "tracker-creation": "./scripts/tracker-creation/index.ts",
-        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
-        "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
-        "tracker-report-expert-mode": "./scripts/report/index.js",
-        "tracker-semantic-timeframe-option-selector":
-            "./scripts/semantic-timeframe-option-selector.js",
-        "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
-        "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.ts",
-        "tracker-email-copy-paste-fp": "./scripts/artifact/tracker-email-copy-paste-fp.ts",
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
     },
@@ -100,6 +93,38 @@ const webpack_config_for_vue = {
     output,
     externals: {
         codendi: "codendi",
+        jquery: "jQuery",
+    },
+    resolve: {
+        extensions: [".js", ".vue"],
+    },
+    module: {
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_easygettext_loader,
+            webpack_configurator.rule_vue_loader,
+        ],
+    },
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
+    resolveLoader: {
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
+};
+
+const config_for_burning_parrot = {
+    entry: {
+        "admin-nature": "./scripts/admin-nature.js",
+        "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
+        "global-admin-trackers": "./scripts/global-admin/trackers.ts",
+        "tracker-creation": "./scripts/tracker-creation/index.ts",
+        "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.ts",
+        "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
+        "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
+        "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
+    },
+    context,
+    output,
+    externals: {
         jquery: "jQuery",
         tlp: "tlp",
     },
@@ -111,7 +136,7 @@ const webpack_config_for_vue = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11), // gettext-init.js needs Babel
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],
@@ -208,8 +233,9 @@ const config_for_themes = {
 
 module.exports = [
     webpack_config_for_burndown_chart,
-    webpack_config_for_ts,
-    webpack_config_for_vue,
+    config_for_flaming_parrot,
+    config_for_vue_flaming_parrot,
+    config_for_burning_parrot,
     config_for_legacy_scripts,
     config_for_themes,
 ];
