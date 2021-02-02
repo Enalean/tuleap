@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FormatSelectorBuilder, FormatSelectorPresenter } from "./FormatSelectorBuilder";
-import { DocumentInterface } from "./DocumentInterface";
+import { FormatSelectorBuilder } from "./FormatSelectorBuilder";
 import { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
+import { FormatSelectorPresenter } from "./DisplayInterface";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
@@ -29,17 +29,19 @@ import {
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`FormatSelectorBuilder`, () => {
-    let doc: Document, builder: FormatSelectorBuilder;
+    let doc: Document, builder: FormatSelectorBuilder, textarea: HTMLTextAreaElement;
     beforeEach(() => {
         doc = createDocument();
         const gettext_provider = {
             gettext: (english: string): string => english,
         };
-        const document_interface: DocumentInterface = new FlamingParrotDocumentAdapter(doc);
-        builder = new FormatSelectorBuilder(document_interface, gettext_provider);
+        const document_adapter = new FlamingParrotDocumentAdapter(doc);
+        builder = new FormatSelectorBuilder(document_adapter, gettext_provider);
+        textarea = doc.createElement("textarea");
+        doc.body.append(textarea);
     });
 
-    describe(`createFormatSelectbox()`, () => {
+    describe(`insertFormatSelectbox()`, () => {
         it.each([[TEXT_FORMAT_TEXT], [TEXT_FORMAT_HTML], [TEXT_FORMAT_COMMONMARK]])(
             `given a presenter with default format %s, the corresponding option will be selected`,
             (format) => {
@@ -49,8 +51,9 @@ describe(`FormatSelectorBuilder`, () => {
                     default_format: format,
                     formatChangedCallback: jest.fn(),
                 };
-                const wrapper = builder.createFormatSelectbox(presenter);
+                builder.insertFormatSelectbox(textarea, presenter);
 
+                const wrapper = getWrapperFromTextarea(textarea);
                 const options = wrapper.firstElementChild?.children;
                 if (!options) {
                     throw new Error("Expected to find options in the selectbox");
@@ -79,8 +82,9 @@ describe(`FormatSelectorBuilder`, () => {
             });
 
             it(`creates a selectbox element with "html", "text" and "markdown" options`, () => {
-                const wrapper = builder.createFormatSelectbox(presenter);
+                builder.insertFormatSelectbox(textarea, presenter);
 
+                const wrapper = getWrapperFromTextarea(textarea);
                 expect(wrapper.outerHTML).toMatchInlineSnapshot(`
                     <div class="rte_format">Format:<select id="rte_format_selectboxsome_id" name="some_name" class="input-small">
                         <option value="text">Text</option>
@@ -91,8 +95,9 @@ describe(`FormatSelectorBuilder`, () => {
             });
 
             it(`registers a callback that reacts when the selectbox changes value`, () => {
-                const wrapper = builder.createFormatSelectbox(presenter);
+                builder.insertFormatSelectbox(textarea, presenter);
 
+                const wrapper = getWrapperFromTextarea(textarea);
                 const selectbox = getSelectboxFromWrapper(wrapper);
                 selectbox.value = "html";
                 selectbox.dispatchEvent(new InputEvent("input"));
@@ -102,14 +107,23 @@ describe(`FormatSelectorBuilder`, () => {
             it(`given a presenter without a name, it defaults the selectbox name to
                 a prefix + the presenter id`, () => {
                 presenter.name = undefined;
-                const wrapper = builder.createFormatSelectbox(presenter);
+                builder.insertFormatSelectbox(textarea, presenter);
 
+                const wrapper = getWrapperFromTextarea(textarea);
                 const selectbox = getSelectboxFromWrapper(wrapper);
                 expect(selectbox.name).toEqual("comment_formatsome_id");
             });
         });
     });
 });
+
+function getWrapperFromTextarea(textarea: HTMLTextAreaElement): HTMLDivElement {
+    const wrapper = textarea.previousElementSibling;
+    if (!(wrapper instanceof HTMLDivElement)) {
+        throw new Error("Expected to find the selectbox wrapper before the textarea");
+    }
+    return wrapper;
+}
 
 function getSelectboxFromWrapper(wrapper: HTMLDivElement): HTMLSelectElement {
     const selectbox = wrapper.firstElementChild;

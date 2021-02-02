@@ -28,21 +28,20 @@ import {
     RichTextEditorOptions,
 } from "./types";
 import { TextEditor } from "./TextEditor";
-import { DocumentInterface } from "./DocumentInterface";
+import { DisplayInterface } from "./DisplayInterface";
 import { FormatSelectorBuilder } from "./FormatSelectorBuilder";
 import { TextFieldFormat } from "../../../constants/fields-constants";
 import { defaultOptionsIfNotProvided } from "./options-defaulter";
 
 export class RichTextEditorFactory {
-    private readonly document_interface: DocumentInterface;
+    private readonly display_interface: DisplayInterface;
     private readonly default_format: TextFieldFormat;
-    private readonly format_builder: FormatSelectorBuilder;
     private readonly markdown_converter: HTMLToMarkdownConverterInterface;
     private readonly markdown_renderer: MarkdownToHTMLRendererInterface;
 
     constructor(doc: Document, private readonly locale: string) {
-        this.document_interface = new FlamingParrotDocumentAdapter(doc);
-        this.default_format = this.document_interface.getDefaultFormat();
+        const document_adapter = new FlamingParrotDocumentAdapter(doc);
+        this.default_format = document_adapter.getDefaultFormat();
 
         const gettext_provider = initGettextSync(
             "rich-text-editor",
@@ -50,7 +49,7 @@ export class RichTextEditorFactory {
             this.locale
         );
 
-        this.format_builder = new FormatSelectorBuilder(this.document_interface, gettext_provider);
+        this.display_interface = new FormatSelectorBuilder(document_adapter, gettext_provider);
         const turndown_service = new TurndownService();
         this.markdown_converter = {
             convert: (html: string): string => turndown_service.turndown(html),
@@ -71,7 +70,7 @@ export class RichTextEditorFactory {
             this.markdown_converter,
             this.markdown_renderer
         );
-        const format_selectbox = this.format_builder.createFormatSelectbox({
+        this.display_interface.insertFormatSelectbox(textarea, {
             id: options.format_selectbox_id,
             name: options.format_selectbox_name,
             default_format: this.default_format,
@@ -79,7 +78,6 @@ export class RichTextEditorFactory {
                 editor.onFormatChange(new_format);
             },
         });
-        this.document_interface.insertFormatWrapper(textarea, format_selectbox);
         editor.onFormatChange(this.default_format);
     }
 }
