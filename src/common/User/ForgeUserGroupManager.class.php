@@ -59,7 +59,7 @@ class User_ForgeUserGroupManager
     {
         $row = $this->dao->getForgeUGroup($user_group->getId());
         if (! $row) {
-            throw new User_UserGroupNotFoundException($user_group->getId());
+            throw new User_UserGroupNotFoundException(sprintf('User group #%d was not found', $user_group->getId()));
         }
 
         if (! $this->userGroupHasModifications($user_group, $row)) {

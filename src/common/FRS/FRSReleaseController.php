@@ -153,7 +153,7 @@ class FRSReleaseController
 
     private function isUgroupHidden(User_UGroup $project_ugroup)
     {
-        return (int) $project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
+        return $project_ugroup->getId() === ProjectUGroup::PROJECT_ADMIN;
     }
 
     private function getAllUserGroups($permission_type, $release_id)

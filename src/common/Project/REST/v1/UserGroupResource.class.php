@@ -320,8 +320,8 @@ class UserGroupResource extends AuthenticatedResource
     {
         if (
             ! $user_group->isStatic() &&
-            (int) $user_group->getId() !== ProjectUGroup::PROJECT_MEMBERS &&
-            (int) $user_group->getId() !== ProjectUGroup::PROJECT_ADMIN
+            $user_group->getId() !== ProjectUGroup::PROJECT_MEMBERS &&
+            $user_group->getId() !== ProjectUGroup::PROJECT_ADMIN
         ) {
             throw new RestException(
                 400,
@@ -450,7 +450,7 @@ class UserGroupResource extends AuthenticatedResource
         $project = $ugroup->getProject();
         $user    = $this->user_manager->getCurrentUser();
 
-        if ((int) $ugroup->getId() === ProjectUGroup::PROJECT_MEMBERS) {
+        if ($ugroup->getId() === ProjectUGroup::PROJECT_MEMBERS) {
             ProjectAuthorization::userCanAccessProjectAndCanManageMembership($user, $project);
         } else {
             ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);

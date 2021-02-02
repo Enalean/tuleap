@@ -91,7 +91,7 @@ class ServiceRepresentationBuilder
         $ugroups = [];
         foreach ($frs_permissions as $frs_permission) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $frs_permission->getUGroupId());
-            if ($ugroup && (int) $ugroup->getId() !== ProjectUGroup::NONE) {
+            if ($ugroup && $ugroup->getId() !== ProjectUGroup::NONE) {
                 $ugroups[] = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
             }
         }
