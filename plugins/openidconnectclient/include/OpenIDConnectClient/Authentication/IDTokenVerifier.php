@@ -82,20 +82,25 @@ class IDTokenVerifier
             throw new MalformedIDTokenException($exception->getMessage(), 0, $exception);
         }
 
-        try {
-            $sub_claim = $id_token->claims()->get('sub');
-        } catch (\OutOfBoundsException $exception) {
-            throw new MalformedIDTokenException('sub claim is not present', 0, $exception);
+        $sub_claim = $id_token->claims()->get('sub');
+        if (! is_string($sub_claim)) {
+            throw new MalformedIDTokenException(sprintf('sub claim is not present or malformed (got %s)', gettype($sub_claim)));
         }
 
-        if (
-            ! is_string($sub_claim) ||
-            ! $this->jwt_validator->validate($id_token, new ValidAt(new FrozenClock(new \DateTimeImmutable()), new \DateInterval(self::LEEWAY_DATE_INTERVAL))) ||
-            ! $this->isNonceValid($nonce, $id_token) ||
-            ! $this->isAudienceClaimValid($provider->getClientId(), $id_token) ||
-            ! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token->claims()->get('iss', '') ?? '')
-        ) {
-            throw new MalformedIDTokenException('ID token claims are not valid');
+        if (! $this->jwt_validator->validate($id_token, new ValidAt(new FrozenClock(new \DateTimeImmutable()), new \DateInterval(self::LEEWAY_DATE_INTERVAL)))) {
+            self::throwsInvalidIDTokenClaims(sprintf('the token is outside its validity period, including a leeway of %s', self::LEEWAY_DATE_INTERVAL));
+        }
+
+        if (! $this->isNonceValid($nonce, $id_token)) {
+            self::throwsInvalidIDTokenClaims('nonce is not valid');
+        }
+
+        if (! $this->isAudienceClaimValid($provider->getClientId(), $id_token)) {
+            self::throwsInvalidIDTokenClaims('audience claim is not valid');
+        }
+
+        if (! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token->claims()->get('iss', '') ?? '')) {
+            self::throwsInvalidIDTokenClaims('issuer claim is not valid');
         }
 
         if (! $this->verifySignature($provider, $id_token)) {
@@ -130,5 +135,13 @@ class IDTokenVerifier
         }
 
         return false;
+    }
+
+    /**
+     * @throws MalformedIDTokenException
+     */
+    private static function throwsInvalidIDTokenClaims(string $reason): void
+    {
+        throw new MalformedIDTokenException(sprintf('ID token claims are not valid (%s)', $reason));
     }
 }
