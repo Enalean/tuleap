@@ -39,9 +39,7 @@ const help_block = image_upload_factory.createHelpBlock(new_followup_textarea);
 const options: RichTextEditorOptions = {
     format_selectbox_id: NEW_FOLLOWUP_ID_PREFIX,
     getAdditionalOptions: (textarea: HTMLTextAreaElement) => getUploadImageOptions(textarea),
-    onFormatChange: (new_format: TextFieldFormat) => {
-        help_block.onFormatChange(new_format);
-    },
+    onFormatChange: (new_format: TextFieldFormat) => help_block?.onFormatChange(new_format),
     onEditorInit: (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) =>
         image_upload_factory.initiateImageUpload(ckeditor, textarea),
 };
