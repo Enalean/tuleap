@@ -6,7 +6,9 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
+    "@tuleap/ckeditor-image-upload-form": "file:../../src/scripts/lib/ckeditor-image-upload-form",
     "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
+    "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
     "codemirror": "5.22.0",
     "d3-array": "^2.9.1",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^4.5.1",
+    "@types/ckeditor": "^4.9.10",
     "@types/dompurify": "^2.0.4",
     "@types/jquery": "^3.5.1",
     "@types/mustache": "^4.1.0",

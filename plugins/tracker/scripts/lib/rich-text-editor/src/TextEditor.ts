@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import CKEDITOR from "ckeditor4";
+import { TEXT_FORMAT_HTML, TextFieldFormat } from "../../../constants/fields-constants";
+import {
+    HTMLToMarkdownConverterInterface,
+    InternalTextEditorOptions,
+    MarkdownToHTMLRendererInterface,
+} from "./types";
+
+const DEFAULT_LOCALE = "en_US";
+const CKEDITOR_DEFAULT_OPTIONS = {
+    toolbar: [
+        ["Bold", "Italic"],
+        ["NumberedList", "BulletedList", "-", "Blockquote", "Styles", "Format"],
+        ["Link", "Unlink", "Anchor", "Image"],
+        ["Source"],
+    ],
+    stylesSet: [
+        { name: "Bold", element: "strong", overrides: { b: true } },
+        { name: "Italic", element: "em", overrides: { i: true } },
+        { name: "Code", element: "code" },
+        { name: "Subscript", element: "sub" },
+        { name: "Superscript", element: "sup" },
+    ],
+    resize_enabled: true,
+    language: DEFAULT_LOCALE,
+    disableNativeSpellChecker: false,
+};
+
+export class TextEditor {
+    private ckeditor: CKEDITOR.editor | null = null;
+
+    constructor(
+        private readonly textarea: HTMLTextAreaElement,
+        private readonly options: InternalTextEditorOptions,
+        private readonly markdown_converter: HTMLToMarkdownConverterInterface,
+        private readonly markdown_renderer: MarkdownToHTMLRendererInterface
+    ) {}
+
+    public onFormatChange(new_format: TextFieldFormat): void {
+        if (new_format === TEXT_FORMAT_HTML) {
+            const text = this.textarea.value;
+            const editor = this.initCKEditor();
+            this.options.onFormatChange(new_format);
+            editor.setData(this.markdown_renderer.render(text));
+            return;
+        }
+        if (this.ckeditor) {
+            const text = this.markdown_converter.convert(this.ckeditor.getData());
+            this.ckeditor.destroy();
+            this.ckeditor = null;
+            this.textarea.value = text;
+        }
+        this.options.onFormatChange(new_format);
+    }
+
+    private initCKEditor(): CKEDITOR.editor {
+        if (CKEDITOR.instances && CKEDITOR.instances[this.textarea.id]) {
+            CKEDITOR.instances[this.textarea.id].destroy(true);
+        }
+
+        const replace_options = {
+            ...CKEDITOR_DEFAULT_OPTIONS,
+            language: this.options.locale,
+            ...this.options.getAdditionalOptions(this.textarea),
+        };
+        const editor = CKEDITOR.replace(this.textarea, replace_options);
+        this.ckeditor = editor;
+        this.options.onEditorInit(editor, this.textarea);
+        return editor;
+    }
+}

@@ -52,14 +52,16 @@ const webpack_config_for_burndown_chart = {
 
 const webpack_config_for_ts = {
     entry: {
-        "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
-        "list-fields": "./scripts/artifact/list-fields.ts",
         "cross-references-fields": "./scripts/form-element/src/cross-references-fields.ts",
+        "edit-view": "./scripts/artifact/edit-view.ts",
+        "list-fields": "./scripts/artifact/list-fields.ts",
+        "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
     },
     context,
     output,
     externals: {
         tlp: "tlp",
+        CKEDITOR: "CKEDITOR",
     },
     resolve: {
         extensions: [".js", ".ts"],
@@ -93,7 +95,6 @@ const webpack_config_for_vue = {
         "tracker-email-copy-paste-fp": "./scripts/artifact/tracker-email-copy-paste-fp.ts",
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
-        "text-follow-up": "./scripts/artifact/text-follow-up.ts",
     },
     context,
     output,
@@ -157,7 +158,6 @@ const config_for_legacy_scripts = {
                 "./scripts/legacy/artifactChildren.js",
                 "./scripts/legacy/load-artifactChildren.js",
                 "./scripts/legacy/modal-in-place.js",
-                "./scripts/legacy/TrackerArtifactEditionSwitcher.js",
                 "./scripts/legacy/FixAggregatesHeaderHeight.js",
                 "./scripts/legacy/TrackerSettings.js",
                 "./scripts/legacy/TrackerCollapseFieldset.js",
