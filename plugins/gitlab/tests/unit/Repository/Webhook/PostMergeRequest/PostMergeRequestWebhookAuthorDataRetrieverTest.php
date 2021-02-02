@@ -24,7 +24,6 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
@@ -43,21 +42,16 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends TestCase
      */
     private $gitlab_api_client;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
      * @var PostMergeRequestWebhookAuthorDataRetriever
      */
+    private $author_retriever;
 
     protected function setUp(): void
     {
         $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
         $this->gitlab_api_client     = Mockery::mock(ClientWrapper::class);
-        $this->logger                = Mockery::mock(LoggerInterface::class);
 
         $this->author_retriever = new PostMergeRequestWebhookAuthorDataRetriever(
-            $this->logger,
             $this->gitlab_api_client,
             $this->credentials_retriever,
         );

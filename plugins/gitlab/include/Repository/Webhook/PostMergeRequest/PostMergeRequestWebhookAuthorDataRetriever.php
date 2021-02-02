@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
@@ -31,10 +30,6 @@ use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 
 class PostMergeRequestWebhookAuthorDataRetriever
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
     /**
      * @var ClientWrapper
      */
@@ -45,11 +40,9 @@ class PostMergeRequestWebhookAuthorDataRetriever
     private $credentials_retriever;
 
     public function __construct(
-        LoggerInterface $logger,
         ClientWrapper $gitlab_api_client,
         CredentialsRetriever $credentials_retriever
     ) {
-        $this->logger                = $logger;
         $this->gitlab_api_client     = $gitlab_api_client;
         $this->credentials_retriever = $credentials_retriever;
     }

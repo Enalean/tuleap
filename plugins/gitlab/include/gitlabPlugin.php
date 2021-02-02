@@ -275,7 +275,6 @@ class gitlabPlugin extends Plugin
                         $logger,
                     ),
                     new PostMergeRequestWebhookAuthorDataRetriever(
-                        $logger,
                         $gitlab_api_client,
                         new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory()))
                     ),
