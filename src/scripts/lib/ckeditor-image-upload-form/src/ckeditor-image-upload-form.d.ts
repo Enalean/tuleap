@@ -30,7 +30,7 @@ declare module "@tuleap/ckeditor-image-upload-form" {
             textarea: HTMLTextAreaElement
         ): void;
 
-        createHelpBlock(textarea: HTMLTextAreaElement): HelpBlock;
+        createHelpBlock(textarea: HTMLTextAreaElement): HelpBlock | null;
     }
 
     interface CKEditorUploadImageOptions {
