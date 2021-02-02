@@ -100,11 +100,7 @@ class CrossReferenceGitEnhancer
         return array_merge(
             $this->getBadgePresentersForBranchOrTag($commit_details),
             [
-                new AdditionalBadgePresenter(
-                    substr($commit_details->getHash(), 0, 10),
-                    false,
-                    false,
-                )
+                AdditionalBadgePresenter::buildSecondary(substr($commit_details->getHash(), 0, 10))
             ]
         );
     }
@@ -117,14 +113,14 @@ class CrossReferenceGitEnhancer
         $first_branch = $commit_details->getFirstBranch();
         if (! empty($first_branch)) {
             return [
-                new AdditionalBadgePresenter($first_branch, true, false)
+                AdditionalBadgePresenter::buildPrimary($first_branch)
             ];
         }
 
         $first_tag = $commit_details->getFirstTag();
         if (! empty($first_tag)) {
             return [
-                new AdditionalBadgePresenter($first_tag, true, true)
+                AdditionalBadgePresenter::buildPrimaryPlain($first_tag)
             ];
         }
 

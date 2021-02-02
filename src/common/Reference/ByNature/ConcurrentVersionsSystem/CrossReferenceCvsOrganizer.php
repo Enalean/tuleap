@@ -105,7 +105,7 @@ class CrossReferenceCvsOrganizer
     ): CrossReferencePresenter {
         $additional_badges = [];
         if ($commit_row['revision']) {
-            $additional_badges[] = new AdditionalBadgePresenter($commit_row['revision'], false, false);
+            $additional_badges[] = AdditionalBadgePresenter::buildSecondary($commit_row['revision']);
         }
 
         $cvs_cross_reference_presenter = $cross_reference_presenter

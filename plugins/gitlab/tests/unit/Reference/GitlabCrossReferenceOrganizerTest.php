@@ -38,6 +38,7 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
+use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class GitlabCrossReferenceOrganizerTest extends TestCase
@@ -400,7 +401,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $john_snow_merge_request = new GitlabMergeRequest(
             'The title of the MR 14',
             'merged',
-            new DateTimeImmutable(),
+            new DateTimeImmutable('@1234567890'),
             null,
             null
         );
@@ -408,7 +409,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $samwell_tarly_merge_request = new GitlabMergeRequest(
             'The title of MR #26',
             'closed',
-            new DateTimeImmutable(),
+            new DateTimeImmutable('@1234567890'),
             null,
             null
         );
@@ -455,7 +456,34 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer->shouldReceive('removeCrossReferenceToSection')->never();
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->twice();
+            ->with(
+                Mockery::on(
+                    function (CrossReferencePresenter $xref) {
+                        return $xref->id === 1
+                            && $xref->title === 'The title of the MR 14'
+                            && $xref->additional_badges[0]->label === 'Merged'
+                            && $xref->additional_badges[0]->is_success === true
+                            && $xref->creation_metadata->created_by === null
+                            && $xref->creation_metadata->created_on->date === '2009-02-14T00:31:30+01:00';
+                    }
+                ),
+                'thenightwatch/winter-is-coming'
+            );
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->with(
+                Mockery::on(
+                    function (CrossReferencePresenter $xref) {
+                        return $xref->id === 2
+                            && $xref->title === 'The title of MR #26'
+                            && $xref->additional_badges[0]->label === 'Closed'
+                            && $xref->additional_badges[0]->is_danger === true
+                            && $xref->creation_metadata->created_by === null
+                            && $xref->creation_metadata->created_on->date === '2009-02-14T00:31:30+01:00';
+                    }
+                ),
+                'foodstocks/winter-is-coming'
+            );
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }

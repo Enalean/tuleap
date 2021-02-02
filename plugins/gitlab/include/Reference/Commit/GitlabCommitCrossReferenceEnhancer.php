@@ -73,10 +73,8 @@ class GitlabCommitCrossReferenceEnhancer
     private function getAdditionalBadgesPresenters(GitlabCommit $gitlab_commit): array
     {
         $branch_badge = $this->getBadgePresenterForBranch($gitlab_commit);
-        $commit_badge = new AdditionalBadgePresenter(
+        $commit_badge = AdditionalBadgePresenter::buildSecondary(
             substr($gitlab_commit->getCommitSha1(), 0, 10),
-            false,
-            false
         );
 
         if ($branch_badge === null) {
@@ -95,11 +93,7 @@ class GitlabCommitCrossReferenceEnhancer
             return null;
         }
 
-        return new AdditionalBadgePresenter(
-            $gitlab_commit->getCommitBranchName(),
-            true,
-            false
-        );
+        return AdditionalBadgePresenter::buildPrimary($gitlab_commit->getCommitBranchName());
     }
 
     private function getCreatedOnPresenter(GitlabCommit $gitlab_commit, \PFUser $user): TlpRelativeDatePresenter
