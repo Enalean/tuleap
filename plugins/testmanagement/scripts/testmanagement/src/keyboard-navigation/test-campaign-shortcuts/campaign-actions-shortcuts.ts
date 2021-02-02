@@ -26,6 +26,7 @@ import {
 import { GettextProvider } from "../type";
 
 import { clickOnElement, focusElement } from "../shortcuts-handles/trigger-datashortcut-element";
+import { showNonPassedTests } from "../shortcuts-handles/show-non-passed-tests";
 
 export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): void {
     const edit_campaign: Shortcut = {
@@ -52,6 +53,14 @@ export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): 
         },
     };
 
+    const show_non_passed_tests: Shortcut = {
+        keyboard_inputs: "n",
+        description: gettextCatalog.getString("Show non-passed tests only"),
+        handle: (): void => {
+            showNonPassedTests(document);
+        },
+    };
+
     const focus_test_list: Shortcut = {
         keyboard_inputs: "l",
         description: gettextCatalog.getString("Set focus in tests list"),
@@ -74,6 +83,7 @@ export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): 
             edit_campaign,
             focus_search_filter,
             toggle_automated_tests_filter,
+            show_non_passed_tests,
             focus_test_list,
             show_scores,
         ],
