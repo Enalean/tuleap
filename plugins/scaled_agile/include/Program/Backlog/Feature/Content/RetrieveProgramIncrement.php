@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\REST;
+namespace Tuleap\ScaledAgile\Program\Backlog\Feature\Content;
 
-use Luracast\Restler\Restler;
-use Tuleap\Project\REST\ProjectRepresentation;
-use Tuleap\ScaledAgile\REST\v1\ProgramIncrementResource;
-use Tuleap\ScaledAgile\REST\v1\ProjectResource;
-use Tuleap\ScaledAgile\REST\v1\ScaledAgileResource;
-
-class ResourcesInjector
+interface RetrieveProgramIncrement
 {
-    public function populate(Restler $restler): void
-    {
-        $restler->addAPIClass(ProjectResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(ScaledAgileResource::class, ScaledAgileResource::ROUTE);
-        $restler->addAPIClass(ProgramIncrementResource::class, ProgramIncrementResource::ROUTE);
-    }
+    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
 }

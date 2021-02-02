@@ -31,6 +31,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
+use Tuleap\ScaledAgile\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
@@ -108,9 +109,11 @@ final class ProjectResource extends AuthenticatedResource
         $this->features_retriever         = new FeatureElementsRetriever(
             $build_program,
             new FeaturesDao(),
-            $artifact_factory,
-            $form_element_factory,
-            new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()))
+            new FeatureRepresentationBuilder(
+                $artifact_factory,
+                $form_element_factory,
+                new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()))
+            )
         );
         $this->program_increments_builder = new ProgramIncrementBuilder(
             $build_program,
