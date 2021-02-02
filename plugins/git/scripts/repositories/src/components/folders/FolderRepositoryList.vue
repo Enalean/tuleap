@@ -19,19 +19,21 @@
 
 <template>
     <collapsible-folder
-        v-bind:is-root-folder="true"
+        v-bind:is_root_folder="true"
         v-bind:children="getFilteredRepositoriesGroupedByPath.children"
     />
 </template>
-<script>
-import { mapGetters } from "vuex";
-import CollapsibleFolder from "./CollapsibleFolder.vue";
 
-export default {
-    name: "FolderRepositoryList",
-    components: { CollapsibleFolder },
-    computed: {
-        ...mapGetters(["getFilteredRepositoriesGroupedByPath"]),
-    },
-};
+<script lang="ts">
+import CollapsibleFolder from "./CollapsibleFolder.vue";
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
+import { Getter } from "vuex-class";
+import { Folder } from "../../type";
+
+@Component({ components: { CollapsibleFolder } })
+export default class FolderRepositoryList extends Vue {
+    @Getter
+    readonly getFilteredRepositoriesGroupedByPath!: Folder;
+}
 </script>

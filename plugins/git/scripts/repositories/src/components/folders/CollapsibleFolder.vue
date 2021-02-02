@@ -20,21 +20,26 @@
 <template>
     <div
         v-bind:class="{
-            'git-repository-list-folder': !isRootFolder,
-            'git-repository-list-base-folder': isBaseFolder,
+            'git-repository-list-folder': !is_root_folder,
+            'git-repository-list-base-folder': is_base_folder,
         }"
     >
-        <div class="git-repository-list-collapsible-folder" v-on:click="collapseFolder()">
+        <div
+            data-test="git-repository-list-folder-collapse"
+            class="git-repository-list-collapsible-folder"
+            v-on:click="collapseFolder()"
+        >
             <i
-                v-if="!isRootFolder"
+                data-test="git-repository-list-folder-icon"
+                v-if="!is_root_folder"
                 v-bind:class="{
-                    'fa fa-fw fa-caret-down': !isFolderCollapsed,
-                    'fa fa-fw fa-caret-right': isFolderCollapsed,
+                    'fa fa-fw fa-caret-down': !is_folder_collapsed,
+                    'fa fa-fw fa-caret-right': is_folder_collapsed,
                 }"
             ></i>
             <h2
                 class="git-repository-list-folder-label"
-                v-if="!isRootFolder"
+                v-if="!is_root_folder"
                 data-test="git-repository-list-folder-label"
             >
                 <i class="far fa-folder"></i>
@@ -44,49 +49,46 @@
         <template v-for="child in children">
             <git-repository
                 v-if="!child.is_folder"
-                v-show="!isFolderCollapsed"
+                v-show="!is_folder_collapsed"
                 v-bind:key="child.id"
                 v-bind:repository="child"
             />
             <collapsible-folder
                 v-else
-                v-show="!isFolderCollapsed"
+                v-show="!is_folder_collapsed"
                 v-bind:key="child.label"
                 v-bind:label="child.label"
                 v-bind:children="child.children"
-                v-bind:is-base-folder="isRootFolder"
+                v-bind:is_base_folder="is_root_folder"
+                data-test="git-repository-collapsible-folder"
             />
         </template>
     </div>
 </template>
-<script>
-import GitRepository from "../GitRepository.vue";
 
-export default {
-    name: "CollapsibleFolder",
-    components: { GitRepository },
-    props: {
-        label: {
-            type: String,
-            required: false,
-        },
-        isRootFolder: {
-            type: Boolean,
-            required: false,
-        },
-        isBaseFolder: {
-            type: Boolean,
-            required: false,
-        },
-        children: Array,
-    },
-    data() {
-        return { isFolderCollapsed: false };
-    },
-    methods: {
-        collapseFolder() {
-            this.isFolderCollapsed = !this.isFolderCollapsed;
-        },
-    },
-};
+<script lang="ts">
+import GitRepository from "../GitRepository.vue";
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
+import { Folder, Repository } from "../../type";
+
+// The name attributes is needed because this component is recursive
+// See https://github.com/kaorun343/vue-property-decorator/issues/102
+@Component({ name: "CollapsibleFolder", components: { GitRepository, CollapsibleFolder } })
+export default class CollapsibleFolder extends Vue {
+    @Prop({ required: false, default: undefined })
+    readonly label: undefined | string;
+    @Prop({ required: false, default: false })
+    readonly is_root_folder!: boolean;
+    @Prop({ required: false, default: false })
+    readonly is_base_folder!: boolean;
+    @Prop({ required: true })
+    readonly children!: Map<string, Folder | Repository> | Array<Folder | Repository>;
+
+    private is_folder_collapsed = false;
+
+    collapseFolder(): void {
+        this.is_folder_collapsed = !this.is_folder_collapsed;
+    }
+}
 </script>
