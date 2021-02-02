@@ -33,7 +33,7 @@ import {
     PROJECT_KEY,
     REPOSITORIES_SORTED_BY_PATH,
     ANONYMOUS_USER_ID,
-} from "../constants.js";
+} from "../constants";
 import {
     formatUrlToGetAllProject,
     formatUrlToGetProjectFromId,
@@ -170,7 +170,7 @@ async function handleGetRepositoryListError(e, commit) {
     }
 }
 
-export async function getGitlabRepositoryList(context, credentials) {
+export async function getGitlabProjectList(context, credentials) {
     let pagination = 1;
     let repositories_gitlab = [];
     credentials.server_url = formatUrlToGetAllProject(credentials.server_url);

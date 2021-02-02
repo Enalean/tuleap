@@ -161,116 +161,125 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
 import { PROJECT_KEY } from "../../../constants";
-import { mapActions, mapGetters } from "vuex";
 import { getProjectId } from "../../../repository-list-presenter";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { Action, Getter } from "vuex-class";
+import { GitlabProject, GitlabDataWithPath, GitLabDataToPostAPI } from "../../../type";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-export default {
-    name: "ListRepositoriesModal",
-    props: {
-        repositories: {
-            type: Array,
-            default: () => [],
-        },
-        gitlab_api_token: {
-            type: String,
-            default: () => "",
-        },
-        server_url: {
-            type: String,
-            default: () => "",
-        },
-    },
-    data() {
-        return {
-            selected_repository: null,
-            is_loading: false,
-            message_error_rest: "",
-        };
-    },
-    computed: {
-        ...mapGetters(["getGitlabRepositoriesIntegrated"]),
-        disabled_button() {
-            return this.selected_repository === null || this.is_loading || this.have_any_rest_error;
-        },
-        have_any_rest_error() {
-            return this.message_error_rest.length > 0;
-        },
-    },
-    methods: {
-        ...mapActions(["postIntegrationGitlab"]),
-        message_tooltip_repository_disabled(repository) {
-            if (this.isRepositoryAlreadyIntegrated(repository)) {
-                return this.$gettext("This repository is already integrated.");
+@Component
+export default class ListRepositoriesModal extends Vue {
+    @Prop({ required: true })
+    readonly repositories!: GitlabProject[];
+    @Prop({ required: true })
+    readonly gitlab_api_token!: string;
+    @Prop({ required: true })
+    readonly server_url!: string;
+
+    @Action
+    readonly postIntegrationGitlab!: (gitlab_data: GitLabDataToPostAPI) => Promise<void>;
+
+    @Getter
+    getGitlabRepositoriesIntegrated!: GitlabDataWithPath[];
+
+    private selected_repository: GitlabProject | null = null;
+    private is_loading = false;
+    private message_error_rest = "";
+
+    get disabled_button(): boolean {
+        return this.selected_repository === null || this.is_loading || this.have_any_rest_error;
+    }
+
+    get have_any_rest_error(): boolean {
+        return this.message_error_rest.length > 0;
+    }
+
+    message_tooltip_repository_disabled(repository: GitlabProject): string {
+        if (this.isRepositoryAlreadyIntegrated(repository)) {
+            return this.$gettext("This repository is already integrated.");
+        }
+
+        return this.$gettext("A repository with same name and path was already integrated.");
+    }
+
+    async fetchRepositories(event: Event): Promise<void> {
+        event.preventDefault();
+        this.is_loading = true;
+        try {
+            if (!this.selected_repository) {
+                return;
             }
 
-            return this.$gettext("A repository with same name and path was already integrated.");
-        },
-        async fetchRepositories(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            try {
-                await this.postIntegrationGitlab({
-                    gitlab_repository_id: this.selected_repository.id,
-                    gitlab_bot_api_token: this.gitlab_api_token,
-                    gitlab_server_url: this.server_url,
-                    project_id: getProjectId(),
-                });
+            await this.postIntegrationGitlab({
+                gitlab_repository_id: this.selected_repository.id,
+                gitlab_bot_api_token: this.gitlab_api_token,
+                gitlab_server_url: this.server_url,
+                project_id: getProjectId(),
+            });
 
-                this.$store.commit("resetRepositories");
-                this.$store.dispatch("changeRepositories", PROJECT_KEY);
-                this.$emit("on-success-close-modal", { repository: this.selected_repository });
-            } catch (rest_error) {
-                this.has_rest_error = true;
-                await this.handle_error(rest_error);
-            } finally {
-                this.is_loading = false;
-            }
-        },
-        reset() {
-            this.selected_repository = null;
+            this.$store.commit("resetRepositories");
+            this.$store.dispatch("changeRepositories", PROJECT_KEY);
+            this.$emit("on-success-close-modal", { repository: this.selected_repository });
+        } catch (rest_error) {
+            await this.handleError(rest_error);
+        } finally {
             this.is_loading = false;
-            this.message_error_rest = "";
-        },
+        }
+    }
 
-        async handle_error(rest_error) {
-            try {
-                const { error } = await rest_error.response.json();
-                this.message_error_rest = error.code + ": " + error.message;
-            } catch (error) {
-                this.message_error_rest = this.$gettext("Oops, an error occurred!");
-            } finally {
-                this.is_loading = false;
-            }
-        },
-        isRepositoryWithSameNamePath(repository) {
-            return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
+    reset(): void {
+        this.selected_repository = null;
+        this.is_loading = false;
+        this.message_error_rest = "";
+    }
+
+    async handleError(rest_error: FetchWrapperError): Promise<void> {
+        try {
+            const { error } = await rest_error.response.json();
+            this.message_error_rest = error.code + ": " + error.message;
+        } catch (error) {
+            this.message_error_rest = this.$gettext("Oops, an error occurred!");
+        } finally {
+            this.is_loading = false;
+        }
+    }
+
+    isRepositoryWithSameNamePath(repository: GitlabProject): boolean {
+        return (
+            this.getGitlabRepositoriesIntegrated.find((integrated_repository) => {
                 return (
-                    repository_integrated.normalized_path === repository.path_with_namespace &&
-                    repository_integrated.gitlab_data.gitlab_repository_url !== repository.web_url
+                    integrated_repository.normalized_path === repository.path_with_namespace &&
+                    integrated_repository.gitlab_data.gitlab_repository_url !== repository.web_url
                 );
-            });
-        },
-        isRepositoryAlreadyIntegrated(repository) {
-            return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
+            }) !== undefined
+        );
+    }
+
+    isRepositoryAlreadyIntegrated(repository: GitlabProject): boolean {
+        return (
+            this.getGitlabRepositoriesIntegrated.find((integrated_repository) => {
                 return (
-                    repository_integrated.gitlab_data.gitlab_repository_id === repository.id &&
-                    repository_integrated.gitlab_data.gitlab_repository_url === repository.web_url
+                    integrated_repository.gitlab_data.gitlab_repository_id === repository.id &&
+                    integrated_repository.gitlab_data.gitlab_repository_url === repository.web_url
                 );
-            });
-        },
-        isRepositoryDisabled(repository) {
-            return (
-                this.isRepositoryWithSameNamePath(repository) ||
-                this.isRepositoryAlreadyIntegrated(repository)
-            );
-        },
-        selectRepository(repository) {
-            if (!this.isRepositoryDisabled(repository)) {
-                this.selected_repository = repository;
-            }
-        },
-    },
-};
+            }) !== undefined
+        );
+    }
+
+    isRepositoryDisabled(repository: GitlabProject): boolean {
+        return (
+            this.isRepositoryWithSameNamePath(repository) ||
+            this.isRepositoryAlreadyIntegrated(repository)
+        );
+    }
+
+    selectRepository(repository: GitlabProject): void {
+        if (!this.isRepositoryDisabled(repository)) {
+            this.selected_repository = repository;
+        }
+    }
+}
 </script>

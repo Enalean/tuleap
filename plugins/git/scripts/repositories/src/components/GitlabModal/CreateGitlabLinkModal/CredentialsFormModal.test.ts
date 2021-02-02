@@ -17,13 +17,18 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../support/local-vue.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
+import { Store } from "vuex-mock-store";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import GetTextPlugin from "vue-gettext";
 
 describe("CredentialsFormModal", () => {
-    let store_options, store;
+    let store_options = {},
+        localVue,
+        store: Store;
+
     beforeEach(() => {
         store_options = {
             state: {},
@@ -31,9 +36,21 @@ describe("CredentialsFormModal", () => {
         };
     });
 
-    function instantiateComponent() {
+    function instantiateComponent(): Wrapper<CredentialsFormModal> {
+        localVue = createLocalVue();
+        localVue.use(VueDOMPurifyHTML);
+        localVue.use(GetTextPlugin, {
+            translations: {},
+            silent: true,
+        });
+
         store = createStoreMock(store_options);
+
         return shallowMount(CredentialsFormModal, {
+            propsData: {
+                gitlab_api_token: "",
+                server_url: "",
+            },
             mocks: { $store: store },
             localVue,
         });
@@ -61,7 +78,7 @@ describe("CredentialsFormModal", () => {
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
 
-        expect(store.dispatch).toHaveBeenCalledWith("getGitlabRepositoryList", {
+        expect(store.dispatch).toHaveBeenCalledWith("getGitlabProjectList", {
             server_url: "https://example.com",
             token: "AFREZF546",
         });
@@ -92,7 +109,7 @@ describe("CredentialsFormModal", () => {
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "AFREZF546",
-            gitlab_repositories: null,
+            gitlab_projects: null,
         });
 
         await wrapper.vm.$nextTick();
@@ -100,11 +117,18 @@ describe("CredentialsFormModal", () => {
         wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.emitted("on-get-gitlab-repositories")[0][0]).toEqual({
-            repositories: [{ id: 10 }],
-            server_url: "https://example.com",
-            token: "AFREZF546",
-        });
+        const on_get_gitlab_projects = wrapper.emitted()["on-get-gitlab-repositories"];
+        if (!on_get_gitlab_projects) {
+            throw new Error("Should have emitted on-get-gitlab-repositories");
+        }
+
+        expect(on_get_gitlab_projects[0]).toEqual([
+            {
+                projects: [{ id: 10 }],
+                server_url: "https://example.com",
+                token: "AFREZF546",
+            },
+        ]);
     });
 
     it("When there are no token and server url, Then submit button is disabled", async () => {
@@ -127,7 +151,7 @@ describe("CredentialsFormModal", () => {
             is_loading: false,
             gitlab_server: "",
             gitlab_token: "",
-            gitlab_repositories: [],
+            gitlab_projects: [],
             empty_message: "No repository is available with your GitLab account",
         });
 
@@ -146,7 +170,7 @@ describe("CredentialsFormModal", () => {
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "",
-            gitlab_repositories: null,
+            gitlab_projects: null,
         });
 
         await wrapper.vm.$nextTick();
@@ -167,7 +191,7 @@ describe("CredentialsFormModal", () => {
             is_loading: false,
             gitlab_server: "htt://example.com",
             gitlab_token: "Azer789",
-            gitlab_repositories: null,
+            gitlab_projects: null,
         });
 
         await wrapper.vm.$nextTick();
@@ -188,7 +212,7 @@ describe("CredentialsFormModal", () => {
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "AFREZF546",
-            gitlab_repositories: null,
+            gitlab_projects: null,
             empty_message: "",
         });
 

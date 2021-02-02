@@ -17,30 +17,35 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../support/local-vue.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
 import GitlabRepositoryModal from "./GitlabRepositoryModal.vue";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
+import { Store } from "vuex-mock-store";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import GetTextPlugin from "vue-gettext";
 
 describe("GitlabRepositoryModal", () => {
-    let store_options, store;
+    let store_options = {},
+        localVue,
+        store: Store;
+
     beforeEach(() => {
         store_options = {
-            state: {
-                used_service_name: [],
-                is_first_load_done: true,
-            },
-            getters: {
-                areExternalUsedServices: false,
-                isCurrentRepositoryListEmpty: false,
-                isInitialLoadingDoneWithoutError: true,
-            },
+            state: {},
+            getters: {},
         };
     });
 
-    function instantiateComponent() {
+    function instantiateComponent(): Wrapper<GitlabRepositoryModal> {
+        localVue = createLocalVue();
+        localVue.use(VueDOMPurifyHTML);
+        localVue.use(GetTextPlugin, {
+            translations: {},
+            silent: true,
+        });
+
         store = createStoreMock(store_options);
         return shallowMount(GitlabRepositoryModal, {
             mocks: { $store: store },
@@ -52,7 +57,7 @@ describe("GitlabRepositoryModal", () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_repositories: null,
+            gitlab_projects: null,
             back_button_clicked: false,
         });
 
@@ -66,7 +71,7 @@ describe("GitlabRepositoryModal", () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_repositories: [{ id: 10 }],
+            gitlab_projects: [{ id: 10 }],
             back_button_clicked: true,
         });
 
@@ -80,7 +85,7 @@ describe("GitlabRepositoryModal", () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_repositories: [{ id: 10 }],
+            gitlab_projects: [{ id: 10 }],
         });
 
         await wrapper.vm.$nextTick();
@@ -93,7 +98,7 @@ describe("GitlabRepositoryModal", () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_repositories: [{ id: 10 }],
+            gitlab_projects: [{ id: 10 }],
         });
         await wrapper.vm.$nextTick();
 
@@ -114,7 +119,7 @@ describe("GitlabRepositoryModal", () => {
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
 
         wrapper.findComponent(CredentialsFormModal).vm.$emit("on-get-gitlab-repositories", {
-            repositories: [{ id: 10 }],
+            projects: [{ id: 10 }],
             token: "Azer7897",
             server_url: "https://example.com",
         });
@@ -131,7 +136,7 @@ describe("GitlabRepositoryModal", () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_repositories: [
+            gitlab_projects: [
                 { id: 10, label: "My Project", path_with_namespace: "my-path/my-project" },
             ],
             back_button_clicked: false,
@@ -139,9 +144,6 @@ describe("GitlabRepositoryModal", () => {
 
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
-
-        // eslint-disable-next-line jest/prefer-spy-on
-        wrapper.vm.$refs.listRepositoriesModal.reset = jest.fn();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
@@ -159,21 +161,63 @@ describe("GitlabRepositoryModal", () => {
         expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
     });
 
-    it("When CredentialsFormModal emits on-close-modal, Then form is reset", async () => {
+    it("When CredentialsFormModal emits on-close-modal, Then form and list of repositories are reset", async () => {
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_repositories: null,
+            gitlab_projects: null,
         });
 
         await wrapper.vm.$nextTick();
 
-        // eslint-disable-next-line jest/prefer-spy-on
-        wrapper.vm.$refs.credentialsForm.reset = jest.fn();
+        const reset_credentials_form = jest.fn();
+
+        wrapper.vm.$refs.credentialsForm = new CredentialsFormModal({
+            propsData: { gitlab_api_token: "", server_url: "" },
+            methods: { reset: reset_credentials_form },
+        });
+
+        const reset_list_repositories_modal = jest.fn();
+
+        wrapper.vm.$refs.listRepositoriesModal = new ListRepositoriesModal({
+            propsData: { repositories: [], gitlab_api_token: "", server_url: "" },
+            methods: { reset: reset_list_repositories_modal },
+        });
 
         wrapper.findComponent(CredentialsFormModal).vm.$emit("on-close-modal");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$refs.credentialsForm.reset).toHaveBeenCalled();
+        expect(reset_credentials_form).toHaveBeenCalled();
+        expect(reset_list_repositories_modal).toHaveBeenCalled();
+    });
+
+    it("When ListRepositoriesModal emits on-close-modal, Then form and list of repositories are reset", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            gitlab_projects: null,
+        });
+
+        await wrapper.vm.$nextTick();
+
+        const reset_credentials_form = jest.fn();
+
+        wrapper.vm.$refs.credentialsForm = new CredentialsFormModal({
+            propsData: { gitlab_api_token: "", server_url: "" },
+            methods: { reset: reset_credentials_form },
+        });
+
+        const reset_list_repositories_modal = jest.fn();
+
+        wrapper.vm.$refs.listRepositoriesModal = new ListRepositoriesModal({
+            propsData: { repositories: [], gitlab_api_token: "", server_url: "" },
+            methods: { reset: reset_list_repositories_modal },
+        });
+
+        wrapper.findComponent(CredentialsFormModal).vm.$emit("on-close-modal");
+        await wrapper.vm.$nextTick();
+
+        expect(reset_credentials_form).toHaveBeenCalled();
+        expect(reset_list_repositories_modal).toHaveBeenCalled();
     });
 });

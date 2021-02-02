@@ -59,6 +59,11 @@ export interface Repository {
     gitlab_data?: null | GitLabData;
 }
 
+export interface GitlabDataWithPath {
+    normalized_path: string;
+    gitlab_data: GitLabData;
+}
+
 export interface PermissionsRepository {
     id: string;
     uri: string;
@@ -73,10 +78,15 @@ export interface GitLabData {
     gitlab_repository_id: number;
 }
 
-export interface GitLabDataWithToken {
+export interface GitLabDataWithToken extends GitLabData {
     gitlab_bot_api_token: string;
-    gitlab_repository_url: string;
+}
+
+export interface GitLabDataToPostAPI {
+    gitlab_bot_api_token: string;
+    gitlab_server_url: string;
     gitlab_repository_id: number;
+    project_id: number;
 }
 
 export interface Folder {
@@ -88,6 +98,10 @@ export interface Folder {
 export interface GitLabCredentials {
     token: string;
     server_url: string;
+}
+
+export interface GitLabCredentialsWithProjects extends GitLabCredentials {
+    projects: GitlabProject[];
 }
 
 export interface GitLabRepository {
@@ -118,4 +132,12 @@ export interface RepositoryOwner {
 export interface ExternalPlugins {
     plugin_name: string;
     data: Array<unknown>;
+}
+
+export interface GitlabProject {
+    id: number;
+    path_with_namespace: string;
+    name_with_namespace: string;
+    avatar_url: string;
+    web_url: string;
 }

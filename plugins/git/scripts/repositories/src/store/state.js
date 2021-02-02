@@ -16,11 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import {
-    REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    ERROR_TYPE_NO_ERROR,
-    PROJECT_KEY,
-} from "../constants.js";
+import { REPOSITORIES_SORTED_BY_LAST_UPDATE, ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "../constants";
 
 const state = {
     repositories_for_owner: {},

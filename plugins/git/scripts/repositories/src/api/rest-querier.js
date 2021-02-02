@@ -18,7 +18,7 @@
  */
 
 import { patch, post, del, recursiveGet } from "tlp";
-import { REPOSITORIES_SORTED_BY_PATH } from "../constants.js";
+import { REPOSITORIES_SORTED_BY_PATH } from "../constants";
 
 export {
     getRepositoryList,

@@ -64,10 +64,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import {
-    REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    REPOSITORIES_SORTED_BY_PATH,
-} from "../../constants.js";
+import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../../constants";
 
 export default {
     name: "DisplayModeSwitcher",

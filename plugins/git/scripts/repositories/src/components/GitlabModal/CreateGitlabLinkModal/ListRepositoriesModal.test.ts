@@ -17,78 +17,94 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
-import localVue from "../../../support/local-vue";
 import * as repository_list_presenter from "../../../repository-list-presenter";
 import { PROJECT_KEY } from "../../../constants";
+import { Store } from "vuex-mock-store";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import GetTextPlugin from "vue-gettext";
+import { GitlabDataWithPath, GitlabProject } from "../../../type";
 
 describe("ListRepositoriesModal", () => {
-    let store_options, store, propsData;
+    let store_options: {
+            getters: { getGitlabRepositoriesIntegrated: GitlabDataWithPath[] };
+        } = {
+            getters: {
+                getGitlabRepositoriesIntegrated: [],
+            },
+        },
+        localVue,
+        store: Store;
+
     beforeEach(() => {
         store_options = {
-            state: {
-                used_service_name: [],
-                is_first_load_done: true,
-            },
             getters: {
-                areExternalUsedServices: false,
-                isCurrentRepositoryListEmpty: false,
-                isInitialLoadingDoneWithoutError: true,
                 getGitlabRepositoriesIntegrated: [],
             },
         };
     });
 
-    function instantiateComponent() {
+    function instantiateComponent(
+        repositories_props_data: GitlabProject[]
+    ): Wrapper<ListRepositoriesModal> {
+        localVue = createLocalVue();
+        localVue.use(VueDOMPurifyHTML);
+        localVue.use(GetTextPlugin, {
+            translations: {},
+            silent: true,
+        });
+
         store = createStoreMock(store_options);
         return shallowMount(ListRepositoriesModal, {
-            propsData,
+            propsData: {
+                gitlab_api_token: "AZERTY123",
+                server_url: "example.com",
+                repositories: repositories_props_data,
+            },
             mocks: { $store: store },
             localVue,
         });
     }
 
     it("When there are repositories, Then repositories are displayed", () => {
-        propsData = {
-            repositories: [
-                {
-                    id: 10,
-                    name_with_namespace: "My Path / Repository",
-                    path_with_namespace: "my-path/repository",
-                },
-                {
-                    id: 11,
-                    name_with_namespace: "My Second / Repository",
-                    path_with_namespace: "my-second/repository",
-                    avatar_url: "example.com",
-                },
-            ],
-        };
-        const wrapper = instantiateComponent();
+        const repositories = [
+            {
+                id: 10,
+                name_with_namespace: "My Path / Repository",
+                path_with_namespace: "my-path/repository",
+            } as GitlabProject,
+            {
+                id: 11,
+                name_with_namespace: "My Second / Repository",
+                path_with_namespace: "my-second/repository",
+                avatar_url: "example.com",
+            } as GitlabProject,
+        ];
+
+        const wrapper = instantiateComponent(repositories);
 
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-10]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-11]").exists()).toBeTruthy();
     });
 
     it("When no repository is selected, Then integrate button is disabled", async () => {
-        propsData = {
-            repositories: [
-                {
-                    id: 10,
-                    name_with_namespace: "My Path / Repository",
-                    path_with_namespace: "my-path/repository",
-                },
-                {
-                    id: 11,
-                    name_with_namespace: "My Second / Repository",
-                    path_with_namespace: "my-second/repository",
-                    avatar_url: "example.com",
-                },
-            ],
-        };
-        const wrapper = instantiateComponent();
+        const repositories = [
+            {
+                id: 10,
+                name_with_namespace: "My Path / Repository",
+                path_with_namespace: "my-path/repository",
+            } as GitlabProject,
+            {
+                id: 11,
+                name_with_namespace: "My Second / Repository",
+                path_with_namespace: "my-second/repository",
+                avatar_url: "example.com",
+            } as GitlabProject,
+        ];
+
+        const wrapper = instantiateComponent(repositories);
 
         wrapper.setData({
             selected_repository: null,
@@ -111,7 +127,7 @@ describe("ListRepositoriesModal", () => {
     });
 
     it("When user clicks on back button, Then event is emitted", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent([]);
 
         wrapper.find("[data-test=gitlab-button-back]").trigger("click");
 
@@ -120,7 +136,8 @@ describe("ListRepositoriesModal", () => {
     });
 
     it("When user submit repository, Then api is queried, repositories are recovered, submit button is disabled, icon changed and success message is displayed", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent([]);
+
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve());
         jest.spyOn(repository_list_presenter, "getProjectId").mockReturnValue(101);
 
@@ -148,11 +165,12 @@ describe("ListRepositoriesModal", () => {
     });
 
     it("When error throw from API, Then error is displayed and button is disabled", async () => {
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent([]);
+
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.reject({
                 response: {
-                    json() {
+                    json(): Promise<{ error: { code: number; message: string } }> {
                         return Promise.resolve({
                             error: {
                                 code: 404,
@@ -194,25 +212,23 @@ describe("ListRepositoriesModal", () => {
             },
         ];
 
-        propsData = {
-            repositories: [
-                {
-                    id: 1,
-                    name_with_namespace: "My Path / Repository",
-                    path_with_namespace: "my-path/repository",
-                    web_url: "https://example.com/MyPath/1",
-                },
-                {
-                    id: 2,
-                    name_with_namespace: "My Second / Repository",
-                    path_with_namespace: "my-second/repository",
-                    avatar_url: "example.com",
-                    web_url: "https://example.com/MySecond/2",
-                },
-            ],
-        };
+        const repositories = [
+            {
+                id: 1,
+                name_with_namespace: "My Path / Repository",
+                path_with_namespace: "my-path/repository",
+                web_url: "https://example.com/MyPath/1",
+            } as GitlabProject,
+            {
+                id: 2,
+                name_with_namespace: "My Second / Repository",
+                path_with_namespace: "my-second/repository",
+                avatar_url: "example.com",
+                web_url: "https://example.com/MySecond/2",
+            } as GitlabProject,
+        ];
 
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent(repositories);
 
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toEqual([
             "gitlab-select-repository",
@@ -245,25 +261,23 @@ describe("ListRepositoriesModal", () => {
             },
         ];
 
-        propsData = {
-            repositories: [
-                {
-                    id: 1,
-                    name_with_namespace: "My Path / Repository",
-                    path_with_namespace: "my-path/repository",
-                    web_url: "https://another.instance.example.com/MyPath/1",
-                },
-                {
-                    id: 2,
-                    name_with_namespace: "My Second / Repository",
-                    path_with_namespace: "my-second/repository",
-                    avatar_url: "example.com",
-                    web_url: "https://example.com/MySecond/2",
-                },
-            ],
-        };
+        const repositories = [
+            {
+                id: 1,
+                name_with_namespace: "My Path / Repository",
+                path_with_namespace: "my-path/repository",
+                web_url: "https://another.instance.example.com/MyPath/1",
+            } as GitlabProject,
+            {
+                id: 2,
+                name_with_namespace: "My Second / Repository",
+                path_with_namespace: "my-second/repository",
+                avatar_url: "example.com",
+                web_url: "https://example.com/MySecond/2",
+            } as GitlabProject,
+        ];
 
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent(repositories);
 
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toEqual([
             "gitlab-select-repository",
@@ -286,25 +300,23 @@ describe("ListRepositoriesModal", () => {
     });
 
     it("When user clicks on avatar or path, Then repository is selected", async () => {
-        propsData = {
-            repositories: [
-                {
-                    id: 1,
-                    name_with_namespace: "My Path / Repository",
-                    path_with_namespace: "my-path/repository",
-                    web_url: "https://example.com/MyPath/1",
-                },
-                {
-                    id: 2,
-                    name_with_namespace: "My Second / Repository",
-                    path_with_namespace: "my-second/repository",
-                    avatar_url: "example.com",
-                    web_url: "https://example.com/MySecond/2",
-                },
-            ],
-        };
+        const repositories = [
+            {
+                id: 1,
+                name_with_namespace: "My Path / Repository",
+                path_with_namespace: "my-path/repository",
+                web_url: "https://example.com/MyPath/1",
+            } as GitlabProject,
+            {
+                id: 2,
+                name_with_namespace: "My Second / Repository",
+                path_with_namespace: "my-second/repository",
+                avatar_url: "example.com",
+                web_url: "https://example.com/MySecond/2",
+            } as GitlabProject,
+        ];
 
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent(repositories);
 
         wrapper.find("[data-test=gitlab-avatar-1]").trigger("click");
         await wrapper.vm.$nextTick();
