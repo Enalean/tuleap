@@ -18,7 +18,7 @@
  */
 
 import { moveFocus, getTargetTest } from "./move-focus";
-import { Direction } from "./type";
+import { Direction } from "../type";
 
 import * as getter_current_test from "./get-current-test";
 import * as getter_current_category from "./get-current-category";

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Direction } from "./type";
+import { Direction } from "../type";
 
 import { getCurrentTest } from "./get-current-test";
 import { getCurrentCategory } from "./get-current-category";
