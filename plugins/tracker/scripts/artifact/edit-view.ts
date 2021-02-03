@@ -28,11 +28,8 @@ const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
 const NEW_FOLLOWUP_ID_PREFIX = "new";
 
 const new_followup_textarea = document.getElementById(NEW_FOLLOWUP_TEXTAREA_ID);
-if (
-    new_followup_textarea instanceof HTMLTextAreaElement &&
-    new_followup_textarea.isContentEditable
-) {
-    // This can happen when copying artifacts
+if (new_followup_textarea instanceof HTMLTextAreaElement) {
+    // When copying artifacts or browsing as anonymous, there is no "new follow-up" textarea
     const locale = getUserLocale();
     const image_upload_factory = new UploadImageFormFactory(document, locale);
     const editor_factory = new RichTextEditorFactory(document, locale);
