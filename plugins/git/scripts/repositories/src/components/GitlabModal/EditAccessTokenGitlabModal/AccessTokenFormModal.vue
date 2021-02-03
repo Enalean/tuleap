@@ -58,6 +58,7 @@
                     required
                     v-model="gitlab_new_token"
                     data-test="add_gitlab_new_token"
+                    autocomplete="off"
                 />
                 <p class="tlp-text-info">
                     <i class="fas fa-info-circle" aria-hidden="true"></i>
