@@ -569,6 +569,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                              ' . $html_name_new . '
                              class="tracker-form-element-artifactlink-new"
                              size="40"
+                             data-test="artifact-link-submit"
                              data-preview-label="' . $hp->purify(dgettext('tuleap-tracker', 'Preview')) . '"
                              value="' .  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  . '"
                              title="' . dgettext('tuleap-tracker', 'Enter artifact ids separated with a comma') . '" />';

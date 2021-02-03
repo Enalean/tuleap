@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,10 +36,15 @@ class ArtifactLinkUpdater
      * @var Tracker_Artifact_PriorityManager
      */
     private $priority_manager;
+    /**
+     * @var ArtifactLinkUpdaterDataFormater
+     */
+    private $data_formater;
 
-    public function __construct(Tracker_Artifact_PriorityManager $priority_manager)
+    public function __construct(Tracker_Artifact_PriorityManager $priority_manager, ArtifactLinkUpdaterDataFormater $data_formater)
     {
         $this->priority_manager = $priority_manager;
+        $this->data_formater    = $data_formater;
     }
 
     public function update(
@@ -88,7 +93,7 @@ class ArtifactLinkUpdater
             $new_linked_artifact_ids
         );
 
-        return $this->formatFieldDatas($artlink_field, $artifact_ids_to_be_linked, $artifact_ids_to_be_unlinked, $type);
+        return $this->data_formater->formatFieldData($artlink_field, $artifact_ids_to_be_linked, $artifact_ids_to_be_unlinked, $type);
     }
 
     /**
@@ -132,7 +137,7 @@ class ArtifactLinkUpdater
         }
 
         try {
-            $fields_data = $this->formatFieldDatas(
+            $fields_data = $this->data_formater->formatFieldData(
                 $artifact_link_field,
                 $to_add,
                 $to_remove,
@@ -205,66 +210,5 @@ class ArtifactLinkUpdater
             }
             $predecessor = $linked_artifact_id;
         }
-    }
-
-    private function formatFieldDatas(
-        Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
-        array $elements_to_be_linked,
-        array $elements_to_be_unlinked,
-        string $type
-    ): array {
-        $field_datas = [];
-
-        $field_datas[$artifactlink_field->getId()]['new_values']     = $this->formatLinkedElementForNewChangeset(
-            $elements_to_be_linked
-        );
-        $field_datas[$artifactlink_field->getId()]['removed_values'] = $this->formatElementsToBeUnlinkedForNewChangeset(
-            $elements_to_be_unlinked
-        );
-
-        $this->augmentFieldDatasRegardingArtifactLinkTypeUsage(
-            $artifactlink_field,
-            $elements_to_be_linked,
-            $field_datas,
-            $type
-        );
-
-        return $field_datas;
-    }
-
-    private function augmentFieldDatasRegardingArtifactLinkTypeUsage(
-        Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
-        array $elements_to_be_linked,
-        array &$field_datas,
-        string $type
-    ): void {
-        $tracker = $artifactlink_field->getTracker();
-        if (! $tracker) {
-            return;
-        }
-
-        if (! $tracker->isProjectAllowedToUseNature()) {
-            return;
-        }
-
-        foreach ($elements_to_be_linked as $artifact_id) {
-            $field_datas[$artifactlink_field->getId()]['natures'][$artifact_id] = $type;
-        }
-    }
-
-    private function formatLinkedElementForNewChangeset(array $linked_elements): string
-    {
-        return implode(',', $linked_elements);
-    }
-
-    private function formatElementsToBeUnlinkedForNewChangeset(array $elements_to_be_unlinked): array
-    {
-        $formated_elements = [];
-
-        foreach ($elements_to_be_unlinked as $element_to_be_unlinked) {
-            $formated_elements[$element_to_be_unlinked] = 1;
-        }
-
-        return $formated_elements;
     }
 }

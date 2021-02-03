@@ -14,7 +14,7 @@
                     {{> siteadmin-config/natures-modal-create }}
 
                     <div class="tlp-table-actions">
-                        <button id="siteadmin-config-natures-modal-create-button" class="tlp-button-primary">
+                        <button id="siteadmin-config-natures-modal-create-button" class="tlp-button-primary" data-test="artifact-link-add-type">
                             <i class="fa fa-plus tlp-button-icon"></i> {{ create_new_nature }}
                         </button>
                     </div>
@@ -70,6 +70,7 @@
                                             <button type="submit"
                                                 class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small siteadmin-config-natures-modal-delete-button"
                                                 data-delete-modal-id="siteadmin-config-natures-modal-delete-{{ shortname }}"
+                                                data-test="artlink-delete-{{ shortname }}"
                                             >
                                                 <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_icon_label }}
                                             </button>
