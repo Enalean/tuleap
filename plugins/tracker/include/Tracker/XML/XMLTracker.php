@@ -26,6 +26,8 @@ namespace Tuleap\Tracker\XML;
 use SimpleXMLElement;
 use Tracker;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\TrackerColor;
 
 final class XMLTracker
@@ -73,6 +75,11 @@ final class XMLTracker
      * @readonly
      */
     private $form_elements = [];
+    /**
+     * @var XMLReport[]
+     * @readonly
+     */
+    private $reports = [];
 
     /**
      * @param string|IDGenerator $id
@@ -165,6 +172,17 @@ final class XMLTracker
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
+    public function withReports(XMLReport $report): self
+    {
+        $new            = clone $this;
+        $new->reports[] = $report;
+        return $new;
+    }
+
     public static function fromTracker(Tracker $tracker): self
     {
         return (new self($tracker->getXMLId(), $tracker->getItemName()))
@@ -190,6 +208,8 @@ final class XMLTracker
 
     public function exportTracker(SimpleXMLElement $tracker_xml): SimpleXMLElement
     {
+        $form_elements_flattened_collection = XMLFormElementFlattenedCollection::buildFromFormElements(...$this->form_elements);
+
         $tracker_xml->addAttribute('id', $this->id);
         $tracker_xml->addAttribute('parent_id', $this->parent_id);
 
@@ -211,6 +231,20 @@ final class XMLTracker
         if (count($this->form_elements) > 0) {
             foreach ($this->form_elements as $form_element) {
                 $form_element->export($tracker_xml->formElements);
+            }
+        }
+
+        if (count($this->reports) > 0) {
+            $tracker_xml->addChild('reports');
+            foreach ($this->reports as $report) {
+                $report->export($tracker_xml->reports, $form_elements_flattened_collection);
+            }
+        }
+
+        if (count($form_elements_flattened_collection) > 0) {
+            $tracker_xml->addChild('permissions');
+            foreach ($form_elements_flattened_collection as $form_element) {
+                $form_element->exportPermissions($tracker_xml->permissions);
             }
         }
 

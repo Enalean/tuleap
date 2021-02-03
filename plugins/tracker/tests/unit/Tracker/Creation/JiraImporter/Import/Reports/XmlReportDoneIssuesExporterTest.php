@@ -134,7 +134,7 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
         $this->cdata_factory             = new \XML_SimpleXMLCDATAFactory();
         $this->status_values_collection  = Mockery::mock(StatusValuesCollection::class);
         $this->default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
-        $this->report_table_exporter     = new XmlReportTableExporter($this->cdata_factory);
+        $this->report_table_exporter     = new XmlReportTableExporter();
     }
 
     public function testItDoesNothingWhenNoStatusField(): void
@@ -218,7 +218,7 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
 
         $report_node = $reports_node->report;
         $this->assertNotNull($report_node);
-        $this->assertEquals('0', $report_node['is_default']);
+        $this->assertNull($report_node['is_default']);
 
         $report_node_name = $report_node->name;
         $this->assertEquals("Done issues", $report_node_name);

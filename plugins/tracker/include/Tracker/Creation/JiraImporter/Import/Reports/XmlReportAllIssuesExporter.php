@@ -25,7 +25,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
-use XML_SimpleXMLCDATAFactory;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\Report\XML\XMLReport;
 
 class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
 {
@@ -33,12 +34,6 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
      * @var XmlReportDefaultCriteriaExporter
      */
     private $default_criteria_exporter;
-
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_factory;
-
     /**
      * @var XmlReportTableExporter
      */
@@ -46,11 +41,9 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
 
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
-        XML_SimpleXMLCDATAFactory $cdata_factory,
         XmlReportTableExporter $report_table_exporter
     ) {
         $this->default_criteria_exporter = $default_criteria_exporter;
-        $this->cdata_factory             = $cdata_factory;
         $this->report_table_exporter     = $report_table_exporter;
     }
 
@@ -65,11 +58,10 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $created_field,
         ?FieldMapping $updated_field
     ): void {
-        $report_node = $reports_node->addChild('report');
-        $report_node->addAttribute("is_default", "1");
-
-        $this->cdata_factory->insert($report_node, 'name', 'All issues');
-        $this->cdata_factory->insert($report_node, 'description', 'All the issues in this tracker');
+        $report_node = (new XMLReport('All issues'))
+            ->withDescription('All the issues in this tracker')
+            ->withIsDefault(true)
+            ->export($reports_node, new XMLFormElementFlattenedCollection([]));
 
         $criteria_fields = array_filter(
             [
@@ -89,9 +81,9 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
 
         $this->default_criteria_exporter->exportDefaultCriteria(
             $criteria_fields,
-            $report_node->addChild('criterias')
+            $report_node->criterias
         );
 
-        $this->report_table_exporter->exportResultsTable($report_node, $column_fields);
+        $this->report_table_exporter->exportResultsTable($report_node->renderers, $column_fields);
     }
 }

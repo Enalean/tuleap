@@ -21,31 +21,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\JiraImport\JiraAgile;
+namespace Tuleap\Tracker\FormElement\Field\XML;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
-final class JiraAgileImporter
+abstract class XMLField extends XMLFormElement
 {
     /**
-     * @var JiraBoardsRetriever
+     * @var XMLFieldPermission[]
+     * @readonly
      */
-    private $boards_retriever;
+    private $permissions = [];
 
-    public function __construct(JiraBoardsRetriever $boards_retriever)
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
+    public function withPermissions(GroupPermission ...$group_permissions): self
     {
-        $this->boards_retriever = $boards_retriever;
+        $new = clone $this;
+        foreach ($group_permissions as $permission) {
+            $new->permissions[] = new XMLFieldPermission($this->id, $permission);
+        }
+        return $new;
     }
 
-    public function exportScrum(LoggerInterface $logger, \SimpleXMLElement $project, string $jira_project, IDGenerator $id_generator): void
+    public function exportPermissions(\SimpleXMLElement $form_elements): void
     {
-        $board = $this->boards_retriever->getFirstScrumBoardForProject($jira_project);
-        if ($board) {
-            $logger->info('Project has Agile configuration to import');
-
-            $scrum_tracker_builder = new ScrumTrackerBuilder();
-            $scrum_tracker_builder->export($project, $id_generator);
+        foreach ($this->permissions as $permission) {
+            $permission->export($form_elements);
         }
     }
 }

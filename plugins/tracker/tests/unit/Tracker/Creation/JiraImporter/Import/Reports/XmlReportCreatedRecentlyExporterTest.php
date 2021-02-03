@@ -132,7 +132,7 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
             new XmlTQLReportExporter(
                 new XmlReportDefaultCriteriaExporter(),
                 $cdata_factory,
-                new XmlReportTableExporter($cdata_factory)
+                new XmlReportTableExporter()
             )
         );
     }

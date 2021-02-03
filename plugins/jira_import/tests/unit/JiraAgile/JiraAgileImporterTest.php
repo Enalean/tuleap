@@ -28,6 +28,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertSame;
 
 class JiraAgileImporterTest extends TestCase
@@ -52,15 +53,7 @@ class JiraAgileImporterTest extends TestCase
 
     public function testItHasASprintTracker(): void
     {
-        $board_retriever = new class implements JiraBoardsRetriever
-        {
-            public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
-            {
-                return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
-            }
-        };
-
-        $project_board_retriever = new JiraAgileImporter($board_retriever);
+        $project_board_retriever = $this->getJiraAgileImport();
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
@@ -75,15 +68,7 @@ class JiraAgileImporterTest extends TestCase
 
     public function testSprintTrackerHasDetailsFieldset(): void
     {
-        $board_retriever = new class implements JiraBoardsRetriever
-        {
-            public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
-            {
-                return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
-            }
-        };
-
-        $project_board_retriever = new JiraAgileImporter($board_retriever);
+        $project_board_retriever = $this->getJiraAgileImport();
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
@@ -93,5 +78,43 @@ class JiraAgileImporterTest extends TestCase
         assertEquals(1, (int) $xml->trackers->tracker->formElements->formElement[0]['rank']);
         assertEquals('details', (string) $xml->trackers->tracker->formElements->formElement[0]->name);
         assertEquals('Details', (string) $xml->trackers->tracker->formElements->formElement[0]->label);
+    }
+
+    public function testSprintTrackerHasNameStringFieldReferencedInColumnsAndCriteria(): void
+    {
+        $project_board_retriever = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $project_board_retriever->exportScrum(new NullLogger(), $xml, 'FOO', new FieldAndValueIDGenerator());
+
+        assertEquals(\Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, (string) $xml->trackers->tracker->formElements->formElement[0]['type']);
+
+        assertNotNull($xml->trackers->tracker->formElements->formElement[0]->formElements->formElement[0]);
+        $string_field = $xml->trackers->tracker->formElements->formElement[0]->formElements->formElement[0];
+        assertEquals('Name', (string) $string_field->label);
+        assertEquals($string_field['ID'], (string) $xml->trackers->tracker->reports->report[0]->renderers->renderer[0]->columns->field[0]['REF']);
+        assertEquals($string_field['ID'], (string) $xml->trackers->tracker->reports->report[0]->criterias->criteria[0]->field['REF']);
+
+        assertCount(3, $xml->trackers->tracker->permissions->permission);
+        assertEquals($string_field['ID'], $xml->trackers->tracker->permissions->permission[0]['REF']);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $xml->trackers->tracker->permissions->permission[0]['type']);
+        assertEquals($string_field['ID'], $xml->trackers->tracker->permissions->permission[1]['REF']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $xml->trackers->tracker->permissions->permission[1]['type']);
+        assertEquals($string_field['ID'], $xml->trackers->tracker->permissions->permission[2]['REF']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $xml->trackers->tracker->permissions->permission[2]['type']);
+    }
+
+    private function getJiraAgileImport()
+    {
+        return new JiraAgileImporter(
+            new class implements JiraBoardsRetriever
+            {
+                public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
+                {
+                    return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
+                }
+            }
+        );
     }
 }

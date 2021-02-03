@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Step\Definition\Field\XML;
 
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\Tracker\FormElement\XML\XMLFormElement;
+use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 use Tuleap\Tracker\XML\IDGenerator;
 
-final class XMLStepDefinition extends XMLFormElement
+final class XMLStepDefinition extends XMLField
 {
     /**
      * @param string|IDGenerator $id

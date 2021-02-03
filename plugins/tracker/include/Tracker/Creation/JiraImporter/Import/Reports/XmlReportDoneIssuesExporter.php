@@ -26,6 +26,8 @@ use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\Report\XML\XMLReport;
 use XML_SimpleXMLCDATAFactory;
 
 class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
@@ -79,11 +81,9 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
             return;
         }
 
-        $report_node = $reports_node->addChild('report');
-        $report_node->addAttribute("is_default", "0");
-
-        $this->cdata_factory->insert($report_node, 'name', 'Done issues');
-        $this->cdata_factory->insert($report_node, 'description', 'All done issues in this tracker');
+        $report_node = (new XMLReport('Done issues'))
+            ->withDescription('All done issues in this tracker')
+            ->export($reports_node, new XMLFormElementFlattenedCollection([]));
 
         $criteria_fields = array_filter(
             [
@@ -94,7 +94,7 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
         );
 
         $this->exportDoneIssuesCriteria(
-            $report_node,
+            $report_node->criterias,
             $criteria_fields,
             $status_field,
             $done_values
@@ -110,7 +110,7 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
         );
 
         $this->report_table_exporter->exportResultsTable(
-            $report_node,
+            $report_node->renderers,
             $column_fields
         );
     }
@@ -120,13 +120,12 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
      * @param JiraFieldAPIAllowedValueRepresentation[] $done_values
      */
     private function exportDoneIssuesCriteria(
-        SimpleXMLElement $report_node,
+        SimpleXMLElement $criterias_node,
         array $field_mappings,
         FieldMapping $status_field,
         array $done_values
     ): void {
-        $criterias_node = $report_node->addChild('criterias');
-        $criteria_node  = $criterias_node->addChild('criteria');
+        $criteria_node = $criterias_node->addChild('criteria');
 
         $criteria_node->addAttribute('rank', '0');
         $criteria_node->addAttribute('is_advanced', '1');

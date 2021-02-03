@@ -24,6 +24,9 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
+use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 
 class XmlReportDefaultCriteriaExporter
 {
@@ -37,10 +40,9 @@ class XmlReportDefaultCriteriaExporter
         $next_rank_in_node = $criterias_node->count();
 
         foreach ($field_mappings as $field_mapping) {
-            $criteria_node = $criterias_node->addChild('criteria');
-            $criteria_node->addAttribute("rank", (string) $next_rank_in_node);
-            $criteria_field_node = $criteria_node->addChild("field");
-            $criteria_field_node->addAttribute("REF", $field_mapping->getXMLId());
+            (new XMLReportCriterion(new XMLReferenceByID($field_mapping->getXMLId())))
+                ->withRank($next_rank_in_node)
+                ->export($criterias_node, new XMLFormElementFlattenedCollection([]));
             $next_rank_in_node++;
         }
     }

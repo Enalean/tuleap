@@ -27,6 +27,10 @@ use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
+use Tuleap\Tracker\FormElement\Field\XML\SubmitPermission;
+use Tuleap\Tracker\FormElement\Field\XML\UpdatePermission;
+use Tuleap\Tracker\FormElement\Field\XML\XMLFieldPermission;
 
 class PermissionsXMLExporter
 {
@@ -56,28 +60,16 @@ class PermissionsXMLExporter
 
     private function exportReadPermission(SimpleXMLElement $permissions_node, FieldMapping $mapping): void
     {
-        $read_permission_node = $permissions_node->addChild('permission');
-        $read_permission_node->addAttribute("scope", "field");
-        $read_permission_node->addAttribute("REF", $mapping->getXMLId());
-        $read_permission_node->addAttribute("ugroup", "UGROUP_ANONYMOUS");
-        $read_permission_node->addAttribute("type", "PLUGIN_TRACKER_FIELD_READ");
+        (new XMLFieldPermission($mapping->getXMLId(), new ReadPermission('UGROUP_ANONYMOUS')))->export($permissions_node);
     }
 
     private function exportSubmitPermission(SimpleXMLElement $permissions_node, FieldMapping $mapping): void
     {
-        $submit_permission_node = $permissions_node->addChild('permission');
-        $submit_permission_node->addAttribute("scope", "field");
-        $submit_permission_node->addAttribute("REF", $mapping->getXMLId());
-        $submit_permission_node->addAttribute("ugroup", "UGROUP_REGISTERED");
-        $submit_permission_node->addAttribute("type", "PLUGIN_TRACKER_FIELD_SUBMIT");
+        (new XMLFieldPermission($mapping->getXMLId(), new SubmitPermission('UGROUP_REGISTERED')))->export($permissions_node);
     }
 
     private function exportUpdatePermission(SimpleXMLElement $permissions_node, FieldMapping $mapping): void
     {
-        $update_permission_node = $permissions_node->addChild('permission');
-        $update_permission_node->addAttribute("scope", "field");
-        $update_permission_node->addAttribute("REF", $mapping->getXMLId());
-        $update_permission_node->addAttribute("ugroup", "UGROUP_PROJECT_MEMBERS");
-        $update_permission_node->addAttribute("type", "PLUGIN_TRACKER_FIELD_UPDATE");
+        (new XMLFieldPermission($mapping->getXMLId(), new UpdatePermission('UGROUP_PROJECT_MEMBERS')))->export($permissions_node);
     }
 }
