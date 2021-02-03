@@ -170,22 +170,23 @@
 .current-test-header-actions {
     display: flex;
     flex: 0 0 auto;
-}
 
-.current-test-header-action {
-    width: 40px;
-    margin: 0 0 0 $tlp-small-spacing;
-    border: 0;
-    border-radius: 50%;
-    background-color: transparent;
-    box-shadow: none;
-    color: $tlp-ui-white;
-    font-size: 20px;
+    .current-test-header-action {
+        width: 40px;
+        height: 40px;
+        margin: 0 0 0 $tlp-small-spacing;
+        border: 0;
+        border-radius: 50%;
+        background-color: transparent;
+        box-shadow: none;
+        color: $tlp-ui-white;
+        font-size: 20px;
 
-    &:hover,
-    &:focus {
-        background: transparentize($tlp-ui-white, .9);
-        box-shadow: $tlp-button-shadow-hover;
+        &:hover,
+        &:focus {
+            background: transparentize($tlp-ui-white, .9);
+            box-shadow: $tlp-button-shadow-hover;
+        }
     }
 }
 
