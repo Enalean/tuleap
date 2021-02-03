@@ -48,7 +48,7 @@
                 v-bind:class="{ 'tlp-form-element-error': error_message.length > 0 }"
             >
                 <label class="tlp-label" for="gitlab_new_token">
-                    <translate>GitLab token (personal or project)</translate>
+                    <translate>GitLab access token (personal or project)</translate>
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
@@ -61,7 +61,7 @@
                 />
                 <p class="tlp-text-info">
                     <i class="fas fa-info-circle" aria-hidden="true"></i>
-                    <translate>GitLab token scope must contain at least: api.</translate>
+                    <translate>GitLab access token scope must contain at least: api.</translate>
                 </p>
             </div>
         </div>

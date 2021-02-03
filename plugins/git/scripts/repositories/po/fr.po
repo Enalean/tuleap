@@ -90,29 +90,26 @@ msgstr "Le plugin Git est désactivé"
 msgid "Git repositories"
 msgstr "Dépôts Git"
 
-msgid "GitLab project token scope must contain at least: api."
-msgstr "La portée du jeton du projet GitLab doit contenir au moins : api."
+msgid "GitLab access token (personal or project)"
+msgstr "Jeton d'accès de GitLab (personnel ou projet)"
+
+msgid "GitLab access token scope must contain at least: api."
+msgstr "La portée du jeton d'accès de GitLab doit contenir au moins : api."
 
 msgid "GitLab repository"
 msgstr "Dépôt GitLab"
 
 msgid "GitLab repository %{ label } has been successfully integrated!"
-msgstr "Le dépot GitLab %{ label } a été intégré avec succés !"
+msgstr "Le dépot GitLab %{ label } a été intégré avec succès !"
 
 msgid ""
 "GitLab repository <strong>%{ label }</strong> has been successfully unlinked!"
 msgstr ""
 "L'intégration du dépot GitLab <strong>%{ label }</strong> a été supprimée "
-"avec succés !"
+"avec succès !"
 
 msgid "GitLab server URL"
 msgstr "URL du serveur GitLab"
-
-msgid "GitLab token (personal or project)"
-msgstr "Jeton GitLab (personnel ou projet)"
-
-msgid "GitLab token scope must contain at least: api."
-msgstr "La portée du jeton GitLab doit contenir au moins : api."
 
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
@@ -134,7 +131,7 @@ msgid ""
 "regenerated."
 msgstr ""
 "Un nouveau webhook pour le dépot GitLab %{ label } a été regénéré avec "
-"succés."
+"succès."
 
 msgid "No repository is available with your GitLab account"
 msgstr "Aucun dépôt n'est disponible avec votre compte GitLab"
@@ -195,7 +192,7 @@ msgstr ""
 "finir par \".git\"."
 
 msgid "Save new token"
-msgstr "Sauvegarder le nouveau jeton d'accés"
+msgstr "Sauvegarder le nouveau jeton d'accès"
 
 msgid "Server url is invalid"
 msgstr "L'url du serveur est invalide"
@@ -242,7 +239,7 @@ msgstr "Ce dépôt est déjà intégré."
 
 msgid "Token of GitLab repository %{ label } has been successfully updated."
 msgstr ""
-"Le jeton d'accés du dépot GitLab %{ label } a été mis à jour avec succés."
+"Le jeton d'accès du dépot GitLab %{ label } a été mis à jour avec succès."
 
 msgid "Unlink GitLab repository?"
 msgstr "Voulez-vous supprimer l'intégration du dépôt GitLab ?"

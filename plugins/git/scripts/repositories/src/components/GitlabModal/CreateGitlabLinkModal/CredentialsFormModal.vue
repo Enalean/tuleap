@@ -54,7 +54,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_project_token">
-                    <translate>GitLab token (personal or project)</translate>
+                    <translate>GitLab access token (personal or project)</translate>
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
@@ -73,7 +73,7 @@
                     </translate>
                 </p>
                 <p class="tlp-text-info">
-                    <translate>GitLab project token scope must contain at least: api.</translate>
+                    <translate>GitLab access token scope must contain at least: api.</translate>
                 </p>
             </div>
         </div>
