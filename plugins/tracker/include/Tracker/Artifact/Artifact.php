@@ -1423,10 +1423,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->last_changeset;
     }
 
-    /**
-     * @return Tracker_Artifact_Changeset|null
-     */
-    public function getLastChangesetWithFieldValue(Tracker_FormElement_Field $field)
+    public function getLastChangesetWithFieldValue(Tracker_FormElement_Field $field): ?Tracker_Artifact_Changeset
     {
         return $this->getChangesetFactory()->getLastChangesetWithFieldValue($this, $field);
     }

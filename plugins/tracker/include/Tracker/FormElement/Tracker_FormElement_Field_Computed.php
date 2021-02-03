@@ -804,8 +804,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $autocomputed_label = ' (' . dgettext('tuleap-tracker', 'autocomputed') . ')';
         $class              = 'auto-computed';
 
-        $changeset = $artifact->getLastChangesetWithFieldValue($this)->getValue($this);
-        $required  = $this->required ? ' <span class="highlight">*</span>' : '';
+        $last_changset = $artifact->getLastChangesetWithFieldValue($this);
+        $changeset     = null;
+        if ($last_changset) {
+            $changeset = $last_changset->getValue($this);
+        }
+        $required = $this->required ? ' <span class="highlight">*</span>' : '';
 
         $html = "";
         if (! $this->userCanRead()) {
