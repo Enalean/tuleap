@@ -41,6 +41,8 @@ class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit
     /** @see Tracker_Artifact_View_Edit::fetch() */
     public function fetch()
     {
+        self::fetchEditViewJSCode();
+
         $html  = '';
         $html .= '<div class="tracker_artifact">';
         $html .= $this->renderer->fetchFieldsForCopy($this->artifact, $this->request->get('artifact'));

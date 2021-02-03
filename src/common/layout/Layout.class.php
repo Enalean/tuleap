@@ -704,12 +704,14 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     public function pv_header($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->generic_header($params);
+        $current_user = UserManager::instance()->getCurrentUser();
+        $user_locale  = $current_user->getLocale();
+        $hp           = Codendi_HTMLPurifier::instance();
         echo '
-<body class="bg_help">
+<body class="bg_help" data-user-locale="' . $hp->purify($user_locale) . '">
 ';
         if (isset($params['pv']) && $params['pv'] < 2) {
             if (isset($params['title']) && $params['title']) {
-                $hp    = Codendi_HTMLPurifier::instance();
                 $title = $params['title'] . ' - ' . format_date(
                     $GLOBALS['Language']->getText('system', 'datefmt'),
                     time()

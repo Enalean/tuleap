@@ -78,11 +78,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     public function fetch()
     {
         if ($this->artifact->userCanUpdate($this->user)) {
-            $include_assets = new \Tuleap\Layout\IncludeAssets(
-                __DIR__ . '/../../../../../../src/www/assets/trackers',
-                '/assets/trackers'
-            );
-            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
+            self::fetchEditViewJSCode();
         }
 
         $html  = '';
@@ -99,6 +95,15 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         $html .= '</div>';
 
         return $html;
+    }
+
+    final protected static function fetchEditViewJSCode(): void
+    {
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../../../../src/www/assets/trackers',
+            '/assets/trackers'
+        );
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('edit-view.js'));
     }
 
     /**
