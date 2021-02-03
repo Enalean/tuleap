@@ -132,8 +132,8 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     {
         $ugroup = $ugroup_member_update->getGroup();
         if (
-            (int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN &&
-            (int) $ugroup->getId() !== ProjectUGroup::PROJECT_MEMBERS
+            $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN &&
+            $ugroup->getId() !== ProjectUGroup::PROJECT_MEMBERS
         ) {
             return;
         }

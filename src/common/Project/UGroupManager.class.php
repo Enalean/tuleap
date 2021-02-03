@@ -583,7 +583,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user)
     {
-        switch ((int) $user_group->getId()) {
+        switch ($user_group->getId()) {
             case ProjectUGroup::PROJECT_MEMBERS:
                 $this->getProjectMemberAdder()->addProjectMember($user, $user_group->getProject());
                 break;
@@ -600,7 +600,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user)
     {
-        switch ((int) $user_group->getId()) {
+        switch ($user_group->getId()) {
             case ProjectUGroup::PROJECT_MEMBERS:
                 $this->getUserRemover()->removeUserFromProject($user_group->getProjectId(), $user->getId());
                 break;

@@ -127,7 +127,7 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
             }
 
             $options[] = [
-                'id'       => (int) $project_ugroup->getId(),
+                'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
                 'selected' => in_array($project_ugroup->getId(), $svn_ugroups),
             ];

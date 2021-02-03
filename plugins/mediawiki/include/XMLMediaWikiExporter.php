@@ -182,11 +182,11 @@ class XMLMediaWikiExporter
 
     private function getLabelForUgroup(ProjectUGroup $ugroup)
     {
-        if ((int) $ugroup->getId() === ProjectUGroup::PROJECT_MEMBERS) {
+        if ($ugroup->getId() === ProjectUGroup::PROJECT_MEMBERS) {
             return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_members_name_key');
         }
 
-        if ((int) $ugroup->getId() === ProjectUGroup::PROJECT_ADMIN) {
+        if ($ugroup->getId() === ProjectUGroup::PROJECT_ADMIN) {
             return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_admins_name_key');
         }
 

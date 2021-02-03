@@ -65,6 +65,6 @@ class PermissionPerGroupUGroupFormatter
      */
     private function isProjectAdmin(ProjectUGroup $user_group)
     {
-        return (int) $user_group->getId() === ProjectUGroup::PROJECT_ADMIN;
+        return $user_group->getId() === ProjectUGroup::PROJECT_ADMIN;
     }
 }
