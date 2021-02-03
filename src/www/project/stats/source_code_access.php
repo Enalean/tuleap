@@ -129,12 +129,13 @@ print '
 switch ($view) {
     case "monthly":
         print '<P>';
-        filedownload_logs_daily($project, $span * 30.5, $who);
-        cvsaccess_logs_daily($project, $span * 30.5, $who);
-        svnaccess_logs_daily($project, $span * 30.5, $who);
-        wiki_logs_daily($project, $span * 30.5, $who);
-        wiki_attachments_logs_daily($project, $span * 30.5, $who);
-        plugins_logs_daily($project, $span * 30.5, $who);
+        $span_days = (int) ($span * 30.5);
+        filedownload_logs_daily($project, $span_days, $who);
+        cvsaccess_logs_daily($project, $span_days, $who);
+        svnaccess_logs_daily($project, $span_days, $who);
+        wiki_logs_daily($project, $span_days, $who);
+        wiki_attachments_logs_daily($project, $span_days, $who);
+        plugins_logs_daily($project, $span_days, $who);
         break;
 
     case "weekly":

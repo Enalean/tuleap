@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -98,7 +98,7 @@ class GitLog
      * @param $group_id
      * @return string
      */
-    private function getGitReadLogFilter($group_id, $who, $span)
+    private function getGitReadLogFilter($group_id, $who, int $span)
     {
         $filters = [$this->getWhoFilter($group_id, $who), $this->getDateFilter($span)];
         return implode(' AND ', array_filter($filters));
@@ -121,10 +121,7 @@ class GitLog
         return "user.user_id NOT IN ($users)";
     }
 
-    /**
-     * @return string
-     */
-    private function getDateFilter($span)
+    private function getDateFilter(int $span): string
     {
         $start_date = new DateTime();
         $start_date->sub(new DateInterval('P' . $span . 'D'));

@@ -1,11 +1,28 @@
 <?php
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
+/**
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Prepare SQL query for given date and given person
  */
-function logs_cond($project, $span, $who)
+function logs_cond($project, int $span, $who)
 {
     // Get information about the date $span days ago
     // Start at midnight $span days ago
@@ -42,7 +59,7 @@ function logs_cond($project, $span, $who)
 /**
  * Process SQL query and display corresponding result
  */
-function logs_display($sql, $span, $field, $title = '')
+function logs_display($sql, int $span, $field, $title = '')
 {
     $hp = Codendi_HTMLPurifier::instance();
     // Executions will continue until morale improves.
@@ -94,7 +111,7 @@ function logs_display($sql, $span, $field, $title = '')
     }
 }
 
-function frs_logs_extract($project, $span, $who)
+function frs_logs_extract($project, int $span, $who)
 {
     /*
      * This request is used to obtain FRS actions log such as package, release or file : creation, update or deletion.
@@ -173,7 +190,7 @@ function frs_logs_extract($project, $span, $who)
     return $sql;
 }
 
-function filedownload_logs_extract($project, $span, $who)
+function filedownload_logs_extract($project, int $span, $who)
 {
     $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title "
     . "FROM filedownload_log AS log, user, frs_file, frs_release, frs_package "
@@ -188,7 +205,7 @@ function filedownload_logs_extract($project, $span, $who)
 }
 
 // filedownload_logs_daily
-function filedownload_logs_daily($project, $span = 7, $who = "allusers")
+function filedownload_logs_daily($project, int $span = 7, $who = "allusers")
 {
     // check first if service is used by this project
     // if service not used return immediately
@@ -214,7 +231,7 @@ function filedownload_logs_daily($project, $span = 7, $who = "allusers")
     );
 }
 
-function cvsaccess_logs_extract($project, $span, $who)
+function cvsaccess_logs_extract($project, int $span, $who)
 {
     // Get information about the date $span days ago
     // Start at midnight $span days ago
@@ -255,7 +272,7 @@ function cvsaccess_logs_extract($project, $span, $who)
     return $sql;
 }
 
-function cvsaccess_logs_daily($project, $span = 7, $who = "allusers")
+function cvsaccess_logs_daily($project, int $span = 7, $who = "allusers")
 {
     $hp = Codendi_HTMLPurifier::instance();
     // check first if service is used by this project
@@ -302,7 +319,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who = "allusers")
     }
 }
 
-function svnaccess_logs_extract($project, $span, $who)
+function svnaccess_logs_extract($project, int $span, $who)
 {
     // Get information about the date $span days ago
     // Start at midnight $span days ago
@@ -344,7 +361,7 @@ function svnaccess_logs_extract($project, $span, $who)
     return $sql;
 }
 
-function svnaccess_logs_daily($project, $span = 7, $who = "allusers")
+function svnaccess_logs_daily($project, int $span = 7, $who = "allusers")
 {
     $hp = Codendi_HTMLPurifier::instance();
     // check first if service is used by this project
@@ -390,7 +407,7 @@ function svnaccess_logs_daily($project, $span = 7, $who = "allusers")
     }
 }
 
-function wiki_logs_extract($project, $span, $who)
+function wiki_logs_extract($project, int $span, $who)
 {
     $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, log.pagename AS title"
     . " FROM wiki_log AS log, user"
@@ -404,7 +421,7 @@ function wiki_logs_extract($project, $span, $who)
 /**
  * Display Wiki pages access log
  */
-function wiki_logs_daily($project, $span = 7, $who = "allusers")
+function wiki_logs_daily($project, int $span = 7, $who = "allusers")
 {
   // check first if service is used by this project
   // if service not used return immediately
@@ -422,7 +439,7 @@ function wiki_logs_daily($project, $span = 7, $who = "allusers")
     );
 }
 
-function wiki_attachments_logs_extract($project, $span, $who)
+function wiki_attachments_logs_extract($project, int $span, $who)
 {
     $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, wa.name AS title"
         . " FROM wiki_attachment_log AS log, user, wiki_attachment AS wa"
@@ -437,7 +454,7 @@ function wiki_attachments_logs_extract($project, $span, $who)
 /**
  * Display Wiki Attachments access log
  */
-function wiki_attachments_logs_daily($project, $span = 7, $who = "allusers")
+function wiki_attachments_logs_daily($project, int $span = 7, $who = "allusers")
 {
     // check first if service is used by this project
     // if service not used return immediately
@@ -455,7 +472,7 @@ function wiki_attachments_logs_daily($project, $span = 7, $who = "allusers")
     );
 }
 
-function plugins_log_extract($project, $span, $who)
+function plugins_log_extract($project, int $span, $who)
 {
     $event_manager = EventManager::instance();
     $logs          = [];
@@ -469,7 +486,7 @@ function plugins_log_extract($project, $span, $who)
     return $logs;
 }
 
-function plugins_logs_daily($project, $span = 7, $who = 'allusers')
+function plugins_logs_daily($project, int $span = 7, $who = 'allusers')
 {
     $logs = plugins_log_extract($project, $span, $who);
     foreach ($logs as $log) {
