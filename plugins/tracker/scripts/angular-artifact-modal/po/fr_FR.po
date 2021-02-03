@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-06-20 15:09+0200\n"
+"PO-Revision-Date: 2021-02-03 15:58+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,92 +14,85 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.4.2\n"
 
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "(auto-computed)"
 msgstr "(calculé automatiquement)"
 
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
+msgid "...to Get"
+msgstr "...pour voir"
+
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
 
-#: src/tuleap-artifact-modal-controller.js
-msgid ""
-"An error occurred while saving the artifact."
-msgstr ""
-"Une erreur s'est produite pendant la sauvegarde de cet artéfact."
+msgid "An error occurred while saving the artifact."
+msgstr "Une erreur s'est produite pendant la sauvegarde de cet artéfact."
 
-#: src/tuleap-artifact-modal-controller.js
-msgid ""
-"An error occured while uploading this file: {{ file_name }}."
+msgid "An error occurred while uploading this file: {{ file_name }}."
 msgstr ""
 "Une erreur s'est produite pendant le téléversement de ce fichier : "
 "{{ file_name }}."
 
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Auto-compute"
 msgstr "Calcul automatique"
 
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "By: {{ file.submitted_by }}"
 msgstr "Par: {{ file.submitted_by }}"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/tuleap-artifact-modal.tpl.html
+msgid "Comment"
+msgstr "Commenter"
+
 msgid "Create a new {{ modal.title }}"
 msgstr "Créer un nouveau {{ modal.title }}"
 
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Edit"
 msgstr "Editer"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Edited by"
 msgstr "Modifié par"
 
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Empty"
 msgstr "Aucun(e)"
 
-#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Enter artifact ids separated by a comma"
 msgstr "Entrer des ids d'artefacts séparés par une virgule"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Error:"
 msgstr "Erreur :"
 
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "File description"
 msgstr "Description du fichier"
 
-#: src/quota-display/quota-display.tpl.html
 msgid "File upload quota allowed"
 msgstr "Quota d'envoi de fichiers autorisé"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Follow-ups"
 msgstr "Commentaires"
 
-#: src/tuleap-artifact-modal.tpl.html
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Help"
+msgstr "Aide"
+
 msgid "Hidden fieldsets:"
 msgstr "Groupes de champs cachés :"
 
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Keep the file"
 msgstr "Garder le fichier"
 
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Mark for removal"
 msgstr "Marquer pour suppression"
 
-#: src/quota-display/quota-display.tpl.html
+msgid "Markdown"
+msgstr "Markdown"
+
+msgid "Markdown mostly used formatting"
+msgstr "Formattage markdown le plus souvent utilisé"
+
 msgid ""
 "Max allowed upload size: {{ quota_display.file_upload_rules.disk_quota | "
 "byteFmt: 2 }}"
@@ -107,84 +100,54 @@ msgstr ""
 "Taille max d'envoi de fichiers : {{ quota_display.file_upload_rules."
 "disk_quota | byteFmt: 2 }}"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "No follow-ups"
 msgstr "Aucun commentaire"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "None"
 msgstr "Aucun"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Only comments are displayed"
 msgstr "Seuls les commentaires sont affichés"
 
-#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Parent artifact"
 msgstr "Artéfact parent"
 
-#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Please choose a parent…"
 msgstr "Veuillez choisir un parent…"
 
-#: src/tuleap-artifact-modal-fields/date-field/date-field.tpl.html
 msgid "Please select a date"
 msgstr "Veuillez choisir une date"
 
-#: src/tuleap-artifact-modal-fields/open-list-field/static-open-list-field.tpl.html
-#: src/tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field.tpl.html
-#: src/tuleap-artifact-modal-fields/open-list-field/users-open-list-field.tpl.html
 msgid "Please select an item in the list"
 msgstr "Veuillez choisir un élément dans la liste"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "References list is empty."
 msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
 
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Reset"
 msgstr "Annuler"
 
-#: src/tuleap-artifact-modal-fields/permission-field/permission-field.tpl.html
 msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
 "Restreindre l'accès à cet artefact pour les groupes d'utilisateurs suivants :"
 
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 
-#: src/tuleap-artifact-modal-fields/link-field/link-field.tpl.html
 msgid "Select parent"
 msgstr "Sélectionner un parent"
 
-#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Size: {{ file.size | byteFmt: 2 }}"
 msgstr "Taille : {{ file.size | byteFmt: 2 }}"
 
-#: src/tuleap-artifact-modal.tpl.html
+msgid "Text"
+msgstr "Texte"
+
 msgid "The artifact will be linked to {{ modal.parent.title }}."
 msgstr "L'artefact sera lié à  {{ modal.parent.title }}."
 
-#: src/tuleap-artifact-modal-controller.js
-msgid ""
-"You exceeded your current file upload quota. Please remove existing "
-"temporary files or wait until they are cleaned up."
-msgstr ""
-"Vous avez dépassé votre quota actuel de téléversement de fichiers. Veuillez "
-"supprimer des fichiers temporaires existants ou attendre jusqu'à ce qu'ils "
-"soient nettoyés."
-
-#: src/quota-display/quota-display.tpl.html
-msgid ""
-"{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} of "
-"{{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
-msgstr ""
-"{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} sur "
-"{{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
-
-msgid "Comment"
-msgstr "Commenter"
+msgid "Type..."
+msgstr "Ecrivez..."
 
 msgid "Unable to upload the file"
 msgstr "Impossible de téléverser le fichier"
@@ -192,7 +155,6 @@ msgstr "Impossible de téléverser le fichier"
 msgid "You are not allowed to paste images here"
 msgstr "Vous n'êtes pas autorisé à coller des images ici"
 
-#, javascript-format
 msgid "You are not allowed to upload files bigger than %s."
 msgstr ""
 "Vous n'êtes pas autorisé à téléverser des fichiers avec une taille excédant "
@@ -201,3 +163,18 @@ msgstr ""
 msgid "You can drag 'n drop or paste image directly in the editor."
 msgstr ""
 "Vous pouvez glisser-déposer ou coller une image directement dans l'éditeur."
+
+msgid ""
+"You exceeded your current file upload quota. Please remove existing "
+"temporary files or wait until they are cleaned up."
+msgstr ""
+"Vous avez dépassé votre quota actuel de téléversement de fichiers. Veuillez "
+"supprimer des fichiers temporaires existants ou attendre jusqu'à ce qu'ils "
+"soient nettoyés."
+
+msgid ""
+"{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} of "
+"{{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
+msgstr ""
+"{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} sur "
+"{{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"

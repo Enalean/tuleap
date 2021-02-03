@@ -40,6 +40,7 @@
 <script>
 import FormatSelector from "../common/FormatSelector.vue";
 import RichTextEditor from "../common/RichTextEditor.vue";
+import { getCommentLabel } from "../gettext-catalog";
 export default {
     name: "FollowupEditor",
     components: { RichTextEditor, FormatSelector },
@@ -48,7 +49,7 @@ export default {
     },
     computed: {
         label() {
-            return this.$gettext("Comment");
+            return getCommentLabel();
         },
         content: {
             get() {

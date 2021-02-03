@@ -36,9 +36,6 @@
     "@types/mustache": "^4.1.0",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.1.2",
-    "concurrently": "^5.3.0",
-    "gulp": "^4.0.2",
-    "gulp-angular-gettext": "^2.3.0",
     "jquery": "^3.5.1",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
@@ -49,7 +46,7 @@
   },
   "scripts": {
     "build": "rm -rf ../../src/www/assets/trackers && $npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --config webpack.dev.js --watch'",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "BABEL_ENV=test $npm_package_config_bin/jest --config=../../tests/jest/jest.projects.config.js \"$(pwd)\"",
     "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }

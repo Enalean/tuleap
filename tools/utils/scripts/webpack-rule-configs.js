@@ -200,14 +200,6 @@ const rule_angular_gettext_loader = {
     ],
 };
 
-// This rule is only intended for the progressive migration of an AngularJS App to Vue
-const rule_angular_mixed_vue_gettext = {
-    test: /\.po$/,
-    exclude: [/node_modules/],
-    issuer: artifact_modal_vue_initializer_path,
-    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
-};
-
 const rule_easygettext_loader = {
     test: /\.po$/,
     exclude: /node_modules/,
@@ -273,7 +265,6 @@ module.exports = {
     rule_vue_loader,
     rule_ng_cache_loader,
     rule_angular_gettext_loader,
-    rule_angular_mixed_vue_gettext,
     rule_easygettext_loader,
     rule_scss_loader,
     rule_css_assets,

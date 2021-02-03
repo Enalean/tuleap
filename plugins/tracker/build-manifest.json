@@ -27,5 +27,11 @@
             "src": "scripts/tracker-creation",
             "po": "scripts/tracker-creation/po"
         }
+    },
+    "gettext-angularjs": {
+        "artifact-modal": {
+            "src": "scripts/angular-artifact-modal/src",
+            "po": "scripts/angular-artifact-modal/po"
+        }
     }
 }

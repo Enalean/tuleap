@@ -22,12 +22,11 @@ import ngSanitize from "angular-sanitize";
 import angular_moment from "angular-moment";
 import filter from "angular-filter";
 import "angular-gettext";
-import translations from "../po/fr.po";
+import french_translations from "../po/fr_FR.po";
 
 import "ngVue";
 import "ngVue/build/plugins.js";
 import Vue from "vue";
-import "./vue-initializer.js";
 
 import angular_tlp from "@tuleap/angular-tlp";
 
@@ -58,6 +57,7 @@ import QuotaDisplayDirective from "./quota-display/quota-display-directive.js";
 import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
 import ListPickerDirective from "./tuleap-artifact-modal-fields/list-picker-field/list-picker-field-directive.js";
 import ListPickerMultipleDirective from "./tuleap-artifact-modal-fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
+import { setCatalog } from "./gettext-catalog";
 
 export default angular
     .module("tuleap.artifact-modal", [
@@ -72,9 +72,10 @@ export default angular
     .run([
         "gettextCatalog",
         function (gettextCatalog) {
-            for (const [language, strings] of Object.entries(translations)) {
+            for (const [language, strings] of Object.entries(french_translations)) {
                 const short_language = language.split("_")[0];
                 gettextCatalog.setStrings(short_language, strings);
+                setCatalog(gettextCatalog);
             }
         },
     ])

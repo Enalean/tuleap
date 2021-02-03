@@ -18,12 +18,4 @@
  */
 
 import { createLocalVue } from "@vue/test-utils";
-import GettextPlugin from "vue-gettext";
-
-const localVue = createLocalVue();
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true,
-});
-
-export default localVue;
+export default createLocalVue();

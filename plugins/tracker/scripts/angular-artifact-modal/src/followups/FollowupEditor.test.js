@@ -20,6 +20,7 @@
 import localVue from "../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FollowupEditor from "./FollowupEditor.vue";
+import { setCatalog } from "../gettext-catalog";
 
 let value;
 
@@ -34,6 +35,7 @@ function getInstance() {
 
 describe(`FollowupEditor`, () => {
     beforeEach(() => {
+        setCatalog({ getString: () => "" });
         value = {
             format: "text",
             body: "",
