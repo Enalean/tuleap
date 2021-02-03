@@ -7,17 +7,7 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
   <div
     class="empty-page-illustration"
   >
-    <svg
-      fill="none"
-      height="150"
-      width="360"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <use
-        class="tlp-illustration"
-        href="../../images/illustrations.svg#global-error-state"
-      />
-    </svg>
+    <!---->
   </div>
    
   <div

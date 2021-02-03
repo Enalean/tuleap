@@ -17,15 +17,10 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
-<template functional>
+<template>
     <div class="empty-page">
         <div class="empty-page-illustration">
-            <svg xmlns="http://www.w3.org/2000/svg" width="364" height="189" fill="none">
-                <use
-                    href="../../images/illustrations.svg#board-without-any-columns-for-user"
-                    class="tlp-illustration"
-                />
-            </svg>
+            <board-without-any-columns-error-for-users-illustration />
         </div>
         <div class="empty-page-text-with-small-text">
             <translate>This taskboard is not ready to be used</translate>
@@ -40,7 +35,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-
-@Component
+@Component({
+    components: {
+        "board-without-any-columns-error-for-users-illustration": (): Promise<
+            Record<string, unknown>
+        > =>
+            import(
+                /* webpackChunkName: "taskboard-board-without-any-columns-error-for-users-illustration" */ "./BoardWithoutAnyColumnsErrorForUsersIllustration.vue"
+            ),
+    },
+})
 export default class BoardWithoutAnyColumnsErrorForUsers extends Vue {}
 </script>

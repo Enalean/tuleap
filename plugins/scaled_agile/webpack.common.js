@@ -53,7 +53,6 @@ module.exports = [
                 ),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
-                webpack_configurator.rule_file_loader_images,
                 webpack_configurator.rule_scss_loader,
             ],
         },

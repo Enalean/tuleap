@@ -21,12 +21,7 @@
 <template>
     <div class="empty-page taskboard-error">
         <div class="empty-page-illustration">
-            <svg xmlns="http://www.w3.org/2000/svg" width="360" height="150" fill="none">
-                <use
-                    href="../../images/illustrations.svg#global-error-state"
-                    class="tlp-illustration"
-                />
-            </svg>
+            <global-app-error-illustration />
         </div>
 
         <div class="empty-page-text-with-small-text">
@@ -64,8 +59,14 @@ import { Component } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 
 const error = namespace("error");
-
-@Component
+@Component({
+    components: {
+        "global-app-error-illustration": (): Promise<Record<string, unknown>> =>
+            import(
+                /* webpackChunkName: "taskboard-global-app-error-illustration" */ "./GlobalAppErrorIllustration.vue"
+            ),
+    },
+})
 export default class GlobalAppError extends Vue {
     @error.State
     readonly global_error_message!: string;

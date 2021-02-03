@@ -151,12 +151,6 @@ const rule_vue_loader = {
     use: [{ loader: "vue-loader" }],
 };
 
-const rule_file_loader_images = {
-    test: /\.svg$/,
-    exclude: /node_modules/,
-    use: [{ loader: "file-loader" }],
-};
-
 const rule_po_files = {
     test: /\.po$/,
     exclude: /node_modules/,
@@ -277,6 +271,5 @@ module.exports = {
     rule_easygettext_loader,
     rule_scss_loader,
     rule_css_assets,
-    rule_file_loader_images,
     rule_vue_images,
 };
