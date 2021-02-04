@@ -24,7 +24,7 @@ import { createStore } from "../store/index.js";
 import ExportCSVButton from "./ExportCSVButton.vue";
 import * as rest_querier from "../api/rest-querier";
 import * as download_helper from "../helpers/download-helper";
-import * as bom_helper from "../helpers/bom-helper.js";
+import * as bom_helper from "../helpers/bom-helper";
 
 describe("ExportCSVButton", () => {
     let download, getCSVReport, addBOM;

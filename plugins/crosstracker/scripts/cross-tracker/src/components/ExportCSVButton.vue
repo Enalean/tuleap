@@ -34,8 +34,8 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import { download } from "../helpers/download-helper.js";
-import { addBOM } from "../helpers/bom-helper.js";
+import { download } from "../helpers/download-helper";
+import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";
 
 export default {
