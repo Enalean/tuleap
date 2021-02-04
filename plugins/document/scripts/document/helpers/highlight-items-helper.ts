@@ -18,8 +18,9 @@
  */
 
 import { TYPE_FOLDER, TYPE_FILE } from "../constants";
+import { Item } from "../type";
 
-export const highlightItem = (item, closest_row) => {
+export const highlightItem = (item: Item, closest_row: HTMLElement): void => {
     if (item.user_can_write) {
         applyDefaultClass(closest_row);
         applyIconClass(item, closest_row);
@@ -28,7 +29,7 @@ export const highlightItem = (item, closest_row) => {
     }
 };
 
-function applyDefaultClass(closest_row) {
+function applyDefaultClass(closest_row: HTMLElement): void {
     if (closest_row.classList.contains("document-quick-look-pane")) {
         closest_row.classList.add("quick-look-pane-highlighted");
     } else {
@@ -36,7 +37,7 @@ function applyDefaultClass(closest_row) {
     }
 }
 
-function applyIconClass(item, closest_row) {
+function applyIconClass(item: Item, closest_row: HTMLElement): void {
     if (item.type === TYPE_FILE) {
         closest_row.classList.add("document-file-highlighted");
     } else if (item.type === TYPE_FOLDER) {
@@ -44,7 +45,7 @@ function applyIconClass(item, closest_row) {
     }
 }
 
-function applyHighlightForbiddenClass(closest_row) {
+function applyHighlightForbiddenClass(closest_row: HTMLElement): void {
     if (closest_row.classList.contains("document-quick-look-pane")) {
         closest_row.classList.add("quick-look-pane-highlighted-forbidden");
     } else {

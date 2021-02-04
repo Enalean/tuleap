@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function hasNoUploadingContent(item) {
+import { ItemFile } from "../type";
+
+export function hasNoUploadingContent(item: ItemFile): boolean {
     return (
         !item.is_uploading_in_collapsed_folder &&
         !item.is_uploading &&
@@ -25,14 +27,20 @@ export function hasNoUploadingContent(item) {
     );
 }
 
-export function isItemUploadingInQuickLookMode(item, is_quicklook_displayed) {
+export function isItemUploadingInQuickLookMode(
+    item: ItemFile,
+    is_quicklook_displayed: boolean
+): boolean {
     if (!is_quicklook_displayed) {
         return false;
     }
     return item.is_uploading_in_collapsed_folder || item.is_uploading_new_version;
 }
 
-export function isItemUploadingInTreeView(item, is_quicklook_displayed) {
+export function isItemUploadingInTreeView(
+    item: ItemFile,
+    is_quicklook_displayed: boolean
+): boolean {
     if (is_quicklook_displayed) {
         return false;
     }
@@ -40,7 +48,10 @@ export function isItemUploadingInTreeView(item, is_quicklook_displayed) {
     return item.is_uploading_in_collapsed_folder || item.is_uploading_new_version;
 }
 
-export function isItemInTreeViewWithoutUpload(item, is_quicklook_displayed) {
+export function isItemInTreeViewWithoutUpload(
+    item: ItemFile,
+    is_quicklook_displayed: boolean
+): boolean {
     if (is_quicklook_displayed) {
         return false;
     }
