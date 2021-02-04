@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function download(content, file_name, mime_type) {
+export function download(content: string, file_name: string, mime_type: string): void {
     const link = document.createElement("a");
     const blob = new Blob([content], { type: mime_type });
     if (URL && "download" in link) {

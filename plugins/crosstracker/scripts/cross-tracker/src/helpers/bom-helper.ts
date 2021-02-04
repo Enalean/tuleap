@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function addBOM(text) {
+export function addBOM(text: string): string {
     const BOM = "\uFEFF";
 
     return BOM + text;
