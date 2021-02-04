@@ -50,6 +50,7 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
@@ -197,7 +198,7 @@ class KanbanResource extends AuthenticatedResource
             $this->artifact_factory
         );
 
-        $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager);
+        $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());
         $this->resources_patcher = new ResourcesPatcher(
             $artifactlink_updater,
             $this->artifact_factory,

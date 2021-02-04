@@ -71,6 +71,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -206,7 +207,7 @@ class MilestoneResource extends AuthenticatedResource
 
         $this->event_manager = EventManager::instance();
 
-        $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
+        $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());
         $this->milestone_content_updater = new MilestoneContentUpdater($this->artifactlink_updater);
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,

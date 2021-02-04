@@ -314,8 +314,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         if ($this->getCurrentUser()->isAdmin($project->getID())) {
             $service_tracker_breadcrumb['sub_items'] = [
                 [
-                    'title' => $GLOBALS['Language']->getText('global', 'Administration'),
-                    'url'   => Tracker::getTrackerGlobalAdministrationURL($project)
+                    'title'     => $GLOBALS['Language']->getText('global', 'Administration'),
+                    'url'       => Tracker::getTrackerGlobalAdministrationURL($project),
+                    'data-test' => "tracker-administration"
                 ]
             ];
         }

@@ -520,7 +520,7 @@ msgstr ""
 "Un courriel non tronqué sera envoyé à la fin du processus de migration."
 
 #, php-format
-msgid "An error has occured during the deletion of the type: %1$s"
+msgid "An error has occurred during the deletion of the type: %1$s"
 msgstr "Une erreur est survenue pendant la suppression de la nature : %1$s"
 
 msgid "An error has occurred, the workflow couldn't be created."
@@ -2121,8 +2121,8 @@ msgid ""
 "Only children that are part of the defined hierarchy will be taken into "
 "account by triggers."
 msgstr ""
-"Seuls les enfants qui font partis de la hiérarchie seront pris en compte "
-"par les déclencheurs."
+"Seuls les enfants qui font partis de la hiérarchie seront pris en compte par "
+"les déclencheurs."
 
 msgid ""
 "Only fields selected in title or description semantic can be required if you "
@@ -3392,7 +3392,7 @@ msgstr "La nature %1$s a été créée avec succès."
 msgid "The type %1$s has been successfully updated."
 msgstr "La nature %1$s a été modifié avec succès."
 
-msgid "The type has been successfuly deleted."
+msgid "The type has been successfully deleted."
 msgstr "La nature a bien été supprimée."
 
 msgid "The unsubscribe list has been successfully updated."

@@ -48,6 +48,7 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use UserManager;
 
@@ -92,7 +93,7 @@ class BacklogItemResource extends AuthenticatedResource
         );
 
         $this->tracker_factory                  = TrackerFactory::instance();
-        $this->artifactlink_updater             = new ArtifactLinkUpdater($priority_manager);
+        $this->artifactlink_updater             = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());
         $this->resources_patcher                = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->artifact_factory,

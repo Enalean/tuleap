@@ -138,12 +138,12 @@ class NatureConfigController
 
             $response->addFeedback(
                 Feedback::INFO,
-                dgettext('tuleap-tracker', 'The type has been successfuly deleted.')
+                dgettext('tuleap-tracker', 'The type has been successfully deleted.')
             );
         } catch (NatureManagementException $exception) {
             $response->addFeedback(
                 Feedback::ERROR,
-                sprintf(dgettext('tuleap-tracker', 'An error has occured during the deletion of the type: %1$s'), $exception->getMessage())
+                sprintf(dgettext('tuleap-tracker', 'An error has occurred during the deletion of the type: %1$s'), $exception->getMessage())
             );
         }
         $response->redirect(self::$URL);

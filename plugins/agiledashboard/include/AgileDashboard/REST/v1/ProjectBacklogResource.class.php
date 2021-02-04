@@ -65,6 +65,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -178,7 +179,7 @@ class ProjectBacklogResource
             $tracker_artifact_factory
         );
 
-        $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
+        $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());
         $this->resources_patcher    = new ResourcesPatcher(
             $this->artifactlink_updater,
             $tracker_artifact_factory,

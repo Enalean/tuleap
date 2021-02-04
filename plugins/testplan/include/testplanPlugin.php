@@ -49,6 +49,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -277,7 +278,8 @@ final class testplanPlugin extends Plugin
         );
 
         $artifactlink_updater = new ArtifactLinkUpdater(
-            $priority_manager
+            $priority_manager,
+            new ArtifactLinkUpdaterDataFormater()
         );
 
         $processor = new EventRedirectAfterArtifactCreationOrUpdateProcessor(

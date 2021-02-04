@@ -634,6 +634,7 @@
         <permission scope="field" REF="F71245" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F71137" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F71137" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F71137" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
       </permissions>
       <artifacts/>
     </tracker>
@@ -686,6 +687,85 @@
         <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
       </permissions>
       <artifacts/>
+    </tracker>
+    <tracker id="T858" parent_id="0">
+      <name><![CDATA[artifact-link]]></name>
+      <item_name><![CDATA[artifact_link]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[fiesta-red]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F18128" rank="1" id="18128" tracker_id="858" parent_id="0">
+          <name><![CDATA[title]]></name>
+          <label><![CDATA[title]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="art_link" ID="F18129" rank="2" id="18129" tracker_id="858" parent_id="0">
+          <name><![CDATA[links]]></name>
+          <label><![CDATA[links]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R2910" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns>
+                <field REF="F18128"/>
+                <field REF="F18129"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F18128" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F18128" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F18128" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F18129" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F18129" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F18129" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="1922">
+          <changeset id="CHANGESET_8263">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2021-02-03T16:24:55+01:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[test]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="fixed_in"><![CDATA[1923]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="1923">
+          <changeset id="CHANGESET_8264">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2021-02-03T16:25:09+01:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[test]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="fixed_in"><![CDATA[1922]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
     </tracker>
     <triggers/>
   </trackers>
