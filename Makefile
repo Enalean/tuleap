@@ -85,10 +85,7 @@ clean-rng:
 # Templates generation
 #
 
-generate-templates-docker: ## Generate XML templates
-	@$(DOCKER) run --rm -u "`id -u`":"`id -g`" -v "$(CURDIR):/wrk" enalean/xsltproc make generate-templates
-
-generate-templates: generate-templates-plugins
+generate-templates: generate-templates-plugins ## Generate XML templates
 	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
 		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
 	xsltproc tools/utils/setup_templates/generate-templates/generate-kanban.xml \
@@ -107,7 +104,7 @@ generate-templates-plugins:
 # Tests and all
 #
 
-post-checkout-build: composer generate-mo generate-templates-docker npm-build ## Rebuild the application, can be run without stack up
+post-checkout-build: composer generate-mo generate-templates npm-build ## Rebuild the application, can be run without stack up
 
 post-checkout-reload-env: dev-clear-cache dev-forgeupgrade restart-services ## Clear caches, forgeupgrade and restart services
 
