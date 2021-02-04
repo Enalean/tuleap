@@ -25,8 +25,8 @@
     "vue": "^2.6.12",
     "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.12",
-    "vue-router": "^3.4.9",
-    "vuex": "^3.6.0"
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@types/bootstrap": "^4.5.1",
