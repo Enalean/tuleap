@@ -61,8 +61,6 @@ function ExecutionListCtrl(
 
     Object.assign($scope, {
         checkActiveClassOnExecution,
-        toggleStatus,
-        toggleAutomatedTests,
         viewTestExecution,
         canCategoryBeDisplayed,
         hideDetailsForRemovedTestExecution,
@@ -77,14 +75,6 @@ function ExecutionListCtrl(
             execid: execution.id,
             defid: execution.definition.id,
         });
-    }
-
-    function toggleStatus(executionStatus) {
-        $scope.status[executionStatus] = !$scope.status[executionStatus];
-    }
-
-    function toggleAutomatedTests() {
-        $scope.are_automated_tests_shown = !$scope.are_automated_tests_shown;
     }
 
     function viewTestExecution(current_execution) {

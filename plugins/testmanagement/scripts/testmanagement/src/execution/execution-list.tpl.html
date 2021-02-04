@@ -56,7 +56,11 @@
                                         {{ 'Passed' | translate }}
                                     </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-passed" class="tlp-switch-checkbox" ng-click="toggleStatus('passed')" checked>
+                                        <input type="checkbox"
+                                               id="status-filter-passed"
+                                               class="tlp-switch-checkbox"
+                                               ng-model="status.passed"
+                                        >
                                         <label for="status-filter-passed" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
@@ -66,7 +70,11 @@
                                         {{ 'Failed' | translate }}
                                     </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-failed" class="tlp-switch-checkbox" ng-click="toggleStatus('failed')" checked>
+                                        <input type="checkbox"
+                                               id="status-filter-failed"
+                                               class="tlp-switch-checkbox"
+                                               ng-model="status.failed"
+                                        >
                                         <label for="status-filter-failed" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
@@ -76,7 +84,11 @@
                                         {{ 'Blocked' | translate }}
                                     </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-blocked" class="tlp-switch-checkbox" ng-click="toggleStatus('blocked')" checked>
+                                        <input type="checkbox"
+                                               id="status-filter-blocked"
+                                               class="tlp-switch-checkbox"
+                                               ng-model="status.blocked"
+                                        >
                                         <label for="status-filter-blocked" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
@@ -86,7 +98,11 @@
                                         {{ 'Not run' | translate }}
                                     </label>
                                     <div class="tlp-switch tlp-switch-mini">
-                                        <input type="checkbox" id="status-filter-notrun" class="tlp-switch-checkbox" ng-click="toggleStatus('notrun')" checked>
+                                        <input type="checkbox"
+                                               id="status-filter-notrun"
+                                               class="tlp-switch-checkbox"
+                                               ng-model="status.notrun"
+                                        >
                                         <label for="status-filter-notrun" class="tlp-switch-button" aria-hidden="true"></label>
                                     </div>
                                 </div>
@@ -99,7 +115,7 @@
                                         <input type="checkbox"
                                                id="status-filter-automated"
                                                class="tlp-switch-checkbox"
-                                               ng-click="toggleAutomatedTests()"
+                                               ng-model="are_automated_tests_shown"
                                                data-shortcut-filter-automated
                                         >
                                         <label for="status-filter-automated" class="tlp-switch-button" aria-hidden="true"></label>
