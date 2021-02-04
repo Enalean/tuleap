@@ -95,7 +95,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("permissions", ["project_ugroups"]),
         modal_title() {

@@ -42,8 +42,7 @@ describe("setUserPreferenciesForFolder", () => {
         const should_be_closed = false;
         const context = {
             rootState: {
-                user_id: 102,
-                project_id: 110,
+                configuration: { user_id: 102, project_id: 110 },
             },
         };
 
@@ -58,8 +57,7 @@ describe("setUserPreferenciesForFolder", () => {
         const should_be_closed = true;
         const context = {
             rootState: {
-                user_id: 102,
-                project_id: 110,
+                configuration: { user_id: 102, project_id: 110 },
             },
         };
 
@@ -74,8 +72,7 @@ describe("setUserPreferenciesForUI", () => {
     it("sets the user preference to old ui", async () => {
         const context = {
             rootState: {
-                user_id: 102,
-                project_id: 110,
+                configuration: { user_id: 102, project_id: 110 },
             },
         };
 
@@ -95,8 +92,7 @@ describe("displayEmbeddedInLargeMode", () => {
     beforeEach(() => {
         context = {
             rootState: {
-                user_id: 102,
-                project_id: 110,
+                configuration: { user_id: 102, project_id: 110 },
             },
             commit: jest.fn(),
         };
@@ -124,8 +120,7 @@ describe("displayEmbeddedInNarrowMode", () => {
     beforeEach(() => {
         context = {
             rootState: {
-                user_id: 102,
-                project_id: 110,
+                configuration: { user_id: 102, project_id: 110 },
             },
             commit: jest.fn(),
         };

@@ -46,7 +46,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id", "current_folder"]),
+        ...mapState(["current_folder"]),
+        ...mapState("configuration", ["project_id"]),
         placeholder_text() {
             return this.$gettext("Name, description...");
         },

@@ -46,7 +46,7 @@ describe("Metadata actions", () => {
 
         global_context = {
             state: {
-                project_id: 102,
+                configuration: { project_id: 102 },
             },
         };
         getProjectMetadata = jest.spyOn(metadata_rest_querier, "getProjectMetadata");
@@ -78,7 +78,7 @@ describe("Metadata actions", () => {
             },
         });
 
-        await loadProjectMetadata(context, [{ state: { project_id: 102 } }]);
+        await loadProjectMetadata(context, [{ state: { configuration: { project_id: 102 } } }]);
 
         expect(handleErrors).toHaveBeenCalled();
     });

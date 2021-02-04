@@ -64,9 +64,9 @@ export default {
             "folder_content",
             "max_files_dragndrop",
             "max_size_upload",
-            "user_id",
             "is_changelog_proposed_after_dnd",
         ]),
+        ...mapState("configuration", ["user_id"]),
         user_can_dragndrop_in_current_folder() {
             return (
                 this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write

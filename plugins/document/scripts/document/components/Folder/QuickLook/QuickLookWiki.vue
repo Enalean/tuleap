@@ -46,7 +46,7 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
     },
     methods: {
         wikiPageRedirect() {

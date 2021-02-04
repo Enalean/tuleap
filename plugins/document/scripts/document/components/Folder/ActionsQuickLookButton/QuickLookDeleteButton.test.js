@@ -28,9 +28,7 @@ import EventBus from "../../../helpers/event-bus.js";
 describe("QuickLookDeleteButton", () => {
     let delete_button_factory, store;
     beforeEach(() => {
-        const state = {
-            project_id: 101,
-        };
+        const state = {};
 
         const store_options = {
             state,

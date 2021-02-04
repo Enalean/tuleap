@@ -72,7 +72,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
         wiki_deletion_warning() {
             return sprintf(
                 this.$gettext(

@@ -56,7 +56,7 @@ describe("UpdateFolderMetadataModal", () => {
                         },
                     ],
                 },
-                project_id: 102,
+                configuration: { project_id: 102 },
             },
         };
 

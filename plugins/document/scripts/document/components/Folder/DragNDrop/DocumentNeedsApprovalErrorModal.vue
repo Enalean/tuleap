@@ -36,7 +36,7 @@ export default {
         reasons: Array,
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
         table_owner() {
             return this.reasons[0].approval_table_owner;
         },

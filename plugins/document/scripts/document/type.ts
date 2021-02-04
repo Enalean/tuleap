@@ -17,6 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ConfigurationState } from "./store/configuration";
+
+export interface State {
+    is_loading_folder: boolean;
+}
+
+export interface RootState extends State {
+    readonly configuration: ConfigurationState;
+}
+
 export enum Direction {
     bottom = "BOTTOM",
     top = "TOP",

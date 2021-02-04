@@ -55,7 +55,7 @@ describe("UpdateMetadataModal", () => {
                         },
                     ],
                 },
-                project_id: 102,
+                configuration: { project_id: 102 },
             },
         };
 

@@ -18,11 +18,11 @@
  *
  */
 
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import LinkCellTitle from "./LinkCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
 import { TYPE_LINK } from "../../../constants";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("LinkCellTitle", () => {
     it(`should render link title`, () => {
@@ -40,7 +40,15 @@ describe("LinkCellTitle", () => {
             },
         };
 
-        const store = new Vuex.Store();
+        const state = {
+            configuration: { project_id: 101 },
+        };
+
+        const store_options = {
+            state,
+        };
+
+        const store = createStoreMock(store_options);
         const wrapper = shallowMount(LinkCellTitle, { store, ...component_options });
 
         expect(wrapper.element).toMatchSnapshot();

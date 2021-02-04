@@ -103,7 +103,7 @@ export default {
     },
     computed: {
         ...mapState("error", ["has_modal_error"]),
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
         submit_button_label() {
             return this.$gettext("Create new version");
         },

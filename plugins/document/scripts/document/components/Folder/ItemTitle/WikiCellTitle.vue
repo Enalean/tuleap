@@ -41,7 +41,7 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
         wiki_url() {
             return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
         },

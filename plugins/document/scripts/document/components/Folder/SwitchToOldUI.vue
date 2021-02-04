@@ -40,7 +40,8 @@ import { redirectToUrl } from "../../helpers/location-helper.js";
 export default {
     name: "SwitchToOldUI",
     computed: {
-        ...mapState(["project_id", "current_folder"]),
+        ...mapState(["current_folder"]),
+        ...mapState("configuration", ["project_id"]),
         redirect_url() {
             const encoded_project_id = encodeURIComponent(this.project_id);
             if (this.$route.name === "folder") {

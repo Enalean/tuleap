@@ -81,18 +81,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         import(/* webpackChunkName: "document-po-" */ "./po/" + getPOFileFromLocale(locale))
     );
 
+    const configuration_state = {
+        user_id,
+        project_id,
+        project_name,
+        project_public_name,
+    };
+
     const AppComponent = Vue.extend(App);
-    const store = createStore(user_id, project_id);
+    const store = createStore(user_id, project_id, configuration_state);
     const router = createRouter(store, project_name);
 
     new AppComponent({
         store,
         router,
         propsData: {
-            user_id,
-            project_id,
-            project_name,
-            project_public_name,
             project_url,
             user_is_admin,
             user_can_create_wiki,

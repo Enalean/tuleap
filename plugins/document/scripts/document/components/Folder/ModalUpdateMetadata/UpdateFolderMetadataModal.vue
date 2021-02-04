@@ -84,7 +84,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["current_folder", "project_id"]),
+        ...mapState(["current_folder"]),
+        ...mapState("configuration", ["project_id"]),
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Update properties");

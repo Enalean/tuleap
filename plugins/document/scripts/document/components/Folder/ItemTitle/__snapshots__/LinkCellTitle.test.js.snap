@@ -12,7 +12,7 @@ exports[`LinkCellTitle should render link title 1`] = `
    
   <a
     class="document-folder-subitem-link"
-    href="/plugins/docman/?group_id=undefined&action=show&id=42"
+    href="/plugins/docman/?group_id=101&action=show&id=42"
   >
     
         my link
