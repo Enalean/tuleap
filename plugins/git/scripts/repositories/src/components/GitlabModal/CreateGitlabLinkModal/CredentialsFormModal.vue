@@ -40,7 +40,7 @@
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
-                    type="text"
+                    type="url"
                     class="tlp-input"
                     id="gitlab_server"
                     required
@@ -65,6 +65,7 @@
                     v-model="gitlab_token"
                     maxlength="255"
                     data-test="add_gitlab_project_token"
+                    autocomplete="off"
                 />
                 <p class="tlp-text-info gitlab-test-info-form-token-modal">
                     <translate>
