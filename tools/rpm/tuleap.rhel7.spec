@@ -1,3 +1,14 @@
+%define _prefix /usr
+%define _datadir /usr/share
+%define _bindir /usr/bin
+%define _unitdir /usr/lib/systemd/system
+%define _tmpfilesdir /usr/lib/tmpfiles.d
+%define perl_vendorlib /usr/share/perl5/vendor_perl
+
+%define _buildhost tuleap-builder
+%define _source_payload w9.xzdio
+%define _binary_payload w9.xzdio
+
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
 %define APP_NAME tuleap
@@ -49,9 +60,6 @@ Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
 
 # Unit file
 Requires: systemd
-
-# It's embedded in Tuleap thanks to npm.
-Obsoletes: ckeditor
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -176,7 +184,6 @@ Hudson/Jenkins plugin for Tuleap Git repositories
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
-Obsoletes: php-sabredav
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
@@ -330,7 +337,7 @@ Share your data with project members.
 Summary: Web API Explorer
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Obsoletes: tuleap-api-explorer
+Obsoletes: tuleap-api-explorer <= 999
 Provides: tuleap-api-explorer
 %description plugin-api-explorer
 %{summary}.
@@ -390,7 +397,7 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Summary: Project ownership
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Obsoletes: tuleap-plugin-project-certification
+Obsoletes: tuleap-plugin-project-certification < 999
 %description plugin-project-ownership
 %{summary}.
 
@@ -678,14 +685,14 @@ done
 
 # Special custom include script
 %{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
-%{__perl} -pi -e "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
+%{__sed} -i "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
 #
 ## Install logrotate.d script
 %{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
 # Replace default httpd logrotate by ours
 %{__install} src/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
 
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
@@ -723,20 +730,20 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 %{__install} plugins/git/bin/sudo/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__perl} -pi -e "s~%%app_user%%~%{APP_USER}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/gl-membership.pl
-%{__perl} -pi -e "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/gl-membership.pl
+%{__sed} -i "s~%%app_user%%~%{APP_USER}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/gl-membership.pl
+%{__sed} -i "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/gl-membership.pl
 %{__install} plugins/git/bin/restore-tar-repository.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite3-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
-%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
+%{__sed} -i "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
 %{__install} plugins/git/etc/sudoers.d/gitolite3-replace-authorized-keys $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 %{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
 %{__install} plugins/git/etc/sudoers.d/tuleap-plugin-git $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
-%{__perl} -pi -e "s~%%app_user%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
-%{__perl} -pi -e "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
+%{__sed} -i "s~%%app_user%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
+%{__sed} -i "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
 %{__install} -D plugins/git/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
 %{__install} -D plugins/git/bin/TULEAP_MAX_NEWBIN_SIZE $RPM_BUILD_ROOT/usr/share/gitolite3/VREF/TULEAP_MAX_NEWBIN_SIZE
 %{__install} plugins/git/etc/systemd/tuleap-process-system-events-git.timer $RPM_BUILD_ROOT/%{_unitdir}
@@ -747,7 +754,7 @@ done
 #
 ##codendiadm > gitolite sudo
 %{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
-%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
+%{__sed} -i "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 
 # Plugin gitlfs
 %{__install} plugins/gitlfs/etc/sudoers.d/tuleap_gitlfs_authenticate $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitlfs_authenticate
@@ -756,7 +763,7 @@ done
 
 ## Plugin PullRequest
 %{__install} plugins/pullrequest/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
 
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
@@ -767,8 +774,8 @@ done
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 %{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/gulpfile.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/doc/
@@ -777,7 +784,7 @@ done
 # Plugin agiledashboard
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/agiledashboard
 %{__install} plugins/agiledashboard/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
 #
 ## Plugin mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
@@ -789,8 +796,8 @@ done
 #
 ## Plugin bugzilla
 %{__install} plugins/bugzilla_reference/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 #
 ## plugin archivedeleted_items
 %{__install} plugins/archivedeleteditems/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_archivedeleteditems
@@ -806,8 +813,8 @@ done
 #
 # Plugin LDAP
 %{__install} plugins/ldap/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
 #
 ## Package release
 %{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/yum.repos.d
@@ -817,27 +824,27 @@ done
 
 # Plugin OpenID Connect Client
 %{__install} plugins/openidconnectclient/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 
 # Plugin GitLab
 %{__install} plugins/gitlab/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
 
 %if %{with enterprise}
 
 # Plugin oauth2_server
 %{__install} plugins/oauth2_server/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
 
 %endif
 
 %if %{with experimental}
 # Plugin scaled_agile
 %{__install} plugins/scaled_agile/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
 %endif
 
 # Symlink for compatibility with older version
