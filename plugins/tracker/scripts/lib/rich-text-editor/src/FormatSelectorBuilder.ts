@@ -18,22 +18,14 @@
  */
 
 import { GettextProvider } from "@tuleap/gettext";
-import { DocumentInterface } from "./DocumentInterface";
 import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_TEXT,
     TextFieldFormat,
 } from "../../../constants/fields-constants";
-
-type FormatChangedCallback = (new_format: TextFieldFormat) => void;
-
-export interface FormatSelectorPresenter {
-    id: string;
-    name?: string;
-    default_format: TextFieldFormat;
-    formatChangedCallback: FormatChangedCallback;
-}
+import { DisplayInterface, FormatSelectorPresenter } from "./DisplayInterface";
+import { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
 
 const isValidFormat = (value: string): value is TextFieldFormat =>
     TEXT_FORMAT_TEXT === value || TEXT_FORMAT_HTML === value || TEXT_FORMAT_COMMONMARK === value;
@@ -41,13 +33,16 @@ const isValidFormat = (value: string): value is TextFieldFormat =>
 const SELECTBOX_ID_PREFIX = "rte_format_selectbox";
 const SELECTBOX_NAME_PREFIX = "comment_format";
 
-export class FormatSelectorBuilder {
+export class FormatSelectorBuilder implements DisplayInterface {
     constructor(
-        private readonly doc: DocumentInterface,
+        private readonly doc: FlamingParrotDocumentAdapter,
         private readonly gettext_provider: GettextProvider
     ) {}
 
-    public createFormatSelectbox(presenter: FormatSelectorPresenter): HTMLDivElement {
+    public insertFormatSelectbox(
+        textarea: HTMLTextAreaElement,
+        presenter: FormatSelectorPresenter
+    ): void {
         const text_option = this.doc.createOption({
             text: this.gettext_provider.gettext("Text"),
             value: TEXT_FORMAT_TEXT,
@@ -78,9 +73,11 @@ export class FormatSelectorBuilder {
             options: [text_option, html_option, markdown_option],
         });
 
-        return this.doc.createSelectBoxWrapper({
+        const wrapper = this.doc.createSelectBoxWrapper({
             label: this.gettext_provider.gettext("Format:"),
             child: selectbox,
         });
+
+        this.doc.insertFormatWrapper(textarea, wrapper);
     }
 }

@@ -19,33 +19,15 @@
 
 import { TextFieldFormat } from "../../../constants/fields-constants";
 
-export interface OptionPresenter {
-    is_selected: boolean;
-    text: string;
-    value: string;
-}
+type FormatChangedCallback = (new_format: TextFieldFormat) => void;
 
-export type SelectboxInputCallback = (new_value: string) => void;
-
-export interface SelectboxPresenter {
+export interface FormatSelectorPresenter {
     id: string;
-    name: string;
-    onInputCallback: SelectboxInputCallback;
-    options: HTMLOptionElement[];
+    name?: string;
+    default_format: TextFieldFormat;
+    formatChangedCallback: FormatChangedCallback;
 }
 
-export interface SelectboxWrapperPresenter {
-    label: string;
-    child: HTMLSelectElement;
-}
-
-export interface DocumentInterface {
-    /**
-     * @throws Error
-     */
-    getDefaultFormat(): TextFieldFormat;
-    createOption(presenter: OptionPresenter): HTMLOptionElement;
-    createSelectBox(presenter: SelectboxPresenter): HTMLSelectElement;
-    createSelectBoxWrapper(presenter: SelectboxWrapperPresenter): HTMLDivElement;
-    insertFormatWrapper(textarea: HTMLTextAreaElement, wrapper: HTMLDivElement): void;
+export interface DisplayInterface {
+    insertFormatSelectbox(textarea: HTMLTextAreaElement, presenter: FormatSelectorPresenter): void;
 }

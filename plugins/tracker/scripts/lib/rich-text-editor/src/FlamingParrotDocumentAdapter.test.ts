@@ -22,12 +22,11 @@ import {
     HTML_FORMAT_CLASSNAME,
 } from "./FlamingParrotDocumentAdapter";
 import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants";
-import { DocumentInterface } from "./DocumentInterface";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`FlamingParrotDocumentAdapter`, () => {
-    let doc: Document, adapter: DocumentInterface;
+    let doc: Document, adapter: FlamingParrotDocumentAdapter;
     beforeEach(() => {
         doc = createDocument();
         adapter = new FlamingParrotDocumentAdapter(doc);

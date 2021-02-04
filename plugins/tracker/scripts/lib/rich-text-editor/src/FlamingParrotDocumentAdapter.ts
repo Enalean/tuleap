@@ -18,12 +18,6 @@
  */
 
 import {
-    SelectboxWrapperPresenter,
-    DocumentInterface,
-    OptionPresenter,
-    SelectboxPresenter,
-} from "./DocumentInterface";
-import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
     TextFieldFormat,
@@ -33,7 +27,27 @@ export const HTML_FORMAT_CLASSNAME = "default_format_html";
 const FLAMING_PARROT_SELECTBOX_CLASSNAME = "input-small";
 const FLAMING_PARROT_WRAPPER_CLASSNAME = "rte_format";
 
-export class FlamingParrotDocumentAdapter implements DocumentInterface {
+export interface OptionPresenter {
+    is_selected: boolean;
+    text: string;
+    value: string;
+}
+
+export type SelectboxInputCallback = (new_value: string) => void;
+
+export interface SelectboxPresenter {
+    id: string;
+    name: string;
+    onInputCallback: SelectboxInputCallback;
+    options: HTMLOptionElement[];
+}
+
+export interface SelectboxWrapperPresenter {
+    label: string;
+    child: HTMLSelectElement;
+}
+
+export class FlamingParrotDocumentAdapter {
     constructor(private readonly doc: Document) {}
 
     public getDefaultFormat(): TextFieldFormat {
