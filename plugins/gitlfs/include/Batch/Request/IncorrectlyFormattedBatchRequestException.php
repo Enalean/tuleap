@@ -21,8 +21,9 @@
 namespace Tuleap\GitLFS\Batch\Request;
 
 use Tuleap\GitLFS\GitLFSException;
+use Tuleap\Request\CodeIsAValidHTTPStatus;
 
-final class IncorrectlyFormattedBatchRequestException extends GitLFSException
+final class IncorrectlyFormattedBatchRequestException extends GitLFSException implements CodeIsAValidHTTPStatus
 {
     public function __construct(string $message)
     {

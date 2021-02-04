@@ -396,19 +396,19 @@ class GitActions extends PluginActions
     private function checkRepoValidity(?GitRepository $git_repo, $project)
     {
         if ($project->isError()) {
-            throw new Git_ProjectNotFoundException('unable to get config', 404);
+            throw new Git_ProjectNotFoundException('unable to get config');
         }
 
         if (! $git_repo) {
-            throw new GitRepoNotFoundException('unable to get config', 404);
+            throw new GitRepoNotFoundException('unable to get config');
         }
 
         if (! $git_repo->belongsToProject($project)) {
-            throw new GitRepoNotInProjectException('unable to get config', 403);
+            throw new GitRepoNotInProjectException('unable to get config');
         }
 
         if (! $git_repo->isMigratedToGerrit()) {
-            throw new GitRepoNotOnGerritException('unable to get config', 500);
+            throw new GitRepoNotOnGerritException('unable to get config');
         }
     }
 
@@ -439,7 +439,7 @@ class GitActions extends PluginActions
     private function checkUserIsAdmin(Project $project, PFUser $user)
     {
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
-             throw new GitUserNotAdminException('unable to get template', 401);
+             throw new GitUserNotAdminException('unable to get template');
         }
 
         return true;
@@ -461,7 +461,7 @@ class GitActions extends PluginActions
             }
         }
 
-        throw new Git_TemplateNotInProjectHierarchyException('Project not in hierarchy', 404);
+        throw new Git_TemplateNotInProjectHierarchyException('Project not in hierarchy');
     }
 
     /**

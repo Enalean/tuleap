@@ -23,7 +23,7 @@ namespace Tuleap\Request;
 
 use Throwable;
 
-final class NotFoundException extends \Exception
+final class NotFoundException extends \Exception implements CodeIsAValidHTTPStatus
 {
     public function __construct(string $message = '', ?Throwable $previous = null)
     {

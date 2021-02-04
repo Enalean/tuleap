@@ -26,6 +26,7 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotAcceptableException;
 use Tuleap\Request\NotFoundException;
 
 class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
@@ -45,7 +46,7 @@ class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $this->doesRequestAcceptGitLFSResponse($request)) {
-            throw new \RuntimeException(self::GIT_LFS_MIME_TYPE . ' data must be an acceptable response', 406);
+            throw new NotAcceptableException(self::GIT_LFS_MIME_TYPE . ' data must be an acceptable response');
         }
         header('Content-Type: ' . self::GIT_LFS_MIME_TYPE);
         try {

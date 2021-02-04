@@ -21,8 +21,9 @@
 namespace Tuleap\GitLFS\Lock\Request;
 
 use Tuleap\GitLFS\GitLFSException;
+use Tuleap\Request\CodeIsAValidHTTPStatus;
 
-final class IncorrectlyFormattedReferenceRequestException extends GitLFSException
+final class IncorrectlyFormattedReferenceRequestException extends GitLFSException implements CodeIsAValidHTTPStatus
 {
     public function __construct(string $message)
     {
