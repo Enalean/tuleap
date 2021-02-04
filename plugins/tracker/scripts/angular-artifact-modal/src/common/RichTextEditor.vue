@@ -54,6 +54,12 @@ import {
     setIsNotUploadingInCKEditor,
     setIsUploadingInCKEditor,
 } from "../tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
+import {
+    getNoPasteMessage,
+    getRTEHelpMessage,
+    getUploadError,
+    getUploadSizeExceeded,
+} from "../gettext-catalog";
 
 export default {
     name: "RichTextEditor",
@@ -97,8 +103,7 @@ export default {
         },
 
         help_message() {
-            // Translate attribute does not work with ng-vue out of the box.
-            return this.$gettext("You can drag 'n drop or paste image directly in the editor.");
+            return getRTEHelpMessage();
         },
 
         content: {
@@ -204,11 +209,11 @@ export default {
             const onErrorCallback = (error) => {
                 if (error instanceof MaxSizeUploadExceededError) {
                     error.loader.message = sprintf(
-                        this.$gettext("You are not allowed to upload files bigger than %s."),
+                        getUploadSizeExceeded(),
                         prettyKibibytes(error.max_size_upload)
                     );
                 } else if (error instanceof UploadError) {
-                    error.loader.message = this.$gettext("Unable to upload the file");
+                    error.loader.message = getUploadError();
                 }
                 setIsNotUploadingInCKEditor();
             };
@@ -233,9 +238,7 @@ export default {
                 if (isThereAnImageWithDataURI(event.data.dataValue)) {
                     event.data.dataValue = "";
                     event.cancel();
-                    this.editor.showNotification(
-                        this.$gettext("You are not allowed to paste images here")
-                    );
+                    this.editor.showNotification(getNoPasteMessage());
                 }
             });
         },

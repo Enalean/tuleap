@@ -26,6 +26,7 @@ import * as is_uploading_in_ckeditor_state from "../tuleap-artifact-modal-fields
 import store_options from "../store/index.js";
 import localVue from "../helpers/local-vue.js";
 import RichTextEditor from "./RichTextEditor.vue";
+import { setCatalog } from "../gettext-catalog";
 
 jest.mock("@tuleap/ckeditor-image-upload", () => {
     const actual_module = jest.requireActual("@tuleap/ckeditor-image-upload");
@@ -68,6 +69,7 @@ function getInstance() {
 describe(`RichTextEditor`, () => {
     beforeEach(() => {
         jest.resetAllMocks();
+        setCatalog({ getString: () => "" });
         store = createStoreMock(store_options);
 
         buildFileUploadHandler = jest.spyOn(image_upload, "buildFileUploadHandler");

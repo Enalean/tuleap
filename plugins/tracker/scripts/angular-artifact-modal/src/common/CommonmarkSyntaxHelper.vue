@@ -151,22 +151,28 @@
 
 <script>
 import { createPopover } from "tlp";
+import {
+    getSyntaxHelperLabel,
+    getSyntaxHelperTitle,
+    getSyntaxHelperToGet,
+    getSyntaxHelperType,
+} from "../gettext-catalog";
 
 export default {
     name: "CommonmarkSyntaxHelper",
     computed: {
         // Translate attribute does not work with ng-vue out of the box.
         help() {
-            return this.$gettext("Help");
+            return getSyntaxHelperTitle();
         },
         title() {
-            return this.$gettext("Markdown mostly used formatting");
+            return getSyntaxHelperLabel();
         },
         type() {
-            return this.$gettext("Type...");
+            return getSyntaxHelperType();
         },
         to_get() {
-            return this.$gettext("...to Get");
+            return getSyntaxHelperToGet();
         },
     },
     mounted() {

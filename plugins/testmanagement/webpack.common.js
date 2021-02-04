@@ -58,7 +58,6 @@ const webpack_config_for_angular = {
             ),
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_vue_loader,
-            webpack_configurator.rule_angular_mixed_vue_gettext,
             webpack_configurator.rule_angular_gettext_loader,
         ],
     },

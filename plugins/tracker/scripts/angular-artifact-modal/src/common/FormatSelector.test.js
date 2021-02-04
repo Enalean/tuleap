@@ -21,6 +21,7 @@ import localVue from "../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FormatSelector from "./FormatSelector.vue";
 import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
+import { setCatalog } from "../gettext-catalog";
 
 let value, disabled, required;
 
@@ -38,6 +39,10 @@ function getInstance() {
 }
 
 describe(`FormatSelector`, () => {
+    beforeEach(() => {
+        setCatalog({ getString: () => "" });
+    });
+
     describe(`when the format was "html"`, () => {
         beforeEach(() => {
             value = "html";

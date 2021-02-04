@@ -30,9 +30,9 @@
                 class="tlp-select tlp-select-small tlp-select-adjusted"
                 data-test="format"
             >
-                <option v-bind:value="text_format">Text</option>
-                <option v-bind:value="html_format">HTML</option>
-                <option v-bind:value="commonmark_format">Markdown</option>
+                <option v-bind:value="text_format">{{ text_label }}</option>
+                <option v-bind:value="html_format">{{ html_label }}</option>
+                <option v-bind:value="commonmark_format">{{ commonmark_label }}</option>
             </select>
             <commonmark-syntax-helper v-if="is_commonmark_format" />
         </div>
@@ -45,6 +45,7 @@ import {
     TEXT_FORMAT_TEXT,
 } from "../../../constants/fields-constants.js";
 import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
+import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../gettext-catalog";
 
 export default {
     name: "FormatSelector",
@@ -76,11 +77,20 @@ export default {
         text_format() {
             return TEXT_FORMAT_TEXT;
         },
+        text_label() {
+            return getTextLabel();
+        },
         html_format() {
             return TEXT_FORMAT_HTML;
         },
+        html_label() {
+            return getHTMLLabel();
+        },
         commonmark_format() {
             return TEXT_FORMAT_COMMONMARK;
+        },
+        commonmark_label() {
+            return getCommonMarkLabel();
         },
     },
 };
