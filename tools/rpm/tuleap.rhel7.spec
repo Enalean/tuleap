@@ -770,7 +770,6 @@ done
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/gulpfile.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/doc/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/functional/
 #

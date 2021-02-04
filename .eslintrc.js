@@ -196,7 +196,6 @@ module.exports = {
         {
             files: [
                 ".eslintrc.js",
-                "gulpfile.js",
                 "webpack.*.js",
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",
