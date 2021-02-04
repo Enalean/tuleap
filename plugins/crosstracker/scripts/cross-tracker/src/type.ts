@@ -40,6 +40,12 @@ export interface Report {
     invalid_trackers: Array<Tracker>;
 }
 
+export interface ReadingReport {
+    trackers: Map<number, Tracker>;
+    expert_query: string;
+    invalid_trackers: Array<Tracker>;
+}
+
 export interface ArtifactsCollection {
     artifacts: Artifact[];
     total: string;

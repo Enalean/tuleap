@@ -16,27 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { ReadingReport, Tracker } from "../type";
 
 export default class ReadingCrossTrackerReport {
+    trackers: Map<number, Tracker>;
+    expert_query: string;
+
     constructor() {
         this.trackers = new Map();
         this.expert_query = "";
     }
 
-    getTrackers() {
+    getTrackers(): IterableIterator<Tracker> {
         return this.trackers.values();
     }
 
-    getTrackerIds() {
+    getTrackerIds(): number[] {
         return [...this.trackers.keys()];
     }
 
-    areTrackersEmpty() {
+    areTrackersEmpty(): boolean {
         return this.trackers.size <= 0;
     }
 
-    duplicateFromReport(report) {
-        this.trackers = new Map(report.trackers);
+    duplicateFromReport(report: ReadingReport): void {
+        this.trackers = report.trackers;
         this.expert_query = report.expert_query;
     }
 }
