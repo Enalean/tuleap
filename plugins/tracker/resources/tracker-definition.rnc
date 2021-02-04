@@ -1,6 +1,7 @@
 include "artifact-definition.rnc"
 include "triggers.rnc"
 include "workflow.rnc"
+include "../../timetracking/resources/timetracking-definition.rnc"
 
 trackers =
     attribute use-natures { xsd:boolean }?,
@@ -17,7 +18,6 @@ trackers =
             attribute target { xsd:string }
         }*
     }?
-
 
 tracker =
         # old ids
@@ -137,6 +137,10 @@ tracker =
 
         element artifacts {
             artifacts
+        }?,
+
+        element timetracking {
+            timetracking
         }?
 
     formElementsContent =

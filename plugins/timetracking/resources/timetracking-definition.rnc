@@ -1,0 +1,21 @@
+timetracking =
+    attribute is_enabled { xsd:boolean },
+    element permissions {
+        element read  { element ugroup { xsd:string }* }? &
+        element write { element ugroup { xsd:string }* }?
+    },
+    element time {
+        attribute artifact_id { xsd:long } &
+        element user { time_user_content } &
+        element minutes { xsd:long } &
+        element step { xsd:string } &
+        element day { time_date_content }
+    }*
+
+time_user_content =
+    attribute format { "username" | "ldap" | "id" },
+    xsd:string
+
+time_date_content =
+    attribute format { "ISO8601" },
+    xsd:string

@@ -42,6 +42,7 @@ use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
+use Tuleap\Timetracking\XML\XMLImport;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -70,6 +71,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $this->addHook(GetTrackersWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
 
         $this->listenToCollectRouteEventWithDefaultController();
 
@@ -339,5 +341,34 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function import_xml_project_tracker_done(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $xml                      = $params['xml_content'];
+        $created_trackers_objects = $params['created_tracker_objects'];
+        $user_finder              = $params['user_finder'];
+        $artifact_id_mapping      = $params['artifact_id_mapping'];
+        $project                  = $params['project'];
+
+        $xml_import = new XMLImport(
+            new XML_RNGValidator(),
+            new TimetrackingEnabler(
+                new AdminDao()
+            ),
+            new TimetrackingUgroupSaver(
+                new TimetrackingUgroupDao()
+            ),
+            new UGroupManager(),
+            $user_finder,
+            new TimeDao()
+        );
+
+        $xml_import->import(
+            $xml,
+            $project,
+            $created_trackers_objects,
+            $artifact_id_mapping
+        );
     }
 }

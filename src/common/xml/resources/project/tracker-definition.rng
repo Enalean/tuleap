@@ -3,6 +3,7 @@
   <include href="artifact-definition.rng"/>
   <include href="triggers.rng"/>
   <include href="workflow.rng"/>
+  <include href="timetracking-definition.rng"/>
   <define name="trackers">
     <optional>
       <attribute name="use-natures">
@@ -305,6 +306,11 @@
     <optional>
       <element name="artifacts">
         <ref name="artifacts"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="timetracking">
+        <ref name="timetracking"/>
       </element>
     </optional>
   </define>

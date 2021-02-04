@@ -58,7 +58,8 @@ rnc2rng: src/common/xml/resources/project/project.rng \
 	 plugins/cardwall/resources/xml_project_cardwall.rng \
 	 plugins/testmanagement/resources/testmanagement.rng \
 	 plugins/testmanagement/resources/testmanagement_external_changeset.rng \
-	 plugins/testmanagement/resources/testmanagement_external_fields.rng
+	 plugins/testmanagement/resources/testmanagement_external_fields.rng \
+	 plugins/timetracking/resources/timetracking.rng
 
 src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/resources/tracker-definition.rnc plugins/docman/resources/docman-definition.rnc src/common/xml/resources/ugroups-definition.rnc plugins/svn/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/mediawiki-definition.rnc src/common/xml/resources/project-definition.rnc
 
@@ -73,6 +74,8 @@ plugins/tracker/resources/trackers.rng: plugins/tracker/resources/trackers.rnc p
 plugins/tracker/resources/tracker.rng: plugins/tracker/resources/tracker.rnc plugins/tracker/resources/tracker-definition.rng
 
 plugins/tracker/resources/artifacts.rng: plugins/tracker/resources/artifacts.rnc plugins/tracker/resources/artifact-definition.rng
+
+plugins/timetracking/resources/timetracking.rng: plugins/timetracking/resources/timetracking.rnc plugins/timetracking/resources/timetracking-definition.rng
 
 %.rng: %.rnc
 	trang -I rnc -O rng $< $@
