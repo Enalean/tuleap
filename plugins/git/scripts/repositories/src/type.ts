@@ -82,13 +82,6 @@ export interface GitLabDataWithToken extends GitLabData {
     gitlab_bot_api_token: string;
 }
 
-export interface GitLabDataToPostAPI {
-    gitlab_bot_api_token: string;
-    gitlab_server_url: string;
-    gitlab_repository_id: number;
-    project_id: number;
-}
-
 export interface Folder {
     is_folder: boolean;
     label: string;
