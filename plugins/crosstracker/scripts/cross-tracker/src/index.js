@@ -23,7 +23,7 @@ import french_translations from "../po/fr.po";
 
 import { createStore } from "./store/index.js";
 import { init as initUser } from "./user-service.js";
-import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
+import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
