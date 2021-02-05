@@ -31,12 +31,12 @@
 import Vue from "vue";
 import { namespace, State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
-import GlobalAppError from "./GlobalError/GlobalAppError.vue";
 import { ColumnDefinition, TaskboardEvent } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
-import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
 import EventBus from "./../helpers/event-bus";
+import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
+import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
+import GlobalAppError from "./GlobalError/GlobalAppError.vue";
 
 const column = namespace("column");
 const error = namespace("error");
