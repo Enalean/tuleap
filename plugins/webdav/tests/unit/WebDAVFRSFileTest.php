@@ -28,7 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Sabre_DAV_Exception_Forbidden;
+use Sabre\DAV\Exception\Forbidden;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -64,7 +64,7 @@ final class WebDAVFRSFileTest extends TestCase
         $utils->shouldReceive('userCanWrite')->with($this->user, $this->project->getID())->once()->andReturnFalse();
         $webDAVFile = new WebDAVFRSFile($this->user, $this->project, new \FRSFile(['file_id' => 4]), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $webDAVFile->delete();
     }
@@ -84,7 +84,7 @@ final class WebDAVFRSFileTest extends TestCase
 
         $webDAVFile = new WebDAVFRSFile($this->user, $this->project, new \FRSFile(['file_id' => 4]), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $webDAVFile->delete();
     }

@@ -24,7 +24,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
-class WebDAVFRSFile extends Sabre_DAV_File
+class WebDAVFRSFile extends \Sabre\DAV\File
 {
     /**
      * @var PFUser
@@ -76,7 +76,7 @@ class WebDAVFRSFile extends Sabre_DAV_File
     public function put($data): void
     {
         if (! file_put_contents($this->file->getFileLocation(), $data)) {
-            throw new Sabre_DAV_Exception_Forbidden('Permission denied to change data');
+            throw new \Sabre\DAV\Exception\Forbidden('Permission denied to change data');
         }
 
         $frs_file_factory = new FRSFileFactory();
@@ -118,8 +118,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      *
      * @return string|null
      *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
-     *
      * @psalm-suppress ImplementedReturnTypeMismatch Return type of the library is incorrect
      */
     public function getContentType()
@@ -141,10 +139,10 @@ class WebDAVFRSFile extends Sabre_DAV_File
         if ($this->utils->userCanWrite($this->user, $this->getProject()->getGroupId())) {
             $result = $this->utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->file->getFileID());
             if ($result == 0) {
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
+                throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
     }
 }

@@ -31,8 +31,9 @@ use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Sabre_DAV_Exception_FileNotFound;
-use Sabre_DAV_Exception_Forbidden;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\MethodNotAllowed;
+use Sabre\DAV\Exception\NotFound;
 use Tuleap\GlobalLanguageMock;
 use WebDAVFRS;
 use WebDAVFRSPackage;
@@ -105,7 +106,7 @@ final class WebDAVFRSTest extends TestCase
         $webDAVFRS->shouldReceive('getFRSPackageFromName')->andReturns($FRSPackage);
         $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($WebDAVPackage);
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $utils = Mockery::spy(WebDAVUtils::class);
         $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
@@ -127,7 +128,7 @@ final class WebDAVFRSTest extends TestCase
         $webDAVFRS->shouldReceive('getFRSPackageFromName')->andReturns($FRSPackage);
         $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($WebDAVPackage);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $utils = Mockery::spy(WebDAVUtils::class);
         $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
@@ -162,7 +163,7 @@ final class WebDAVFRSTest extends TestCase
         $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $webDAVFRS->shouldReceive('userCanWrite')->andReturns(false);
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $webDAVFRS->createDirectory('pkg');
     }
@@ -183,7 +184,7 @@ final class WebDAVFRSTest extends TestCase
         $utils = Mockery::spy(WebDAVUtils::class);
         $utils->shouldReceive('getPackageFactory')->andReturns($frspf);
         $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $webDAVFRS->createDirectory('pkg');
     }

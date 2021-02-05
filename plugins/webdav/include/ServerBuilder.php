@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,9 +26,8 @@ namespace Tuleap\WebDAV;
 use BrowserPlugin;
 use ForgeConfig;
 use PermissionsOverrider_PermissionsOverriderManager;
-use Sabre_DAV_Locks_Backend_FS;
-use Sabre_DAV_Locks_Plugin;
-use Sabre_DAV_Server;
+use Sabre\DAV\Locks\Plugin;
+use Sabre\DAV\Server;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use WebDAVRoot;
@@ -51,17 +50,17 @@ final class ServerBuilder
         $this->plugin        = $plugin;
     }
 
-    public function getServerOnDedicatedDomain(\PFUser $user): Sabre_DAV_Server
+    public function getServerOnDedicatedDomain(\PFUser $user): \Sabre\DAV\Server
     {
         return $this->getServer($user, '/');
     }
 
-    public function getServerOnSubPath(\PFUser $user): Sabre_DAV_Server
+    public function getServerOnSubPath(\PFUser $user): \Sabre\DAV\Server
     {
         return $this->getServer($user, WebdavController::ROUTE_BASE);
     }
 
-    private function getServer(\PFUser $user, string $base_uri): Sabre_DAV_Server
+    private function getServer(\PFUser $user, string $base_uri): \Sabre\DAV\Server
     {
         // Creating the Root directory from WebDAV file system
         $rootDirectory = new WebDAVRoot(
@@ -82,7 +81,7 @@ final class ServerBuilder
         $tree = new WebDAVTree($rootDirectory);
 
         // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
-        $server = new Sabre_DAV_Server($tree);
+        $server = new Server($tree);
 
         // Base URI is the path used to access to WebDAV server
         $server->setBaseUri($base_uri);
@@ -93,8 +92,8 @@ final class ServerBuilder
         if (! is_dir($locks_path)) {
             mkdir($locks_path, 0750, true);
         }
-        $lockBackend = new Sabre_DAV_Locks_Backend_FS($locks_path);
-        $lockPlugin  = new Sabre_DAV_Locks_Plugin($lockBackend);
+        $lockBackend = new \Sabre\DAV\Locks\Backend\File($locks_path);
+        $lockPlugin  = new Plugin($lockBackend);
         $server->addPlugin($lockPlugin);
 
         // Creating the browser plugin

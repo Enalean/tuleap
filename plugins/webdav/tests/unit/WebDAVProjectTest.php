@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Sabre_DAV_Exception_FileNotFound;
+use Sabre\DAV\Exception\NotFound;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVProject;
@@ -85,7 +85,7 @@ final class WebDAVProjectTest extends TestCase
 
         $this->project->shouldReceive('usesFile')->andReturnFalse();
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $this->webdav_project->getChild('Files');
     }

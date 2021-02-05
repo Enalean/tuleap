@@ -24,7 +24,7 @@ use Tuleap\WebDAV\Docman\DocumentDownloader;
 /**
  * This class Represents Docman files & embedded files in WebDAV
  */
-class WebDAVDocmanFile extends Sabre_DAV_File
+class WebDAVDocmanFile extends \Sabre\DAV\File
 {
     /**
      * @var PFUser
@@ -68,13 +68,13 @@ class WebDAVDocmanFile extends Sabre_DAV_File
                 try {
                     $this->download($version);
                 } catch (Exception $e) {
-                    throw new Sabre_DAV_Exception_FileNotFound($e->getMessage());
+                    throw new \Sabre\DAV\Exception\NotFound($e->getMessage());
                 }
             } else {
-                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+                throw new \Sabre\DAV\Exception\RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
         } else {
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
         }
     }
 
@@ -142,7 +142,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
             $params['id']       = $this->item->getId();
             $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
     }
 
@@ -155,6 +155,8 @@ class WebDAVDocmanFile extends Sabre_DAV_File
 
     /**
      * Create a new version of the file
+     *
+     * @param string|resource $data
      */
     public function put($data): void
     {
@@ -166,16 +168,20 @@ class WebDAVDocmanFile extends Sabre_DAV_File
             $params['confirm']  = true;
 
             // File stuff
-            $params['id']             = $this->item->getId();
-            $params['file_name']      = $this->getName();
-            $params['upload_content'] = stream_get_contents($data);
+            $params['id']        = $this->item->getId();
+            $params['file_name'] = $this->getName();
+            if (is_resource($data)) {
+                $params['upload_content'] = stream_get_contents($data);
+            } else {
+                $params['upload_content'] = $data;
+            }
             if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
                 $this->utils->processDocmanRequest(new WebDAV_Request($params));
             } else {
-                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+                throw new \Sabre\DAV\Exception\RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_new_version'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_new_version'));
         }
     }
 
@@ -195,7 +201,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
     {
         switch (get_class($this->item)) {
             case Docman_File::class:
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
             case Docman_EmbeddedFile::class:
                 $this->rename($name);
                 break;
@@ -218,10 +224,10 @@ class WebDAVDocmanFile extends Sabre_DAV_File
 
                 $this->utils->processDocmanRequest(new WebDAV_Request($params));
             } catch (Exception $e) {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($e->getMessage());
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($e->getMessage());
             }
         } else {
-            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+            throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
         }
     }
 }

@@ -13,13 +13,7 @@
     "config": {
         "sort-packages": true
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Enalean/dav.git"
-        }
-    ],
     "require": {
-        "sabre/dav": "dev-tuleap-legacy-webdav"
+        "sabre/dav": "~4.1.0"
     }
 }

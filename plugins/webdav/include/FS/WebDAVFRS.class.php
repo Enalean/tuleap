@@ -24,10 +24,8 @@ use Tuleap\FRS\FRSPermissionManager;
 /**
  * This class lists the packages of a given project
  *
- * It is an implementation of the abstract class Sabre_DAV_Directory methods
- *
  */
-class WebDAVFRS extends Sabre_DAV_Directory
+class WebDAVFRS extends \Sabre\DAV\FS\Directory
 {
 
     private $user;
@@ -48,6 +46,8 @@ class WebDAVFRS extends Sabre_DAV_Directory
         $this->user        = $user;
         $this->project     = $project;
         $this->maxFileSize = $maxFileSize;
+
+        parent::__construct('');
     }
 
     /**
@@ -77,8 +77,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      * @param String $packageName
      *
      * @return WebDAVFRSPackage
-     *
-     * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
     public function getChild($packageName)
     {
@@ -89,11 +87,11 @@ class WebDAVFRS extends Sabre_DAV_Directory
 
         // Check if Package exists
         if (! $package->exist()) {
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
         }
 
         if (! $package->userCanRead($this->getUser())) {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
         }
 
         return $package;
@@ -103,8 +101,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      * Returns the name of the service
      *
      * @return String
-     *
-     * @see lib/Sabre/DAV/Sabre_DAV_INode#getName()
      */
     public function getName()
     {
@@ -112,10 +108,7 @@ class WebDAVFRS extends Sabre_DAV_Directory
     }
 
     /**
-     * FRS don't have a last modified date this
-     * is used only to suit the class Sabre_DAV_Node
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
+     * FRS don't have a last modified date.
      */
     public function getLastModified()
     {
@@ -250,8 +243,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      * @param String $name
      *
      * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Directory#createDirectory($name)
      */
     public function createDirectory($name)
     {
@@ -263,10 +254,10 @@ class WebDAVFRS extends Sabre_DAV_Directory
                 $packageData['status_id'] = 1;
                 $packageId                = $utils->getPackageFactory()->create($packageData);
             } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'package_name_exist'));
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'package_name_exist'));
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_create'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_create'));
         }
     }
 }

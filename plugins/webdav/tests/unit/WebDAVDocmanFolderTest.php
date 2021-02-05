@@ -28,11 +28,12 @@ use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Sabre_DAV_Exception_Conflict;
-use Sabre_DAV_Exception_FileNotFound;
-use Sabre_DAV_Exception_Forbidden;
-use Sabre_DAV_Exception_MethodNotAllowed;
-use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
+use Sabre\DAV\Exception\BadRequest;
+use Sabre\DAV\Exception\Conflict;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\MethodNotAllowed;
+use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\Exception\RequestedRangeNotSatisfiable;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -238,7 +239,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
         $webDAVDocmanFolder->getChild('whatever');
     }
 
@@ -263,7 +264,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_Conflict::class);
+        $this->expectException(Conflict::class);
         $webDAVDocmanFolder->getChild('SameName');
     }
 
@@ -288,7 +289,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_Conflict::class);
+        $this->expectException(Conflict::class);
         $webDAVDocmanFolder->getChild('SameName');
     }
 
@@ -312,7 +313,7 @@ class WebDAVDocmanFolderTest extends TestCase
             $utils
         );
 
-        $this->expectException(\Sabre_DAV_Exception_BadRequest::class);
+        $this->expectException(BadRequest::class);
         $webDAVDocmanFolder->getChild('leWiki');
     }
 
@@ -349,7 +350,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
         $webDAVDocmanFolder->createDirectory('name');
     }
 
@@ -371,7 +372,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
         $webDAVDocmanFolder->delete();
     }
 
@@ -382,7 +383,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_MethodNotAllowed::class);
+        $this->expectException(MethodNotAllowed::class);
         $webDAVDocmanFolder->setName('newName');
     }
 
@@ -404,7 +405,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
         $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
@@ -417,7 +418,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 23);
 
-        $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
+        $this->expectException(RequestedRangeNotSatisfiable::class);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
