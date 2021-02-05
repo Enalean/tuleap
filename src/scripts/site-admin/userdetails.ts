@@ -16,6 +16,7 @@
  */
 
 import { createModal, datePicker } from "tlp";
+import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
 
 document.addEventListener("DOMContentLoaded", function () {
     initExpirationDatepicker();
@@ -23,35 +24,30 @@ document.addEventListener("DOMContentLoaded", function () {
     initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricted();
 });
 
-function initExpirationDatepicker() {
+function initExpirationDatepicker(): void {
     const expiry_element = document.querySelector("#expiry");
-    if (expiry_element) {
+    if (expiry_element && expiry_element instanceof HTMLInputElement) {
         datePicker(expiry_element);
     }
 }
 
-function initChangePasswordModal() {
-    const dom_user_change_password_modal = document.getElementById("user-change-password-modal");
-    const tlp_user_change_password_modal = createModal(dom_user_change_password_modal, {});
-
-    document
-        .getElementById("siteadmin-user-details-change-password")
-        .addEventListener("click", () => {
-            tlp_user_change_password_modal.toggle();
-        });
-
-    const url_params = location.search;
-    if (url_params.indexOf("show-change-user-password-modal") !== -1) {
-        tlp_user_change_password_modal.toggle();
-    }
+function initChangePasswordModal(): void {
+    openTargetModalIdOnClick(document, "siteadmin-user-details-change-password");
 }
 
-function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricted() {
+function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricted(): void {
     const warning_project_without_restricted_removal_modal_element = document.getElementById(
         "modal-warning-removal-project-not-including-restricted"
     );
 
     if (!warning_project_without_restricted_removal_modal_element) {
+        return;
+    }
+
+    if (
+        !warning_project_without_restricted_removal_modal_element.dataset
+            .nbProjectNotAcceptingRestricted
+    ) {
         return;
     }
 
@@ -77,7 +73,7 @@ function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricte
     }
 
     const user_details_form = document.getElementById("siteadmin-user-details-form");
-    if (!user_details_form) {
+    if (!user_details_form || !(user_details_form instanceof HTMLFormElement)) {
         return;
     }
 
@@ -92,8 +88,8 @@ function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricte
             return;
         }
 
-        const user_status_input = user_details_form.elements["form_status"];
-        if (!user_status_input) {
+        const user_status_input = document.getElementById("status");
+        if (!user_status_input || !(user_status_input instanceof HTMLInputElement)) {
             return;
         }
 
