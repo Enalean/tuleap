@@ -112,6 +112,9 @@ class TrackerXmlExportTest extends TestCase
         $this->tracker1->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
         $this->tracker2->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
 
+        $this->tracker1->shouldReceive('getXMLId');
+        $this->tracker2->shouldReceive('getXMLId');
+
         $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->twice();
 
         $type = new NaturePresenter('fixed_in', '', '', true);
@@ -136,6 +139,9 @@ class TrackerXmlExportTest extends TestCase
 
         $this->tracker1->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
         $this->tracker2->shouldReceive('exportToXML')->never();
+
+        $this->tracker1->shouldReceive('getXMLId');
+        $this->tracker2->shouldNotReceive('getXMLId');
 
         $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->once();
 

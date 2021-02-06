@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2019. All rights reserved.
+ * Copyright Enalean (c) 2019 - Present. All rights reserved.
  *
  *  Tuleap and Enalean names and logos are registrated trademarks owned by
  *  Enalean SAS. All other trademarks or names are properties of their respective
@@ -43,6 +43,7 @@ use Tuleap\Timetracking\Time\TimetrackingReportFactory;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
+use UGroupManager;
 use UserHelper;
 use UserManager;
 
@@ -99,7 +100,12 @@ class TimetrackingReportResource extends AuthenticatedResource
         $this->date_extractor                 = new TimetrackingDatesExtractor($this->json_decoder);
         $this->tracker_representation_factory = new TrackerRepresentationFactory(
             new TimeDao(),
-            new PermissionsRetriever(new TimetrackingUgroupRetriever(new TimetrackingUgroupDao())),
+            new PermissionsRetriever(
+                new TimetrackingUgroupRetriever(
+                    new TimetrackingUgroupDao(),
+                    new UGroupManager()
+                )
+            ),
             UserHelper::instance()
         );
     }

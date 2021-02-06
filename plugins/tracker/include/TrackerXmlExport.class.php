@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2020. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2021. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -94,18 +94,20 @@ class TrackerXmlExport
         $this->addUsedNature($xml_content, $project);
         foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
             if ($tracker->isActive()) {
-                $exported_trackers[] = $tracker;
-                $artifacts           = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
-                $this->artifact_xml_export->export($tracker, $artifacts, $user, $archive);
+                $exported_trackers[$tracker->getXMLId()] = $tracker;
+
+                $xml_tracker = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
+                $this->artifact_xml_export->export($tracker, $xml_tracker, $user, $archive);
             }
         }
 
         $params = [
-            'user'        => $user,
-            'xml_content' => &$xml_content,
-            'group_id'    => $project->getID(),
-            'project'     => $project,
-            'archive'     => &$archive
+            'user'              => $user,
+            'xml_content'       => &$xml_content,
+            'group_id'          => $project->getID(),
+            'project'           => $project,
+            'exported_trackers' => $exported_trackers,
+            'archive'           => &$archive
         ];
 
         $this->event_manager->processEvent(TRACKER_EVENT_EXPORT_FULL_XML, $params);
@@ -146,7 +148,7 @@ class TrackerXmlExport
         $this->addUsedNature($xml_content, $project);
         foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
             if ($tracker->isActive()) {
-                $exported_trackers[] = $tracker;
+                $exported_trackers[$tracker->getXMLId()] = $tracker;
                 $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
             }
         }

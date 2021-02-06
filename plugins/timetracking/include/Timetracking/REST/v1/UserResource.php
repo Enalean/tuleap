@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -36,6 +36,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use UGroupManager;
 use UserManager;
 
 class UserResource extends AuthenticatedResource
@@ -90,7 +91,8 @@ class UserResource extends AuthenticatedResource
             new TimeDao(),
             new PermissionsRetriever((
             new TimetrackingUgroupRetriever(
-                new TimetrackingUgroupDao()
+                new TimetrackingUgroupDao(),
+                new UGroupManager()
             )
             )),
             new AdminDao(),

@@ -53,6 +53,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use UGroupManager;
 use UserManager;
 
 class ProjectResource
@@ -77,7 +78,8 @@ class ProjectResource
         $this->user_manager          = UserManager::instance();
         $this->permissions_retriever = new PermissionsRetriever(
             new TimetrackingUgroupRetriever(
-                new TimetrackingUgroupDao()
+                new TimetrackingUgroupDao(),
+                new UGroupManager()
             )
         );
         $this->time_retriever        = new TimeRetriever(
