@@ -2,8 +2,10 @@
     "extends": "../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
         "lib": ["DOM", "DOM.Iterable"],
-        "outDir": "dist/",
-        "experimentalDecorators": true
+        "outDir": "types/",
+        "experimentalDecorators": true,
+        "emitDeclarationOnly": true
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.test.ts"]
 }

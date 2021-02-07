@@ -44,8 +44,8 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import type { Project } from "../../../type";
-import type { ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy/src/project-privacy-helper";
-import { getProjectPrivacyIcon } from "@tuleap/vue-breadcrumb-privacy/src/project-privacy-helper";
+import type { ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import { getProjectPrivacyIcon } from "@tuleap/vue-breadcrumb-privacy";
 import { Action, State } from "vuex-class";
 import { sprintf } from "sprintf-js";
 import type { FocusFromProjectPayload } from "../../../store/type";
