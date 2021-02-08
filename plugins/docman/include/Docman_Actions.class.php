@@ -326,7 +326,8 @@ class Docman_Actions extends Actions
 
     public function createItem()
     {
-        $request      = $this->_controler->request;
+        $request = $this->_controler->request;
+
         $item_factory = $this->_getItemFactory();
         if ($request->exist('item')) {
             $item = $request->get('item');
@@ -453,7 +454,7 @@ class Docman_Actions extends Actions
                     }
 
                     //Submit News about this document
-                    if ($request->exist('news')) {
+                    if ($request->getProject()->usesService(Service::NEWS) && $request->exist('news')) {
                         if ($user->isMember($request->get('group_id'), 'A') || $user->isMember($request->get('group_id'), 'N1') || $user->isMember($request->get('group_id'), 'N2')) { //only for allowed people
                             $news = $request->get('news');
                             if (isset($news['summary']) && trim($news['summary']) && isset($news['details']) && trim($news['details']) && isset($news['is_private'])) {
