@@ -139,4 +139,33 @@ class CommitDetailsRetrieverTest extends TestCase
         self::assertEquals('John Doe', $commit_details->getAuthorName());
         self::assertEquals(1234567890, $commit_details->getCommitterEpoch());
     }
+
+    public function testIfNotFoundInDbItReturnsNullIfCommitDoesNotHaveATitleBecauseInThatCaseWeAssumeThatTheCommitDoesNotExistInTheRepository(): void
+    {
+        $dao = Mockery::mock(
+            CommitDetailsCacheDao::class,
+            [
+                'searchCommitDetails' => [],
+            ],
+        );
+        $dao->shouldReceive('saveCommitDetails')
+            ->never();
+
+        $retriever = new CommitDetailsRetriever($dao, Mockery::mock(\UserManager::class));
+
+        self::assertNull(
+            $retriever->retrieveCommitDetails(
+                Mockery::mock(GitRepository::class, ['getId' => 1]),
+                Mockery::mock(
+                    Commit::class,
+                    [
+                        'GetHash'  => '1a2b3c4d5e6f7g8h9i',
+                        'GetTitle' => null,
+                        'GetHeads' => null,
+                        'GetTags'  => null,
+                    ]
+                ),
+            )
+        );
+    }
 }

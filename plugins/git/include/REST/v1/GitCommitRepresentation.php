@@ -77,7 +77,7 @@ class GitCommitRepresentation
     public function build($repository_path, Commit $commit, CommitMetadata $commit_metadata)
     {
         $this->id             = $commit->GetHash();
-        $this->title          = $commit->GetTitle();
+        $this->title          = (string) $commit->GetTitle();
         $this->message        = implode("\n", $commit->GetComment());
         $this->author_name    = $commit->GetAuthorName();
         $this->author_email   = $commit->getAuthorEmail();
