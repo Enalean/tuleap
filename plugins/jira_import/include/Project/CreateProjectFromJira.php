@@ -46,6 +46,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
+use Tuleap\Widget\ProjectHeartbeat;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
@@ -197,6 +198,25 @@ final class CreateProjectFromJira
             $tracker_xml->addChild('cannedResponses');
 
             $jira_exporter->exportJiraToXml($tracker_xml, $jira_credentials->getJiraUrl(), $jira_project, $jira_tracker['id'], $field_id_generator);
+        }
+
+        return $this->addWidgetOnDashboard($xml_element, [ProjectHeartbeat::NAME]);
+    }
+
+    /**
+     * @param string[] $widget_names
+     */
+    private function addWidgetOnDashboard(\SimpleXMLElement $xml_element, array $widget_names): \SimpleXMLElement
+    {
+        $xml_dashboard = $xml_element->addChild('dashboards')->addChild("dashboard");
+        $xml_dashboard->addAttribute('name', 'Dashboard');
+
+        foreach ($widget_names as $widget_name) {
+            $xml_dashboard
+                ->addChild("line")
+                ->addChild("column")
+                ->addChild("widget")
+                ->addAttribute("name", $widget_name);
         }
 
         return $xml_element;
