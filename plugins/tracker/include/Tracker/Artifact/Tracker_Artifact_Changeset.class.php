@@ -794,7 +794,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Returns the Id of this changeset
      *
-     * @return string The Id of this changeset
+     * @return int The Id of this changeset
      *
      * @psalm-mutation-free
      */
