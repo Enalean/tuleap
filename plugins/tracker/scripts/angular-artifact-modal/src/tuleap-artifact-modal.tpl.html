@@ -1,13 +1,17 @@
 <script type="text/ng-template" id="field-fieldset.tpl.html">
-<div class="tlp-pane tlp-pane-collapsable" ng-class="{ 'tlp-pane-collapsed': field.collapsed, 'tlp-pane-hidden': field.is_hidden }">
+<div
+    class="tlp-pane tlp-pane-collapsable"
+    ng-class="{ 'tlp-pane-collapsed': field.collapsed, 'tlp-pane-hidden': field.is_hidden }"
+    data-test="fieldset"
+>
     <div class="tlp-pane-container">
         <div class="tlp-pane-header" ng-click="modal.toggleFieldset(field)">
-            <h1 class="tlp-pane-title">
+            <h1 class="tlp-pane-title" data-test="fieldset-label">
                 <i class="tlp-pane-title-icon fa fa-fw" ng-class="{ 'fa-caret-right': field.collapsed, 'fa-caret-down': ! field.collapsed }"></i>
                 {{ field.label }}
             </h1>
         </div>
-        <section class="tlp-pane-section">
+        <section class="tlp-pane-section" data-test="fieldset-content">
             <ng-include
                 src="field.template_url"
                 ng-repeat="field in field.content"
@@ -63,7 +67,7 @@
 </script>
 
 <script type="text/ng-template" id="field-rb.tpl.html">
-<div class="tlp-form-element">
+<div class="tlp-form-element" data-test="radiobutton-field">
     <label class="tlp-label">
         {{ field.label }}
         <i ng-if="field.required" class="fa fa-asterisk"></i>
@@ -72,6 +76,7 @@
     <label for="{{ 'rb_' + field.field_id + '_100' }}"
         class="tlp-label tlp-radio"
         ng-if="! field.required"
+        data-test="radiobutton-field-value"
     >
         <input type="radio"
             ng-model="modal.values[field.field_id].bind_value_ids[0]"
@@ -80,6 +85,7 @@
             ng-required="{{ field.required }}"
             ng-disabled="modal.isDisabled(field)"
             id="{{ 'rb_' + field.field_id + '_100' }}"
+            data-test="radiobutton-field-input"
         >
         <span translate>None</span>
     </label>
@@ -87,6 +93,7 @@
     <label ng-repeat="field_value in field.values"
         for="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
         class="tlp-label tlp-radio"
+        data-test="radiobutton-field-value"
     >
         <input type="radio"
             ng-model="modal.values[field.field_id].bind_value_ids[0]"
@@ -95,6 +102,7 @@
             ng-required="{{ field.required }}"
             ng-disabled="modal.isDisabled(field)"
             id="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
+            data-test="radiobutton-field-input"
         >
         {{ field_value.label }}
     </label>
@@ -102,7 +110,7 @@
 </script>
 
 <script type="text/ng-template" id="field-cb.tpl.html">
-<div class="tlp-form-element">
+<div class="tlp-form-element" data-test="checkbox-field">
     <label class="tlp-label">
         {{ field.label }}
         <i ng-if="field.required" class="fa fa-asterisk"></i>
@@ -111,6 +119,7 @@
     <label ng-repeat="field_value in field.values"
         for="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
         class="tlp-label tlp-checkbox"
+        data-test="checkbox-field-value"
     >
         <input type="checkbox"
             ng-model="modal.values[field.field_id].bind_value_ids[$index]"
@@ -118,6 +127,7 @@
             ng-false-value="null"
             ng-disabled="modal.isDisabled(field)"
             id="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
+            data-test="checkbox-field-input"
         >
         {{ field_value.label }}
     </label>
@@ -125,7 +135,7 @@
 </script>
 
 <script type="text/ng-template" id="field-int.tpl.html">
-<div class="tlp-form-element">
+<div class="tlp-form-element" data-test="int-field">
     <label for="{{ 'tracker_field_' + field.field_id }}"
         class="tlp-label"
     >
@@ -134,6 +144,7 @@
     </label>
     <input type="number"
         class="tlp-input"
+        data-test="int-field-input"
         size="5"
         ng-model="modal.values[field.field_id].value"
         ng-required="{{ field.required }}"
@@ -144,7 +155,7 @@
 </script>
 
 <script type="text/ng-template" id="field-string.tpl.html">
-<div class="tlp-form-element">
+<div class="tlp-form-element" data-test="string-field">
     <label for="{{ 'tracker_field_' + field.field_id }}"
         class="tlp-label"
     >
@@ -153,7 +164,7 @@
     </label>
     <input type="text"
         class="tlp-input"
-        data-test="{{ 'artifact-modal-field-' + field.name }}"
+        data-test="string-field-input"
         ng-model="modal.values[field.field_id].value"
         ng-required="{{ field.required }}"
         ng-disabled="modal.isDisabled(field)"
@@ -163,7 +174,7 @@
 </script>
 
 <script type="text/ng-template" id="field-float.tpl.html">
-<div class="tlp-form-element">
+<div class="tlp-form-element" data-test="float-field">
     <label for="{{ 'tracker_field_' + field.field_id }}"
         class="tlp-label"
     >
@@ -172,6 +183,7 @@
     </label>
     <input type="number"
         class="tlp-input"
+        data-test="float-field-input"
         step="any"
         size="5"
         ng-model="modal.values[field.field_id].value"
@@ -253,6 +265,7 @@
 
 <script type="text/ng-template" id="field-computed.tpl.html">
 <div class="tlp-form-element"
+    data-test="computed-field"
     tuleap-artifact-modal-computed-field="field"
     is-disabled="modal.isDisabled(field)"
     value-model="modal.values[field.field_id]"
@@ -312,6 +325,7 @@
     tuleap-artifact-modal-permission-field="field"
     is-disabled="modal.isDisabled(field)"
     value-model="modal.values[field.field_id]"
+    data-test="permission-field"
 ></div>
 </script>
 

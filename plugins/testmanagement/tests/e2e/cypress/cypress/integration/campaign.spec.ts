@@ -104,7 +104,7 @@ describe("TTM campaign", () => {
                 );
                 cy.get("[data-test=add-test-button]").click();
 
-                cy.get("[data-test=artifact-modal-field-summary]").type("My first test");
+                getStringFieldWithLabel("Summary").type("My first test");
                 cy.get("[data-test=artifact-modal-save-button]").click();
                 cy.contains("1 test will be added");
 
@@ -159,9 +159,7 @@ describe("TTM campaign", () => {
 
                 it("Edits the test", () => {
                     cy.get("[data-test=current-test-edit]").click();
-                    cy.get("[data-test=artifact-modal-field-summary]").type(
-                        "{selectall}My first test edited"
-                    );
+                    getStringFieldWithLabel("Summary").type("{selectall}My first test edited");
                     cy.get("[data-test=artifact-modal-save-button]").click();
                     cy.get("[data-test=current-test]").should("have.class", "notrun");
                     cy.get("[data-test=current-test-header-title]").contains(
@@ -215,3 +213,15 @@ describe("TTM campaign", () => {
         });
     });
 });
+
+type CypressWrapper = Cypress.Chainable<JQuery<HTMLElement>>;
+
+function getStringFieldWithLabel(label: string): CypressWrapper {
+    return cy
+        .get("[data-test=string-field]")
+        .contains(label)
+        .parents("[data-test=string-field]")
+        .within(() => {
+            return cy.get("[data-test=string-field-input]");
+        });
+}

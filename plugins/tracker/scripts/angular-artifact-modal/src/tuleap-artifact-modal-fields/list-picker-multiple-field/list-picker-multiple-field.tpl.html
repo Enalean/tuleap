@@ -17,7 +17,11 @@
   ~ along with Tuleap. If not, see http://www.gnu.org/licenses/.
   ~
   -->
-<div class="tlp-form-element" ng-class="{'tlp-form-element-error': !list_picker_multiple_field.isFieldValid()}">
+<div
+    class="tlp-form-element"
+    ng-class="{'tlp-form-element-error': !list_picker_multiple_field.isFieldValid()}"
+    data-test="multi-selectbox-field"
+>
     <label for="{{ ('tracker_field_' + list_picker_multiple_field.field.field_id) }}" class="tlp-label">
         {{ list_picker_multiple_field.field.label }}
         <i ng-if="::(list_picker_multiple_field.field.required)" class="fas fa-asterisk"></i>
@@ -31,6 +35,7 @@
             ng-disabled="list_picker_multiple_field.isDisabled(field)"
             data-select="list-picker-multiple"
             tuleap-highlight-directive="field.filtered_values"
+            data-test="multi-selectbox-field-select"
     >
     </select>
 </div>
