@@ -289,6 +289,7 @@ CREATE TABLE tracker_changeset_comment(
     body TEXT NOT NULL,
     body_format varchar(16) NOT NULL default 'text',
     old_artifact_history_id INT(11) NULL,
+    private TINYINT(1) DEFAULT 0 NOT NULL,
     INDEX changeset_idx(changeset_id)
 ) ENGINE=InnoDB;
 
@@ -1114,5 +1115,13 @@ FROM groups
     INNER JOIN service USING (group_id)
 WHERE groups.status != 'D'
       AND service.short_name = 'plugin_tracker';
+
+DROP TABLE IF EXISTS tracker_private_comment_permission;
+CREATE TABLE IF NOT EXISTS tracker_private_comment_permission (
+    id            INT(11) NOT NULL AUTO_INCREMENT,
+    tracker_id    INT(11) NOT NULL,
+    ugroup_id     INT(11) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB
 
 INSERT INTO forgeconfig (name, value) VALUES ('feature_flag_use_list_pickers_in_trackers_and_modals', 1);

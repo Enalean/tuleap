@@ -23,6 +23,8 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Permission\FollowUp\PrivateComments\PermissionsOnPrivateCommentChecker;
+use Tuleap\Tracker\REST\ChangesetRepresentation;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
@@ -43,6 +45,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      * @var Tracker_Artifact_Changeset_Comment
      */
     private $latest_comment;
+
+    /**
+     * @var bool
+     */
+    public $private_comment_access_denied;
 
     /**
      * Constructor
@@ -250,6 +257,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $html .= $this->getPermalink();
         $html .= $this->fetchChangesetActionButtons();
         $html .= $this->fetchImportedFromXmlData();
+        $html .= $this->getPrivateBlock();
         $html .= $this->getUserLink();
         $html .= $this->getTimeAgo($current_user);
         $html .= '</div>';
@@ -260,6 +268,15 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';
+        return $html;
+    }
+
+    private function getPrivateBlock()
+    {
+        $html = '';
+        if ($this->getComment()->private){
+            $html = ' <span class="label__private">Private</span>';
+        }
         return $html;
     }
 
@@ -395,6 +412,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             $classnames .= ' tracker_artifact_followup-with_comment ';
         }
 
+        if ($comment && ! $comment->hasEmptyBody() && $comment->private){
+            $classnames .= ' tracker_artifact_followup-with_private_comment ';
+        }
+
         if ($this->submitted_by && $this->submitted_by < 100) {
             $classnames .= ' tracker_artifact_followup-by_system_user ';
         }
@@ -472,14 +493,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      *
      * @return void
      */
-    public function updateComment($body, $user, $comment_format, $timestamp)
+    public function updateComment($body, $user, $comment_format, $timestamp, ?bool $private = null)
     {
-        if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)) {
+        if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp, $private)) {
             $this->executePostCreationActions();
         }
     }
 
-    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)
+    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp, bool $private = false)
     {
         if ($this->userCanEdit($user)) {
             $commentUpdated = $this->getCommentDao()->createNewVersion(
@@ -488,7 +509,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 $user->getId(),
                 $timestamp,
                 $this->getComment()->id,
-                $comment_format
+                $comment_format,
+                $private
             );
 
             unset($this->latest_comment);
@@ -533,11 +555,16 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     public function getComment()
     {
-        if (isset($this->latest_comment)) {
+        if ($this->private_comment_access_denied || isset($this->latest_comment)) {
             return $this->latest_comment;
         }
 
-        if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
+        $user = $this->getUserManager()->getCurrentUser();
+        $tracker = $this->getArtifact()->getTracker();
+
+        $access_private_comments = PermissionsOnPrivateCommentChecker::getInstance()->checkPermission($user, $tracker);
+
+        if ($row = $this->getCommentDao()->searchLastVersion($this->id, $access_private_comments)->getRow()) {
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment(
                 $row['id'],
                 $this,
@@ -547,7 +574,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 $row['submitted_on'],
                 $row['body'],
                 $row['body_format'],
-                $row['parent_id']
+                $row['parent_id'],
+                $row['private']
             );
         }
         return $this->latest_comment;
@@ -560,6 +588,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function setLatestComment($comment)
     {
         $this->latest_comment = $comment;
+    }
+
+    public function setPrivateCommentAccessDenied(bool $private_comment_access_denied): void
+    {
+        $this->private_comment_access_denied = $private_comment_access_denied;
     }
 
     /**
@@ -794,7 +827,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Returns the Id of this changeset
      *
-     * @return string The Id of this changeset
+     * @return int The Id of this changeset
      *
      * @psalm-mutation-free
      */

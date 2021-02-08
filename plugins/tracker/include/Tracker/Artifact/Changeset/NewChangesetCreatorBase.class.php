@@ -106,7 +106,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         bool $send_notification,
         string $comment_format,
         CreatedFileURLMapping $url_mapping,
-        TrackerImportConfig $tracker_import_config
+        TrackerImportConfig $tracker_import_config,
+        bool $private = false
     ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
@@ -116,9 +117,9 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         try {
-            $new_changeset = $this->transaction_executor->execute(function () use ($artifact, $fields_data, $comment, $comment_format, $submitter, $submitted_on, $email, $url_mapping, $tracker_import_config) {
+            $new_changeset = $this->transaction_executor->execute(function () use ($artifact, $fields_data, $comment, $comment_format, $submitter, $submitted_on, $email, $url_mapping, $tracker_import_config, $private) {
                 try {
-                    $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
+                    $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email, $private);
 
                     $previous_changeset = $artifact->getLastChangeset();
 
@@ -161,7 +162,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                             $submitted_on,
                             $comment_format,
                             $changeset_id,
-                            $url_mapping
+                            $url_mapping,
+                            $private
                         )
                     ) {
                         throw new Tracker_CommentNotStoredException();
@@ -265,7 +267,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $submitted_on,
         $comment_format,
         $changeset_id,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
+        bool $private = false
     ): bool {
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
 
@@ -280,7 +283,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $submitter->getId(),
             $submitted_on,
             0,
-            $comment_format
+            $comment_format,
+            $private
         );
         if (! $comment_added) {
             return false;
@@ -303,7 +307,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         array $fields_data,
         $comment,
         PFUser $submitter,
-        $email
+        $email,
+        bool $private = false
     ): void {
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
             $message = dgettext('tuleap-tracker', 'You are not logged in.');

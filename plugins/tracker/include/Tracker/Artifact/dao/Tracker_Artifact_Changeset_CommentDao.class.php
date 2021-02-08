@@ -27,17 +27,18 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject
         $this->table_name = 'tracker_changeset_comment';
     }
 
-    public function searchLastVersion($changeset_id)
+    public function searchLastVersion($changeset_id, bool $access_private = false)
     {
-        $changeset_id = $this->da->escapeInt($changeset_id);
-        $sql          = "SELECT * FROM $this->table_name
-                WHERE changeset_id = $changeset_id
+        $changeset_id  = $this->da->escapeInt($changeset_id);
+        $private_where = $access_private ? '' : 'AND private = 0';
+        $sql           = "SELECT * FROM $this->table_name
+                WHERE changeset_id = $changeset_id $private_where
                 ORDER BY id DESC
                 LIMIT 1";
         return $this->retrieve($sql);
     }
 
-    public function searchLastVersionForArtifact($artifact_id)
+    public function searchLastVersionForArtifact($artifact_id, bool $private = false)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $sql         = "SELECT comment_v1.*
@@ -48,13 +49,16 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject
                 AND comment_v2.id IS NULL
                 AND comment_v1.id IS NOT NULL";
         $result      = [];
+        if (!$private) {
+            $sql .= " AND comment_v1.private = 0";
+        }
         foreach ($this->retrieve($sql) as $row) {
             $result[$row['changeset_id']] = $row;
         }
         return $result;
     }
 
-    public function createNewVersion($changeset_id, $body, $submitted_by, $submitted_on, $parent_id, $body_format)
+    public function createNewVersion($changeset_id, $body, $submitted_by, $submitted_on, $parent_id, $body_format, bool $private = false)
     {
         $stripped_body = $this->extractStrippedBody($body, $body_format);
 
@@ -65,14 +69,15 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject
         $submitted_on          = $this->da->escapeInt($submitted_on);
         $parent_id             = $this->da->escapeInt($parent_id);
         $escaped_stripped_body = $this->da->quoteSmart($stripped_body);
+        $private               = ($private) ? 1 : 0;
 
-        $sql = "INSERT INTO $this->table_name (changeset_id, body, body_format, submitted_by, submitted_on, parent_id)
-                VALUES ($changeset_id, $body, $body_format, $submitted_by, $submitted_on, $parent_id)";
+        $sql = "INSERT INTO $this->table_name (changeset_id, body, body_format, submitted_by, submitted_on, parent_id, private)
+                VALUES ($changeset_id, $body, $body_format, $submitted_by, $submitted_on, $parent_id, $private)";
         $id  = $this->updateAndGetLastId($sql);
 
         if ($stripped_body !== "") {
             $sql = "INSERT INTO tracker_changeset_comment_fulltext (comment_id, stripped_body)
-                VALUES ($id, $escaped_stripped_body)";
+                    VALUES ($id, $escaped_stripped_body)";
             $this->update($sql);
         }
 

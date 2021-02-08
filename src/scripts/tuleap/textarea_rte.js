@@ -22,6 +22,7 @@ import "regenerator-runtime/runtime";
 /* global Class:readonly Builder:readonly $:readonly */
 var tuleap = window.tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
+tuleap.private_access = Boolean(tuleap.private_access);
 
 import "../codendi/RichTextEditor.js";
 
@@ -30,11 +31,34 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         options = Object.extend({ toolbar: "tuleap" }, options || {});
         this.options = Object.extend({ htmlFormat: false, id: 0 }, options || {});
         $super(element, options);
-        // This div contains comment format selection buttons
+        // This div contains comment format selection buttons and checkbox private comments
         var div = Builder.node("div");
+        var header = Builder.node("div", { class: "rte_header" });
         var select_container = Builder.node("div", { class: "rte_format" });
+
         select_container.appendChild(document.createTextNode("Format : "));
-        div.appendChild(select_container);
+        header.appendChild(select_container);
+        div.appendChild(header);
+
+        if (element.id === "tracker_followup_comment_new" && tuleap.private_access) {
+            const private_container = Builder.node("div", { class: "rte_private" });
+            private_container.appendChild(document.createTextNode("Private comment : "));
+            header.appendChild(private_container);
+            const checkbox = Builder.node("input", {
+                type: "checkbox",
+                id: "private_comment_input" + this.options.id,
+                name: "private_comment_input" + this.options.id,
+                class: "checkbox",
+            });
+            private_container.appendChild(checkbox);
+            checkbox.addEventListener("change", () => {
+                element.classList.toggle("comment-body__private");
+            });
+        }
+
+        if (this.options.privateFormat) {
+            element.classList.toggle("comment-body__private");
+        }
 
         var div_clear = Builder.node("div", { class: "rte_clear" });
         div.appendChild(div_clear);
@@ -133,6 +157,7 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         var id = this.element.id;
 
         $super();
+
         (function recordRequiredAttribute() {
             if ($(id).hasAttribute("required")) {
                 $(id).removeAttribute("required");

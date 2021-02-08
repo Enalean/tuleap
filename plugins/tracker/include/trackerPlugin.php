@@ -189,6 +189,9 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
+use Tuleap\Tracker\Permission\FollowUp\FollowUpController;
+use Tuleap\Tracker\Permission\FollowUp\PrivateComments\PermissionsOnPrivateCommentsUpdateController;
+use Tuleap\Tracker\Permission\FollowUp\PrivateComments\TrackerPrivateCommentsDao;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Reference\ReferenceCreator;
@@ -1991,6 +1994,20 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
     }
 
+    public function routeGetFollowUpPermissions(): FollowUpController
+    {
+        return new FollowUpController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/permission'));
+    }
+
+    public function routePostPrivateCommentsPermissions(): DispatchableWithRequest
+    {
+        return new PermissionsOnPrivateCommentsUpdateController(
+            TrackerFactory::instance(),
+            new TrackerPrivateCommentsDao()
+        );
+    }
+
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function (FastRoute\RouteCollector $r) {
@@ -2009,6 +2026,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $r->get(ByFieldController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
             $r->get(ByGroupController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));
             $r->post(PermissionsOnFieldsUpdateController::URL . '/{id:\d+}', $this->getRouteHandler('routePostFieldsPermissions'));
+
+            $r->get(FollowUpController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFollowUpPermissions'));
+            $r->post(PermissionsOnPrivateCommentsUpdateController::URL . '/{id:\d+}', $this->getRouteHandler('routePostPrivateCommentsPermissions'));
 
             $r->post('/webhooks/delete', $this->getRouteHandler('routePostWebhooksDelete'));
             $r->post('/webhooks/create', $this->getRouteHandler('routePostWebhooksCreate'));
