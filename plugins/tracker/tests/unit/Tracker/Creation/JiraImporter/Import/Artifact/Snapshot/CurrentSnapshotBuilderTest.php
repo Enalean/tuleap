@@ -106,7 +106,7 @@ class CurrentSnapshotBuilderTest extends TestCase
         return IssueAPIRepresentation::buildFromAPIResponse(
             [
                 'id'     => '10042',
-                'self'   => 'https://jira_instance/rest/api/latest/issue/10042',
+                'self'   => 'https://jira_instance/rest/api/3/issue/10042',
                 'key'    => 'key01',
                 'fields' => [
                     'summary'   => 'summary01',
@@ -220,7 +220,7 @@ class CurrentSnapshotBuilderTest extends TestCase
         return IssueAPIRepresentation::buildFromAPIResponse(
             [
                 'id'             => '10042',
-                'self'           => 'https://jira_instance/rest/api/latest/issue/10042',
+                'self'           => 'https://jira_instance/rest/api/3/issue/10042',
                 'key'            => 'key01',
                 'fields'         => [
                     'updated' => '2020-04-25T14:10:10.823+0100',

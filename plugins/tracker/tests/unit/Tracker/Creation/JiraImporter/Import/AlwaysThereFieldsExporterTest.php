@@ -306,20 +306,20 @@ class AlwaysThereFieldsExporterTest extends TestCase
     {
         return [
             [
-                'self' => 'URL/rest/api/latest/issuetype/10002',
+                'self' => 'URL/rest/api/3/issuetype/10002',
                 'id' => '10002' ,
                 'name' => 'Story' ,
                 'subtask' => false,
                 'statuses' => [
                     [
-                        'self' => 'URL/rest/api/latest/status/3',
+                        'self' => 'URL/rest/api/3/status/3',
                         'description' => 'This issue is being actively worked on at the moment by the assignee.',
                         'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
                         'name' => 'In Progress',
                         'untranslatedName' => 'In Progress',
                         'id' => '3',
                         'statusCategory' => [
-                            'self' => 'URL/rest/api/latest/statuscategory/4',
+                            'self' => 'URL/rest/api/3/statuscategory/4',
                             'id' => 4,
                             'key' => 'indeterminate',
                             'colorName' => 'yellow',

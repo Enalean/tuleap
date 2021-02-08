@@ -86,20 +86,20 @@ class StatusValuesCollectionTest extends TestCase
     {
         return [
             [
-                'self' => 'URL/rest/api/latest/issuetype/10002',
+                'self' => 'URL/rest/api/3/issuetype/10002',
                 'id' => '10002' ,
                 'name' => 'bug' ,
                 'subtask' => false,
                 'statuses' => [
                     [
-                        'self' => 'URL/rest/api/latest/status/10000',
+                        'self' => 'URL/rest/api/3/status/10000',
                         'description' => '' ,
                         'iconUrl' => 'URL/' ,
                         'name' => 'To Do',
                         'untranslatedName' => 'To Do',
                         'id' => '10000',
                         'statusCategory' => [
-                            'self' => 'URL/rest/api/latest/statuscategory/2',
+                            'self' => 'URL/rest/api/3/statuscategory/2',
                             'id' => 2,
                             'key' => 'new' ,
                             'colorName' => 'blue-gray',
@@ -107,14 +107,14 @@ class StatusValuesCollectionTest extends TestCase
                         ]
                     ],
                     [
-                        'self' => 'URL/rest/api/latest/status/3',
+                        'self' => 'URL/rest/api/3/status/3',
                         'description' => 'This issue is being actively worked on at the moment by the assignee.',
                         'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
                         'name' => 'In Progress',
                         'untranslatedName' => 'In Progress',
                         'id' => '3',
                         'statusCategory' => [
-                            'self' => 'URL/rest/api/latest/statuscategory/4',
+                            'self' => 'URL/rest/api/3/statuscategory/4',
                             'id' => 4,
                             'key' => 'indeterminate',
                             'colorName' => 'yellow',
@@ -122,14 +122,14 @@ class StatusValuesCollectionTest extends TestCase
                         ]
                     ],
                     [
-                        'self' => 'URL/rest/api/latest/status/10001',
+                        'self' => 'URL/rest/api/3/status/10001',
                         'description' => '',
                         'iconUrl' => 'URL/',
                         'name' => 'Done',
                         'untranslatedName' => 'Done',
                         'id' => '10001',
                         'statusCategory' => [
-                            'self' => 'URL/rest/api/latest/statuscategory/3',
+                            'self' => 'URL/rest/api/3/statuscategory/3',
                             'id' => 3,
                             'key' => 'done',
                             'colorName' => 'green',
