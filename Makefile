@@ -1,5 +1,5 @@
-SHELL := /bin/bash
-RPM_TMP=$(HOME)/rpmbuild
+SHELL := /usr/bin/env bash
+RPM_TMP=/build/rpmbuild
 PKG_NAME=tuleap-plugin-mytuleap-contact-support
 VERSION=$(shell LANG=C cat VERSION)
 # This meant to avoid having git in the docker container
@@ -18,7 +18,7 @@ ifeq ($(OS),centos:7)
 	DIST=.el7
 endif
 BASE_DIR=$(shell pwd)
-RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
+RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "_tmppath /build" --define "dist $(DIST)"
 
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
@@ -42,11 +42,13 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 # This is crappy but it avoids the duplication of the files that need to be built
 .PHONY: build
+build: export HOME = "/build"
+build: export TMPDIR = "/build"
 build:
 	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
 	cd /build/src/src/scripts/lib/tlp-fetch/ && npm install --no-audit && npm run build && \
 	cd /build/src/plugins/mytuleap_contact_support && npm install && npm run build && \
-	cd /build/src/plugins/mytuleap_contact_support && scl enable php73 'composer install --classmap-authoritative --no-dev --no-interaction --no-scripts'
+	cd /build/src/plugins/mytuleap_contact_support && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
@@ -74,9 +76,7 @@ $(RPM_TMP):
 	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
 
 docker-run:
-	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
-	useradd -d /build -m build
 	pushd /tuleap && git checkout-index -a --prefix=/build/src/ && popd
-	cp -Rf /plugin/ /build/src/plugins/mytuleap_contact_support && chown -R build /build/src
-	su --login --command "make -C /build/src/plugins/mytuleap_contact_support all RELEASE=$(RELEASE) OS=$(OS)" build
-	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
+	cp -Rf /plugin/ /build/src/plugins/mytuleap_contact_support
+	make -C /build/src/plugins/mytuleap_contact_support all RELEASE=$(RELEASE) OS=$(OS)
+	install -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
