@@ -66,9 +66,9 @@ final class ClientWrapperTest extends \PHPUnit\Framework\TestCase
         $response->shouldReceive('getBody')->andReturn($response_body)->once();
         $response->shouldReceive('getStatusCode')->andReturn(200)->once();
         $this->factory->shouldReceive('createRequest')
-            ->withArgs(['GET', "https://example.com/rest/api/latest/project"])->once();
+            ->withArgs(['GET', "https://example.com/rest/api/3/project"])->once();
         $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
-        $this->wrapper->getUrl("/rest/api/latest/project");
+        $this->wrapper->getUrl("/rest/api/3/project");
     }
 
     public function testItThrowsAnExceptionIfStatusCodeIsNot200(): void
@@ -79,10 +79,10 @@ final class ClientWrapperTest extends \PHPUnit\Framework\TestCase
         $response->shouldReceive('getBody')->andReturn('');
         $response->shouldReceive('getReasonPhrase')->andReturn("Forbidden")->once();
         $this->factory->shouldReceive('createRequest')
-            ->withArgs(['GET', "https://example.com/rest/api/latest/project"])->once()->andReturn(\Mockery::spy(RequestInterface::class));
+            ->withArgs(['GET', "https://example.com/rest/api/3/project"])->once()->andReturn(\Mockery::spy(RequestInterface::class));
         $this->client->shouldReceive('sendRequest')->andReturn($response)->once();
 
         $this->expectException(JiraConnectionException::class);
-        $this->wrapper->getUrl("/rest/api/latest/project");
+        $this->wrapper->getUrl("/rest/api/3/project");
     }
 }

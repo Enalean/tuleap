@@ -33,7 +33,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 class ClientWrapper implements JiraClient
 {
-    public const JIRA_CORE_BASE_URL = '/rest/api/latest';
+    public const JIRA_CORE_BASE_URL = '/rest/api/3';
 
     /**
      * @var ClientInterface

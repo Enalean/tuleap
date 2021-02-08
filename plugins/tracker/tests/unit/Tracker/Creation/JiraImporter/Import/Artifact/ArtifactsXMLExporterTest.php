@@ -232,7 +232,7 @@ class ArtifactsXMLExporterTest extends TestCase
                     'issues'     => [
                         [
                             'id'     => '10042',
-                            'self'   => 'https://jira_instance/rest/api/latest/issue/10042',
+                            'self'   => 'https://jira_instance/rest/api/3/issue/10042',
                             'key'    => 'key01',
                             'fields' => [
                                 'summary'   => 'summary01',
@@ -251,7 +251,7 @@ class ArtifactsXMLExporterTest extends TestCase
                         ],
                         [
                             'id'     => '10043',
-                            'self'   => 'https://jira_instance/rest/api/latest/issue/10043',
+                            'self'   => 'https://jira_instance/rest/api/3/issue/10043',
                             'key'    => 'key02',
                             'fields' => [
                                 'summary'   => 'summary02',
@@ -344,7 +344,7 @@ class ArtifactsXMLExporterTest extends TestCase
                     'issues'     => [
                         [
                             'id'     => '10042',
-                            'self'   => 'https://jira_instance/rest/api/latest/issue/10042',
+                            'self'   => 'https://jira_instance/rest/api/3/issue/10042',
                             'key'    => 'key01',
                             'fields' => [
                                 'summary'   => 'summary01',
@@ -387,7 +387,7 @@ class ArtifactsXMLExporterTest extends TestCase
                     'issues'     => [
                         [
                             'id'     => '10043',
-                            'self'   => 'https://jira_instance/rest/api/latest/issue/10043',
+                            'self'   => 'https://jira_instance/rest/api/3/issue/10043',
                             'key'    => 'key02',
                             'fields' => [
                                 'summary'   => 'summary02',
