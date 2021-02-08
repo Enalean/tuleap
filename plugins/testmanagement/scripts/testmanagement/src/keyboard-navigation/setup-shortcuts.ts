@@ -33,8 +33,8 @@ export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): v
         keyboard_inputs: "j,up",
         displayed_inputs: "j,↑",
         description: gettextCatalog.getString("Select previous test tab from test list"),
-        handle: (event: KeyboardEvent): void => {
-            moveFocus(document, event.target, Direction.previous);
+        handle: (): void => {
+            moveFocus(document, Direction.previous);
         },
     };
 
@@ -42,8 +42,8 @@ export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): v
         keyboard_inputs: "k,down",
         displayed_inputs: "k,↓",
         description: gettextCatalog.getString("Select next test tab from test list"),
-        handle: (event: KeyboardEvent): void => {
-            moveFocus(document, event.target, Direction.next);
+        handle: (): void => {
+            moveFocus(document, Direction.next);
         },
     };
 
@@ -51,8 +51,8 @@ export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): v
         keyboard_inputs: "home",
         displayed_inputs: "Home,↖",
         description: gettextCatalog.getString("Select first test tab from test list"),
-        handle: (event: KeyboardEvent): void => {
-            moveFocus(document, event.target, Direction.top);
+        handle: (): void => {
+            moveFocus(document, Direction.top);
         },
     };
 
@@ -60,8 +60,8 @@ export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): v
         keyboard_inputs: "end",
         displayed_inputs: "End",
         description: gettextCatalog.getString("Select last test tab from test list"),
-        handle: (event: KeyboardEvent): void => {
-            moveFocus(document, event.target, Direction.bottom);
+        handle: (): void => {
+            moveFocus(document, Direction.bottom);
         },
     };
 
@@ -93,7 +93,7 @@ export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): v
         keyboard_inputs: "l",
         description: gettextCatalog.getString("Set focus in tests list"),
         handle: (): void => {
-            focusElement(document, "[data-shortcut-navigation][tabindex='0']");
+            focusElement(document, "[data-navigation-test-link][tabindex='0']");
         },
     };
 

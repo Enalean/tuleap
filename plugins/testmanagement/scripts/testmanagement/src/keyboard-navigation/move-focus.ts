@@ -19,101 +19,92 @@
 
 import { Direction } from "./type";
 
-export function moveFocus(
-    doc: Document,
-    current_test_tab: EventTarget | null,
-    direction: Direction
-): void {
-    if (
-        !(current_test_tab instanceof HTMLAnchorElement) ||
-        !current_test_tab.hasAttribute("data-shortcut-navigation")
-    ) {
-        return;
-    }
-    const target_test_tab = getTargetTestTab(doc, current_test_tab, direction);
+import { getCurrentTest } from "./get-current-test";
+import { getCurrentCategory } from "./get-current-category";
+
+export function moveFocus(doc: Document, direction: Direction): void {
+    const target_test_tab = getTargetTest(doc, direction);
     if (target_test_tab) {
         target_test_tab.focus();
     }
 }
 
-export function getTargetTestTab(
-    doc: Document,
-    current_test_tab: HTMLAnchorElement,
-    direction: Direction
-): HTMLAnchorElement | null {
-    const tests_tablist = doc.querySelectorAll("[data-shortcut-navigation]");
-
-    if (direction === Direction.bottom) {
-        return getLastTestTab(tests_tablist);
+export function getTargetTest(doc: Document, direction: Direction): HTMLAnchorElement | null {
+    const current_test = getCurrentTest(doc);
+    if (!current_test) {
+        return null;
     }
 
     if (direction === Direction.top) {
-        return getFirstTestTab(tests_tablist);
+        return getFirstTestLink(doc);
     }
 
-    const current_test_tab_position = getCurrentTabPositionInList(tests_tablist, current_test_tab);
-    if (current_test_tab_position === null) {
-        return null;
+    if (direction === Direction.bottom) {
+        return getLastTestLink(doc);
     }
 
-    const next_tab = getNextTestTab(tests_tablist, current_test_tab_position);
+    const current_category = getCurrentCategory(doc);
+
     if (direction === Direction.next) {
-        return next_tab ? next_tab : getFirstTestTab(tests_tablist);
+        return getNextTestLink(doc, current_test, current_category);
     }
 
-    const previous_tab = getPreviousTestTab(tests_tablist, current_test_tab_position);
     if (direction === Direction.previous) {
-        return previous_tab ? previous_tab : getLastTestTab(tests_tablist);
+        return getPreviousTestLink(doc, current_test, current_category);
     }
 
-    return null;
+    throw new Error("Incorrect Direction member");
 }
 
-function getCurrentTabPositionInList(
-    tests_tablist: NodeList,
-    current_test_tab: HTMLAnchorElement
-): number | null {
-    const tab_position_index = current_test_tab.getAttribute("data-test-tab-index");
-    if (!tab_position_index) {
-        return null;
+function getFirstTestLink(link_container: HTMLElement | Document): HTMLAnchorElement {
+    const first_link = link_container.querySelector("[data-navigation-test-link]");
+    if (!(first_link instanceof HTMLAnchorElement)) {
+        throw new Error(
+            `Could not find an anchor element with [data-navigation-test-link] attribute in ${link_container}`
+        );
     }
-    return parseInt(tab_position_index, 10);
+    return first_link;
 }
 
-function getPreviousTestTab(
-    tests_tablist: NodeList,
-    current_test_tab_position: number
-): HTMLAnchorElement | null {
-    const previous_tab = tests_tablist[current_test_tab_position - 1];
-    if (!(previous_tab instanceof HTMLAnchorElement)) {
-        return null;
+function getLastTestLink(link_container: HTMLElement | Document): HTMLAnchorElement {
+    const links = link_container.querySelectorAll("[data-navigation-test-link]");
+    const last_link = links[links.length - 1];
+    if (!(last_link instanceof HTMLAnchorElement)) {
+        throw new Error(
+            `Could not find last anchor element with [data-navigation-test-link] attribute in ${link_container}`
+        );
     }
-    return previous_tab;
+    return last_link;
 }
 
-function getNextTestTab(
-    tests_tablist: NodeList,
-    current_test_tab_position: number
-): HTMLAnchorElement | null {
-    const next_tab = tests_tablist[current_test_tab_position + 1];
-    if (!(next_tab instanceof HTMLAnchorElement)) {
-        return null;
+function getNextTestLink(
+    doc: Document,
+    current_test: HTMLElement,
+    current_category: HTMLElement
+): HTMLAnchorElement {
+    const next_test_tab = current_test.nextElementSibling;
+    if (next_test_tab instanceof HTMLElement) {
+        return getFirstTestLink(next_test_tab);
     }
-    return next_tab;
+
+    const next_category = current_category.nextElementSibling;
+    return next_category instanceof HTMLElement
+        ? getFirstTestLink(next_category)
+        : getFirstTestLink(doc);
 }
 
-function getFirstTestTab(tests_tablist: NodeList): HTMLAnchorElement | null {
-    const first_tab = tests_tablist[0];
-    if (!(first_tab instanceof HTMLAnchorElement)) {
-        return null;
+function getPreviousTestLink(
+    doc: Document,
+    current_test: HTMLElement,
+    current_category: HTMLElement
+): HTMLAnchorElement {
+    const previous_test_tab = current_test.previousElementSibling;
+    if (previous_test_tab instanceof HTMLElement) {
+        return getFirstTestLink(previous_test_tab);
     }
-    return first_tab;
-}
 
-function getLastTestTab(tests_tablist: NodeList): HTMLAnchorElement | null {
-    const last_tab = tests_tablist[tests_tablist.length - 1];
-    if (!(last_tab instanceof HTMLAnchorElement)) {
-        return null;
-    }
-    return last_tab;
+    const previous_category = current_category.previousElementSibling;
+    return previous_category instanceof HTMLElement
+        ? getLastTestLink(previous_category)
+        : getLastTestLink(doc);
 }

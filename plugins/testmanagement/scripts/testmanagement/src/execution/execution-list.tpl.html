@@ -146,7 +146,9 @@
                         aria-orientation="vertical"
                     >
                         <li ng-repeat="category in categories"
-                            ng-if="canCategoryBeDisplayed(category)">
+                            ng-if="canCategoryBeDisplayed(category)"
+                            data-navigation-category
+                        >
                             <p class="tests-list-category">{{ category.label }}</p>
                             <ol class="tests-list">
                                 <li ng-repeat="execution in category.executions
@@ -156,6 +158,7 @@
                                     | orderBy:'definition.id'
                                     | unique:'definition.id'
                                     track by execution.definition.id"
+                                    data-navigation-test
                                 >
                                     <a class="tests-list-test {{ execution.status }}"
                                        ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
@@ -167,8 +170,7 @@
                                        aria-controls="{{ execution.definition.id }}-tabpanel"
                                        aria-selected="{{ checkActiveClassOnExecution(execution) }}"
                                        tabindex="{{ checkActiveClassOnExecution(execution) ? 0 : -1 }}"
-                                       data-test-tab-index="{{ $parent.$parent.$index + $index }}"
-                                       data-shortcut-navigation
+                                       data-navigation-test-link
                                     >
                                         <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
                                              data-tlp-tooltip="{{ presence.real_name }}"
