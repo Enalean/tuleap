@@ -1,4 +1,4 @@
-RPM_TMP=$(HOME)/rpmbuild
+RPM_TMP=/build/rpmbuild
 PKG_NAME=tuleap-plugin-enalean-licensemanager
 VERSION=$(shell LANG=C cat VERSION)
 # This meant to avoid having git in the docker container
@@ -9,12 +9,11 @@ ifeq ($(RELEASE),)
 endif
 DIST=
 BASE_DIR=$(shell pwd)
-RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
+RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "_tmppath /build" --define "dist $(DIST)"
 
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
-all:
-	$(MAKE) DIST=$(shell rpm --eval '.el%{centos_ver}') rpm
+all: rpm
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm
 	@echo "Results: $^"
@@ -33,8 +32,8 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 .PHONY: build
 build:
-	cd /build/src && scl enable php72 'make generate-mo'
-	cd /build/src/plugins/enalean_licensemanager/ && scl enable php72 'composer install --classmap-authoritative --no-dev --no-interaction --no-scripts'
+	cd /build/src && make generate-mo
+	cd /build/src/plugins/enalean_licensemanager/ && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
@@ -60,8 +59,6 @@ $(RPM_TMP):
 	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
 
 docker-run:
-	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
-	useradd -d /build -m build
-	cp -Rf /tuleap/ /build/src && cp -Rf /plugin/ /build/src/plugins/enalean_licensemanager && chown -R build /build/src
-	su --login --command "make -C /build/src/plugins/enalean_licensemanager all RELEASE=$(RELEASE)" build
-	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
+	cp -Rf /tuleap/ /build/src && cp -Rf /plugin/ /build/src/plugins/enalean_licensemanager
+	make -C /build/src/plugins/enalean_licensemanager all RELEASE=$(RELEASE) DIST=.el7
+	install -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output

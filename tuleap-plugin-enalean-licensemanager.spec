@@ -1,3 +1,12 @@
+%define _prefix /usr
+%define _datadir /usr/share
+%define _bindir /usr/bin
+%define _unitdir /usr/lib/systemd/system
+%define _tmpfilesdir /usr/lib/tmpfiles.d
+%define _buildhost tuleap-builder
+%define _source_payload w9.xzdio
+%define _binary_payload w9.xzdio
+
 Name:		tuleap-plugin-enalean-licensemanager
 Version:	@@VERSION@@
 Release:	@@RELEASE@@%{?dist}
@@ -11,7 +20,6 @@ Source0:	%{name}-%{version}.tar.gz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 Requires:	tuleap >= 9.8
-
 
 %description
 %{summary}.
