@@ -25,5 +25,5 @@ if [ "$LAST_TAG" == "$PACKAGE_VERSION" ]; then
     fi
 fi
 
-docker build -t $DOCKERIMAGE rpm
-docker run --rm -v "$TULEAP_PATH":/tuleap:ro -v $PWD:/plugin:ro -v "$WORKSPACE":/output -e UID=`id -u` -e GID=`id -g` -e RELEASE="$RELEASE" $DOCKERIMAGE
+docker build -t $DOCKERIMAGE -f "$TULEAP_PATH"/tools/utils/nix/build-tools.dockerfile "$TULEAP_PATH"/tools/utils/nix/
+docker run --rm -v "$TULEAP_PATH":/tuleap:ro -v $PWD:/plugin:ro -v "$WORKSPACE":/output -w /plugin --tmpfs /build:rw,exec,nosuid --tmpfs /tmp --user "$(id -u):$(id -g)" -e RELEASE="$RELEASE" $DOCKERIMAGE make docker-run

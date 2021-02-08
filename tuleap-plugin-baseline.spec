@@ -1,4 +1,13 @@
-Summary: Test Management plugin for Tuleap
+%define _prefix /usr
+%define _datadir /usr/share
+%define _bindir /usr/bin
+%define _unitdir /usr/lib/systemd/system
+%define _tmpfilesdir /usr/lib/tmpfiles.d
+%define _buildhost tuleap-builder
+%define _source_payload w9.xzdio
+%define _binary_payload w9.xzdio
+
+Summary: Set and compare baselines
 Name: tuleap-plugin-baseline
 Version: @@VERSION@@
 Release: @@RELEASE@@%{?dist}
