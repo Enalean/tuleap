@@ -26,6 +26,8 @@ use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -127,6 +129,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
         $this->addHook(BuildArtifactFormActionEvent::NAME);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -494,5 +497,18 @@ final class scaled_agilePlugin extends Plugin
             new PlanDao(),
             TrackerFactory::instance()
         );
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
+    {
+        $ugroup_manager                       = new UGroupManager();
+        $permission_per_group_section_builder = new \Tuleap\ScaledAgile\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder(
+            new \Tuleap\ScaledAgile\Adapter\Program\Plan\CanPrioritizeFeaturesDAO(),
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            $ugroup_manager,
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
+        );
+
+        $permission_per_group_section_builder->collectSections($event);
     }
 }

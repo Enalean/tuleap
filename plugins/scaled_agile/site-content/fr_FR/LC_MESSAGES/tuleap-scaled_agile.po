@@ -12,12 +12,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3.1\n"
 
+msgid "Can prioritize features"
+msgstr "Peut prioriser des fonctionnalités"
+
 msgid ""
 "Extension of the Agile Dashboard plugin to allow planning of Backlog items "
 "across projects"
 msgstr ""
 "Extension du plugin Tableau de bord Agile qui permet la planification "
 "d'éléments depuis plusieurs projets"
+
+msgid "Granted groups"
+msgstr "Groupes autorisés"
 
 msgid "Mirror of"
 msgstr "Réplique de"
@@ -31,6 +37,9 @@ msgid ""
 msgstr ""
 "La modification de l'outil de suivi de jalons de cette planification est "
 "interdite parce que ce projet fait partie d'un backlog d'agilité à l'échelle."
+
+msgid "Permission"
+msgstr "Permission"
 
 msgid "Scaled Agile"
 msgstr "Agilité à l'échelle"
@@ -56,3 +65,6 @@ msgid ""
 msgstr ""
 "Vous êtes en train de créer un incrément de programme, les releases "
 "correspondantes seront crées dans les équipes correspondantes."
+
+msgid "{{ user_group_name }} has no permission"
+msgstr "{{ user_group_name }} n'a aucune permission"
