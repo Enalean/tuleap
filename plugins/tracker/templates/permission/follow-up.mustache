@@ -1,0 +1,20 @@
+<h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker |Fallow Up Permissions{{/ dgettext }}</h2>
+
+<form action="{{ update_url }}" method="post">
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="ugroups">{{# dgettext }} tuleap-tracker |Allow to read and write private follow-ups for those user groups:{{/ dgettext }}</label>
+        <select class="tlp-select" id="ugroups" name="ugroups[]" multiple>
+            {{# ugroup_list }}
+                <option value="{{ id }}" {{# selected }} selected {{/ selected}}>{{ name }}</option>
+            {{/ ugroup_list }}
+        </select>
+        <p class="tlp-text-info">*If no group is selected, private follow up will not be displayed to anyone.</p>
+    </div>
+    <div class="tlp-form-element">
+        <input type="submit"
+               class="btn btn-primary"
+               name="update"
+               value="{{# dgettext }} tuleap-tracker | Save setting {{/ dgettext }}"
+        >
+    </div>
+</form>
