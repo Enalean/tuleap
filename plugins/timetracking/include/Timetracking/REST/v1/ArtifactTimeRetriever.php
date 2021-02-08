@@ -122,7 +122,7 @@ class ArtifactTimeRetriever
             throw new NoTimetrackingForTrackerException();
         }
 
-        if (! $this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $artifact->getTracker())) {
+        if (! $this->permissions_retriever->userCanSeeAllTimesInTracker($user, $artifact->getTracker())) {
             throw new UserCannotSeeTrackedTimeException();
         }
 

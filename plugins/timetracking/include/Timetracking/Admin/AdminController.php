@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -122,9 +122,9 @@ class AdminController
         $tracker->displayFooter($this->tracker_manager);
     }
 
-    private function getReadersUGroupPresenters(Tracker $tracker)
+    private function getReadersUGroupPresenters(Tracker $tracker): array
     {
-        $user_groups      = $this->user_group_factory->getProjectUGroupsWithAdministratorAndMembers($tracker->getProject());
+        $user_groups      = $this->user_group_factory->getProjectUGroupsWithMembers($tracker->getProject());
         $selected_ugroups = $this->timetracking_ugroup_retriever->getReaderIdsForTracker($tracker);
 
         $read_ugroups = [];
@@ -139,9 +139,9 @@ class AdminController
         return $read_ugroups;
     }
 
-    private function getWritersUGroupPresenters(Tracker $tracker)
+    private function getWritersUGroupPresenters(Tracker $tracker): array
     {
-        $user_groups      = $this->user_group_factory->getProjectUGroupsWithAdministratorAndMembers($tracker->getProject());
+        $user_groups      = $this->user_group_factory->getProjectUGroupsWithMembers($tracker->getProject());
         $selected_ugroups = $this->timetracking_ugroup_retriever->getWriterIdsForTracker($tracker);
 
         $write_ugroups = [];

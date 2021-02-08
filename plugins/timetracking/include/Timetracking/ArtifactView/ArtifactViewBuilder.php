@@ -99,7 +99,7 @@ class ArtifactViewBuilder
 
         if (
             ! $user_can_add_time &&
-            ! $this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)
+            ! $this->permissions_retriever->userCanSeeAllTimesInTracker($user, $tracker)
         ) {
             return null;
         }

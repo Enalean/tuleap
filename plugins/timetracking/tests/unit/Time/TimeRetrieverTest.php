@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,7 +64,7 @@ class TimeRetrieverTest extends TestCase
 
     public function testItReturnsAnEmptyArrayIfUserIsNotAbleToReadTimes()
     {
-        $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker($this->user, $this->tracker)->andReturns(false);
+        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker($this->user, $this->tracker)->andReturns(false);
         $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(false);
 
         $this->dao->shouldNotReceive('getTimesAddedInArtifactByUser');
@@ -75,7 +75,7 @@ class TimeRetrieverTest extends TestCase
 
     public function testItRetrievesTimesIfTheUserIsWriter()
     {
-        $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker($this->user, $this->tracker)->andReturns(false);
+        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker($this->user, $this->tracker)->andReturns(false);
         $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(true);
 
         $epected_once = $this->dao->allows()->getTimesAddedInArtifactByUser(102, 200)->andReturns([]);
@@ -88,7 +88,7 @@ class TimeRetrieverTest extends TestCase
 
     public function testItRetrievesTimesIfTheUserIsGlobalReader()
     {
-        $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker($this->user, $this->tracker)->andReturns(true);
+        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker($this->user, $this->tracker)->andReturns(true);
         $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(false);
 
         $epected_once = $this->dao->allows()->getAllTimesAddedInArtifact(200)->andReturns([]);

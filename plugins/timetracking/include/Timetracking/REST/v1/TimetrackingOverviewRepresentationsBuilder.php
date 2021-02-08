@@ -132,6 +132,6 @@ class TimetrackingOverviewRepresentationsBuilder
     {
         return $tracker !== null
             && $tracker->userCanView($user)
-            && $this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker);
+            && $this->permissions_retriever->userCanSeeAllTimesInTracker($user, $tracker);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,6 @@ class UserCannotSeeTrackedTimeException extends InvalidArgumentException
 {
     public function __construct()
     {
-        parent::__construct('Invalid query: you cannot see aggregated times on this artifact');
+        parent::__construct('Invalid query: you cannot see all times on this artifact');
     }
 }

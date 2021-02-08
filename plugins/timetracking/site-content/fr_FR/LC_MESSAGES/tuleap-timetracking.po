@@ -25,6 +25,9 @@ msgstr "Ajouter un nouveau temps"
 msgid "Add time"
 msgstr "Ajouter un temps"
 
+msgid "Add times"
+msgstr "Ajouter des temps"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -64,8 +67,19 @@ msgstr "Suivi de temps personnel"
 msgid "Read"
 msgstr "Lecture"
 
+msgid "Read all tracker times"
+msgstr "Lire tous les temps de l'outil de suivi"
+
 msgid "Save modifications"
 msgstr "Sauvegarder les modifications"
+
+msgid ""
+"Select user groups that will be able to add time and read all times in this "
+"tracker, in addition of site administrators and project administrators."
+msgstr ""
+"Selectionner les groupes d'utilisateurs qui seront capables d'ajouter et de lire "
+"tous les temps dans cet outil de suivi, en plus des administrateurs du site "
+"et des administrateurs du projet."
 
 msgid "Step"
 msgstr "Étape"
