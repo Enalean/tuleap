@@ -750,7 +750,8 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
             <?php
 
-            if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
+            $is_user_allowed_to_send_news = user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1');
+            if ($project->usesService(Service::NEWS) && $is_user_allowed_to_send_news) {
                 echo '
             <TR><TD><FIELDSET><LEGEND>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_news')) . '</LEGEND>
                 <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
@@ -844,7 +845,9 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
 function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 {
     global $package_factory, $release_factory, $files_factory;
-    $pm = ProjectManager::instance();
+
+    $project = ProjectManager::instance()->getProject($group_id);
+
     //get and filter all inputs from $request
     $release     = [];
     $res         = $request->get('release');
@@ -961,7 +964,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $private_news = 0;
     }
 
-    if ($request->valid(new Valid_WhiteList('release_submit_news', [0, 1]))) {
+    if ($project->usesService(Service::NEWS) && $request->valid(new Valid_WhiteList('release_submit_news', [0, 1]))) {
         $release_submit_news = (int) $request->get('release_submit_news');
     } else {
         $release_submit_news = 0;
