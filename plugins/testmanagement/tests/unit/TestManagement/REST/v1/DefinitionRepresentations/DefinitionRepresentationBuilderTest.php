@@ -101,7 +101,7 @@ class DefinitionRepresentationBuilderTest extends TestCase
 
         $this->purifier->shouldReceive('purifyHTMLWithReferences')->andReturn('wololo');
 
-        $text_field->shouldReceive('getFormatForRESTRepresentation')->andReturn('text');
+        $text_field->shouldReceive('getFormat')->andReturn('text');
 
         $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
@@ -160,7 +160,7 @@ class DefinitionRepresentationBuilderTest extends TestCase
 
         $this->purifier->shouldReceive('purifyHTMLWithReferences')->andReturn('wololo');
 
-        $text_field->shouldReceive('getFormatForRESTRepresentation')->andReturn('html');
+        $text_field->shouldReceive('getFormat')->andReturn('html');
 
         $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
@@ -203,7 +203,7 @@ class DefinitionRepresentationBuilderTest extends TestCase
 
         $this->interpreter->shouldReceive('getInterpretedContentWithReferences')->andReturn('wololo');
 
-        $text_field->shouldReceive('getFormatForRESTRepresentation')->andReturn('commonmark');
+        $text_field->shouldReceive('getFormat')->andReturn('commonmark');
         $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
             $definition_artifact,
@@ -232,7 +232,7 @@ class DefinitionRepresentationBuilderTest extends TestCase
                                            ->andReturn($field);
 
         $text_field->shouldReceive('getText')->andReturn('');
-        $text_field->shouldReceive('getFormatForRESTRepresentation')->andReturn('wololo');
+        $text_field->shouldReceive('getFormat')->andReturn('wololo');
 
         $this->expectException(DefinitionDescriptionFormatNotFoundException::class);
 

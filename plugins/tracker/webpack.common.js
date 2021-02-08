@@ -65,7 +65,7 @@ const config_for_flaming_parrot = {
     context,
     output,
     externals: {
-        CKEDITOR: "CKEDITOR",
+        ckeditor4: "CKEDITOR",
         codendi: "codendi",
         jquery: "jQuery",
     },

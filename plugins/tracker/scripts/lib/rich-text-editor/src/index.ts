@@ -18,4 +18,4 @@
  */
 
 export { RichTextEditorFactory } from "./RichTextEditorFactory";
-export { RichTextEditorOptions } from "./types";
+export type { RichTextEditorOptions } from "./types";

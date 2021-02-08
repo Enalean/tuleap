@@ -95,7 +95,7 @@ class DefinitionRepresentationBuilder
             throw new DescriptionTextFieldNotFoundException();
         }
 
-        switch ($description_text_field->getFormatForRESTRepresentation()) {
+        switch ($description_text_field->getFormat()) {
             case Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT:
             case Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT:
                 return new DefinitionTextOrHTMLRepresentation(
@@ -104,7 +104,7 @@ class DefinitionRepresentationBuilder
                     $definition_artifact,
                     $this->tracker_form_element_factory,
                     $user,
-                    $description_text_field->getFormatForRESTRepresentation(),
+                    $description_text_field->getFormat(),
                     $changeset,
                     $requirement
                 );
@@ -119,7 +119,7 @@ class DefinitionRepresentationBuilder
                     $requirement,
                 );
         }
-        throw new DefinitionDescriptionFormatNotFoundException($description_text_field->getFormatForRESTRepresentation());
+        throw new DefinitionDescriptionFormatNotFoundException($description_text_field->getFormat());
     }
 
     public function getMinimalRepresentation(PFUser $user, Artifact $artifact): ?MinimalDefinitionRepresentation

@@ -1,6 +1,18 @@
 # @tuleap/plugin-tracker-rich-text-editor
 
-Depends on the global variable `CKEDITOR` (from `ckeditor4`). Provide it as `externals` in webpack configuration and include ckeditor files **before** loading this module.
+Depends on `ckeditor4` module. Provide it as `externals` in webpack configuration:
+
+```javascript
+// webpack.config.js
+{
+    //...
+    externals: {
+        "ckeditor4": "CKEDITOR",
+    },
+    //...
+}
+```
+Also, make sure to include CKEDITOR sources in PHP **before** loading this module.
 
 ## Usage:
 
@@ -20,6 +32,7 @@ options: RichTextEditorOptions = {
     },
     onFormatChange: (new_format: TextFieldFormat) => {
         // React on change of Format selectbox value
+        // This is also called once at initialization
     },
     onEditorInit: (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => {
         // React on creation of the CKEditor (only in "html" format)

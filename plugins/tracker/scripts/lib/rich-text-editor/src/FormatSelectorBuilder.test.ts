@@ -43,12 +43,12 @@ describe(`FormatSelectorBuilder`, () => {
 
     describe(`insertFormatSelectbox()`, () => {
         it.each([[TEXT_FORMAT_TEXT], [TEXT_FORMAT_HTML], [TEXT_FORMAT_COMMONMARK]])(
-            `given a presenter with default format %s, the corresponding option will be selected`,
+            `given a presenter with selected value %s, the corresponding option will be selected`,
             (format) => {
-                const presenter = {
+                const presenter: FormatSelectorPresenter = {
                     id: "some_id",
                     name: "some_name",
-                    default_format: format,
+                    selected_value: format,
                     formatChangedCallback: jest.fn(),
                 };
                 builder.insertFormatSelectbox(textarea, presenter);
@@ -76,7 +76,7 @@ describe(`FormatSelectorBuilder`, () => {
                 presenter = {
                     id: "some_id",
                     name: "some_name",
-                    default_format: TEXT_FORMAT_TEXT,
+                    selected_value: TEXT_FORMAT_TEXT,
                     formatChangedCallback: jest.fn(),
                 };
             });

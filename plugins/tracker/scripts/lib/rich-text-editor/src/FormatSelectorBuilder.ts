@@ -46,17 +46,17 @@ export class FormatSelectorBuilder implements DisplayInterface {
         const text_option = this.doc.createOption({
             text: this.gettext_provider.gettext("Text"),
             value: TEXT_FORMAT_TEXT,
-            is_selected: presenter.default_format === TEXT_FORMAT_TEXT,
+            is_selected: presenter.selected_value === TEXT_FORMAT_TEXT,
         });
         const html_option = this.doc.createOption({
             text: this.gettext_provider.gettext("HTML"),
             value: TEXT_FORMAT_HTML,
-            is_selected: presenter.default_format === TEXT_FORMAT_HTML,
+            is_selected: presenter.selected_value === TEXT_FORMAT_HTML,
         });
         const markdown_option = this.doc.createOption({
             text: this.gettext_provider.gettext("Markdown"),
             value: TEXT_FORMAT_COMMONMARK,
-            is_selected: presenter.default_format === TEXT_FORMAT_COMMONMARK,
+            is_selected: presenter.selected_value === TEXT_FORMAT_COMMONMARK,
         });
 
         const selectbox_name = presenter.name

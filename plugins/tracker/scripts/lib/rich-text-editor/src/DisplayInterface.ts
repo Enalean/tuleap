@@ -24,7 +24,7 @@ type FormatChangedCallback = (new_format: TextFieldFormat) => void;
 export interface FormatSelectorPresenter {
     id: string;
     name?: string;
-    default_format: TextFieldFormat;
+    selected_value: TextFieldFormat;
     formatChangedCallback: FormatChangedCallback;
 }
 
