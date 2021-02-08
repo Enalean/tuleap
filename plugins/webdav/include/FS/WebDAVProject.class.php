@@ -22,7 +22,7 @@
 /**
  * This class lists the services of a given project that can be accessed using WebDAV
  */
-class WebDAVProject extends Sabre_DAV_Directory
+class WebDAVProject extends \Sabre\DAV\FS\Directory
 {
     /**
      * @var PFUser
@@ -41,8 +41,12 @@ class WebDAVProject extends Sabre_DAV_Directory
      */
     private $utils;
 
-    public function __construct(PFUser $user, Project $project, int $maxFileSize, WebDAVUtils $utils)
-    {
+    public function __construct(
+        PFUser $user,
+        Project $project,
+        int $maxFileSize,
+        WebDAVUtils $utils
+    ) {
         $this->user        = $user;
         $this->project     = $project;
         $this->maxFileSize = $maxFileSize;
@@ -52,7 +56,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Generates the list of services under the project
      *
-     * @return Sabre_DAV_INode[]
+     * @return \Sabre\DAV\INode[]
      */
     public function getChildren(): array
     {
@@ -79,13 +83,13 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @param string $service
      */
-    public function getChild($service): Sabre_DAV_INode
+    public function getChild($service): \Sabre\DAV\INode
     {
         $children = $this->getChildren();
         if (isset($children[$service])) {
             return $children[$service];
         }
-        throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'service_not_available'));
+        throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'service_not_available'));
     }
 
     public function getName(): string

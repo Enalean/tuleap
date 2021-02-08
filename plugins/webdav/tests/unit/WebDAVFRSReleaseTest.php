@@ -31,9 +31,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Sabre_DAV_Exception_FileNotFound;
-use Sabre_DAV_Exception_Forbidden;
-use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
+use Sabre\DAV\Exception;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\MethodNotAllowed;
+use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\Exception\RequestedRangeNotSatisfiable;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -108,7 +110,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(0);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturnNull();
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -125,7 +127,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -146,7 +148,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -168,7 +170,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -198,7 +200,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -227,7 +229,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -260,7 +262,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
+        $this->expectException(RequestedRangeNotSatisfiable::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -526,7 +528,7 @@ class WebDAVFRSReleaseTest extends TestCase
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSRelease->shouldReceive('userCanWrite')->andReturns(false);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSRelease->delete();
     }
@@ -547,7 +549,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getUtils')->andReturns($utils);
         $webDAVFRSRelease->shouldReceive('getReleaseId')->andReturns(0);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSRelease->delete();
     }
@@ -586,7 +588,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getUtils')->andReturns($utils);
         $project = \Mockery::spy(\Project::class);
         $webDAVFRSRelease->shouldReceive('getProject')->andReturns($project);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSRelease->setName('newName');
     }
@@ -607,7 +609,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getUtils')->andReturns($utils);
         $project = \Mockery::spy(\Project::class);
         $webDAVFRSRelease->shouldReceive('getProject')->andReturns($project);
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $webDAVFRSRelease->setName('newName');
     }
@@ -651,7 +653,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $package = new FRSPackage();
         $destination->shouldReceive('getPackage')->andReturns($package);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $source->move($destination);
     }
@@ -673,7 +675,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $package = new FRSPackage();
         $destination->shouldReceive('getPackage')->andReturns($package);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $source->move($destination);
     }
@@ -695,7 +697,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $package = new FRSPackage();
         $destination->shouldReceive('getPackage')->andReturns($package);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $source->move($destination);
     }
@@ -718,7 +720,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $package = new FRSPackage();
         $destination->shouldReceive('getPackage')->andReturns($package);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $source->move($destination);
     }
@@ -742,7 +744,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $package = new FRSPackage(['status_id' => FRSPackage::STATUS_HIDDEN]);
         $destination->shouldReceive('getPackage')->andReturns($package);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $source->move($destination);
     }
@@ -821,7 +823,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $webDAVFRSRelease->shouldReceive('userCanWrite')->andReturns(false);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSRelease->createFile('release');
     }
@@ -844,7 +846,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $project = \Mockery::spy(\Project::class);
         $webDAVFRSRelease->shouldReceive('getProject')->andReturns($project);
         $webDAVFRSRelease->shouldReceive('getUtils')->andReturns($utils);
-        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
+        $this->expectException(RequestedRangeNotSatisfiable::class);
         $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVFRSRelease->shouldReceive('getMaxFileSize')->andReturns(64);
 
@@ -899,7 +901,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('openFile')->never();
         $webDAVFRSRelease->shouldReceive('streamCopyToStream')->never();
         $webDAVFRSRelease->shouldReceive('closeFile')->never();
-        $this->expectException('Sabre_DAV_Exception');
+        $this->expectException(Exception::class);
 
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
     }
@@ -914,7 +916,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('openFile')->once()->andReturns(false);
         $webDAVFRSRelease->shouldReceive('streamCopyToStream')->never();
         $webDAVFRSRelease->shouldReceive('closeFile')->never();
-        $this->expectException('Sabre_DAV_Exception');
+        $this->expectException(Exception::class);
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
@@ -929,8 +931,8 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('openFile')->once()->andReturns(true);
         $webDAVFRSRelease->shouldReceive('streamCopyToStream')->once();
         $webDAVFRSRelease->shouldReceive('closeFile')->once()->andReturns(false);
-        $this->expectException('Sabre_DAV_Exception');
-        $this->expectException('Sabre_DAV_Exception');
+        $this->expectException(Exception::class);
+        $this->expectException(Exception::class);
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }

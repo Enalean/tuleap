@@ -29,8 +29,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project_AccessPrivateException;
 use ProjectManager;
-use Sabre_DAV_Exception_FileNotFound;
-use Sabre_DAV_Exception_Forbidden;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\NotFound;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -99,7 +99,7 @@ final class WebDAVRootTest extends TestCase
     {
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $this->webDAVRoot->getChildren();
     }
@@ -159,7 +159,7 @@ final class WebDAVRootTest extends TestCase
 
         $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build());
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $this->webDAVRoot->getChild('project1');
     }
@@ -171,7 +171,7 @@ final class WebDAVRootTest extends TestCase
     {
         $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(null);
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $this->webDAVRoot->getChild('project1');
     }
@@ -183,7 +183,7 @@ final class WebDAVRootTest extends TestCase
     {
         $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(ProjectTestBuilder::aProject()->withStatusDeleted()->build());
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $this->webDAVRoot->getChild('project1');
     }
@@ -200,7 +200,7 @@ final class WebDAVRootTest extends TestCase
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->with($this->user, $project)->andThrow(new Project_AccessPrivateException());
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $this->webDAVRoot->getChild('project1');
     }

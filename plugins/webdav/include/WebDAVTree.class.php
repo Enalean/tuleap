@@ -20,9 +20,9 @@
  */
 
 /**
- * This is the WebDAV server tree it implements Sabre_DAV_ObjectTree to rewrite some methods
+ * This is the WebDAV server tree
  */
-class WebDAVTree extends Sabre_DAV_ObjectTree
+class WebDAVTree extends \Sabre\DAV\Tree
 {
 
     /**
@@ -84,7 +84,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
      */
     public function copy($sourcePath, $destinationPath)
     {
-        throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
+        throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
 
         // Check that write access is enabled for WebDAV
         /*if ($this->getUtils()->isWriteEnabled()) {
@@ -135,13 +135,15 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
      * operation is not yet well supported by the FRS itself we cannot implement
      * it the right way.
      *
-     * @see lib/Sabre/DAV/Sabre_DAV_Tree#move($sourcePath, $destinationPath)
+     * @param string $sourcePath      The path to the file which should be moved
+     * @param string $destinationPath The full destination path, so not just the destination parent node
+     *
      * @psalm-suppress InvalidReturnType Return type of the library is incorrect
      */
-    public function move($sourcePath, $destinationPath)
+    public function move($sourcePath, $destinationPath): void
     {
-        list($sourceDir, $sourceName)           = Sabre_DAV_URLUtil::splitPath($sourcePath);
-        list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
+        list($sourceDir, $sourceName)           = \Sabre\Uri\split($sourcePath);
+        list($destinationDir, $destinationName) = \Sabre\Uri\split($destinationPath);
 
         $source      = $this->getNodeForPath($sourcePath);
         $itemFactory = $this->getUtils()->getDocmanItemFactory();
@@ -177,10 +179,10 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
                     throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_projects_move'));
                 }*/
             } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
             }
         } else {
-            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
+            throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
         }
     }
 

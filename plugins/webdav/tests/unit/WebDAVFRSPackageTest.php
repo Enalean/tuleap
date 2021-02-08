@@ -28,6 +28,9 @@ use FRSRelease;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\MethodNotAllowed;
+use Sabre\DAV\Exception\NotFound;
 use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . '/bootstrap.php';
@@ -102,7 +105,7 @@ class WebDAVFRSPackageTest extends TestCase
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
 
-        $this->expectException('Sabre_DAV_Exception_FileNotFound');
+        $this->expectException(NotFound::class);
 
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
     }
@@ -124,7 +127,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
         $webDAVFRSPackage->shouldReceive('getUser')->andReturns(Mockery::mock(\PFUser::class));
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
     }
@@ -337,7 +340,7 @@ class WebDAVFRSPackageTest extends TestCase
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(false);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSPackage->delete();
     }
@@ -351,7 +354,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(true);
         $release = \Mockery::spy(FRSRelease::class);
         $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([$release]);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSPackage->delete();
     }
@@ -373,7 +376,7 @@ class WebDAVFRSPackageTest extends TestCase
         $project = \Mockery::spy(\Project::class);
         $webDAVFRSPackage->shouldReceive('getProject')->andReturns($project);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSPackage->delete();
     }
@@ -411,7 +414,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
         $project = \Mockery::spy(\Project::class);
         $webDAVFRSPackage->shouldReceive('getProject')->andReturns($project);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSPackage->setName('newName');
     }
@@ -430,7 +433,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
         $project = \Mockery::spy(\Project::class);
         $webDAVFRSPackage->shouldReceive('getProject')->andReturns($project);
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $webDAVFRSPackage->setName('newName');
     }
@@ -463,7 +466,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(false);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Forbidden::class);
 
         $webDAVFRSPackage->createDirectory('release');
     }
@@ -482,7 +485,7 @@ class WebDAVFRSPackageTest extends TestCase
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('getReleaseFactory')->andReturns($frsrf);
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $webDAVFRSPackage->createDirectory('release');
     }

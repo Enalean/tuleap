@@ -22,11 +22,8 @@
 /**
  * This class is used to mount the releases of a given
  * package into the WebDAV virtual file system.
- *
- * It's an implementation of the abstract class Sabre_DAV_Directory methods
- *
  */
-class WebDAVFRSPackage extends Sabre_DAV_Directory
+class WebDAVFRSPackage extends \Sabre\DAV\FS\Directory
 {
 
     private $user;
@@ -55,9 +52,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
     /**
      * Generates the list of releases under the package
      *
-     * @return Sabre_DAV_INode[]
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_IDirectory#getChildren()
+     * @return \Sabre\DAV\INode[]
      */
     public function getChildren()
     {
@@ -81,15 +76,13 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      * @param String $releaseName
      *
      * @return WebDAVFRSRelease
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
     public function getChild($releaseName)
     {
         $releaseName = $this->getUtils()->retrieveName($releaseName);
         $frs_release = $this->getFRSReleaseFromName($releaseName);
         if ($frs_release === null) {
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));
         }
         $release = $this->getWebDAVRelease($frs_release);
 
@@ -97,11 +90,11 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
 
         // Check if Release exists
         if (! $release->exist()) {
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));
         }
 
         if (! $release->userCanRead($this->getUser())) {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
         }
 
         return $release;
@@ -111,8 +104,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      * Returns the name of the package
      *
      * @return String
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_INode#getName()
      */
     public function getName()
     {
@@ -124,10 +115,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
     }
 
     /**
-     * Packages don't have a last modified date this
-     * is used only suit the class Sabre_DAV_Node
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
+     * Packages don't have a last modified date
      */
     public function getLastModified()
     {
@@ -280,8 +268,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      * Deletes the package
      *
      * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#delete()
      */
     public function delete()
     {
@@ -290,16 +276,16 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
             $releases    = $this->getReleaseList($this->getPackage());
             $numReleases = count($releases);
             if ($numReleases > 0) {
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_empty'));
+                throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_empty'));
             } else {
                 $utils  = $this->getUtils();
                 $result = $utils->getPackageFactory()->delete_package($this->getProject()->getGroupId(), $this->getPackageId());
                 if ($result == 0) {
-                    throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
+                    throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
                 }
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_delete'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_delete'));
         }
     }
 
@@ -307,8 +293,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      * Renames the package
      *
      * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#setName($name)
      */
     public function setName($name)
     {
@@ -318,10 +302,10 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
                 $this->getPackage()->setName(htmlspecialchars($name));
                 $utils->getPackageFactory()->update($this->getPackage());
             } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'package_name_exist'));
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'package_name_exist'));
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_rename'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_rename'));
         }
     }
 
@@ -356,8 +340,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      * @param String $name
      *
      * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Directory#createDirectory($name)
      */
     public function createDirectory($name)
     {
@@ -379,10 +361,10 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
                     $relFactory->setDefaultPermissions($release);
                 }
             } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'release_name_exist'));
+                throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'release_name_exist'));
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_create'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_create'));
         }
     }
 }

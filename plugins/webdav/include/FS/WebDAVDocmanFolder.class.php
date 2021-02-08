@@ -21,7 +21,7 @@
 
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 
-class WebDAVDocmanFolder extends Sabre_DAV_Directory
+class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
 {
     private const DUPLICATE                                 = 'duplicate';
     private const ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV = 'exists-not-displayed';
@@ -112,7 +112,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
     /**
      * Returns the visible content of the folder
      *
-     * @return Sabre_DAV_INode[]
+     * @return \Sabre\DAV\INode[]
      */
     public function getChildren(): array
     {
@@ -131,21 +131,21 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      *
      * @param string $name
      */
-    public function getChild($name): Sabre_DAV_INode
+    public function getChild($name): \Sabre\DAV\INode
     {
         $name     = $this->utils->retrieveName($name);
         $children = $this->getChildList();
 
         if (! isset($children[$name])) {
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_not_available'));
+            throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_not_available'));
         }
 
         if ($children[$name] === self::DUPLICATE) {
-            throw new Sabre_DAV_Exception_Conflict($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_duplicated'));
+            throw new \Sabre\DAV\Exception\Conflict($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_duplicated'));
         }
 
         if ($children[$name] === self::ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV) {
-            throw new Sabre_DAV_Exception_BadRequest(dgettext('tuleap-webdav', 'Item exists but cannot be displayed over webdav (link, wiki, empty)'));
+            throw new \Sabre\DAV\Exception\BadRequest(dgettext('tuleap-webdav', 'Item exists but cannot be displayed over webdav (link, wiki, empty)'));
         }
 
         return $children[$name];
@@ -194,15 +194,15 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
 
             $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
         }
     }
 
     /**
      * Creates a new document under the folder
      *
-     * @param string $name Name of the document
-     * @param resource $data Content of the document
+     * @param string               $name Name of the file
+     * @param resource|string|null $data Initial payload
      */
     public function createFile($name, $data = null): void
     {
@@ -215,8 +215,15 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
             $params['confirm']  = true;
 
             // File stuff
-            $params['file_name']      = $name;
-            $params['upload_content'] = $data === null ? '' : stream_get_contents($data);
+            $params['file_name'] = $name;
+
+            if ($data === null) {
+                $params['upload_content'] = '';
+            } elseif (is_resource($data)) {
+                $params['upload_content'] = stream_get_contents($data);
+            } else {
+                $params['upload_content'] = $data;
+            }
             if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
                 $params['item']['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
                 $params['item']['parent_id'] = $this->item->getId();
@@ -224,10 +231,10 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
 
                 $this->utils->processDocmanRequest(new WebDAV_Request($params));
             } else {
-                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+                throw new \Sabre\DAV\Exception\RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
         }
     }
 
@@ -256,7 +263,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
 
             $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
-            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
+            throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
         }
     }
 
@@ -271,7 +278,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
             $params['id']       = $this->item->getId();
             $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+            throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
     }
 

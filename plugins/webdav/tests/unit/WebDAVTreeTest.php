@@ -29,6 +29,7 @@ use FRSRelease;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Sabre\DAV\Exception\MethodNotAllowed;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
@@ -185,7 +186,7 @@ final class WebDAVTreeTest extends TestCase
 
         $node->shouldReceive('setName')->never();
         $node->shouldReceive('move')->never();
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
@@ -202,7 +203,7 @@ final class WebDAVTreeTest extends TestCase
 
         $node->shouldReceive('setName')->never();
         //$node->expectOnce('move');
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
@@ -214,7 +215,7 @@ final class WebDAVTreeTest extends TestCase
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
         $tree->shouldReceive('getUtils')->andReturns($utils);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -232,7 +233,7 @@ final class WebDAVTreeTest extends TestCase
         $source = $this->getTestFolder($this->docman_folder);
         $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($source);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -250,7 +251,7 @@ final class WebDAVTreeTest extends TestCase
         $source = $this->getTestRelease();
         $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($source);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -268,7 +269,7 @@ final class WebDAVTreeTest extends TestCase
         $source = $this->getTestFolder($sourceItem);
         $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -291,7 +292,7 @@ final class WebDAVTreeTest extends TestCase
         $dpm->shouldReceive('userCanWrite')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -314,7 +315,7 @@ final class WebDAVTreeTest extends TestCase
         $dpm->shouldReceive('userCanWrite')->andReturns(false);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -340,7 +341,7 @@ final class WebDAVTreeTest extends TestCase
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($dif);
 
         //$this->assertNoErrors();
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
 
@@ -370,7 +371,7 @@ final class WebDAVTreeTest extends TestCase
         //$sourceItem->expectOnce('fireEvent', array('plugin_docman_event_move', $source->getUser(), $destinationItem));
 
         //$this->assertNoErrors();
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -401,7 +402,7 @@ final class WebDAVTreeTest extends TestCase
         $dif->shouldReceive('setNewParent')->never();
         $sourceItem->shouldReceive('fireEvent')->never();
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -412,7 +413,7 @@ final class WebDAVTreeTest extends TestCase
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
         $tree->shouldReceive('getUtils')->andReturns($utils);
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -431,7 +432,7 @@ final class WebDAVTreeTest extends TestCase
         $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
 
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -455,7 +456,7 @@ final class WebDAVTreeTest extends TestCase
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
         $dpm->shouldReceive('currentUserCanWriteSubItems')->never();
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -479,7 +480,7 @@ final class WebDAVTreeTest extends TestCase
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
         $dpm->shouldReceive('currentUserCanWriteSubItems')->never();
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
@@ -497,7 +498,7 @@ final class WebDAVTreeTest extends TestCase
         $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
 
 
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 

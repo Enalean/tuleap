@@ -108,7 +108,7 @@ class WebDAVPlugin extends Plugin
         );
     }
 
-    public function getServer(): Sabre_DAV_Server
+    public function getServer(): \Sabre\DAV\Server
     {
         return $this->getServerBuilder()->getServerOnDedicatedDomain($this->getWebDAVAuthentication()->authenticate());
     }

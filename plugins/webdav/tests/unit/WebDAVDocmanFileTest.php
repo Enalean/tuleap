@@ -33,10 +33,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Sabre_DAV_Exception_FileNotFound;
-use Sabre_DAV_Exception_Forbidden;
-use Sabre_DAV_Exception_MethodNotAllowed;
-use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\MethodNotAllowed;
+use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\Exception\RequestedRangeNotSatisfiable;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -93,7 +93,7 @@ class WebDAVDocmanFileTest extends TestCase
         $item = new Docman_File();
         $item->setCurrentVersion($version);
 
-        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
+        $this->expectException(NotFound::class);
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, $item, $this->document_download, $this->utils);
         $webDAVDocmanFile->get();
@@ -113,7 +113,7 @@ class WebDAVDocmanFileTest extends TestCase
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 1);
 
-        $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
+        $this->expectException(RequestedRangeNotSatisfiable::class);
         $webDAVDocmanFile->get();
     }
 
@@ -141,7 +141,7 @@ class WebDAVDocmanFileTest extends TestCase
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, $item, $this->document_download, $this->utils);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
         $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
 
         $webDAVDocmanFile->put($data);
@@ -158,7 +158,7 @@ class WebDAVDocmanFileTest extends TestCase
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 20);
 
-        $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
+        $this->expectException(RequestedRangeNotSatisfiable::class);
         $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
     }
@@ -184,7 +184,7 @@ class WebDAVDocmanFileTest extends TestCase
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download, $this->utils);
 
-        $this->expectException(Sabre_DAV_Exception_MethodNotAllowed::class);
+        $this->expectException(MethodNotAllowed::class);
 
         $webDAVDocmanFile->setName('newName');
     }
@@ -193,7 +193,7 @@ class WebDAVDocmanFileTest extends TestCase
     {
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download, $this->utils);
 
-        $this->expectException(Sabre_DAV_Exception_MethodNotAllowed::class);
+        $this->expectException(MethodNotAllowed::class);
 
         $webDAVDocmanFile->setName('newName');
     }
@@ -214,7 +214,7 @@ class WebDAVDocmanFileTest extends TestCase
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download, $this->utils);
 
-        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $webDAVDocmanFile->delete();
     }
