@@ -164,17 +164,5 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
                 $(id).writeAttribute("data-required", true);
             }
         })();
-
-        if (window.CKEDITOR.instances[this.element.id]) {
-            window.CKEDITOR.instances[this.element.id].addCss("body { background-color: red; }");
-        }
-
-        //const rte_body = window.CKEDITOR.instances[this.element.id].document.getBody().$;
-
-        // if (window.CKEDITOR.instances[this.element.id] && this.options.privateFormat) {
-        //     rte_body.style.backgroundColor = "#dcede4";
-        // } else if (window.CKEDITOR.instances[this.element.id] && !this.options.privateFormat) {
-        //     rte_body.style.backgroundColor = "";
-        // }
     },
 });
