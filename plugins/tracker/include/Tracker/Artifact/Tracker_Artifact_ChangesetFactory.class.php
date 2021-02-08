@@ -1,4 +1,7 @@
 <?php
+
+use Tuleap\Tracker\Permission\FollowUp\PrivateComments\PermissionsOnPrivateCommentChecker;
+
 /**
  * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
@@ -151,8 +154,9 @@ class Tracker_Artifact_ChangesetFactory
      */
     public function getFullChangesetsForArtifact(Artifact $artifact, PFUser $user)
     {
-        $changeset_values_cache = $this->changeset_value_dao->searchByArtifactId($artifact->getId());
-        $comments_cache         = $this->changeset_comment_dao->searchLastVersionForArtifact($artifact->getId());
+        $access_private_comments = PermissionsOnPrivateCommentChecker::getInstance()->checkPermission($user, $artifact->getTracker());
+        $changeset_values_cache  = $this->changeset_value_dao->searchByArtifactId($artifact->getId());
+        $comments_cache          = $this->changeset_comment_dao->searchLastVersionForArtifact($artifact->getId(), $access_private_comments);
 
         $changesets         = $this->getChangesetsForArtifact($artifact);
         $previous_changeset = null;
@@ -178,9 +182,12 @@ class Tracker_Artifact_ChangesetFactory
                 $row['submitted_on'],
                 $row['body'],
                 $row['body_format'],
-                $row['parent_id']
+                $row['parent_id'],
+                $row['private']
             );
             $changeset->setLatestComment($comment);
+        } else {
+            $changeset->setPrivateCommentAccessDenied(true);
         }
     }
 

@@ -23,6 +23,7 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
+use Tuleap\Tracker\Permission\FollowUp\PrivateComments\PermissionsOnPrivateCommentChecker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -88,7 +89,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         if (! $submitted_values || ! is_array($submitted_values)) {
             $submitted_values = [];
         }
-        $html_form  = $this->renderer->fetchFields($this->artifact, $submitted_values);
+        $html_form = $this->renderer->fetchFields($this->artifact, $submitted_values);
         $html_form .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
 
         $html .= $this->renderer->fetchArtifactForm($html_form);
@@ -118,6 +119,10 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
 
         $tracker      = $this->artifact->getTracker();
         $invert_order = $this->user->getPreference(self::USER_PREFERENCE_INVERT_ORDER . '_' . $tracker->getId()) == false;
+
+        if (PermissionsOnPrivateCommentChecker::getInstance()->checkPermission($this->user, $tracker)) {
+            $html .= "<script>window.tuleap.private_access = true;</script>";
+        }
 
         $classname       = 'tracker_artifact_followup_comments-display_changes';
         $display_changes = $this->user->getPreference(self::USER_PREFERENCE_DISPLAY_CHANGES);
@@ -188,6 +193,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         return $html;
     }
 
+    /**
+     * @var Tracker_Artifact_Changeset[] $comments
+     */
     private function fetchCommentContent(array $comments, $invert_comments)
     {
         $html = '';
@@ -199,13 +207,15 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         foreach ($comments as $item) {
             \assert($item instanceof Tracker_Artifact_Followup_Item);
             if ($previous_item) {
-                $diff_to_previous   = $item->diffToPreviousArtifactView($this->user, $previous_item);
-                $classnames         = 'tracker_artifact_followup ';
-                $classnames        .= $item->getFollowUpClassnames($diff_to_previous);
-                $comment_html       = '<li id="followup_' . $item->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up">';
-                $comment_html      .= $item->fetchFollowUp($diff_to_previous, $this->user);
-                $comment_html      .= '</li>';
-                $comments_content[] = $comment_html;
+                $diff_to_previous = $item->diffToPreviousArtifactView($this->user, $previous_item);
+                if ($item->getComment() || $diff_to_previous) {
+                    $classnames         = 'tracker_artifact_followup ';
+                    $classnames        .= $item->getFollowUpClassnames($diff_to_previous);
+                    $comment_html       = '<li id="followup_' . $item->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up">';
+                    $comment_html      .= $item->fetchFollowUp($diff_to_previous, $this->user);
+                    $comment_html      .= '</li>';
+                    $comments_content[] = $comment_html;
+                }
             }
             $previous_item = $item;
         }

@@ -65,7 +65,7 @@ class Tracker_Action_UpdateArtifact
     {
          //TODO : check permissions on this action?
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
-
+        $private = (bool) $request->get('private_comment_inputnew');
         $fields_data                          = $request->get('artifact');
         $fields_data['request_method_called'] = 'artifact-update';
         $this->artifact->getTracker()->augmentDataFromRequest($fields_data);
@@ -75,7 +75,14 @@ class Tracker_Action_UpdateArtifact
             if ($current_user->isAnonymous()) {
                 $current_user->setEmail($request->get('email'));
             }
-            $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, true, $comment_format);
+            $this->artifact->createNewChangeset(
+                $fields_data,
+                $request->get('artifact_followup_comment'),
+                $current_user,
+                true,
+                $comment_format,
+                $private
+            );
 
             $art_link = $this->artifact->fetchDirectLinkToArtifact();
             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Successfully Updated (%1$s)'), $art_link), CODENDI_PURIFIER_LIGHT);
