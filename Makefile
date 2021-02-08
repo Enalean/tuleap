@@ -1,5 +1,5 @@
-SHELL := /bin/bash
-RPM_TMP=${HOME}/rpmbuild
+SHELL := /usr/bin/env bash
+RPM_TMP=/build/rpmbuild
 PKG_NAME=tuleap-plugin-botmattermost-agiledashboard
 VERSION=$(shell LANG=C cat VERSION)
 
@@ -7,7 +7,7 @@ ifeq ($(RELEASE),)
 	RELEASE=1
 endif
 BASE_DIR=$(shell pwd)
-RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
+RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "_tmppath /build" --define "dist $(DIST)"
 
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
@@ -29,6 +29,8 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 		> $@
 
 .PHONY: build
+build: export HOME = "/build"
+build: export TMPDIR = "/build"
 build:
 	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
     cd /build/src/plugins/botmattermost_agiledashboard && npm install && npm run build
@@ -58,9 +60,7 @@ $(RPM_TMP):
 	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
 
 docker-run:
-	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
-	useradd -d /build -m build
 	pushd /tuleap && git checkout-index -a --prefix=/build/src/ && popd
-	cp -Rf /plugin/ /build/src/plugins/botmattermost_agiledashboard && chown -R build /build/src
-	su --login --command "make -C /build/src/plugins/botmattermost_agiledashboard all RELEASE=$(RELEASE) DIST=.$(DIST)" build
-	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
+	cp -Rf /plugin/ /build/src/plugins/botmattermost_agiledashboard
+	make -C /build/src/plugins/botmattermost_agiledashboard all RELEASE=$(RELEASE) DIST=.$(DIST)
+	install -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
