@@ -18,8 +18,8 @@ function cleanup {
 }
 trap cleanup EXIT
 
-docker pull $DOCKER_REGISTRY/enalean/tuleap-buildrpms:"$OS"-without-srpms
-docker run -i --name "$UNIQUE_NAME-rpm-builder" -v "$WORKSPACE/sources":/tuleap:ro $DOCKER_REGISTRY/enalean/tuleap-buildrpms:"$OS"-without-srpms
+docker build -t "$UNIQUE_NAME-rpm-builder" -f "$WORKSPACE"/sources/tools/utils/nix/build-tools.dockerfile "$WORKSPACE"/sources/tools/utils/nix/
+docker run -i --name "$UNIQUE_NAME-rpm-builder" -v /rpms -v "$WORKSPACE/sources":/tuleap:ro -w /tuleap "$UNIQUE_NAME-rpm-builder" tools/rpm/build_rpm_inside_container.sh
 
 if [ "$OS" == "centos7" ]; then
     docker pull $DOCKER_REGISTRY/enalean/tuleap-installrpms:ci-centos7

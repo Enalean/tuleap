@@ -58,7 +58,7 @@ fi
 
 docker run -i --rm -v "$clean_tuleap_sources":/tuleap -w /tuleap -u "$(id -u):$(id -g)" --tmpfs /tmp/tuleap_build:rw,noexec,nosuid tuleap-generated-files-builder tools/utils/scripts/generated-files-builder.sh prod
 
-docker run -i --name rpm-builder -e "EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0}" -v "$clean_tuleap_sources":/tuleap:ro enalean/tuleap-buildrpms:"$OS"-without-srpms
+docker run -i --name rpm-builder -e "EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0}" -v /rpms -v "$clean_tuleap_sources":/tuleap:ro -w /tuleap tuleap-generated-files-builder tools/rpm/build_rpm_inside_container.sh
 
 if [ "$OS" == "centos7" ]; then
     docker run -t -d --rm --name rpm-installer --volumes-from rpm-builder -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
