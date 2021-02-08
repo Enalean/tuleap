@@ -112,7 +112,7 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends TestCase
         self::assertNull($this->builder->getCommitDetailsCrossReferenceInformation($this->user, $ref));
     }
 
-    public function testItReturnsNullIfCommitCannotBeFoundInTheRepository(): void
+    public function testItReturnsNullIfCommitCannotBeInstantiatedByGitPHP(): void
     {
         $repository = Mockery::mock(\GitRepository::class)
             ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => true])
@@ -132,6 +132,46 @@ class CommitDetailsCrossReferenceInformationBuilderTest extends TestCase
         $this->commit_provider
             ->shouldReceive('getCommit')
             ->with($repository, '1a2b3c4d5e')
+            ->andReturnNull();
+
+        self::assertNull($this->builder->getCommitDetailsCrossReferenceInformation($this->user, $ref));
+    }
+
+    public function testItReturnsNullIfCommitCannotBeFoundInTheRepository(): void
+    {
+        $repository = Mockery::mock(\GitRepository::class)
+            ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => true])
+            ->getMock();
+
+        $this->git_reference_manager
+            ->shouldReceive('getCommitInfoFromReferenceValue')
+            ->with($this->project, 'cloudy/stable/1a2b3c4d5e')
+            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
+
+        $ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('git_commit')
+            ->withValue('cloudy/stable/1a2b3c4d5e')
+            ->withProjectId(1)
+            ->build();
+
+        $commit = Mockery::mock(Commit::class);
+        $this->commit_provider
+            ->shouldReceive('getCommit')
+            ->with($repository, '1a2b3c4d5e')
+            ->andReturn($commit);
+
+        $commit_details = new CommitDetails(
+            '1a2b3c4d5e6f7g8h9i',
+            'Add foo to stuff',
+            '',
+            '',
+            'jdoe@example.com',
+            'John Doe',
+            1234567890
+        );
+        $this->details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->with($repository, $commit)
             ->andReturnNull();
 
         self::assertNull($this->builder->getCommitDetailsCrossReferenceInformation($this->user, $ref));

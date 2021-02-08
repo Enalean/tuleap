@@ -78,10 +78,15 @@ class CommitDetailsCrossReferenceInformationBuilder
             return null;
         }
 
+        $commit_details = $this->commit_details_retriever->retrieveCommitDetails($repository, $commit);
+        if (! $commit_details) {
+            return null;
+        }
+
         $section_label = $project->getUnixNameLowerCase() . '/' . $repository->getFullName();
 
         return new CommitDetailsCrossReferenceInformation(
-            $this->commit_details_retriever->retrieveCommitDetails($repository, $commit),
+            $commit_details,
             $cross_reference_presenter,
             $section_label
         );

@@ -37,7 +37,7 @@ class CommitDetailsRetriever
         $this->dao = $dao;
     }
 
-    public function retrieveCommitDetails(GitRepository $repository, Commit $commit): CommitDetails
+    public function retrieveCommitDetails(GitRepository $repository, Commit $commit): ?CommitDetails
     {
         $commit_details_from_cache = $this->retrieveCommitDetailsFromDb($repository, $commit);
 
@@ -62,7 +62,7 @@ class CommitDetailsRetriever
         );
     }
 
-    private function retrieveCommitDetailsFromCommit(Commit $commit, GitRepository $repository): CommitDetails
+    private function retrieveCommitDetailsFromCommit(Commit $commit, GitRepository $repository): ?CommitDetails
     {
         $branches     = $commit->GetHeads();
         $first_branch = empty($branches) ? '' : $branches[0]->GetName();
@@ -70,7 +70,11 @@ class CommitDetailsRetriever
         $tags      = $commit->GetTags();
         $first_tag = empty($tags) ? '' : $tags[0]->GetName();
 
-        $title           = $commit->GetTitle();
+        $title = $commit->GetTitle();
+        if ($title === null) {
+            return null;
+        }
+
         $author_email    = $commit->GetAuthorEmail();
         $author_name     = $commit->GetAuthorName();
         $author_epoch    = (int) $commit->GetAuthorEpoch();

@@ -490,7 +490,7 @@ class Commit extends GitObject
      *
      * @access public
      * @param int $trim length to trim to (0 for no trim)
-     * @return string title
+     * @return string | null
      */
     public function GetTitle($trim = 0) // @codingStandardsIgnoreLine
     {
