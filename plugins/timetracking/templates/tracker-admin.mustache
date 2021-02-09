@@ -19,11 +19,15 @@
     {{# is_timetracking_enabled }}
         <h3>{{# dgettext }} tuleap-timetracking | Permissions {{/ dgettext }}</h3>
 
+        <p>
+            {{# dgettext }} tuleap-timetracking | Select user groups that will be able to add time and read all times in this tracker, in addition of site administrators and project administrators. {{/ dgettext }}
+        </p>
+
         <table class="table" id="timetracking-admin-rights">
             <thead>
                 <tr>
-                    <th>{{# dgettext }} tuleap-timetracking | Read {{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-timetracking | Write {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-timetracking | Read all tracker times {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-timetracking | Add times {{/ dgettext }}</th>
                 </tr>
             </thead>
             <tbody>

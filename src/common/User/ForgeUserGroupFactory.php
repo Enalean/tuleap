@@ -20,6 +20,7 @@
 
 use Tuleap\User\UserGroup\NameTranslator;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class User_ForgeUserGroupFactory
 {
 
@@ -116,6 +117,17 @@ class User_ForgeUserGroupFactory
 
         $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
         $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
+
+        return array_merge($user_groups, $this->getStaticByProject($project), [$this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)]);
+    }
+
+    /**
+     * @return User_ForgeUGroup[]
+     */
+    public function getProjectUGroupsWithMembers(Project $project): array
+    {
+        $user_groups   = [];
+        $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
 
         return array_merge($user_groups, $this->getStaticByProject($project), [$this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)]);
     }

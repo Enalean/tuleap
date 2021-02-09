@@ -118,7 +118,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
 
     public function testGetTrackersMinimalRepresentationWithTimetracking()
     {
-        $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker(
+        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker(
             $this->user,
             $this->tracker
         )->andReturns(true);
@@ -148,7 +148,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
         $tracker_representation     = \Mockery::mock(CompleteTrackerRepresentation::class);
         $tracker_representation->id = $this->tracker->getId();
 
-        $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker(
+        $this->permissions_retriever->allows()->userCanSeeAllTimesInTracker(
             $this->user,
             $this->tracker
         )->andReturns(true);

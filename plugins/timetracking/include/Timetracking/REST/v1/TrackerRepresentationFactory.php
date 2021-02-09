@@ -61,7 +61,7 @@ class TrackerRepresentationFactory
     {
         $authorized_trackers_ids = [];
         foreach ($trackers as $tracker) {
-            if ($this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)) {
+            if ($this->permissions_retriever->userCanSeeAllTimesInTracker($user, $tracker)) {
                 $authorized_trackers_ids[] = (int) $tracker->getId();
             }
         }

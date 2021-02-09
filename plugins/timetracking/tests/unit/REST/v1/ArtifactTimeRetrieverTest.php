@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -146,7 +146,7 @@ class ArtifactTimeRetrieverTest extends TestCase
         $this->project_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt');
         $this->timetracking_enabler->shouldReceive('isTimetrackingEnabledForTracker')->with($this->tracker)->andReturns(true);
 
-        $this->permissions_retriever->shouldReceive('userCanSeeAggregatedTimesInTracker')->andReturn(false);
+        $this->permissions_retriever->shouldReceive('userCanSeeAllTimesInTracker')->andReturn(false);
         $this->expectException(UserCannotSeeTrackedTimeException::class);
 
         $this->retriever->getArtifactTime($this->user, '{"artifact_id": "12"}');
@@ -157,7 +157,7 @@ class ArtifactTimeRetrieverTest extends TestCase
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturns($this->artifact);
         $this->project_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt');
         $this->timetracking_enabler->shouldReceive('isTimetrackingEnabledForTracker')->with($this->tracker)->andReturns(true);
-        $this->permissions_retriever->shouldReceive('userCanSeeAggregatedTimesInTracker')->andReturn(true);
+        $this->permissions_retriever->shouldReceive('userCanSeeAllTimesInTracker')->andReturn(true);
 
         $times_for_user = [
             new Time(9000, 120, 12, '2018-12-12', 45, 'Write some tests'),
