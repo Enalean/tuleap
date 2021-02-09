@@ -43,6 +43,7 @@ use Tuleap\Timetracking\Time\TimeUpdater;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLImport;
+use Tuleap\Timetracking\XML\XMLExport;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -78,6 +79,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+            $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
         }
 
         return parent::getHooksAndCallbacks();
@@ -187,7 +189,10 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
      */
     private function getTimetrackingUgroupRetriever()
     {
-        return new TimetrackingUgroupRetriever(new TimetrackingUgroupDao());
+        return new TimetrackingUgroupRetriever(
+            new TimetrackingUgroupDao(),
+            new UGroupManager()
+        );
     }
 
     /**
@@ -369,6 +374,36 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             $project,
             $created_trackers_objects,
             $artifact_id_mapping
+        );
+    }
+
+    public function tracker_event_export_full_xml(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $timetracking_ugroup_retriever = new TimetrackingUgroupRetriever(
+            new TimetrackingUgroupDao(),
+            new UGroupManager()
+        );
+
+        $xml_export = new XMLExport(
+            new TimetrackingEnabler(
+                new AdminDao()
+            ),
+            $timetracking_ugroup_retriever,
+            Tracker_ArtifactFactory::instance(),
+            new TimeRetriever(
+                new TimeDao(),
+                new PermissionsRetriever($timetracking_ugroup_retriever),
+                new AdminDao(),
+                \ProjectManager::instance()
+            ),
+            UserXMLExporter::build(),
+            UserManager::instance()
+        );
+
+        $xml_export->export(
+            $params['xml_content'],
+            $params['user'],
+            $params['exported_trackers']
         );
     }
 }

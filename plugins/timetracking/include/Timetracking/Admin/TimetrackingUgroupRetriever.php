@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,27 @@
 
 namespace Tuleap\Timetracking\Admin;
 
+use Project;
+use ProjectUGroup;
 use Tracker;
+use UGroupManager;
 
 class TimetrackingUgroupRetriever
 {
-
     /**
      * @var TimetrackingUgroupDao
      */
     private $dao;
 
-    public function __construct(TimetrackingUgroupDao $dao)
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
+
+    public function __construct(TimetrackingUgroupDao $dao, UGroupManager $ugroup_manager)
     {
-        $this->dao = $dao;
+        $this->dao            = $dao;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
     /**
@@ -63,5 +71,48 @@ class TimetrackingUgroupRetriever
         }
 
         return $ugroup_ids;
+    }
+
+    /**
+     * @return ProjectUGroup[]
+     */
+    public function getWriterUgroupsForTracker(Tracker $tracker): array
+    {
+        $ugroup_rows = $this->dao->getWriters($tracker->getId());
+
+        return $this->buildUgroupsCollection($tracker->getProject(), $ugroup_rows);
+    }
+
+    /**
+     * @return ProjectUGroup[]
+     */
+    public function getReaderUgroupsForTracker(Tracker $tracker): array
+    {
+        $ugroup_rows = $this->dao->getReaders($tracker->getId());
+
+        return $this->buildUgroupsCollection($tracker->getProject(), $ugroup_rows);
+    }
+
+    /**
+     * @return ProjectUGroup[]
+     */
+    private function buildUgroupsCollection(Project $project, array $ugroup_rows): array
+    {
+        $ugroups = [];
+        foreach ($ugroup_rows as $ugroup_row) {
+            $ugroup_id = (int) $ugroup_row['ugroup_id'];
+            $ugroup    = $this->ugroup_manager->getUGroup(
+                $project,
+                $ugroup_id
+            );
+
+            if ($ugroup === null) {
+                continue;
+            }
+
+            $ugroups[] = $ugroup;
+        }
+
+        return $ugroups;
     }
 }

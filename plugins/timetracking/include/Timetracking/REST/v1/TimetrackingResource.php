@@ -42,6 +42,7 @@ use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimeUpdater;
+use UGroupManager;
 use UserManager;
 
 class TimetrackingResource extends AuthenticatedResource
@@ -70,7 +71,8 @@ class TimetrackingResource extends AuthenticatedResource
         $time_dao             = new TimeDao();
         $permissionsRetriever = new PermissionsRetriever((
         new TimetrackingUgroupRetriever(
-            new TimetrackingUgroupDao()
+            new TimetrackingUgroupDao(),
+            new UGroupManager()
         )
         ));
         $this->time_retriever = new TimeRetriever(

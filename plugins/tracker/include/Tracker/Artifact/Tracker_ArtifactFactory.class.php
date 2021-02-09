@@ -114,7 +114,7 @@ class Tracker_ArtifactFactory
      *
      * @param int $tracker_id the id of the tracker
      *
-     * @return array of Tracker_Artifact identified by id (array() if not found)
+     * @return Artifact[] identified by id (array() if not found)
      */
     public function getArtifactsByTrackerId($tracker_id)
     {

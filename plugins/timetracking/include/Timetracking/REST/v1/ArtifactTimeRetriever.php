@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,7 @@ use Tuleap\Timetracking\REST\v1\Exception\NoTimetrackingForTrackerException;
 use Tuleap\Timetracking\REST\v1\Exception\UserCannotSeeTrackedTimeException;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use UGroupManager;
 
 class ArtifactTimeRetriever
 {
@@ -79,7 +80,8 @@ class ArtifactTimeRetriever
         $admin_dao             = new AdminDao();
         $permissions_retriever = new PermissionsRetriever(
             new TimetrackingUgroupRetriever(
-                new TimetrackingUgroupDao()
+                new TimetrackingUgroupDao(),
+                new UGroupManager()
             )
         );
         return new self(
