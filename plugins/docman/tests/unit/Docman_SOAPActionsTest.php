@@ -314,6 +314,11 @@ class Docman_SOAPActionsTest extends TestCase
      */
     public function testCreateItem(): void
     {
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('usesService')
+            ->with('news')
+            ->andReturnTrue();
+
         $action = $this->action;
 
         $params  = [
@@ -330,6 +335,7 @@ class Docman_SOAPActionsTest extends TestCase
         $request->shouldReceive('exist')->with('item')->andReturns(true);
         $request->shouldReceive('get')->with('item')->andReturns($params['item']);
         $request->shouldReceive('get')->with('group_id')->andReturns($params['group_id']);
+        $request->shouldReceive('getProject')->andReturns($project);
 
         $action->getControler()->request = $request;
 
@@ -361,6 +367,11 @@ class Docman_SOAPActionsTest extends TestCase
      */
     public function testCreateItemNoDates(): void
     {
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('usesService')
+            ->with('news')
+            ->andReturnTrue();
+
         $action = $this->action;
 
         $params  = [
@@ -375,6 +386,7 @@ class Docman_SOAPActionsTest extends TestCase
         $request->shouldReceive('exist')->with('item')->andReturns(true);
         $request->shouldReceive('get')->with('item')->andReturns($params['item']);
         $request->shouldReceive('get')->with('group_id')->andReturns($params['group_id']);
+        $request->shouldReceive('getProject')->andReturns($project);
 
         $this->itemFactory->shouldReceive('create')->andReturn(128002);
 

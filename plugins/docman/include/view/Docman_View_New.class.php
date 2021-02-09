@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -183,6 +183,11 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
 
     public function _getNewsFieldset($params)
     {
+        $project = ProjectManager::instance()->getProject($params['item']->getGroupId());
+        if (! $project->usesService(Service::NEWS)) {
+            return '';
+        }
+
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         $user = $this->_controller->getUser();
