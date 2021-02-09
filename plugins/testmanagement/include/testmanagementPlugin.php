@@ -79,6 +79,7 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\User\History\HistoryQuickLink;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -126,7 +127,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
 
-            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+            $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(GetEditableTypesInProject::NAME);
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
             $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
@@ -471,15 +472,15 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $params['natures'][] = NatureCoveredByPresenter::NATURE_COVERED_BY;
     }
 
-    public function import_xml_project_tracker_done(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
         $importer = new XMLImport($this->getConfig(), $this->getTrackerChecker(), new ExecutionDao());
         $importer->import(
-            $params['project'],
-            $params['extraction_path'],
-            $params['mapping'],
-            $params['artifact_id_mapping'],
-            $params['changeset_id_mapping']
+            $event->getProject(),
+            $event->getExtractionPath(),
+            $event->getCreatedTrackersMapping(),
+            $event->getArtifactsIdMapping(),
+            $event->getChangesetIdMapping()
         );
     }
 

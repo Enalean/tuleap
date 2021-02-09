@@ -38,6 +38,7 @@ use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\XML\PHPCast;
@@ -270,9 +271,6 @@ class TrackerXmlImport
     }
 
     /**
-     *
-     * @param $extraction_path
-     *
      * @return Tracker[]|void
      * @throws TrackerFromXmlException
      * @throws TrackerFromXmlImportCannotBeCreatedException
@@ -284,7 +282,7 @@ class TrackerXmlImport
         Project $project,
         SimpleXMLElement $xml_input,
         MappingsRegistry $registery,
-        $extraction_path,
+        string $extraction_path,
         PFUser $user
     ) {
         if (! $xml_input->trackers) {
@@ -322,13 +320,13 @@ class TrackerXmlImport
             $registery->addReference($xml_reference, $renderer_xml_mapping);
         }
 
-        $xml_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xml_fields_mapping);
+        $xml_field_values_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xml_fields_mapping);
 
         $created_artifacts = $this->importBareArtifacts(
             $xml_trackers,
             $created_trackers_objects,
             $extraction_path,
-            $xml_mapping,
+            $xml_field_values_mapping,
             $artifacts_id_mapping,
             $configuration,
             $tracker_import_config
@@ -338,7 +336,7 @@ class TrackerXmlImport
             $xml_trackers,
             $created_trackers_objects,
             $extraction_path,
-            $xml_mapping,
+            $xml_field_values_mapping,
             $artifacts_id_mapping,
             $url_mapping,
             $created_artifacts,
@@ -365,23 +363,21 @@ class TrackerXmlImport
             $this->trigger_rulesmanager->createFromXML($xml_input->trackers->triggers, $this->xml_fields_mapping);
         }
 
-        $this->event_manager->processEvent(
-            Event::IMPORT_XML_PROJECT_TRACKER_DONE,
-            [
-                'project'                 => $project,
-                'xml_content'             => $xml_input,
-                'mapping'                 => $created_trackers_mapping,
-                'field_mapping'           => $this->xml_fields_mapping,
-                'mappings_registery'      => $registery,
-                'artifact_id_mapping'     => $artifacts_id_mapping,
-                'changeset_id_mapping'    => $changeset_id_mapping,
-                'extraction_path'         => $extraction_path,
-                'logger'                  => $this->logger,
-                'value_mapping'           => $xml_mapping,
-                'user_finder'             => $this->user_finder,
-                'created_tracker_objects' => $created_trackers_objects
-            ]
+        $event = new ImportXMLProjectTrackerDone(
+            $project,
+            $xml_input,
+            $created_trackers_mapping,
+            $this->xml_fields_mapping,
+            $registery,
+            $artifacts_id_mapping,
+            $changeset_id_mapping,
+            $extraction_path,
+            $this->logger,
+            $xml_field_values_mapping,
+            $this->user_finder,
+            $created_trackers_objects
         );
+        $this->event_manager->processEvent($event);
 
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,

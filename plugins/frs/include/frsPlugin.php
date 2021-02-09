@@ -44,6 +44,7 @@ use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
@@ -65,7 +66,6 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->addHook(GetReleaseNotesLink::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
-        $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
         $this->addHook(FRSOngoingUploadChecker::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
 
@@ -73,6 +73,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(ArtifactPartialUpdate::NAME);
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
+            $this->addHook(ImportXMLProjectTrackerDone::NAME);
         }
 
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
@@ -266,10 +267,10 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $injector->declareProjectResources($params['resources'], $params['project']);
     }
 
-    public function import_xml_project_tracker_done($params) //phpcs:ignore
+    public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
-        $mappings            = $params['mappings_registery'];
-        $artifact_id_mapping = $params['artifact_id_mapping'];
+        $mappings            = $event->getMappingsRegistery();
+        $artifact_id_mapping = $event->getArtifactsIdMapping();
 
         $frs_release_mapping = $mappings->get(FRSXMLImporter::MAPPING_KEY);
         if (! $frs_release_mapping) {
