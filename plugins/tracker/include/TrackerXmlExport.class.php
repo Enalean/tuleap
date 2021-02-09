@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2021. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 
 class TrackerXmlExport
 {
@@ -101,16 +102,14 @@ class TrackerXmlExport
             }
         }
 
-        $params = [
-            'user'              => $user,
-            'xml_content'       => &$xml_content,
-            'group_id'          => $project->getID(),
-            'project'           => $project,
-            'exported_trackers' => $exported_trackers,
-            'archive'           => &$archive
-        ];
-
-        $this->event_manager->processEvent(TRACKER_EVENT_EXPORT_FULL_XML, $params);
+        $event = new TrackerEventExportFullXML(
+            $user,
+            $xml_content,
+            $project,
+            $exported_trackers,
+            $archive
+        );
+        $this->event_manager->processEvent($event);
 
         $this->exportTriggers($xml_trackers, $xml_field_mapping, $exported_trackers);
         $this->validateTrackerExport($xml_trackers);
