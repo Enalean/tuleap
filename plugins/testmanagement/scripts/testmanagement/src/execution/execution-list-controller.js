@@ -201,7 +201,15 @@ function ExecutionListCtrl(
                 } else {
                     $timeout(function () {
                         const first_test_tab = document.querySelector("[data-shortcut-navigation]");
-                        first_test_tab.setAttribute("tabindex", "0");
+                        if (first_test_tab) {
+                            first_test_tab.setAttribute("tabindex", "0");
+                            return;
+                        }
+                        if (!shouldShowEmptyState()) {
+                            throw new Error(
+                                "Could not find [data-navigation-test-link] attribute."
+                            );
+                        }
                     }, 0);
                 }
 
