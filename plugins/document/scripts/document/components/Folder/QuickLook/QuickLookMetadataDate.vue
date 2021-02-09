@@ -36,7 +36,9 @@
             v-bind:placement="relative_date_placement"
             v-bind:preference="relative_date_preference"
             v-bind:locale="user_locale"
-        />
+        >
+            {{ getFormattedDate }}
+        </tlp-relative-date>
         <span
             class="document-quick-look-property-empty"
             data-test="metadata-date-permanent"

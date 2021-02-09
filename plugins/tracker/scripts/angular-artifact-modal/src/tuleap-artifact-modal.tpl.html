@@ -442,7 +442,10 @@
                                     absolute-date="{{ modal.formatDateUsingPreferredUserFormat(comment.submitted_on) }}"
                                     preference="{{ modal.relativeDatePreference() }}"
                                     locale="{{ modal.user_locale }}"
-                                    placement="{{ modal.relativeDatePlacement() }}"></tlp-relative-date>
+                                    placement="{{ modal.relativeDatePlacement() }}"
+                                >
+                                    {{ modal.formatDateUsingPreferredUserFormat(comment.submitted_on) }}
+                                </tlp-relative-date>
                             </div>
 
                             <div ng-if="comment.submitted_on !== comment.last_modified_date"
@@ -455,7 +458,10 @@
                                     absolute-date="{{ modal.formatDateUsingPreferredUserFormat(comment.last_modified_date) }}"
                                     preference="{{ modal.relativeDatePreference() }}"
                                     locale="{{ modal.user_locale }}"
-                                    placement="{{ modal.relativeDatePlacement() }}"></tlp-relative-date>
+                                    placement="{{ modal.relativeDatePlacement() }}"
+                                >
+                                    {{ modal.formatDateUsingPreferredUserFormat(comment.last_modified_date) }}
+                                </tlp-relative-date>
                             </div>
                         </div>
                     </div>
