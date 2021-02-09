@@ -41,6 +41,10 @@ export interface Metadata {
     value: number | string | null;
 }
 
+export interface FolderMetadata extends Metadata {
+    recursion: string | null;
+}
+
 /**
  * Note of metadata usage:
  *
@@ -66,10 +70,10 @@ export interface Item {
     user_can_write: boolean;
     can_user_manage: boolean;
     lock_info: LockInfo;
-    metadata: Array<Metadata>;
+    metadata: Array<Metadata> | Array<FolderMetadata>;
     parent_id: number | null;
     type: string;
-    status: string;
+    status: string | FolderStatus;
 }
 
 export interface Folder extends Item {
@@ -77,6 +81,13 @@ export interface Folder extends Item {
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;
     type: "folder";
+    metadata: Array<FolderMetadata>;
+    status: FolderStatus;
+}
+
+export interface FolderStatus {
+    value: string;
+    recursion: string;
 }
 
 export interface ApprovableDocument extends Item {
@@ -110,12 +121,14 @@ export interface Wiki extends Item {
     parent_id: number;
     wiki_properties: WikiProperties;
     type: "wiki";
+    status: string;
 }
 
 export interface Empty extends Item {
     parent_id: number;
     approval_table: ApprovalTable | null;
     type: "empty";
+    status: string;
 }
 
 export interface LockInfo {

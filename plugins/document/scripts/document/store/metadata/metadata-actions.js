@@ -38,7 +38,7 @@ import {
 } from "../../constants";
 import { getItem, getItemWithSize } from "../../api/rest-querier";
 import Vue from "vue";
-import { formatCustomMetadataForFolderUpdate } from "../../helpers/metadata-helpers/data-transformatter-helper";
+import { formatCustomMetadataForFolderUpdate } from "../../helpers/metadata-helpers/update-data-transformatter-helper";
 
 export const loadProjectMetadata = async (context, [global_context]) => {
     try {
