@@ -809,7 +809,10 @@ function forum_utils_news_access($forum_id)
         //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set
         $g_id = db_result($res1, 0, 'group_id');
 
-        return permission_is_authorized('NEWS_READ', intval($forum_id), UserManager::instance()->getCurrentUser()->getId(), $g_id);
+        $project = ProjectManager::instance()->getProject($g_id);
+
+        return $project->usesService(Service::NEWS)
+            && permission_is_authorized('NEWS_READ', intval($forum_id), UserManager::instance()->getCurrentUser()->getId(), $g_id);
     }
 
     return true;
