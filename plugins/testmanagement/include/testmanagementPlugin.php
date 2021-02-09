@@ -78,6 +78,7 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\User\History\HistoryQuickLink;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -132,7 +133,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
             $this->addHook(FilterFormElementsThatCanBeCreatedForTracker::NAME);
             $this->addHook(DisplayAdminFormElementsWarningsEvent::NAME);
-            $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
+            $this->addHook(TrackerEventExportFullXML::NAME);
             $this->addHook(TRACKER_USAGE);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
@@ -696,12 +697,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function tracker_event_export_full_xml(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
     {
-        $project_id = $params['group_id'];
-        $project    = ProjectManager::instance()->getProject($project_id);
+        $project = $event->getProject();
 
-        if (! $project || ! $project->usesService($this->getServiceShortname())) {
+        if (! $project->usesService($this->getServiceShortname())) {
             return;
         }
 
@@ -709,7 +709,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $xml_content = $exporter->exportToXML($project);
 
         if ($xml_content) {
-            $this->addXMLFileIntoArchive($xml_content, $project, $params['archive']);
+            $this->addXMLFileIntoArchive($xml_content, $project, $event->getArchive());
         }
     }
 

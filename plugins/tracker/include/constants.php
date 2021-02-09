@@ -231,16 +231,6 @@ define('TRACKER_EVENT_DELETE_TRACKER', 'tracker_event_delete_tracker');
 define('TRACKER_EVENT_FETCH_ADMIN_BUTTONS', 'tracker_event_fetch_admin_buttons');
 
 /**
- * Event emitted to export AgileDashboard and carwall
- *
- * Parameters:
- *   'user'        PFUser
- *   'xml_content' SimpleXmlElement
- *   'group_id'    group_id
- */
-define('TRACKER_EVENT_EXPORT_FULL_XML', 'tracker_event_export_full_xml');
-
-/**
  * Getting informations from agile dashboard plugin about the tracker affilitaion to an agile dashboard
  *
  * Parameters:

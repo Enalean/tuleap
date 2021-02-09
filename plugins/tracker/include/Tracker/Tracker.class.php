@@ -2035,7 +2035,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $this->exportTrackerToXML($xmlElem, $user_xml_exporter, $xmlMapping, true);
     }
 
-    public function getXMLId()
+    public function getXMLId(): string
     {
         return self::XML_ID_PREFIX . $this->getId();
     }

@@ -35,6 +35,7 @@ use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 
 /**
  * CardwallPlugin
@@ -82,7 +83,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
-            $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
+            $this->addHook(TrackerEventExportFullXML::NAME);
             $this->addHook(IsFieldUsedInASemanticEvent::NAME);
             $this->addHook(ImportRendererFromXmlEvent::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
@@ -111,12 +112,23 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         return ['tracker'];
     }
 
-    public function tracker_event_export_full_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
     {
-        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker($params['user'], $params['group_id']);
-        $this->getAgileDashboardExporter()->exportFull($params['project'], $params['xml_content'], $plannings);
+        $project_id  = (int) $event->getProject()->getID();
+        $xml_content = $event->getXmlElement();
 
-        $this->getCardwallXmlExporter($params['group_id'])->export($params['xml_content']);
+        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker(
+            $event->getUser(),
+            $project_id
+        );
+
+        $this->getAgileDashboardExporter()->exportFull(
+            $event->getProject(),
+            $xml_content,
+            $plannings
+        );
+
+        $this->getCardwallXmlExporter($project_id)->export($xml_content);
     }
 
     private function getAgileDashboardExporter(): AgileDashboard_XMLExporter

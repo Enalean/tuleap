@@ -45,6 +45,7 @@ use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLImport;
 use Tuleap\Timetracking\XML\XMLExport;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
@@ -79,7 +80,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
-            $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
+            $this->addHook(TrackerEventExportFullXML::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -377,7 +378,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
     }
 
-    public function tracker_event_export_full_xml(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
     {
         $timetracking_ugroup_retriever = new TimetrackingUgroupRetriever(
             new TimetrackingUgroupDao(),
@@ -401,9 +402,9 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
 
         $xml_export->export(
-            $params['xml_content'],
-            $params['user'],
-            $params['exported_trackers']
+            $event->getXmlElement(),
+            $event->getUser(),
+            $event->getExportedTrackers()
         );
     }
 }
