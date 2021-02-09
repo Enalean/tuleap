@@ -18,7 +18,12 @@
  */
 
 import { getStatusFromMapping, getStatusMetadata } from "./hardcoded-metadata-mapping-helper";
-import moment from "moment";
+import { updateItemMetadata } from "./value-transformer/status-metadata-helper";
+import { formatDateValue } from "./value-transformer/date-metadata-helper";
+import {
+    formatMetadataListValue,
+    formatMetadataMultipleValue,
+} from "./value-transformer/list-value-helper";
 
 export function transformFolderMetadataForRecursionAtUpdate(item) {
     let folder_to_update = JSON.parse(JSON.stringify(item));
@@ -35,19 +40,6 @@ export function transformFolderMetadataForRecursionAtUpdate(item) {
     return folder_to_update;
 }
 
-export function transformItemMetadataForCreation(
-    document_to_create,
-    parent,
-    is_item_status_metadata_used
-) {
-    if (!is_item_status_metadata_used) {
-        return;
-    }
-
-    const metadata = getStatusMetadata(parent.metadata);
-    updateItemMetadata(metadata, document_to_create);
-}
-
 export function transformDocumentMetadataForUpdate(
     document_to_update,
     is_item_status_metadata_used
@@ -58,73 +50,6 @@ export function transformDocumentMetadataForUpdate(
 
     const metadata = getStatusMetadata(document_to_update.metadata);
     updateItemMetadata(metadata, document_to_update);
-}
-
-function updateItemMetadata(metadata, item) {
-    let status = "none";
-    if (metadata && metadata.list_value[0].id) {
-        status = getStatusFromMapping(metadata.list_value[0].id);
-    }
-
-    item.status = status;
-}
-
-function formatMetadataMultipleValue(parent_metadata) {
-    if (!parent_metadata.list_value) {
-        return [100];
-    }
-    const list_value_ids = parent_metadata.list_value.map(({ id }) => id);
-
-    return list_value_ids.length > 0 ? list_value_ids : [100];
-}
-
-function formatMetadataListValue(parent_metadata) {
-    if (!parent_metadata.list_value) {
-        return 100;
-    }
-    return parent_metadata.list_value[0] ? parent_metadata.list_value[0].id : 100;
-}
-
-export function transformCustomMetadataForItemCreation(parent_metadata) {
-    if (parent_metadata.length === 0) {
-        return [];
-    }
-
-    let formatted_metadata_list = [];
-    parent_metadata.forEach((parent_metadata) => {
-        let formatted_metadata = {
-            short_name: parent_metadata.short_name,
-            type: parent_metadata.type,
-            name: parent_metadata.name,
-            is_multiple_value_allowed: parent_metadata.is_multiple_value_allowed,
-            is_required: parent_metadata.is_required,
-        };
-
-        switch (parent_metadata.type) {
-            case "date":
-                formatted_metadata.value = formatDateValue(parent_metadata.value);
-                formatted_metadata_list.push(formatted_metadata);
-                break;
-            case "text":
-            case "string":
-                formatted_metadata.value = parent_metadata.value;
-                formatted_metadata_list.push(formatted_metadata);
-                break;
-            case "list":
-                if (parent_metadata.is_multiple_value_allowed) {
-                    formatted_metadata.list_value = formatMetadataMultipleValue(parent_metadata);
-                    formatted_metadata_list.push(formatted_metadata);
-                } else {
-                    formatted_metadata.value = formatMetadataListValue(parent_metadata);
-                    formatted_metadata_list.push(formatted_metadata);
-                }
-                break;
-            default:
-                break;
-        }
-    });
-
-    return formatted_metadata_list;
 }
 
 export function transformCustomMetadataForItemUpdate(parent_metadata) {
@@ -149,14 +74,6 @@ export function transformCustomMetadataForItemUpdate(parent_metadata) {
                 break;
         }
     });
-}
-
-function formatDateValue(date) {
-    if (!date) {
-        return "";
-    }
-
-    return moment(date, "YYYY-MM-DD").format("YYYY-MM-DD");
 }
 
 export function formatCustomMetadataForFolderUpdate(

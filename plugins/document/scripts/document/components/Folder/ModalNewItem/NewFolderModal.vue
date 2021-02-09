@@ -61,10 +61,10 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import FolderGlobalMetadataForCreate from "../Metadata/FolderMetadata/FolderGlobalMetadataForCreate.vue";
-import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
-import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/data-transformatter-helper";
-import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
+import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
+import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
+import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/creation-data-transformatter-helper";
 
 export default {
     name: "NewFolderModal",
