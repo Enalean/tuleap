@@ -245,7 +245,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function routeWriteMail(): DispatchableWithRequest
     {
-        return new ForumML\WriteMailController($this);
+        return new ForumML\WriteMailController();
     }
 
     public function routeOutputAttachment(): DispatchableWithRequest

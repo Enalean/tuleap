@@ -30,9 +30,6 @@ msgstr "Attachement manquant"
 msgid "Back to the list"
 msgstr "Retour à la liste"
 
-msgid "Browse Archives"
-msgstr "Naviguer dans les archives"
-
 msgid "Cc:"
 msgstr "Cc :"
 
@@ -61,12 +58,8 @@ msgstr "Listes de discussions"
 msgid "Mailing-List '%1$s'"
 msgstr "List de diffusion '%1$s'"
 
-#, php-format
-msgid "Mailing-List '%1$s' - New Thread"
-msgstr "Mailing-Liste '%1$s' - Nouveau thread"
-
-msgid "Message:"
-msgstr "Message:"
+msgid "Message"
+msgstr "Message"
 
 msgid "Missing 'date' and/or 'filename' parameters."
 msgstr "Les paramètres 'date' et/ou 'filename' sont manquants."
@@ -83,14 +76,14 @@ msgstr "Répondre"
 msgid "Search results for '%1$s'"
 msgstr "Résultat de recherche pour '%1$s'"
 
+msgid "Send"
+msgstr "Envoyer"
+
 msgid "Sending Mail failed."
 msgstr "Echec d'envoi de l'e-mail."
 
 msgid "Subject"
 msgstr "Sujet"
-
-msgid "Submit a new Thread:"
-msgstr "Soumettre un nouveau thread:"
 
 #, php-format
 msgid "Submit failed. Invalid e-mail address in CC List.<br>'%1$s'"

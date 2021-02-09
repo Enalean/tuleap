@@ -143,6 +143,7 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
         );
 
         $layout->addCssAsset(new CssAsset($this->include_assets, 'style-forumml'));
+        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('new-thread.js'));
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
         $service->displayMailingListHeaderWithAdditionalBreadcrumbs(

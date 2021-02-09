@@ -1,0 +1,9 @@
+{
+    "name": "forumml",
+    "gettext-vue": {
+        "new-thread": {
+            "src": "scripts/new-thread",
+            "po": "scripts/new-thread/po"
+        }
+    }
+}

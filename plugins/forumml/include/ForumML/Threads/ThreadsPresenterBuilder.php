@@ -84,13 +84,16 @@ class ThreadsPresenterBuilder
             );
         }
 
-        $post_thread_url = '/plugins/forumml/index.php?' .
-            http_build_query(
-                [
-                    'group_id' => $project->getID(),
-                    'list'     => $list_id,
-                ]
-            );
+        $post_thread_url = '';
+        if ($user->isLoggedIn()) {
+            $post_thread_url = '/plugins/forumml/index.php?' .
+                http_build_query(
+                    [
+                        'group_id' => $project->getID(),
+                        'list'     => $list_id,
+                    ]
+                );
+        }
 
         return new ThreadsPresenter(
             $list_name,
