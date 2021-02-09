@@ -20,53 +20,54 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\Feature;
+namespace Tuleap\ScaledAgile\Adapter\Program\Feature\Content;
 
-use Tuleap\ScaledAgile\Program\Backlog\Feature\FeaturesStore;
-use Tuleap\ScaledAgile\Program\Backlog\Feature\RetrieveFeatures;
-use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
+use Tuleap\ScaledAgile\Adapter\Program\Feature\FeatureRepresentationBuilder;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\Content\ContentStore;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\Content\RetrieveProgramIncrement;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\Content\RetrieveFeatureContent;
 use Tuleap\ScaledAgile\REST\v1\FeatureRepresentation;
 
-final class FeatureElementsRetriever implements RetrieveFeatures
+class FeatureContentRetriever implements RetrieveFeatureContent
 {
     /**
-     * @var FeaturesStore
+     * @var ContentStore
      */
-    private $features_store;
+    private $content_store;
     /**
-     * @var BuildProgram
+     * @var RetrieveProgramIncrement
      */
-    private $build_program;
-
+    private $program_increment_content_retriever;
     /**
      * @var FeatureRepresentationBuilder
      */
     private $feature_representation_builder;
 
     public function __construct(
-        BuildProgram $build_program,
-        FeaturesStore $features_store,
+        RetrieveProgramIncrement $program_increment_content_retriever,
+        ContentStore $content_store,
         FeatureRepresentationBuilder $feature_representation_builder
     ) {
-        $this->features_store                 = $features_store;
-        $this->build_program                  = $build_program;
-        $this->feature_representation_builder = $feature_representation_builder;
+        $this->content_store                       = $content_store;
+        $this->program_increment_content_retriever = $program_increment_content_retriever;
+        $this->feature_representation_builder      = $feature_representation_builder;
     }
 
     /**
      * @return FeatureRepresentation[]
      *
      * @throws \Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException
-     * @throws \Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException
+     * @throws PlanTrackerException
      */
-    public function retrieveFeaturesToBePlanned(int $id, \PFUser $user): array
+    public function retrieveProgramIncrementContent(int $id, \PFUser $user): array
     {
-        $program = $this->build_program->buildExistingProgramProject($id, $user);
+        $program_increment = $this->program_increment_content_retriever->retrieveProgramIncrement($id, $user);
 
-        $to_be_planned_artifacts = $this->features_store->searchPlannableFeatures($program);
+        $planned_content = $this->content_store->searchContent($program_increment);
 
         $elements = [];
-        foreach ($to_be_planned_artifacts as $artifact) {
+        foreach ($planned_content as $artifact) {
             $feature = $this->feature_representation_builder->buildFeatureRepresentation(
                 $user,
                 $artifact['artifact_id'],

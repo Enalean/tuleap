@@ -97,7 +97,7 @@ class ProjectResourceTest extends \RestBase
     /**
      * @depends testPUTTeam
      */
-    public function testGetProgramIncrements(): void
+    public function testGetProgramIncrements(): int
     {
         $project_id = $this->getProgramProjectId();
 
@@ -112,6 +112,23 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals('In development', $program_increments[0]['status']);
         self::assertNull($program_increments[0]['start_date']);
         self::assertNull($program_increments[0]['end_date']);
+
+        return $program_increments[0]['id'];
+    }
+
+    /**
+     * @depends testGetProgramIncrements
+     */
+    public function testGetProgramIncrementContent(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('program_increment/' . urlencode((string) $id) . '/content')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $content = $response->json();
+        self::assertGreaterThan(1, $content);
+        self::assertEquals('My artifact', $content[0]['artifact_title']);
     }
 
     private function getProgramProjectId(): int

@@ -20,23 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\Feature;
+namespace Tuleap\ScaledAgile\Adapter\Program\Feature\Content;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
+use Tuleap\ScaledAgile\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ScaledAgile\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\Feature\BackgroundColor;
-use Tuleap\ScaledAgile\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\Content\ContentStore;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\Content\PlannedProgramIncrement;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\Content\RetrieveProgramIncrement;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
-use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\ScaledAgile\REST\v1\FeatureRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
 
-class FeatureElementsRetrieverTest extends TestCase
+final class ProgramIncrementContentRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -46,7 +49,7 @@ class FeatureElementsRetrieverTest extends TestCase
     private $retrieve_background;
 
     /**
-     * @var FeatureElementsRetriever
+     * @var RetrieveProgramIncrement
      */
     private $retriever;
 
@@ -61,26 +64,26 @@ class FeatureElementsRetrieverTest extends TestCase
     private $artifact_factory;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FeaturesStore
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ContentStore
      */
-    private $features_dao;
+    private $content_store;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildProgram
      */
-    private $build_program;
+    private $retrieve_program_increment;
 
     protected function setUp(): void
     {
-        $this->features_dao         = \Mockery::mock(FeaturesStore::class);
-        $this->build_program        = \Mockery::mock(BuildProgram::class);
-        $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
-        $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
+        $this->content_store              = \Mockery::mock(ContentStore::class);
+        $this->retrieve_program_increment = \Mockery::mock(RetrieveProgramIncrement::class);
+        $this->artifact_factory           = \Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory       = \Mockery::mock(\Tracker_FormElementFactory::instance());
+        $this->retrieve_background        = \Mockery::mock(BackgroundColorRetriever::class);
 
-        $this->retriever = new FeatureElementsRetriever(
-            $this->build_program,
-            $this->features_dao,
+        $this->retriever = new FeatureContentRetriever(
+            $this->retrieve_program_increment,
+            $this->content_store,
             new FeatureRepresentationBuilder(
                 $this->artifact_factory,
                 $this->form_element_factory,
@@ -93,11 +96,23 @@ class FeatureElementsRetrieverTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
 
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(202));
-        $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
+        $this->retrieve_program_increment->shouldReceive('retrieveProgramIncrement')->andReturn(
+            new PlannedProgramIncrement(202)
+        );
+        $this->content_store->shouldReceive('searchContent')->andReturn(
             [
-                ['tracker_name' => 'User stories', 'artifact_id' => 1, 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],
-                ['tracker_name' => 'Features', 'artifact_id' => 2, 'artifact_title' => 'Artifact 2', 'field_title_id' => 1],
+                [
+                    'tracker_name'   => 'User stories',
+                    'artifact_id'    => 1,
+                    'artifact_title' => 'Artifact 1',
+                    'field_title_id' => 1
+                ],
+                [
+                    'tracker_name'   => 'Features',
+                    'artifact_id'    => 2,
+                    'artifact_title' => 'Artifact 2',
+                    'field_title_id' => 1
+                ],
             ]
         );
 
@@ -151,6 +166,6 @@ class FeatureElementsRetrieverTest extends TestCase
             ),
         ];
 
-        self::assertEquals($collection, $this->retriever->retrieveFeaturesToBePlanned(202, $user));
+        self::assertEquals($collection, $this->retriever->retrieveProgramIncrementContent(202, $user));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\REST;
+namespace Tuleap\ScaledAgile\Adapter\Program\Feature\Content;
 
-use Luracast\Restler\Restler;
-use Tuleap\Project\REST\ProjectRepresentation;
-use Tuleap\ScaledAgile\REST\v1\ProgramIncrementResource;
-use Tuleap\ScaledAgile\REST\v1\ProjectResource;
-use Tuleap\ScaledAgile\REST\v1\ScaledAgileResource;
-
-class ResourcesInjector
+final class ProgramIncrementNotFoundException extends \Exception
 {
-    public function populate(Restler $restler): void
+    public function __construct()
     {
-        $restler->addAPIClass(ProjectResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(ScaledAgileResource::class, ScaledAgileResource::ROUTE);
-        $restler->addAPIClass(ProgramIncrementResource::class, ProgramIncrementResource::ROUTE);
+        parent::__construct('Program increment artifact have not been found');
     }
 }
