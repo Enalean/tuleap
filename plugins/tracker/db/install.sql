@@ -1000,6 +1000,16 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_legacy_tracker_migrated(
     legacy_tracker_id int(11) NOT NULL PRIMARY KEY
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS plugin_tracker_private_comment_disabled_tracker(
+    tracker_id INT(11) PRIMARY KEY
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_tracker_private_comment_permission(
+    comment_id INT(11) NOT NULL,
+    ugroup_id int(11) NOT NULL,
+    PRIMARY KEY(comment_id, ugroup_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
