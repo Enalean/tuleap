@@ -29805,70 +29805,70 @@
       <code>registerExtraReferences</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/AsynchronousCreation/CreateProgramIncrementsRunner.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/AsynchronousCreation/CreateProgramIncrementsRunner.php">
     <RedundantCast occurrences="1">
       <code>(int) $artifact_id</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/AsynchronousCreation/CreateProgramIncrementsTask.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/AsynchronousCreation/CreateProgramIncrementsTask.php">
     <RedundantCast occurrences="1">
       <code>(int) $replication_data-&gt;getArtifact()-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/AsynchronousCreation/StatusValueMapper.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/AsynchronousCreation/StatusValueMapper.php">
     <RedundantCast occurrences="1">
       <code>(int) $field_status_data-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/ArtifactLinkValueAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/ArtifactLinkValueAdapter.php">
     <RedundantCast occurrences="1">
       <code>(int) $replication_data-&gt;getArtifact()-&gt;getID()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/DescriptionValueAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/DescriptionValueAdapter.php">
     <RedundantCast occurrences="1">
       <code>(int) $field_description_data-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/EndPeriodValueAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/EndPeriodValueAdapter.php">
     <RedundantCast occurrences="1">
       <code>(int) $end_period_field_data-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/ReplicationDataAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/ReplicationDataAdapter.php">
     <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $source_artifact-&gt;getId()</code>
       <code>(int) $source_artifact-&gt;getSubmittedOn()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/Source/SourceArtifactNatureAnalyzer.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/Source/SourceArtifactNatureAnalyzer.php">
     <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $artifact-&gt;getId()</code>
       <code>(int) $artifact-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/StartDateValueValueAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/StartDateValueValueAdapter.php">
     <RedundantCast occurrences="1">
       <code>(int) $field_start_date_data-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/StatusValueAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/StatusValueAdapter.php">
     <RedundantCast occurrences="1">
       <code>(int) $field_status_data-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/TitleFieldAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/TitleFieldAdapter.php">
     <RedundantCast occurrences="1">
       <code>(int) $replication_tracker_data-&gt;getTrackerId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/TitleValueAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/TitleValueAdapter.php">
     <RedundantCast occurrences="2">
       <code>(int) $field_title_data-&gt;getId()</code>
       <code>(int) $field_title_data-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/PlanningCheck/PlanningProgramAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Program/PlanningCheck/PlanningProgramAdapter.php">
     <PossiblyInvalidArgument occurrences="2">
       <code>$program-&gt;getID()</code>
       <code>$user-&gt;getId()</code>
@@ -29877,27 +29877,27 @@
       <code>(int) $program_increment_tracker-&gt;getId()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Team/TeamTrackerAdapter.php">
+  <file src="plugins/program_management/include/Adapter/Team/TeamTrackerAdapter.php">
     <PossiblyInvalidArgument occurrences="1">
       <code>$team_tracker-&gt;getGroupId()</code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="plugins/scaled_agile/include/Program/Backlog/AsynchronousCreation/ArtifactCreatedHandler.php">
+  <file src="plugins/program_management/include/Program/Backlog/AsynchronousCreation/ArtifactCreatedHandler.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $event-&gt;getArtifact()-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Program/Backlog/ProgramIncrement/Source/Fields/Field.php">
+  <file src="plugins/program_management/include/Program/Backlog/ProgramIncrement/Source/Fields/Field.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $this-&gt;field-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Program/Backlog/ProgramIncrement/Source/Fields/SynchronizedFieldFromProgramAndTeamTrackersCollection.php">
+  <file src="plugins/program_management/include/Program/Backlog/ProgramIncrement/Source/Fields/SynchronizedFieldFromProgramAndTeamTrackersCollection.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $field-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Program/Backlog/ProgramIncrement/Team/TeamProjectsCollectionBuilder.php">
+  <file src="plugins/program_management/include/Program/Backlog/ProgramIncrement/Team/TeamProjectsCollectionBuilder.php">
     <RedundantCast occurrences="1">
       <code>(int) $project-&gt;getID()</code>
     </RedundantCast>
@@ -29905,34 +29905,21 @@
       <code>(int) $row['team_project_id']</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Program/Backlog/TrackerCollectionFactory.php">
+  <file src="plugins/program_management/include/Program/Backlog/TrackerCollectionFactory.php">
     <RedundantCast occurrences="1">
       <code>(int) $project-&gt;getID()</code>
     </RedundantCast>
   </file>
-  <file src="plugins/scaled_agile/include/Program/PlanningConfiguration/Planning.php">
+  <file src="plugins/program_management/include/Program/PlanningConfiguration/Planning.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $this-&gt;id</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Project.php">
+  <file src="plugins/program_management/include/Project.php">
     <RedundantCastGivenDocblockType occurrences="3">
       <code>(int) $this-&gt;id</code>
       <code>(string) $this-&gt;name</code>
       <code>(string) $this-&gt;public_name</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/scaled_agile/include/ScaledAgileTracker.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $this-&gt;tracker-&gt;getId()</code>
-    </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(string) $this-&gt;tracker-&gt;getName()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/scaled_agile/include/scaled_agilePlugin.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $event-&gt;getArtifact()-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">

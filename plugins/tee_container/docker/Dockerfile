@@ -77,7 +77,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-theme-burningparrot \
     tuleap-theme-flamingparrot \
     tuleap-realtime && \
-    if [ "$RELEASE_CYCLE" == "dev" ]; then yum install -y tuleap-plugin-scaled_agile tuleap-plugin-jira-import; fi && \
+    if [ "$RELEASE_CYCLE" == "dev" ]; then yum install -y tuleap-plugin-program_management tuleap-plugin-jira-import; fi && \
     yum clean all && \
     /bin/rm -rf /rpms $YUM_REPO_PATH && \
     localedef -i fr_FR -c -f UTF-8 fr_FR.UTF-8 && \

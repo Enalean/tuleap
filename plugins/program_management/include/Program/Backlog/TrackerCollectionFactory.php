@@ -1,0 +1,85 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\ProgramManagement\Program\Backlog;
+
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Project;
+use Tuleap\ProgramManagement\ProgramTracker;
+
+class TrackerCollectionFactory
+{
+    /**
+     * @var BuildPlanning
+     */
+    private $planning_adapter;
+
+    public function __construct(BuildPlanning $planning_adapter)
+    {
+        $this->planning_adapter = $planning_adapter;
+    }
+
+    /**
+     * @throws TopPlanningNotFoundInProjectException
+     */
+    public function buildFromProgramProjectAndItsTeam(
+        Project $program_project,
+        TeamProjectsCollection $team_projects_collection,
+        \PFUser $user
+    ): SourceTrackerCollection {
+        $projects = array_values(
+            array_merge([$program_project], $team_projects_collection->getTeamProjects())
+        );
+        $trackers = [];
+        foreach ($projects as $project) {
+            $trackers[] = $this->getPlannableTracker($user, $project);
+        }
+        return new SourceTrackerCollection($trackers);
+    }
+
+    /**
+     * @throws TopPlanningNotFoundInProjectException
+     */
+    public function buildFromTeamProjects(
+        TeamProjectsCollection $team_projects_collection,
+        \PFUser $user
+    ): ProgramIncrementsTrackerCollection {
+        $trackers = [];
+        foreach ($team_projects_collection->getTeamProjects() as $team_projects) {
+            $trackers[] = $this->getPlannableTracker($user, $team_projects);
+        }
+        return new ProgramIncrementsTrackerCollection($trackers);
+    }
+
+    /**
+     * @throws TopPlanningNotFoundInProjectException
+     */
+    private function getPlannableTracker(\PFUser $user, Project $project): ProgramTracker
+    {
+        $root_planning = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
+        return $root_planning->getPlanningTracker();
+    }
+}

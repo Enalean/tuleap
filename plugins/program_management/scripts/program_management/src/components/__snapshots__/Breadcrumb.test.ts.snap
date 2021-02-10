@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Breadcrumb Displays the breadcrumb state 1`] = `
+<div
+  class="breadcrumb-container"
+>
+  <breadcrumb-privacy-stub
+    privacy="[object Object]"
+    project_flags=""
+    project_public_name="Public name"
+  />
+   
+  <nav
+    class="breadcrumb"
+  >
+    <div
+      class="breadcrumb-item breadcrumb-project"
+    >
+      <a
+        class="breadcrumb-link"
+        href="/projects/short-name"
+      >
+        
+                Public name
+            
+      </a>
+    </div>
+     
+    <div
+      class="breadcrumb-item"
+    >
+      <a
+        class="breadcrumb-link"
+        data-current-language="en_US"
+        data-msgid="Program"
+        href="/program_management/short-name"
+      >
+        Program
+      </a>
+    </div>
+  </nav>
+</div>
+`;

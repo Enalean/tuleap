@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyState Displays the empty state for Program Increment 1`] = `
+<div
+  class="program-increment-empty-state"
+  project_public_name="Public name"
+  project_short_name="short-name"
+>
+  <empty-svg-stub />
+   
+  <p
+    class="empty-page-text"
+    data-current-language="en_US"
+    data-msgid="There are no iterations yet"
+  >
+    There are no iterations yet
+  </p>
+   
+  <form
+    action="/plugins/tracker/?program_increment=create&tracker=undefined&func=new-artifact"
+    method="post"
+  >
+    <!---->
+  </form>
+</div>
+`;

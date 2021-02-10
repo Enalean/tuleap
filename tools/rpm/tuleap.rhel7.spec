@@ -472,11 +472,11 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 
 %if %{with experimental}
 
-%package plugin-scaled_agile
-Summary: Scaled Agile Backlog
+%package plugin-program_management
+Summary: Program Management
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
-%description plugin-scaled_agile
+%description plugin-program_management
 %{summary}.
 
 %package plugin-jira-import
@@ -582,8 +582,8 @@ done
 %endif
 %if %{with experimental}
 %else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/scaled_agile
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/scaled_agile
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/program_management
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
@@ -844,10 +844,10 @@ done
 %endif
 
 %if %{with experimental}
-# Plugin scaled_agile
-%{__install} plugins/scaled_agile/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
-%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
-%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
+# Plugin program_management
+%{__install} plugins/program_management/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 %endif
 
 # Symlink for compatibility with older version
@@ -1459,12 +1459,12 @@ fi
 
 %if %{with experimental}
 
-%files plugin-scaled_agile
+%files plugin-program_management
 %defattr(-,root,root,-)
-%{APP_DIR}/plugins/scaled_agile
-%{APP_DIR}/src/www/assets/scaled_agile
-%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_scaled_agile
-%config(noreplace) /etc/logrotate.d/%{APP_NAME}_scaled_agile
+%{APP_DIR}/plugins/program_management
+%{APP_DIR}/src/www/assets/program_management
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_program_management
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_program_management
 
 %files plugin-jira-import
 %defattr(-,root,root,-)

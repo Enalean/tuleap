@@ -1,0 +1,14 @@
+{
+  "name": "tuleap/plugin-program_management",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\ProgramManagement\\": "include/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\ProgramManagement\\": "tests/unit/",
+      "Tuleap\\ProgramManagement\\REST\\": "./tests/rest/"
+    }
+  }
+}
