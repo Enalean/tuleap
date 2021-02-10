@@ -456,24 +456,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const IMPORT_COMPAT_REF_XML = 'import_compat_ref_xml';
 
     /**
-     * Event launched while importing a project from a xml content
-     *
-     * Parameters:
-     *   'project'             => Project where trackers are being created
-     *   'xml_content'         => The SimpleXMLElement to check in
-     *   'mapping'             => An array with a mapping between xml ids and new ids for trackers
-     *   'field_mapping'       => An array with a mapping between xml ids and new objects
-     *   'mappings_registery'  => The XML mappings
-     *   'artifact_id_mapping' => A mapping between xml ids and new ids for artifacts
-     *   'extraction_path'     => Path where archive has been extracted
-     *   'logger'              => logger used for import
-     *
-     * Expected Results:
-     *   The various plugins create objects from the xml content
-     */
-    public const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
-
-    /**
      * Event raised to display the list of deleted Trackers
      *
      * Expected results:

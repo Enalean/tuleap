@@ -148,6 +148,7 @@ use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
@@ -243,7 +244,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook('codendi_daily_start');
             $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
             $this->addHook(MessageFetcherAdditionalWarnings::NAME);
-            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+            $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
             $this->addHook(ArtifactDeleted::NAME);
             $this->addHook(MoveArtifactGetExternalSemanticCheckers::NAME);
@@ -1510,13 +1511,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function import_xml_project_tracker_done(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
-        $xml             = $params['xml_content'];
-        $tracker_mapping = $params['mapping'];
-        $field_mapping   = $params['value_mapping'];
-        $logger          = $params['logger'];
-        $project         = $params['project'];
+        $xml             = $event->getXmlElement();
+        $tracker_mapping = $event->getCreatedTrackersMapping();
+        $value_mapping   = $event->getXmlFieldValuesMapping();
+        $logger          = $event->getLogger();
+        $project         = $event->getProject();
         $user            = UserManager::instance()->getCurrentUser();
 
         $kanban = new KanbanXmlImporter(
@@ -1527,7 +1528,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getKanbanFactory(),
             $this->getKanbanColumnFactory()
         );
-        $kanban->import($xml, $tracker_mapping, $project, $field_mapping, $user, $params['mappings_registery']);
+        $kanban->import($xml, $tracker_mapping, $project, $value_mapping, $user, $event->getMappingsRegistery());
     }
 
     private function getDashboardKanbanColumnManager()

@@ -36,6 +36,7 @@ use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 /**
  * CardwallPlugin
@@ -78,7 +79,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
             $this->addHook(Event::JAVASCRIPT);
-            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+            $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(AllowedFieldTypeChangesRetriever::NAME);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
@@ -553,27 +554,22 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $cardwall_xml_export->export($params['into_xml']);
     }
 
-    /**
-     *
-     * @param array $params
-     * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
-     */
-    public function import_xml_project_tracker_done($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
         $cardwall_ontop_import = new CardwallConfigXmlImport(
-            $params['project']->getId(),
-            $params['mapping'],
-            $params['field_mapping'],
-            $params['artifact_id_mapping'],
+            $event->getProject()->getId(),
+            $event->getCreatedTrackersMapping(),
+            $event->getXmlFieldsMapping(),
+            $event->getArtifactsIdMapping(),
             new Cardwall_OnTop_Dao(),
             new Cardwall_OnTop_ColumnDao(),
             new Cardwall_OnTop_ColumnMappingFieldDao(),
             new Cardwall_OnTop_ColumnMappingFieldValueDao(),
             EventManager::instance(),
             new XML_RNGValidator(),
-            $params['logger']
+            $event->getLogger()
         );
-        $cardwall_ontop_import->import($params['xml_content']);
+        $cardwall_ontop_import->import($event->getXmlElement());
     }
 
     public function agiledashboard_event_rest_get_milestone($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

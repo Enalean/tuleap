@@ -46,6 +46,7 @@ use Tuleap\Timetracking\XML\XMLImport;
 use Tuleap\Timetracking\XML\XMLExport;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once 'constants.php';
@@ -73,7 +74,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $this->addHook(GetTrackersWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
 
         $this->listenToCollectRouteEventWithDefaultController();
 
@@ -81,6 +81,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(TrackerEventExportFullXML::NAME);
+            $this->addHook(ImportXMLProjectTrackerDone::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -349,13 +350,13 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $injector->populate($params['restler']);
     }
 
-    public function import_xml_project_tracker_done(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
-        $xml                      = $params['xml_content'];
-        $created_trackers_objects = $params['created_tracker_objects'];
-        $user_finder              = $params['user_finder'];
-        $artifact_id_mapping      = $params['artifact_id_mapping'];
-        $project                  = $params['project'];
+        $xml                      = $event->getXmlElement();
+        $created_trackers_objects = $event->getCreatedTrackersObjects();
+        $user_finder              = $event->getUserFinder();
+        $artifact_id_mapping      = $event->getArtifactsIdMapping();
+        $project                  = $event->getProject();
 
         $xml_import = new XMLImport(
             new XML_RNGValidator(),

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker;
 
-use Event;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -49,6 +48,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 use Tuleap\Tracker\XML\Importer\TrackerXmlSaver;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -657,22 +657,7 @@ final class TrackerXmlImportTest extends TestCase
             "T103" => 666
         ];
 
-        $this->event_manager->shouldReceive('processEvent')->withArgs(
-            [
-                Event::IMPORT_XML_PROJECT_TRACKER_DONE,
-                [
-                    'project'             => $this->project,
-                    'xml_content'         => $xml,
-                    'mapping'             => $expected_mapping,
-                    'field_mapping'       => [],
-                    'mappings_registery'  => $this->mapping_registery,
-                    'artifact_id_mapping' => Mockery::any(),
-                    'extraction_path'     => '',
-                    'logger'              => Mockery::any(),
-                    'value_mapping'       => Mockery::any()
-                ]
-            ]
-        );
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::type(ImportXMLProjectTrackerDone::class));
 
         $this->tracker_xml_importer->import(
             $this->configuration,
