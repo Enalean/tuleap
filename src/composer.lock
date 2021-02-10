@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc12f488940e5faeda797d63fc2725c6",
+    "content-hash": "2b5df3c2c13f0a1905d8459514022283",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -6696,6 +6696,54 @@
             "time": "2020-12-04T05:05:53+00:00"
         },
         {
+            "name": "qossmic/deptrac-shim",
+            "version": "0.11.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/qossmic/deptrac-shim.git",
+                "reference": "5f25cf64203eecf159ffa9b31be361407d89c4a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/qossmic/deptrac-shim/zipball/5f25cf64203eecf159ffa9b31be361407d89c4a8",
+                "reference": "5f25cf64203eecf159ffa9b31be361407d89c4a8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-tokenizer": "*",
+                "ext-zlib": "*",
+                "php": "^7.2 || 8.0.*"
+            },
+            "replace": {
+                "qossmic/deptrac": "self.version"
+            },
+            "suggest": {
+                "ext-dom": "For using the JUnit output formatter"
+            },
+            "bin": [
+                "deptrac"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simon Mönch",
+                    "email": "simon.moench@qossmic.com",
+                    "role": "maintainer"
+                }
+            ],
+            "description": "deptrac phar distribution",
+            "support": {
+                "issues": "https://github.com/qossmic/deptrac-shim/issues",
+                "source": "https://github.com/qossmic/deptrac-shim/tree/0.11.0.1"
+            },
+            "time": "2021-02-01T11:56:08+00:00"
+        },
+        {
             "name": "sebastian/cli-parser",
             "version": "1.0.1",
             "source": {
@@ -7658,55 +7706,6 @@
                 }
             ],
             "time": "2020-09-28T06:39:44+00:00"
-        },
-        {
-            "name": "sensiolabs-de/deptrac-shim",
-            "version": "0.10.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sensiolabs-de/deptrac-shim.git",
-                "reference": "27b0fa91d3b4e56846d9df11a2c2f3fd0487241b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs-de/deptrac-shim/zipball/27b0fa91d3b4e56846d9df11a2c2f3fd0487241b",
-                "reference": "27b0fa91d3b4e56846d9df11a2c2f3fd0487241b",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "ext-tokenizer": "*",
-                "ext-zlib": "*",
-                "php": "^7.2 || 8.0.*"
-            },
-            "replace": {
-                "sensiolabs-de/astrunner": "^1.0",
-                "sensiolabs-de/deptrac": "self.version"
-            },
-            "suggest": {
-                "ext-dom": "For using the JUnit output formatter"
-            },
-            "bin": [
-                "deptrac"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Simon Mönch",
-                    "email": "simon.moench@sensiolabs.de",
-                    "role": "maintainer"
-                }
-            ],
-            "description": "deptrac phar distribution",
-            "support": {
-                "issues": "https://github.com/sensiolabs-de/deptrac-shim/issues",
-                "source": "https://github.com/sensiolabs-de/deptrac-shim/tree/0.10.2"
-            },
-            "time": "2020-12-08T17:09:50+00:00"
         },
         {
             "name": "slevomat/coding-standard",
