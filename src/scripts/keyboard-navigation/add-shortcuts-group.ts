@@ -20,9 +20,9 @@
 import hotkeys from "hotkeys-js";
 import { HOTKEYS_SCOPE_NO_MODAL } from "./handle-modals-events";
 import { createShortcutsGroupInHelpModal } from "./add-to-help-modal";
-import { Shortcut, ShortcutsGroup } from "./type";
+import type { Shortcut, ShortcutsGroup } from "./type";
 
-export { Shortcut, ShortcutsGroup };
+export type { Shortcut, ShortcutsGroup };
 
 export function addShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
     shortcuts_group.shortcuts.forEach((shortcut) => {
