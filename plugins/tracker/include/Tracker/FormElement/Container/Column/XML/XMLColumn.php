@@ -21,22 +21,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\JiraImport\JiraAgile;
+namespace Tuleap\Tracker\FormElement\Container\Column\XML;
 
-class JiraProjectBoardRetriever
+use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
+
+final class XMLColumn extends XMLContainer
 {
-    /**
-     * @var JiraBoardsRetriever
-     */
-    private $boards_retriever;
-
-    public function __construct(JiraBoardsRetriever $boards_retriever)
+    public function __construct(string $id, string $name)
     {
-        $this->boards_retriever = $boards_retriever;
-    }
-
-    public function hasScrum(string $jira_project): bool
-    {
-        return $this->boards_retriever->getFirstScrumBoardForProject($jira_project) !== null;
+        parent::__construct($id, Tracker_FormElementFactory::CONTAINER_COLUMN_TYPE, $name);
     }
 }

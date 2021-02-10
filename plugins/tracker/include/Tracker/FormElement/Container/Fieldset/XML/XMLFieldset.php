@@ -21,9 +21,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
+namespace Tuleap\Tracker\FormElement\Container\Fieldset\XML;
 
-interface IDGenerator
+use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
+use Tuleap\Tracker\XML\IDGenerator;
+
+final class XMLFieldset extends XMLContainer
 {
-    public function getNextId(): int;
+    /**
+     * @param string|IDGenerator $id
+     */
+    public function __construct($id, string $name)
+    {
+        parent::__construct($id, Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, $name);
+    }
 }

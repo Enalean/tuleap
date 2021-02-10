@@ -319,7 +319,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list'): string
     {
-        $current_field_id = (int) $this->field->id;
+        $current_field_id = $this->field->id;
         $R2               = 'R2_' . $current_field_id;
         $none_value       = (int) self::NONE_VALUE;
 

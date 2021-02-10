@@ -40,7 +40,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return array
      */
-    public function getFormElementDataForCreation($parent_id)
+    public function getFormElementDataForCreation($parent_id): array
     {
         $form_element_data = parent::getFormElementDataForCreation($parent_id);
 
@@ -786,7 +786,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $workflow = $this->getWorkflow();
         if (! empty($workflow) && $workflow->is_used) {
-            return $workflow->field_id === (int) $this->id;
+            return $workflow->field_id === $this->id;
         }
         return false;
     }
@@ -800,7 +800,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $workflow = $this->getWorkflow();
         if (! empty($workflow)) {
-            return $workflow->field_id === (int) $this->id;
+            return $workflow->field_id === $this->id;
         }
         return false;
     }
@@ -1249,18 +1249,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Transforms FormElement_List into a SimpleXMLElement
      */
     public function exportToXml(
-        SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        SimpleXMLElement $parent_node,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter
-    ) {
-        parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
+    ): SimpleXMLElement {
+        $node = parent::exportToXML($parent_node, $xmlMapping, $project_export_context, $user_xml_exporter);
         if ($this->getBind() && $this->shouldBeBindXML()) {
-            $child = $root->addChild('bind');
+            $child = $node->addChild('bind');
             $bf    = new Tracker_FormElement_Field_List_BindFactory();
             $child->addAttribute('type', $bf->getType($this->getBind()));
             $this->getBind()->exportToXML($child, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
+        return $node;
     }
 
     /**

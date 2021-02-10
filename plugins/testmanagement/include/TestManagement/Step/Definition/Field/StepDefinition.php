@@ -30,6 +30,7 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
+use Tuleap\TestManagement\Step\Definition\Field\XML\XMLStepDefinition;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -37,6 +38,7 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
+use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
@@ -584,8 +586,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $steps;
     }
 
-    public function getTagNameForXMLExport(): string
+    protected function getXMLInternalRepresentation(): XMLFormElement
     {
-        return self::XML_TAG_EXTERNAL_FIELD;
+        return new XMLStepDefinition(
+            $this->getXMLId(),
+            $this->getName(),
+        );
     }
 }

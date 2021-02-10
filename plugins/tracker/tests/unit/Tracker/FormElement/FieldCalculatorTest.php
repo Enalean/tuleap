@@ -69,7 +69,7 @@ final class FieldCalculatorTest extends TestCase
                 ]
             );
 
-        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', '109');
+        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
         $this->assertEquals(20, $value);
     }
 
@@ -120,7 +120,7 @@ final class FieldCalculatorTest extends TestCase
                 ]
             );
 
-        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', '109');
+        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
         $this->assertEquals(40, $value);
     }
@@ -170,7 +170,7 @@ final class FieldCalculatorTest extends TestCase
                 ]
             );
 
-        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', '109');
+        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
         $this->assertEquals(40, $value);
     }
@@ -246,7 +246,7 @@ final class FieldCalculatorTest extends TestCase
             );
 
 
-        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', '109');
+        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
         $this->assertEquals(20, $value);
     }
@@ -294,7 +294,7 @@ final class FieldCalculatorTest extends TestCase
                     'manual_sum' => null
                 ]
             );
-        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', '109');
+        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
         $this->assertEquals(4, $value);
     }
@@ -343,7 +343,7 @@ final class FieldCalculatorTest extends TestCase
                 ]
             );
 
-        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', '109');
+        $value = $this->field_calculator->calculate(['233'], time(), true, 'effort', 109);
 
         $this->assertEquals(25, $value);
     }

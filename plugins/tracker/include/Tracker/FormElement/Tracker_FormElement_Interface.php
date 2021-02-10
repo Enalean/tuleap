@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,12 @@
 /**
  * Base interface for all form elements in trackers, from fieldsets to selectboxes
  */
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable
 {
 
     /**
-     * get the permissions for thios tracker
+     * get the permissions for this tracker
      *
      * @return array
      */
@@ -37,9 +38,9 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, 
      * Transforms FormElement into a SimpleXMLElement
      */
     public function exportToXml(
-        SimpleXMLElement $root,
-        &$xmlMapping,
-        $project_export_context,
+        SimpleXMLElement $parent_node,
+        array &$xmlMapping,
+        bool $project_export_context,
         UserXMLExporter $user_xml_exporter
-    );
+    ): SimpleXMLElement;
 }

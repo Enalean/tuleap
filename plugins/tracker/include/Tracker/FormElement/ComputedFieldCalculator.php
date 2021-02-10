@@ -42,7 +42,7 @@ class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalc
         $timestamp,
         bool $stop_on_manual_value,
         string $target_field_name,
-        string $computed_field_id,
+        int $computed_field_id,
         ArtifactsAlreadyProcessedDuringComputationCollection $already_seen
     ): array {
         $dar = $this->dao->getComputedFieldValues(

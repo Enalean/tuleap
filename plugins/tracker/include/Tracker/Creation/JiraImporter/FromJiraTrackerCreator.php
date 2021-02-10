@@ -41,7 +41,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
+use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
+use Tuleap\Tracker\XML\XMLTracker;
 use Tuleap\XML\MappingsRegistry;
 use UserManager;
 use XML_ParseException;
@@ -146,19 +148,14 @@ class FromJiraTrackerCreator
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
         $jira_exporter = $this->getJiraExporter($jira_token, $jira_username, $jira_url);
 
+        $tracker_for_export = (new XMLTracker('T200', $itemname))
+            ->withName($name)
+            ->withDescription($description)
+            ->withColor(TrackerColor::fromName($color));
+
         $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
         $trackers_xml = $xml->addChild('trackers');
-        $tracker_xml  = $trackers_xml->addChild('tracker');
-        $tracker_xml->addAttribute('instantiate_for_new_projects', '0');
-        $tracker_xml->addAttribute('id', "T200");
-        $tracker_xml->addAttribute('parent_id', "0");
-
-        $this->cdata_section_factory->insert($tracker_xml, 'name', $name);
-        $this->cdata_section_factory->insert($tracker_xml, 'item_name', $itemname);
-        $this->cdata_section_factory->insert($tracker_xml, 'description', $description);
-        $this->cdata_section_factory->insert($tracker_xml, 'color', $color);
-
-        $tracker_xml->addChild('cannedResponses');
+        $tracker_xml  = $tracker_for_export->export($trackers_xml);
 
         $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id, $jira_issue_type_id, new FieldAndValueIDGenerator());
 

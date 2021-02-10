@@ -25,7 +25,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use SimpleXMLElement;
 use Tracker_FormElement;
-use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
+use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use XML_SimpleXMLCDATAFactory;
 
 class ContainersXMLCollectionBuilder
@@ -134,19 +135,11 @@ class ContainersXMLCollectionBuilder
         int $rank,
         int $id
     ): SimpleXMLElement {
-        $column_node = $form_elements->addChild("formElement");
-        $column_node->addAttribute('type', Tracker_FormElementFactory::CONTAINER_COLUMN_TYPE);
+        $column = (new XMLColumn(Tracker_FormElement::XML_ID_PREFIX . 'col' . $id, $name))
+            ->withRank($rank)
+            ->withLabel($label);
 
-        $xml_id = Tracker_FormElement::XML_ID_PREFIX . 'col' . $id;
-        $column_node->addAttribute('ID', $xml_id);
-        $column_node->addAttribute('rank', (string) $rank);
-
-        $this->simplexml_cdata_factory->insert($column_node, 'name', $name);
-        $this->simplexml_cdata_factory->insert($column_node, 'label', $label);
-
-        $column_node->addChild('formElements');
-
-        return $column_node;
+        return $column->export($form_elements);
     }
 
     private function buildFieldsetXMLNode(
@@ -156,19 +149,10 @@ class ContainersXMLCollectionBuilder
         int $rank,
         int $id
     ): SimpleXMLElement {
-        $fieldset_node = $form_elements->addChild("formElement");
-        $fieldset_node->addAttribute('type', Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE);
+        $xml_fieldset = (new XMLFieldset(Tracker_FormElement::XML_ID_PREFIX . $id, $name))
+            ->withRank($rank)
+            ->withLabel($label);
 
-        $xml_id = Tracker_FormElement::XML_ID_PREFIX . $id;
-        $fieldset_node->addAttribute('ID', $xml_id);
-        $fieldset_node->addAttribute('rank', (string) $rank);
-        $fieldset_node->addAttribute('use_it', '1');
-
-        $this->simplexml_cdata_factory->insert($fieldset_node, 'name', $name);
-        $this->simplexml_cdata_factory->insert($fieldset_node, 'label', $label);
-
-        $fieldset_node->addChild('formElements');
-
-        return $fieldset_node;
+        return $xml_fieldset->export($form_elements);
     }
 }

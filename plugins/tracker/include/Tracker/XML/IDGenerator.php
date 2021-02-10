@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,20 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
+namespace Tuleap\Tracker\XML;
 
-use Tuleap\Tracker\XML\IDGenerator;
-
-final class FieldAndValueIDGenerator implements IDGenerator
+interface IDGenerator
 {
-    /**
-     * @var int
-     */
-    private $id = 0;
-
-    public function getNextId(): int
-    {
-        $this->id++;
-        return $this->id;
-    }
+    public function getNextId(): int;
 }

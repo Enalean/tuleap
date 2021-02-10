@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField
 {
 
@@ -81,9 +81,11 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         }
     }
 
-    public function getDescription()
+    /**
+     * @psalm-mutation-free
+     */
+    public function getDescription(): string
     {
-        // no description for Line Break
         return '';
     }
 

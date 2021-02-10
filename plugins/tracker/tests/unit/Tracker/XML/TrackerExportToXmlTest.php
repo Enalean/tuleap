@@ -72,6 +72,9 @@ final class TrackerExportToXmlTest extends TestCase
         $this->tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
         $this->tracker->shouldReceive('getUserManager')->andReturn(Mockery::mock(UserManager::class));
         $this->tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $this->tracker->shouldReceive('getItemName')->andReturn('bug');
+        $this->tracker->shouldReceive('getName')->andReturn('Bugs');
+        $this->tracker->shouldReceive('getDescription')->andReturn('');
 
         $this->ugroup_retriever = Mockery::mock(UGroupRetrieverWithLegacy::class);
         $this->tracker->shouldReceive('getUGroupRetrieverWithLegacy')->andReturn($this->ugroup_retriever);
@@ -195,7 +198,7 @@ final class TrackerExportToXmlTest extends TestCase
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
-        $this->hierarchy->addRelationship(9001, 110);
+        $this->tracker->setParent(Mockery::mock(Tracker::class, ['getXMLId' => 'T9001']));
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
