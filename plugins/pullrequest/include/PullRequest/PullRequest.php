@@ -44,6 +44,9 @@ class PullRequest implements Labelable
     private $user_id;
     private $creation_date;
     private $branch_src;
+    /**
+     * @var string
+     */
     private $sha1_src;
     private $repo_dest_id;
     private $branch_dest;
@@ -59,7 +62,7 @@ class PullRequest implements Labelable
         $user_id,
         $creation_date,
         $branch_src,
-        $sha1_src,
+        string $sha1_src,
         $repo_dest_id,
         $branch_dest,
         $sha1_dest,
@@ -122,7 +125,7 @@ class PullRequest implements Labelable
         return $this->branch_src;
     }
 
-    public function getSha1Src()
+    public function getSha1Src(): string
     {
         return $this->sha1_src;
     }
