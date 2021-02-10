@@ -11,7 +11,12 @@
         <span translate>New campaign</span>
     </button>
     <div class="test-campaigns-header-spacer"></div>
-    <input type="search" class="tlp-search tlp-search-small test-campaigns-search" placeholder="{{ 'Label or status...' | translate }}" ng-model="search">
+    <input type="search"
+           class="tlp-search tlp-search-small test-campaigns-search"
+           placeholder="{{ 'Label or status...' | translate }}"
+           ng-model="search"
+           data-shortcut-search-filter
+    >
 </div>
 <div class="tlp-framed test-campaigns">
     <feedback-message></feedback-message>
@@ -64,11 +69,13 @@
             ng-if="$ctrl.shouldShowLoadClosedButton()"
             ng-click="$ctrl.showClosedCampaigns()"
             translate
+            data-shortcut-closed-campaigns
         >Load closed campaigns </a>
         <a href=""
             ng-if="$ctrl.shouldShowHideClosedButton()"
             ng-click="$ctrl.hideClosedCampaigns()"
             translate
+            data-shortcut-closed-campaigns
         >Hide closed campaigns </a>
     </div>
 
