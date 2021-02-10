@@ -33,7 +33,6 @@ describe("Time tracking", function () {
         cy.get("[data-test=timetracking-save-configuration]").click();
 
         // give permissions
-        cy.get("[data-test=timetracking-readers]").select("Project administrators");
         cy.get("[data-test=timetracking-writers]").select("Project members");
         cy.get("[data-test=timetracking-save-configuration]").click();
     });
