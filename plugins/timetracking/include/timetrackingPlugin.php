@@ -27,6 +27,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
 use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
+use Tuleap\Timetracking\JiraImporter\JiraXMLExport;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Plugin\TimetrackingPluginInfo;
 use Tuleap\Timetracking\REST\ResourcesInjector;
@@ -44,6 +45,7 @@ use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLImport;
 use Tuleap\Timetracking\XML\XMLExport;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
@@ -82,6 +84,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(TrackerEventExportFullXML::NAME);
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
+            $this->addHook(JiraImporterExternalPluginsEvent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -407,6 +410,18 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             $event->getXmlElement(),
             $event->getUser(),
             $event->getExportedTrackers()
+        );
+    }
+
+    public function jiraImporterExternalPluginsEvent(JiraImporterExternalPluginsEvent $event): void
+    {
+        $xml_exporter = new JiraXMLExport(
+            new XML_SimpleXMLCDATAFactory(),
+            $event->getLogger()
+        );
+
+        $xml_exporter->exportJiraTimetracking(
+            $event->getXmlTracker()
         );
     }
 }

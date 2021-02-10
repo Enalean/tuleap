@@ -197,7 +197,7 @@ class XMLImport
             }
         }
 
-        if ($xml_timetracking->permissions->read) {
+        if ($xml_timetracking->permissions->write) {
             $writer_ids = [];
             foreach ($xml_timetracking->permissions->write->ugroup as $xml_write_ugroup) {
                 $ugroup = $this->getUgroup(
