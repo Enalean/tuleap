@@ -35,21 +35,6 @@ class PullRequestsTest extends RestBase
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
-    // some routes require a major refactoring of REST tests initialization
-    // and thus will be done in a following commit
-
-    //public function testGetPullRequest() {
-    //    $response  = $this->getResponse($this->client->get('pull_requests/1'));
-
-    //    $pull_request = $response->json();
-
-    //    $this->assertEquals(1, $pull_request['id']);
-    //    $this->assertEquals(102, $pull_request['user_id']);
-    //    $this->assertEquals(1, $pull_request['repository']['id']);
-    //    $this->assertEquals('dev', $pull_request['branch_src']);
-    //    $this->assertEquals('master', $pull_request['branch_dest']);
-    //}
-
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('pull_requests/'));
@@ -73,27 +58,6 @@ class PullRequestsTest extends RestBase
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
-
-    // public function testPATCHPullRequestToAbandonAPullRequest() {
-    //     $data = json_encode(array(
-    //         'status' => 'abandon'
-    //     ));
-
-    //     $response = $this->getResponse($this->client->patch(
-    //         'pull_requests/1',
-    //         null,
-    //         $data
-    //     ));
-
-    //     $this->assertEquals($response->getStatusCode(), 200);
-
-    //     // some routes require a major refactoring of REST tests initialization
-    //     // and thus will be done in a following commit
-    //     $response_get = $this->getResponse($this->client->get('pull_requests/1'));
-    //     $pull_request = $response_get->json();
-
-    //     $this->assertEquals('abandon', $pull_request['status']);
-    // }
 
     public function testPATCHPullRequestThrow400IfStatusIsUnknown()
     {
