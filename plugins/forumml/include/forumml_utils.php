@@ -20,7 +20,7 @@
  *
  */
 
-use Tuleap\ForumML\Threads\ThreadsDao;
+use Tuleap\ForumML\ThreadsDao;
 
 define('FORUMML_MESSAGE_ID', 1);
 define('FORUMML_DATE', ThreadsDao::HEADER_ID_DATE);

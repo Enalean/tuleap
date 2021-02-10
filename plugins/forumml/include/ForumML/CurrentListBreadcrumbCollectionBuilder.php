@@ -44,6 +44,9 @@ class CurrentListBreadcrumbCollectionBuilder
         $this->list_presenter_builder = $list_presenter_builder;
     }
 
+    /**
+     * @psalm-param array{group_id: int, list_name: string, is_public: int, description: string, group_list_id: int} $row
+     */
     public function getCurrentListBreadcrumbCollectionFromRow(
         array $row,
         Project $project,

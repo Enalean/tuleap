@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'thread-list';
-@use 'new-thread';
-@use 'message';
+declare(strict_types=1);
+
+namespace Tuleap\ForumML\OneThread;
+
+/**
+ * @psalm-immutable
+ */
+final class Sender
+{
+    /**
+     * @var string
+     */
+    private $address;
+    /**
+     * @var string
+     */
+    private $display;
+
+    public function __construct(string $address, string $display)
+    {
+        $this->address = $address;
+        $this->display = $display;
+    }
+
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    public function getDisplay(): string
+    {
+        return $this->display;
+    }
+}

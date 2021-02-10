@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ForumML\Threads;
+namespace Tuleap\ForumML\OneThread;
 
 use HTTPRequest;
 use Project;
@@ -34,8 +34,9 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\NotFoundException;
 
-class ThreadsController implements DispatchableWithBurningParrot, DispatchableWithRequest, DispatchableWithProject
+class OneThreadController implements DispatchableWithBurningParrot, DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var \TemplateRenderer
@@ -48,7 +49,7 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
     /**
      * @var TlpRelativeDatePresenterBuilder
      * /**
-     * @var ThreadsPresenterBuilder
+     * @var OneThreadPresenterBuilder
      */
     private $presenter_builder;
     /**
@@ -63,7 +64,7 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
     public function __construct(
         \TemplateRenderer $renderer,
         IncludeAssets $include_assets,
-        ThreadsPresenterBuilder $presenter_builder,
+        OneThreadPresenterBuilder $presenter_builder,
         CurrentListBreadcrumbCollectionBuilder $breadcrumb_collection_builder,
         ListInfoFromVariablesProvider $list_info_from_variable_provider
     ) {
@@ -82,20 +83,21 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $list_info = $this->list_info_from_variable_provider->getListInfoFromVariables($request, $variables);
+        $user      = $request->getCurrentUser();
 
-        $user = $request->getCurrentUser();
-
-        $threads_presenter = $this->presenter_builder->getThreadsPresenter(
-            $list_info->getProject(),
-            $user,
-            $list_info->getListId(),
-            $list_info->getListName(),
-            (int) $request->getValidated('offset', 'uint', 0),
-            (string) $request->get('search'),
-        );
+        try {
+            $thread_presenter = $this->presenter_builder->getThreadPresenter(
+                $list_info->getProject(),
+                $user,
+                $list_info->getListId(),
+                $list_info->getListName(),
+                (int) $variables['thread_id']
+            );
+        } catch (ThreadNotFoundException $exception) {
+            throw new NotFoundException();
+        }
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'forumml-style'));
-        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('new-thread.js'));
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
         $service = $list_info->getService();
@@ -110,24 +112,14 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
             )
         );
         $this->renderer->renderToPage(
-            'threads',
-            $threads_presenter
+            'one-thread',
+            $thread_presenter
         );
         $service->displayFooter();
     }
 
-    public static function getUrl(int $list_id): string
+    public static function getUrl(int $list_id, int $thread_id): string
     {
-        return '/plugins/forumml/list/' . urlencode((string) $list_id) . '/threads';
-    }
-
-    public static function getSearchUrl(int $list_id, string $words): string
-    {
-        return self::getUrl($list_id) . '?' .
-            http_build_query(
-                [
-                    'search' => $words,
-                ]
-            );
+        return '/plugins/forumml/list/' . urlencode((string) $list_id) . '/threads/' . urlencode((string) $thread_id);
     }
 }

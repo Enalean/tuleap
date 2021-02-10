@@ -20,17 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ForumML\Threads;
+namespace Tuleap\ForumML;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class ThreadsDao extends DataAccessObject
 {
-    public const HEADER_ID_DATE    = 2;
-    public const HEADER_ID_FROM    = 3;
-    public const HEADER_ID_SUBJECT = 4;
+    public const HEADER_ID_DATE         = 2;
+    public const HEADER_ID_FROM         = 3;
+    public const HEADER_ID_SUBJECT      = 4;
+    public const HEADER_ID_CONTENT_TYPE = 12;
+    public const HEADER_ID_CC           = 34;
 
+    /**
+     * @return null|array{group_id: int, list_name: string, is_public: int, description: string, group_list_id: int}
+     */
     public function searchActiveList(int $id): ?array
     {
         $sql = "SELECT *
@@ -133,5 +138,103 @@ class ThreadsDao extends DataAccessObject
         );
 
         return count($children) + $this->searchNbChildren($children, $id);
+    }
+
+    public function searchMessageInfo(int $list_id, int $message_id): array
+    {
+        $sql = 'SELECT
+                    m.*,
+                    mh_d.value AS date,
+                    mh_f.value AS sender,
+                    mh_s.value AS subject,
+                    mh_ct.value AS content_type,
+                    mh_cc.value AS cc,
+                    a.id_attachment,
+                    a.file_name,
+                    a.file_path
+                FROM plugin_forumml_message m
+                    LEFT JOIN plugin_forumml_messageheader mh_d
+                        ON (mh_d.id_message = m.id_message AND mh_d.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_f
+                        ON (mh_f.id_message = m.id_message AND mh_f.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_s
+                        ON (mh_s.id_message = m.id_message AND mh_s.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_ct
+                        ON (mh_ct.id_message = m.id_message AND mh_ct.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_cc
+                        ON (mh_cc.id_message = m.id_message AND mh_cc.id_header = ?)
+                    LEFT JOIN plugin_forumml_attachment a
+                        ON (a.id_message = m.id_message AND a.content_id = "")
+                WHERE m.id_list = ?
+                  AND m.id_message = ?';
+
+        return $this->getDB()->run(
+            $sql,
+            self::HEADER_ID_DATE,
+            self::HEADER_ID_FROM,
+            self::HEADER_ID_SUBJECT,
+            self::HEADER_ID_CONTENT_TYPE,
+            self::HEADER_ID_CC,
+            $list_id,
+            $message_id
+        );
+    }
+
+    /**
+     * @param int[] $parent_ids
+     */
+    public function searchChildrenMessageInfo(int $list_id, array $parent_ids): array
+    {
+        $in_condition = EasyStatement::open()->in('?*', $parent_ids);
+
+        $sql = 'SELECT
+                    m.*,
+                    mh_d.value AS date,
+                    mh_f.value AS sender,
+                    mh_s.value AS subject,
+                    mh_ct.value AS content_type,
+                    mh_cc.value AS cc,
+                    a.id_attachment,
+                    a.file_name,
+                    a.file_path
+                FROM plugin_forumml_message m
+                    LEFT JOIN plugin_forumml_messageheader mh_d
+                        ON (mh_d.id_message = m.id_message AND mh_d.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_f
+                        ON (mh_f.id_message = m.id_message AND mh_f.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_s
+                        ON (mh_s.id_message = m.id_message AND mh_s.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_ct
+                        ON (mh_ct.id_message = m.id_message AND mh_ct.id_header = ?)
+                    LEFT JOIN plugin_forumml_messageheader mh_cc
+                        ON (mh_cc.id_message = m.id_message AND mh_cc.id_header = ?)
+                    LEFT JOIN plugin_forumml_attachment a
+                        ON (a.id_message = m.id_message AND a.content_id = "")
+                WHERE m.id_list = ?
+                  AND m.id_parent IN (' . $in_condition . ')';
+
+        return $this->getDB()->run(
+            $sql,
+            self::HEADER_ID_DATE,
+            self::HEADER_ID_FROM,
+            self::HEADER_ID_SUBJECT,
+            self::HEADER_ID_CONTENT_TYPE,
+            self::HEADER_ID_CC,
+            $list_id,
+            ...$in_condition->values()
+        );
+    }
+
+    public function storeCachedHtml(int $message_id, string $cached_html): void
+    {
+        $this->getDB()->update(
+            'plugin_forumml_message',
+            [
+                'cached_html' => $cached_html,
+            ],
+            [
+                'id_message' => $message_id
+            ]
+        );
     }
 }

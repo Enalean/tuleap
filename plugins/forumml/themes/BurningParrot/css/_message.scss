@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.forumml-thread-message {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.forumml-thread-message-avatar {
+    flex: 0 0 auto;
+    margin: var(--tlp-medium-spacing);
+}
+
+.forumml-thread-message-card {
+    $avatar-size: 48px;
+
+    flex: 1 1 auto;
+    min-height: calc(#{$avatar-size} + 2px * var(--tlp-medium-spacing));
+    box-shadow: 0 3px 4px var(--tlp-theme-dark-background-color-transparent-90);
+}
+
+.forumml-thread-message-permalink {
+    margin: 0 2px 0 0;
+    transition: color 150ms ease-in-out;
+    color: var(--tlp-ui-dimmed);
+    font-size: .625rem;
+
+    &:focus,
+    &:hover {
+        color: var(--tlp-theme-color);
+    }
+}
+
+.forumml-thread-message-sender {
+    margin: 0 0 var(--tlp-small-spacing);
+    color: var(--tlp-ui-dimmed);
+    font-size: .75rem;
+    line-height: 1rem;
+}
+
+.forumml-thread-message-body {
+    line-height: 1.5rem;
+}
+
+.forumml-thread-message-attachments {
+    margin: var(--tlp-small-spacing) 0 0;
+    font-size: .75rem;
+    line-height: 1rem;
+}
+
+.forumml-thread-message-attachments-icon {
+    margin: 0 2px 0 0;
+    color: var(--tlp-ui-dimmed);
+}
+
+.forumml-thread-message-attachments-separator:last-child {
+    display: none;
+}

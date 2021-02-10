@@ -67,13 +67,7 @@
                                         <span>
                                             {{# created_by}},
                                             {{/ created_by}}
-                                                <tlp-relative-date
-                                                    date="{{ date }}"
-                                                    absolute-date="{{ absolute_date }}"
-                                                    placement="{{ placement }}"
-                                                    preference="{{ preference }}"
-                                                    locale="{{ locale }}"
-                                                >{{ absolute_date }}</tlp-relative-date>
+                                                {{> tlp_relative_date }}
                                         </span>
                                     {{/ created_on }}
                                 </div>
