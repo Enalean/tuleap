@@ -151,34 +151,6 @@ document.observe("dom:loaded", function () {
             });
     });
 
-    $$(".tracker_artifact_field  textarea").each(function (element) {
-        if (!location.search.includes("func=new-artifact")) {
-            return;
-        }
-        var html_id = element.id;
-        var field_id = html_id.match(/_(\d+)$/)[1];
-        var name = element.dataset.formatName || "artifact[" + field_id + "][format]";
-        var is_html = true;
-
-        if (element.dataset.format) {
-            is_html = element.dataset.format !== "text";
-        } else {
-            var body_format = $("artifact[" + field_id + "]_body_format");
-
-            if (body_format === null || body_format.value == "text") {
-                is_html = false;
-            }
-        }
-
-        new tuleap.textarea.RTE(element, {
-            toggle: true,
-            default_in_html: false,
-            id: html_id,
-            name: name,
-            htmlFormat: is_html,
-        });
-    });
-
     function getTextAreaValueAndHtmlFormat(comment_panel, id) {
         var content;
         var htmlFormat;
