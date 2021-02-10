@@ -44,6 +44,10 @@ function update_news() {
     var subject = $("release_news_subject");
     var details = $("release_news_details");
 
+    if (subject === null || details === null) {
+        return;
+    }
+
     var a = this.relname;
     var b = rel_name.value;
     var expr1 = subject.value;
@@ -478,12 +482,12 @@ Event.observe(window, "load", function () {
         });
     }
     //News
-    Element.hide("tr_subject");
-    Element.hide("tr_details");
-    Element.hide("tr_public");
-    Element.hide("tr_private");
+    if ($("submit_news") !== null) {
+        Element.hide("tr_subject");
+        Element.hide("tr_details");
+        Element.hide("tr_public");
+        Element.hide("tr_private");
 
-    if ($("submit_news") != null) {
         Event.observe($("submit_news"), "click", function () {
             if ($("submit_news").checked) {
                 Element.show("tr_subject");
