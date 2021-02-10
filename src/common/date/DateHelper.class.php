@@ -64,7 +64,9 @@ class DateHelper
             absolute-date="' . $purifier->purify($presenter->absolute_date) . '"
             preference="' . $purifier->purify($presenter->preference) . '"
             locale="' . $purifier->purify($presenter->locale) . '"
-            placement="' . $purifier->purify($presenter->placement) . '"></tlp-relative-date>';
+            placement="' . $purifier->purify($presenter->placement) . '">'
+            . $purifier->purify($presenter->absolute_date)
+            . '</tlp-relative-date>';
     }
 
     public static function relativeDateBlockContext(int $time, PFUser $current_user): string

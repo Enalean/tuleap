@@ -48,7 +48,9 @@
                     v-bind:placement="relative_date_placement"
                     v-bind:preference="relative_date_preference"
                     v-bind:locale="user_locale"
-                />
+                >
+                    {{ getFormattedDate(item.creation_date) }}
+                </tlp-relative-date>
             </div>
             <div class="tlp-property">
                 <label class="tlp-label" v-translate>Last update date</label>
@@ -58,7 +60,9 @@
                     v-bind:placement="relative_date_placement"
                     v-bind:preference="relative_date_preference"
                     v-bind:locale="user_locale"
-                />
+                >
+                    {{ getFormattedDate(item.last_update_date) }}
+                </tlp-relative-date>
             </div>
             <div
                 class="tlp-property"

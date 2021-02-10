@@ -51,7 +51,7 @@ function appendTheTlpRelativeDateElement(doc: HTMLDocument): RelativeDateElement
         placement="right"
         preference="absolute"
         locale="en_US"
-    ></tlp-relative-date>`;
+    >2020/08/04</tlp-relative-date>`;
 
     const tlp_local_time = container.querySelector("tlp-relative-date");
     if (!(tlp_local_time instanceof RelativeDateElement)) {

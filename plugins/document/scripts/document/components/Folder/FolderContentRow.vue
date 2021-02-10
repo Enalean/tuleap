@@ -93,7 +93,9 @@
                     v-bind:placement="relative_date_placement"
                     v-bind:preference="relative_date_preference"
                     v-bind:locale="user_locale"
-                />
+                >
+                    {{ formatted_full_date }}
+                </tlp-relative-date>
             </td>
         </template>
     </tr>

@@ -34,7 +34,7 @@ describe("relative-date element", () => {
                     placement="${placement}"
                     preference="${preference}"
                     locale="en_US"
-                ></tlp-relative-date>`;
+                >${absolute_date}</tlp-relative-date>`;
 
         const tlp_local_time = container.querySelector("tlp-relative-date");
         if (!(tlp_local_time instanceof RelativeDateElement)) {
