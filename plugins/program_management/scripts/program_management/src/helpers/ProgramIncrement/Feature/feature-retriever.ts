@@ -18,9 +18,9 @@
  */
 
 import { recursiveGet } from "tlp";
-import { TrackerMinimalRepresentation } from "../../type";
+import { TrackerMinimalRepresentation } from "../../../type";
 
-export interface ToBePlannedElement {
+export interface Feature {
     artifact_id: number;
     artifact_title: string;
     artifact_xref: string;
@@ -28,8 +28,8 @@ export interface ToBePlannedElement {
     background_color: string;
 }
 
-export function getToBePlannedElements(program_id: number): Promise<ToBePlannedElement[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/program_backlog`, {
+export function getFeatures(increment_id: number): Promise<Feature[]> {
+    return recursiveGet(`/api/v1/program_increment/${encodeURIComponent(increment_id)}/content`, {
         params: {
             limit: 50,
             offset: 0,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ToBePlannedCard Displays a card with accessibility pattern 1`] = `
+exports[`ElementCard Displays a card with accessibility pattern 1`] = `
 <div
   class="element-card element-card-lake_placid_blue element-card-background-peggy_pink_text element-card-with-accessibility"
 >
@@ -33,7 +33,7 @@ exports[`ToBePlannedCard Displays a card with accessibility pattern 1`] = `
 </div>
 `;
 
-exports[`ToBePlannedCard Displays a card without accessibility pattern 1`] = `
+exports[`ElementCard Displays a card without accessibility pattern 1`] = `
 <div
   class="element-card element-card-lake_placid_blue"
 >

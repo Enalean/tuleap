@@ -60,9 +60,7 @@
             v-bind:class="{ 'program-increment-content-hidden': !is_open }"
             data-test="program-increment-content"
         >
-            <div class="program-increment-content-items">
-                <program-increment-no-content />
-            </div>
+            <program-increment-feature-list v-if="is_open" v-bind:increment="increment" />
         </section>
     </div>
 </template>
@@ -70,18 +68,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import { getUserLocale } from "../../../configuration";
+import { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 
 @Component({
-    components: { ProgramIncrementNoContent },
+    components: { ProgramIncrementFeatureList },
 })
-export default class ProgramIncrement extends Vue {
+export default class ProgramIncrementCard extends Vue {
     @Prop({ required: true })
     readonly increment!: ProgramIncrement;
 
-    is_open = false;
+    private is_open = false;
 
     formatDate = (date: string): string => formatDateYearMonthDay(getUserLocale(), date);
 

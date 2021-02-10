@@ -17,22 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp";
-import { TrackerMinimalRepresentation } from "../../type";
-
-export interface ToBePlannedElement {
-    artifact_id: number;
-    artifact_title: string;
-    artifact_xref: string;
-    tracker: TrackerMinimalRepresentation;
-    background_color: string;
-}
-
-export function getToBePlannedElements(program_id: number): Promise<ToBePlannedElement[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/program_backlog`, {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-    });
+export interface TrackerMinimalRepresentation {
+    id: number;
+    uri: string;
+    label: string;
+    color_name: string;
 }
