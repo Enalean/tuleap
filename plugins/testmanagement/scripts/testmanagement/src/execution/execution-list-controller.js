@@ -200,7 +200,9 @@ function ExecutionListCtrl(
                     updateViewTestExecution($scope.execution_id, "").then(scrollToCurrentTest);
                 } else {
                     $timeout(function () {
-                        const first_test_tab = document.querySelector("[data-shortcut-navigation]");
+                        const first_test_tab = document.querySelector(
+                            "[data-navigation-test-link]"
+                        );
                         if (first_test_tab) {
                             first_test_tab.setAttribute("tabindex", "0");
                             return;

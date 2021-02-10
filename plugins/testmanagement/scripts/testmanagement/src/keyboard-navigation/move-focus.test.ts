@@ -17,109 +17,171 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { moveFocus, getTargetTestTab } from "./move-focus";
+import { moveFocus, getTargetTest } from "./move-focus";
 import { Direction } from "./type";
+
+import * as getter_current_test from "./get-current-test";
+import * as getter_current_category from "./get-current-category";
+
+jest.mock("./get-current-test");
+jest.mock("./get-current-category");
 
 describe("move-focus", () => {
     let doc: Document;
 
-    let first_test: HTMLAnchorElement;
-    let second_test: HTMLAnchorElement;
-    let third_test: HTMLAnchorElement;
+    let first_category: HTMLElement;
+    let second_category: HTMLElement;
+
+    let first_test: HTMLLIElement;
+    let second_test: HTMLLIElement;
+    let third_test: HTMLLIElement;
+    let fourth_test: HTMLLIElement;
+
+    let first_test_link: HTMLAnchorElement;
+    let second_test_link: HTMLAnchorElement;
+    let third_test_link: HTMLAnchorElement;
+    let fourth_test_link: HTMLAnchorElement;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         setupTestsListDocument(doc);
     });
 
-    describe("moveFocus()", () => {
-        let focus: jest.SpyInstance;
-        let current_test_tab: EventTarget;
+    describe("moveFocus", () => {
+        it("focuses the first test tab if getTargetTest() returns an element", () => {
+            const focus = jest.spyOn(first_test_link, "focus");
+            jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
 
-        beforeEach(() => {
-            focus = jest.spyOn(first_test, "focus");
-        });
-
-        it("returns nothing if current test tab is not an anchor HTML element with the 'data-shortcut-navigation' attribute", () => {
-            current_test_tab = doc.createElement("span");
-            moveFocus(doc, current_test_tab, Direction.top);
-
-            expect(focus).not.toHaveBeenCalled();
-        });
-
-        it("focuses the first test tab", () => {
-            current_test_tab = doc.createElement("a");
-            if (current_test_tab instanceof HTMLAnchorElement) {
-                current_test_tab.setAttribute("data-shortcut-navigation", "");
-            }
-
-            moveFocus(doc, current_test_tab, Direction.top);
+            moveFocus(doc, Direction.top);
 
             expect(focus).toHaveBeenCalled();
         });
     });
 
-    describe("getTargetTestTab()", () => {
-        it("returns the last test tab in the given tests tablist", () => {
-            const target_test_tab = getTargetTestTab(doc, second_test, Direction.bottom);
-            expect(target_test_tab).toBe(third_test);
+    describe("getTargetTest", () => {
+        it("returns null if no test is focused", () => {
+            jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(null);
+            const target_test = getTargetTest(doc, Direction.top);
+
+            expect(target_test).toBe(null);
         });
 
-        it("returns the first test tab in the given tests tablist", () => {
-            const target_test_tab = getTargetTestTab(doc, second_test, Direction.top);
-            expect(target_test_tab).toBe(first_test);
+        it("throws an error if test link does not have the [data-navigation-test-link] attribute", () => {
+            jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(first_test);
+            second_test_link.removeAttribute("data-navigation-test-link");
+
+            expect(() => {
+                getTargetTest(doc, Direction.next);
+            }).toThrowError();
         });
 
-        it("returns the previous test tab in the given tests tablist", () => {
-            const target_test_tab = getTargetTestTab(doc, second_test, Direction.previous);
-            expect(target_test_tab).toBe(first_test);
+        it("returns the first test link in document", () => {
+            jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
+            const target_test = getTargetTest(doc, Direction.top);
+
+            expect(target_test).toBe(first_test_link);
         });
 
-        it("returns the next test tab in the given tests tablist", () => {
-            const target_test_tab = getTargetTestTab(doc, second_test, Direction.next);
-            expect(target_test_tab).toBe(third_test);
+        it("return the last test link in document", () => {
+            jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
+            const target_test = getTargetTest(doc, Direction.bottom);
+
+            expect(target_test).toBe(fourth_test_link);
         });
 
-        it("returns the first test tab when current test tab is the last in the tests tablist", () => {
-            const target_test_tab = getTargetTestTab(doc, third_test, Direction.next);
-            expect(target_test_tab).toBe(first_test);
+        describe("Direction.next", () => {
+            it("returns the next test link", () => {
+                jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(first_test);
+                const target_test = getTargetTest(doc, Direction.next);
+
+                expect(target_test).toBe(second_test_link);
+            });
+
+            it("returns the first test link in next category if current test is last of its category", () => {
+                jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
+                jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
+                    first_category
+                );
+                const target_test = getTargetTest(doc, Direction.next);
+
+                expect(target_test).toBe(third_test_link);
+            });
+
+            it("returns first test link if current test is the last", () => {
+                jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(fourth_test);
+                jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
+                    second_category
+                );
+                const target_test = getTargetTest(doc, Direction.next);
+
+                expect(target_test).toBe(first_test_link);
+            });
         });
 
-        it("returns the last test tab when current test tab is the first in the tests tablist", () => {
-            const target_test_tab = getTargetTestTab(doc, first_test, Direction.previous);
-            expect(target_test_tab).toBe(third_test);
-        });
+        describe("Direction.previous", () => {
+            it("returns the previous test link", () => {
+                jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
+                const target_test = getTargetTest(doc, Direction.previous);
 
-        it("returns null if last test tab is not an anchor HTML element", () => {
-            const fourth_test = doc.createElement("span");
-            fourth_test.setAttribute("data-shortcut-navigation", "");
-            doc.body.append(fourth_test);
+                expect(target_test).toBe(first_test_link);
+            });
 
-            const target_test_tab = getTargetTestTab(doc, third_test, Direction.bottom);
+            it("returns the last test link in previous category if current test is first of its category", () => {
+                jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(third_test);
+                jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
+                    second_category
+                );
+                const target_test = getTargetTest(doc, Direction.previous);
 
-            expect(target_test_tab).toBe(null);
-        });
+                expect(target_test).toBe(second_test_link);
+            });
 
-        it("returns null if current tab position in list could not be found", () => {
-            second_test.removeAttribute("data-test-tab-index");
-            const target_test_tab = getTargetTestTab(doc, second_test, Direction.next);
+            it("returns last test link if current test is the first", () => {
+                jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(first_test);
+                jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
+                    first_category
+                );
+                const target_test = getTargetTest(doc, Direction.previous);
 
-            expect(target_test_tab).toBe(null);
+                expect(target_test).toBe(fourth_test_link);
+            });
         });
     });
 
     function setupTestsListDocument(doc: Document): void {
-        const tests_list = doc.createElement("div");
-        first_test = doc.createElement("a");
-        second_test = doc.createElement("a");
-        third_test = doc.createElement("a");
+        first_category = doc.createElement("div");
+        first_category.setAttribute("data-navigation-category", "");
+        second_category = doc.createElement("div");
+        second_category.setAttribute("data-navigation-category", "");
 
-        [first_test, second_test, third_test].forEach((test, index) => {
-            test.setAttribute("data-test-tab-index", index.toString());
-            test.setAttribute("data-shortcut-navigation", "");
+        first_test = doc.createElement("li");
+        second_test = doc.createElement("li");
+        third_test = doc.createElement("li");
+        fourth_test = doc.createElement("li");
+
+        [first_test, second_test, third_test, fourth_test].forEach((test) => {
+            test.setAttribute("data-navigation-test", "");
         });
 
-        tests_list.append(first_test, second_test, third_test);
-        doc.body.append(tests_list);
+        first_test_link = doc.createElement("a");
+        second_test_link = doc.createElement("a");
+        third_test_link = doc.createElement("a");
+        fourth_test_link = doc.createElement("a");
+
+        [first_test_link, second_test_link, third_test_link, fourth_test_link].forEach(
+            (test_link) => {
+                test_link.setAttribute("data-navigation-test-link", "");
+            }
+        );
+
+        first_test.append(first_test_link);
+        second_test.append(second_test_link);
+        third_test.append(third_test_link);
+        fourth_test.append(fourth_test_link);
+
+        first_category.append(first_test, second_test);
+        second_category.append(third_test, fourth_test);
+
+        doc.body.append(first_category, second_category);
     }
 });
