@@ -48,7 +48,8 @@ class GitBundle
     public function dumpRepository(
         GitRepository $repository,
         ArchiveInterface $archive,
-        $temporary_dump_path_on_filesystem
+        $temporary_dump_path_on_filesystem,
+        string $file_name
     ) {
         try {
             if ($this->doesRepositoryHaveCommits($repository) === false) {
@@ -57,7 +58,6 @@ class GitBundle
                 return true;
             }
 
-            $file_name          = self::getBundleName($repository);
             $repository_path    = $repository->getFullPath();
             $path_to_filesystem = "$temporary_dump_path_on_filesystem/$file_name";
 
@@ -84,14 +84,6 @@ class GitBundle
                 '[git ' . $repository->getName() . '] git-bundle returned with status ' . $e->return_value
             );
         }
-    }
-
-    /**
-     * @psalm-taint-escape file
-     */
-    private static function getBundleName(GitRepository $repository): string
-    {
-        return preg_replace('/[^\da-zA-Z_.\-]/i', '', $repository->getName() . '.bundle');
     }
 
     private function createBundle(
