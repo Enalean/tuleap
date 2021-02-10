@@ -238,6 +238,20 @@ class Git_Exec
         return $output;
     }
 
+    public function getAllBranchesSortedByCreationDate(): array
+    {
+        $output = [];
+        $this->gitCmdWithOutput("for-each-ref --sort=-creatordate --format='%(refname:short)' refs/heads", $output);
+        return $output;
+    }
+
+    public function getAllTagsSortedByCreationDate(): array
+    {
+        $output = [];
+        $this->gitCmdWithOutput("for-each-ref --sort=-creatordate --format='%(refname:short)' refs/tags", $output);
+        return $output;
+    }
+
     /**
      * Return content of an object
      *

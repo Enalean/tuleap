@@ -64,11 +64,9 @@ use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerExce
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Git\GitPHP\Head;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\GitPHP\RepositoryAccessException;
 use Tuleap\Git\GitPHP\RepositoryNotExistingException;
-use Tuleap\Git\GitPHP\Tag;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
@@ -731,7 +729,6 @@ class RepositoryResource extends AuthenticatedResource
             return [];
         }
 
-        /** @var Head[] $branches_refs */
         $branches_refs        = $project->GetHeads();
         $total_size           = count($branches_refs);
         $sliced_branches_refs = array_slice($branches_refs, $offset, $limit);
@@ -739,9 +736,12 @@ class RepositoryResource extends AuthenticatedResource
         $commits = [];
         foreach ($sliced_branches_refs as $branch) {
             try {
-                $commits[] = $branch->GetCommit();
+                $commit = $project->GetCommit($branch);
+                if ($commit !== null) {
+                    $commits[] = $commit;
+                }
             } catch (GitRepoRefNotFoundException $e) {
-                // ignore the tag if by any chance it is invalid
+                // ignore the branch if by any chance it is invalid
             }
         }
 
@@ -749,14 +749,16 @@ class RepositoryResource extends AuthenticatedResource
 
         $result = [];
         foreach ($sliced_branches_refs as $branch) {
-            $name = $branch->GetName();
+            $name = $branch;
             try {
-                $commit_representation = $commit_representation_collection->getRepresentation($branch->GetCommit());
+                $commit = $project->GetCommit($branch);
+                if ($commit !== null) {
+                    $commit_representation = $commit_representation_collection->getRepresentation($commit);
+                    $branch_representation = new GitBranchRepresentation();
+                    $branch_representation->build($name, $commit_representation);
 
-                $branch_representation = new GitBranchRepresentation();
-                $branch_representation->build($name, $commit_representation);
-
-                $result[] = $branch_representation;
+                    $result[] = $branch_representation;
+                }
             } catch (GitRepoRefNotFoundException $e) {
                 // ignore the branch if by any chance it is invalid
             }
@@ -810,15 +812,14 @@ class RepositoryResource extends AuthenticatedResource
             return [];
         }
 
-        /** @var Tag[] $tags_refs */
         $tags_refs        = $project->GetTags();
         $total_size       = count($tags_refs);
         $sliced_tags_refs = array_slice($tags_refs, $offset, $limit);
+        $commits          = [];
 
-        $commits = [];
         foreach ($sliced_tags_refs as $tag) {
             try {
-                $commit = $tag->GetCommit();
+                $commit = $project->getCommit($tag);
                 if ($commit) {
                     $commits[] = $commit;
                 }
@@ -831,8 +832,8 @@ class RepositoryResource extends AuthenticatedResource
 
         $result = [];
         foreach ($sliced_tags_refs as $tag) {
-            $name   = $tag->GetName();
-            $commit = $tag->GetCommit();
+            $name   = $tag;
+            $commit = $project->getCommit($tag);
             if (! $commit) {
                 continue;
             }

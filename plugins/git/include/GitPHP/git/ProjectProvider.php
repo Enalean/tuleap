@@ -20,6 +20,8 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use Git_Exec;
+
 class ProjectProvider
 {
     private $repository;
@@ -34,7 +36,10 @@ class ProjectProvider
         $project_root = $repository->getGitRootPath() . $repository->getProject()->getUnixName() . '/';
         $project_path = $repository->getFullName() . '.git';
 
-        $this->project    = new Project($project_root, $project_path);
+        $repository_path = $project_root . $project_path;
+        $git_exec        = new Git_Exec($repository_path, $repository_path);
+
+        $this->project    = new Project($project_root, $project_path, $git_exec);
         $this->repository = $repository;
     }
 
