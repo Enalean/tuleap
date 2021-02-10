@@ -1,9 +1,0 @@
-{
-    "name": "scaled_agile",
-    "gettext-vue": {
-        "scaled_agile": {
-            "src": "scripts/scaled_agile",
-            "po": "scripts/scaled_agile/po"
-        }
-    }
-}

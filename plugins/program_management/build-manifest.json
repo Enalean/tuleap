@@ -1,0 +1,9 @@
+{
+    "name": "program_management",
+    "gettext-vue": {
+        "program_management": {
+            "src": "scripts/program_management",
+            "po": "scripts/program_management/po"
+        }
+    }
+}

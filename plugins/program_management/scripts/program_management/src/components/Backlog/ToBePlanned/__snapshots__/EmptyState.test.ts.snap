@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyState Displays the empty state for Backlog unplanned section 1`] = `
+<p
+  class="empty-page-text"
+  data-current-language="en_US"
+  data-msgid="There is nothing to plan"
+  project_public_name="Public name"
+  project_short_name="short-name"
+>
+  There is nothing to plan
+</p>
+`;
