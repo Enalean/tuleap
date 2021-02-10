@@ -35,6 +35,7 @@ export interface InternalTextEditorOptions {
 export interface RichTextEditorOptions {
     format_selectbox_id: string;
     format_selectbox_name?: string;
+    format_selectbox_value?: TextFieldFormat;
     getAdditionalOptions?: additionalOptionsProvider;
     onEditorInit?: editorInitCallback;
     onFormatChange?: formatChangedCallback;

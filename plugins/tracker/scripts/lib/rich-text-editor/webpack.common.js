@@ -33,7 +33,7 @@ const webpack_config = {
         libraryTarget: "umd",
     },
     externals: {
-        ckeditor4: "CKEDITOR",
+        ckeditor4: "ckeditor4",
     },
     resolve: {
         extensions: [".ts", ".js"],

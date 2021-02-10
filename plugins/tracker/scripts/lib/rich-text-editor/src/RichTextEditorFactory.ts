@@ -70,14 +70,18 @@ export class RichTextEditorFactory {
             this.markdown_converter,
             this.markdown_renderer
         );
+        const selected_value =
+            options.format_selectbox_value !== undefined
+                ? options.format_selectbox_value
+                : this.default_format;
         this.display_interface.insertFormatSelectbox(textarea, {
             id: options.format_selectbox_id,
             name: options.format_selectbox_name,
-            default_format: this.default_format,
+            selected_value,
             formatChangedCallback: (new_format) => {
                 editor.onFormatChange(new_format);
             },
         });
-        editor.onFormatChange(this.default_format);
+        editor.onFormatChange(selected_value);
     }
 }

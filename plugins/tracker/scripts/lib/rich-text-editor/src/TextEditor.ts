@@ -77,14 +77,18 @@ export class TextEditor {
             CKEDITOR.instances[this.textarea.id].destroy(true);
         }
 
+        const dimensions = this.textarea.getBoundingClientRect();
         const replace_options = {
             ...CKEDITOR_DEFAULT_OPTIONS,
             language: this.options.locale,
+            height: dimensions.height,
+            width: dimensions.width,
             ...this.options.getAdditionalOptions(this.textarea),
         };
         const editor = CKEDITOR.replace(this.textarea, replace_options);
         this.ckeditor = editor;
         this.options.onEditorInit(editor, this.textarea);
+
         return editor;
     }
 }

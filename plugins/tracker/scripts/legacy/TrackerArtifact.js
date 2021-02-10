@@ -152,6 +152,9 @@ document.observe("dom:loaded", function () {
     });
 
     $$(".tracker_artifact_field  textarea").each(function (element) {
+        if (!location.search.includes("func=new-artifact")) {
+            return;
+        }
         var html_id = element.id;
         var field_id = html_id.match(/_(\d+)$/)[1];
         var name = element.dataset.formatName || "artifact[" + field_id + "][format]";
