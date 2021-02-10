@@ -38,11 +38,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
-import { userHasAccessibilityMode } from "../../../configuration";
+import { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
+import { userHasAccessibilityMode } from "../../configuration";
 
 @Component({})
-export default class ToBePlannedCard extends Vue {
+export default class ElementCard extends Vue {
     @Prop({ required: true })
     readonly element!: ToBePlannedElement;
 

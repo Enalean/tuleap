@@ -24,7 +24,7 @@
             v-if="to_be_planned_elements.length === 0 && !is_loading && !has_error"
             data-test="empty-state"
         />
-        <to-be-planned-card
+        <element-card
             v-for="element in to_be_planned_elements"
             v-bind:key="element.artifact_id"
             v-bind:element="element"
@@ -53,11 +53,11 @@ import {
     ToBePlannedElement,
 } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import EmptyState from "./EmptyState.vue";
-import ToBePlannedCard from "./ToBePlannedCard.vue";
+import ElementCard from "../ElementCard.vue";
 import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
 
 @Component({
-    components: { ToBePlannedSkeleton, ToBePlannedCard, EmptyState },
+    components: { ToBePlannedSkeleton, ElementCard, EmptyState },
 })
 export default class ToBePlanned extends Vue {
     private error_message = "";

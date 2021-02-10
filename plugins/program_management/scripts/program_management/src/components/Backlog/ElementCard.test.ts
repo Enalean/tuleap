@@ -18,13 +18,13 @@
  */
 
 import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
-import ToBePlannedCard from "./ToBePlannedCard.vue";
-import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
-import * as configuration from "../../../configuration";
+import ElementCard from "./ElementCard.vue";
+import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
+import { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
+import * as configuration from "../../configuration";
 
-describe("ToBePlannedCard", () => {
-    let component_options: ShallowMountOptions<ToBePlannedCard>;
+describe("ElementCard", () => {
+    let component_options: ShallowMountOptions<ElementCard>;
 
     it("Displays a card with accessibility pattern", async () => {
         jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(true);
@@ -43,7 +43,7 @@ describe("ToBePlannedCard", () => {
             localVue: await createProgramManagementLocalVue(),
         };
 
-        const wrapper = shallowMount(ToBePlannedCard, component_options);
+        const wrapper = shallowMount(ElementCard, component_options);
         expect(wrapper.element).toMatchSnapshot();
     });
 
@@ -64,7 +64,7 @@ describe("ToBePlannedCard", () => {
             localVue: await createProgramManagementLocalVue(),
         };
 
-        const wrapper = shallowMount(ToBePlannedCard, component_options);
+        const wrapper = shallowMount(ElementCard, component_options);
         expect(wrapper.element).toMatchSnapshot();
     });
 });
