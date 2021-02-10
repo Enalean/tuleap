@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -2407,6 +2407,9 @@ msgstr "Nom Complet (login)"
 msgid "Real name"
 msgstr "Nom complet"
 
+msgid "Real name is not valid"
+msgstr "Le nom complet n'est pas valide"
+
 msgid "Real name successfully updated"
 msgstr "Le nom complet a été mis à jour avec succès"
 
@@ -2735,9 +2738,6 @@ msgstr "Le séparateur CSV n'est pas valide"
 
 msgid "Submitted by"
 msgstr "Soumis par"
-
-msgid "Submitted real name is too long, it must be less than 32 characters"
-msgstr "Le nom complet doit contenir au maximum 32 caractères"
 
 msgid "Submitted relative dates display is not valid."
 msgstr "Le format d'affichage des dates relatives n'est pas valide"
@@ -3738,8 +3738,8 @@ msgid ""
 "You are using an outdated version of %s. You might encounter issues if you "
 "continue."
 msgstr ""
-"Vous utilisez une version obsolète de %s. Vous pouvez rencontrer divers "
-"bugs si vous continuez."
+"Vous utilisez une version obsolète de %s. Vous pouvez rencontrer divers bugs "
+"si vous continuez."
 
 msgid "You can choose up to %s category"
 msgid_plural "You can choose up to %s categories"

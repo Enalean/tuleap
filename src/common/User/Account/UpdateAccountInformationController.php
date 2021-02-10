@@ -97,7 +97,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
 
         $something_changed = false;
 
-        $wanted_realname = $request->get('realname');
+        $wanted_realname = $request->getValidated('realname', new \Valid_RealNameFormat(), false);
         if ($wanted_realname && $account_information_collection->isUserAllowedToCanChangeRealName()) {
             $something_changed = $this->updateRealName($layout, $user, (string) $wanted_realname) || $something_changed;
         }
@@ -121,8 +121,9 @@ final class UpdateAccountInformationController implements DispatchableWithReques
 
     private function updateRealName(BaseLayout $layout, \PFUser $user, string $wanted_realname): bool
     {
-        if (strlen($wanted_realname) > \PFUser::REALNAME_MAX_LENGTH) {
-            $layout->addFeedback(\Feedback::ERROR, _('Submitted real name is too long, it must be less than 32 characters'));
+        $validator = new \Valid_RealNameFormat();
+        if (! $validator->validate($wanted_realname)) {
+            $layout->addFeedback(\Feedback::ERROR, _('Real name is not valid'));
             return false;
         }
         if ($wanted_realname === $user->getRealName()) {

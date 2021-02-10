@@ -19,6 +19,7 @@
 
 $profile-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
 $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
+$profile-max-width: 720px;
 
 .body-user-profile {
     background: linear-gradient(to bottom, $profile-header-background 0, $profile-header-background 200px, $tlp-theme-background-color 200px);
@@ -65,7 +66,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 720px;
+    max-width: $profile-max-width;
 }
 
 .user-profile-avatar {
@@ -74,7 +75,10 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 }
 
 .user-profile-identity {
+    $avatar-jumbo-size: 96px;
+
     flex: 1 0 auto;
+    max-width: $profile-max-width - $avatar-jumbo-size - $tlp-medium-spacing;
 }
 
 .user-profile-status-active {
@@ -91,10 +95,13 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 
 .user-profile-title {
     margin: 0 $tlp-medium-spacing 0 0;
+    overflow: hidden;
     color: $theme-color-on-dark-background;
     font-size: 30px;
     font-weight: 300;
     line-height: 26px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .user-profile-member-information {
@@ -148,12 +155,12 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 
 .user-profile-has-projects {
     width: 100%;
-    max-width: 720px;
+    max-width: $profile-max-width;
 }
 
 .user-profile-no-project,
 .user-profile-no-project:last-child {
-    max-width: 720px;
+    max-width: $profile-max-width;
     margin: 0 $tlp-medium-spacing;
 }
 
