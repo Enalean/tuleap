@@ -28,6 +28,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
@@ -82,6 +83,11 @@ final class XMLImportTest extends TestCase
      */
     private $project;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -92,6 +98,7 @@ final class XMLImportTest extends TestCase
         $this->ugroup_manager            = Mockery::mock(UGroupManager::class);
         $this->user_finder               = Mockery::mock(IFindUserFromXMLReference::class);
         $this->time_dao                  = Mockery::mock(TimeDao::class);
+        $this->logger                    = Mockery::mock(LoggerInterface::class);
 
         $this->xml_import = new XMLImport(
             $this->rng_validator,
@@ -99,7 +106,8 @@ final class XMLImportTest extends TestCase
             $this->timetracking_ugroup_saver,
             $this->ugroup_manager,
             $this->user_finder,
-            $this->time_dao
+            $this->time_dao,
+            $this->logger
         );
 
         $this->project = Mockery::mock(Project::class);
@@ -181,6 +189,8 @@ final class XMLImportTest extends TestCase
                 "Step 01"
             );
 
+        $this->mockLogInfo();
+
         $this->xml_import->import(
             $xml,
             $this->project,
@@ -250,6 +260,8 @@ final class XMLImportTest extends TestCase
             ->andReturn($user);
 
         $this->time_dao->shouldNotReceive('addTime');
+
+        $this->mockLogInfo();
 
         $this->xml_import->import(
             $xml,
@@ -327,6 +339,12 @@ final class XMLImportTest extends TestCase
         $this->user_finder->shouldReceive('getUser')
             ->andReturn($user);
 
+        $this->mockLogInfo();
+
+        $this->logger->shouldReceive('warning')
+            ->with('Could not find any ugroup named unkown_ugroup, skipping.')
+            ->once();
+
         $this->xml_import->import(
             $xml,
             $this->project,
@@ -367,5 +385,20 @@ final class XMLImportTest extends TestCase
             $created_trackers_objects,
             $artifact_id_mapping
         );
+    }
+
+    private function mockLogInfo(): void
+    {
+        $this->logger->shouldReceive('info')
+            ->with('Enable timetracking for tracker 789.')
+            ->once();
+
+        $this->logger->shouldReceive('info')
+            ->with('Add timetracking reader permission.')
+            ->once();
+
+        $this->logger->shouldReceive('info')
+            ->with('Add timetracking writer permission.')
+            ->once();
     }
 }

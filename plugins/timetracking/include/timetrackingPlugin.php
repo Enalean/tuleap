@@ -368,7 +368,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             ),
             new UGroupManager(),
             $user_finder,
-            new TimeDao()
+            new TimeDao(),
+            $event->getLogger()
         );
 
         $xml_import->import(

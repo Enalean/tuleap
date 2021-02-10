@@ -25,6 +25,7 @@ namespace Tuleap\Timetracking\XML;
 use DateTimeImmutable;
 use Project;
 use ProjectUGroup;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
@@ -68,13 +69,19 @@ class XMLImport
      */
     private $time_dao;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         XML_RNGValidator $rng_validator,
         TimetrackingEnabler $timetracking_enabler,
         TimetrackingUgroupSaver $timetracking_ugroup_saver,
         UGroupManager $ugroup_manager,
         IFindUserFromXMLReference $user_finder,
-        TimeDao $time_dao
+        TimeDao $time_dao,
+        LoggerInterface $logger
     ) {
         $this->rng_validator             = $rng_validator;
         $this->timetracking_enabler      = $timetracking_enabler;
@@ -82,6 +89,7 @@ class XMLImport
         $this->ugroup_manager            = $ugroup_manager;
         $this->user_finder               = $user_finder;
         $this->time_dao                  = $time_dao;
+        $this->logger                    = $logger;
     }
 
     public function import(
@@ -128,6 +136,10 @@ class XMLImport
         $ugroup_name = (string) $ugroup;
         $ugroup      = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
 
+        if ($ugroup === null) {
+            $this->logger->warning("Could not find any ugroup named $ugroup_name, skipping.");
+        }
+
         return $ugroup;
     }
 
@@ -145,6 +157,7 @@ class XMLImport
 
             $time_artifact_id = (string) $xml_time['artifact_id'];
             if (! $artifact_id_mapping->containsSource($time_artifact_id)) {
+                $this->logger->warning("Artifact #$time_artifact_id not found in provided XML, skipping its times.");
                 continue;
             }
 
@@ -176,6 +189,7 @@ class XMLImport
             }
 
             if (count($reader_ids) > 0) {
+                $this->logger->info("Add timetracking reader permission.");
                 $this->timetracking_ugroup_saver->saveReaders(
                     $tracker,
                     $reader_ids
@@ -197,6 +211,7 @@ class XMLImport
             }
 
             if (count($writer_ids) > 0) {
+                $this->logger->info("Add timetracking writer permission.");
                 $this->timetracking_ugroup_saver->saveWriters(
                     $tracker,
                     $writer_ids
@@ -208,6 +223,9 @@ class XMLImport
     private function enableTimetrackingForTracker(SimpleXMLElement $xml_tracker, Tracker $tracker): void
     {
         if (PHPCast::toBoolean($xml_tracker->timetracking['is_enabled'])) {
+            $xml_tracker_id = (string) $xml_tracker['id'];
+            $this->logger->info("Enable timetracking for tracker $xml_tracker_id.");
+
             $this->timetracking_enabler->enableTimetrackingForTracker($tracker);
         }
     }
