@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tracker_FormElement_Field_Date;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_Numeric;
+
 /**
  * @psalm-immutable
  */
@@ -40,18 +44,23 @@ final class SynchronizedFields
      */
     private $description_field;
     /**
-     * @var Field
+     * @psalm-var Field<Tracker_FormElement_Field_List>
      */
     private $status_field;
     /**
-     * @var Field
+     * @psalm-var Field<Tracker_FormElement_Field_Date>
      */
     private $start_date_field;
     /**
-     * @var Field
+     * @psalm-var Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric>
      */
     private $end_period_field;
 
+    /**
+     * @psalm-param Field<Tracker_FormElement_Field_List> $status_field
+     * @psalm-param Field<Tracker_FormElement_Field_Date> $start_date_field
+     * @psalm-param Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric> $end_period_field
+     */
     public function __construct(
         Field $artifact_link_field,
         Field $title_field,
@@ -83,16 +92,25 @@ final class SynchronizedFields
         return $this->description_field;
     }
 
+    /**
+     * @psalm-return Field<Tracker_FormElement_Field_List>
+     */
     public function getStatusField(): Field
     {
         return $this->status_field;
     }
 
+    /**
+     * @psalm-return Field<Tracker_FormElement_Field_Date>
+     */
     public function getStartDateField(): Field
     {
         return $this->start_date_field;
     }
 
+    /**
+     * @psalm-return Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric>
+     */
     public function getEndPeriodField(): Field
     {
         return $this->end_period_field;

@@ -38,7 +38,7 @@ final class VerifyOAuth2AccessTokenEvent implements Dispatchable
      */
     private $access_token;
     /**
-     * @var AuthenticationScope
+     * @var AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>
      *
      * @psalm-readonly
      */
@@ -67,6 +67,7 @@ final class VerifyOAuth2AccessTokenEvent implements Dispatchable
 
     /**
      * @psalm-mutation-free
+     * @psalm-return AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>
      */
     public function getRequiredScope(): AuthenticationScope
     {

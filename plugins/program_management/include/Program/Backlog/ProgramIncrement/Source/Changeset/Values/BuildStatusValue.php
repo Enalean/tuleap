@@ -22,10 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface BuildStatusValue
 {
+    /**
+     * @psalm-param Field<Tracker_FormElement_Field_List> $field_status_data
+     */
     public function build(Field $field_status_data, ReplicationData $replication_data): StatusValue;
 }

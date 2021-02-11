@@ -44,7 +44,6 @@ final class StartDateValueValueAdapter implements BuildStartDateValue
                 "timeframe start date"
             );
         }
-        assert($start_date_value instanceof \Tracker_Artifact_ChangesetValue_Date);
         return new StartDateValue($start_date_value->getValue());
     }
 }

@@ -101,6 +101,10 @@ class CrossTrackerReport
         return $this->invalid_trackers;
     }
 
+    /**
+     * @psalm-assert !null $this->valid_trackers
+     * @psalm-assert !null $this->invalid_trackers
+     */
     private function populateValidityTrackers()
     {
         $this->valid_trackers   = [];

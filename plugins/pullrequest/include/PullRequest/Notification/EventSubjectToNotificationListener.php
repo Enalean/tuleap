@@ -24,6 +24,14 @@ namespace Tuleap\PullRequest\Notification;
 
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 
+/**
+ * @psalm-type AcceptableNotificationToProcessBuilder = \Tuleap\PullRequest\Reviewer\Notification\ReviewerChangeNotificationToProcessBuilder |
+ *                                                      \Tuleap\PullRequest\StateStatus\PullRequestAbandonedNotificationToProcessBuilder |
+ *                                                      \Tuleap\PullRequest\StateStatus\PullRequestMergedNotificationToProcessBuilder |
+ *                                                      \Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedNotificationToProcessBuilder |
+ *                                                      \Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentNotificationToProcessBuilder |
+ *                                                      \Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentNotificationToProcessBuilder
+ */
 final class EventSubjectToNotificationListener
 {
     /**
@@ -37,6 +45,9 @@ final class EventSubjectToNotificationListener
      */
     private $builder;
 
+    /**
+     * @psalm-param AcceptableNotificationToProcessBuilder $builder
+     */
     public function __construct(PullRequestNotificationStrategy $strategy, NotificationToProcessBuilder $builder)
     {
         $this->strategy = $strategy;

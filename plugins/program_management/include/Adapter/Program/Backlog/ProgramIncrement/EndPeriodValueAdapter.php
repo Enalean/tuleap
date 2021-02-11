@@ -42,9 +42,6 @@ final class EndPeriodValueAdapter implements BuildEndPeriodValue
             );
         }
 
-        assert($end_period_value instanceof \Tracker_Artifact_ChangesetValue_Date ||
-               $end_period_value instanceof  \Tracker_Artifact_ChangesetValue_Numeric);
-
         return new EndPeriodValue((string) $end_period_value->getValue());
     }
 }
