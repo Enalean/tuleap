@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
 use Tuleap\Markdown\ContentInterpretor;
-use Tuleap\Tracker\Artifact\Changeset\Followup\InvalidCommentFormatException;
+use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
 
 class CommentRepresentationBuilder
 {

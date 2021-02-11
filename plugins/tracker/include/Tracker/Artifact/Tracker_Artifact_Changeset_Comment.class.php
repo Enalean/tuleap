@@ -21,6 +21,7 @@
 
 use Tuleap\Markdown\CommonMarkInterpreter;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_Changeset_Comment
 {
 
@@ -53,7 +54,13 @@ class Tracker_Artifact_Changeset_Comment
     public $changeset;
     public $comment_type_id;
     public $canned_response_id;
+    /**
+     * @var int | string
+     */
     public $submitted_by;
+    /**
+     * @var int | string
+     */
     public $submitted_on;
     /**
      * @var string
@@ -63,6 +70,9 @@ class Tracker_Artifact_Changeset_Comment
      * @var string
      */
     public $bodyFormat;
+    /**
+     * @var int | string
+     */
     public $parent_id;
 
     /**
@@ -174,35 +184,15 @@ class Tracker_Artifact_Changeset_Comment
             return null;
         }
 
-        $uh   = UserHelper::instance();
-        $html = '<div class="tracker_artifact_followup_comment_edited_by">';
-        if ($this->parent_id) {
-            $html .= dgettext('tuleap-tracker', 'last edited by:');
-            $html .= ' ' . $uh->getLinkOnUserFromUserId($this->submitted_by) . ' ';
-            $html .= DateHelper::relativeDateInlineContext($this->submitted_on, $current_user);
-        }
-        $html .= '</div>';
-
-        if (! empty($this->body)) {
-            // consider markdown format to be similar to text one for now
-            $considered_body_format = $this->bodyFormat;
-            if ($considered_body_format === self::COMMONMARK_COMMENT) {
-                $considered_body_format = self::TEXT_COMMENT;
-            }
-            $html .= '<input type="hidden"
-                id="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
-                name="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
-                value="' . $considered_body_format . '" />';
-            $html .= '<div class="tracker_artifact_followup_comment_body">';
-            if ($this->parent_id && ! trim($this->body)) {
-                $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
-            } else {
-                $html .= $this->getPurifiedBodyForHTML();
-            }
-            $html .= '</div>';
-        }
-
-        return $html;
+        $presenter = new \Tuleap\Tracker\Artifact\Changeset\Comment\CommentPresenter(
+            $this,
+            UserHelper::instance(),
+            $current_user
+        );
+        $renderer  = TemplateRendererFactory::build()->getRenderer(
+            __DIR__ . '/../../../templates/artifact/changeset/comment'
+        );
+        return $renderer->renderToString('comment', $presenter);
     }
 
     /**
@@ -359,7 +349,7 @@ class Tracker_Artifact_Changeset_Comment
         $cdata_factory->insertWithAttributes(
             $comment_node,
             'submitted_on',
-            date('c', $this->submitted_on),
+            date('c', (int) $this->submitted_on),
             ['format' => 'ISO8601']
         );
 

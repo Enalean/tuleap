@@ -1,0 +1,21 @@
+<div class="tracker_artifact_followup_comment_edited_by">
+    {{# has_parent }}
+        {{# dgettext }}tuleap-tracker | last edited by:{{/ dgettext }}
+        {{{ user_link }}}
+        {{{ relative_date }}}
+    {{/ has_parent }}
+</div>
+{{^ is_empty }}
+    <input type="hidden"
+           id="tracker_artifact_followup_comment_body_format_{{ changeset_id }}"
+           name="tracker_artifact_followup_comment_body_format_{{ changeset_id }}"
+           value="{{ format }}" />
+    <div class="tracker_artifact_followup_comment_body">
+        {{# was_cleared }}
+            <em>{{# dgettext }}tuleap-tracker | Comment has been cleared{{/ dgettext }}</em>
+        {{/ was_cleared }}
+        {{^ was_cleared }}
+            {{{ purified_body }}}
+        {{/ was_cleared }}
+    </div>
+{{/ is_empty }}

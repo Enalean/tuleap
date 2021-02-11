@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\Followup\InvalidCommentFormatException;
+use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
 
 final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
