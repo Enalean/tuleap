@@ -102,7 +102,8 @@ class GitXMLExporterTest extends TestCase
         $ugroup_manager->shouldReceive('getUGroup')->andReturns($ugroup);
 
         $repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $repository         = \Mockery::spy(\GitRepository::class);
+        $repository         = \Mockery::mock(\GitRepository::class);
+        $repository->shouldReceive('getId')->andReturns(101);
         $repository->shouldReceive('getName')->andReturns('MyRepo');
         $repository->shouldReceive('getDescription')->andReturns('Repository description');
         $repository->shouldReceive('getFullPath')->andReturns($this->export_folder);
@@ -178,7 +179,7 @@ class GitXMLExporterTest extends TestCase
 
         $this->assertEquals('MyRepo', $attrs['name']);
         $this->assertEquals('Repository description', $attrs['description']);
-        $this->assertEquals('export/MyRepo.bundle', $attrs['bundle-path']);
+        $this->assertEquals('export/repository-101.bundle', $attrs['bundle-path']);
 
         $repository_02 = $exported_repositories->repository[1];
         $attrs_02      = $repository_02->attributes();

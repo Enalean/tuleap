@@ -193,9 +193,11 @@ class GitXmlExporter
                 $last_push_node->addAttribute("refname_type", $row["refname_type"]);
             }
 
-            $bundle_path = "";
+            $bundle_path = '';
+            $bundle_name = '';
             if ($repository->isInitialized()) {
-                $bundle_path = self::EXPORT_FOLDER . DIRECTORY_SEPARATOR . $repository->getName() . '.bundle';
+                $bundle_name = 'repository-' . (int) $repository->getId() . '.bundle';
+                $bundle_path = self::EXPORT_FOLDER . DIRECTORY_SEPARATOR . $bundle_name;
             }
 
             $root_node->addAttribute(
@@ -203,7 +205,7 @@ class GitXmlExporter
                 $bundle_path
             );
 
-            $this->bundleRepository($repository, $temporary_dump_path_on_filesystem, $archive);
+            $this->bundleRepository($repository, $temporary_dump_path_on_filesystem, $archive, $bundle_name);
 
             $this->exportGitRepositoryPermissions($repository, $root_node);
         }
@@ -212,11 +214,12 @@ class GitXmlExporter
     private function bundleRepository(
         GitRepository $repository,
         $temporary_dump_path_on_filesystem,
-        ArchiveInterface $archive
+        ArchiveInterface $archive,
+        string $bundle_name
     ) {
         $this->logger->info('Create git bundle for repository ' . $repository->getName());
 
-        $this->git_bundle->dumpRepository($repository, $archive, $temporary_dump_path_on_filesystem);
+        $this->git_bundle->dumpRepository($repository, $archive, $temporary_dump_path_on_filesystem, $bundle_name);
     }
 
     private function exportGitRepositoryPermissions(GitRepository $repository, SimpleXMLElement $xml_content)
