@@ -224,12 +224,12 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->assertStringContainsStringIgnoringCase('nothing changed', $feedback[0]['message']);
     }
 
-    public function testItThrowsAnErrorWhenRealNameIsTooLong(): void
+    public function testItThrowsAnErrorWhenRealNameIsNotValid(): void
     {
         $this->user_manager->shouldNotReceive('updateDb');
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'FooBar Alice FooBar Alice FooBard')->build(),
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', "FooBar \n FooBard")->build(),
             $this->layout,
             []
         );
@@ -237,7 +237,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(2, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('too long', $feedback[0]['message']);
+        $this->assertEquals('Real name is not valid', $feedback[0]['message']);
     }
 
     public function testItDoesntUpdateRealNameWhenDBUpdateFails(): void

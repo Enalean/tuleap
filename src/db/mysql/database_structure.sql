@@ -844,7 +844,7 @@ CREATE TABLE user (
   email text NOT NULL,
   user_pw varchar(32) NOT NULL default '',
   password varchar(255) DEFAULT NULL,
-  realname varchar(32) NOT NULL default '',
+  realname text NOT NULL default '',
   register_purpose text,
   status char(1) NOT NULL default 'A',
   shell varchar(50) NOT NULL default '/sbin/nologin',
