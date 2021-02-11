@@ -31,6 +31,8 @@ use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuild
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -194,6 +196,11 @@ final class program_managementPlugin extends Plugin
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             new ProgramAdapter(
                 ProjectManager::instance(),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
                 new ProgramDao()
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),

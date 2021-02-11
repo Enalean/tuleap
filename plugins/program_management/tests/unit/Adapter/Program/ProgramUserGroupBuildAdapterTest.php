@@ -24,9 +24,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ProgramManagement\Program\ProgramForManagement;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\ProgramManagement\Program\Plan\ProgramUserGroup;
-use Tuleap\ProgramManagement\Program\Program;
 
 final class ProgramUserGroupBuildAdapterTest extends TestCase
 {
@@ -49,7 +49,7 @@ final class ProgramUserGroupBuildAdapterTest extends TestCase
 
     public function testBuildProgramUserGroups(): void
     {
-        $program = new Program(102);
+        $program = new ProgramForManagement(102);
 
         $this->user_group_retriever->shouldReceive('getExistingUserGroup')->with('102_3')->andReturn(
             new \ProjectUGroup(['ugroup_id' => 3, 'group_id' => 102])
@@ -68,7 +68,7 @@ final class ProgramUserGroupBuildAdapterTest extends TestCase
 
     public function testRejectsUGroupOutsideOfTheProgram(): void
     {
-        $program = new Program(102);
+        $program = new ProgramForManagement(102);
 
         $this->user_group_retriever->shouldReceive('getExistingUserGroup')->with('103_3')->andReturn(
             new \ProjectUGroup(['ugroup_id' => 3, 'group_id' => 103])

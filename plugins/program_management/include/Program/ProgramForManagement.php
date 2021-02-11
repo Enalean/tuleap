@@ -20,17 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Plan;
+namespace Tuleap\ProgramManagement\Program;
 
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
-
-interface BuildProgramUserGroup
+/**
+ * @psalm-immutable
+ */
+final class ProgramForManagement
 {
     /**
-     * @param non-empty-list<string> $raw_user_group_ids
-     * @return non-empty-list<ProgramUserGroup>
-     *
-     * @throws InvalidProgramUserGroup
+     * @var int
      */
-    public function buildProgramUserGroups(ProgramForManagement $program, array $raw_user_group_ids): array;
+    public $id;
+
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
 }

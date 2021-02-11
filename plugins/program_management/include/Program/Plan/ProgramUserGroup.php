@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Plan;
 
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Program\ProgramForManagement;
 
 /**
  * @psalm-immutable
@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Program\Program;
 final class ProgramUserGroup
 {
     /**
-     * @var Program
+     * @var ProgramForManagement
      */
     public $program;
     /**
@@ -38,7 +38,7 @@ final class ProgramUserGroup
      */
     public $id;
 
-    public function __construct(Program $program, int $id)
+    public function __construct(ProgramForManagement $program, int $id)
     {
         $this->program = $program;
         $this->id      = $id;

@@ -24,10 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project_AccessException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Program\ProgramStore;
 use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramAdapterTest extends TestCase
 {
@@ -46,55 +50,56 @@ final class ProgramAdapterTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectManager
      */
     private $project_manager;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     protected function setUp(): void
     {
-        $this->project_manager = \Mockery::mock(\ProjectManager::class);
-        $this->program_store   = \Mockery::mock(ProgramStore::class);
+        $this->project_manager        = \Mockery::mock(\ProjectManager::class);
+        $this->project_access_checker = \Mockery::mock(ProjectAccessChecker::class);
+        $this->program_store          = \Mockery::mock(ProgramStore::class);
 
-        $this->adapter = new ProgramAdapter($this->project_manager, $this->program_store);
-
-        $_SERVER['REQUEST_URI'] = '/';
+        $this->adapter = new ProgramAdapter($this->project_manager, $this->project_access_checker, $this->program_store);
     }
 
-    protected function tearDown(): void
+    public function testThrowsAnErrorWhenUserCannotAccessTheProject(): void
     {
-        unset($_SERVER['REQUEST_URI']);
+        $project = new \Project(['group_id' => 102, 'status' => 'A', 'access' => 'public']);
+        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(
+            \Mockery::mock(Project_AccessException::class)
+        );
+
+        $this->expectException(ProgramAccessException::class);
+        $this->adapter->buildExistingProgramProjectForManagement(102, UserTestBuilder::aUser()->build());
     }
 
-    public function testItThrowsErrorWhenUserIsNotProjectAdmin(): void
+    public function testItThrowsErrorWhenUserIsNotProjectAdminButRequestAProgramForManagementOperations(): void
     {
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnFalse();
-        $user->shouldReceive('isMember')->with($project_id)->andReturnFalse();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnFalse();
-        $user->shouldReceive('isRestricted')->andReturnFalse();
 
         $this->expectException(ProgramAccessException::class);
-        $this->adapter->buildExistingProgramProject($project_id, $user);
+        $this->adapter->buildExistingProgramProjectForManagement($project_id, $user);
     }
-
 
     public function testItThrowsErrorWhenProjectIsNotAProgram(): void
     {
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
         $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
-
         $this->expectException(ProjectIsNotAProgramException::class);
-        $this->adapter->buildExistingProgramProject($project_id, $user);
+        $this->adapter->buildExistingProgramProject($project_id, UserTestBuilder::aUser()->build());
     }
 
     public function testItBuildsAProgram(): void
@@ -103,30 +108,23 @@ final class ProgramAdapterTest extends TestCase
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
         $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnTrue();
-
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
 
         $expected = new Program($project_id);
 
-        self::assertEquals($expected, $this->adapter->buildExistingProgramProject($project_id, $user));
+        self::assertEquals($expected, $this->adapter->buildExistingProgramProject($project_id, UserTestBuilder::aUser()->build()));
     }
 
-    public function testItThrowsErrorWhenUserIsNotProjectAdminForNewPject(): void
+    public function testItThrowsErrorWhenUserIsNotProjectAdminForNewProject(): void
     {
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
         $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnFalse();
-        $user->shouldReceive('isMember')->with($project_id)->andReturnFalse();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnFalse();
-        $user->shouldReceive('isRestricted')->andReturnFalse();
 
         $this->expectException(ProgramAccessException::class);
         $this->adapter->buildNewProgramProject($project_id, $user);
@@ -137,14 +135,28 @@ final class ProgramAdapterTest extends TestCase
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
 
         $expected = new ToBeCreatedProgram($project_id);
 
         self::assertEquals($expected, $this->adapter->buildNewProgramProject($project_id, $user));
+    }
+
+    public function testCanObtainsAProgramToDoManagementOperations(): void
+    {
+        $project_id = 101;
+        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
+        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturn(true);
+
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->with($project_id)->andReturn(true);
+
+        $expected = new ProgramForManagement($project_id);
+        self::assertEquals($expected, $this->adapter->buildExistingProgramProjectForManagement($project_id, $user));
     }
 }

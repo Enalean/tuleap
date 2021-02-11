@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
+use PermissionsOverrider_PermissionsOverriderManager;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\ProgramManagement\Adapter\Program\Hierarchy\HierarchyAdapter;
@@ -61,6 +64,11 @@ final class ProgramManagementResource extends AuthenticatedResource
         $this->hierarchy_creator = new HierarchyCreator(
             new ProgramAdapter(
                 \ProjectManager::instance(),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
                 new ProgramDao()
             ),
             new HierarchyAdapter(
