@@ -27,7 +27,6 @@ use SimpleXMLElement;
 use Tracker_FormElement;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
-use XML_SimpleXMLCDATAFactory;
 
 class ContainersXMLCollectionBuilder
 {
@@ -38,16 +37,6 @@ class ContainersXMLCollectionBuilder
 
     public const LEFT_COLUMN_NAME  = 'left_column';
     public const RIGHT_COLUMN_NAME = 'right_column';
-
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $simplexml_cdata_factory;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $simplexml_cdata_factory)
-    {
-        $this->simplexml_cdata_factory = $simplexml_cdata_factory;
-    }
 
     public function buildCollectionOfJiraContainersXML(SimpleXMLElement $form_elements, ContainersXMLCollection $collection): void
     {

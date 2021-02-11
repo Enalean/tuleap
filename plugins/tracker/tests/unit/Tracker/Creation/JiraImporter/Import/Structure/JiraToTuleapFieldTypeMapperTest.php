@@ -31,7 +31,6 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
-use XML_SimpleXMLCDATAFactory;
 
 final class JiraToTuleapFieldTypeMapperTest extends TestCase
 {
@@ -84,7 +83,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $form_elements               = new SimpleXMLElement("<formElements/>");
         $this->containers_collection = new ContainersXMLCollection(new FieldAndValueIDGenerator());
-        (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))->buildCollectionOfJiraContainersXML(
+        (new ContainersXMLCollectionBuilder())->buildCollectionOfJiraContainersXML(
             $form_elements,
             $this->containers_collection,
         );

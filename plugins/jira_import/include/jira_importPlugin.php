@@ -86,7 +86,6 @@ final class jira_importPlugin extends Plugin
                         new XMLFileContentRetriever(),
                         new XMLImportHelper($user_manager),
                         new JiraTrackerBuilder(),
-                        new XML_SimpleXMLCDATAFactory(),
                         new ArtifactLinkTypeImporter(
                             new NaturePresenterFactory(
                                 $nature_dao,

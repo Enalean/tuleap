@@ -33,16 +33,11 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
-use XML_SimpleXMLCDATAFactory;
 
 class FromJiraTrackerCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\XML_SimpleXMLCDATAFactory
-     */
-    private $xml_cdata_factory;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerCreationDataChecker
      */
@@ -71,7 +66,6 @@ class FromJiraTrackerCreatorTest extends TestCase
         $this->tracker_xml_import        = Mockery::mock(TrackerXmlImport::class);
         $this->tracker_factory           = Mockery::mock(TrackerFactory::class);
         $this->creation_data_checker     = Mockery::mock(TrackerCreationDataChecker::class);
-        $this->xml_cdata_factory         = new XML_SimpleXMLCDATAFactory();
         $this->logger                    = Mockery::mock(LoggerInterface::class);
         $this->jira_user_on_tuleap_cache = Mockery::mock(JiraUserOnTuleapCache::class);
     }
@@ -89,7 +83,6 @@ class FromJiraTrackerCreatorTest extends TestCase
                 $this->tracker_xml_import,
                 $this->tracker_factory,
                 $this->creation_data_checker,
-                $this->xml_cdata_factory,
                 $this->logger,
                 $this->jira_user_on_tuleap_cache
             ]

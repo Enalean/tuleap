@@ -47,7 +47,6 @@ use Tuleap\Tracker\XML\XMLTracker;
 use Tuleap\XML\MappingsRegistry;
 use UserManager;
 use XML_ParseException;
-use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
 
 class FromJiraTrackerCreator
@@ -67,11 +66,6 @@ class FromJiraTrackerCreator
      */
     private $creation_data_checker;
     /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_section_factory;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -85,14 +79,12 @@ class FromJiraTrackerCreator
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
         TrackerCreationDataChecker $creation_data_checker,
-        XML_SimpleXMLCDATAFactory $cdata_section_factory,
         LoggerInterface $logger,
         JiraUserOnTuleapCache $jira_user_on_tuleap_cache
     ) {
         $this->tracker_xml_import        = $tracker_xml_import;
         $this->tracker_factory           = $tracker_factory;
         $this->creation_data_checker     = $creation_data_checker;
-        $this->cdata_section_factory     = $cdata_section_factory;
         $this->logger                    = $logger;
         $this->jira_user_on_tuleap_cache = $jira_user_on_tuleap_cache;
     }
@@ -113,7 +105,6 @@ class FromJiraTrackerCreator
                 new PendingJiraImportDao(),
                 TrackerFactory::instance()
             ),
-            new XML_SimpleXMLCDATAFactory(),
             $logger,
             $jira_user_on_tuleap_cache
         );

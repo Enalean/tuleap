@@ -24,15 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use PHPUnit\Framework\TestCase;
-use XML_SimpleXMLCDATAFactory;
 
 class ContainersXMLCollectionBuilderTest extends TestCase
 {
     public function testItExportsAFieldset(): void
     {
-        $builder = new ContainersXMLCollectionBuilder(
-            new XML_SimpleXMLCDATAFactory()
-        );
+        $builder = new ContainersXMLCollectionBuilder();
 
         $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElements/>');
 
