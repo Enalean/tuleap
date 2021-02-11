@@ -271,7 +271,72 @@ final class XMLImportTest extends TestCase
         );
     }
 
+    public function testItImportsOnlyWriteConfigurationIfNoTimesAndReadersProvidedInXML(): void
+    {
+        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $created_trackers_objects = [
+            '789' => $tracker_mapping
+        ];
 
+        $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $artifact_id_mapping->add(152, 9999);
+
+        $xml = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="789">
+                        <timetracking is_enabled="true">
+                            <permissions>
+                                <write>
+                                    <ugroup>project_members</ugroup>
+                                </write>
+                            </permissions>
+                        </timetracking>
+                    </tracker>
+                </trackers>
+            </project>
+            EOS
+        );
+
+        $this->timetracking_enabler->shouldReceive('enableTimetrackingForTracker')
+            ->once()
+            ->with($tracker_mapping);
+
+        $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
+        $this->ugroup_manager->shouldReceive('getUGroupByName')
+            ->with($this->project, "project_members")
+            ->once()
+            ->andReturn($ugroup_project_members);
+
+        $this->timetracking_ugroup_saver->shouldNotReceive('saveReaders');
+
+        $this->timetracking_ugroup_saver->shouldReceive('saveWriters')
+            ->with($tracker_mapping, [4])
+            ->once();
+
+        $user = Mockery::mock(PFUser::class)->shouldReceive('getId')->andReturn(123)->getMock();
+        $this->user_finder->shouldReceive('getUser')
+            ->andReturn($user);
+
+        $this->time_dao->shouldNotReceive('addTime');
+
+        $this->logger->shouldReceive('info')
+            ->with('Enable timetracking for tracker 789.')
+            ->once();
+
+        $this->logger->shouldReceive('info')
+            ->with('Add timetracking writer permission.')
+            ->once();
+
+        $this->xml_import->import(
+            $xml,
+            $this->project,
+            $created_trackers_objects,
+            $artifact_id_mapping
+        );
+    }
 
     public function testItSkipsUnkownUgroupForConfigurationInXML(): void
     {

@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
+use EventManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
@@ -154,6 +156,11 @@ class JiraXmlExporter
      */
     private $wrapper;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_manager;
+
     public function __construct(
         LoggerInterface $logger,
         ClientWrapper $wrapper,
@@ -170,7 +177,8 @@ class JiraXmlExporter
         XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
         XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
         XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
-        XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter
+        XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter,
+        EventDispatcherInterface $event_manager
     ) {
         $this->logger                               = $logger;
         $this->wrapper                              = $wrapper;
@@ -188,6 +196,7 @@ class JiraXmlExporter
         $this->xml_report_done_issues_exporter      = $xml_report_done_issues_exporter;
         $this->xml_report_created_recently_exporter = $xml_report_created_recently_exporter;
         $this->xml_report_updated_recently_exporter = $xml_report_updated_recently_exporter;
+        $this->event_manager                        = $event_manager;
     }
 
     /**
@@ -338,7 +347,8 @@ class JiraXmlExporter
                 $report_table_exporter,
             ),
             new XmlReportCreatedRecentlyExporter($tql_report_exporter),
-            new XmlReportUpdatedRecentlyExporter($tql_report_exporter)
+            new XmlReportUpdatedRecentlyExporter($tql_report_exporter),
+            EventManager::instance()
         );
     }
 
@@ -428,6 +438,13 @@ class JiraXmlExporter
             $jira_base_url,
             $jira_project_key,
             $jira_issue_type_id
+        );
+
+        $this->event_manager->dispatch(
+            new JiraImporterExternalPluginsEvent(
+                $node_tracker,
+                $this->logger
+            )
         );
 
         if ($this->error_collector->hasError()) {
