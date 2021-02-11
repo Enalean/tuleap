@@ -37,7 +37,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
-use XML_SimpleXMLCDATAFactory;
 
 class AlwaysThereFieldsExporterTest extends TestCase
 {
@@ -87,7 +86,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
         $root_form_elements          = new SimpleXMLElement("<formElements/>");
         $this->containers_collection = new ContainersXMLCollection($field_id_generator);
 
-        (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))
+        (new ContainersXMLCollectionBuilder())
             ->buildCollectionOfJiraContainersXML($root_form_elements, $this->containers_collection);
 
         $this->field_mapping_collection = new FieldMappingCollection($field_id_generator);

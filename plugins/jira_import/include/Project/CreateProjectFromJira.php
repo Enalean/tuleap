@@ -49,7 +49,6 @@ use Tuleap\Widget\ProjectHeartbeat;
 use Tuleap\Tracker\XML\XMLTracker;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
-use XML_SimpleXMLCDATAFactory;
 
 final class CreateProjectFromJira
 {
@@ -74,10 +73,6 @@ final class CreateProjectFromJira
      */
     private $jira_tracker_builder;
     /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_section_factory;
-    /**
      * @var ArtifactLinkTypeImporter
      */
     private $artifact_link_type_importer;
@@ -88,7 +83,6 @@ final class CreateProjectFromJira
         XMLFileContentRetriever $xml_file_content_retriever,
         IFindUserFromXMLReference $user_finder,
         JiraTrackerBuilder $jira_tracker_builder,
-        XML_SimpleXMLCDATAFactory $cdata_section_factory,
         ArtifactLinkTypeImporter $artifact_link_type_importer
     ) {
         $this->user_manager                = $user_manager;
@@ -96,7 +90,6 @@ final class CreateProjectFromJira
         $this->template_factory            = $template_factory;
         $this->xml_file_content_retriever  = $xml_file_content_retriever;
         $this->jira_tracker_builder        = $jira_tracker_builder;
-        $this->cdata_section_factory       = $cdata_section_factory;
         $this->artifact_link_type_importer = $artifact_link_type_importer;
     }
 

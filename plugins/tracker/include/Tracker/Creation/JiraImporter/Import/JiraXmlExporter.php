@@ -325,9 +325,7 @@ class JiraXmlExporter
                 $logger
             ),
             new SemanticsXMLExporter(),
-            new ContainersXMLCollectionBuilder(
-                new XML_SimpleXMLCDATAFactory()
-            ),
+            new ContainersXMLCollectionBuilder(),
             new AlwaysThereFieldsExporter(
                 $field_xml_exporter
             ),
