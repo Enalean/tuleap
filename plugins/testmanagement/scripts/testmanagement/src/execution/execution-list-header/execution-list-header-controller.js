@@ -1,6 +1,9 @@
 import "../../campaign/campaign-edit.tpl.html";
 import CampaignEditCtrl from "../../campaign/campaign-edit-controller.js";
 
+import "../../campaign/campaign-edit-label.tpl.html";
+import CampaignEditLabelCtrl from "../../campaign/campaign-edit-label-controller.js";
+
 import "../execution-presences.tpl.html";
 import ExecutionPresencesCtrl from "../execution-presences-controller.js";
 
@@ -25,6 +28,7 @@ export default function controller(
     const self = this;
     Object.assign(self, {
         openEditCampaignModal,
+        openEditCampaignLabelModal,
         showPresencesModal,
         isRealtimeEnabled,
         positiveScore,
@@ -45,6 +49,19 @@ export default function controller(
                     ExecutionService.synchronizeExecutions(ExecutionService.campaign.id).then(
                         self.handleRemovedExecutionsCallback
                     );
+                },
+            },
+        });
+    }
+
+    function openEditCampaignLabelModal() {
+        return TlpModalService.open({
+            templateUrl: "campaign-edit-label.tpl.html",
+            controller: CampaignEditLabelCtrl,
+            controllerAs: "edit_label_modal",
+            resolve: {
+                editCampaignLabelCallback: (campaign) => {
+                    ExecutionService.updateCampaign(campaign);
                 },
             },
         });

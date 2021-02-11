@@ -1,0 +1,48 @@
+<form class="tlp-modal"
+      name="editCampaignLabelForm"
+      ng-submit="editCampaignLabel(campaign)">
+    <div class="tlp-modal-header">
+      <h1 class="tlp-modal-title">
+          <i class="fas fa-pencil-alt tlp-modal-title-icon" aria-hidden="true"></i>
+          <span translate>Rename campaign</span>
+      </h1>
+      <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">&times;</div>
+    </div>
+
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element"
+             ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid }">
+            <label class="tlp-label" for="campaign-label">
+                {{ 'Campaign label' | translate }} <i class="fas fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <input type="text"
+                   class="tlp-input edit-campaign-label-input"
+                   id="campaign-label"
+                   data-test=campaign-label
+                   name="campaign_label"
+                   ng-model="campaign.label"
+                   placeholder="{{ 'Campaign label' | translate }}"
+                   required
+                   ng-trim />
+            <p class="tlp-text-danger" ng-show="editCampaignNameLabelForm.campaign_label.$dirty && editCampaignLabelForm.campaign_label.$invalid">
+                {{ 'A campaign label is required' | translate }}
+                <i class="far fa-frown" aria-hidden="true"></i>
+            </p>
+        </div>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal">
+            {{ 'Cancel' | translate }}
+        </button>
+        <button type="submit"
+                data-test="edit-campaign-save-button"
+                class="tlp-button-primary tlp-modal-action"
+                ng-disabled="submitting_changes || ! editCampaignLabelForm.$valid">
+            <i class="tlp-button-icon fas fa-circle-notch fa-spin" ng-if="submitting_changes" aria-hidden="true"></i>
+            {{ 'Save changes' | translate }}
+        </button>
+    </div>
+</form>
