@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
+use Tuleap\ProgramManagement\Program\ProgramForManagement;
 
-interface RetrieveFeatures
+final class CannotManipulateTopBacklog extends \RuntimeException
 {
-    /**
-     * @return FeatureRepresentation[]
-     */
-    public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array;
+    public function __construct(ProgramForManagement $program, \PFUser $user)
+    {
+        parent::__construct(
+            sprintf(
+                'User #%d cannot manipulate the top backlog of the program #%d',
+                $user->getId(),
+                $program->id
+            )
+        );
+    }
 }

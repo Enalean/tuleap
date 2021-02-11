@@ -306,7 +306,7 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void
     {
-        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactFromExplicitTopBacklog($artifact_deleted->getArtifact()->getID());
+        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactsFromExplicitTopBacklog([$artifact_deleted->getArtifact()->getID()]);
     }
 
     /**

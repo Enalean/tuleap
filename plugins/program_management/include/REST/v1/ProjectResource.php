@@ -27,6 +27,15 @@ use Luracast\Restler\RestException;
 use PermissionsOverrider_PermissionsOverriderManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogUpdater;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -243,13 +252,63 @@ final class ProjectResource extends AuthenticatedResource
     }
 
     /**
+     * Manipulate the program backlog
+     *
+     * @url PATCH {id}/program_backlog
+     *
+     * @param int $id ID of the program
+     * @param BacklogPatchRepresentation $backlog_patch_representation {@from body}
+     *
+     * @throws RestException 401
+     * @throws RestException 400
+     */
+    protected function patchBacklog(int $id, BacklogPatchRepresentation $backlog_patch_representation): void
+    {
+        $user = $this->user_manager->getCurrentUser();
+
+        $feature_ids_to_remove = [];
+        foreach ($backlog_patch_representation->remove as $feature_to_remove) {
+            $feature_ids_to_remove[] = $feature_to_remove->id;
+        }
+
+        $project_access_checker = new ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+
+        $project_manager     = \ProjectManager::instance();
+        $top_backlog_updater = new TopBacklogUpdater(
+            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
+            new ProcessTopBacklogChange(
+                \Tracker_ArtifactFactory::instance(),
+                new PrioritizeFeaturesPermissionVerifier(
+                    $project_manager,
+                    $project_access_checker,
+                    new CanPrioritizeFeaturesDAO()
+                ),
+                new ArtifactsExplicitTopBacklogDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            )
+        );
+
+        try {
+            $top_backlog_updater->updateTopBacklog($id, new TopBacklogChange($feature_ids_to_remove), $user);
+        } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
+            throw new RestException(404);
+        } catch (ProjectIsNotAProgramException $e) {
+            throw new RestException(403, $e->getMessage());
+        }
+    }
+
+    /**
      * @url OPTIONS {id}/program_backlog
      *
      * @param int $id Id of the project
      */
     public function optionsBacklog(int $id): void
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     /**

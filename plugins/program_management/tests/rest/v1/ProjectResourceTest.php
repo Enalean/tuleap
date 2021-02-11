@@ -131,6 +131,22 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals('My artifact', $content[0]['artifact_title']);
     }
 
+    /**
+     * @depends testPUTTeam
+     */
+    public function testManipulateTopBacklog(): void
+    {
+        $project_id = $this->getProgramProjectId();
+
+        $body = json_encode(['remove' => [['id' => 88888888]]], JSON_THROW_ON_ERROR);
+
+        $response = $this->getResponse(
+            $this->client->patch('projects/' . urlencode((string) $project_id) . '/program_backlog', null, $body)
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
     private function getProgramProjectId(): int
     {
         return $this->getProjectId('program');
