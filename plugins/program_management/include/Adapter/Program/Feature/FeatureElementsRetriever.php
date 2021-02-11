@@ -59,9 +59,9 @@ final class FeatureElementsRetriever implements RetrieveFeatures
      * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException
      * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException
      */
-    public function retrieveFeaturesToBePlanned(int $id, \PFUser $user): array
+    public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array
     {
-        $program = $this->build_program->buildExistingProgramProject($id, $user);
+        $program = $this->build_program->buildExistingProgramProject($program_id, $user);
 
         $to_be_planned_artifacts = $this->features_store->searchPlannableFeatures($program);
 

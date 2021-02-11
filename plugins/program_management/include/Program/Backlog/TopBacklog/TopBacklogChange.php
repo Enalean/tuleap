@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
-
-interface RetrieveFeatures
+/**
+ * @psalm-immutable
+ */
+final class TopBacklogChange
 {
     /**
-     * @return FeatureRepresentation[]
+     * @var int[]
      */
-    public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array;
+    public $potential_features_id_to_remove;
+
+    /**
+     * @param int[] $potential_features_id_to_remove
+     */
+    public function __construct(array $potential_features_id_to_remove)
+    {
+        $this->potential_features_id_to_remove = $potential_features_id_to_remove;
+    }
 }

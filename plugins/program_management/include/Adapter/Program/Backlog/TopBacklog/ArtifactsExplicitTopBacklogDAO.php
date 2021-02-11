@@ -23,13 +23,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class ArtifactsExplicitTopBacklogDAO extends DataAccessObject
 {
-    public function removeArtifactFromExplicitTopBacklog(int $artifact_id): void
+    /**
+     * @psalm-param non-empty-array<int> $artifact_ids
+     */
+    public function removeArtifactsFromExplicitTopBacklog(array $artifact_ids): void
     {
-        $this->getDB()->run('DELETE FROM plugin_program_management_explicit_top_backlog WHERE artifact_id = ?', $artifact_id);
+        $statement_artifacts = EasyStatement::open()->in('artifact_id IN (?*)', $artifact_ids);
+        $this->getDB()->run(
+            "DELETE FROM plugin_program_management_explicit_top_backlog WHERE $statement_artifacts",
+            ...$statement_artifacts->values()
+        );
     }
 
     public function removeArtifactsPlannedInAProgramIncrement(int $potential_program_increment_id): void
