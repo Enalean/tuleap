@@ -91,6 +91,11 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
 
     protected function displayFooter()
     {
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../../../../src/www/assets/trackers',
+            '/assets/trackers'
+        );
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('create-view.js'));
         $this->tracker->displayFooter($this->layout);
     }
 }
