@@ -38,6 +38,7 @@ use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
@@ -77,20 +78,27 @@ final class CreateProjectFromJira
      */
     private $artifact_link_type_importer;
 
+    /**
+     * @var PlatformConfigurationRetriever
+     */
+    private $platform_configuration_collection_builder;
+
     public function __construct(
         UserManager $user_manager,
         TemplateFactory $template_factory,
         XMLFileContentRetriever $xml_file_content_retriever,
         IFindUserFromXMLReference $user_finder,
         JiraTrackerBuilder $jira_tracker_builder,
-        ArtifactLinkTypeImporter $artifact_link_type_importer
+        ArtifactLinkTypeImporter $artifact_link_type_importer,
+        PlatformConfigurationRetriever $platform_configuration_collection_builder
     ) {
-        $this->user_manager                = $user_manager;
-        $this->user_finder                 = $user_finder;
-        $this->template_factory            = $template_factory;
-        $this->xml_file_content_retriever  = $xml_file_content_retriever;
-        $this->jira_tracker_builder        = $jira_tracker_builder;
-        $this->artifact_link_type_importer = $artifact_link_type_importer;
+        $this->user_manager                              = $user_manager;
+        $this->user_finder                               = $user_finder;
+        $this->template_factory                          = $template_factory;
+        $this->xml_file_content_retriever                = $xml_file_content_retriever;
+        $this->jira_tracker_builder                      = $jira_tracker_builder;
+        $this->artifact_link_type_importer               = $artifact_link_type_importer;
+        $this->platform_configuration_collection_builder = $platform_configuration_collection_builder;
     }
 
     public function create(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname): \Project
@@ -167,6 +175,11 @@ final class CreateProjectFromJira
 
         $field_id_generator = new FieldAndValueIDGenerator();
 
+        $platform_configuration_collection = $this->platform_configuration_collection_builder->getJiraPlatformConfiguration(
+            $jira_client,
+            $logger
+        );
+
         $trackers_xml = $xml_element->addChild('trackers');
 
         foreach ($jira_trackers as $jira_tracker) {
@@ -178,7 +191,14 @@ final class CreateProjectFromJira
             $tracker     = (new XMLTracker($jira_tracker['id'], $tracker_itemname))->withName($tracker_fullname);
             $tracker_xml = $tracker->export($trackers_xml);
 
-            $jira_exporter->exportJiraToXml($tracker_xml, $jira_credentials->getJiraUrl(), $jira_project, $jira_tracker['id'], $field_id_generator);
+            $jira_exporter->exportJiraToXml(
+                $platform_configuration_collection,
+                $tracker_xml,
+                $jira_credentials->getJiraUrl(),
+                $jira_project,
+                $jira_tracker['id'],
+                $field_id_generator
+            );
         }
 
         $jira_agile_importer->exportScrum($logger, $xml_element, $jira_project, $field_id_generator);

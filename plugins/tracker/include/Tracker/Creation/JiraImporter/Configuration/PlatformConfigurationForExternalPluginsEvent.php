@@ -21,26 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import;
+namespace Tuleap\Tracker\Creation\JiraImporter\Configuration;
 
 use Psr\Log\LoggerInterface;
-use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
-use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 
-class JiraImporterExternalPluginsEvent implements Dispatchable
+class PlatformConfigurationForExternalPluginsEvent implements Dispatchable
 {
-    public const NAME = 'jiraImporterExternalPluginsEvent';
+    public const NAME = 'platformConfigurationForExternalPluginsEvent';
 
     /**
-     * @var SimpleXMLElement
+     * @var ClientWrapper
+     * @psalm-readonly
      */
-    private $xml_tracker;
+    private $wrapper;
 
     /**
      * @var PlatformConfiguration
      */
-    private $jira_platform_configuration;
+    private $platform_configuration;
 
     /**
      * @var LoggerInterface
@@ -49,27 +49,27 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
     private $logger;
 
     public function __construct(
-        SimpleXMLElement $xml_tracker,
-        PlatformConfiguration $jira_platform_configuration,
+        ClientWrapper $wrapper,
+        PlatformConfiguration $platform_configuration,
         LoggerInterface $logger
     ) {
-        $this->xml_tracker                 = $xml_tracker;
-        $this->logger                      = $logger;
-        $this->jira_platform_configuration = $jira_platform_configuration;
+        $this->wrapper                = $wrapper;
+        $this->platform_configuration = $platform_configuration;
+        $this->logger                 = $logger;
     }
 
-    public function getXmlTracker(): SimpleXMLElement
+    public function getWrapper(): ClientWrapper
     {
-        return $this->xml_tracker;
+        return $this->wrapper;
+    }
+
+    public function addConfigurationInCollection(string $configuration_name): void
+    {
+        $this->platform_configuration->addAllowedConfiguration($configuration_name);
     }
 
     public function getLogger(): LoggerInterface
     {
         return $this->logger;
-    }
-
-    public function getJiraPlatformConfiguration(): PlatformConfiguration
-    {
-        return $this->jira_platform_configuration;
     }
 }

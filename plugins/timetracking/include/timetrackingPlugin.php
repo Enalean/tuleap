@@ -27,6 +27,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
 use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
+use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfigurationRetriever;
 use Tuleap\Timetracking\JiraImporter\JiraXMLExport;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Plugin\TimetrackingPluginInfo;
@@ -45,6 +46,7 @@ use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 use Tuleap\Timetracking\XML\XMLImport;
 use Tuleap\Timetracking\XML\XMLExport;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationForExternalPluginsEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
@@ -85,6 +87,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             $this->addHook(TrackerEventExportFullXML::NAME);
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(JiraImporterExternalPluginsEvent::NAME);
+            $this->addHook(PlatformConfigurationForExternalPluginsEvent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -421,7 +424,18 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
 
         $xml_exporter->exportJiraTimetracking(
-            $event->getXmlTracker()
+            $event->getXmlTracker(),
+            $event->getJiraPlatformConfiguration()
         );
+    }
+
+    public function platformConfigurationForExternalPluginsEvent(PlatformConfigurationForExternalPluginsEvent $event): void
+    {
+        $configuration = (new JiraTimetrackingConfigurationRetriever($event->getWrapper(), $event->getLogger()))
+            ->getJiraTimetrackingConfiguration();
+
+        if ($configuration !== null) {
+            $event->addConfigurationInCollection($configuration);
+        }
     }
 }

@@ -28,6 +28,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
@@ -351,6 +352,7 @@ class JiraXmlExporter
      * @throws JiraConnectionException
      */
     public function exportJiraToXml(
+        PlatformConfiguration $jira_platform_configuration,
         SimpleXMLElement $node_tracker,
         string $jira_base_url,
         string $jira_project_key,
@@ -438,6 +440,7 @@ class JiraXmlExporter
         $this->event_manager->dispatch(
             new JiraImporterExternalPluginsEvent(
                 $node_tracker,
+                $jira_platform_configuration,
                 $this->logger
             )
         );
