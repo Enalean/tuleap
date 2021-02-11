@@ -32,7 +32,7 @@ artifact =
         element body { text_content }
 
     text_content =
-        attribute format { "text" | "html" },
+        attribute format { "text" | "html" | "commonmark" },
         xsd:string
 
     date_content =

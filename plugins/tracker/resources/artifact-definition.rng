@@ -90,6 +90,7 @@
       <choice>
         <value>text</value>
         <value>html</value>
+        <value>commonmark</value>
       </choice>
     </attribute>
     <data type="string"/>
