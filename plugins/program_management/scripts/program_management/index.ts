@@ -71,11 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         10
     );
 
-    if (!vue_mount_point.dataset.userWithAccessibilityMode) {
-        throw new Error("Missing accessiblity dataset");
-    }
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
-
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
 
     build(
