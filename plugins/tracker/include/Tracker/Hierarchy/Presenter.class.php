@@ -58,10 +58,6 @@ class Tracker_Hierarchy_Presenter
      * @var int
      */
     public $tracker_used_in_trigger_rules_nb;
-    /**
-     * @var string|null
-     */
-    public $tracker_hierarchy_delegated_to_name;
 
     /**
      * @param Tracker[] $trackers_used_in_trigger_rules
@@ -70,7 +66,6 @@ class Tracker_Hierarchy_Presenter
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         array $possible_children,
         TreeNode $hierarchy,
-        ?string $tracker_hierarchy_delegated_to_name,
         array $trackers_used_in_trigger_rules
     ) {
         $this->tracker           = $tracker;
@@ -96,7 +91,6 @@ class Tracker_Hierarchy_Presenter
             )
         );
         $this->tracker_used_in_trigger_rules_nb    = count($trackers_used_in_trigger_rules);
-        $this->tracker_hierarchy_delegated_to_name = $tracker_hierarchy_delegated_to_name;
     }
 
     public function getTrackerUrl()

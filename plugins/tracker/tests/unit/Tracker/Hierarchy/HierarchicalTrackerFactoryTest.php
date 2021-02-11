@@ -20,7 +20,6 @@
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
-use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -29,14 +28,16 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
 
     public function testGetWithChildren(): void
     {
-        $tracker = $this->mockTrackerWithId(1, 'Name');
+        $project_id = 110;
+        $project    = new \Project(['group_id' => $project_id]);
+        $tracker    = $this->getTrackerWithIdNameAndProject(1, 'Name', $project);
 
         $dao          = Mockery::mock(HierarchyDAO::class);
         $children_ids = [2, 3];
         $dao->shouldReceive('getChildren')->with($tracker->getId())->andReturn($children_ids);
 
-        $child1          = $this->mockTrackerWithId(2, 'Name');
-        $child2          = $this->mockTrackerWithId(3, 'Name');
+        $child1          = $this->getTrackerWithIdNameAndProject(2, 'Name', $project);
+        $child2          = $this->getTrackerWithIdNameAndProject(3, 'Name', $project);
         $tracker_factory = \Mockery::spy(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturns($child1);
         $tracker_factory->shouldReceive('getTrackerById')->with(3)->andReturns($child2);
@@ -63,16 +64,14 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         $dao = Mockery::mock(HierarchyDAO::class);
         $dao->shouldReceive('searchAncestorIds')->with(1)->andReturn([4])->once();
 
-        $project_id = 100;
-        $project    = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getId')->andReturns($project_id);
-        $tracker = $this->mockTrackerWithId(1, 'Name');
-        $tracker->shouldReceive("getProject")->andReturn($project);
+        $project_id           = 100;
+        $project              = new \Project(['group_id' => $project_id]);
+        $tracker              = $this->getTrackerWithIdNameAndProject(1, 'Name', $project);
         $hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($tracker, []);
 
-        $possible_child_1 = $this->mockTrackerWithId(2, 'Name');
-        $possible_child_2 = $this->mockTrackerWithId(3, 'Name');
-        $ancestor         = $this->mockTrackerWithId(4, 'Name');
+        $possible_child_1 = $this->getTrackerWithIdNameAndProject(2, 'Name', $project);
+        $possible_child_2 = $this->getTrackerWithIdNameAndProject(3, 'Name', $project);
+        $ancestor         = $this->getTrackerWithIdNameAndProject(4, 'Name', $project);
 
         $project_trackers = [
             1 => $tracker,
@@ -84,52 +83,13 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         $tracker_factory = \Mockery::spy(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackersByGroupId')->with($project_id)->andReturns($project_trackers);
 
-        $event_dispatcher = new class implements EventDispatcherInterface {
-            public function dispatch(object $event)
-            {
-                return $event;
-            }
-        };
-
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, $event_dispatcher);
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
 
         $actual_possible_children = $factory->getPossibleChildren($hierarchical_tracker);
 
         $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_1);
         $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_2);
         $this->assertCount(0, $actual_possible_children);
-    }
-
-    public function testPossibleChildrenDoesNotIncludeTheOnesWithAHierarchyManagedByAnotherResource(): void
-    {
-        $tracker_factory  = Mockery::mock(\TrackerFactory::class);
-        $hierarchy_dao    = Mockery::mock(HierarchyDAO::class);
-        $event_dispatcher = new class implements EventDispatcherInterface {
-            public function dispatch(object $event)
-            {
-                if ($event instanceof TrackerHierarchyDelegation) {
-                    $event->enableTrackerHierarchyDelegation('test');
-                }
-
-                return $event;
-            }
-        };
-        $factory          = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $hierarchy_dao, $event_dispatcher);
-
-        $current_tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(Project::buildForTest())->build();
-        $other_tracker   = TrackerTestBuilder::aTracker()->withId(103)->build();
-
-        $tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn([$current_tracker, $other_tracker]);
-        $hierarchy_dao->shouldReceive('searchAncestorIds')->andReturn([]);
-
-        $possible_children = $factory->getPossibleChildren(
-            new Tracker_Hierarchy_HierarchicalTracker(
-                $current_tracker,
-                []
-            )
-        );
-
-        self::assertEmpty($possible_children);
     }
 
     private function getHierarchyAsTreeNode($hierarchy): \TreeNode
@@ -152,19 +112,16 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
     public function testGetDeepHierarchy(): void
     {
         $project_id = 110;
-        $project    = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getID')->andReturns($project_id);
-        $tracker = $this->mockTrackerWithId(5, 'Name');
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $tracker->shouldReceive('getGroupId')->andReturn($project_id);
+        $project    = new \Project(['group_id' => $project_id]);
+        $tracker    = $this->getTrackerWithIdNameAndProject(5, 'Name', $project);
 
         $project_trackers = [
-            '1' => $this->mockTrackerWithId(1, 'Releases'),
-            '2' => $this->mockTrackerWithId(2, 'Sprints'),
-            '3' => $this->mockTrackerWithId(3, 'Stories'),
-            '4' => $this->mockTrackerWithId(4, 'Tasks'),
-            '5' => $this->mockTrackerWithId(5, 'Bugs'),
-            '6' => $this->mockTrackerWithId(6, 'Documents')
+            '1' => $this->getTrackerWithIdNameAndProject(1, 'Releases', $project),
+            '2' => $this->getTrackerWithIdNameAndProject(2, 'Sprints', $project),
+            '3' => $this->getTrackerWithIdNameAndProject(3, 'Stories', $project),
+            '4' => $this->getTrackerWithIdNameAndProject(4, 'Tasks', $project),
+            '5' => $this->getTrackerWithIdNameAndProject(5, 'Bugs', $project),
+            '6' => $this->getTrackerWithIdNameAndProject(6, 'Documents', $project)
         ];
 
         $hierarchy_dar = [
@@ -202,13 +159,15 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
 
         $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
-        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
+        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
 
         $this->assertEquals($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
 
     public function testItCanReturnTheListOfTrackersInHierarchyByParentId(): void
     {
+        $project_id       = 110;
+        $project          = new \Project(['group_id' => $project_id]);
         $hierarchy_dar    = [
             ['child_id' => 2, 'parent_id' => 1],
             ['child_id' => 3, 'parent_id' => 2],
@@ -216,17 +175,17 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
             ['child_id' => 5, 'parent_id' => 2]
         ];
         $project_trackers = [
-            '1' => $this->mockTrackerWithId(1, 'Releases'),
-            '2' => $this->mockTrackerWithId(2, 'Sprints'),
-            '3' => $this->mockTrackerWithId(3, 'Stories'),
-            '4' => $this->mockTrackerWithId(4, 'Tasks'),
-            '5' => $this->mockTrackerWithId(5, 'Bugs'),
-            '6' => $this->mockTrackerWithId(6, 'Documents')
+            '1' => $this->getTrackerWithIdNameAndProject(1, 'Releases', $project),
+            '2' => $this->getTrackerWithIdNameAndProject(2, 'Sprints', $project),
+            '3' => $this->getTrackerWithIdNameAndProject(3, 'Stories', $project),
+            '4' => $this->getTrackerWithIdNameAndProject(4, 'Tasks', $project),
+            '5' => $this->getTrackerWithIdNameAndProject(5, 'Bugs', $project),
+            '6' => $this->getTrackerWithIdNameAndProject(6, 'Documents', $project)
         ];
         $project_id       = 100;
         $dao              = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory  = \Mockery::spy(\TrackerFactory::class);
-        $factory          = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
+        $factory          = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         $expected         = [
             1      => [2],
             2      => [3, 5],
@@ -245,16 +204,14 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         $project    = \Mockery::spy(\Project::class);
         $project->shouldReceive('getID')->andReturns($project_id);
 
-        $story_tracker = $this->mockTrackerWithId(120, 'Stories');
-        $story_tracker->shouldReceive("getProject")->andReturn($project);
-        $story_tracker->shouldReceive("getGroupId")->andReturn($project_id);
+        $story_tracker    = $this->getTrackerWithIdNameAndProject(120, 'Stories', $project);
         $project_trackers = [
-            '117' => $this->mockTrackerWithId(117, 'Project'),
-            '118' => $this->mockTrackerWithId(118, 'Releases'),
+            '117' => $this->getTrackerWithIdNameAndProject(117, 'Project', $project),
+            '118' => $this->getTrackerWithIdNameAndProject(118, 'Releases', $project),
             '120' => $story_tracker,
-            '121' => $this->mockTrackerWithId(121, 'Tasks'),
-            '122' => $this->mockTrackerWithId(122, 'Bugs'),
-            '119' => $this->mockTrackerWithId(119, 'Epics')
+            '121' => $this->getTrackerWithIdNameAndProject(121, 'Tasks', $project),
+            '122' => $this->getTrackerWithIdNameAndProject(122, 'Bugs', $project),
+            '119' => $this->getTrackerWithIdNameAndProject(119, 'Epics', $project)
         ];
         $tracker          = $project_trackers['120'];
 
@@ -288,7 +245,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
 
         $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
-        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
+        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
 
         $this->assertEquals($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
@@ -296,12 +253,9 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
     public function testDoesNotComplainsWhenAChildDoesNotExistInTheTrackersOfTheProject(): void
     {
         $project_id = 110;
-        $project    = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getID')->andReturns($project_id);
+        $project    = new \Project(['group_id' => $project_id]);
 
-        $story_tracker = $this->mockTrackerWithId(119, 'Stories');
-        $story_tracker->shouldReceive("getProject")->andReturn($project);
-        $story_tracker->shouldReceive("getGroupId")->andReturn($project_id);
+        $story_tracker    = $this->getTrackerWithIdNameAndProject(119, 'Stories', $project);
         $project_trackers = [
             '119' => $story_tracker
         ];
@@ -312,7 +266,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
 
         $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
-        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
+        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
 
         self::assertCount(1, $factory->getHierarchy($story_tracker)->getChildren());
     }
@@ -374,7 +328,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
     private function getRootTrackerId($hierarchy_dar, $current_tracker_id)
     {
         $dao     = Mockery::spy(HierarchyDAO::class);
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(\Mockery::spy(\TrackerFactory::class), $dao, Mockery::mock(EventDispatcherInterface::class));
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(\Mockery::spy(\TrackerFactory::class), $dao);
 
         return $factory->getRootTrackerId($hierarchy_dar, $current_tracker_id);
     }
@@ -397,15 +351,8 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         return $dao;
     }
 
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private function mockTrackerWithId(int $id, string $name)
+    private function getTrackerWithIdNameAndProject(int $id, string $name, Project $project): Tracker
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($id);
-        $tracker->shouldReceive('getName')->andReturn($name);
-
-        return $tracker;
+        return TrackerTestBuilder::aTracker()->withId($id)->withName($name)->withProject($project)->build();
     }
 }

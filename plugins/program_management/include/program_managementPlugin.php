@@ -54,7 +54,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Synchroniz
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Hierarchy\ProgramManagementHierarchyDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramIncrementConfigurationBuilder;
@@ -89,7 +88,6 @@ use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -126,7 +124,6 @@ final class program_managementPlugin extends Plugin
         $this->addHook('project_is_deleted', 'projectIsDeleted');
         $this->addHook(ConfigurationCheckDelegation::NAME);
         $this->addHook(BlockScrumAccess::NAME);
-        $this->addHook(TrackerHierarchyDelegation::NAME);
         $this->addHook(OriginalProjectCollector::NAME);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -323,21 +320,10 @@ final class program_managementPlugin extends Plugin
     public function planningAdministrationDelegation(
         PlanningAdministrationDelegation $planning_administration_delegation
     ): void {
-        $component_involved_verifier = new ComponentInvolvedVerifier(
-            new TeamDao(),
-            new ProgramDao()
-        );
+        $component_involved_verifier = $this->getComponentInvolvedVerifier();
         $project_data                = ProjectAdapter::build($planning_administration_delegation->getProject());
         if ($component_involved_verifier->isInvolvedInAProgramWorkspace($project_data)) {
             $planning_administration_delegation->enablePlanningAdministrationDelegation();
-        }
-    }
-
-    public function trackerHierarchyDelegation(
-        TrackerHierarchyDelegation $tracker_hierarchy_delegation
-    ): void {
-        if ((new ProgramManagementHierarchyDAO())->isPartOfAHierarchy(new ProgramTracker($tracker_hierarchy_delegation->getTracker()))) {
-            $tracker_hierarchy_delegation->enableTrackerHierarchyDelegation($this->getPluginInfo()->getPluginDescriptor()->getFullName());
         }
     }
 
@@ -520,5 +506,15 @@ final class program_managementPlugin extends Plugin
         );
 
         $permission_per_group_section_builder->collectSections($event);
+    }
+
+    private function getComponentInvolvedVerifier(): ComponentInvolvedVerifier
+    {
+        $component_involved_verifier = new ComponentInvolvedVerifier(
+            new TeamDao(),
+            new ProgramDao()
+        );
+
+        return $component_involved_verifier;
     }
 }
