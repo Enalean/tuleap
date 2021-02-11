@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
-use XML_SimpleXMLCDATAFactory;
 
 final class XmlReportTableExporterTest extends TestCase
 {
@@ -45,22 +44,17 @@ final class XmlReportTableExporterTest extends TestCase
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
         );
 
-        $table_renderer_exporter = new XmlReportTableExporter(
-            new XML_SimpleXMLCDATAFactory()
-        );
+        $table_renderer_exporter = new XmlReportTableExporter();
 
-        $report_node = new \SimpleXMLElement('<report></report>');
+        $renderers = new \SimpleXMLElement('<renderers></renderers>');
 
         $table_renderer_exporter->exportResultsTable(
-            $report_node,
+            $renderers,
             [
                 $summary_field_mapping,
                 $description_field_mapping
             ]
         );
-
-        $renderers = $report_node->renderers;
-        $this->assertNotNull($renderers);
 
         $renderer = $renderers->renderer;
         $this->assertNotNull($renderer);

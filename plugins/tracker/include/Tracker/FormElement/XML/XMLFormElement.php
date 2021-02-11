@@ -31,7 +31,12 @@ abstract class XMLFormElement
      * @var string
      * @readonly
      */
-    private $id;
+    public $id;
+    /**
+     * @var string
+     * @readonly
+     */
+    public $name;
     /**
      * @var int
      * @readonly
@@ -42,11 +47,6 @@ abstract class XMLFormElement
      * @readonly
      */
     private $use_it = true;
-    /**
-     * @var string
-     * @readonly
-     */
-    private $name;
     /**
      * @var string
      * @readonly
@@ -253,4 +253,6 @@ abstract class XMLFormElement
     {
         return \Tracker_FormElement::XML_TAG;
     }
+
+    abstract public function exportPermissions(\SimpleXMLElement $form_elements): void;
 }

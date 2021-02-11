@@ -219,7 +219,7 @@ class JiraXmlExporter
         );
 
         $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector, $logger);
-        $report_table_exporter     = new XmlReportTableExporter($cdata_factory);
+        $report_table_exporter     = new XmlReportTableExporter();
         $default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
 
         $tql_report_exporter = new XmlTQLReportExporter(
@@ -331,12 +331,10 @@ class JiraXmlExporter
             ),
             new XmlReportAllIssuesExporter(
                 $default_criteria_exporter,
-                $cdata_factory,
                 $report_table_exporter
             ),
             new XmlReportOpenIssuesExporter(
                 $default_criteria_exporter,
-                $cdata_factory,
                 $report_table_exporter,
             ),
             new XmlReportDoneIssuesExporter(

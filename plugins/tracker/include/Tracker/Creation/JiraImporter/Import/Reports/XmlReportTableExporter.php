@@ -24,50 +24,29 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
-use XML_SimpleXMLCDATAFactory;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
+use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn;
+use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
 
 class XmlReportTableExporter
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_factory;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $cdata_factory)
-    {
-        $this->cdata_factory = $cdata_factory;
-    }
-
     /**
      * @param FieldMapping[] $column_fields
      */
     public function exportResultsTable(SimpleXMLElement $report_node, array $column_fields): void
     {
-        $renderers_node = $report_node->addChild('renderers');
-        $renderer_node  = $renderers_node->addChild('renderer');
-        $renderer_node->addAttribute('rank', "0");
-        $renderer_node->addAttribute('type', "table");
-        $renderer_node->addAttribute('chunksz', "15");
-
-        $this->cdata_factory->insert($renderer_node, 'name', 'Results');
-
-        $this->exportReportColumns(
-            $renderer_node,
-            $column_fields
-        );
-    }
-
-    /**
-     * @param FieldMapping[] $field_mappings
-     */
-    private function exportReportColumns(
-        SimpleXMLElement $renderer_node,
-        array $field_mappings
-    ): void {
-        $columns_node = $renderer_node->addChild('columns');
-        foreach ($field_mappings as $field_mapping) {
-            $field_node = $columns_node->addChild('field');
-            $field_node->addAttribute('REF', $field_mapping->getXMLId());
+        $xml_table = (new XMLTable('Results'))
+            ->withChunkSize(15)
+            ->withRank(0);
+        foreach ($column_fields as $column_field) {
+            $xml_table = $xml_table->withColumns(
+                new XMLColumn(
+                    new XMLReferenceByID($column_field->getXMLId())
+                )
+            );
         }
+
+        $xml_table->export($report_node, new XMLFormElementFlattenedCollection([]));
     }
 }

@@ -119,8 +119,7 @@ final class XmlReportAllIssuesExporterTest extends TestCase
         $cdata_factory       = new \XML_SimpleXMLCDATAFactory();
         $this->report_export = new XmlReportAllIssuesExporter(
             new XmlReportDefaultCriteriaExporter(),
-            $cdata_factory,
-            new XmlReportTableExporter($cdata_factory)
+            new XmlReportTableExporter()
         );
     }
 

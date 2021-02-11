@@ -21,39 +21,49 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Container\XML;
+namespace Tuleap\Tracker\Report\Renderer\XML;
 
-use Tuleap\Tracker\FormElement\XML\XMLFormElement;
+use SimpleXMLElement;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use XML_SimpleXMLCDATAFactory;
 
-abstract class XMLContainer extends XMLFormElement
+abstract class XMLRenderer
 {
     /**
-     * @var XMLFormElement[]
+     * @var string
      * @readonly
      */
-    public $form_elements = [];
+    private $name;
+    /**
+     * @var int
+     * @readonly
+     */
+    private $rank = 1;
 
-    public function export(\SimpleXMLElement $form_elements): \SimpleXMLElement
+    public function __construct(string $name)
     {
-        $node = parent::export($form_elements);
-        $node->addChild('formElements');
-        foreach ($this->form_elements as $form_element) {
-            $form_element->export($node->formElements);
-        }
-        return $node;
+        $this->name = $name;
     }
 
     /**
      * @return static
+     * @psalm-mutation-free
      */
-    public function withFormElements(XMLFormElement ...$form_elements): self
+    public function withRank(int $rank): self
     {
-        $new                = clone $this;
-        $new->form_elements = array_merge($new->form_elements, $form_elements);
+        $new       = clone $this;
+        $new->rank = $rank;
         return $new;
     }
 
-    public function exportPermissions(\SimpleXMLElement $form_elements): void
+    public function export(SimpleXMLElement $renderers, XMLFormElementFlattenedCollection $form_elements): SimpleXMLElement
     {
+        $renderer_xml = $renderers->addChild('renderer');
+        $renderer_xml->addAttribute('rank', (string) $this->rank);
+
+        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata->insert($renderer_xml, 'name', $this->name);
+
+        return $renderer_xml;
     }
 }

@@ -25,12 +25,37 @@ namespace Tuleap\Tracker\XML;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
 use Tuleap\Tracker\TrackerColor;
+use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
+use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
+use Tuleap\Tracker\FormElement\Field\XML\SubmitPermission;
+use Tuleap\Tracker\FormElement\Field\XML\UpdatePermission;
+use Tuleap\Tracker\FormElement\XML\XMLReferenceByName;
+use Tuleap\Tracker\Report\XML\XMLReport;
+use Tuleap\Tracker\Report\XML\XMLReportCriterion;
+use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
+use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
+/**
+ * This test class intend to test not only the XMLTracker class itself but to provide an integrated test of
+ * the whole tracker export
+ *
+ * @covers \Tuleap\Tracker\XML\XMLTracker
+ * @covers \Tuleap\Tracker\FormElement\XML\XMLReferenceByID
+ * @covers \Tuleap\Tracker\FormElement\XML\XMLReferenceByName
+ * @covers \Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset
+ * @covers \Tuleap\Tracker\FormElement\Field\XML\XMLFieldPermission
+ * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField
+ * @covers \Tuleap\Tracker\Report\XML\XMLReport
+ * @covers \Tuleap\Tracker\Report\XML\XMLReportCriterion
+ * @covers \Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable
+ * @covers \Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn
+ */
 class XMLTrackerTest extends TestCase
 {
     public function testExportsOneTracker(): void
@@ -216,5 +241,172 @@ class XMLTrackerTest extends TestCase
         assertCount(2, $node->formElements->formElement);
         assertEquals('fieldset1', (string) $node->formElements->formElement[0]['ID']);
         assertEquals('fieldset2', (string) $node->formElements->formElement[1]['ID']);
+    }
+
+    public function testItHasAFieldAtTheRootOfTreeWithPermissions(): void
+    {
+        $tracker = (new XMLTracker('some_xml_id', 'bug'))
+            ->withFormElement(
+                (new XMLStringField('some_id', 'name'))
+                    ->withPermissions(
+                        new ReadPermission('UGROUP_ANONYMOUS'),
+                        new SubmitPermission('UGROUP_REGISTERED'),
+                        new UpdatePermission('UGROUP_PROJECT_MEMBERS'),
+                    )
+            );
+
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+        $node = $tracker->export($xml);
+
+        assertCount(3, $node->permissions->permission);
+        assertEquals('some_id', $node->permissions->permission[0]['REF']);
+        assertEquals('field', $node->permissions->permission[0]['scope']);
+        assertEquals('UGROUP_ANONYMOUS', $node->permissions->permission[0]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $node->permissions->permission[0]['type']);
+
+        assertEquals('some_id', $node->permissions->permission[1]['REF']);
+        assertEquals('field', $node->permissions->permission[1]['scope']);
+        assertEquals('UGROUP_REGISTERED', $node->permissions->permission[1]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $node->permissions->permission[1]['type']);
+
+        assertEquals('some_id', $node->permissions->permission[2]['REF']);
+        assertEquals('field', $node->permissions->permission[2]['scope']);
+        assertEquals('UGROUP_PROJECT_MEMBERS', $node->permissions->permission[2]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $node->permissions->permission[2]['type']);
+    }
+
+    public function testItHasAFieldInsideAFieldSetWithPermissions(): void
+    {
+        $tracker = (new XMLTracker('some_xml_id', 'bug'))
+            ->withFormElement(
+                (new XMLFieldset('fieldset_id', 'details'))
+                    ->withFormElements(
+                        (new XMLStringField('some_id', 'name'))
+                        ->withPermissions(
+                            new ReadPermission('UGROUP_ANONYMOUS'),
+                            new SubmitPermission('UGROUP_REGISTERED'),
+                            new UpdatePermission('UGROUP_PROJECT_MEMBERS'),
+                        )
+                    )
+            );
+
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+        $node = $tracker->export($xml);
+
+        assertCount(3, $node->permissions->permission);
+        assertEquals('some_id', $node->permissions->permission[0]['REF']);
+        assertEquals('field', $node->permissions->permission[0]['scope']);
+        assertEquals('UGROUP_ANONYMOUS', $node->permissions->permission[0]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $node->permissions->permission[0]['type']);
+
+        assertEquals('some_id', $node->permissions->permission[1]['REF']);
+        assertEquals('field', $node->permissions->permission[1]['scope']);
+        assertEquals('UGROUP_REGISTERED', $node->permissions->permission[1]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $node->permissions->permission[1]['type']);
+
+        assertEquals('some_id', $node->permissions->permission[2]['REF']);
+        assertEquals('field', $node->permissions->permission[2]['scope']);
+        assertEquals('UGROUP_PROJECT_MEMBERS', $node->permissions->permission[2]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $node->permissions->permission[2]['type']);
+    }
+
+    public function testItHasAReportThatReferenceAFieldIndexedByName(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(new XMLStringField('some_id', 'name'))
+            ->withReports(
+                (new XMLReport('Default'))
+                    ->withCriteria(
+                        new XMLReportCriterion(
+                            new XMLReferenceByName('name')
+                        )
+                    )
+            );
+
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+        $node = $tracker->export($xml);
+
+        assertEquals('some_id', (string) $node->reports->report[0]->criterias->criteria[0]->field['REF']);
+    }
+
+    public function testItHasAReportThatReferenceAFieldIndexedByNameInsideContainer(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                (new XMLFieldset('fieldset', 'details'))
+                ->withFormElements(
+                    new XMLStringField('some_id', 'name')
+                )
+            )
+            ->withReports(
+                (new XMLReport('Default'))
+                    ->withCriteria(
+                        new XMLReportCriterion(
+                            new XMLReferenceByName('name')
+                        )
+                    )
+            );
+
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+        $node = $tracker->export($xml);
+
+        assertEquals('some_id', (string) $node->reports->report[0]->criterias->criteria[0]->field['REF']);
+    }
+
+
+    public function testItHasAReportWithTableRendererThatReferenceAFieldByName(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                (new XMLFieldset('fieldset', 'details'))
+                    ->withFormElements(
+                        new XMLStringField('some_id', 'name')
+                    )
+            )
+            ->withReports(
+                (new XMLReport('Default'))
+                    ->withRenderers(
+                        (new XMLTable('table'))
+                        ->withColumns(
+                            new XMLColumn(
+                                new XMLReferenceByName('name')
+                            )
+                        )
+                    )
+            );
+
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+        $node = $tracker->export($xml);
+
+        assertEquals('table', (string) $node->reports->report[0]->renderers->renderer[0]['type']);
+        assertEquals('some_id', (string) $node->reports->report[0]->renderers->renderer[0]->columns->field[0]['REF']);
+    }
+
+    public function testItHasAReportWithTableRendererThatReferenceAFieldByID(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                (new XMLFieldset('fieldset', 'details'))
+                    ->withFormElements(
+                        new XMLStringField('some_id', 'name')
+                    )
+            )
+            ->withReports(
+                (new XMLReport('Default'))
+                    ->withRenderers(
+                        (new XMLTable('table'))
+                            ->withColumns(
+                                new XMLColumn(
+                                    new XMLReferenceByID('some_id')
+                                )
+                            )
+                    )
+            );
+
+        $xml  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+        $node = $tracker->export($xml);
+
+        assertEquals('table', (string) $node->reports->report[0]->renderers->renderer[0]['type']);
+        assertEquals('some_id', (string) $node->reports->report[0]->renderers->renderer[0]->columns->field[0]['REF']);
     }
 }

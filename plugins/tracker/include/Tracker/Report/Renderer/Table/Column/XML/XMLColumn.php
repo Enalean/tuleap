@@ -21,31 +21,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\JiraImport\JiraAgile;
+namespace Tuleap\Tracker\Report\Renderer\Table\Column\XML;
 
-use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\FormElement\XML\XMLReference;
 
-final class JiraAgileImporter
+final class XMLColumn
 {
     /**
-     * @var JiraBoardsRetriever
+     * @var XMLReference
+     * @readonly
      */
-    private $boards_retriever;
+    private $reference;
 
-    public function __construct(JiraBoardsRetriever $boards_retriever)
+    public function __construct(XMLReference $reference)
     {
-        $this->boards_retriever = $boards_retriever;
+        $this->reference = $reference;
     }
 
-    public function exportScrum(LoggerInterface $logger, \SimpleXMLElement $project, string $jira_project, IDGenerator $id_generator): void
+    public function export(\SimpleXMLElement $columns, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
-        $board = $this->boards_retriever->getFirstScrumBoardForProject($jira_project);
-        if ($board) {
-            $logger->info('Project has Agile configuration to import');
-
-            $scrum_tracker_builder = new ScrumTrackerBuilder();
-            $scrum_tracker_builder->export($project, $id_generator);
-        }
+        $field = $columns->addChild('field');
+        $field->addAttribute('REF', $this->reference->getId($form_elements));
+        return $field;
     }
 }

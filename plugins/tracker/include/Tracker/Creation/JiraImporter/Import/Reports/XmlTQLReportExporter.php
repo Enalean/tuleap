@@ -81,7 +81,7 @@ class XmlTQLReportExporter
 
         $this->default_criteria_exporter->exportDefaultCriteria($criteria_fields, $criterias_node);
         $this->report_table_exporter->exportResultsTable(
-            $report_node,
+            $report_node->addChild('renderers'),
             $column_fields
         );
     }
