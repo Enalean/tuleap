@@ -33,6 +33,12 @@ class StringFieldDao extends SpecificPropertiesDao
         $this->table_name = 'tracker_field_string';
     }
 
+    /**
+     * @param int $field_id
+     * @param array $row
+     * @return \DataAccessResult|false
+     * @throws \DataAccessQueryException
+     */
     public function save($field_id, $row)
     {
         $field_id = $this->da->escapeInt($field_id);
