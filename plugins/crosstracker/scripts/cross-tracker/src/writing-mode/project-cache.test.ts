@@ -18,8 +18,9 @@
  *
  */
 
-import { getSortedProjectsIAmMemberOf as getProjects } from "./projects-cache.js";
+import { getSortedProjectsIAmMemberOf as getProjects } from "./projects-cache";
 import * as rest_querier from "../api/rest-querier";
+import type { Project } from "../type";
 
 describe("getSortedProjectsIAmMemberOf", () => {
     it("Returns the projects I'm member of", async () => {
@@ -28,7 +29,7 @@ describe("getSortedProjectsIAmMemberOf", () => {
             "getSortedProjectsIAmMemberOf"
         );
 
-        const expected_project_list = [
+        const expected_project_list: Array<Project> = [
             { id: 101, label: "project A" },
             { id: 102, label: "project B" },
         ];

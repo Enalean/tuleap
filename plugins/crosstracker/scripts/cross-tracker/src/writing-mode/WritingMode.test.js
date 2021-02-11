@@ -24,7 +24,7 @@ import WritingMode from "./WritingMode.vue";
 import {
     default as WritingCrossTrackerReport,
     TooManyTrackersSelectedError,
-} from "./writing-cross-tracker-report.js";
+} from "./writing-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 

@@ -92,7 +92,7 @@
     </div>
 </template>
 <script>
-import { getSortedProjectsIAmMemberOf } from "./projects-cache.js";
+import { getSortedProjectsIAmMemberOf } from "./projects-cache";
 import { getTrackersOfProject } from "../api/rest-querier";
 
 export default {
