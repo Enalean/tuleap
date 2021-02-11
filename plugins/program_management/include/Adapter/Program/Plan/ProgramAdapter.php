@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
-use Luracast\Restler\RestException;
-use Tuleap\REST\ProjectAuthorization;
+use Project;
+use Project_AccessException;
+use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\Program\ProgramStore;
@@ -39,13 +41,19 @@ final class ProgramAdapter implements BuildProgram
      * @var ProgramStore
      */
     private $program_store;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     public function __construct(
         \ProjectManager $project_manager,
+        ProjectAccessChecker $project_access_checker,
         ProgramStore $program_store
     ) {
-        $this->project_manager = $project_manager;
-        $this->program_store   = $program_store;
+        $this->project_manager        = $project_manager;
+        $this->project_access_checker = $project_access_checker;
+        $this->program_store          = $program_store;
     }
 
     /**
@@ -54,13 +62,22 @@ final class ProgramAdapter implements BuildProgram
      */
     public function buildExistingProgramProject(int $id, \PFUser $user): Program
     {
-        $project = $this->buildProject($id, $user);
-
-        if (! $this->program_store->isProjectAProgramProject((int) $project->getId())) {
-            throw new ProjectIsNotAProgramException((int) $project->getId());
-        }
+        $project = $this->getProject($id, $user);
+        $this->ensureProgramIsAProject($project);
 
         return new Program((int) $project->getID());
+    }
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
+    {
+        $project = $this->getProjectForManagement($id, $user);
+        $this->ensureProgramIsAProject($project);
+
+        return new ProgramForManagement((int) $project->getID());
     }
 
     /**
@@ -68,17 +85,37 @@ final class ProgramAdapter implements BuildProgram
      */
     public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
     {
-        $project = $this->buildProject($id, $user);
+        $project = $this->getProjectForManagement($id, $user);
 
         return new ToBeCreatedProgram((int) $project->getID());
     }
 
-    private function buildProject(int $id, \PFUser $user): \Project
+    /**
+     * @throws ProjectIsNotAProgramException
+     */
+    private function ensureProgramIsAProject(Project $project): void
+    {
+        if (! $this->program_store->isProjectAProgramProject((int) $project->getId())) {
+            throw new ProjectIsNotAProgramException((int) $project->getId());
+        }
+    }
+
+    private function getProjectForManagement(int $id, \PFUser $user): \Project
+    {
+        $project = $this->getProject($id, $user);
+        if (! $user->isAdmin($id)) {
+            throw new ProgramAccessException();
+        }
+
+        return $project;
+    }
+
+    private function getProject(int $id, \PFUser $user): \Project
     {
         $project = $this->project_manager->getProject($id);
         try {
-            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
-        } catch (RestException $exception) {
+            $this->project_access_checker->checkUserCanAccessProject($user, $project);
+        } catch (Project_AccessException $exception) {
             throw new ProgramAccessException();
         }
 

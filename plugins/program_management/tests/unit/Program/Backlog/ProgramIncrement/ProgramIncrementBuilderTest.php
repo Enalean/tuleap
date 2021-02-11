@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -39,6 +40,11 @@ final class ProgramIncrementBuilderTest extends TestCase
             }
 
             public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
+            {
+                throw new \LogicException("Not implemented");
+            }
+
+            public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
             {
                 throw new \LogicException("Not implemented");
             }

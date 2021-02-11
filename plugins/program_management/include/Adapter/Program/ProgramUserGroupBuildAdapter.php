@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
+use Tuleap\ProgramManagement\Program\ProgramForManagement;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgramUserGroup;
 use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Program\Plan\ProgramUserGroup;
-use Tuleap\ProgramManagement\Program\Program;
 
 final class ProgramUserGroupBuildAdapter implements BuildProgramUserGroup
 {
@@ -45,14 +45,14 @@ final class ProgramUserGroupBuildAdapter implements BuildProgramUserGroup
      * @return non-empty-list<ProgramUserGroup>
      * @throws InvalidProgramUserGroup
      */
-    public function buildProgramUserGroups(Program $program, array $raw_user_group_ids): array
+    public function buildProgramUserGroups(ProgramForManagement $program, array $raw_user_group_ids): array
     {
         $program_user_groups = [];
 
         foreach ($raw_user_group_ids as $raw_user_group_id) {
             $project_user_group = $this->user_group_retriever->getExistingUserGroup($raw_user_group_id);
 
-            if ((int) $project_user_group->getProjectId() !== $program->getId()) {
+            if ((int) $project_user_group->getProjectId() !== $program->id) {
                 throw new ProgramUserGroupDoesNotExistException($raw_user_group_id);
             }
 

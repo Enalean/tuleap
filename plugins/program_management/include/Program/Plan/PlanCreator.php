@@ -79,14 +79,14 @@ final class PlanCreator implements CreatePlan
         if (in_array($program_increment_id, $trackers_id, true)) {
             throw new CannotPlanIntoItselfException();
         }
-        $program_project            = $this->program_build->buildExistingProgramProject($project_id, $user);
+        $program_project            = $this->program_build->buildExistingProgramProjectForManagement($project_id, $user);
         $program_tracker            = $this->build_tracker->buildProgramIncrementTracker(
             $program_increment_id,
-            $program_project->getId()
+            $program_project->id
         );
         $plannable_tracker_ids      = $this->build_tracker->buildPlannableTrackerList(
             $trackers_id,
-            $program_project->getId()
+            $program_project->id
         );
         $can_prioritize_user_groups = $this->build_program_user_group->buildProgramUserGroups(
             $program_project,

@@ -24,9 +24,12 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use BackendLogger;
 use Luracast\Restler\RestException;
+use PermissionsOverrider_PermissionsOverriderManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -92,7 +95,15 @@ final class ProjectResource extends AuthenticatedResource
         $project_manager      = \ProjectManager::instance();
         $program_dao          = new ProgramDao();
         $explicit_backlog_dao = new ExplicitBacklogDao();
-        $build_program        = new ProgramAdapter($project_manager, $program_dao);
+        $build_program        = new ProgramAdapter(
+            $project_manager,
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                \EventManager::instance()
+            ),
+            $program_dao
+        );
         $this->plan_creator   = new PlanCreator(
             $build_program,
             $tracker_adapter,
