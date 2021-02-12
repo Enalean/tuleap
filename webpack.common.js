@@ -42,6 +42,7 @@ module.exports = [
         output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
         externals: {
             tlp: "tlp",
+            "@tuleap/tlp": "tlp",
         },
         module: {
             rules: [
