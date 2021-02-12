@@ -86,6 +86,7 @@ class ArtifactsXMLExporter
     public function exportArtifacts(
         SimpleXMLElement $tracker_node,
         FieldMappingCollection $jira_field_mapping_collection,
+        IssueAPIRepresentationCollection $issue_representation_collection,
         string $jira_base_url,
         string $jira_project_id,
         string $jira_issue_type_name
@@ -103,7 +104,8 @@ class ArtifactsXMLExporter
             $artifacts_node,
             $jira_issues_response,
             $jira_base_url,
-            $jira_field_mapping_collection
+            $jira_field_mapping_collection,
+            $issue_representation_collection
         );
 
         $count_loop = 1;
@@ -119,7 +121,8 @@ class ArtifactsXMLExporter
                 $artifacts_node,
                 $jira_issues_response,
                 $jira_base_url,
-                $jira_field_mapping_collection
+                $jira_field_mapping_collection,
+                $issue_representation_collection
             );
 
             $is_last = (int) $jira_issues_response['total'] <=
@@ -178,7 +181,8 @@ class ArtifactsXMLExporter
         SimpleXMLElement $artifacts_node,
         array $jira_issues_response,
         string $jira_base_url,
-        FieldMappingCollection $jira_field_mapping_collection
+        FieldMappingCollection $jira_field_mapping_collection,
+        IssueAPIRepresentationCollection $issue_representation_collection
     ): void {
         if (! isset($jira_issues_response['issues'])) {
             return;
@@ -193,6 +197,7 @@ class ArtifactsXMLExporter
 
         foreach ($jira_issues as $issue) {
             $issue_api_representation = IssueAPIRepresentation::buildFromAPIResponse($issue);
+            $issue_representation_collection->addIssueRepresentationInCollection($issue_api_representation);
 
             $issue_id  = $issue_api_representation->getId();
             $issue_key = $issue_api_representation->getKey();

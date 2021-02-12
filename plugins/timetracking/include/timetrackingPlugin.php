@@ -29,6 +29,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
 use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfigurationRetriever;
 use Tuleap\Timetracking\JiraImporter\JiraXMLExport;
+use Tuleap\Timetracking\JiraImporter\Worklog\WorklogRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Plugin\TimetrackingPluginInfo;
 use Tuleap\Timetracking\REST\ResourcesInjector;
@@ -419,13 +420,19 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     public function jiraImporterExternalPluginsEvent(JiraImporterExternalPluginsEvent $event): void
     {
         $xml_exporter = new JiraXMLExport(
+            new WorklogRetriever(
+                $event->getJiraClient(),
+                $event->getLogger()
+            ),
             new XML_SimpleXMLCDATAFactory(),
+            $event->getJiraUserRetriever(),
             $event->getLogger()
         );
 
         $xml_exporter->exportJiraTimetracking(
             $event->getXmlTracker(),
-            $event->getJiraPlatformConfiguration()
+            $event->getJiraPlatformConfiguration(),
+            $event->getIssueRepresentationCollection()
         );
     }
 

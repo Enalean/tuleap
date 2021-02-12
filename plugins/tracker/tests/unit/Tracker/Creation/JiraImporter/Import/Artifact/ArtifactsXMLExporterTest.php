@@ -40,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChan
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -293,15 +294,19 @@ class ArtifactsXMLExporterTest extends TestCase
                 'comments'   => []
             ]);
 
+        $issue_collection = new IssueAPIRepresentationCollection();
         $this->exporter->exportArtifacts(
             $tracker_node,
             $mapping_collection,
+            $issue_collection,
             $jira_base_url,
             $jira_project_id,
             $jira_issue_name
         );
 
         $this->assertXMLArtifactsContent($tracker_node);
+
+        $this->assertCount(2, $issue_collection->getIssueRepresentationCollection());
     }
 
     public function testItExportsArtifactsPaginated(): void
@@ -429,15 +434,19 @@ class ArtifactsXMLExporterTest extends TestCase
                 'comments'   => []
             ]);
 
+        $issue_collection = new IssueAPIRepresentationCollection();
         $this->exporter->exportArtifacts(
             $tracker_node,
             $mapping_collection,
+            $issue_collection,
             $jira_base_url,
             $jira_project_id,
             $jira_issue_name
         );
 
         $this->assertXMLArtifactsContent($tracker_node);
+
+        $this->assertCount(2, $issue_collection->getIssueRepresentationCollection());
     }
 
     private function mockChangelogForKey01(): void
