@@ -28,7 +28,6 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
-use Tuleap\Tracker\TrackerColor;
 
 class PermissionsRetrieverTest extends TestCase
 {
@@ -65,7 +64,10 @@ class PermissionsRetrieverTest extends TestCase
         );
 
         $this->user    = Mockery::mock(PFUser::class);
-        $this->tracker = new Tracker(123, 101, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
+        $this->tracker = Mockery::mock(Tracker::class);
+
+        $this->tracker->shouldReceive('getGroupId')->andReturn(101);
+        $this->tracker->shouldReceive('getId')->andReturn(123);
     }
 
     public function testItReturnsTrueToReadAllTimesIfUserIsSiteAdmin(): void
@@ -101,7 +103,7 @@ class PermissionsRetrieverTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueToReadAllTimesIfUserIsMemberOfAUgroupGrantedToRead(): void
+    public function testItReturnsTrueToReadAllTimesIfUserIsTrackerAdmin(): void
     {
         $this->user->shouldReceive('isSuperUser')
             ->once()
@@ -112,6 +114,23 @@ class PermissionsRetrieverTest extends TestCase
             ->with(101)
             ->andReturnFalse();
 
+        $this->tracker->shouldReceive('userIsAdmin')
+            ->once()
+            ->with($this->user)
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->retriever->userCanSeeAllTimesInTracker(
+                $this->user,
+                $this->tracker
+            )
+        );
+    }
+
+    public function testItReturnsTrueToReadAllTimesIfUserIsMemberOfAUgroupGrantedToRead(): void
+    {
+        $this->mockUserIsNotAdmin();
+
         $this->timetracking_ugroup_retriever->shouldReceive('getReaderIdsForTracker')
             ->once()
             ->with($this->tracker)
@@ -121,7 +140,7 @@ class PermissionsRetrieverTest extends TestCase
 
         $this->user->shouldReceive('isMemberOfUGroup')
             ->once()
-            ->with(987, 101, 123)
+            ->with(987, 101)
             ->andReturnTrue();
 
         $this->assertTrue(
@@ -134,14 +153,7 @@ class PermissionsRetrieverTest extends TestCase
 
     public function testItReturnsFalseToReadAllTimesIfUserIsNotMemberOfAUgroupGrantedToRead(): void
     {
-        $this->user->shouldReceive('isSuperUser')
-            ->once()
-            ->andReturnFalse();
-
-        $this->user->shouldReceive('isAdmin')
-            ->once()
-            ->with(101)
-            ->andReturnFalse();
+        $this->mockUserIsNotAdmin();
 
         $this->timetracking_ugroup_retriever->shouldReceive('getReaderIdsForTracker')
             ->once()
@@ -152,7 +164,7 @@ class PermissionsRetrieverTest extends TestCase
 
         $this->user->shouldReceive('isMemberOfUGroup')
             ->once()
-            ->with(987, 101, 123)
+            ->with(987, 101)
             ->andReturnFalse();
 
         $this->assertFalse(
@@ -165,14 +177,7 @@ class PermissionsRetrieverTest extends TestCase
 
     public function testItReturnsFalseToReadAllTimesIfUserIsNotAdminAndNoUgroupGrantedToRead(): void
     {
-        $this->user->shouldReceive('isSuperUser')
-            ->once()
-            ->andReturnFalse();
-
-        $this->user->shouldReceive('isAdmin')
-            ->once()
-            ->with(101)
-            ->andReturnFalse();
+        $this->mockUserIsNotAdmin();
 
         $this->timetracking_ugroup_retriever->shouldReceive('getReaderIdsForTracker')
             ->once()
@@ -222,7 +227,7 @@ class PermissionsRetrieverTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueToAddTimesIfUserIsMemberOfAUgroupGrantedToRead(): void
+    public function testItReturnsTrueToAddTimesIfUserIsTrackerAdmin(): void
     {
         $this->user->shouldReceive('isSuperUser')
             ->once()
@@ -233,6 +238,23 @@ class PermissionsRetrieverTest extends TestCase
             ->with(101)
             ->andReturnFalse();
 
+        $this->tracker->shouldReceive('userIsAdmin')
+            ->once()
+            ->with($this->user)
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->retriever->userCanAddTimeInTracker(
+                $this->user,
+                $this->tracker
+            )
+        );
+    }
+
+    public function testItReturnsTrueToAddTimesIfUserIsMemberOfAUgroupGrantedToRead(): void
+    {
+        $this->mockUserIsNotAdmin();
+
         $this->timetracking_ugroup_retriever->shouldReceive('getWriterIdsForTracker')
             ->once()
             ->with($this->tracker)
@@ -242,7 +264,7 @@ class PermissionsRetrieverTest extends TestCase
 
         $this->user->shouldReceive('isMemberOfUGroup')
             ->once()
-            ->with(987, 101, 123)
+            ->with(987, 101)
             ->andReturnTrue();
 
         $this->assertTrue(
@@ -255,14 +277,7 @@ class PermissionsRetrieverTest extends TestCase
 
     public function testItReturnsFalseToAddTimesIfUserIsNotMemberOfAUgroupGrantedToRead(): void
     {
-        $this->user->shouldReceive('isSuperUser')
-            ->once()
-            ->andReturnFalse();
-
-        $this->user->shouldReceive('isAdmin')
-            ->once()
-            ->with(101)
-            ->andReturnFalse();
+        $this->mockUserIsNotAdmin();
 
         $this->timetracking_ugroup_retriever->shouldReceive('getWriterIdsForTracker')
             ->once()
@@ -273,7 +288,7 @@ class PermissionsRetrieverTest extends TestCase
 
         $this->user->shouldReceive('isMemberOfUGroup')
             ->once()
-            ->with(987, 101, 123)
+            ->with(987, 101)
             ->andReturnFalse();
 
         $this->assertFalse(
@@ -286,14 +301,7 @@ class PermissionsRetrieverTest extends TestCase
 
     public function testItReturnsFalseToAddTimesIfUserIsNotAdminAndNoUgroupGrantedToRead(): void
     {
-        $this->user->shouldReceive('isSuperUser')
-            ->once()
-            ->andReturnFalse();
-
-        $this->user->shouldReceive('isAdmin')
-            ->once()
-            ->with(101)
-            ->andReturnFalse();
+        $this->mockUserIsNotAdmin();
 
         $this->timetracking_ugroup_retriever->shouldReceive('getWriterIdsForTracker')
             ->once()
@@ -308,5 +316,22 @@ class PermissionsRetrieverTest extends TestCase
                 $this->tracker
             )
         );
+    }
+
+    private function mockUserIsNotAdmin(): void
+    {
+        $this->user->shouldReceive('isSuperUser')
+            ->once()
+            ->andReturnFalse();
+
+        $this->user->shouldReceive('isAdmin')
+            ->once()
+            ->with(101)
+            ->andReturnFalse();
+
+        $this->tracker->shouldReceive('userIsAdmin')
+            ->once()
+            ->with($this->user)
+            ->andReturnFalse();
     }
 }

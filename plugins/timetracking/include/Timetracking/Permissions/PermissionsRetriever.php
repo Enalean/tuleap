@@ -40,16 +40,12 @@ class PermissionsRetriever
 
     public function userCanAddTimeInTracker(PFUser $user, Tracker $tracker): bool
     {
-        if ($user->isSuperUser()) {
-            return true;
-        }
-
-        if ($user->isAdmin($tracker->getGroupId())) {
+        if ($this->isUserAdministratorOfTracker($user, $tracker)) {
             return true;
         }
 
         foreach ($this->timetracking_ugroup_retriever->getWriterIdsForTracker($tracker) as $ugroup_id) {
-            if ($user->isMemberOfUGroup($ugroup_id, $tracker->getGroupId(), $tracker->getId())) {
+            if ($user->isMemberOfUGroup($ugroup_id, $tracker->getGroupId())) {
                 return true;
             }
         }
@@ -59,20 +55,23 @@ class PermissionsRetriever
 
     public function userCanSeeAllTimesInTracker(PFUser $user, Tracker $tracker): bool
     {
-        if ($user->isSuperUser()) {
-            return true;
-        }
-
-        if ($user->isAdmin((int) $tracker->getGroupId())) {
+        if ($this->isUserAdministratorOfTracker($user, $tracker)) {
             return true;
         }
 
         foreach ($this->timetracking_ugroup_retriever->getReaderIdsForTracker($tracker) as $ugroup_id) {
-            if ($user->isMemberOfUGroup($ugroup_id, (int) $tracker->getGroupId(), $tracker->getId())) {
+            if ($user->isMemberOfUGroup($ugroup_id, (int) $tracker->getGroupId())) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private function isUserAdministratorOfTracker(PFUser $user, Tracker $tracker): bool
+    {
+        return $user->isSuperUser() ||
+            $user->isAdmin($tracker->getGroupId()) ||
+            $tracker->userIsAdmin($user);
     }
 }
