@@ -4,6 +4,9 @@ import CampaignEditCtrl from "../../campaign/campaign-edit-controller.js";
 import "../../campaign/campaign-edit-label.tpl.html";
 import CampaignEditLabelCtrl from "../../campaign/campaign-edit-label-controller.js";
 
+import "../../campaign/campaign-edit-automated.tpl.html";
+import CampaignEditAutomatedCtrl from "../../campaign/campaign-edit-automated-controller.js";
+
 import "../execution-presences.tpl.html";
 import ExecutionPresencesCtrl from "../execution-presences-controller.js";
 
@@ -29,6 +32,7 @@ export default function controller(
     Object.assign(self, {
         openEditCampaignModal,
         openEditCampaignLabelModal,
+        openEditCampaignAutomatedModal,
         showPresencesModal,
         isRealtimeEnabled,
         positiveScore,
@@ -44,8 +48,7 @@ export default function controller(
             controller: CampaignEditCtrl,
             controllerAs: "edit_modal",
             resolve: {
-                editCampaignCallback: (campaign) => {
-                    ExecutionService.updateCampaign(campaign);
+                editCampaignCallback: () => {
                     ExecutionService.synchronizeExecutions(ExecutionService.campaign.id).then(
                         self.handleRemovedExecutionsCallback
                     );
@@ -61,6 +64,19 @@ export default function controller(
             controllerAs: "edit_label_modal",
             resolve: {
                 editCampaignLabelCallback: (campaign) => {
+                    ExecutionService.updateCampaign(campaign);
+                },
+            },
+        });
+    }
+
+    function openEditCampaignAutomatedModal() {
+        return TlpModalService.open({
+            templateUrl: "campaign-edit-automated.tpl.html",
+            controller: CampaignEditAutomatedCtrl,
+            controllerAs: "edit_automated_modal",
+            resolve: {
+                editCampaignAutomatedCallback: (campaign) => {
                     ExecutionService.updateCampaign(campaign);
                 },
             },

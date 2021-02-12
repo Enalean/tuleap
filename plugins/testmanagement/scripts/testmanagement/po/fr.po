@@ -98,6 +98,9 @@ msgstr "Fermer"
 msgid "Comment"
 msgstr "Commentaire"
 
+msgid "Configure automated tests"
+msgstr "Configurer les tests automatisés"
+
 msgid "Create a campaign"
 msgstr "Créer une campagne"
 
@@ -113,9 +116,6 @@ msgstr "Graphe de dépendances de &#34;{{ graph.title }}&#34;"
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 
-msgid "Edit"
-msgstr "Éditer"
-
 msgid "Edit campaign"
 msgstr "Éditer la campagne"
 
@@ -124,9 +124,6 @@ msgstr "Éditer le test"
 
 msgid "Edit this test"
 msgstr "Éditer ce test"
-
-msgid "Edit {{ campaign.label }} campaign"
-msgstr "Édition de la campagne {{ campaign.label }}"
 
 msgid ""
 "Enter the id of the bug you want to link to \"{{ modal.test_summary }}\". "
@@ -271,6 +268,9 @@ msgstr "Sélectionne l'onglet de test suivant dans la liste"
 msgid "Select previous test tab from test list"
 msgstr "Sélectionne l'onglet de test précédent dans la liste"
 
+msgid "Select tests"
+msgstr "Sélectionner les tests"
+
 msgid "Set focus in comment field"
 msgstr "Donner le focus au champ de saisie de commentaire"
 
@@ -309,9 +309,6 @@ msgstr "Raccourcis de test dans Test Management"
 
 msgid "Test summary"
 msgstr "Résumé du test"
-
-msgid "Tests"
-msgstr "Tests"
 
 msgid "The URL to a Jenkins job that will execute automated tests"
 msgstr "L'URL vers un projet Jenkins qui exécutera les tests automatisés"

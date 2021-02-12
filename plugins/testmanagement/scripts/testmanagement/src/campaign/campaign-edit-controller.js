@@ -243,15 +243,8 @@ function CampaignEditCtrl(
             return test.execution.id;
         });
 
-        CampaignService.patchExecutions(campaign.id, definition_ids, execution_ids)
-            .then(() => {
-                return CampaignService.patchCampaign(
-                    campaign.id,
-                    campaign.label,
-                    campaign.job_configuration
-                );
-            })
-            .then((response) => {
+        CampaignService.patchExecutions(campaign.id, definition_ids, execution_ids).then(
+            (response) => {
                 $scope.submitting_changes = false;
 
                 if (editCampaignCallback) {
@@ -259,6 +252,7 @@ function CampaignEditCtrl(
                 }
 
                 modal_instance.tlp_modal.hide();
-            });
+            }
+        );
     }
 }
