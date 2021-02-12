@@ -131,25 +131,29 @@ class AgileDashboard_XMLController extends MVC2_PluginController
     public function importProject(
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         \Psr\Log\LoggerInterface $logger
-    ) {
+    ): void {
         $this->checkUserIsAdmin();
         $project = $this->request->getProject();
         $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($project);
 
-        $xml      = $this->request->get('xml_content');
+        $xml = $this->request->get('xml_content');
+        if (! isset($xml->agiledashboard)) {
+            return;
+        }
+
         $rng_path = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
 
         $partial_element = new SimpleXMLElement((string) $xml->asXml());
         $this->external_field_extractor->extractExternalFieldFromProjectElement($partial_element);
 
         $this->xml_rng_validator->validate($partial_element, $rng_path);
-        $xml = $this->request->get('xml_content')->agiledashboard;
+        $xml_agiledashboard = $xml->agiledashboard;
 
-        $this->importPlannings($xml);
+        $this->importPlannings($xml_agiledashboard);
 
-        $this->explicit_backlog_xml_import->importConfiguration($xml, $project);
+        $this->explicit_backlog_xml_import->importConfiguration($xml_agiledashboard, $project);
         $this->explicit_backlog_xml_import->importContent(
-            $xml,
+            $xml_agiledashboard,
             $project,
             $this->request->getCurrentUser(),
             $artifact_id_mapping,

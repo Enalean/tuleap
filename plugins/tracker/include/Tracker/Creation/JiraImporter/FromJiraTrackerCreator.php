@@ -166,6 +166,8 @@ class FromJiraTrackerCreator
             XML_ParseException $exception
         ) {
             $this->logger->info("Ending import from jira with errors.");
+            $this->logger->info($exception->getMessage());
+            $this->logger->info($exception->getTraceAsString());
             $xml_content = $tracker_xml->asXML();
             if ($xml_content !== false && is_string($xml_content)) {
                 $this->logger->debug("Generated XML content: $xml_content");
