@@ -77,26 +77,6 @@ class ProjectResourceTest extends \RestBase
     /**
      * @depends testPUTTeam
      */
-    public function getToBePlannedElements(): void
-    {
-        $project_id = $this->getProgramProjectId();
-
-        $response = $this->getResponse(
-            $this->client->get('projects/' . $project_id . '/program_backlog'),
-            REST_TestDataBuilder::TEST_USER_1_NAME
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $to_be_planned = $response->json();
-        $this->assertCount(2, $to_be_planned);
-        $this->assertEquals(["tracker_name" => "bug", "artifact_id" => 1, "artifact_title" => "My bug"], $to_be_planned[0]);
-        $this->assertEquals(["tracker_name" => "user story", "artifact_id" => 2, "artifact_title" => "My story"], $to_be_planned[1]);
-    }
-
-    /**
-     * @depends testPUTTeam
-     */
     public function testGetProgramIncrements(): int
     {
         $project_id = $this->getProgramProjectId();
@@ -138,14 +118,89 @@ class ProjectResourceTest extends \RestBase
     {
         $project_id = $this->getProgramProjectId();
 
-        $body = json_encode(['remove' => [['id' => 88888888]]], JSON_THROW_ON_ERROR);
+        $bug_id = $this->getBugIDWithSpecificSummary('My artifact for top backlog manipulation', $project_id);
 
+        $this->patchTopBacklog($project_id, [], [$bug_id]);
+        self::assertEmpty($this->getTopBacklogContent($project_id));
+
+        $this->patchTopBacklog($project_id, [$bug_id], []);
+        self::assertEquals([$bug_id], $this->getTopBacklogContent($project_id));
+
+        $this->patchTopBacklog($project_id, [], [$bug_id]);
+        self::assertEmpty($this->getTopBacklogContent($project_id));
+    }
+
+    private function getBugIDWithSpecificSummary(string $summary, int $program_id): int
+    {
         $response = $this->getResponse(
-            $this->client->patch('projects/' . urlencode((string) $project_id) . '/program_backlog', null, $body)
+            $this->client->get('trackers/' . urlencode((string) $this->tracker_ids[$program_id]['bug']) . '/artifacts?&expert_query=' . urlencode('summary="' . $summary . '"'))
         );
 
         self::assertEquals(200, $response->getStatusCode());
+
+        $artifacts = $response->json();
+
+        self::assertCount(1, $artifacts);
+        self::assertTrue(isset($artifacts[0]['id']));
+
+        return $artifacts[0]['id'];
     }
+
+    /**
+     * @return int[]
+     */
+    private function getTopBacklogContent(int $program_id): array
+    {
+        $response = $this->getResponse(
+            $this->client->get('projects/' . urlencode((string) $program_id) . '/program_backlog')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+
+        $top_backlog_elements    = $response->json();
+        $top_backlog_element_ids = [];
+
+        foreach ($top_backlog_elements as $top_backlog_element) {
+            $top_backlog_element_ids[] = $top_backlog_element['artifact_id'];
+        }
+
+        return $top_backlog_element_ids;
+    }
+
+    /**
+     * @param int[] $to_add
+     * @param int[] $to_remove
+     * @throws \JsonException
+     */
+    private function patchTopBacklog(int $program_id, array $to_add, array $to_remove): void
+    {
+        $response = $this->getResponse(
+            $this->client->patch(
+                'projects/' . urlencode((string) $program_id) . '/program_backlog',
+                null,
+                json_encode(['add' => self::formatTopBacklogElementChange($to_add), 'remove' => self::formatTopBacklogElementChange($to_remove)], JSON_THROW_ON_ERROR)
+            )
+        );
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @param int[] $elements
+     * @return array{id: int}[]
+     *
+     * @psalm-pure
+     */
+    private static function formatTopBacklogElementChange(array $elements): array
+    {
+        $formatted_elements = [];
+
+        foreach ($elements as $element) {
+            $formatted_elements[] = ['id' => $element];
+        }
+
+        return $formatted_elements;
+    }
+
 
     private function getProgramProjectId(): int
     {

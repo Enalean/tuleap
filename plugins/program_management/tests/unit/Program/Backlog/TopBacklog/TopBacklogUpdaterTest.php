@@ -64,7 +64,7 @@ final class TopBacklogUpdaterTest extends TestCase
         };
 
         $update = new TopBacklogUpdater($build_program, $top_backlog_change_processor);
-        $update->updateTopBacklog(102, new TopBacklogChange([10000]), UserTestBuilder::aUser()->build());
+        $update->updateTopBacklog(102, new TopBacklogChange([], [10000]), UserTestBuilder::aUser()->build());
 
         self::assertTrue($top_backlog_change_processor->has_been_called);
     }

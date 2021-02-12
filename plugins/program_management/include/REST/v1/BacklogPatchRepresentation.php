@@ -28,8 +28,14 @@ namespace Tuleap\ProgramManagement\REST\v1;
 final class BacklogPatchRepresentation
 {
     /**
-     * @var array {@type \Tuleap\ProgramManagement\REST\v1\BacklogRemoveRepresentation}{@max 10}
-     * @psalm-var BacklogRemoveRepresentation[]
+     * @var array {@type \Tuleap\ProgramManagement\REST\v1\TopBacklogElementInvolvedInChangeRepresentation}{@max 10}
+     * @psalm-var TopBacklogElementInvolvedInChangeRepresentation[]
+     */
+    public $add;
+
+    /**
+     * @var array {@type \Tuleap\ProgramManagement\REST\v1\TopBacklogElementInvolvedInChangeRepresentation}{@max 10}
+     * @psalm-var TopBacklogElementInvolvedInChangeRepresentation[]
      */
     public $remove;
 }

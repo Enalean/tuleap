@@ -67,28 +67,33 @@ final class ProcessTopBacklogChangeTest extends TestCase
         );
     }
 
-    public function testRemoveOnlyArtifactsUserCanView(): void
+    public function testAddAndRemoveOnlyArtifactsUserCanView(): void
     {
         $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
 
-        $artifact = \Mockery::mock(Artifact::class);
-        $tracker  = \Mockery::mock(\Tracker::class);
+        $artifact_741 = \Mockery::mock(Artifact::class);
+        $artifact_742 = \Mockery::mock(Artifact::class);
+        $tracker      = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(102);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 741)->andReturn($artifact);
+        $artifact_741->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact_742->shouldReceive('getTracker')->andReturn($tracker);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 741)->andReturn($artifact_741);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 742)->andReturn($artifact_742);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 789)->andReturn(null);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 790)->andReturn(null);
 
         $this->dao->shouldReceive('removeArtifactsFromExplicitTopBacklog')->with([741])->once();
+        $this->dao->shouldReceive('addArtifactsToTheExplicitTopBacklog')->with([742])->once();
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new ProgramForManagement(102),
-            new TopBacklogChange([741, 789]),
+            new TopBacklogChange([742, 790], [741, 789]),
             $user
         );
     }
 
-    public function testRemoveOnlyArtifactThatArePartOfTheRequestedProgram(): void
+    public function testAndAndRemoveOnlyArtifactThatArePartOfTheRequestedProgram(): void
     {
         $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
@@ -103,7 +108,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new ProgramForManagement(102),
-            new TopBacklogChange([963]),
+            new TopBacklogChange([964], [963]),
             $user
         );
     }
@@ -117,7 +122,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->expectException(CannotManipulateTopBacklog::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new ProgramForManagement(102),
-            new TopBacklogChange([403]),
+            new TopBacklogChange([], [403]),
             UserTestBuilder::aUser()->build()
         );
     }
