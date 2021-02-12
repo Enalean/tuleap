@@ -18,11 +18,11 @@
  */
 
 import french_translations from "../po/fr_FR.po";
-import { ListPicker, ListPickerOptions } from "./type";
+import type { ListPicker, ListPickerOptions } from "./type";
 import { initGettextSync } from "@tuleap/gettext";
 import * as creator from "./list-picker";
 
-export { ListPicker, ListPickerOptions };
+export type { ListPicker, ListPickerOptions };
 export function createListPicker(
     source_select_box: HTMLSelectElement,
     options: ListPickerOptions

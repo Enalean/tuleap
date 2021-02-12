@@ -20,7 +20,7 @@
 import type { Drekkenov, DrekkenovInitOptions } from "./types";
 import { DrekkenovState } from "./DrekkenovState";
 
-export {
+export type {
     Drekkenov,
     DrekkenovInitOptions,
     DragCallbackParameter,

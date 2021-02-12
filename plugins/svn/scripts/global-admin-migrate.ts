@@ -18,6 +18,8 @@
  *
  */
 
+export {};
+
 document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("migrate-from-core-button");
     if (!(button instanceof HTMLInputElement)) {
