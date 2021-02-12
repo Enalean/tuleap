@@ -47,14 +47,14 @@ class CommentRepresentationBuilder
             $format === \Tracker_Artifact_Changeset_Comment::HTML_COMMENT
             || $format === \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
         ) {
-            return new HTMLOrTextCommentRepresentation($comment->body, $comment->getPurifiedBodyForHTML(), $format);
+            return new HTMLOrTextCommentRepresentation($comment->body, $comment->getPurifiedBodyForHTML(), $format, null);
         }
         if ($format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
             $interpreted = $this->interpreter->getInterpretedContentWithReferences(
                 $comment->body,
                 (int) $comment->changeset->getArtifact()->getTracker()->getGroupId()
             );
-            return new CommonMarkCommentRepresentation($interpreted, $comment->body);
+            return new CommonMarkCommentRepresentation($interpreted, $comment->body, null);
         }
 
         throw new InvalidCommentFormatException($format);

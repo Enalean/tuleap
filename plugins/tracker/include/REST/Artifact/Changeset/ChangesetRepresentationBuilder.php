@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -39,15 +40,21 @@ class ChangesetRepresentationBuilder
      * @var CommentRepresentationBuilder
      */
     private $comment_builder;
+    /**
+     * @var PermissionChecker
+     */
+    private $comment_permission_checker;
 
     public function __construct(
         \UserManager $user_manager,
         \Tracker_FormElementFactory $form_element_factory,
-        CommentRepresentationBuilder $comment_builder
+        CommentRepresentationBuilder $comment_builder,
+        PermissionChecker $comment_permission_checker
     ) {
-        $this->user_manager         = $user_manager;
-        $this->form_element_factory = $form_element_factory;
-        $this->comment_builder      = $comment_builder;
+        $this->user_manager               = $user_manager;
+        $this->form_element_factory       = $form_element_factory;
+        $this->comment_builder            = $comment_builder;
+        $this->comment_permission_checker = $comment_permission_checker;
     }
 
     /**
@@ -58,7 +65,7 @@ class ChangesetRepresentationBuilder
         string $filter_mode,
         \PFUser $current_user
     ): ?ChangesetRepresentation {
-        $last_comment = $this->getCommentOrDefaultWithNull($changeset);
+        $last_comment = $this->getCommentOrDefaultWithNull($changeset, $current_user);
         if ($filter_mode === \Tracker_Artifact_Changeset::FIELDS_COMMENTS && $last_comment->hasEmptyBody()) {
             return null;
         }
@@ -91,7 +98,7 @@ class ChangesetRepresentationBuilder
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $user
     ): ChangesetRepresentation {
-        $last_comment = $this->getCommentOrDefaultWithNull($changeset);
+        $last_comment = $this->getCommentOrDefaultWithNullWithoutPermission($changeset);
         $field_values = $this->getRESTFieldValuesWithoutPermissions($changeset, $user);
         return $this->buildFromFieldValues($changeset, $last_comment, $field_values);
     }
@@ -125,7 +132,6 @@ class ChangesetRepresentationBuilder
         $last_modified_by          = ($comment_submitted_by_user !== null)
             ? MinimalUserRepresentation::build($comment_submitted_by_user)
             : null;
-
         return new ChangesetRepresentation(
             (int) $changeset->getId(),
             $submitted_by_id,
@@ -139,8 +145,23 @@ class ChangesetRepresentationBuilder
         );
     }
 
-    private function getCommentOrDefaultWithNull(\Tracker_Artifact_Changeset $changeset): \Tracker_Artifact_Changeset_Comment
+    private function getCommentOrDefaultWithNullWithoutPermission(\Tracker_Artifact_Changeset $changeset): \Tracker_Artifact_Changeset_Comment
     {
         return $changeset->getComment() ?: new \Tracker_Artifact_Changeset_CommentNull($changeset);
+    }
+
+    private function getCommentOrDefaultWithNull(\Tracker_Artifact_Changeset $changeset, \PFUser $user): \Tracker_Artifact_Changeset_Comment
+    {
+        $comment = $changeset->getComment();
+
+        if ($comment === null) {
+            return new \Tracker_Artifact_Changeset_CommentNull($changeset);
+        }
+
+        if (! $this->comment_permission_checker->userCanSeeComment($user, $comment)) {
+            return new \Tracker_Artifact_Changeset_CommentNull($changeset);
+        }
+
+        return $comment;
     }
 }

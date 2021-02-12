@@ -32,6 +32,8 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
@@ -198,7 +200,8 @@ class ReportsResource extends AuthenticatedResource
                 $form_element_factory,
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
-                )
+                ),
+                new PermissionChecker(new TrackerPrivateCommentUGroupPermissionDao())
             )
         );
 

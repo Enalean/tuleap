@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
+
 /**
  * @psalm-immutable
  */
@@ -42,10 +44,19 @@ final class HTMLOrTextCommentRepresentation implements CommentRepresentation
      */
     public $format;
 
-    public function __construct(string $body, string $post_processed_body, string $format)
+    /**
+     * @var MinimalUserGroupRepresentation[] | null
+     */
+    public $ugroups;
+
+    /**
+     * @param MinimalUserGroupRepresentation[]|null $ugroups
+     */
+    public function __construct(string $body, string $post_processed_body, string $format, ?array $ugroups)
     {
         $this->body                = $body;
         $this->post_processed_body = $post_processed_body;
         $this->format              = $format;
+        $this->ugroups             = $ugroups;
     }
 }

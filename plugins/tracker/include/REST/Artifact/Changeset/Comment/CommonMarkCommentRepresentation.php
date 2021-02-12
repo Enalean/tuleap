@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
+
 /**
  * @psalm-immutable
  */
@@ -48,10 +50,19 @@ final class CommonMarkCommentRepresentation implements CommentRepresentation
      */
     public $commonmark;
 
-    public function __construct(string $body, string $commonmark)
+    /**
+     * @var MinimalUserGroupRepresentation[] | null
+     */
+    public $ugroups;
+
+    /**
+     * @param MinimalUserGroupRepresentation[]|null $ugroups
+     */
+    public function __construct(string $body, string $commonmark, ?array $ugroups)
     {
         $this->body                = $body;
         $this->post_processed_body = $body;
         $this->commonmark          = $commonmark;
+        $this->ugroups             = $ugroups;
     }
 }

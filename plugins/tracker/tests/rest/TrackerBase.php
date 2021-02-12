@@ -39,6 +39,7 @@ class TrackerBase extends RestBase
     private const TRACKER_FILE_URL_PROJECT_NAME     = 'test-tracker-file-url';
     private const REST_XML_API_PROJECT_NAME         = 'rest-xml-api';
     private const COMPUTED_VALUE_PROJECT_NAME       = 'computed-fields-default-value';
+    public const PRIVATE_COMMENT_PROJECT_NAME       = 'tracker-private-comment';
 
     public const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
     public const BASE_TRACKER_SHORTNAME                           = 'base';
@@ -56,6 +57,7 @@ class TrackerBase extends RestBase
     private const TRACKER_FILE_URL_SHORTNAME                      = 'image';
     private const REST_XML_API_TRACKER_SHORTNAME                  = 'epic';
     private const COMPUTED_VALUE_TRACKER_SHORTNAME                = 'ComputedFieldsDefaultValues';
+    private const PRIVATE_COMMENT_TRACKER_SHORTNAME               = 'bug';
 
     protected $tracker_administrator_project_id;
     protected $tracker_workflows_project_id;
@@ -75,13 +77,22 @@ class TrackerBase extends RestBase
     protected $computed_value_tracker_id;
     protected $tracker_artifacts_tracker_id;
 
-    protected $base_artifact_ids   = [];
-    protected $delete_artifact_ids = [];
+    protected $base_artifact_ids          = [];
+    protected $delete_artifact_ids        = [];
+    private $private_comment_artifact_ids = [];
 
     /**
      * @var int
      */
     public $tracker_with_timeframe_semantic_id;
+    /**
+     * @var mixed
+     */
+    private $private_comment_tracker_id;
+    /**
+     * @var int
+     */
+    protected $private_comment_artifact_id;
 
     public function setUp(): void
     {
@@ -97,6 +108,7 @@ class TrackerBase extends RestBase
         $tracker_artifacts_project_id           = $this->getProjectId(self::TRACKER_ARTIFACTS_PROJECT_NAME);
         $this->rest_xml_api_project_id          = $this->getProjectId(self::REST_XML_API_PROJECT_NAME);
         $computed_value_project_id              = $this->getProjectId(self::COMPUTED_VALUE_PROJECT_NAME);
+        $private_comment_project_id             = $this->getProjectId(self::PRIVATE_COMMENT_PROJECT_NAME);
 
         $this->move_tracker_id                           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
         $this->base_tracker_id                           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
@@ -112,11 +124,22 @@ class TrackerBase extends RestBase
         $this->rest_xml_api_tracker_id                   = $this->tracker_ids[$this->rest_xml_api_project_id][self::REST_XML_API_TRACKER_SHORTNAME];
         $this->computed_value_tracker_id                 = $this->tracker_ids[$computed_value_project_id][self::COMPUTED_VALUE_TRACKER_SHORTNAME];
         $this->tracker_artifacts_tracker_id              = $this->tracker_ids[$tracker_artifacts_project_id][self::TRACKER_ARTIFACTS_TRACKER_SHORTNAME];
+        $this->private_comment_tracker_id                = $this->tracker_ids[$private_comment_project_id][self::PRIVATE_COMMENT_TRACKER_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
+        $this->getPrivateCommentArtifactIds();
+        $this->private_comment_artifact_id = end($this->private_comment_artifact_ids);
 
         $this->initUserId(DataBuilder::USER_TESTER_NAME);
+    }
+
+    private function getPrivateCommentArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->private_comment_tracker_id,
+            $this->private_comment_artifact_ids
+        );
     }
 
     private function getBaseArtifactIds()
