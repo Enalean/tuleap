@@ -6,6 +6,12 @@
             "po": "scripts/burndown-chart/po"
         }
     },
+    "gettext-ts": {
+        "rich-text-editor": {
+            "src": "scripts/lib/rich-text-editor/src",
+            "po": "scripts/lib/rich-text-editor/po"
+        }
+    },
     "gettext-vue": {
         "colorpicker": {
             "src": "scripts/colorpicker",
