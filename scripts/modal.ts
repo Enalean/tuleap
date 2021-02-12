@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-import { post } from "@tuleap/tlp-fetch";
+import type { post } from "@tuleap/tlp-fetch";
 
 export function contactSupportModalShown(mount_point: Document, tlp_post: typeof post): () => void {
     return (): void => {

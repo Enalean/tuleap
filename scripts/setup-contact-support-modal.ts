@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { get } from "tlp";
+import type { get } from "tlp";
 import { sanitize } from "dompurify";
 
 type ShowModalFn = (mount_point: Document, modal_element: Element) => void;

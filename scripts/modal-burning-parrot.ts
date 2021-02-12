@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { createModal, get, Modal, post } from "tlp";
+import type { Modal } from "tlp";
+import { createModal, get, post } from "tlp";
 import { setupContactSupportModalBurningParrot } from "./setup-contact-support-modal";
 import { contactSupportModalShown } from "./modal";
 
