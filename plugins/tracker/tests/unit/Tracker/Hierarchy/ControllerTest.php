@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -159,7 +158,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            self::buildEventDispatcher(),
             $this->artifact_links_usage_dao
         );
         return $controller->buildPresenter();
@@ -181,7 +179,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            self::buildEventDispatcher(),
             $this->artifact_links_usage_dao
         );
         $controller->update();
@@ -203,7 +200,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            self::buildEventDispatcher(),
             $this->artifact_links_usage_dao
         );
         $controller->update();
@@ -225,7 +221,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            self::buildEventDispatcher(),
             $this->artifact_links_usage_dao
         );
 
@@ -247,7 +242,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            self::buildEventDispatcher(),
             $this->artifact_links_usage_dao
         );
         $controller->update();
@@ -262,7 +256,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            self::buildEventDispatcher(),
             $this->artifact_links_usage_dao
         );
         $this->dao->shouldReceive('updateChildren')->once();
@@ -287,16 +280,5 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
         $this->request->shouldReceive('get')->with('children')->andReturn($children_ids);
         $this->request->shouldReceive('validArray')->andReturnTrue();
         $this->request->shouldReceive('exist')->with('children')->andReturnTrue();
-    }
-
-    private static function buildEventDispatcher(): EventDispatcherInterface
-    {
-        return new class implements EventDispatcherInterface
-        {
-            public function dispatch(object $event)
-            {
-                return $event;
-            }
-        };
     }
 }

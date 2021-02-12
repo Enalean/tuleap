@@ -19,7 +19,6 @@
  */
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
-use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
 
 class Tracker_Hierarchy_HierarchicalTrackerFactory
 {
@@ -32,19 +31,13 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
      * @var HierarchyDAO
      */
     private $dao;
-    /**
-     * @var \Psr\EventDispatcher\EventDispatcherInterface
-     */
-    private $event_dispatcher;
 
     public function __construct(
         TrackerFactory $tracker_factory,
-        HierarchyDAO $dao,
-        \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher
+        HierarchyDAO $dao
     ) {
-        $this->tracker_factory  = $tracker_factory;
-        $this->dao              = $dao;
-        $this->event_dispatcher = $event_dispatcher;
+        $this->tracker_factory = $tracker_factory;
+        $this->dao             = $dao;
     }
 
     /**
@@ -79,7 +72,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
     public static function instance()
     {
         if (! self::$instance) {
-            self::$instance = new Tracker_Hierarchy_HierarchicalTrackerFactory(TrackerFactory::instance(), new HierarchyDAO(), EventManager::instance());
+            self::$instance = new Tracker_Hierarchy_HierarchicalTrackerFactory(TrackerFactory::instance(), new HierarchyDAO());
         }
         return self::$instance;
     }
@@ -116,22 +109,9 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
         $ids_to_remove    = $this->dao->searchAncestorIds($tracker->getId());
         $ids_to_remove[]  = $tracker->getId();
 
-        foreach ($this->removeIdsFromTrackerList($project_trackers, $ids_to_remove) as $project_tracker) {
-            if ($this->isTrackerHierarchyDelegatedToAnotherResource($project_tracker)) {
-                $ids_to_remove[] = $project_tracker->getId();
-            }
-        }
-
         $project_trackers = $this->removeIdsFromTrackerList($project_trackers, $ids_to_remove);
 
         return $project_trackers;
-    }
-
-    private function isTrackerHierarchyDelegatedToAnotherResource(Tracker $tracker): bool
-    {
-        $tracker_hierarchy_delegation = new TrackerHierarchyDelegation($tracker);
-        $this->event_dispatcher->dispatch($tracker_hierarchy_delegation);
-        return $tracker_hierarchy_delegation->getResourceNameTrackerHierarchyHasBeenDelegatedTo() !== null;
     }
 
     private function getProjectTrackers(Project $project)

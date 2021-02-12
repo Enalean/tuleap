@@ -3280,14 +3280,6 @@ msgstr[1] ""
 "déclencheurs. Il ne sera pas possible de les enlever de la hiérarchie tant "
 "que des déclencheurs les impliquent."
 
-msgid ""
-"The tracker %s is involved in a hierarchy managed by %s. You will not be "
-"able to change the hierarchy from this administration panel."
-msgstr ""
-"L'outil de suivi %s est impliqué dans une hiérarchie gérée par %s. Vous ne "
-"pouvez pas modifier la hiérarchie de cet outil de suivi depuis cette section "
-"de l'administration."
-
 #, php-format
 msgid ""
 "The tracker '%1$s' cannot be created. Use '--update' to update an existing "
@@ -3346,9 +3338,6 @@ msgid ""
 msgstr ""
 "L'outil de suivi n'a pas de champ \"start_date\" de type Date ou bien vous "
 "n'avez pas la permission d'y accéder."
-
-msgid "The tracker hierarchy cannot be defined."
-msgstr "La hiérarchie entre outils de suivi ne peut être définie."
 
 #, php-format
 msgid "The tracker name %s is already used. Please use another one."

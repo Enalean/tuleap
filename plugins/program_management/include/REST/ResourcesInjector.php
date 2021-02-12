@@ -26,14 +26,12 @@ use Luracast\Restler\Restler;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\ProgramManagement\REST\v1\ProgramIncrementResource;
 use Tuleap\ProgramManagement\REST\v1\ProjectResource;
-use Tuleap\ProgramManagement\REST\v1\ProgramManagementResource;
 
 class ResourcesInjector
 {
     public function populate(Restler $restler): void
     {
         $restler->addAPIClass(ProjectResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(ProgramManagementResource::class, ProgramManagementResource::ROUTE);
         $restler->addAPIClass(ProgramIncrementResource::class, ProgramIncrementResource::ROUTE);
     }
 }
