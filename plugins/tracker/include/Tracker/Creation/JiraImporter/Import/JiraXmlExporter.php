@@ -339,7 +339,6 @@ class JiraXmlExporter
             ),
             new XmlReportDoneIssuesExporter(
                 $default_criteria_exporter,
-                $cdata_factory,
                 $report_table_exporter,
             ),
             new XmlReportCreatedRecentlyExporter($tql_report_exporter),

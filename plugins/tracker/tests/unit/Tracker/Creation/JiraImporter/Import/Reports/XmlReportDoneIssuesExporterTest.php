@@ -141,7 +141,6 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
     {
         $report_export = new XmlReportDoneIssuesExporter(
             $this->default_criteria_exporter,
-            $this->cdata_factory,
             $this->report_table_exporter,
         );
 
@@ -167,7 +166,6 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
 
         $report_export = new XmlReportDoneIssuesExporter(
             $this->default_criteria_exporter,
-            $this->cdata_factory,
             $this->report_table_exporter,
         );
 
@@ -197,7 +195,6 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
 
         $report_export = new XmlReportDoneIssuesExporter(
             $this->default_criteria_exporter,
-            $this->cdata_factory,
             $this->report_table_exporter,
         );
 
