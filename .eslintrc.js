@@ -225,5 +225,11 @@ module.exports = {
                 "no-only-tests/no-only-tests": "error",
             },
         },
+        {
+            files: ["vite.config.ts"],
+            rules: {
+                "import/no-extraneous-dependencies": "off", // Vite is installed globally
+            },
+        },
     ],
 };

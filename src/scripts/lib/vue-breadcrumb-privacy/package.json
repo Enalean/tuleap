@@ -5,8 +5,15 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "main": "dist/breadcrumb-privacy.js",
-  "types": "dist/scripts/lib/vue-breadcrumb-privacy/src/index.d.ts",
+  "module": "dist/vue-breadcrumb-privacy.es.js",
+  "main": "dist/vue-breadcrumb-privacy.umd.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-breadcrumb-privacy.es.js",
+      "require": "./dist/vue-breadcrumb-privacy.umd.js"
+    }
+  },
   "dependencies": {
     "@tuleap/tlp": "file:../../../themes/tlp"
   },
@@ -23,8 +30,8 @@
     "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "build": "$npm_package_config_bin/concurrently \"rm -rf types/ && $npm_package_config_bin/tsc\" \"$npm_package_config_bin/vite build\"",
+    "watch": "$npm_package_config_bin/concurrently \"rm -rf types/ && $npm_package_config_bin/tsc -w\" \"$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.ts\" --ext ts,vue --exec '$npm_package_config_bin/vite build --mode development --minify false'\"",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
