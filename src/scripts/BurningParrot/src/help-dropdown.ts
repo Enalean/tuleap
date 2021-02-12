@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { createDropdown, createModal, Modal, Dropdown, patch } from "tlp";
+import type { Modal, Dropdown } from "tlp";
+import { createDropdown, createModal, patch } from "tlp";
 import { manageUserPreferences } from "../../user/user-patch-release-note-preference";
 
 export function initHelpDropdown(): void {

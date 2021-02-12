@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
+import type { State } from "./type";
 
 export function hideClosedItems(state: State): void {
     state.are_closed_items_displayed = false;

@@ -19,9 +19,9 @@
 
 import * as actions from "./error-actions";
 import * as mutations from "./error-mutations";
-import { ErrorState } from "./type";
-import { Module } from "vuex";
-import { RootState } from "../type";
+import type { ErrorState } from "./type";
+import type { Module } from "vuex";
+import type { RootState } from "../type";
 
 const error_module_default: Module<ErrorState, RootState> = {
     namespaced: true,

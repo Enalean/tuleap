@@ -34,7 +34,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import { ColumnDefinition, Swimlane } from "../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../type";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import DropContainerCell from "./Cell/DropContainerCell.vue";

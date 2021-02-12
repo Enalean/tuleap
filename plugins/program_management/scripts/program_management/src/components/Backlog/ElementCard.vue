@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
+import type { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
 import { userHasAccessibilityMode } from "../../configuration";
 
 @Component({})

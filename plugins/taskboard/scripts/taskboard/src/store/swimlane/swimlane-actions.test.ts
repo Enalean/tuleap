@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../../type";
+import type { Card, Swimlane } from "../../type";
 import * as tlp from "tlp";
-import { RecursiveGetInit } from "tlp";
+import type { RecursiveGetInit } from "tlp";
 import * as actions from "./swimlane-actions";
 import { loadChildrenCards } from "./swimlane-actions";
-import { ActionContext } from "vuex";
-import { RefreshCardActionPayload, SwimlaneState } from "./type";
+import type { ActionContext } from "vuex";
+import type { RefreshCardActionPayload, SwimlaneState } from "./type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { RootState } from "../type";
+import type { RootState } from "../type";
 
 jest.mock("tlp");
 

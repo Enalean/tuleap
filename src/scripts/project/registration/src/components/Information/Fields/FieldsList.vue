@@ -52,7 +52,7 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { FieldData } from "../../../type";
+import type { FieldData } from "../../../type";
 import EventBus from "../../../helpers/event-bus";
 
 @Component

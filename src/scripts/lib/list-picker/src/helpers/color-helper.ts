@@ -18,7 +18,7 @@
  *
  */
 
-import { LegacyColorRGB } from "../type";
+import type { LegacyColorRGB } from "../type";
 
 export function isColorBad(color_value: string): boolean {
     return color_value.match(/^#[a-f0-9]{6}$/i) !== null;

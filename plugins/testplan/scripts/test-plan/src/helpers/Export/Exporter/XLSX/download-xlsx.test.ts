@@ -26,7 +26,7 @@ import { downloadXLSX } from "./download-xlsx";
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import * as xlsx from "xlsx";
 import * as report_transformer from "./transform-report-to-xlsx-sheet";
-import { ExportReport } from "../../Report/report-creator";
+import type { ExportReport } from "../../Report/report-creator";
 
 describe("download-xlsx", () => {
     it("starts the download of an XLSX document", () => {

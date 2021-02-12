@@ -18,9 +18,10 @@
  */
 
 import StepOne from "./StepOne.vue";
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { ProjectTemplate, State, Tracker } from "../../../store/type";
+import type { ProjectTemplate, State, Tracker } from "../../../store/type";
 import { createTrackerCreationLocalVue } from "../../../helpers/local-vue-for-tests";
 
 describe("StepOne", () => {

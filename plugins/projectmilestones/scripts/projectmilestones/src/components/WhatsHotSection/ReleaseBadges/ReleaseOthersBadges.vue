@@ -61,7 +61,7 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
 import { State } from "vuex-class";
 

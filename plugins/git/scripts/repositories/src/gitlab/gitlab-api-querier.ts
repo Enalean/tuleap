@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { GitLabCredentials } from "../type";
+import type { GitLabCredentials } from "../type";
 import { get } from "tlp";
 
 export { getAsyncGitlabRepositoryList };

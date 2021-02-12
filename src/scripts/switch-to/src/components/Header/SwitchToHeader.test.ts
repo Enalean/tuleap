@@ -20,9 +20,9 @@
 import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
-import { State } from "../../store/type";
+import type { State } from "../../store/type";
 import SwitchToHeader from "./SwitchToHeader.vue";
-import { SearchForm } from "../../type";
+import type { SearchForm } from "../../type";
 
 describe("SwitchToHeader", () => {
     it("Does not display the button if search is not available (user is restricted)", async () => {

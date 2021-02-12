@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickerItem, ListPickerItemMap } from "../type";
-import { ListItemMapBuilder } from "./ListItemMapBuilder";
+import type { ListPickerItem, ListPickerItemMap } from "../type";
+import type { ListItemMapBuilder } from "./ListItemMapBuilder";
 
 export class ItemsMapManager {
     private items_map!: ListPickerItemMap;

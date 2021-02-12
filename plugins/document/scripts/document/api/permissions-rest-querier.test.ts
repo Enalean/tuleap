@@ -27,7 +27,7 @@ import {
     putLinkPermissions,
     putWikiPermissions,
 } from "./permissions-rest-querier";
-import { Permissions } from "../type";
+import type { Permissions } from "../type";
 
 jest.mock("tlp");
 

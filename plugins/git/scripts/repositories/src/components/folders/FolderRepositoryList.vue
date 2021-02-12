@@ -29,7 +29,7 @@ import CollapsibleFolder from "./CollapsibleFolder.vue";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import { Getter } from "vuex-class";
-import { Folder } from "../../type";
+import type { Folder } from "../../type";
 
 @Component({ components: { CollapsibleFolder } })
 export default class FolderRepositoryList extends Vue {

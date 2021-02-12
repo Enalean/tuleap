@@ -18,11 +18,12 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
-import { Store } from "vuex-mock-store";
+import type { Store } from "vuex-mock-store";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
-import { State } from "../../store/type";
+import type { State } from "../../store/type";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 
 describe("ProjectInformationFooter", () => {

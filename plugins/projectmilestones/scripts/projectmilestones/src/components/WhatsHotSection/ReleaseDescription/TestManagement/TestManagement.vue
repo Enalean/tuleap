@@ -29,9 +29,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../../type";
+import type { MilestoneData } from "../../../../type";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
-import { DataPieChart } from "../../../../../../../../../src/scripts/charts-builders/type";
+import type { DataPieChart } from "../../../../../../../../../src/scripts/charts-builders/type";
 import { createPieChart } from "../../../../chart_builder/pie_chart_drawer/pie-chart-drawer";
 
 @Component({})

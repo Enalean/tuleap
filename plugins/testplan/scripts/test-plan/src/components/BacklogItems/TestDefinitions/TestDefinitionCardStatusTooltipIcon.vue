@@ -36,7 +36,7 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { TestDefinition } from "../../../type";
+import type { TestDefinition } from "../../../type";
 import { State } from "vuex-class";
 
 @Component

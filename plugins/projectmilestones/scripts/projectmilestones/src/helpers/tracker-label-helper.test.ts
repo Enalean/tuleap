@@ -18,7 +18,7 @@
  */
 
 import { getTrackerSubmilestoneLabel } from "./tracker-label-helper";
-import {
+import type {
     MilestoneData,
     MilestoneResourcesData,
     TrackerProjectLabel,

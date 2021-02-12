@@ -18,7 +18,7 @@
  *
  */
 
-import { Vue } from "vue/types/vue";
+import type { Vue } from "vue/types/vue";
 import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";

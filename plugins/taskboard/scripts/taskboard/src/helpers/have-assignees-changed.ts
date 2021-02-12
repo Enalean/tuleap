@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { User } from "../type";
+import type { User } from "../type";
 
 export function haveAssigneesChanged(assignees: User[], new_assignees: User[]): boolean {
     if (assignees.length !== new_assignees.length) {

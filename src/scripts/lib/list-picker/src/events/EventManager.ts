@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { DropdownManager } from "../dropdown/DropdownManager";
-import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
-import { SelectionManager } from "../type";
-import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
-import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
+import type { DropdownManager } from "../dropdown/DropdownManager";
+import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
+import type { SelectionManager } from "../type";
+import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
+import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 import {
     isArrowDown,
     isArrowUp,
@@ -30,7 +30,7 @@ import {
     isShiftKey,
     isTabKey,
 } from "../helpers/keys-helper";
-import { FieldFocusManager } from "../navigation/FieldFocusManager";
+import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 export class EventManager {
     private escape_key_handler!: (event: Event) => void;

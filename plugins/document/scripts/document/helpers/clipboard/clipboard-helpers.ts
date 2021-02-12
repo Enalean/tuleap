@@ -18,7 +18,7 @@
  *
  */
 
-import { Item } from "../../type";
+import type { Item } from "../../type";
 
 export function isItemDestinationIntoItself(
     folder_content: Array<Item>,

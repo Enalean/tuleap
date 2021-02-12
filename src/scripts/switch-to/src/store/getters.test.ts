@@ -18,8 +18,8 @@
  */
 
 import * as getters from "./getters";
-import { State } from "./type";
-import { Project, UserHistoryEntry } from "../type";
+import type { State } from "./type";
+import type { Project, UserHistoryEntry } from "../type";
 
 describe("SwitchTo getters", () => {
     describe("filtered_projects", () => {

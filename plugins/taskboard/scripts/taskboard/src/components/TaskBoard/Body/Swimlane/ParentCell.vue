@@ -35,7 +35,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Swimlane } from "../../../../type";
+import type { Swimlane } from "../../../../type";
 import NoMappingMessage from "./Header/NoMappingMessage.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";

@@ -36,7 +36,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { is_testplan_activated } from "../../../helpers/test-management-helper";
 
 @Component

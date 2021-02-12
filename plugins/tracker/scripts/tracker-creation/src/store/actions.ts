@@ -19,8 +19,8 @@
  */
 
 import { post } from "tlp";
-import { Credentials, ProjectList, ProjectTrackerPayload, TrackerList, State } from "./type";
-import { ActionContext } from "vuex";
+import type { Credentials, ProjectList, ProjectTrackerPayload, TrackerList, State } from "./type";
+import type { ActionContext } from "vuex";
 
 export async function getJiraProjectList(
     context: ActionContext<State, State>,

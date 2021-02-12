@@ -100,6 +100,7 @@ module.exports = {
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/class-literal-property-style": "error",
         "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
+        "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-non-null-assertion": "error",

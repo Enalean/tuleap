@@ -19,13 +19,14 @@
  */
 
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
-import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TemplateCardContent from "../TemplateCard.vue";
 import CompanyTemplateList from "./CompanyTemplateList.vue";
-import { RootState } from "../../../store/type";
-import { TemplateData } from "../../../type";
-import { ConfigurationState } from "../../../store/configuration";
+import type { RootState } from "../../../store/type";
+import type { TemplateData } from "../../../type";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("CompanyTemplateList", () => {
     let local_vue = createLocalVue();

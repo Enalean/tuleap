@@ -18,8 +18,8 @@
  *
  */
 import * as getters from "./getters";
-import { State } from "./type";
-import { TemplateData } from "../type";
+import type { State } from "./type";
+import type { TemplateData } from "../type";
 
 describe("getters", () => {
     describe("is_template_selected", () => {

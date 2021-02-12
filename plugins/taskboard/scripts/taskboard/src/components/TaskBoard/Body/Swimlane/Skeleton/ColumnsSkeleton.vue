@@ -30,7 +30,7 @@
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import SkeletonMixin from "./skeleton-mixin";
 import CardSkeleton from "./CardSkeleton.vue";
-import { ColumnDefinition } from "../../../../../type";
+import type { ColumnDefinition } from "../../../../../type";
 
 @Component({
     components: { CardSkeleton },

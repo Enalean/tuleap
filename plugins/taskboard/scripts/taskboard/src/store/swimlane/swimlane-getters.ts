@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SwimlaneState } from "./type";
-import { Card, ColumnDefinition, Swimlane } from "../../type";
+import type { SwimlaneState } from "./type";
+import type { Card, ColumnDefinition, Swimlane } from "../../type";
 import { isStatusAcceptedByColumn } from "../../helpers/list-value-to-column-mapper";
 import { getColumnOfCard } from "../../helpers/list-value-to-column-mapper";
-import { RootState } from "../type";
+import type { RootState } from "../type";
 import { findSwimlane } from "./swimlane-helpers";
 
 export * from "./card/card-getters";

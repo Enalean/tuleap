@@ -89,7 +89,7 @@ import UserProjectList from "./UserProjectList.vue";
 import { Component } from "vue-property-decorator";
 import SvgTemplate from "./SvgTemplate.vue";
 import { getProjectUserIsAdminOf } from "../../../api/rest-querier";
-import { TemplateData } from "../../../type";
+import type { TemplateData } from "../../../type";
 import TemplateCard from "../TemplateCard.vue";
 
 @Component({

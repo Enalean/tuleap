@@ -24,7 +24,7 @@ import {
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
 import { ItemsMapManager } from "../items/ItemsMapManager";
-import { GettextProvider } from "@tuleap/gettext";
+import type { GettextProvider } from "@tuleap/gettext";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("DropDownContentRenderer", () => {

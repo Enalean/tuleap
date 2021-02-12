@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CampaignState } from "./type";
-import { Campaign } from "../../type";
+import type { CampaignState } from "./type";
+import type { Campaign } from "../../type";
 import {
     addCampaigns,
     addNewCampaign,

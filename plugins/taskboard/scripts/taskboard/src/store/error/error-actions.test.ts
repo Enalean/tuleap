@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
 import { FetchWrapperError } from "tlp";
 import * as actions from "./error-actions";
-import { ErrorState } from "./type";
+import type { ErrorState } from "./type";
 
 describe("Error modules actions", () => {
     let context: ActionContext<ErrorState, RootState>;

@@ -28,15 +28,15 @@ import {
     getMilestonesContent,
 } from "../api/rest-querier";
 
-import {
+import type {
     MilestoneContent,
     MilestoneData,
     State,
     TestManagementCampaign,
     TrackerNumberArtifacts,
 } from "../type";
-import { FetchWrapperError } from "tlp";
-import { ActionContext } from "vuex";
+import type { FetchWrapperError } from "tlp";
+import type { ActionContext } from "vuex";
 import { getSortedSprints } from "../helpers/milestones-sprints-helper";
 
 async function getCurrentMilestones(context: ActionContext<State, State>): Promise<void> {

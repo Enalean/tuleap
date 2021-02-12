@@ -1,5 +1,5 @@
 declare module "unist-util-remove" {
-    import { Node } from "unist";
+    import type { Node } from "unist";
 
     interface Options {
         readonly cascade?: boolean;

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ColumnDefinition } from "../../type";
-import { ColumnState } from "./type";
+import type { ColumnDefinition } from "../../type";
+import type { ColumnState } from "./type";
 
 export function collapseColumn(state: ColumnState, column: ColumnDefinition): void {
     findColumn(state, column).is_collapsed = true;

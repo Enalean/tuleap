@@ -18,7 +18,8 @@
  */
 
 import * as tlp from "tlp";
-import { getProgramIncrements, ProgramIncrement } from "./program-increment-retriever";
+import type { ProgramIncrement } from "./program-increment-retriever";
+import { getProgramIncrements } from "./program-increment-retriever";
 
 jest.mock("tlp");
 

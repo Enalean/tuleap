@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../../type";
+import type { ColumnDefinition } from "../../../../type";
 import { namespace } from "vuex-class";
 
 const column_store = namespace("column");

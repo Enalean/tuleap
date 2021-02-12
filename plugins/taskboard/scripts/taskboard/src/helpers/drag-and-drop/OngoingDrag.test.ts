@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AfterDropEventSource, DragStartContext, DrekkenovInitOptions } from "./types";
+import type { AfterDropEventSource, DragStartContext, DrekkenovInitOptions } from "./types";
 import { OngoingDrag } from "./OngoingDrag";
 import { HIDE_CSS_CLASS } from "./constants";
 

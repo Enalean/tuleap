@@ -17,7 +17,8 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createProjectRegistrationLocalVue } from "../helpers/local-vue-for-tests";
 

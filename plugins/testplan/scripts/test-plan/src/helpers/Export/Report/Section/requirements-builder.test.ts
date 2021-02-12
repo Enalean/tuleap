@@ -19,12 +19,12 @@
 
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
 import { DateCell, EmptyCell, NumberCell, TextCell } from "../report-cells";
-import { BacklogItem, TestDefinition } from "../../../../type";
+import type { BacklogItem, TestDefinition } from "../../../../type";
 import { buildRequirementsSection } from "./requirements-builder";
-import { Tracker } from "./Tracker/tracker";
+import type { Tracker } from "./Tracker/tracker";
 import * as artifacts_retriever from "./Tracker/artifacts-retriever";
 import * as trackers_retriever from "./Tracker/trackers-retriever";
-import { Artifact, TrackerFieldValue } from "./Tracker/artifact";
+import type { Artifact, TrackerFieldValue } from "./Tracker/artifact";
 
 describe("Build requirements section", () => {
     it("builds section", async () => {

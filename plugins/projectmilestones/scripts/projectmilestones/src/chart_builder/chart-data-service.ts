@@ -18,9 +18,9 @@
  */
 
 import { getFormattedDates } from "../../../../../../src/scripts/charts-builders/chart-dates-service";
-import { PointsWithDate } from "../../../../../../src/scripts/charts-builders/type";
-import { PointsNotNullWithDate } from "../type";
-import {
+import type { PointsWithDate } from "../../../../../../src/scripts/charts-builders/type";
+import type { PointsNotNullWithDate } from "../type";
+import type {
     PointsNotNullWithDateForGenericBurnup,
     PointsWithDateForGenericBurnup,
 } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";

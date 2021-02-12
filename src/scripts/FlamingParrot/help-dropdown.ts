@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { Dropdown, createDropdown } from "../../themes/tlp/src/js/dropdowns";
+import type { Dropdown } from "../../themes/tlp/src/js/dropdowns";
+import { createDropdown } from "../../themes/tlp/src/js/dropdowns";
 import { manageUserPreferences } from "../user/user-patch-release-note-preference";
 import { patch } from "@tuleap/tlp-fetch";
 

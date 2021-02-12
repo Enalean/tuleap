@@ -20,7 +20,7 @@
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { retrieveArtifacts } from "./artifacts-retriever";
-import { Artifact } from "./artifact";
+import type { Artifact } from "./artifact";
 
 jest.mock("tlp");
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Store, StoreConstructorOptions } from "vuex-mock-store";
+import type { Store, StoreConstructorOptions } from "vuex-mock-store";
 
 export * from "vuex-mock-store";
 export function createStoreMock<S, G, Spy>(

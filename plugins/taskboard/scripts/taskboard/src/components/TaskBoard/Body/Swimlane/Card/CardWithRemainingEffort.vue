@@ -28,7 +28,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../../../type";
+import type { Card } from "../../../../../type";
 import ParentCard from "./ParentCard.vue";
 import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
 import EditCardButtons from "./EditMode/EditCardButtons.vue";

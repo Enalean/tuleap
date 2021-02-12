@@ -18,7 +18,7 @@
  */
 
 import type { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
-import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "./RichTextEditorsCreator";
 
 jest.mock("@tuleap/ckeditor-image-upload-form", () => {

@@ -29,7 +29,7 @@
 import CardAssignees from "./CardAssignees.vue";
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { Card, Tracker, User } from "../../../../../type";
+import type { Card, Tracker, User } from "../../../../../type";
 
 @Component({
     components: {

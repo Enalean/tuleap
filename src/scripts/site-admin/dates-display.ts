@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RelativeDateElement } from "../tuleap/custom-elements/relative-date/relative-date-element";
+import type { RelativeDateElement } from "../tuleap/custom-elements/relative-date/relative-date-element";
 import {
     relativeDatePlacement,
     relativeDatePreference,

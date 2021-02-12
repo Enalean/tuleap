@@ -57,7 +57,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
-import { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
+import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
 
 @Component({
     components: { GitInlineFilter, GitPermissionsTable },

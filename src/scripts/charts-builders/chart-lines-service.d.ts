@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PointsWithDate, XYScale } from "./type";
-import { Selection } from "d3-selection";
-import { CurveFactory } from "d3-shape";
-import { PointsWithDateForGenericBurnup } from "../../../plugins/agiledashboard/scripts/burnup-chart/src/type";
+import type { PointsWithDate, XYScale } from "./type";
+import type { Selection } from "d3-selection";
+import type { CurveFactory } from "d3-shape";
+import type { PointsWithDateForGenericBurnup } from "../../../plugins/agiledashboard/scripts/burnup-chart/src/type";
 
 export function drawIdealLine(
     container: Selection<SVGSVGElement, unknown, null, undefined>,

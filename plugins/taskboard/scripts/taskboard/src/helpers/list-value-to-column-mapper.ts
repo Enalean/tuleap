@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Mapping } from "../type";
+import type { Card, ColumnDefinition, Mapping } from "../type";
 
 export function getColumnOfCard(
     columns: ColumnDefinition[],

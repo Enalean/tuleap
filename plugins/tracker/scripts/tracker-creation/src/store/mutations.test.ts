@@ -19,7 +19,8 @@
 
 import * as mutations from "./mutations";
 import { setActiveOption } from "./mutations";
-import { CreationOptions, ProjectTemplate, State, Tracker } from "./type";
+import type { ProjectTemplate, State, Tracker } from "./type";
+import { CreationOptions } from "./type";
 
 describe("mutations", () => {
     describe("setActiveOption", () => {

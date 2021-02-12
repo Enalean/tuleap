@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import TaskBoardBody from "./TaskBoardBody.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
@@ -25,8 +26,8 @@ import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
 import * as mapper from "../../../helpers/list-value-to-column-mapper";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
-import { RootState } from "../../../store/type";
-import { Swimlane, ColumnDefinition } from "../../../type";
+import type { RootState } from "../../../store/type";
+import type { Swimlane, ColumnDefinition } from "../../../type";
 
 async function createWrapper(
     swimlanes: Swimlane[],

@@ -48,10 +48,8 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { programId } from "../../../configuration";
-import {
-    getToBePlannedElements,
-    ToBePlannedElement,
-} from "../../../helpers/ToBePlanned/element-to-plan-retriever";
+import type { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
+import { getToBePlannedElements } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import EmptyState from "./EmptyState.vue";
 import ElementCard from "../ElementCard.vue";
 import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";

@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
+import type { Slots, Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import DropContainerCell from "./DropContainerCell.vue";
-import { ColumnDefinition, Swimlane } from "../../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../../type";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../../../../store/type";
+import type { RootState } from "../../../../../store/type";
 import AddCard from "../Card/Add/AddCard.vue";
 
 function getWrapper(

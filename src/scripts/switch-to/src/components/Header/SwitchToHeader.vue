@@ -55,8 +55,8 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import SwitchToFilter from "./SwitchToFilter.vue";
 import { State } from "vuex-class";
-import { SearchForm } from "../../type";
-import { Modal } from "tlp";
+import type { SearchForm } from "../../type";
+import type { Modal } from "tlp";
 
 @Component({
     components: { SwitchToFilter },

@@ -22,9 +22,9 @@ import {
     getPutArtifactBody,
     getPutArtifactBodyToAddChild,
 } from "./update-artifact";
-import { NewCardPayload, UpdateCardPayload } from "../store/swimlane/card/type";
-import { ListValue, Mapping, Tracker } from "../type";
-import { ListField, TextField, Values } from "../store/swimlane/card/api-artifact-type";
+import type { NewCardPayload, UpdateCardPayload } from "../store/swimlane/card/type";
+import type { ListValue, Mapping, Tracker } from "../type";
+import type { ListField, TextField, Values } from "../store/swimlane/card/api-artifact-type";
 
 describe("update-artifact", () => {
     describe("getPutArtifactBody", () => {

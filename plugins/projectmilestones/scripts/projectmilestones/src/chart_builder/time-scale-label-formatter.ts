@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Selection, select, BaseType } from "d3-selection";
+import type { Selection, BaseType } from "d3-selection";
+import { select } from "d3-selection";
 
 const PADDING_OVERLAPS = 2;
 

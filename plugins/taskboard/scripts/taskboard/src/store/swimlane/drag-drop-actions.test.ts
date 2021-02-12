@@ -16,13 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { ActionContext } from "vuex";
+import type { ActionContext } from "vuex";
 import * as actions from "./drag-drop-actions";
 import * as item_finder from "../../helpers/html-to-item";
 import * as card_positioner from "../../helpers/cards-reordering";
-import { HandleDropPayload, MoveCardsPayload, ReorderCardsPayload, SwimlaneState } from "./type";
-import { RootState } from "../type";
-import { Card, ColumnDefinition, Swimlane, Direction, CardPosition } from "../../type";
+import type {
+    HandleDropPayload,
+    MoveCardsPayload,
+    ReorderCardsPayload,
+    SwimlaneState,
+} from "./type";
+import type { RootState } from "../type";
+import type { Card, ColumnDefinition, Swimlane, CardPosition } from "../../type";
+import { Direction } from "../../type";
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 

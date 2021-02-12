@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AfterDropEventSource, AfterDropListener, DragDropHandlers } from "./types";
+import type { AfterDropEventSource, AfterDropListener, DragDropHandlers } from "./types";
 
 export class DocumentEventsHandler implements AfterDropListener {
     constructor(

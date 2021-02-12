@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
 import { TaskboardEvent } from "../../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";

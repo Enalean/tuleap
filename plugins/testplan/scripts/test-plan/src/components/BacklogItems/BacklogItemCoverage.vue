@@ -45,11 +45,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { BacklogItem } from "../../type";
+import type { BacklogItem } from "../../type";
+import type { TestStats } from "../../helpers/BacklogItems/compute-test-stats";
 import {
     computeTestStats,
     getTestStatusFromStats,
-    TestStats,
 } from "../../helpers/BacklogItems/compute-test-stats";
 
 @Component

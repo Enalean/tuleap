@@ -18,7 +18,8 @@
  */
 
 import * as Popper from "popper.js";
-import { createPopover, Popover, POPOVER_SHOWN_CLASS_NAME } from "./popovers";
+import type { Popover } from "./popovers";
+import { createPopover, POPOVER_SHOWN_CLASS_NAME } from "./popovers";
 
 jest.mock("popper.js", () => {
     return {

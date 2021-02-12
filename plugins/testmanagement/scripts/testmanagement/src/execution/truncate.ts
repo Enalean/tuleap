@@ -23,7 +23,7 @@ import toHtml from "hast-util-to-html";
 import map from "unist-util-map";
 import remove from "unist-util-remove";
 import toString from "hast-util-to-string";
-import { Node, Parent } from "unist";
+import type { Node, Parent } from "unist";
 
 export function truncateHTML(
     content: string,

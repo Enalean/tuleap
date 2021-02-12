@@ -20,7 +20,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import { ColumnDefinition } from "../../../../../type";
+import type { ColumnDefinition } from "../../../../../type";
 
 const column_store = namespace("column");
 

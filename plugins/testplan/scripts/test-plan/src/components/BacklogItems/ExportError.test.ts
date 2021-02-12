@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import ExportError from "./ExportError.vue";
 import * as tlp from "tlp";
-import { Modal } from "tlp";
+import type { Modal } from "tlp";
 
 describe("ExportError", () => {
     it("shows the modal on mount", async () => {

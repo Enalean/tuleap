@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import TroveCatLink from "./TroveCatLink.vue";
 import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import { State } from "../../store/type";
+import type { State } from "../../store/type";
 
 describe("TroveCatLink", () => {
     it("Display the link", async () => {

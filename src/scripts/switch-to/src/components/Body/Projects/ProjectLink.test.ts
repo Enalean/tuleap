@@ -18,10 +18,10 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { Project } from "../../../type";
+import type { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
-import { State } from "../../../store/type";
+import type { State } from "../../../store/type";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("ProjectLink", () => {

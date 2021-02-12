@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Project, SearchForm, UserHistory, UserHistoryEntry } from "../type";
+import type { Project, SearchForm, UserHistory, UserHistoryEntry } from "../type";
 
 export interface State {
     readonly projects: Project[];

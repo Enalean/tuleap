@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RichTextEditorOptions } from "./types";
+import type { RichTextEditorOptions } from "./types";
 import { defaultOptionsIfNotProvided } from "./options-defaulter";
 
 describe(`options-defaulter`, () => {

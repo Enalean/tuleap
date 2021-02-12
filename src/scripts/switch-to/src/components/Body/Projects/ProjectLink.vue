@@ -43,14 +43,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { Project } from "../../../type";
-import {
-    getProjectPrivacyIcon,
-    ProjectPrivacy,
-} from "@tuleap/vue-breadcrumb-privacy/src/project-privacy-helper";
+import type { Project } from "../../../type";
+import type { ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy/src/project-privacy-helper";
+import { getProjectPrivacyIcon } from "@tuleap/vue-breadcrumb-privacy/src/project-privacy-helper";
 import { Action, State } from "vuex-class";
 import { sprintf } from "sprintf-js";
-import { FocusFromProjectPayload } from "../../../store/type";
+import type { FocusFromProjectPayload } from "../../../store/type";
 
 @Component
 export default class ProjectLink extends Vue {

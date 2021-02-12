@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Selection } from "d3-selection";
-import { XYMinMaxCoordinates } from "../type";
+import type { Selection } from "d3-selection";
+import type { XYMinMaxCoordinates } from "../type";
 
 const OVERSIZE_LINE_SCALE = 10;
 

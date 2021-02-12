@@ -18,8 +18,8 @@
  */
 
 import { createBurnupChart, getTotal } from "./burnup-chart-drawer";
-import { ChartPropsWhithoutTooltip } from "../../../../../../../src/scripts/charts-builders/type";
-import {
+import type { ChartPropsWhithoutTooltip } from "../../../../../../../src/scripts/charts-builders/type";
+import type {
     GenericBurnupData,
     PointsWithDateForGenericBurnup,
 } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";

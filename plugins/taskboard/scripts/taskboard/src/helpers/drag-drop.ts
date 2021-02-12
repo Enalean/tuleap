@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { HandleDragPayload } from "../store/swimlane/type";
+import type { HandleDragPayload } from "../store/swimlane/type";
 import { isDraggedOverAnotherSwimlane, isDraggedOverTheSourceCell } from "./html-to-item";
-import { Store } from "vuex";
-import { RootState } from "../store/type";
+import type { Store } from "vuex";
+import type { RootState } from "../store/type";
 
 export function isContainer(element: HTMLElement): boolean {
     return Boolean(element.dataset.isContainer) === true;

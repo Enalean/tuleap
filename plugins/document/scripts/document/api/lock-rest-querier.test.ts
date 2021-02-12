@@ -29,7 +29,7 @@ import {
     postLockEmpty,
     deleteLockEmpty,
 } from "./lock-rest-querier";
-import { Embedded, Empty, ItemFile, Link } from "../type";
+import type { Embedded, Empty, ItemFile, Link } from "../type";
 
 jest.mock("tlp");
 

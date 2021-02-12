@@ -23,11 +23,11 @@ import * as general_information_builder from "./Section/general-information-buil
 import * as requirements_builder from "./Section/requirements-builder";
 import * as test_results_builder from "./Section/test-results-builder";
 import * as justifications_builder from "./Section/justifications-builder";
-import { GeneralSection } from "./Section/general-information-builder";
+import type { GeneralSection } from "./Section/general-information-builder";
 import { TextCell } from "./report-cells";
-import { RequirementsSection } from "./Section/requirements-builder";
-import { TestResultsSection } from "./Section/test-results-builder";
-import { JustificationsSection } from "./Section/justifications-builder";
+import type { RequirementsSection } from "./Section/requirements-builder";
+import type { TestResultsSection } from "./Section/test-results-builder";
+import type { JustificationsSection } from "./Section/justifications-builder";
 
 describe("Create an export report", () => {
     it("generates the report", async () => {

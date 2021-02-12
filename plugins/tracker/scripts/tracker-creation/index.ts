@@ -25,8 +25,7 @@ import {
     getPOFileFromLocale,
 } from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store/index";
-import {
-    CreationOptions,
+import type {
     CSRFToken,
     ExistingTrackersList,
     ProjectWithTrackers,
@@ -35,6 +34,7 @@ import {
     DataForColorPicker,
     Tracker,
 } from "./src/store/type";
+import { CreationOptions } from "./src/store/type";
 import { createRouter } from "./src/router";
 
 document.addEventListener("DOMContentLoaded", async () => {

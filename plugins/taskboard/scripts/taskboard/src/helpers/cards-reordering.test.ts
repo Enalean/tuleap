@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card } from "../type";
+import type { Card } from "../type";
 import { getCardPosition } from "./cards-reordering";
 
 describe("cards-reordering", () => {

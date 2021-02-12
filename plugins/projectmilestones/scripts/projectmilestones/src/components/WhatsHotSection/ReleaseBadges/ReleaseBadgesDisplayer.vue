@@ -35,7 +35,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";

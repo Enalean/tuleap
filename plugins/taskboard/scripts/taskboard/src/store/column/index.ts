@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { ColumnState } from "./type";
-import { RootState } from "../type";
+import type { Module } from "vuex";
+import type { ColumnState } from "./type";
+import type { RootState } from "../type";
 import * as mutations from "./column-mutations";
 import * as actions from "./column-actions";
 import * as getters from "./column-getters";

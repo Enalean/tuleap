@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
+import type {
     BacklogItem,
     Campaign,
     PlannedTestDefinitionFromREST,
     TestDefinition,
 } from "../../../type";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
-import { VueGettextProvider } from "../../vue-gettext-provider";
+import type { VueGettextProvider } from "../../vue-gettext-provider";
 
 export interface PlannedTestCaseAssociatedWithTestExecAndCampaign {
     campaign_id: number;

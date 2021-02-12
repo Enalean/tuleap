@@ -59,9 +59,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { UserHistoryEntry } from "../../../type";
+import type { UserHistoryEntry } from "../../../type";
 import { Action } from "vuex-class";
-import { FocusFromHistoryPayload } from "../../../store/type";
+import type { FocusFromHistoryPayload } from "../../../store/type";
 
 @Component
 export default class RecentItemsEntry extends Vue {

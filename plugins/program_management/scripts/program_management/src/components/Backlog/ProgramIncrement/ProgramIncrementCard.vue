@@ -70,7 +70,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import { getUserLocale } from "../../../configuration";
-import { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 
 @Component({

@@ -18,9 +18,9 @@
  */
 
 import * as getters from "./swimlane-getters";
-import { SwimlaneState } from "./type";
-import { Card, ColumnDefinition, Swimlane } from "../../type";
-import { RootState } from "../type";
+import type { SwimlaneState } from "./type";
+import type { Card, ColumnDefinition, Swimlane } from "../../type";
+import type { RootState } from "../type";
 
 jest.mock("tlp");
 

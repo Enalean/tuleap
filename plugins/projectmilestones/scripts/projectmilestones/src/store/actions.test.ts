@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
+import type { ActionContext } from "vuex";
 import * as actions from "./actions";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import {
+import type {
     TrackerAgileDashboard,
     MilestoneData,
     TrackerProjectLabel,

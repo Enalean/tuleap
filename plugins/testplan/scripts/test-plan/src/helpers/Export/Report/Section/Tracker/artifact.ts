@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MinimalTracker } from "./tracker";
+import type { MinimalTracker } from "./tracker";
 
 interface BaseTrackerFieldValue {
     field_id: number;

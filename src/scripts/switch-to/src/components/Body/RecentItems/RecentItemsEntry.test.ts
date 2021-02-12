@@ -18,10 +18,10 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { QuickLink, UserHistoryEntry } from "../../../type";
+import type { QuickLink, UserHistoryEntry } from "../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
-import { State } from "../../../store/type";
+import type { State } from "../../../store/type";
 
 describe("RecentItemsEntry", () => {
     it("Displays a link with a cross ref", () => {

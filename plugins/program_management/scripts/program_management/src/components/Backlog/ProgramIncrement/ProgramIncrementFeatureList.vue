@@ -54,8 +54,9 @@ import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
 import ElementCard from "../ElementCard.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Feature, getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
-import { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
+import { getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
 @Component({
     components: { ToBePlannedSkeleton, ElementCard, ProgramIncrementNoContent },

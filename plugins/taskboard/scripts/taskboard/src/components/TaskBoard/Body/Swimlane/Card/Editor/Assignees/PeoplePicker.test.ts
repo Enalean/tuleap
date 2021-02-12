@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import PeoplePicker from "./PeoplePicker.vue";
 import { createTaskboardLocalVue } from "../../../../../../../helpers/local-vue-for-test";
-import { UserForPeoplePicker } from "../../../../../../../store/swimlane/card/type";
+import type { UserForPeoplePicker } from "../../../../../../../store/swimlane/card/type";
 
 const mocked_jquery = {
     select2: jest.fn(),

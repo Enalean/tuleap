@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ItemFile } from "../type";
+import type { ItemFile } from "../type";
 
 export function hasNoUploadingContent(item: ItemFile): boolean {
     return (

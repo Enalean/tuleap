@@ -18,11 +18,11 @@
  *
  */
 
-import {
+import type {
     ChartPropsWhithoutTooltip,
     XYScale,
 } from "../../../../../../../src/scripts/charts-builders/type";
-import { GenericBurnupData } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
+import type { GenericBurnupData } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
 import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builders/chart-dates-service";
 import { max } from "d3-array";
 import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";

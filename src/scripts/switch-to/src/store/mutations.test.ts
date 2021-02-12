@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
+import type { State } from "./type";
 import { updateFilterValue, setProgrammaticallyFocusedElement } from "./mutations";
-import { Project } from "../type";
+import type { Project } from "../type";
 
 describe("SwitchTo mutations", () => {
     describe("updateFilterValue", () => {

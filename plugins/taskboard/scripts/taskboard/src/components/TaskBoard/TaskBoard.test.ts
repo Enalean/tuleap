@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import TaskBoard from "./TaskBoard.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { ColumnDefinition, Swimlane } from "../../type";
+import type { ColumnDefinition, Swimlane } from "../../type";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
-import { RootState } from "../../store/type";
+import type { RootState } from "../../store/type";
 import * as drekkenov from "../../helpers/drag-and-drop/drekkenov";
 import ErrorModal from "../GlobalError/ErrorModal.vue";
 

@@ -18,7 +18,7 @@
  *
  */
 
-import { BurnupData, GenericBurnupData } from "./type";
+import type { BurnupData, GenericBurnupData } from "./type";
 
 export function transformToGenericBurnupData(
     burnup_data: BurnupData,

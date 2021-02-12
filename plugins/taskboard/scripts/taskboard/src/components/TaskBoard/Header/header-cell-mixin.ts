@@ -19,7 +19,7 @@
 
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { ColumnDefinition } from "../../../type";
+import type { ColumnDefinition } from "../../../type";
 
 @Component
 export default class HeaderCellMixin extends Vue {

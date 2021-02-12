@@ -19,7 +19,7 @@
 
 import { highlightItem } from "./highlight-items-helper";
 import { TYPE_FILE, TYPE_FOLDER } from "../constants";
-import { Folder, ItemFile } from "../type";
+import type { Folder, ItemFile } from "../type";
 
 describe("highlight-items-helper", () => {
     describe("Highlight preview pane", () => {

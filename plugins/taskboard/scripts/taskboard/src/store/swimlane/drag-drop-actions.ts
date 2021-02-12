@@ -18,16 +18,21 @@
  */
 
 import { patch } from "tlp";
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
-import { HandleDropPayload, MoveCardsPayload, ReorderCardsPayload, SwimlaneState } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
+import type {
+    HandleDropPayload,
+    MoveCardsPayload,
+    ReorderCardsPayload,
+    SwimlaneState,
+} from "./type";
 import {
     getCardFromSwimlane,
     isDraggedOverAnotherSwimlane,
     isDraggedOverTheSourceCell,
 } from "../../helpers/html-to-item";
 import { getCardPosition } from "../../helpers/cards-reordering";
-import { Card, ColumnDefinition, Swimlane } from "../../type";
+import type { Card, ColumnDefinition, Swimlane } from "../../type";
 import { isSoloCard } from "./swimlane-helpers";
 
 export function handleDrop(

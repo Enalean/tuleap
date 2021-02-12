@@ -18,7 +18,8 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectList from "./AllProjectTemplates.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";

@@ -18,7 +18,7 @@
  */
 
 import { del, put } from "tlp";
-import { Importance } from "../type";
+import type { Importance } from "../type";
 
 const headers = {
     "content-type": "application/json",

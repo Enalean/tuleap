@@ -44,7 +44,7 @@
 import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { RepositoryFineGrainedPermissions } from "./type";
+import type { RepositoryFineGrainedPermissions } from "./type";
 
 @Component({ components: { GitPermissionsBadge } })
 export default class GitRepositoryTableFineGrainedPermissionsRepository extends Vue {

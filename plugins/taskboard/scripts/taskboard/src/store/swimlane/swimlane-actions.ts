@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../../type";
+import type { Card, Swimlane } from "../../type";
 import { get, recursiveGet } from "tlp";
-import { ActionContext } from "vuex";
-import { RefreshCardActionPayload, SwimlaneState } from "./type";
-import { RootState } from "../type";
-import { UserPreference, UserPreferenceValue } from "../user/type";
+import type { ActionContext } from "vuex";
+import type { RefreshCardActionPayload, SwimlaneState } from "./type";
+import type { RootState } from "../type";
+import type { UserPreference, UserPreferenceValue } from "../user/type";
 import { isSoloCard } from "./swimlane-helpers";
 import { injectDefaultPropertiesInCard } from "../../helpers/card-default";
 

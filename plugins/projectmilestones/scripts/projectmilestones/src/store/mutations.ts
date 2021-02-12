@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MilestoneData, State } from "../type";
+import type { MilestoneData, State } from "../type";
 
 export default {
     setIsLoading(state: State, loading: boolean): void {

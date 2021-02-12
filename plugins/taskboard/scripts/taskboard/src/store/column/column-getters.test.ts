@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ColumnDefinition, ListValue, Mapping } from "../../type";
+import type { ColumnDefinition, ListValue, Mapping } from "../../type";
 import * as getters from "./column-getters";
-import { ColumnState } from "./type";
-import { RootState } from "../type";
+import type { ColumnState } from "./type";
+import type { RootState } from "../type";
 
 describe("column-getters", () => {
     let column_state: ColumnState, root_state: RootState;

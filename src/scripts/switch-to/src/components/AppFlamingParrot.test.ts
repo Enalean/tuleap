@@ -22,7 +22,7 @@ import AppFlamingParrot from "./AppFlamingParrot.vue";
 import $ from "jquery";
 import { createSwitchToLocalVue } from "../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../vue-components/store-wrapper-jest";
-import { State } from "../store/type";
+import type { State } from "../store/type";
 
 describe("AppFlamingParrot", () => {
     it("Autofocus the first input in the modal", async () => {

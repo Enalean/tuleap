@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Shortcut, ShortcutsGroup } from "./type";
+import type { Shortcut, ShortcutsGroup } from "./type";
 import {
     createShortcutsGroupInHelpModal,
     createKeyboardInputElement,

@@ -48,7 +48,7 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { TemplateData } from "../../../type";
+import type { TemplateData } from "../../../type";
 
 @Component({})
 export default class UserProjectList extends Vue {

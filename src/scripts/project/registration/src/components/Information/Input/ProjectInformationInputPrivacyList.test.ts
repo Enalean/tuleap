@@ -19,10 +19,10 @@
  */
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import { RootState } from "../../../store/type";
+import type { RootState } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import ProjectInformationInputPrivacyList from "./ProjectInformationInputPrivacyList.vue";
-import { ConfigurationState } from "../../../store/configuration";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("ProjectInformationInputPrivacyList", () => {
     describe("The selected default project visibility when the component is mounted -", () => {

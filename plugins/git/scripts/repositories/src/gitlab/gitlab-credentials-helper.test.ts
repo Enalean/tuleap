@@ -23,7 +23,7 @@ import {
     formatUrlToGetAllProject,
     formatUrlToGetProjectFromId,
 } from "./gitlab-credentials-helper";
-import { GitLabCredentials } from "../type";
+import type { GitLabCredentials } from "../type";
 
 describe("Gitlab Credentials Helper", () => {
     describe("credentialsAreNotEmpty", () => {

@@ -31,15 +31,15 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Getter, Mutation, namespace } from "vuex-class";
-import {
+import type {
     DragCallbackParameter,
     DragDropCallbackParameter,
     Drekkenov,
-    init,
     PossibleDropCallbackParameter,
     SuccessfulDropCallbackParameter,
 } from "../../helpers/drag-and-drop/drekkenov";
-import { Card, ColumnDefinition, Swimlane } from "../../type";
+import { init } from "../../helpers/drag-and-drop/drekkenov";
+import type { Card, ColumnDefinition, Swimlane } from "../../type";
 import {
     canMove,
     checkCellAcceptsDrop,
@@ -47,7 +47,7 @@ import {
     isConsideredInDropzone,
     invalid,
 } from "../../helpers/drag-drop";
-import { HandleDropPayload } from "../../store/swimlane/type";
+import type { HandleDropPayload } from "../../store/swimlane/type";
 import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
 import TaskBoardBody from "./Body/TaskBoardBody.vue";
 import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";

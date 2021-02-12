@@ -26,11 +26,11 @@ import {
     initVueGettext,
     getPOFileFromLocale,
 } from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
-import { ColumnDefinition, Tracker } from "./src/type";
+import type { ColumnDefinition, Tracker } from "./src/type";
 import Vuex from "vuex";
-import { UserState } from "./src/store/user/type";
-import { RootState } from "./src/store/type";
-import { ColumnState } from "./src/store/column/type";
+import type { UserState } from "./src/store/user/type";
+import type { RootState } from "./src/store/type";
+import type { ColumnState } from "./src/store/column/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");

@@ -18,14 +18,15 @@
  */
 
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import * as repository_list_presenter from "../../../repository-list-presenter";
 import { PROJECT_KEY } from "../../../constants";
-import { Store } from "vuex-mock-store";
+import type { Store } from "vuex-mock-store";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
-import { GitlabDataWithPath, GitlabProject } from "../../../type";
+import type { GitlabDataWithPath, GitlabProject } from "../../../type";
 
 describe("ListRepositoriesModal", () => {
     let store_options: {

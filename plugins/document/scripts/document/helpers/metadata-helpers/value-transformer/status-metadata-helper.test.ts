@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Folder, Metadata, ListValue } from "../../../type";
+import type { Folder, Metadata, ListValue } from "../../../type";
 import { updateItemMetadata } from "./status-metadata-helper";
 
 describe("updateItemMetadata", () => {

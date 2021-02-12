@@ -45,7 +45,7 @@ import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryT
 import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
+import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
 
 @Component({
     components: {

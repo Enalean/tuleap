@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SwimlaneState } from "./type";
-import { Swimlane, Card } from "../../type";
+import type { SwimlaneState } from "./type";
+import type { Swimlane, Card } from "../../type";
 
 const swimlaneHasSameId = (a: Swimlane) => (b: Swimlane): boolean => a.card.id === b.card.id;
 

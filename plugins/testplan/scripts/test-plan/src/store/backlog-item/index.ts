@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { RootState } from "../type";
-import { BacklogItemState } from "./type";
+import type { Module } from "vuex";
+import type { RootState } from "../type";
+import type { BacklogItemState } from "./type";
 import * as actions from "./backlog-item-actions";
 import * as mutations from "./backlog-item-mutations";
 

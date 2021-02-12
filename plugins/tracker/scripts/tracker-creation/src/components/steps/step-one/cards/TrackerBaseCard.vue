@@ -40,7 +40,7 @@
 import Vue from "vue";
 import { State, Mutation } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
-import { CreationOptions } from "../../../../store/type";
+import type { CreationOptions } from "../../../../store/type";
 
 @Component
 export default class TrackerBaseCard extends Vue {

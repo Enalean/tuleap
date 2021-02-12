@@ -26,7 +26,7 @@ import {
 } from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
 import { createStore } from "./src/store";
-import { RootState } from "./src/store/type";
+import type { RootState } from "./src/store/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("test-plan");

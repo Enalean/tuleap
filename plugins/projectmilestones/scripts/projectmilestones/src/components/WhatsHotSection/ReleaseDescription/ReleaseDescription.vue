@@ -46,7 +46,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";

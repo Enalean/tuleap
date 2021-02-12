@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItemState } from "./type";
-import { BacklogItem, TestDefinition } from "../../type";
+import type { BacklogItemState } from "./type";
+import type { BacklogItem, TestDefinition } from "../../type";
 import {
     addBacklogItems,
     addTestDefinitions,

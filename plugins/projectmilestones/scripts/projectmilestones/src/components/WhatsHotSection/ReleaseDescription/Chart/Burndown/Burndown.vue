@@ -25,10 +25,10 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../../../type";
+import type { MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import { createBurndownChart } from "../../../../../chart_builder/burndown_chart_builder/burndown-chart-drawer";
-import { ChartPropsWhithoutTooltip } from "../../../../../../../../../../src/scripts/charts-builders/type";
+import type { ChartPropsWhithoutTooltip } from "../../../../../../../../../../src/scripts/charts-builders/type";
 
 @Component
 export default class Burndown extends Vue {

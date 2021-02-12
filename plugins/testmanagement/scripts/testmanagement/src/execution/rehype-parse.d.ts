@@ -1,5 +1,5 @@
 declare module "rehype-parse" {
-    import { Plugin } from "unified";
+    import type { Plugin } from "unified";
 
     const parse: Plugin;
 

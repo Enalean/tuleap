@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { XYScale } from "../../../../../../src/scripts/charts-builders/type";
-import { XYMinMaxCoordinates } from "../type";
+import type { XYScale } from "../../../../../../src/scripts/charts-builders/type";
+import type { XYMinMaxCoordinates } from "../type";
 import { extent } from "d3-array";
 
 export function getCoordinatesScaleLines(

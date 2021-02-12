@@ -29,7 +29,8 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
-import { Card, TaskboardEvent } from "../../../../../../type";
+import type { Card } from "../../../../../../type";
+import { TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
 @Component({

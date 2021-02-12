@@ -66,7 +66,7 @@ import encodeData from "../helpers/encode-data";
 import RefsFilter from "./RefsFilter.vue";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { Tag, URLParameter } from "../type";
+import type { Tag, URLParameter } from "../type";
 
 @Component({ components: { RefsFilter } })
 export default class TagsSection extends Vue {

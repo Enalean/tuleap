@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../../../type";
+import type { MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import ChartError from "../ChartError.vue";
 import { State } from "vuex-class";

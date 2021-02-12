@@ -20,8 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../../store/type";
-import { TestDefinition } from "../../../type";
+import type { RootState } from "../../../store/type";
+import type { TestDefinition } from "../../../type";
 
 describe("TestDefinitionCardStatus", () => {
     it("has a link to go to the test exec in TTM when the test definition is planned", () => {

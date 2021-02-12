@@ -27,19 +27,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import {
+import type {
     DataFormat,
     GroupedDataFormat,
     IdTextPair,
     LoadingData,
     Options,
-    select2,
     Select2Plugin,
 } from "tlp";
+import { select2 } from "tlp";
 import $ from "jquery";
 import { sanitize } from "dompurify";
 import { render } from "mustache";
-import { UserForPeoplePicker } from "./type";
+import type { UserForPeoplePicker } from "./type";
 
 @Component
 export default class PeoplePicker extends Vue {

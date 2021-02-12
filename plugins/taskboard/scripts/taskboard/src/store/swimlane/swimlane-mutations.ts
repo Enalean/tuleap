@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Direction, Mapping, Swimlane } from "../../type";
-import {
+import type { Card, Mapping, Swimlane } from "../../type";
+import { Direction } from "../../type";
+import type {
     AddChildrenToSwimlanePayload,
     MoveCardsPayload,
     RefreshCardMutationPayload,

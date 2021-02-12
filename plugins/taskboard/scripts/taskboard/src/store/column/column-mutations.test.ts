@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ColumnDefinition } from "../../type";
+import type { ColumnDefinition } from "../../type";
 import * as mutations from "./column-mutations";
-import { ColumnState } from "./type";
+import type { ColumnState } from "./type";
 
 describe(`Column module mutations`, () => {
     describe("collapseColumn", () => {

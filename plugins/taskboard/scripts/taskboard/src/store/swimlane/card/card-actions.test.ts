@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
-import { RootState } from "../../type";
-import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../../type";
+import type { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
 import * as tlp from "tlp";
-import { RefreshCardMutationPayload, SwimlaneState } from "../type";
-import { Card, Swimlane, Tracker, User } from "../../../type";
+import type { RefreshCardMutationPayload, SwimlaneState } from "../type";
+import type { Card, Swimlane, Tracker, User } from "../../../type";
 import * as actions from "./card-actions";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { ListField, TextField } from "./api-artifact-type";
+import type { ListField, TextField } from "./api-artifact-type";
 
 jest.mock("tlp");
 

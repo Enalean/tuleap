@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItem, TestDefinition } from "../../type";
+import type { BacklogItem, TestDefinition } from "../../type";
 import BacklogItemCoverage from "./BacklogItemCoverage.vue";
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("BacklogItemCoverage", () => {

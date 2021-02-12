@@ -99,16 +99,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { FetchWrapperError, Modal, createModal } from "tlp";
+import type { FetchWrapperError, Modal } from "tlp";
+import { createModal } from "tlp";
 import { namespace, State } from "vuex-class";
-import { CreateCampaignPayload } from "../../store/campaign/type";
+import type { CreateCampaignPayload } from "../../store/campaign/type";
 import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";
 import CreateModalErrorFeedback from "./CreateModalErrorFeedback.vue";
-import {
-    TrackerReport,
-    getTrackerReports,
-} from "../../helpers/Campaigns/tracker-reports-retriever";
-import { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
+import type { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
+import { getTrackerReports } from "../../helpers/Campaigns/tracker-reports-retriever";
+import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
 const campaign = namespace("campaign");
 const backlog_item = namespace("backlog_item");

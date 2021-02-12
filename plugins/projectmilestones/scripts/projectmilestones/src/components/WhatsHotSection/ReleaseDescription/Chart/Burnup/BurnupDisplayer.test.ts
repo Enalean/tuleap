@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
+import type {
     BurnupData,
     MilestoneData,
     PointsWithDateForBurnup,
     StoreOptions,
 } from "../../../../../type";
-import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createReleaseWidgetLocalVue } from "../../../../../helpers/local-vue-for-test";
 import ChartError from "../ChartError.vue";

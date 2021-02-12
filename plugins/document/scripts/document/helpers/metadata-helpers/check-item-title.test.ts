@@ -25,7 +25,7 @@ import {
     doesFolderNameAlreadyExist,
     doesFolderAlreadyExistsAtUpdate,
 } from "./check-item-title";
-import { Folder, Item, ItemFile } from "../../type";
+import type { Folder, Item, ItemFile } from "../../type";
 
 describe("doesFolderNameAlreadyExist", () => {
     it("Title already exists when folder name already exists", () => {

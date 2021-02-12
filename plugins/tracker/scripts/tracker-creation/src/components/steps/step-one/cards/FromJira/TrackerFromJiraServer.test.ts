@@ -21,7 +21,7 @@
 import TrackerFromJiraServer from "./TrackerFromJiraServer.vue";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
 import { shallowMount } from "@vue/test-utils";
-import { Credentials } from "../../../../../store/type";
+import type { Credentials } from "../../../../../store/type";
 
 describe("TrackerFromJiraServer", () => {
     it("renders the component", async () => {

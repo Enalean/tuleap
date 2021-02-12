@@ -27,7 +27,8 @@ import {
     initVueGettext,
     getPOFileFromLocale,
 } from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
-import { BurnupMode, TrackerAgileDashboard } from "./src/type";
+import type { TrackerAgileDashboard } from "./src/type";
+import { BurnupMode } from "./src/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);

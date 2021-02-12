@@ -18,8 +18,8 @@
  *
  */
 
-import { TemplateData } from "../type";
-import { ConfigurationState } from "./configuration";
+import type { TemplateData } from "../type";
+import type { ConfigurationState } from "./configuration";
 
 export interface State {
     selected_tuleap_template: TemplateData | null;

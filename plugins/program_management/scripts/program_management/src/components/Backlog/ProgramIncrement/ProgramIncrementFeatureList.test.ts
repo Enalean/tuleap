@@ -1,10 +1,10 @@
 import * as retriever from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
-import { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
+import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import * as configuration from "../../../configuration";
 import { shallowMount } from "@vue/test-utils";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import { DefaultData } from "vue/types/options";
+import type { DefaultData } from "vue/types/options";
 
 describe("ProgramIncrementFeatureList", () => {
     it("Displays the empty state when no features are found", async () => {

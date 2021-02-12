@@ -46,10 +46,11 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
-import { Card, TaskboardEvent, Tracker, User } from "../../../../../type";
+import type { Card, Tracker, User } from "../../../../../type";
+import { TaskboardEvent } from "../../../../../type";
 import { namespace, Getter } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
-import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
+import type { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";
 import CardInfo from "./CardInfo.vue";
 import { haveAssigneesChanged } from "../../../../../helpers/have-assignees-changed";

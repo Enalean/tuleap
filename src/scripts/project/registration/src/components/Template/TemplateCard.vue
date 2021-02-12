@@ -55,7 +55,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { TemplateData } from "../../type";
+import type { TemplateData } from "../../type";
 
 @Component({})
 export default class TemplateCard extends Vue {

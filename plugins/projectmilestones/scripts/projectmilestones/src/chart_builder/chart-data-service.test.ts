@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PointsWithDateForBurndown } from "../type";
+import type { PointsWithDateForBurndown } from "../type";
 import { getDisplayableData, getDisplayableDataForBurnup } from "./chart-data-service";
-import { PointsWithDateForGenericBurnup } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
+import type { PointsWithDateForGenericBurnup } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
 
 describe("chartDataService", () => {
     describe("getDisplayableData", () => {

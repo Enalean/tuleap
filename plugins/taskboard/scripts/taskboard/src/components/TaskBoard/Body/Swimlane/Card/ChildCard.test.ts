@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ChildCard from "./ChildCard.vue";
-import { Card, User } from "../../../../../type";
+import type { Card, User } from "../../../../../type";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import BaseCard from "./BaseCard.vue";
 

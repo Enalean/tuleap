@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
-import { ColumnDefinition } from "../../type";
-import { UserPreference, UserPreferenceValue } from "../user/type";
-import { ColumnState } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
+import type { ColumnDefinition } from "../../type";
+import type { UserPreference, UserPreferenceValue } from "../user/type";
+import type { ColumnState } from "./type";
 
 export function expandColumn(
     context: ActionContext<ColumnState, RootState>,

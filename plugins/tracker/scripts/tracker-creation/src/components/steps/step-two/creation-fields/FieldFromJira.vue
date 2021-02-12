@@ -56,7 +56,7 @@
 import Vue from "vue";
 import { Getter, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { JiraImportData } from "../../../../store/type";
+import type { JiraImportData } from "../../../../store/type";
 @Component
 export default class FieldFromJira extends Vue {
     @State

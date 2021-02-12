@@ -52,7 +52,7 @@
 import Vue from "vue";
 import { State, Mutation } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { ProjectTemplate, Tracker } from "../../../../../store/type";
+import type { ProjectTemplate, Tracker } from "../../../../../store/type";
 
 @Component
 export default class TrackerTemplateSelector extends Vue {

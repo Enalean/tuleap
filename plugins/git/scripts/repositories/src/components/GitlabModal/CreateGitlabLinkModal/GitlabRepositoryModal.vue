@@ -60,12 +60,13 @@
 </template>
 
 <script lang="ts">
-import { createModal, Modal } from "tlp";
+import type { Modal } from "tlp";
+import { createModal } from "tlp";
 import ListRepositoriesModal from "./ListRepositoriesModal.vue";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import { GitLabCredentialsWithProjects, GitlabProject } from "../../../type";
+import type { GitLabCredentialsWithProjects, GitlabProject } from "../../../type";
 
 @Component({ components: { CredentialsFormModal, ListRepositoriesModal } })
 export default class GitlabRepositoryModal extends Vue {

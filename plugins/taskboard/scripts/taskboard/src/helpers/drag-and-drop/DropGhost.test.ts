@@ -18,9 +18,9 @@
  */
 
 import { GHOST_CSS_CLASS, HIDE_CSS_CLASS } from "./constants";
-import { OngoingDrag } from "./OngoingDrag";
+import type { OngoingDrag } from "./OngoingDrag";
 import { DropGhost } from "./DropGhost";
-import { AfterDropEventSource, DrekkenovInitOptions } from "./types";
+import type { AfterDropEventSource, DrekkenovInitOptions } from "./types";
 import * as dom_manipulation from "./dom-manipulation";
 
 describe(`DropGhost`, () => {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as d3Scale from "d3-scale";
+import type * as d3Scale from "d3-scale";
 
 export interface PropertiesBuilderGraph {
     margins: MarginsGraph;

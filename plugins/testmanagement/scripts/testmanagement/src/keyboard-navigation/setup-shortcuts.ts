@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { GettextProvider } from "./type";
+import type { GettextProvider } from "./type";
 
 import { setupNavigationShortcuts } from "./test-campaign-shortcuts/navigation-shortcuts";
 import { setupCampaignActionsShortcuts } from "./test-campaign-shortcuts/campaign-actions-shortcuts";

@@ -39,7 +39,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import BaseCard from "./BaseCard.vue";
-import { Card } from "../../../../../type";
+import type { Card } from "../../../../../type";
 import EditCardButtons from "./EditMode/EditCardButtons.vue";
 
 @Component({

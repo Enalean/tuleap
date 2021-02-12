@@ -26,12 +26,13 @@ jest.mock("../../helpers/Export/download-export-document", () => {
     };
 });
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../store/type";
+import type { RootState } from "../../store/type";
 import ExportButton from "./ExportButton.vue";
-import { BacklogItemState } from "../../store/backlog-item/type";
-import { CampaignState } from "../../store/campaign/type";
+import type { BacklogItemState } from "../../store/backlog-item/type";
+import type { CampaignState } from "../../store/campaign/type";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("ExportButton", () => {

@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DropdownManager } from "../dropdown/DropdownManager";
-import { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
-import { ItemsMapManager } from "../items/ItemsMapManager";
+import type { DropdownManager } from "../dropdown/DropdownManager";
+import type { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
+import type { ItemsMapManager } from "../items/ItemsMapManager";
 import { html, render } from "lit-html";
 
 export class SingleSelectionManager implements SelectionManager {

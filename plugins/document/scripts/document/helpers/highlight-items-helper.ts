@@ -18,7 +18,7 @@
  */
 
 import { TYPE_FOLDER, TYPE_FILE } from "../constants";
-import { Item } from "../type";
+import type { Item } from "../type";
 
 export const highlightItem = (item: Item, closest_row: HTMLElement): void => {
     if (item.user_can_write) {

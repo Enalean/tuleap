@@ -18,7 +18,7 @@
  */
 
 import { recursiveGet } from "tlp";
-import { TrackerMinimalRepresentation } from "../../../type";
+import type { TrackerMinimalRepresentation } from "../../../type";
 
 export interface Feature {
     artifact_id: number;

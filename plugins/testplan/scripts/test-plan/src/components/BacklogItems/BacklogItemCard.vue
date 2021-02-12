@@ -46,7 +46,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { BacklogItem } from "../../type";
+import type { BacklogItem } from "../../type";
 import { namespace, State } from "vuex-class";
 import BacklogItemCoverage from "./BacklogItemCoverage.vue";
 import AddTestButtonWithAdditionalActionsMenu from "./AddTestButtonWithAdditionalActionsMenu.vue";

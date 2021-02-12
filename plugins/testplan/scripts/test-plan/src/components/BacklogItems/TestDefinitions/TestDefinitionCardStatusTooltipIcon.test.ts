@@ -18,11 +18,11 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { BacklogItem, TestDefinition } from "../../../type";
+import type { BacklogItem, TestDefinition } from "../../../type";
 import TestDefinitionCardStatusTooltipIcon from "./TestDefinitionCardStatusTooltipIcon.vue";
 import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../../store/type";
+import type { RootState } from "../../../store/type";
 
 describe("TestDefinitionCardStatusTooltipIcon", () => {
     it.each([

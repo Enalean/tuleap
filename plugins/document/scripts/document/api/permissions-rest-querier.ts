@@ -18,7 +18,7 @@
  */
 
 import { put } from "tlp";
-import { Permissions } from "../type";
+import type { Permissions } from "../type";
 
 export {
     putEmbeddedFilePermissions,

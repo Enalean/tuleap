@@ -49,7 +49,7 @@ import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
-import { ColumnDefinition, Swimlane } from "../../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../../type";
 import { isSoloCard } from "../../../../../store/swimlane/swimlane-helpers";
 
 const column_store = namespace("column");

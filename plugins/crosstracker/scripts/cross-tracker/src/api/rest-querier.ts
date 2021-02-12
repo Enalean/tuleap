@@ -18,7 +18,7 @@
  */
 
 import { get, put, recursiveGet } from "tlp";
-import { ArtifactsCollection, Report, Project, Tracker } from "../type";
+import type { ArtifactsCollection, Report, Project, Tracker } from "../type";
 
 export {
     getReport,

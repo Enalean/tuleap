@@ -24,7 +24,7 @@ import {
     findNextGhostSibling,
     insertAfter,
 } from "./dom-manipulation";
-import { DrekkenovInitOptions } from "./types";
+import type { DrekkenovInitOptions } from "./types";
 
 describe(`dom-manipulation`, () => {
     let doc: Document;

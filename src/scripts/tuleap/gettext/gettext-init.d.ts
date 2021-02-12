@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { POFile } from "./vue-gettext-init";
+import type { POFile } from "./vue-gettext-init";
 import GetText from "node-gettext";
 
 export { GetText };

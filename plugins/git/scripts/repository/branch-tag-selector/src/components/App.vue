@@ -63,7 +63,7 @@ import BranchesSection from "./BranchesSection.vue";
 import TagsSection from "./TagsSection.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { URLParameter } from "../type";
+import type { URLParameter } from "../type";
 
 @Component({ components: { BranchesSection, TagsSection } })
 export default class App extends Vue {

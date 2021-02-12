@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { User } from "../../../../../type";
+import type { User } from "../../../../../type";
 import { Component, Prop } from "vue-property-decorator";
 
 @Component

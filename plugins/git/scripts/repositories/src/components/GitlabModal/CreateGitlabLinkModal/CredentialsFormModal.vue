@@ -111,7 +111,7 @@
 import { credentialsAreEmpty, serverUrlIsValid } from "../../../gitlab/gitlab-credentials-helper";
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { GitLabCredentials, GitlabProject } from "../../../type";
+import type { GitLabCredentials, GitlabProject } from "../../../type";
 import { Action } from "vuex-class";
 
 @Component

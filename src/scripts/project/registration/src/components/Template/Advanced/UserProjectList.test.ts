@@ -20,11 +20,12 @@
 
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import UserProjectList from "./UserProjectList.vue";
-import { shallowMount, Wrapper } from "@vue/test-utils";
-import { TemplateData } from "../../../type";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import type { TemplateData } from "../../../type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
-import { State } from "../../../store/type";
-import { Store } from "vuex-mock-store";
+import type { State } from "../../../store/type";
+import type { Store } from "vuex-mock-store";
 
 describe("UserProjectList", () => {
     let wrapper: Wrapper<UserProjectList>,

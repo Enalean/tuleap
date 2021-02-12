@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DrekkenovInitOptions, init } from "./drekkenov";
+import type { DrekkenovInitOptions } from "./drekkenov";
+import { init } from "./drekkenov";
 import { DrekkenovState } from "./DrekkenovState";
 const noop_function = (): void => {
     // Do nothing

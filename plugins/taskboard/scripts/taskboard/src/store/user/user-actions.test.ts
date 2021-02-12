@@ -20,9 +20,9 @@
 import * as actions from "./user-actions";
 import * as tlp from "tlp";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
-import { UserPreference, UserPreferenceValue, UserState } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
+import type { UserPreference, UserPreferenceValue, UserState } from "./type";
 
 jest.mock("tlp");
 

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CampaignState } from "./campaign/type";
-import { BacklogItemState } from "./backlog-item/type";
+import type { CampaignState } from "./campaign/type";
+import type { BacklogItemState } from "./backlog-item/type";
 
 export interface State {
     readonly user_display_name: string;

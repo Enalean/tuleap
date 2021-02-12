@@ -18,7 +18,8 @@
  *
  */
 
-import { html, TemplateResult } from "lit-html";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
 import { convertBadColorHexToRGB, isColorBad } from "../color-helper";
 import { getOptionsLabel } from "../option-label-helper";
 import { styleMap } from "lit-html/directives/style-map";

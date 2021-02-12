@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { augment, BacklogItemRepresentation } from "./backlog-item-factory";
+import type { BacklogItemRepresentation } from "./backlog-item-factory";
+import { augment } from "./backlog-item-factory";
 
 describe("BacklogItemFactory", () => {
     describe("augment", () => {

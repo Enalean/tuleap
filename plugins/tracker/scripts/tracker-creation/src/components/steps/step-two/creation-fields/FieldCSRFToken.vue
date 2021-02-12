@@ -24,7 +24,7 @@
 import Vue from "vue";
 import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { CSRFToken } from "../../../../store/type.js";
+import type { CSRFToken } from "../../../../store/type.js";
 
 @Component
 export default class FieldCSRFToken extends Vue {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ArtifactMilestone, BurndownData, BurnupData } from "../type";
+import type { ArtifactMilestone, BurndownData, BurnupData } from "../type";
 import { getBurndownDataFromType, getBurnupDataFromType } from "./chart-helper";
 
 describe("Chart Helpers", () => {

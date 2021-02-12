@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FetchWrapperError } from "tlp";
+import type { FetchWrapperError } from "tlp";
 
 export function extractErrorMessage(error: Error): Promise<string> {
     if (isFetchWrapperError(error)) {

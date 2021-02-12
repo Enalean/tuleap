@@ -25,7 +25,8 @@ export * from "./js/index";
 import "../node_modules/select2/dist/js/i18n/fr.js";
 
 import locale from "./vendor-i18n/fr_FR/tlp.fr";
-import { select2, Options, Select2Plugin } from "./js/index";
+import type { Options, Select2Plugin } from "./js/index";
+import { select2 } from "./js/index";
 
 flatpickr.localize(French);
 

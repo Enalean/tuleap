@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Tracker } from "../../../../../store/type";
+import type { Tracker } from "../../../../../store/type";
 import DefaultTemplateCard from "./DefaultTemplateCard.vue";
 import { State } from "vuex-class";
 

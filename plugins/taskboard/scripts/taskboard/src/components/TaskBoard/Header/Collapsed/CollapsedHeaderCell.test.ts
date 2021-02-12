@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { ColumnDefinition } from "../../../../type";
+import type { ColumnDefinition } from "../../../../type";
 import CollapsedHeaderCell from "./CollapsedHeaderCell.vue";
 import ExpandButton from "./ExpandButton.vue";
 

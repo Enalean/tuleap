@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MetadataListValue } from "./list-value-helper";
 import {
     assertListIsOnlyMultipleValue,
     formatMetadataListValue,
     formatMetadataMultipleValue,
-    MetadataListValue,
     processFormattingOnKnownType,
 } from "./list-value-helper";
-import { Metadata, ListValue } from "../../../type";
+import type { Metadata, ListValue } from "../../../type";
 
 describe("list-value-helper", () => {
     describe("assertListIsOnlyMultipleValue", () => {

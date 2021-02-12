@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItem } from "../../type";
+import type { BacklogItem } from "../../type";
 
 export interface TestStats {
     passed: number;

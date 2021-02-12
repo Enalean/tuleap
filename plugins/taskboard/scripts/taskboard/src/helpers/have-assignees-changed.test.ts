@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { User } from "../type";
+import type { User } from "../type";
 import { haveAssigneesChanged } from "./have-assignees-changed";
 
 describe("haveAssigneesChanged", () => {

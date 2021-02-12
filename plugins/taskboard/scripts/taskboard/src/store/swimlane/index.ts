@@ -20,10 +20,10 @@
 import * as actions from "./swimlane-actions";
 import * as mutations from "./swimlane-mutations";
 import * as getters from "./swimlane-getters";
-import { SwimlaneState } from "./type";
-import { Module } from "vuex";
-import { RootState } from "../type";
-import { UserForPeoplePicker } from "./card/type";
+import type { SwimlaneState } from "./type";
+import type { Module } from "vuex";
+import type { RootState } from "../type";
+import type { UserForPeoplePicker } from "./card/type";
 
 const swimlane_module_default: Module<SwimlaneState, RootState> = {
     namespaced: true,

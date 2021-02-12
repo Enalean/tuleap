@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    addShortcutsGroup,
+import type {
     Shortcut,
     ShortcutsGroup,
 } from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
+import { addShortcutsGroup } from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
 
-import { Direction, GettextProvider } from "../type";
+import type { GettextProvider } from "../type";
+import { Direction } from "../type";
 
 import { moveFocus } from "../shortcuts-handles/move-focus";
 

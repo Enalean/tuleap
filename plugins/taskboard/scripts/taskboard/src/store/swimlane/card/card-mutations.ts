@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card } from "../../../type";
-import { SwimlaneState } from "../type";
-import {
+import type { Card } from "../../../type";
+import type { SwimlaneState } from "../type";
+import type {
     UpdateCardPayload,
     NewRemainingEffortPayload,
     TrackerAssignableUsersPayload,

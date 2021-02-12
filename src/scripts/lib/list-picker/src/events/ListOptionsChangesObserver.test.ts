@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ItemsMapManager } from "../items/ItemsMapManager";
-import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
-import { SelectionManager } from "../type";
-import { EventManager } from "./EventManager";
+import type { ItemsMapManager } from "../items/ItemsMapManager";
+import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
+import type { SelectionManager } from "../type";
+import type { EventManager } from "./EventManager";
 import { ListOptionsChangesObserver } from "./ListOptionsChangesObserver";
 import {
     appendGroupedOptionsToSourceSelectBox,

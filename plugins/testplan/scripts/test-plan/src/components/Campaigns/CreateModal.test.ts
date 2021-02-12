@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
+import type Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import * as tlp from "tlp";
-import { Modal } from "tlp";
+import type { Modal } from "tlp";
 import CreateModal from "./CreateModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../store/type";
-import { CampaignState } from "../../store/campaign/type";
+import type { RootState } from "../../store/type";
+import type { CampaignState } from "../../store/campaign/type";
 import * as tracker_report_retriever from "../../helpers/Campaigns/tracker-reports-retriever";
-import { BacklogItemState } from "../../store/backlog-item/type";
+import type { BacklogItemState } from "../../store/backlog-item/type";
 
 jest.mock("tlp", () => {
     return {

@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../../../type";
+import type { ColumnDefinition } from "../../../../../type";
 
 @Component
 export default class ClassesForCollapsedColumnMixin extends Vue {

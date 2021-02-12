@@ -20,12 +20,12 @@
 import Vue from "vue";
 import { initVueGettext, getPOFileFromLocale } from "../../tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
-import { TemplateData, TroveCatData } from "./src/type";
+import type { TemplateData, TroveCatData } from "./src/type";
 import { createStore } from "./src/store";
-import { RootState } from "./src/store/type";
+import type { RootState } from "./src/store/type";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createRouter } from "./src/router";
-import { ConfigurationState } from "./src/store/configuration";
+import type { ConfigurationState } from "./src/store/configuration";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("project-registration");

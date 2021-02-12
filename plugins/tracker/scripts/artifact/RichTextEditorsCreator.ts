@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getUploadImageOptions, UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
-import {
+import type { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
+import { getUploadImageOptions } from "@tuleap/ckeditor-image-upload-form";
+import type {
     RichTextEditorFactory,
     RichTextEditorOptions,
 } from "@tuleap/plugin-tracker-rich-text-editor";
+import type { TextFieldFormat } from "../constants/fields-constants";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-    TextFieldFormat,
 } from "../constants/fields-constants";
 
 const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";

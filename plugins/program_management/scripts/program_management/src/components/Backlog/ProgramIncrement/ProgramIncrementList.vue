@@ -63,10 +63,8 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import EmptyState from "./EmptyState.vue";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
-import {
-    getProgramIncrements,
-    ProgramIncrement,
-} from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import { getProgramIncrements } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { programId, canCreateProgramIncrement, programIncrementId } from "../../../configuration";
 import ProgramIncrementSkeleton from "./ProgramIncrementSkeleton.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";

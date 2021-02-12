@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AddTestDefinitionsToBacklogItemPayload, BacklogItemState } from "./type";
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
-import { FetchWrapperError, recursiveGet } from "tlp";
-import {
+import type { AddTestDefinitionsToBacklogItemPayload, BacklogItemState } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
+import type { FetchWrapperError } from "tlp";
+import { recursiveGet } from "tlp";
+import type {
     BacklogItem,
     BacklogItemFromREST,
     TestDefinition,

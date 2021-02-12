@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { FieldData, TemplateData, TroveCatData } from "../../type";
-import { Module } from "vuex";
-import { RootState } from "../type";
+import type { FieldData, TemplateData, TroveCatData } from "../../type";
+import type { Module } from "vuex";
+import type { RootState } from "../type";
 
 export interface ConfigurationState {
     readonly are_restricted_users_allowed: boolean;

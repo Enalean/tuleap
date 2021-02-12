@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TrackerToBeCreatedMandatoryData } from "../store/type";
+import type { TrackerToBeCreatedMandatoryData } from "../store/type";
 
 const XML_MIME_TYPE = "text/xml";
 const TRACKER_DEFAULT_COLOR = "inca-silver";

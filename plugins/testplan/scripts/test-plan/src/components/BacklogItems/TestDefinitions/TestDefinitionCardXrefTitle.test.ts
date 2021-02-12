@@ -18,9 +18,9 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { BacklogItem, TestDefinition } from "../../../type";
+import type { BacklogItem, TestDefinition } from "../../../type";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../../store/type";
+import type { RootState } from "../../../store/type";
 import TestDefinitionCardXrefTitle from "./TestDefinitionCardXrefTitle.vue";
 import { createTestPlanLocalVue } from "../../../helpers/local-vue-for-test";
 

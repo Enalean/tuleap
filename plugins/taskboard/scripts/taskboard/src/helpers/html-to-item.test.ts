@@ -22,7 +22,7 @@ import {
     getCardFromSwimlane,
     isDraggedOverAnotherSwimlane,
 } from "./html-to-item";
-import { Card, Swimlane } from "../type";
+import type { Card, Swimlane } from "../type";
 
 describe("html-to-item helper", () => {
     describe("isDraggedOverTheSourceCell", () => {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { Store } from "vuex";
-import { RootState } from "./type";
+import type { RootState } from "./type";
 import campaign from "./campaign";
 import backlog_item from "./backlog-item";
 

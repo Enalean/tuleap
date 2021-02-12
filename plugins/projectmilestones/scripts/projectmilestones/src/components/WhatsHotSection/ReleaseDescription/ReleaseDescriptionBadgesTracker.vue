@@ -47,7 +47,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData, TrackerNumberArtifacts } from "../../../type";
+import type { MilestoneData, TrackerNumberArtifacts } from "../../../type";
 
 @Component
 export default class ReleaseDescriptionBadgesTracker extends Vue {

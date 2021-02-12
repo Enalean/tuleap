@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EncodeDataParameters } from "../type";
+import type { EncodeDataParameters } from "../type";
 
 export default function (parameters: EncodeDataParameters): string {
     return Object.keys(parameters)

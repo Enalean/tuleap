@@ -42,7 +42,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
-import { BacklogItem, Campaign } from "../../type";
+import type { BacklogItem, Campaign } from "../../type";
 import ExportError from "./ExportError.vue";
 
 const backlog_item = namespace("backlog_item");

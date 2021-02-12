@@ -19,8 +19,8 @@
 
 import { DropdownManager } from "./DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { ScrollingManager } from "../events/ScrollingManager";
-import { FieldFocusManager } from "../navigation/FieldFocusManager";
+import type { ScrollingManager } from "../events/ScrollingManager";
+import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 describe("dropdown-manager", () => {
     let doc: HTMLDocument,

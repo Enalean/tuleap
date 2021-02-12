@@ -48,7 +48,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
-import { ColumnDefinition, Swimlane } from "../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import ChildrenSwimlane from "./Swimlane/ChildrenSwimlane.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";

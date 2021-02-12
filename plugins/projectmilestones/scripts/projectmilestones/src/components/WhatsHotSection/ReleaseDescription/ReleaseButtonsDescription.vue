@@ -62,7 +62,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData, Pane } from "../../../type";
+import type { MilestoneData, Pane } from "../../../type";
 import { State } from "vuex-class";
 
 @Component

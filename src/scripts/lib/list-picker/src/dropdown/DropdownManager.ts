@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { ScrollingManager } from "../events/ScrollingManager";
-import { FieldFocusManager } from "../navigation/FieldFocusManager";
+import type { ScrollingManager } from "../events/ScrollingManager";
+import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 export class DropdownManager {
     private resize_observer: ResizeObserver;

@@ -18,12 +18,13 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import * as element_checker from "../../helpers/is-element-in-viewport";
 import VueRouter from "vue-router";
-import { Store } from "vuex-mock-store";
-import { State } from "../../store/type";
+import type { Store } from "vuex-mock-store";
+import type { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import TemplateFooter from "./TemplateFooter.vue";
 

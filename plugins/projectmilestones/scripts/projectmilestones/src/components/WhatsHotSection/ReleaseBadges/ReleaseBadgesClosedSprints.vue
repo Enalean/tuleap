@@ -40,7 +40,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
 import { State } from "vuex-class";
 

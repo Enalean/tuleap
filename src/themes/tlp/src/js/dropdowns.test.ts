@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Dropdown } from "./dropdowns";
 import {
-    Dropdown,
     createDropdown,
     EVENT_TLP_DROPDOWN_SHOWN,
     EVENT_TLP_DROPDOWN_HIDDEN,

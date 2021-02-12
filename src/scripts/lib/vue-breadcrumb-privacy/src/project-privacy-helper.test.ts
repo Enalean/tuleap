@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProjectPrivacyIcon, ProjectPrivacy } from "./project-privacy-helper";
+import type { ProjectPrivacy } from "./project-privacy-helper";
+import { getProjectPrivacyIcon } from "./project-privacy-helper";
 
 describe("project-privacy-helper", () => {
     it.each([

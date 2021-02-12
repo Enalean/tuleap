@@ -18,7 +18,7 @@
  */
 
 import * as mutations from "./error-mutations";
-import { ErrorState } from "./type";
+import type { ErrorState } from "./type";
 
 describe("Error modules mutations", () => {
     describe("setGlobalErrorMessage", () => {

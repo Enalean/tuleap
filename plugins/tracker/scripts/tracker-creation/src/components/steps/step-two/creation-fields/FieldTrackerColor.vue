@@ -42,9 +42,10 @@ import { State } from "vuex-class";
 import { render } from "mustache";
 import { sanitize } from "dompurify";
 import $ from "jquery";
-import { DataFormat, GroupedDataFormat, LoadingData, select2, Select2Plugin } from "tlp";
-import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
-import { DataForColorPicker } from "../../../../store/type";
+import type { DataFormat, GroupedDataFormat, LoadingData, Select2Plugin } from "tlp";
+import { select2 } from "tlp";
+import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
+import type { DataForColorPicker } from "../../../../store/type";
 
 @Component
 export default class FieldTrackerColor extends Vue {

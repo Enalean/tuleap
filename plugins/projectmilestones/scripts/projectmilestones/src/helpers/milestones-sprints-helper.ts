@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MilestoneData } from "../type";
+import type { MilestoneData } from "../type";
 
 export function openSprintsExist(release_data: MilestoneData): boolean {
     if (typeof release_data.total_sprint !== "number") {

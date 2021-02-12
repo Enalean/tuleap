@@ -18,11 +18,12 @@
  */
 
 import Vue from "vue";
-import Vuex, { Store } from "vuex";
+import type { Store } from "vuex";
+import Vuex from "vuex";
 import mutations from "./mutations";
 import * as getters from "./getters";
 import * as actions from "./actions";
-import { BurnupMode, State, TrackerAgileDashboard } from "../type";
+import type { BurnupMode, State, TrackerAgileDashboard } from "../type";
 
 Vue.use(Vuex);
 

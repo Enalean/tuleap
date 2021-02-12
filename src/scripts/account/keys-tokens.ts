@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker, Modal } from "tlp";
+import type { Modal } from "tlp";
+import { datePicker } from "tlp";
 import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
 import "../tuleap/custom-elements/copy-to-clipboard";
 

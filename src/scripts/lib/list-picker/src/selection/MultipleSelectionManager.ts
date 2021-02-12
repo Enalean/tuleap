@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } from "../type";
-import { DropdownManager } from "../dropdown/DropdownManager";
-import { ItemsMapManager } from "../items/ItemsMapManager";
-import { GettextProvider } from "@tuleap/gettext";
+import type { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } from "../type";
+import type { DropdownManager } from "../dropdown/DropdownManager";
+import type { ItemsMapManager } from "../items/ItemsMapManager";
+import type { GettextProvider } from "@tuleap/gettext";
 import { render } from "lit-html";
 import { createItemBadgeTemplate } from "../helpers/templates/list-picker-element-badge-creator";
 

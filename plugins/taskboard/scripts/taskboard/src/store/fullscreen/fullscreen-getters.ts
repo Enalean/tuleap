@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FullscreenState } from "./type";
+import type { FullscreenState } from "./type";
 
 export const fullscreen_class = (state: FullscreenState): string => {
     return state.is_taskboard_in_fullscreen_mode ? "taskboard-fullscreen" : "";

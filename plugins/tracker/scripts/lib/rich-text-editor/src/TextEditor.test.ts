@@ -23,7 +23,7 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "../../../constants/fields-constants";
-import { HTMLToMarkdownConverterInterface, MarkdownToHTMLRendererInterface } from "./types";
+import type { HTMLToMarkdownConverterInterface, MarkdownToHTMLRendererInterface } from "./types";
 import CKEDITOR from "ckeditor4";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
