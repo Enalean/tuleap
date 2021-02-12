@@ -270,6 +270,10 @@ final class ProjectResource extends AuthenticatedResource
         foreach ($backlog_patch_representation->remove as $feature_to_remove) {
             $feature_ids_to_remove[] = $feature_to_remove->id;
         }
+        $feature_ids_to_add = [];
+        foreach ($backlog_patch_representation->add as $feature_to_add) {
+            $feature_ids_to_add[] = $feature_to_add->id;
+        }
 
         $project_access_checker = new ProjectAccessChecker(
             PermissionsOverrider_PermissionsOverriderManager::instance(),
@@ -293,7 +297,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         try {
-            $top_backlog_updater->updateTopBacklog($id, new TopBacklogChange($feature_ids_to_remove), $user);
+            $top_backlog_updater->updateTopBacklog($id, new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove), $user);
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
             throw new RestException(404);
         } catch (ProjectIsNotAProgramException $e) {

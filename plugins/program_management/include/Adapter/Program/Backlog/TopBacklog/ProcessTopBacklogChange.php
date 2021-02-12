@@ -70,18 +70,33 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 throw new CannotManipulateTopBacklog($program, $user);
             }
 
-            $feature_ids_to_remove = [];
-
-            foreach ($top_backlog_change->potential_features_id_to_remove as $feature_id) {
-                $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
-                if ($artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->id) {
-                    $feature_ids_to_remove[] = $feature_id;
-                }
+            $feature_ids_to_add = $this->filterFeaturesThatCanBeManipulated($top_backlog_change->potential_features_id_to_add, $user, $program);
+            if (count($feature_ids_to_add) > 0) {
+                $this->explicit_top_backlog_dao->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
             }
 
+            $feature_ids_to_remove = $this->filterFeaturesThatCanBeManipulated($top_backlog_change->potential_features_id_to_remove, $user, $program);
             if (count($feature_ids_to_remove) > 0) {
                 $this->explicit_top_backlog_dao->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
             }
         });
+    }
+
+    /**
+     * @param int[] $features_id
+     * @return int[]
+     */
+    private function filterFeaturesThatCanBeManipulated(array $features_id, \PFUser $user, ProgramForManagement $program): array
+    {
+        $filtered_features = [];
+
+        foreach ($features_id as $feature_id) {
+            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
+            if ($artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->id) {
+                $filtered_features[] = $feature_id;
+            }
+        }
+
+        return $filtered_features;
     }
 }

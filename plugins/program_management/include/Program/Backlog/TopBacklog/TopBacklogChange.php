@@ -30,13 +30,19 @@ final class TopBacklogChange
     /**
      * @var int[]
      */
+    public $potential_features_id_to_add;
+    /**
+     * @var int[]
+     */
     public $potential_features_id_to_remove;
 
     /**
+     * @param int[] $potential_features_id_to_add
      * @param int[] $potential_features_id_to_remove
      */
-    public function __construct(array $potential_features_id_to_remove)
+    public function __construct(array $potential_features_id_to_add, array $potential_features_id_to_remove)
     {
+        $this->potential_features_id_to_add    = $potential_features_id_to_add;
         $this->potential_features_id_to_remove = $potential_features_id_to_remove;
     }
 }

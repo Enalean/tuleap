@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\REST\v1;
 /**
  * @psalm-immutable
  */
-final class BacklogRemoveRepresentation
+final class TopBacklogElementInvolvedInChangeRepresentation
 {
     /**
      * @var int {@required true}
