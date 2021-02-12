@@ -26,6 +26,8 @@ namespace Tuleap\Timetracking\JiraImporter;
 use ProjectUGroup;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
+use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfigurationRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use XML_SimpleXMLCDATAFactory;
 
 class JiraXMLExport
@@ -48,8 +50,10 @@ class JiraXMLExport
         $this->logger        = $logger;
     }
 
-    public function exportJiraTimetracking(SimpleXMLElement $xml_tracker): void
-    {
+    public function exportJiraTimetracking(
+        SimpleXMLElement $xml_tracker,
+        PlatformConfiguration $platform_configuration
+    ): void {
         $this->logger->debug("Export timetracking");
 
         $xml_timetracking = $xml_tracker->addChild('timetracking');
@@ -64,5 +68,17 @@ class JiraXMLExport
             "ugroup",
             $project_member_ugroup_name
         );
+
+        $this->exportTimes($platform_configuration);
+    }
+
+    private function exportTimes(PlatformConfiguration $platform_configuration): void
+    {
+        if (! $platform_configuration->isConfigurationAllowed(JiraTimetrackingConfigurationRetriever::CONFIGURATION_KEY)) {
+            $this->logger->debug("Jira platform does not have timetracking configured to be imported. Skipping.");
+            return;
+        }
+
+        $this->logger->debug("Jira platform has the expected timetracking provider configured.");
     }
 }

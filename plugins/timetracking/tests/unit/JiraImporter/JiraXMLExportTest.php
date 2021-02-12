@@ -25,20 +25,25 @@ namespace Tuleap\Timetracking\JiraImporter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use XML_SimpleXMLCDATAFactory;
 
 final class JiraXMLExportTest extends TestCase
 {
-    public function testItExportsTimetrackingConfigurationForJiraTracker(): void
+    public function testItEnablesTimetrackingConfigurationForJiraTracker(): void
     {
-        $xml_tracker = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
+        $xml_tracker            = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker/>');
+        $platform_configuration = new PlatformConfiguration();
 
         $exporter = new JiraXMLExport(
             new XML_SimpleXMLCDATAFactory(),
             new NullLogger()
         );
 
-        $exporter->exportJiraTimetracking($xml_tracker);
+        $exporter->exportJiraTimetracking(
+            $xml_tracker,
+            $platform_configuration
+        );
 
         $this->assertTrue(isset($xml_tracker->timetracking));
         $this->assertSame("1", (string) $xml_tracker->timetracking['is_enabled']);

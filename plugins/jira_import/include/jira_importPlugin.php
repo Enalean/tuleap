@@ -27,6 +27,7 @@ use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
@@ -95,6 +96,9 @@ final class jira_importPlugin extends Plugin
                                 $nature_dao,
                                 $nature_validator,
                             ),
+                        ),
+                        new PlatformConfigurationRetriever(
+                            EventManager::instance()
                         )
                     )
                 );

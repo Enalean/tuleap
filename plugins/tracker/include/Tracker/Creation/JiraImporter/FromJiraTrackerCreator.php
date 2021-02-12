@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use BackendLogger;
+use EventManager;
 use ForgeConfig;
 use Project;
 use Psr\Log\LoggerInterface;
@@ -35,6 +36,7 @@ use TrackerFromXmlImportCannotBeCreatedException;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
@@ -75,18 +77,25 @@ class FromJiraTrackerCreator
      */
     private $jira_user_on_tuleap_cache;
 
+    /**
+     * @var PlatformConfigurationRetriever
+     */
+    private $platform_configuration_retriever;
+
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
         TrackerCreationDataChecker $creation_data_checker,
         LoggerInterface $logger,
-        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
+        PlatformConfigurationRetriever $platform_configuration_retriever
     ) {
-        $this->tracker_xml_import        = $tracker_xml_import;
-        $this->tracker_factory           = $tracker_factory;
-        $this->creation_data_checker     = $creation_data_checker;
-        $this->logger                    = $logger;
-        $this->jira_user_on_tuleap_cache = $jira_user_on_tuleap_cache;
+        $this->tracker_xml_import               = $tracker_xml_import;
+        $this->tracker_factory                  = $tracker_factory;
+        $this->creation_data_checker            = $creation_data_checker;
+        $this->logger                           = $logger;
+        $this->jira_user_on_tuleap_cache        = $jira_user_on_tuleap_cache;
+        $this->platform_configuration_retriever = $platform_configuration_retriever;
     }
 
     public static function build(JiraUserOnTuleapCache $jira_user_on_tuleap_cache): self
@@ -106,7 +115,10 @@ class FromJiraTrackerCreator
                 TrackerFactory::instance()
             ),
             $logger,
-            $jira_user_on_tuleap_cache
+            $jira_user_on_tuleap_cache,
+            new PlatformConfigurationRetriever(
+                EventManager::instance()
+            )
         );
     }
 
@@ -137,7 +149,14 @@ class FromJiraTrackerCreator
         $this->logger->info("Selected jira issue type: $jira_issue_type_id");
 
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
-        $jira_exporter = $this->getJiraExporter($jira_token, $jira_username, $jira_url);
+
+        $jira_credentials = new JiraCredentials($jira_url, $jira_username, $jira_token);
+        $jira_exporter    = $this->getJiraExporter($jira_credentials);
+
+        $platform_configuration_collection = $this->platform_configuration_retriever->getJiraPlatformConfiguration(
+            ClientWrapper::build($jira_credentials),
+            $this->logger
+        );
 
         $tracker_for_export = (new XMLTracker('T200', $itemname))
             ->withName($name)
@@ -148,7 +167,14 @@ class FromJiraTrackerCreator
         $trackers_xml = $xml->addChild('trackers');
         $tracker_xml  = $tracker_for_export->export($trackers_xml);
 
-        $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id, $jira_issue_type_id, new FieldAndValueIDGenerator());
+        $jira_exporter->exportJiraToXml(
+            $platform_configuration_collection,
+            $tracker_xml,
+            $jira_url,
+            $jira_project_id,
+            $jira_issue_type_id,
+            new FieldAndValueIDGenerator()
+        );
 
         try {
             $trackers = $this->tracker_xml_import->import(
@@ -194,13 +220,8 @@ class FromJiraTrackerCreator
      * protected for testing purpose
      * @throws \RuntimeException
      */
-    protected function getJiraExporter(
-        ConcealedString $jira_token,
-        string $jira_username,
-        string $jira_url
-    ): JiraXmlExporter {
-        $jira_credentials = new JiraCredentials($jira_url, $jira_username, $jira_token);
-
+    protected function getJiraExporter(JiraCredentials $jira_credentials): JiraXmlExporter
+    {
         return JiraXmlExporter::build(
             $jira_credentials,
             $this->logger,
