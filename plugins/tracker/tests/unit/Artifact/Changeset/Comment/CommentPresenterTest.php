@@ -62,15 +62,18 @@ final class CommentPresenterTest extends TestCase
         self::assertSame(102, $presenter->changeset_id);
         self::assertFalse($presenter->is_empty);
         self::assertFalse($presenter->was_cleared);
+        self::assertFalse($presenter->is_commonmark);
     }
 
-    public function testItBuildsACommonmarkCommentAsText(): void
+    public function testItBuildsACommonmarkComment(): void
     {
         $comment   = $this->buildComment('Some **Markdown** content', 'commonmark', 0);
         $presenter = new CommentPresenter($comment, $this->user_helper, UserTestBuilder::aUser()->build());
 
-        self::assertSame('text', $presenter->format);
+        self::assertSame('commonmark', $presenter->format);
+        self::assertSame('Some **Markdown** content', $presenter->commonmark_source);
         self::assertNotEmpty($presenter->purified_body);
+        self::assertTrue($presenter->is_commonmark);
     }
 
     public function testItBuildsAnEmptyComment(): void

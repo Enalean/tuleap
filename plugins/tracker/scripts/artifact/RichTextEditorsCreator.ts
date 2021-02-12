@@ -24,18 +24,11 @@ import type {
     RichTextEditorOptions,
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { TextFieldFormat } from "../constants/fields-constants";
-import {
-    TEXT_FORMAT_COMMONMARK,
-    TEXT_FORMAT_HTML,
-    TEXT_FORMAT_TEXT,
-} from "../constants/fields-constants";
+import { isValidTextFormat, TEXT_FORMAT_TEXT } from "../constants/fields-constants";
 
 const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
 const NEW_FOLLOWUP_ID_SUFFIX = "new";
 const TEXT_FIELDS_SELECTOR = ".tracker_artifact_field textarea";
-
-const isValidFormat = (value: string): value is TextFieldFormat =>
-    TEXT_FORMAT_TEXT === value || TEXT_FORMAT_HTML === value || TEXT_FORMAT_COMMONMARK === value;
 
 type OnEditorInitCallback = (editor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => void;
 
@@ -67,6 +60,9 @@ export class RichTextEditorsCreator {
         this.editor_factory.createRichTextEditor(new_followup_textarea, options);
     }
 
+    /**
+     * @throws
+     */
     public createTextFieldEditors(text_fields_options?: TextFieldEditorsOptions): void {
         const text_field_textareas = this.doc.querySelectorAll(TEXT_FIELDS_SELECTOR);
         for (const text_field_textarea of text_field_textareas) {
@@ -104,7 +100,7 @@ export class RichTextEditorsCreator {
         const format_hidden_input = this.doc.getElementById(`artifact[${field_id}]_body_format`);
         if (format_hidden_input instanceof HTMLInputElement) {
             const format = format_hidden_input.value;
-            if (isValidFormat(format)) {
+            if (isValidTextFormat(format)) {
                 return format;
             }
         }

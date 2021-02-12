@@ -56,24 +56,32 @@ final class CommentPresenter
      * @var string
      */
     public $relative_date;
+    /**
+     * @var bool
+     */
+    public $is_commonmark = false;
+    /**
+     * @var string
+     */
+    public $commonmark_source = '';
 
     public function __construct(
         \Tracker_Artifact_Changeset_Comment $comment,
         \UserHelper $user_helper,
         \PFUser $current_user
     ) {
-        $this->has_parent = (bool) $comment->parent_id;
-        // consider markdown format to be similar to text one for now
-        $considered_body_format = $comment->bodyFormat;
-        if ($considered_body_format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
-            $considered_body_format = \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
-        }
-        $this->format        = $considered_body_format;
+        $this->has_parent    = (bool) $comment->parent_id;
+        $this->format        = $comment->bodyFormat;
         $this->purified_body = $comment->getPurifiedBodyForHTML();
         $this->changeset_id  = (int) $comment->changeset->getId();
         $this->is_empty      = $comment->hasEmptyBody();
         $this->was_cleared   = ($this->has_parent && ! trim($comment->body));
         $this->user_link     = $user_helper->getLinkOnUserFromUserId((int) $comment->submitted_by);
         $this->relative_date = \DateHelper::relativeDateInlineContext((int) $comment->submitted_on, $current_user);
+
+        if ($this->format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
+            $this->is_commonmark     = true;
+            $this->commonmark_source = $comment->body;
+        }
     }
 }
