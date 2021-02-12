@@ -26,6 +26,7 @@ use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactUpdater;
+use Tracker_Workflow_GlobalRulesViolationException;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -96,6 +97,8 @@ class ExecutionStatusUpdater
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             // Do nothing
+        } catch (Tracker_Workflow_GlobalRulesViolationException $exception) {
+            throw new RestException(400, $GLOBALS['Response']->getRawFeedback());
         } catch (Tracker_Exception $exception) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 throw new RestException(500, $GLOBALS['Response']->getRawFeedback());

@@ -327,16 +327,18 @@ function ExecutionDetailCtrl(
             execution.results,
             uploaded_file_ids
         )
-            .then(function (data) {
-                ExecutionService.updateTestExecution(
-                    data,
-                    SharedPropertiesService.getCurrentUser()
-                );
-                ExecutionService.clearEditor(execution);
-            })
-            .catch(function (response) {
-                ExecutionService.displayError(execution, response);
-            })
+            .then(
+                function (data) {
+                    ExecutionService.updateTestExecution(
+                        data,
+                        SharedPropertiesService.getCurrentUser()
+                    );
+                    ExecutionService.clearEditor(execution);
+                },
+                (error) => {
+                    ExecutionService.displayErrorMessage(execution, error.message);
+                }
+            )
             .finally(function () {
                 execution.saving = false;
             });
