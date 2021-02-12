@@ -18,6 +18,8 @@
  *
  */
 
+export {};
+
 document.addEventListener("DOMContentLoaded", () => {
     handleSessionSwitch();
 });

@@ -18,6 +18,8 @@
  *
  */
 
+export {};
+
 const nav = document.querySelector(".user-preferences-nav");
 if (nav === null) {
     throw Error("Navigation element for preferences is not found");

@@ -18,5 +18,6 @@
  */
 
 import BreadcrumbPrivacy from "./BreadcrumbPrivacy.vue";
-export { getProjectPrivacyIcon, ProjectFlag, ProjectPrivacy } from "./project-privacy-helper";
+export { getProjectPrivacyIcon } from "./project-privacy-helper";
+export type { ProjectFlag, ProjectPrivacy } from "./project-privacy-helper";
 export { BreadcrumbPrivacy };

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+export {};
+
 document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("toggle-cross-referenced-by");
     const cross_referenced_by_section = document.getElementById(
