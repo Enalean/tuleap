@@ -26,6 +26,7 @@
     "css-loader": "^5.0.0",
     "css-minimizer-webpack-plugin": "^1.1.5",
     "cypress": "^6.5.0",
+    "cypress-file-upload": "^5.0.2",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-cypress": "^2.11.2",

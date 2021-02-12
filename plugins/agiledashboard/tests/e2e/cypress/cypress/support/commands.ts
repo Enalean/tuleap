@@ -30,6 +30,9 @@ declare global {
     }
 }
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "cypress-file-upload";
+
 Cypress.Commands.add("dragAndDrop", (source: string, destination: string, position: string) => {
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(source).trigger("mousedown", { which: 1 });
