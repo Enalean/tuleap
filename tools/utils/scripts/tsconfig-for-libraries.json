@@ -8,6 +8,7 @@
         "sourceMap": true,
         "allowSyntheticDefaultImports": true,
         "isolatedModules": true,
-        "moduleResolution": "Node"
+        "moduleResolution": "Node",
+        "skipLibCheck": true
     }
 }
