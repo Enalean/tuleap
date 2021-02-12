@@ -66,6 +66,9 @@
                 <p class="tlp-text-danger" ng-if="overview.buildStatusIs('fail')">
                     <i class="fas fa-times"></i> <span translate>Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
                 </p>
+                <p class="tlp-text-info" ng-if="overview.buildStatusIs('pending')">
+                    <i class="fas fa-sync" aria-hidden="true"></i> <span translate>Pending since {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
+                </p>
                 <p class="tlp-text-warning" ng-if="overview.buildStatusIs('unknown')">
                     <i class="fa fa-exclamation-triangle"></i> <span translate>Unknown</span>
                 </p>

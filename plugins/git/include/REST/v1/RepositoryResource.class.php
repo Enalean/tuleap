@@ -510,7 +510,7 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param string $id_or_path       Git repository id or Git repository path
      * @param string $commit_reference Commit SHA-1
-     * @param string $state            {@choice failure,success} {@from body}
+     * @param string $state            {@choice failure,success,pending} {@from body}
      * @param string $token            {@from body}
      *
      * @status 201
