@@ -72,7 +72,7 @@ class RepositoryResource
         $this->logger = \pullrequestPlugin::getLogger();
     }
 
-    public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset)
+    public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset): RepositoryPullRequestRepresentation
     {
         try {
             $criterion = $this->query_to_criterion_converter->convert($query);

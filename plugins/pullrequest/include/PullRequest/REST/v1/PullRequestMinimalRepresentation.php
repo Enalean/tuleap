@@ -83,6 +83,10 @@ class PullRequestMinimalRepresentation
      * @var string {@type string}
      */
     public $status;
+    /**
+     * @var PullRequestHEADRepresentation {@type PullRequestHEADRepresentation}
+     */
+    public $head;
 
     public function __construct(GitoliteAccessURLGenerator $gitolite_access_URL_generator)
     {
@@ -113,6 +117,7 @@ class PullRequestMinimalRepresentation
         $this->branch_src    = $pull_request->getBranchSrc();
         $this->branch_dest   = $pull_request->getBranchDest();
         $this->status        = $this->expandStatusName($pull_request->getStatus());
+        $this->head          = new PullRequestHEADRepresentation($pull_request);
     }
 
     private function expandStatusName($status_acronym)
