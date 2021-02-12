@@ -7,11 +7,11 @@
             onclick="this.blur();"
             ng-click="$ctrl.openEditCampaignModal()"
             ng-if="$ctrl.campaign_state.campaign.user_can_update"
-            title="{{ ::'Edit campaign' | translate }}"
+            title="{{ ::'Select tests' | translate }}"
             data-test="edit-campaign-button"
             data-shortcut-edit-campaign
     >
-        <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ 'Edit' | translate }}
+        <i class="fas fa-tlp-select-test tlp-button-icon"></i> {{ 'Select tests' | translate }}
     </button>
     <button type="button"
         class="tlp-button-primary tlp-button-outline execution-header-button"
@@ -42,6 +42,15 @@
             >
                 <i class="fas fa-pencil-alt tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                 {{ ::'Rename campaign' | translate }}
+            </button>
+            <button
+                type="button"
+                ng-click="$ctrl.openEditCampaignAutomatedModal()"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+            >
+                <i class="fas fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                {{ ::'Configure automated tests' | translate }}
             </button>
         </div>
     </div>
