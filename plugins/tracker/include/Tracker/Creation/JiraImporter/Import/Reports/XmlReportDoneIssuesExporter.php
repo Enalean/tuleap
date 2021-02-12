@@ -28,7 +28,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedVal
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Report\XML\XMLReport;
-use XML_SimpleXMLCDATAFactory;
 
 class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
 {
@@ -36,27 +35,16 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
      * @var XmlReportDefaultCriteriaExporter
      */
     private $default_criteria_exporter;
-
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_factory;
-
     /**
      * @var XmlReportTableExporter
      */
     private $report_table_exporter;
 
-    /**
-     * @param FieldMapping[] $column_fields
-     */
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
-        XML_SimpleXMLCDATAFactory $cdata_factory,
         XmlReportTableExporter $report_table_exporter
     ) {
         $this->default_criteria_exporter = $default_criteria_exporter;
-        $this->cdata_factory             = $cdata_factory;
         $this->report_table_exporter     = $report_table_exporter;
     }
 
