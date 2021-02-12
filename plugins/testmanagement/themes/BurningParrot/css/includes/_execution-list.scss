@@ -43,7 +43,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 .test-campaign-header {
     display: flex;
     flex: 0 0 auto;
-    align-items: flex-end;
+    align-items: center;
     margin: 0;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
@@ -54,6 +54,29 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 
 .execution-header-button {
     margin: 0 0 0 $tlp-medium-spacing;
+}
+
+.execution-header-button-edit.tlp-button-outline {
+    height: auto;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+
+    &:focus,
+    &:hover {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    &:focus-visible {
+        box-shadow: $tlp-shadow-focus;
+    }
+}
+
+.execution-header-button-edit-menu {
+    // magic value to adjust the menu just at the middle of the ellipsis
+    left: -9px;
 }
 
 .test-campaign-header-spacer {

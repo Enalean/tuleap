@@ -3,35 +3,13 @@
       ng-submit="editCampaign(campaign)">
     <div class="tlp-modal-header">
       <h1 class="tlp-modal-title">
-          <i class="fas fa-pencil-alt tlp-modal-title-icon"></i>
+          <i class="fas fa-pencil-alt tlp-modal-title-icon" aria-hidden="true"></i>
           <span translate>Edit {{ campaign.label }} campaign</span>
       </h1>
       <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">&times;</div>
     </div>
 
     <div class="tlp-modal-body">
-        <div class="tlp-form-element"
-             ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid }">
-            <label class="tlp-label" for="campaign-label">
-                {{ 'Campaign label' | translate }} <i class="fa fa-asterisk"></i>
-            </label>
-            <input type="text"
-                   class="tlp-input edit-campaign-label-input"
-                   id="campaign-label"
-                   data-test=campaign-label
-                   name="campaign_label"
-                   ng-model="campaign.label"
-                   placeholder="{{ 'Campaign label' | translate }}"
-                   required
-                   ng-trim />
-            <p class="tlp-text-danger" ng-show="editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid">
-                {{ 'A campaign label is required' | translate }}
-                <i class="far fa-frown"></i>
-            </p>
-        </div>
-
-        <hr class="tlp-modal-separator">
-
         <h2 class="tlp-modal-subtitle" translate>Jenkins job</h2>
         <div class="tlp-form-element"
             ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_job_url.$dirty && editCampaignForm.campaign_job_url.$invalid }"
@@ -156,7 +134,7 @@
                 data-test="edit-campaign-save-button"
                 class="tlp-button-primary tlp-modal-action"
                 ng-disabled="submitting_changes || ! editCampaignForm.$valid">
-            <i class="fa fa-spinner fa-spin" ng-if="submitting_changes"></i>
+            <i class="tlp-button-icon fas fa-circle-notch fa-spin" ng-if="submitting_changes"></i>
             {{ 'Save changes' | translate }}
         </button>
     </div>
