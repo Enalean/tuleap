@@ -25,9 +25,11 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertSame;
 
@@ -51,7 +53,13 @@ class JiraAgileImporterTest extends TestCase
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
 
-        $project_board_retriever->exportScrum(new NullLogger(), $xml, 'FOO', new FieldAndValueIDGenerator());
+        $project_board_retriever->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
     }
 
     public function testItHasASprintTracker(): void
@@ -60,7 +68,13 @@ class JiraAgileImporterTest extends TestCase
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
-        $project_board_retriever->exportScrum(new NullLogger(), $xml, 'FOO', new FieldAndValueIDGenerator());
+        $project_board_retriever->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
 
         assertCount(1, $xml->trackers->tracker);
         assertEquals('T1', (string) $xml->trackers->tracker[0]['id']);
@@ -75,7 +89,13 @@ class JiraAgileImporterTest extends TestCase
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
-        $project_board_retriever->exportScrum(new NullLogger(), $xml, 'FOO', new FieldAndValueIDGenerator());
+        $project_board_retriever->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
 
         assertEquals(\Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, (string) $xml->trackers->tracker->formElements->formElement[0]['type']);
         assertEquals(1, (int) $xml->trackers->tracker->formElements->formElement[0]['rank']);
@@ -89,7 +109,13 @@ class JiraAgileImporterTest extends TestCase
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
-        $project_board_retriever->exportScrum(new NullLogger(), $xml, 'FOO', new FieldAndValueIDGenerator());
+        $project_board_retriever->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
 
         assertEquals(\Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, (string) $xml->trackers->tracker->formElements->formElement[0]['type']);
 
@@ -150,7 +176,49 @@ class JiraAgileImporterTest extends TestCase
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
-        $project_board_retriever->exportScrum(new NullLogger(), $xml, 'FOO', new FieldAndValueIDGenerator());
+        $project_board_retriever->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+    }
+
+    public function testItCreatesOneSprintArtifact()
+    {
+        $jira_agile_importer = new JiraAgileImporter(
+            $this->getJiraBoradRetrieverWithOneBoard(),
+            $this->getJiraSprintRetrieverWithSprints(
+                [JiraSprint::buildActive(1, 'Sprint 1')]
+            )
+        );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+        );
+
+        assertCount(1, $xml->trackers->tracker[0]->artifacts->artifact);
+        $xml_artifact_node = $xml->trackers->tracker[0]->artifacts->artifact[0];
+
+        assertNotEmpty($xml_artifact_node['id']);
+        assertCount(1, $xml_artifact_node->changeset);
+        assertEquals('username', $xml_artifact_node->changeset[0]->submitted_by['format']);
+        assertEquals('forge__tracker_importer_user', $xml_artifact_node->changeset[0]->submitted_by);
+        assertEquals('ISO8601', $xml_artifact_node->changeset[0]->submitted_on['format']);
+        assertNotNull($xml_artifact_node->changeset[0]->submitted_on);
+        assertNotNull($xml_artifact_node->changeset[0]->comments);
+        assertCount(0, $xml_artifact_node->changeset[0]->comments->comment);
+        assertCount(1, $xml_artifact_node->changeset[0]->field_change);
+        assertEquals('name', $xml_artifact_node->changeset[0]->field_change[0]['field_name']);
+        assertEquals('string', $xml_artifact_node->changeset[0]->field_change[0]['type']);
+        assertEquals('Sprint 1', $xml_artifact_node->changeset[0]->field_change[0]->value);
     }
 
     private function getJiraAgileImport(): JiraAgileImporter
@@ -174,12 +242,26 @@ class JiraAgileImporterTest extends TestCase
 
     private function getJiraSprintRetrieverWithoutSprints(): JiraSprintRetriever
     {
-        return new class implements JiraSprintRetriever
+        return $this->getJiraSprintRetrieverWithSprints([]);
+    }
+
+    private function getJiraSprintRetrieverWithSprints(array $sprints): JiraSprintRetriever
+    {
+        return new class ($sprints) implements JiraSprintRetriever
         {
+            /**
+             * @var array
+             */
+            private $sprints;
+
+            public function __construct(array $sprints)
+            {
+                $this->sprints = $sprints;
+            }
 
             public function getAllSprints(JiraBoard $board): array
             {
-                return [];
+                return $this->sprints;
             }
         };
     }

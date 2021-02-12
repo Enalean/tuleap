@@ -39,11 +39,11 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class ScrumTrackerBuilder
 {
-    private const NAME_FIELD_NAME = 'name';
+    public const NAME_FIELD_NAME = 'name';
 
-    public function export(\SimpleXMLElement $project, IDGenerator $id_generator): void
+    public function get(IDGenerator $id_generator): XMLTracker
     {
-        $tracker = (new XMLTracker($id_generator, 'sprint'))
+        return (new XMLTracker($id_generator, 'sprint'))
             ->withName('Sprints')
             ->withColor(TrackerColor::fromName('acid-green'))
             ->withFormElement(
@@ -77,6 +77,5 @@ final class ScrumTrackerBuilder
                             )
                     )
             );
-        $tracker->export($project->trackers);
     }
 }

@@ -206,7 +206,7 @@ final class CreateProjectFromJira
             );
         }
 
-        $jira_agile_importer->exportScrum($logger, $xml_element, $jira_project, $field_id_generator);
+        $jira_agile_importer->exportScrum($logger, $xml_element, $jira_project, $field_id_generator, $import_user);
 
         return $this->addWidgetOnDashboard($xml_element, [ProjectHeartbeat::NAME]);
     }

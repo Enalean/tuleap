@@ -110,4 +110,9 @@ final class JiraSprint
         }
         return $self;
     }
+
+    public static function buildActive(int $id, string $name): self
+    {
+        return new self($id, '', 'active', $name);
+    }
 }

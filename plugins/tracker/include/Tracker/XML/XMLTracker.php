@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\XML;
 
 use SimpleXMLElement;
 use Tracker;
+use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Report\XML\XMLReport;
@@ -80,6 +81,11 @@ final class XMLTracker
      * @readonly
      */
     private $reports = [];
+    /**
+     * @var XMLArtifact[]
+     * @readonly
+     */
+    private $artifacts = [];
 
     /**
      * @param string|IDGenerator $id
@@ -183,6 +189,17 @@ final class XMLTracker
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
+    public function withArtifact(XMLArtifact $artifact): self
+    {
+        $new              = clone $this;
+        $new->artifacts[] = $artifact;
+        return $new;
+    }
+
     public static function fromTracker(Tracker $tracker): self
     {
         return (new self($tracker->getXMLId(), $tracker->getItemName()))
@@ -245,6 +262,13 @@ final class XMLTracker
             $tracker_xml->addChild('permissions');
             foreach ($form_elements_flattened_collection as $form_element) {
                 $form_element->exportPermissions($tracker_xml->permissions);
+            }
+        }
+
+        if (count($this->artifacts) > 0) {
+            $tracker_xml->addChild('artifacts');
+            foreach ($this->artifacts as $artifact) {
+                $artifact->export($tracker_xml->artifacts);
             }
         }
 
