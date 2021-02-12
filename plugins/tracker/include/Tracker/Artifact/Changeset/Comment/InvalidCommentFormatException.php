@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\Changeset\Followup;
+namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 final class InvalidCommentFormatException extends \Exception
 {
     public function __construct(string $format)
     {
-        parent::__construct(sprintf("Invalid comment format: %s passed. Valid formats are 'html' or 'text'", $format));
+        parent::__construct(sprintf("Invalid comment format: %s passed. Valid formats are 'html', 'text' or 'commonmark'", $format));
     }
 }

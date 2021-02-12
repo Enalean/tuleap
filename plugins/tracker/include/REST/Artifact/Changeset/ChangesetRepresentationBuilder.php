@@ -51,7 +51,7 @@ class ChangesetRepresentationBuilder
     }
 
     /**
-     * @throws \Tuleap\Tracker\Artifact\Changeset\Followup\InvalidCommentFormatException
+     * @throws \Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException
      */
     public function buildWithFields(
         \Tracker_Artifact_Changeset $changeset,
@@ -85,7 +85,7 @@ class ChangesetRepresentationBuilder
      * This does not check permissions so use it with caution.
      *
      * "A great power comes with a great responsibility"
-     * @throws \Tuleap\Tracker\Artifact\Changeset\Followup\InvalidCommentFormatException
+     * @throws \Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException
      */
     public function buildWithFieldValuesWithoutPermissions(
         \Tracker_Artifact_Changeset $changeset,
@@ -107,7 +107,7 @@ class ChangesetRepresentationBuilder
     }
 
     /**
-     * @throws \Tuleap\Tracker\Artifact\Changeset\Followup\InvalidCommentFormatException
+     * @throws \Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException
      */
     private function buildFromFieldValues(
         \Tracker_Artifact_Changeset $changeset,
