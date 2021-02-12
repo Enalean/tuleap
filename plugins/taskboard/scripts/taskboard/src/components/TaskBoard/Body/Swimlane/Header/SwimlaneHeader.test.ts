@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import SwimlaneHeader from "./SwimlaneHeader.vue";
-import { Swimlane } from "../../../../../type";
+import type { Swimlane } from "../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { FullscreenState } from "../../../../../store/fullscreen/type";
-import { SwimlaneState } from "../../../../../store/swimlane/type";
+import type { FullscreenState } from "../../../../../store/fullscreen/type";
+import type { SwimlaneState } from "../../../../../store/swimlane/type";
 
 const swimlane: Swimlane = {
     card: {

@@ -19,7 +19,7 @@
 
 import { FormatSelectorBuilder } from "./FormatSelectorBuilder";
 import { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
-import { FormatSelectorPresenter } from "./DisplayInterface";
+import type { FormatSelectorPresenter } from "./DisplayInterface";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,

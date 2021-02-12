@@ -18,11 +18,11 @@
  */
 
 import * as actions from "./actions";
-import { State } from "./type";
+import type { State } from "./type";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as tlp from "@tuleap/tlp-fetch";
-import { ActionContext } from "vuex";
-import { Project, UserHistory, UserHistoryEntry } from "../type";
+import type { ActionContext } from "vuex";
+import type { Project, UserHistory, UserHistoryEntry } from "../type";
 
 describe("SwitchTo actions", () => {
     describe("loadHistory", () => {

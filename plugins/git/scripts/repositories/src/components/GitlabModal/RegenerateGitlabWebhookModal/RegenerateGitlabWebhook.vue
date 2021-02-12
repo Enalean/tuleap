@@ -92,8 +92,9 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import { createModal, FetchWrapperError, Modal } from "tlp";
-import { GitLabData, Repository } from "../../../type";
+import type { FetchWrapperError, Modal } from "tlp";
+import { createModal } from "tlp";
+import type { GitLabData, Repository } from "../../../type";
 import { Action } from "vuex-class";
 
 @Component

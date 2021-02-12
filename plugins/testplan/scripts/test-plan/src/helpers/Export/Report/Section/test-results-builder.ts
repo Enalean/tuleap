@@ -18,8 +18,8 @@
  */
 
 import { DateCell, TextCell } from "../report-cells";
-import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
-import { VueGettextProvider } from "../../../vue-gettext-provider";
+import type { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
+import type { VueGettextProvider } from "../../../vue-gettext-provider";
 
 type TestResultsSectionRow = readonly [
     TextCell,

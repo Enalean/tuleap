@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import BranchesSection from "./BranchesSection.vue";
 import * as tlp from "tlp";
-import { Branch } from "../type";
+import type { Branch } from "../type";
 import { createBranchTagSelectorLocalVue } from "../helpers/local-vue-for-test";
 
 jest.mock("tlp");

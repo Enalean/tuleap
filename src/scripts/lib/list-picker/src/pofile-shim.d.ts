@@ -18,7 +18,7 @@
  */
 
 declare module "*.po" {
-    import { GettextParserPoFile } from "@tuleap/gettext";
+    import type { GettextParserPoFile } from "@tuleap/gettext";
     const content: GettextParserPoFile;
     export default content;
 }

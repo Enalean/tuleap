@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CampaignProgression from "./CampaignProgression.vue";
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("CampaignProgression", () => {

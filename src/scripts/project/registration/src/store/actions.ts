@@ -18,10 +18,10 @@
  *
  */
 
-import { State } from "./type";
-import { ProjectProperties, TemplateData } from "../type";
+import type { State } from "./type";
+import type { ProjectProperties, TemplateData } from "../type";
 import { postProject } from "../api/rest-querier";
-import { ActionContext } from "vuex";
+import type { ActionContext } from "vuex";
 
 export function setSelectedTemplate(
     context: ActionContext<State, State>,

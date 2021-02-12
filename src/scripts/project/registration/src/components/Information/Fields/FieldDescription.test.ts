@@ -18,11 +18,12 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldDescription from "./FieldDescription.vue";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
-import { ConfigurationState } from "../../../store/configuration";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("FieldDescription -", () => {
     let factory: Wrapper<FieldDescription>;

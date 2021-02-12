@@ -18,9 +18,9 @@
  */
 
 import * as getters from "./card-getters";
-import { SwimlaneState } from "../type";
-import { UserForPeoplePicker } from "./type";
-import { Tracker } from "../../../type";
+import type { SwimlaneState } from "../type";
+import type { UserForPeoplePicker } from "./type";
+import type { Tracker } from "../../../type";
 
 describe("Card getters", () => {
     let state: SwimlaneState;

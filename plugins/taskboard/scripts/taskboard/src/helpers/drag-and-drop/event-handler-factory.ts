@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
+import type {
     AfterDropEventSource,
     DragDropHandlers,
     DragHandler,
     DragStartContext,
     DrekkenovInitOptions,
 } from "./types";
-import { OngoingDrag } from "./OngoingDrag";
+import type { OngoingDrag } from "./OngoingDrag";
 import { findClosestDraggable, findClosestDropzone } from "./dom-manipulation";
-import { DropGhost } from "./DropGhost";
+import type { DropGhost } from "./DropGhost";
 import { DREKKENOV_DRAG_DROP_TYPE, DREKKENOV_DRAG_DROP_VALUE } from "./constants";
-import { DrekkenovState } from "./DrekkenovState";
+import type { DrekkenovState } from "./DrekkenovState";
 
 export function dragStartFactory(
     options: DrekkenovInitOptions,

@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CampaignState, CreateCampaignPayload } from "./type";
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
-import { recursiveGet, post, get, FetchWrapperError } from "tlp";
-import { Campaign } from "../../type";
+import type { CampaignState, CreateCampaignPayload } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
+import type { FetchWrapperError } from "tlp";
+import { recursiveGet, post, get } from "tlp";
+import type { Campaign } from "../../type";
 
 export async function loadCampaigns(
     context: ActionContext<CampaignState, RootState>

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BaseType, Selection } from "d3-selection";
+import type { BaseType, Selection } from "d3-selection";
 
 export class TimeScaleLabelsFormatter {
     constructor({

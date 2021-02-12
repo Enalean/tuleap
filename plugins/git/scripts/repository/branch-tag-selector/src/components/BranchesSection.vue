@@ -64,7 +64,7 @@ import encodeData from "../helpers/encode-data";
 import RefsFilter from "./RefsFilter.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Branch, URLParameter } from "../type";
+import type { Branch, URLParameter } from "../type";
 
 @Component({ components: { RefsFilter } })
 export default class BranchesSection extends Vue {

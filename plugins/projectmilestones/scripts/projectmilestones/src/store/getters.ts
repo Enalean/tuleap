@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../type";
+import type { State } from "../type";
 
 export const has_rest_error = (state: State): boolean => state.error_message !== null;

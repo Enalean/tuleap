@@ -18,7 +18,7 @@
  */
 
 import { createVueGettextProviderPassthrough } from "../../../vue-gettext-provider-for-test";
-import { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
+import type { PlannedTestCaseAssociatedWithTestExecAndCampaign } from "../get-planned-test-cases";
 import { buildJustificationsSection } from "./justifications-builder";
 import { DateCell, HTMLCell, TextCell } from "../report-cells";
 import * as artifacts_retriever from "./Tracker/artifacts-retriever";

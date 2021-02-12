@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition } from "../../../../../scripts/taskboard/src/type";
+import type { Card, ColumnDefinition } from "../../../../../scripts/taskboard/src/type";
 
 function getReleaseIdFromREST(): Cypress.Chainable<Response> {
     return cy

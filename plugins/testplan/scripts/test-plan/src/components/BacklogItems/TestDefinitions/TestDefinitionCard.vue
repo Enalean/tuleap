@@ -49,8 +49,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { BacklogItem, TestDefinition } from "../../../type";
-import { RemoveIsJustRefreshedFlagOnTestDefinitionPayload } from "../../../store/backlog-item/type";
+import type { BacklogItem, TestDefinition } from "../../../type";
+import type { RemoveIsJustRefreshedFlagOnTestDefinitionPayload } from "../../../store/backlog-item/type";
 import { namespace } from "vuex-class";
 import TestDefinitionCardStatus from "./TestDefinitionCardStatus.vue";
 import TestDefinitionCardXrefTitle from "./TestDefinitionCardXrefTitle.vue";

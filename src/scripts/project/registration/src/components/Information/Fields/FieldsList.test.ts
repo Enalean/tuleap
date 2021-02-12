@@ -18,11 +18,12 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldsList from "./FieldsList.vue";
 import EventBus from "../../../helpers/event-bus";
-import { FieldData } from "../../../type";
+import type { FieldData } from "../../../type";
 
 async function getWrapper(field: FieldData): Promise<Wrapper<FieldsList>> {
     return shallowMount(FieldsList, {

@@ -54,10 +54,10 @@ import ReleaseBadgesDisplayer from "./ReleaseBadges/ReleaseBadgesDisplayer.vue";
 import ReleaseDescription from "./ReleaseDescription/ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import Vue from "vue";
-import { MilestoneData, TestManagementCampaign } from "../../type";
+import type { MilestoneData, TestManagementCampaign } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import { FetchWrapperError } from "tlp";
+import type { FetchWrapperError } from "tlp";
 import { is_testplan_activated } from "../../helpers/test-management-helper";
 
 @Component({

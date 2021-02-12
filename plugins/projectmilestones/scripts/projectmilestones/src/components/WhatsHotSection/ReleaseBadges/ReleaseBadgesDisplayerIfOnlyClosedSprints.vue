@@ -32,7 +32,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { State } from "vuex-class";
 @Component({
     components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges },

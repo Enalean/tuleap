@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../type";
+import type { Card, Swimlane } from "../type";
 
 export function isDraggedOverTheSourceCell(
     target_cell: HTMLElement,

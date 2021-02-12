@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../store/type";
-import { Campaign } from "../../type";
-import { CampaignState } from "../../store/campaign/type";
+import type { RootState } from "../../store/type";
+import type { Campaign } from "../../type";
+import type { CampaignState } from "../../store/campaign/type";
 import ListOfCampaigns from "./ListOfCampaigns.vue";
 import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";

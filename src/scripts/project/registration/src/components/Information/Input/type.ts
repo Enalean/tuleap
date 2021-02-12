@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DataFormat } from "tlp";
+import type { DataFormat } from "tlp";
 
 export interface VisibilityForVisibilitySelector extends DataFormat {
     text: string;

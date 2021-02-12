@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
-import { RootState, State } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState, State } from "./type";
 import * as actions from "./actions";
 
 jest.mock("tlp");

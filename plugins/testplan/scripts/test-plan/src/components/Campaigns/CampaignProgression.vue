@@ -62,7 +62,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 
 @Component
 export default class CampaignProgression extends Vue {

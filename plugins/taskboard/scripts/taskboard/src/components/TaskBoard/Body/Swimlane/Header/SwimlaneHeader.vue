@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Swimlane } from "../../../../../type";
+import type { Swimlane } from "../../../../../type";
 import { namespace, State } from "vuex-class";
 
 const fullscreen = namespace("fullscreen");

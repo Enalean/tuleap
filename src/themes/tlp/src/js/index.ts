@@ -21,13 +21,12 @@
 import "core-js/stable";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "regenerator-runtime/runtime";
-import { Modal, createModal as createModalImplementation, ModalOptions } from "./modal";
-import {
-    Dropdown,
-    createDropdown as createDropdownImplementation,
-    DropdownOptions,
-} from "./dropdowns";
-import { createPopover as createPopoverImplementation, Popover, PopoverOptions } from "./popovers";
+import type { Modal, ModalOptions } from "./modal";
+import { createModal as createModalImplementation } from "./modal";
+import type { Dropdown, DropdownOptions } from "./dropdowns";
+import { createDropdown as createDropdownImplementation } from "./dropdowns";
+import type { Popover, PopoverOptions } from "./popovers";
+import { createPopover as createPopoverImplementation } from "./popovers";
 
 export * from "@tuleap/tlp-fetch";
 

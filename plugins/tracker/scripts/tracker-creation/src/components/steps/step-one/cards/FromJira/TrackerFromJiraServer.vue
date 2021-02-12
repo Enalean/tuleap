@@ -72,7 +72,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Credentials } from "../../../../../store/type";
+import type { Credentials } from "../../../../../store/type";
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 
 @Component({

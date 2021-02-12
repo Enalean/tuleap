@@ -18,21 +18,22 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectInformation from "./ProjectInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
-import { RootState } from "../../store/type";
+import type { RootState } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import EventBus from "../../helpers/event-bus";
 import VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
-import { Store } from "vuex-mock-store";
-import { ProjectProperties, TemplateData } from "../../type";
-import { ConfigurationState } from "../../store/configuration";
+import type { Store } from "vuex-mock-store";
+import type { ProjectProperties, TemplateData } from "../../type";
+import type { ConfigurationState } from "../../store/configuration";
 
 describe("ProjectInformation -", () => {
     let factory: Wrapper<ProjectInformation>,

@@ -18,12 +18,14 @@
  */
 
 import Vue from "vue";
-import Vuex, { Store } from "vuex";
-import { RootState, State } from "./type";
+import type { Store } from "vuex";
+import Vuex from "vuex";
+import type { RootState, State } from "./type";
 import mutations from "./mutations";
 import * as actions from "./actions";
 import * as getters from "./getters";
-import { ConfigurationState, createConfigurationModule } from "./configuration";
+import type { ConfigurationState } from "./configuration";
+import { createConfigurationModule } from "./configuration";
 
 Vue.use(Vuex);
 

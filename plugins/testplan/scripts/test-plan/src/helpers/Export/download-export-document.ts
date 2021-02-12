@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createExportReport, ExportReport } from "./Report/report-creator";
-import { BacklogItem, Campaign } from "../../type";
-import { VueGettextProvider } from "../vue-gettext-provider";
+import type { ExportReport } from "./Report/report-creator";
+import { createExportReport } from "./Report/report-creator";
+import type { BacklogItem, Campaign } from "../../type";
+import type { VueGettextProvider } from "../vue-gettext-provider";
 
 export async function downloadExportDocument(
     gettext_provider: VueGettextProvider,

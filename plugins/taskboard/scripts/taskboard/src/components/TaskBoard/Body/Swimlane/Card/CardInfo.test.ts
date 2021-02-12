@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
+import type { Slots, Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import CardInfo from "./CardInfo.vue";
-import { Card, Tracker, User } from "../../../../../type";
+import type { Card, Tracker, User } from "../../../../../type";
 import CardAssignees from "./CardAssignees.vue";
 
 function getWrapper(card: Card, slots: Slots = {}): Wrapper<CardInfo> {

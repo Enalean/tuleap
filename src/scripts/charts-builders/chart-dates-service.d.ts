@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DaysDisplayingBurndownData, PointsWithDate } from "./type";
-import { PointsWithDateForGenericBurnup } from "../../../plugins/agiledashboard/scripts/burnup-chart/src/type";
+import type { DaysDisplayingBurndownData, PointsWithDate } from "./type";
+import type { PointsWithDateForGenericBurnup } from "../../../plugins/agiledashboard/scripts/burnup-chart/src/type";
 
 export function getDaysToDisplay({
     opening_days,

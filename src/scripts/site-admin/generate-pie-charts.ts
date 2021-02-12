@@ -18,7 +18,7 @@
  */
 
 import { StatisticsPieChart } from "../charts-builders/statistics-pie-chart.js";
-import { ChartPropsWhithRadius } from "../charts-builders/type";
+import type { ChartPropsWhithRadius } from "../charts-builders/type";
 
 document.addEventListener("DOMContentLoaded", () => {
     const PIE_CHART_MAX_HEIGHT = 250;

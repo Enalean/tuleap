@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, CardPosition, Direction } from "../type";
+import type { Card, CardPosition } from "../type";
+import { Direction } from "../type";
 
 export function getCardPosition(
     card: Card,

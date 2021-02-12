@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPicker, ListPickerOptions } from "./type";
+import type { ListPicker, ListPickerOptions } from "./type";
 import { DropdownContentRenderer } from "./renderers/DropdownContentRenderer";
 import { EventManager } from "./events/EventManager";
 import { DropdownManager } from "./dropdown/DropdownManager";
@@ -30,7 +30,7 @@ import { ListItemHighlighter } from "./navigation/ListItemHighlighter";
 import { ItemsMapManager } from "./items/ItemsMapManager";
 import { ListOptionsChangesObserver } from "./events/ListOptionsChangesObserver";
 import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
-import { GettextProvider } from "@tuleap/gettext";
+import type { GettextProvider } from "@tuleap/gettext";
 import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
 

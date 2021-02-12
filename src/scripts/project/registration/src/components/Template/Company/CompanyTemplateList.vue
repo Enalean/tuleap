@@ -38,7 +38,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TemplateCard from "../TemplateCard.vue";
-import { TemplateData } from "../../../type";
+import type { TemplateData } from "../../../type";
 import { sprintf } from "sprintf-js";
 import { namespace } from "vuex-class";
 const configuration = namespace("configuration");

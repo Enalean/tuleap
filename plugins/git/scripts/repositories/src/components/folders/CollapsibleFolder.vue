@@ -70,7 +70,7 @@
 import GitRepository from "../GitRepository.vue";
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { Folder, Repository } from "../../type";
+import type { Folder, Repository } from "../../type";
 
 // The name attributes is needed because this component is recursive
 // See https://github.com/kaorun343/vue-property-decorator/issues/102

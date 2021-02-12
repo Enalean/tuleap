@@ -18,7 +18,7 @@
  */
 
 import { formatRepository } from "./gitlab-repository-formatter";
-import { GitLabRepository } from "../type";
+import type { GitLabRepository } from "../type";
 
 describe("gitlabRepositoryFormatter", () => {
     describe("formatRepository", () => {

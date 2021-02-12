@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Modal } from "tlp";
+import type { Modal } from "tlp";
 
 export interface State {
     repositories_for_owner: string;

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createListPicker, ListPicker, ListPickerOptions } from "@tuleap/list-picker";
+import type { ListPicker, ListPickerOptions } from "@tuleap/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 import {
     initListPickersInArtifactCreationView,
     initListPickersPostUpdateErrorView,

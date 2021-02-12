@@ -20,8 +20,9 @@
 
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
-import { shallowMount, Wrapper } from "@vue/test-utils";
-import {
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import type {
     Credentials,
     JiraImportData,
     ProjectList,

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { getColumnOfCard } from "./list-value-to-column-mapper";
-import { Card, ColumnDefinition } from "../type";
+import type { Card, ColumnDefinition } from "../type";
 
 describe(`list-value-to-column-mapper`, () => {
     describe("getColumnOfCard", () => {

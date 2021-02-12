@@ -32,7 +32,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import BacklogItemCard from "./BacklogItemCard.vue";
-import { BacklogItem } from "../../type";
+import type { BacklogItem } from "../../type";
 import { namespace } from "vuex-class";
 
 const backlog_item_store = namespace("backlog_item");

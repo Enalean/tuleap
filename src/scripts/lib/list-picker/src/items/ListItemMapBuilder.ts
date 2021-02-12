@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickerItem, ListPickerItemMap, ListPickerOptions } from "../type";
-import { html, render, TemplateResult } from "lit-html";
+import type { ListPickerItem, ListPickerItemMap, ListPickerOptions } from "../type";
+import type { TemplateResult } from "lit-html";
+import { html, render } from "lit-html";
 import { getOptionsLabel } from "../helpers/option-label-helper";
 import {
     hasOptionPredefinedTemplate,

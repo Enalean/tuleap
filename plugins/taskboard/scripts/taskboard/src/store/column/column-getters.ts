@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ColumnDefinition, Mapping } from "../../type";
-import { ColumnState } from "./type";
-import { RootState } from "../type";
+import type { ColumnDefinition, Mapping } from "../../type";
+import type { ColumnState } from "./type";
+import type { RootState } from "../type";
 
 export const accepted_trackers_ids = (
     column_state: ColumnState,

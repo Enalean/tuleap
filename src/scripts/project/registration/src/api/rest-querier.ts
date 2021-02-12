@@ -18,7 +18,7 @@
  */
 
 import { post, recursiveGet, get } from "tlp";
-import { ProjectProperties, MinimalProjectRepresentation, TemplateData } from "../type";
+import type { ProjectProperties, MinimalProjectRepresentation, TemplateData } from "../type";
 
 export { postProject, getProjectUserIsAdminOf, getTermOfService };
 

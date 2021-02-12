@@ -65,9 +65,9 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { GitLabDataWithToken, Repository } from "../../../type";
+import type { GitLabDataWithToken, Repository } from "../../../type";
 import Vue from "vue";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { Action } from "vuex-class";
 
 @Component

@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
-import { Card, ColumnDefinition, Swimlane } from "../../../../../type";
+import type { Card, ColumnDefinition, Swimlane } from "../../../../../type";
 import { namespace } from "vuex-class";
 import ChildCard from "../Card/ChildCard.vue";
 import CardSkeleton from "../Skeleton/CardSkeleton.vue";

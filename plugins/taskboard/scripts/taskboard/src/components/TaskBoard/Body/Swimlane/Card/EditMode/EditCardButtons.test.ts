@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, TaskboardEvent } from "../../../../../../type";
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Card } from "../../../../../../type";
+import { TaskboardEvent } from "../../../../../../type";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import EditCardButtons from "./EditCardButtons.vue";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
 import EventBus from "../../../../../../helpers/event-bus";

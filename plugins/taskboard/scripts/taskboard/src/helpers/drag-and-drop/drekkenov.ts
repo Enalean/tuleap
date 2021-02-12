@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Drekkenov, DrekkenovInitOptions } from "./types";
+import type { Drekkenov, DrekkenovInitOptions } from "./types";
 import { DrekkenovState } from "./DrekkenovState";
 
 export {

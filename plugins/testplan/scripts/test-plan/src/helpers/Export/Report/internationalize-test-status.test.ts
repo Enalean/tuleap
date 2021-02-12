@@ -19,7 +19,7 @@
 
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import { createVueGettextProviderPassthrough } from "../../vue-gettext-provider-for-test";
-import { TestStats } from "../../BacklogItems/compute-test-stats";
+import type { TestStats } from "../../BacklogItems/compute-test-stats";
 
 describe("Internationalize test status", () => {
     it.each([

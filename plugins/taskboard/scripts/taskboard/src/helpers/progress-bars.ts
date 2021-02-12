@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RemainingEffort } from "../type";
+import type { RemainingEffort } from "../type";
 
 export function getWidthPercentage(
     initial_effort: number | null,

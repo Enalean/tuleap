@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition, Swimlane } from "../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../type";
 import { namespace } from "vuex-class";
 import ParentCell from "./ParentCell.vue";
 import ChildrenCell from "./Cell/ChildrenCell.vue";

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ProjectPrivacy, ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectPrivacy, ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 
 export {
     setBreadcrumbSettings,

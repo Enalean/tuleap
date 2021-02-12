@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TextFieldFormat } from "../../../constants/fields-constants";
+import type { TextFieldFormat } from "../../../constants/fields-constants";
 
 type EmptyObject = Record<string, never>;
 

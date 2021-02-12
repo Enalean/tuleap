@@ -18,7 +18,8 @@
  */
 
 import { addScaleLines } from "./chart-scale-drawer";
-import { Selection, select } from "d3-selection";
+import type { Selection } from "d3-selection";
+import { select } from "d3-selection";
 
 describe("ScaleDrawer -", () => {
     describe("addScaleLines -", () => {

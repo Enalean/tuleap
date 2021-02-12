@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
+import type { ShallowMountOptions } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ElementCard from "./ElementCard.vue";
 import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
-import { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
+import type { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
 import * as configuration from "../../configuration";
 
 describe("ElementCard", () => {

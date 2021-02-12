@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CampaignState } from "./type";
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
+import type { CampaignState } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
 import * as tlp from "tlp";
 import { createCampaign, loadCampaigns, refreshCampaign } from "./campaign-actions";
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
+import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
 jest.mock("tlp");
 

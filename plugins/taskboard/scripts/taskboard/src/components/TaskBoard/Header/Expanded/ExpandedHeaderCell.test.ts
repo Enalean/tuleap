@@ -20,8 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import ExpandedHeaderCell from "./ExpandedHeaderCell.vue";
 import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { UserState } from "../../../../store/user/type";
-import { ColumnDefinition } from "../../../../type";
+import type { UserState } from "../../../../store/user/type";
+import type { ColumnDefinition } from "../../../../type";
 import WrongColorPopover from "./WrongColorPopover.vue";
 
 describe("ExpandedHeaderCell", () => {

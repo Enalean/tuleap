@@ -99,7 +99,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { BannerState, Importance } from "../type";
+import type { BannerState, Importance } from "../type";
 import "ckeditor4";
 
 @Component

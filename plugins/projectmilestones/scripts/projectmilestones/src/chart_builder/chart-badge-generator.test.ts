@@ -18,8 +18,9 @@
  */
 import * as chart_badge_services from "./chart-badge-services";
 import { addBadgeCaption } from "./chart-badge-generator";
-import { select, Selection } from "d3-selection";
-import { XYSizeElement } from "../type";
+import type { Selection } from "d3-selection";
+import { select } from "d3-selection";
+import type { XYSizeElement } from "../type";
 
 jest.mock("./chart-badge-services", () => ({
     getContainerProperties: jest.fn(

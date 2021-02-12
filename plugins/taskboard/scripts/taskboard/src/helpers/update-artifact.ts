@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NewCardPayload, UpdateCardPayload } from "../store/swimlane/card/type";
-import {
+import type { NewCardPayload, UpdateCardPayload } from "../store/swimlane/card/type";
+import type {
     Field,
     Link,
     LinkField,
@@ -26,11 +26,11 @@ import {
     PostBody,
     PutBody,
     TextField,
-    TextFormat,
     TextValue,
     Values,
 } from "../store/swimlane/card/api-artifact-type";
-import { AddInPlace, AssignedToField, Card, TitleField, Tracker, User } from "../type";
+import { TextFormat } from "../store/swimlane/card/api-artifact-type";
+import type { AddInPlace, AssignedToField, Card, TitleField, Tracker, User } from "../type";
 
 export function getPutArtifactBody(payload: UpdateCardPayload): PutBody {
     if (!payload.tracker.title_field) {

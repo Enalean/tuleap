@@ -20,8 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { ColumnDefinition } from "../type";
-import { RootState } from "../store/type";
+import type { ColumnDefinition } from "../type";
+import type { RootState } from "../store/type";
 
 describe("App", () => {
     function getStore(

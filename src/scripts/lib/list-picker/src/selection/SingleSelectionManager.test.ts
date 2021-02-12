@@ -18,12 +18,12 @@
  */
 
 import { SingleSelectionManager } from "./SingleSelectionManager";
-import { DropdownManager } from "../dropdown/DropdownManager";
+import type { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
-import { ListPickerItem } from "../type";
+import type { ListPickerItem } from "../type";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("SingleSelectionManager", () => {

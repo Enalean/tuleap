@@ -80,7 +80,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { ProjectWithTrackers, Tracker } from "../../../../../store/type";
+import type { ProjectWithTrackers, Tracker } from "../../../../../store/type";
 import { State, Mutation } from "vuex-class";
 
 @Component({

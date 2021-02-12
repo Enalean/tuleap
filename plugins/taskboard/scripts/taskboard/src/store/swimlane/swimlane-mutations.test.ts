@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Direction, Mapping, Swimlane } from "../../type";
+import type { Card, ColumnDefinition, Mapping, Swimlane } from "../../type";
+import { Direction } from "../../type";
 import * as mutations from "./swimlane-mutations";
-import { SwimlaneState } from "./type";
+import type { SwimlaneState } from "./type";
 import { findSwimlane, findSwimlaneIndex } from "./swimlane-helpers";
 
 describe(`Swimlane state mutations`, () => {

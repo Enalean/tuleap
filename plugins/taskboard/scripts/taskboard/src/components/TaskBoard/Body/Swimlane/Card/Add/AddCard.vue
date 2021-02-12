@@ -46,9 +46,9 @@ import { Component, Prop } from "vue-property-decorator";
 import { Mutation } from "vuex-class";
 import AddButton from "./AddButton.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
-import { ColumnDefinition, Swimlane } from "../../../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../../../type";
 import { namespace } from "vuex-class";
-import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
+import type { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
 
 const swimlane = namespace("swimlane");

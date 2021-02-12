@@ -18,7 +18,7 @@
  */
 
 import { DateCell, TextCell } from "../report-cells";
-import { VueGettextProvider } from "../../../vue-gettext-provider";
+import type { VueGettextProvider } from "../../../vue-gettext-provider";
 
 export interface GeneralSection {
     readonly rows: readonly [

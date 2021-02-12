@@ -30,7 +30,7 @@ import {
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import {
+import type {
     ArtifactMilestone,
     BurndownData,
     MilestoneContent,

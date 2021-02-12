@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { VueConstructor } from "vue/types/vue";
+import type { VueConstructor } from "vue/types/vue";
 import VueGettext from "vue-gettext";
 
 export { getPOFileFromLocale } from "./gettext-init";

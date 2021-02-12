@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
-import { FocusFromHistoryPayload, FocusFromProjectPayload, State } from "./type";
+import type { ActionContext } from "vuex";
+import type { FocusFromHistoryPayload, FocusFromProjectPayload, State } from "./type";
 import { get } from "@tuleap/tlp-fetch";
-import { Project, UserHistory, UserHistoryEntry } from "../type";
+import type { Project, UserHistory, UserHistoryEntry } from "../type";
 
 export async function loadHistory(context: ActionContext<State, State>): Promise<void> {
     if (context.state.is_history_loaded) {

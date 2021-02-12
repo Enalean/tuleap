@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { User } from "../../../../../type";
+import type { User } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
 
 describe("UserAvatar", () => {

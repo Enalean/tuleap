@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ColumnDefinition } from "../../type";
+import type { ColumnDefinition } from "../../type";
 
 export interface ColumnState {
     columns: ColumnDefinition[];

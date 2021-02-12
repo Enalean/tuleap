@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DrekkenovInitOptions } from "./types";
+import type { DrekkenovInitOptions } from "./types";
 
 export function cloneHTMLElement(element: HTMLElement): HTMLElement {
     const cloned_node = element.cloneNode(true);

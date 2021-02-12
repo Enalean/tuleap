@@ -19,7 +19,7 @@
  */
 
 import { isItemDestinationIntoItself } from "./clipboard-helpers";
-import { Folder, ItemFile } from "../../type";
+import type { Folder, ItemFile } from "../../type";
 
 describe("isItemDestinationIntoItself", () => {
     it("Is into itself when destination and item are the same", () => {

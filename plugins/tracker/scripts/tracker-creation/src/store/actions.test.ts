@@ -18,10 +18,10 @@
  *
  */
 
-import { ActionContext } from "vuex";
+import type { ActionContext } from "vuex";
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { Credentials, State } from "./type";
+import type { Credentials, State } from "./type";
 import { getJiraProjectList } from "./actions";
 
 jest.mock("tlp");

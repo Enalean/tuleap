@@ -27,7 +27,7 @@ import {
     sortByLabelAlphabetically,
     sortByLastUpdateDate,
 } from "./filter";
-import { Folder, Repository } from "../type";
+import type { Folder, Repository } from "../type";
 
 describe("filter", () => {
     describe("createHierarchy", () => {

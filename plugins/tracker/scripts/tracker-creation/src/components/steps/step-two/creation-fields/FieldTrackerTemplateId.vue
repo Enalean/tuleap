@@ -24,7 +24,7 @@
 import Vue from "vue";
 import { State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { Tracker } from "../../../../store/type";
+import type { Tracker } from "../../../../store/type";
 
 @Component
 export default class FieldTrackerTemplateId extends Vue {

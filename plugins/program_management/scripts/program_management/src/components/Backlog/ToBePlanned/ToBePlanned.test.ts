@@ -21,9 +21,9 @@ import { shallowMount } from "@vue/test-utils";
 import ToBePlanned from "./ToBePlanned.vue";
 import * as retriever from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import * as configuration from "../../../configuration";
-import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
+import type { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import { DefaultData } from "vue/types/options";
+import type { DefaultData } from "vue/types/options";
 
 describe("ToBePlanned", () => {
     it("Displays the empty state when no artifact are found", async () => {

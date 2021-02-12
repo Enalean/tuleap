@@ -22,15 +22,15 @@ import { initGettextSync } from "@tuleap/gettext";
 import TurndownService from "turndown";
 import marked from "marked";
 import { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
-import {
+import type {
     HTMLToMarkdownConverterInterface,
     MarkdownToHTMLRendererInterface,
     RichTextEditorOptions,
 } from "./types";
 import { TextEditor } from "./TextEditor";
-import { DisplayInterface } from "./DisplayInterface";
+import type { DisplayInterface } from "./DisplayInterface";
 import { FormatSelectorBuilder } from "./FormatSelectorBuilder";
-import { TextFieldFormat } from "../../../constants/fields-constants";
+import type { TextFieldFormat } from "../../../constants/fields-constants";
 import { defaultOptionsIfNotProvided } from "./options-defaulter";
 
 export class RichTextEditorFactory {

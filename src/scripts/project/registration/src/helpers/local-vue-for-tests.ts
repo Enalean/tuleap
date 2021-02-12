@@ -21,7 +21,7 @@ import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "../../../../tuleap/gettext/vue-gettext-init";
-import { Vue } from "vue/types/vue";
+import type { Vue } from "vue/types/vue";
 import VueRouter from "vue-router";
 
 export async function createProjectRegistrationLocalVue(): Promise<typeof Vue> {

@@ -18,11 +18,12 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import { Store } from "vuex-mock-store";
+import type { Store } from "vuex-mock-store";
 import ProjectShortName from "./ProjectShortName.vue";
-import { DefaultData } from "vue/types/options";
+import type { DefaultData } from "vue/types/options";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import EventBus from "../../../helpers/event-bus";
 

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DataFormat, GroupedDataFormat, IdTextPair, LoadingData, select2 } from "tlp";
+import type { DataFormat, GroupedDataFormat, IdTextPair, LoadingData } from "tlp";
+import { select2 } from "tlp";
 import { sanitize } from "dompurify";
 import { render } from "mustache";
 import $ from "jquery";

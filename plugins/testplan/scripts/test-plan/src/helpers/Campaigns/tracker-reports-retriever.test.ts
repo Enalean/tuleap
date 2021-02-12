@@ -18,7 +18,8 @@
  */
 
 import * as tlp from "tlp";
-import { getTrackerReports, TrackerReport } from "./tracker-reports-retriever";
+import type { TrackerReport } from "./tracker-reports-retriever";
+import { getTrackerReports } from "./tracker-reports-retriever";
 
 jest.mock("tlp");
 

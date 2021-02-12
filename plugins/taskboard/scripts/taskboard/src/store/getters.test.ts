@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RootState } from "./type";
-import { Card, ColumnDefinition, Swimlane } from "../type";
+import type { RootState } from "./type";
+import type { Card, ColumnDefinition, Swimlane } from "../type";
 import * as getters from "./getters";
 import { createElement } from "../helpers/jest/create-dom-element";
 

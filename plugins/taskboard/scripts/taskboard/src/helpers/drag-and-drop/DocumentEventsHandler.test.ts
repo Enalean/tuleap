@@ -18,7 +18,7 @@
  */
 
 import { DocumentEventsHandler } from "./DocumentEventsHandler";
-import { AfterDropEventSource, DragDropHandlers } from "./types";
+import type { AfterDropEventSource, DragDropHandlers } from "./types";
 
 describe(`DocumentEventsHandler`, () => {
     let mock_event_source: AfterDropEventSource;

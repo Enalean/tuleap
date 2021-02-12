@@ -18,7 +18,7 @@
  */
 
 import { put, recursiveGet } from "tlp";
-import { Metadata } from "../type";
+import type { Metadata } from "../type";
 
 export {
     putFileMetadata,

@@ -53,7 +53,7 @@ import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
 import { sprintf } from "sprintf-js";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
+import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
 
 @Component({
     components: { GitPermissionsTableRepository },

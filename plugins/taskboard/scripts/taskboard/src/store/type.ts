@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UserState } from "./user/type";
-import { ErrorState } from "./error/type";
-import { FullscreenState } from "./fullscreen/type";
-import { SwimlaneState } from "./swimlane/type";
-import { ColumnState } from "./column/type";
-import { Tracker } from "../type";
+import type { UserState } from "./user/type";
+import type { ErrorState } from "./error/type";
+import type { FullscreenState } from "./fullscreen/type";
+import type { SwimlaneState } from "./swimlane/type";
+import type { ColumnState } from "./column/type";
+import type { Tracker } from "../type";
 
 export interface State {
     admin_url: string;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPicker, ListPickerOptions } from "@tuleap/list-picker";
+import type { ListPicker, ListPickerOptions } from "@tuleap/list-picker";
 
 export type ListPickerCreator = (
     source_select_box: HTMLSelectElement,

@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../../../store/type";
-import { mount, Wrapper } from "@vue/test-utils";
+import type { State } from "../../../store/type";
+import type { Wrapper } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import StepTwo from "./StepTwo.vue";
 import { createTrackerCreationLocalVue } from "../../../helpers/local-vue-for-tests";

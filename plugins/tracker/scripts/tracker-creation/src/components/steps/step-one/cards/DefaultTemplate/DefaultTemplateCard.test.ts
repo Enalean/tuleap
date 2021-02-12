@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import DefaultTemplateCard from "./DefaultTemplateCard.vue";
-import { Tracker } from "../../../../../store/type";
+import type { Tracker } from "../../../../../store/type";
 
 describe("DefaultTemplateCard", () => {
     it("Displays a card for bug tracker", () => {

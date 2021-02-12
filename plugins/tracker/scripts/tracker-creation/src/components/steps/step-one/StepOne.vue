@@ -56,7 +56,7 @@ import StepLayout from "../layout/StepLayout.vue";
 import StepOneInfo from "./StepOneInfo.vue";
 import TrackerEmptyCard from "./cards/TrackerEmpty/TrackerEmptyCard.vue";
 import TrackerFromAnotherProjectCard from "./cards/TrackerFromAnotherProject/TrackerFromAnotherProjectCard.vue";
-import { Tracker } from "../../../store/type";
+import type { Tracker } from "../../../store/type";
 import DefaultTemplateSection from "./cards/DefaultTemplate/DefaultTemplateSection.vue";
 import { sprintf } from "sprintf-js";
 import TrackerFromJiraCard from "./cards/FromJira/TrackerFromJiraCard.vue";

@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
+import type {
     AddTestDefinitionsToBacklogItemPayload,
     BacklogItemState,
     RemoveIsJustRefreshedFlagOnTestDefinitionPayload,
 } from "./type";
-import { BacklogItem, TestDefinition } from "../../type";
+import type { BacklogItem, TestDefinition } from "../../type";
 
 export function beginLoadingTestDefinition(state: BacklogItemState, item: BacklogItem): void {
     updateBacklogItem(state, item, (item) => ({ ...item, is_loading_test_definitions: true }));

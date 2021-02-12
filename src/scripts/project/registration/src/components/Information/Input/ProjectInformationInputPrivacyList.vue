@@ -60,8 +60,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { DataFormat, GroupedDataFormat, LoadingData, Options, select2, Select2Plugin } from "tlp";
-import { VisibilityForVisibilitySelector } from "./type";
+import type { DataFormat, GroupedDataFormat, LoadingData, Options, Select2Plugin } from "tlp";
+import { select2 } from "tlp";
+import type { VisibilityForVisibilitySelector } from "./type";
 import { sanitize } from "dompurify";
 import { render } from "mustache";
 import { Component } from "vue-property-decorator";

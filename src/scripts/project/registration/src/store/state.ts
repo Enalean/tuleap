@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
+import type { State } from "./type";
 
 const state: State = {
     selected_tuleap_template: null,

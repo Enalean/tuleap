@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
+import type { Slots, Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import BaseCard from "./BaseCard.vue";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { Card, TaskboardEvent, Tracker, User } from "../../../../../type";
+import type { Card, Tracker, User } from "../../../../../type";
+import { TaskboardEvent } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";
-import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
+import type { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 import * as scroll_helper from "../../../../../helpers/scroll-to-item";
 
 function getWrapper(

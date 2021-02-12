@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 
 export interface CampaignState {
     campaigns: Array<Campaign>;

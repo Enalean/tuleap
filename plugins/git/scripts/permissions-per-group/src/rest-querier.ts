@@ -18,7 +18,7 @@
  */
 
 import { get } from "tlp";
-import { RepositoryFineGrainedPermissions } from "./type";
+import type { RepositoryFineGrainedPermissions } from "./type";
 
 export { getGitPermissions };
 

@@ -35,7 +35,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition, Swimlane } from "../../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../../type";
 import DropContainerCell from "./DropContainerCell.vue";
 import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
 import { isStatusAcceptedByColumn } from "../../../../../helpers/list-value-to-column-mapper";

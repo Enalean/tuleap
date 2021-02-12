@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
-import { GitLabRepository, FormattedGitLabRepository } from "../type";
+import type { GitLabRepository, FormattedGitLabRepository } from "../type";
 
 export function formatRepository(repository: GitLabRepository): FormattedGitLabRepository {
     const label = extractLabelFromName(repository.name);

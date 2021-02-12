@@ -18,7 +18,7 @@
  */
 
 import { getWidthPercentage } from "./progress-bars";
-import { RemainingEffort } from "../type";
+import type { RemainingEffort } from "../type";
 
 describe("progress bars helper", () => {
     it("Returns a width percentage", () => {

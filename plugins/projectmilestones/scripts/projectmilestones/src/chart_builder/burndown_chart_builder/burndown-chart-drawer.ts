@@ -23,9 +23,9 @@ import { select } from "d3-selection";
 import { curveMonotoneX } from "d3-shape";
 import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";
 import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builders/chart-dates-service";
-import { BurndownData } from "../../type";
+import type { BurndownData } from "../../type";
 
-import {
+import type {
     ChartPropsWhithoutTooltip,
     PropertiesBuilderGraph,
     XYScale,

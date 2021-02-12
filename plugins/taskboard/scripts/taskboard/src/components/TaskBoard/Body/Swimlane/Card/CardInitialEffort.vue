@@ -33,7 +33,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../../../type";
+import type { Card } from "../../../../../type";
 
 @Component
 export default class CardInitialEffort extends Vue {

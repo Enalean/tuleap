@@ -46,7 +46,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import ProjectLink from "./ProjectLink.vue";
 import { Getter, State } from "vuex-class";
-import { Project, UserHistoryEntry } from "../../../type";
+import type { Project, UserHistoryEntry } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 

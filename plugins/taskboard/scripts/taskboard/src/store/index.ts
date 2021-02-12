@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Store, StoreOptions } from "vuex";
+import type { StoreOptions } from "vuex";
+import { Store } from "vuex";
 import * as mutations from "./mutations";
 import * as actions from "./actions";
 import * as getters from "./getters";
 import error from "./error";
 import swimlane from "./swimlane";
 import fullscreen from "./fullscreen";
-import { UserState } from "./user/type";
+import type { UserState } from "./user/type";
 import { createUserModule } from "./user";
-import { RootState } from "./type";
-import { ColumnState } from "./column/type";
+import type { RootState } from "./type";
+import type { ColumnState } from "./column/type";
 import { createColumnModule } from "./column";
 
 export function createStore(

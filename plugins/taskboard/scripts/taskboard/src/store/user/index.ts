@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { RootState } from "../type";
-import { UserState } from "./type";
+import type { Module } from "vuex";
+import type { RootState } from "../type";
+import type { UserState } from "./type";
 import * as actions from "./user-actions";
 
 export function createUserModule(initial_user_state: UserState): Module<UserState, RootState> {

@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { computeTestStats, getTestStatusFromStats, TestStats } from "./compute-test-stats";
-import { BacklogItem } from "../../type";
+import type { TestStats } from "./compute-test-stats";
+import { computeTestStats, getTestStatusFromStats } from "./compute-test-stats";
+import type { BacklogItem } from "../../type";
 
 describe("Compute test stats", () => {
     it("computes raw statistics", () => {

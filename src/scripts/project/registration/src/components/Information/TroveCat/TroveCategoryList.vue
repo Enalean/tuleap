@@ -47,7 +47,7 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { TroveCatData } from "../../../type";
+import type { TroveCatData } from "../../../type";
 import EventBus from "../../../helpers/event-bus";
 
 @Component({})

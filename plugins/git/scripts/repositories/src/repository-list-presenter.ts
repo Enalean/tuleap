@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ExternalPlugins, RepositoryOwner } from "./type";
+import type { ExternalPlugins, RepositoryOwner } from "./type";
 
 export {
     build,

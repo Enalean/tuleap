@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SwimlaneState } from "../type";
-import { Tracker } from "../../../type";
-import { UserForPeoplePicker } from "./type";
+import type { SwimlaneState } from "../type";
+import type { Tracker } from "../../../type";
+import type { UserForPeoplePicker } from "./type";
 
 export const have_possible_assignees_been_loaded_for_tracker = (state: SwimlaneState) => (
     tracker: Tracker

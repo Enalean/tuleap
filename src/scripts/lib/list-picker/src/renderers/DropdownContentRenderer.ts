@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickerItemGroup } from "../type";
-import { ItemsMapManager } from "../items/ItemsMapManager";
-import { GettextProvider } from "@tuleap/gettext";
+import type { ListPickerItemGroup } from "../type";
+import type { ItemsMapManager } from "../items/ItemsMapManager";
+import type { GettextProvider } from "@tuleap/gettext";
 
 export class DropdownContentRenderer {
     private readonly groups_map: Map<string, ListPickerItemGroup>;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MilestoneData } from "../type";
+import type { MilestoneData } from "../type";
 import { is_testplan_activated } from "./test-management-helper";
 
 describe("TestManagementHelper", () => {

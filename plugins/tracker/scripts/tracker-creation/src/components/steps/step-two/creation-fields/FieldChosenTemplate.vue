@@ -41,7 +41,7 @@
 import Vue from "vue";
 import { State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import {
+import type {
     TrackerToBeCreatedMandatoryData,
     Tracker,
     ProjectWithTrackers,

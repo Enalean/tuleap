@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Popper, { PopperOptions, Placement } from "popper.js";
+import type { PopperOptions, Placement } from "popper.js";
+import Popper from "popper.js";
 import { findClosestElement } from "./dom-walker";
 
 export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";

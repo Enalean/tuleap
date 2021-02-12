@@ -59,10 +59,11 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import { createModal, Modal } from "tlp";
+import type { Modal } from "tlp";
+import { createModal } from "tlp";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
 import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
-import { Repository } from "../../../type";
+import type { Repository } from "../../../type";
 
 @Component({ components: { ConfirmReplaceTokenModal, AccessTokenFormModal } })
 export default class EditAccessTokenGitlabModal extends Vue {

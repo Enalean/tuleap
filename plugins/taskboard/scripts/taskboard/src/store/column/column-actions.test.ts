@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
-import { ColumnDefinition } from "../../type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
+import type { ColumnDefinition } from "../../type";
 import * as actions from "./column-actions";
-import { ColumnState } from "./type";
+import type { ColumnState } from "./type";
 
 jest.mock("tlp");
 

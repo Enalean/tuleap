@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CreationOptions, ProjectTemplate, State, Tracker } from "./type";
+import type { ProjectTemplate, State, Tracker } from "./type";
+import { CreationOptions } from "./type";
 import { TRACKER_SHORTNAME_FORMAT } from "../constants";
 import { isDefaultTemplateSelected } from "./is-default-template-selected";
 

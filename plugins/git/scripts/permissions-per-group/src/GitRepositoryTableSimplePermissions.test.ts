@@ -18,9 +18,10 @@
  */
 
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import GitRepositoryTableSimplePermissions from "./GitRepositoryTableSimplePermissions.vue";
-import { RepositorySimplePermissions } from "./type";
+import type { RepositorySimplePermissions } from "./type";
 
 describe("GitRepositoryTableSimplePermissions", () => {
     const store_options = {};

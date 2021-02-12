@@ -47,7 +47,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import BannerPresenter from "./BannerPresenter.vue";
 import { deleteBannerForPlatform, saveBannerForPlatform } from "../api/rest-querier";
-import { BannerState, Importance } from "../type";
+import type { BannerState, Importance } from "../type";
 
 const LOCATION_HASH_SUCCESS = "#banner-change-success";
 

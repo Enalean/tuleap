@@ -18,10 +18,10 @@
  */
 import * as drag_drop from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
-import { SwimlaneState } from "../store/swimlane/type";
+import type { SwimlaneState } from "../store/swimlane/type";
 import * as item_finder from "./html-to-item";
-import { Store } from "vuex";
-import { RootState } from "../store/type";
+import type { Store } from "vuex";
+import type { RootState } from "../store/type";
 
 describe(`drag-drop helper`, () => {
     describe(`isContainer()`, () => {

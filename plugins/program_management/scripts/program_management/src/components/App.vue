@@ -45,7 +45,7 @@ import {
 } from "../configuration";
 import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
-import { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
 @Component({
     components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb },

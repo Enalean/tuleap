@@ -24,7 +24,7 @@ import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-fo
 import AgreementModal from "./AgreementModal.vue";
 import * as rest_querier from "../../../api/rest-querier";
 import * as tlp from "tlp";
-import { Modal } from "tlp";
+import type { Modal } from "tlp";
 
 jest.mock("tlp", () => {
     return {

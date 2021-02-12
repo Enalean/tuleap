@@ -18,7 +18,8 @@
  */
 
 import * as tlp from "tlp";
-import { getFeatures, Feature } from "./feature-retriever";
+import type { Feature } from "./feature-retriever";
+import { getFeatures } from "./feature-retriever";
 
 jest.mock("tlp");
 

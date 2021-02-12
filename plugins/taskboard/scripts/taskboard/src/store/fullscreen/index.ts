@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { RootState } from "../type";
-import { FullscreenState } from "./type";
+import type { Module } from "vuex";
+import type { RootState } from "../type";
+import type { FullscreenState } from "./type";
 import * as mutations from "./fullscreen-mutations";
 import * as getters from "./fullscreen-getters";
 

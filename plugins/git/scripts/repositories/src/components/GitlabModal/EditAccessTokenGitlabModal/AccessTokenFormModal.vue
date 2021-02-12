@@ -99,7 +99,7 @@
 import { credentialsAreEmpty } from "../../../gitlab/gitlab-credentials-helper";
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { GitLabCredentials, GitLabRepository, Repository } from "../../../type";
+import type { GitLabCredentials, GitLabRepository, Repository } from "../../../type";
 import { Action } from "vuex-class";
 
 @Component

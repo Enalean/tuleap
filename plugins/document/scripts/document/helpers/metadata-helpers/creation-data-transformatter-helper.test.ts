@@ -21,7 +21,7 @@ import {
     transformCustomMetadataForItemCreation,
     transformItemMetadataForCreation,
 } from "./creation-data-transformatter-helper";
-import { Folder, Item, Metadata, ListValue } from "../../type";
+import type { Folder, Item, Metadata, ListValue } from "../../type";
 
 describe("creation metadata transformer", () => {
     it("Given an existing document, then the default status metadata is the parent one", () => {

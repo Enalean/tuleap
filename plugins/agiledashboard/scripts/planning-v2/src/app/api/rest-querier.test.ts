@@ -18,12 +18,12 @@
  */
 
 import * as tlp from "tlp";
+import type { MilestoneRepresentation } from "./rest-querier";
 import {
     getClosedSubMilestones,
     getClosedTopMilestones,
     getOpenSubMilestones,
     getOpenTopMilestones,
-    MilestoneRepresentation,
 } from "./rest-querier";
 
 jest.mock("tlp");

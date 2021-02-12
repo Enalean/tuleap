@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import AddCard from "./AddCard.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import AddButton from "./AddButton.vue";
-import { ColumnDefinition, Swimlane } from "../../../../../../type";
+import type { ColumnDefinition, Swimlane } from "../../../../../../type";
 import { createStoreMock } from "../../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../../../../../store/type";
-import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
-import { SwimlaneState } from "../../../../../../store/swimlane/type";
+import type { RootState } from "../../../../../../store/type";
+import type { NewCardPayload } from "../../../../../../store/swimlane/card/type";
+import type { SwimlaneState } from "../../../../../../store/swimlane/type";
 import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
 
 jest.useFakeTimers();

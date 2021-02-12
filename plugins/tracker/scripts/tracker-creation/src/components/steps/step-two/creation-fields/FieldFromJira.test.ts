@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import FieldFromJira from "./FieldFromJira.vue";
-import {
+import type {
     Credentials,
     JiraImportData,
     ProjectList,

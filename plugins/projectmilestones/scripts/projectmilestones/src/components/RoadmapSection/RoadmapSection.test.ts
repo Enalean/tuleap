@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import RoadmapSection from "./RoadmapSection.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { StoreOptions } from "../../type";
+import type { StoreOptions } from "../../type";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
 const project_id = 102;

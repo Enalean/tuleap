@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TextFieldFormat } from "../../../constants/fields-constants";
+import type { TextFieldFormat } from "../../../constants/fields-constants";
 
 type FormatChangedCallback = (new_format: TextFieldFormat) => void;
 

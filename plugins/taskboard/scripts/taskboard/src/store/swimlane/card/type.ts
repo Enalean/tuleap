@@ -17,8 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Swimlane, Tracker, User, UserProperties } from "../../../type";
-import { DataFormat } from "tlp";
+import type {
+    Card,
+    ColumnDefinition,
+    Swimlane,
+    Tracker,
+    User,
+    UserProperties,
+} from "../../../type";
+import type { DataFormat } from "tlp";
 
 export interface NewRemainingEffortPayload {
     readonly card: Card;

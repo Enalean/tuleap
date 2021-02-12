@@ -21,7 +21,7 @@ import { postProject, getProjectUserIsAdminOf, getTermOfService } from "./rest-q
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { MinimalProjectRepresentation, ProjectProperties, TemplateData } from "../type";
+import type { MinimalProjectRepresentation, ProjectProperties, TemplateData } from "../type";
 
 jest.mock("tlp");
 

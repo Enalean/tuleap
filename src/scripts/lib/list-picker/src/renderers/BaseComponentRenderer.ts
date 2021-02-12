@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { ListPickerComponent, ListPickerOptions } from "../type";
+import type { ListPickerComponent, ListPickerOptions } from "../type";
 import { isListPickerInAModal } from "../helpers/list-picker-in-modals-helper";
 
 export class BaseComponentRenderer {

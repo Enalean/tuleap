@@ -23,7 +23,7 @@ import {
     isItemUploadingInTreeView,
     hasNoUploadingContent,
 } from "./uploading-status-helper";
-import { ItemFile } from "../type";
+import type { ItemFile } from "../type";
 
 describe("FolderContentRow", () => {
     describe("hasNoUploadingContent", () => {

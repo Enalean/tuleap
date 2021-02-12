@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItemState } from "./type";
-import { ActionContext } from "vuex";
-import { RootState } from "../type";
+import type { BacklogItemState } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../type";
 import * as tlp from "tlp";
 import { loadBacklogItems, loadTestDefinitions } from "./backlog-item-actions";
-import { BacklogItem, TestDefinition } from "../../type";
+import type { BacklogItem, TestDefinition } from "../../type";
 
 jest.mock("tlp");
 

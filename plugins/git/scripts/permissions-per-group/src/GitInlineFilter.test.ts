@@ -18,7 +18,8 @@
  */
 
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import localVueForTest from "./helper/local-vue-for-test";
 

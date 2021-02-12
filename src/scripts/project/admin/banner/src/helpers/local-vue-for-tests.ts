@@ -19,7 +19,7 @@
 
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "../../../../../tuleap/gettext/vue-gettext-init";
-import { Vue } from "vue/types/vue";
+import type { Vue } from "vue/types/vue";
 
 export async function createProjectAdminBannerLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();

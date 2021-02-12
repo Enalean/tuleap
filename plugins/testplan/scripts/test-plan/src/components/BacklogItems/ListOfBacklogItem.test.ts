@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../store/type";
-import { BacklogItem } from "../../type";
-import { BacklogItemState } from "../../store/backlog-item/type";
+import type { RootState } from "../../store/type";
+import type { BacklogItem } from "../../type";
+import type { BacklogItemState } from "../../store/backlog-item/type";
 import ListOfBacklogItems from "./ListOfBacklogItems.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
 import BacklogItemContainer from "./BacklogItemContainer.vue";

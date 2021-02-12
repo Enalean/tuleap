@@ -36,7 +36,7 @@ import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import Vue from "vue";
 import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { MilestoneData } from "../../type";
+import type { MilestoneData } from "../../type";
 
 @Component({
     components: { ReleaseDisplayer },

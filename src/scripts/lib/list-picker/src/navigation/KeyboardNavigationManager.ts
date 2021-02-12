@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListItemHighlighter } from "./ListItemHighlighter";
+import type { ListItemHighlighter } from "./ListItemHighlighter";
 import { getNextItem, getPreviousItem } from "../helpers/list-item-finder";
 import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
 

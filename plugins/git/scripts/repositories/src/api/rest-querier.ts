@@ -19,7 +19,7 @@
 
 import { patch, post, del, recursiveGet } from "tlp";
 import { REPOSITORIES_SORTED_BY_PATH } from "../constants";
-import { GitLabData, GitLabDataWithToken, Repository } from "../type";
+import type { GitLabData, GitLabDataWithToken, Repository } from "../type";
 
 export type RepositoryCallback = (repositories: Repository[]) => void;
 

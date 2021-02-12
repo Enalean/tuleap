@@ -48,7 +48,7 @@ import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Action, Getter, State } from "vuex-class";
-import { MilestoneData, TrackerAgileDashboard } from "../type";
+import type { MilestoneData, TrackerAgileDashboard } from "../type";
 import PastSection from "./PastSection/PastSection.vue";
 import RoadmapEmptyStateSection from "./ProjectMilestonesEmpty/RoadmapEmptyStateSection.vue";
 

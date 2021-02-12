@@ -18,7 +18,7 @@
  */
 
 import { TYPE_FOLDER } from "../constants";
-import { Item } from "../type";
+import type { Item } from "../type";
 
 export function getFolderSubtree(
     folder_content: Array<Item>,

@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
 import CardSkeleton from "./CardSkeleton.vue";
-import { ColumnDefinition } from "../../../../../type";
+import type { ColumnDefinition } from "../../../../../type";
 
 describe("ColumnsSkeleton", () => {
     it("displays a fixed amount of skeletons depending on column index", () => {

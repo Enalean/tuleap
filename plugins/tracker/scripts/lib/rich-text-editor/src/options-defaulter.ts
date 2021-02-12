@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { InternalTextEditorOptions, RichTextEditorOptions } from "./types";
+import type { InternalTextEditorOptions, RichTextEditorOptions } from "./types";
 
 const defaultEmptyFunction = (): void => {
     /* Do nothing */

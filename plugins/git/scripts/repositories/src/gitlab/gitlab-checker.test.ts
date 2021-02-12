@@ -18,7 +18,7 @@
  */
 
 import { isGitlabRepository } from "./gitlab-checker";
-import { Repository } from "../type";
+import type { Repository } from "../type";
 
 describe("gitlabChecker", () => {
     describe("isGitlabRepository", () => {

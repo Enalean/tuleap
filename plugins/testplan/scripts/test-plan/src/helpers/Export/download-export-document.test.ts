@@ -19,7 +19,7 @@
 
 import { createVueGettextProviderPassthrough } from "../vue-gettext-provider-for-test";
 import { downloadExportDocument } from "./download-export-document";
-import { ExportReport } from "./Report/report-creator";
+import type { ExportReport } from "./Report/report-creator";
 import * as report_creator from "./Report/report-creator";
 
 describe("Start download of export document", () => {

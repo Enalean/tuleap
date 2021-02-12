@@ -20,8 +20,8 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
-import { ColumnDefinition } from "../../../../../type";
-import { DraggedCard } from "../../../../../store/type";
+import type { ColumnDefinition } from "../../../../../type";
+import type { DraggedCard } from "../../../../../store/type";
 
 const column_store = namespace("column");
 

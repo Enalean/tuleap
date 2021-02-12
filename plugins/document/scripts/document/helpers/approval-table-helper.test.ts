@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ApprovalTableBadge, extractApprovalTableData } from "./approval-table-helper";
+import type { ApprovalTableBadge } from "./approval-table-helper";
+import { extractApprovalTableData } from "./approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
 
 describe("extractApprovalTableData", () => {

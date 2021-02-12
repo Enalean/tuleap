@@ -18,9 +18,9 @@
  *
  */
 
-import { State } from "./type";
-import { TemplateData } from "../type";
-import { FetchWrapperError } from "tlp";
+import type { State } from "./type";
+import type { TemplateData } from "../type";
+import type { FetchWrapperError } from "tlp";
 
 export default {
     setSelectedTemplate(state: State, selected_template: TemplateData): void {

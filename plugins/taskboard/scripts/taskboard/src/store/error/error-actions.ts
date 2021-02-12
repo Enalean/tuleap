@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RootState } from "../type";
-import { FetchWrapperError } from "tlp";
-import { ActionContext } from "vuex";
-import { ErrorState } from "./type";
+import type { RootState } from "../type";
+import type { FetchWrapperError } from "tlp";
+import type { ActionContext } from "vuex";
+import type { ErrorState } from "./type";
 
 export async function handleGlobalError(
     context: ActionContext<ErrorState, RootState>,

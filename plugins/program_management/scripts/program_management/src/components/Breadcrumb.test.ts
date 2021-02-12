@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
+import type { ShallowMountOptions } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import Breadcrumb from "./Breadcrumb.vue";
 import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
 

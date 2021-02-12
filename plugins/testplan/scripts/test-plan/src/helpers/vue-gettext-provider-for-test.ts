@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { VueGettextProvider } from "./vue-gettext-provider";
+import type { VueGettextProvider } from "./vue-gettext-provider";
 
 export function createVueGettextProviderPassthrough(): VueGettextProvider {
     return {

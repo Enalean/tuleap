@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Modal } from "./modal";
 import {
-    Modal,
     createModal,
     EVENT_TLP_MODAL_SHOWN,
     EVENT_TLP_MODAL_HIDDEN,

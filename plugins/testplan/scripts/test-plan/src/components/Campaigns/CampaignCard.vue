@@ -45,7 +45,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 import CampaignProgression from "./CampaignProgression.vue";
 import { State } from "vuex-class";
 

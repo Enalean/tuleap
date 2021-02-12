@@ -18,11 +18,12 @@
  */
 
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import CollapsibleFolder from "./CollapsibleFolder.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
-import { Folder, Repository } from "../../type";
+import type { Folder, Repository } from "../../type";
 import GitRepository from "../GitRepository.vue";
 
 describe("CollapsibleFolder", () => {

@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CellObject, ColInfo, Comments, Range, RowInfo, utils, WorkSheet } from "xlsx";
-import { ExportReport, ReportSection } from "../../Report/report-creator";
-import { ReportCell } from "../../Report/report-cells";
+import type { CellObject, ColInfo, Comments, Range, RowInfo, WorkSheet } from "xlsx";
+import { utils } from "xlsx";
+import type { ExportReport, ReportSection } from "../../Report/report-creator";
+import type { ReportCell } from "../../Report/report-cells";
 
 const CELL_BASE_CHARACTER_WIDTH = 10;
 const CELL_MAX_CHARACTER_WIDTH = 65;

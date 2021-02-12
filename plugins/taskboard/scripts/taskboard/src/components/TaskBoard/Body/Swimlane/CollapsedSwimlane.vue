@@ -47,7 +47,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Swimlane, ColumnDefinition } from "../../../../type";
+import type { Swimlane, ColumnDefinition } from "../../../../type";
 import { namespace } from "vuex-class";
 import CardXrefLabel from "./Card/CardXrefLabel.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";

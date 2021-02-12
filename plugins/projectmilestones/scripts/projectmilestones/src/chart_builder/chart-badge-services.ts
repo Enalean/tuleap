@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { XYSizeElement } from "../type";
-import { Selection } from "d3-selection";
+import type { XYSizeElement } from "../type";
+import type { Selection } from "d3-selection";
 const PADDING_ONE_DIGIT = 7.5;
 const PADDING_WIDTH = 5;
 const PADDING_HEIGHT = 2;

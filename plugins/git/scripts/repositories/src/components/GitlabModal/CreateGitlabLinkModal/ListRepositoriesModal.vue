@@ -167,9 +167,9 @@ import { getProjectId } from "../../../repository-list-presenter";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
-import { GitlabProject, GitlabDataWithPath } from "../../../type";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { GitLabRepositoryCreation } from "../../../api/rest-querier";
+import type { GitlabProject, GitlabDataWithPath } from "../../../type";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { GitLabRepositoryCreation } from "../../../api/rest-querier";
 
 @Component
 export default class ListRepositoriesModal extends Vue {

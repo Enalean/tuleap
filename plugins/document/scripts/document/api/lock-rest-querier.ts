@@ -18,7 +18,7 @@
  */
 
 import { del, post } from "tlp";
-import { Embedded, Empty, ItemFile, Link, Wiki } from "../type";
+import type { Embedded, Empty, ItemFile, Link, Wiki } from "../type";
 
 export {
     postLockFile,

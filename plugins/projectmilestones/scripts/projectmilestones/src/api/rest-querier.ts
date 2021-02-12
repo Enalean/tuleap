@@ -18,7 +18,7 @@
  */
 
 import { get, recursiveGet } from "tlp";
-import {
+import type {
     MilestoneContent,
     MilestoneData,
     ParametersRequestWithId,

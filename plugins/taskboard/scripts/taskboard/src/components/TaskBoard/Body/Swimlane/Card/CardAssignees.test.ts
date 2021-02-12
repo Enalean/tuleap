@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import CardAssignees from "./CardAssignees.vue";
-import { Card, Tracker, User } from "../../../../../type";
+import type { Card, Tracker, User } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../../../../store/type";
-import { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
+import type { RootState } from "../../../../../store/type";
+import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
 
 jest.mock("tlp");
 jest.useFakeTimers();

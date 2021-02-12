@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    TEXT_FORMAT_HTML,
-    TEXT_FORMAT_TEXT,
-    TextFieldFormat,
-} from "../../../constants/fields-constants";
+import type { TextFieldFormat } from "../../../constants/fields-constants";
+import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants";
 
 export const HTML_FORMAT_CLASSNAME = "default_format_html";
 const FLAMING_PARROT_SELECTBOX_CLASSNAME = "input-small";

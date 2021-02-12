@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
-import { RootState } from "../../../../../store/type";
+import type { RootState } from "../../../../../store/type";
 
 describe("SwimlaneSkeleton", () => {
     it("displays a fixed amount of skeletons in each column", () => {

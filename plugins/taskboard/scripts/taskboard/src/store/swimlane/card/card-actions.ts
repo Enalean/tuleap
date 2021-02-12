@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { ActionContext } from "vuex";
-import { RootState } from "../../type";
-import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
+import type { ActionContext } from "vuex";
+import type { RootState } from "../../type";
+import type { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
 import { get, patch, post, put } from "tlp";
-import { RefreshCardMutationPayload, SwimlaneState } from "../type";
+import type { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import {
     getPostArtifactBody,
     getPutArtifactBody,
     getPutArtifactBodyToAddChild,
 } from "../../../helpers/update-artifact";
 import { injectDefaultPropertiesInCard } from "../../../helpers/card-default";
-import { Card, Swimlane, Tracker, User } from "../../../type";
+import type { Card, Swimlane, Tracker, User } from "../../../type";
 import pRetry from "p-retry";
-import { UserForPeoplePicker } from "./type";
+import type { UserForPeoplePicker } from "./type";
 
 const headers = {
     "Content-Type": "application/json",

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { Folder, Repository } from "../type";
+import type { Folder, Repository } from "../type";
 
 function isFolder(item: Folder | Repository): item is Folder {
     return "is_folder" in item;

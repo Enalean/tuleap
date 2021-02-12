@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MilestoneData } from "../type";
+import type { MilestoneData } from "../type";
 
 export function getTrackerSubmilestoneLabel(release_data: MilestoneData): string {
     const submilestone_tracker = release_data.resources.milestones.accept.trackers[0];

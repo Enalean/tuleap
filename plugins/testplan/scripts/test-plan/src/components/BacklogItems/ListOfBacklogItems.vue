@@ -36,7 +36,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import { BacklogItem } from "../../type";
+import type { BacklogItem } from "../../type";
 import ListOfBacklogItemsHeader from "./ListOfBacklogItemsHeader.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
 import BacklogItemCard from "./BacklogItemCard.vue";

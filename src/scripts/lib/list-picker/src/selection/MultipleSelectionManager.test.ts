@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DropdownManager } from "../dropdown/DropdownManager";
-import { ListPickerItem } from "../type";
+import type { DropdownManager } from "../dropdown/DropdownManager";
+import type { ListPickerItem } from "../type";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { MultipleSelectionManager } from "./MultipleSelectionManager";
-import { GettextProvider } from "@tuleap/gettext";
+import type { GettextProvider } from "@tuleap/gettext";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";

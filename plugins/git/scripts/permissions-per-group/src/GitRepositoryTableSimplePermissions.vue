@@ -65,7 +65,7 @@
 import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { RepositorySimplePermissions } from "./type";
+import type { RepositorySimplePermissions } from "./type";
 
 @Component({ components: { GitPermissionsBadge } })
 export default class GitRepositoryTableSimplePermissions extends Vue {

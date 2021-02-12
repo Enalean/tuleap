@@ -18,11 +18,12 @@
  *
  */
 
-import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import TemplateCard from "./TemplateCard.vue";
-import { TemplateData } from "../../type";
+import type { TemplateData } from "../../type";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
-import { Store } from "vuex-mock-store";
+import type { Store } from "vuex-mock-store";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 
 describe("CardWithChildren", () => {

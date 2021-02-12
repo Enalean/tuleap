@@ -55,7 +55,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { BacklogItem } from "../../type";
+import type { BacklogItem } from "../../type";
 import { State } from "vuex-class";
 import { createDropdown } from "tlp";
 import {

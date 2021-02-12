@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import CollapseButton from "./CollapseButton.vue";
-import { ColumnDefinition } from "../../../../type";
-import { RootState } from "../../../../store/type";
+import type { ColumnDefinition } from "../../../../type";
+import type { RootState } from "../../../../store/type";
 
 async function getWrapper(column: ColumnDefinition): Promise<Wrapper<CollapseButton>> {
     return shallowMount(CollapseButton, {

@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { GettextProvider } from "@tuleap/gettext";
+import type { GettextProvider } from "@tuleap/gettext";
+import type { TextFieldFormat } from "../../../constants/fields-constants";
 import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_TEXT,
-    TextFieldFormat,
 } from "../../../constants/fields-constants";
-import { DisplayInterface, FormatSelectorPresenter } from "./DisplayInterface";
-import { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
+import type { DisplayInterface, FormatSelectorPresenter } from "./DisplayInterface";
+import type { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
 
 const isValidFormat = (value: string): value is TextFieldFormat =>
     TEXT_FORMAT_TEXT === value || TEXT_FORMAT_HTML === value || TEXT_FORMAT_COMMONMARK === value;

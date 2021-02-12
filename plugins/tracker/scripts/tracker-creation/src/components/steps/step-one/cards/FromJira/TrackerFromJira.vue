@@ -45,7 +45,7 @@
 import Vue from "vue";
 import { Action, Mutation, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { Credentials, JiraImportData, ProjectList } from "../../../../../store/type";
+import type { Credentials, JiraImportData, ProjectList } from "../../../../../store/type";
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 import TrackerFromJiraServer from "./TrackerFromJiraServer.vue";
 

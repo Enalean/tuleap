@@ -85,7 +85,12 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Credentials, JiraImportData, ProjectList, TrackerList } from "../../../../../store/type";
+import type {
+    Credentials,
+    JiraImportData,
+    ProjectList,
+    TrackerList,
+} from "../../../../../store/type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action, Mutation, State } from "vuex-class";
 

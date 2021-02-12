@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AfterDropEventSource, AfterDropListener, DrekkenovInitOptions } from "./types";
+import type { AfterDropEventSource, AfterDropListener, DrekkenovInitOptions } from "./types";
 import { GHOST_CSS_CLASS, HIDE_CSS_CLASS } from "./constants";
 import { cloneHTMLElement, findNextGhostSibling, insertAfter } from "./dom-manipulation";
-import { OngoingDrag } from "./OngoingDrag";
+import type { OngoingDrag } from "./OngoingDrag";
 
 export class DropGhost implements AfterDropListener {
     constructor(

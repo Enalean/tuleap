@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
-import { Project, UserHistory, UserHistoryEntry } from "../type";
+import type { State } from "./type";
+import type { Project, UserHistory, UserHistoryEntry } from "../type";
 
 export function updateFilterValue(state: State, value: string): void {
     state.filter_value = value;

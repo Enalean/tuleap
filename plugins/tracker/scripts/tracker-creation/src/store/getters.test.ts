@@ -18,8 +18,7 @@
  */
 
 import * as getters from "./getters";
-import {
-    CreationOptions,
+import type {
     JiraImportData,
     ProjectList,
     ProjectTemplate,
@@ -28,6 +27,7 @@ import {
     TrackerList,
     TrackerToBeCreatedMandatoryData,
 } from "./type";
+import { CreationOptions } from "./type";
 
 describe("getters", () => {
     describe("is_ready_for_step_2", () => {

@@ -19,7 +19,7 @@
  */
 
 import { TYPE_FOLDER } from "../../constants";
-import { Folder, Item } from "../../type";
+import type { Folder, Item } from "../../type";
 
 function doesTitleAlreadyExists(text_value: string, item: Item, parent_folder: Folder): boolean {
     return item.title === text_value && item.parent_id === parent_folder.id;

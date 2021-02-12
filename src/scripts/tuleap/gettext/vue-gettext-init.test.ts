@@ -19,8 +19,9 @@
 
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
-import { initVueGettext, POFile } from "./vue-gettext-init";
-import { VueConfiguration } from "vue/types/vue";
+import type { POFile } from "./vue-gettext-init";
+import { initVueGettext } from "./vue-gettext-init";
+import type { VueConfiguration } from "vue/types/vue";
 
 jest.mock("vue", () => {
     return {

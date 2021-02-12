@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import NoMappingMessage from "./NoMappingMessage.vue";
-import { Card } from "../../../../../type";
+import type { Card } from "../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
 
 describe("NoMappingMessage", () => {

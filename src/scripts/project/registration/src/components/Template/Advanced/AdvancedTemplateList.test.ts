@@ -20,13 +20,14 @@
 
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import AdvancedTemplateList from "./AdvancedTemplateList.vue";
-import { shallowMount, Wrapper } from "@vue/test-utils";
-import { TemplateData } from "../../../type";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import type { TemplateData } from "../../../type";
 import * as rest_querier from "../../../api/rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { State } from "../../../store/type";
+import type { State } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
-import { Store } from "vuex-mock-store";
+import type { Store } from "vuex-mock-store";
 
 describe("AdvancedTemplateList", () => {
     let wrapper: Wrapper<AdvancedTemplateList>;

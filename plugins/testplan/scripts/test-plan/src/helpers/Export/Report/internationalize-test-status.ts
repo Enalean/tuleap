@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TestStats } from "../../BacklogItems/compute-test-stats";
-import { VueGettextProvider } from "../../vue-gettext-provider";
+import type { TestStats } from "../../BacklogItems/compute-test-stats";
+import type { VueGettextProvider } from "../../vue-gettext-provider";
 
 export function getInternationalizedTestStatus(
     gettext_provider: VueGettextProvider,

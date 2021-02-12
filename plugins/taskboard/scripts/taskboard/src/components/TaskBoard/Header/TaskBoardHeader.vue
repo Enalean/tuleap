@@ -40,7 +40,7 @@
 import Vue from "vue";
 import { namespace, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../type";
+import type { ColumnDefinition } from "../../../type";
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
 import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
 

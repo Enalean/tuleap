@@ -19,7 +19,7 @@
 
 import { createVueGettextProviderPassthrough } from "../../vue-gettext-provider-for-test";
 import { getPlannedTestCasesAssociatedWithCampaignAndTestExec } from "./get-planned-test-cases";
-import { BacklogItem, Campaign, TestDefinition } from "../../../type";
+import type { BacklogItem, Campaign, TestDefinition } from "../../../type";
 
 describe("Get planned test cases", () => {
     it("extracts sorted planned test cases", () => {

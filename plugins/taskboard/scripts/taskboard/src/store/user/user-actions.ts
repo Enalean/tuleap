@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ActionContext } from "vuex";
-import { UserPreference, UserPreferenceValue, UserState } from "./type";
-import { RootState } from "../type";
+import type { ActionContext } from "vuex";
+import type { UserPreference, UserPreferenceValue, UserState } from "./type";
+import type { RootState } from "../type";
 import { del, patch } from "tlp";
 
 export async function setPreference(

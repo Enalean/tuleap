@@ -43,7 +43,7 @@ import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 import ListOfCampaignsHeader from "./ListOfCampaignsHeader.vue";
 import GlobalErrorMessage from "./GlobalErrorMessage.vue";
 

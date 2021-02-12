@@ -70,7 +70,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import { createDropdown } from "tlp";
-import { BacklogItem, TestDefinition } from "../../../type";
+import type { BacklogItem, TestDefinition } from "../../../type";
 import {
     buildEditTestDefinitionItemLink,
     buildGoToTestExecutionLink,

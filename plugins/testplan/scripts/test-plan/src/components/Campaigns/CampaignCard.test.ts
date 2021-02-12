@@ -19,10 +19,10 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CampaignCard from "./CampaignCard.vue";
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../store/type";
+import type { RootState } from "../../store/type";
 
 describe("CampaignCard", () => {
     it("Displays a campaign as a card", async () => {

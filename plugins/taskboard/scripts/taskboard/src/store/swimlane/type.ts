@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
-import { UserForPeoplePicker } from "./card/type";
+import type { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
+import type { UserForPeoplePicker } from "./card/type";
 
 export interface SwimlaneState {
     swimlanes: Array<Swimlane>;

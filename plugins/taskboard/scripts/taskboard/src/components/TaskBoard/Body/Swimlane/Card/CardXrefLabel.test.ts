@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CardXrefLabel from "./CardXrefLabel.vue";
-import { Card } from "../../../../../type";
+import type { Card } from "../../../../../type";
 
 describe("CardXrefLabel", () => {
     it("displays the xref and the label of a card", () => {

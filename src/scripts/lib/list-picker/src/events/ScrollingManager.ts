@@ -18,7 +18,7 @@
  */
 
 import { isListPickerInAModal } from "../helpers/list-picker-in-modals-helper";
-import { ScrollCoordinates } from "../type";
+import type { ScrollCoordinates } from "../type";
 
 export class ScrollingManager {
     private readonly first_scrollable_parent: HTMLElement | null = null;

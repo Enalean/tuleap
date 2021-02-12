@@ -18,7 +18,8 @@
  */
 
 import { isDefaultTemplateSelected } from "./is-default-template-selected";
-import { CreationOptions, State } from "./type";
+import type { State } from "./type";
+import { CreationOptions } from "./type";
 
 describe("isDefaultTemplateSelected", () => {
     it("returns true if default template is selected", () => {

@@ -95,7 +95,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { getProjectPrivacyIcon, ProjectFlag, ProjectPrivacy } from "./project-privacy-helper";
+import type { ProjectFlag, ProjectPrivacy } from "./project-privacy-helper";
+import { getProjectPrivacyIcon } from "./project-privacy-helper";
 import { createPopover } from "@tuleap/tlp";
 
 @Component

@@ -37,7 +37,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
-import { Campaign } from "../../type";
+import type { Campaign } from "../../type";
 
 const campaign = namespace("campaign");
 

@@ -36,7 +36,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
-import { BacklogItem } from "../../../type";
+import type { BacklogItem } from "../../../type";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";

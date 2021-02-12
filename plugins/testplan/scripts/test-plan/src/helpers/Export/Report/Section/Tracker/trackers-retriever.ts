@@ -19,7 +19,7 @@
 
 import { get } from "tlp";
 import { limitConcurrencyPool } from "./concurrency-limit-pool";
-import { MinimalTracker, Tracker } from "./tracker";
+import type { MinimalTracker, Tracker } from "./tracker";
 
 const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_TRACKERS = 5;
 

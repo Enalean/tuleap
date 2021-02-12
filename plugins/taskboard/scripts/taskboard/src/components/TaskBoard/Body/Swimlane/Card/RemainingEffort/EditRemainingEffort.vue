@@ -33,9 +33,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card, TaskboardEvent } from "../../../../../../type";
+import type { Card } from "../../../../../../type";
+import { TaskboardEvent } from "../../../../../../type";
 import { namespace } from "vuex-class";
-import { NewRemainingEffortPayload } from "../../../../../../store/swimlane/card/type";
+import type { NewRemainingEffortPayload } from "../../../../../../store/swimlane/card/type";
 import EventBus from "../../../../../../helpers/event-bus";
 import { autoFocusAutoSelect } from "../../../../../../helpers/autofocus-autoselect";
 

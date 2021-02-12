@@ -62,7 +62,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 
 @Component
 export default class ReleaseHeaderRemainingDays extends Vue {

@@ -19,19 +19,18 @@
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import type { GitLabRepositoryUpdate, GitRepositoryRecursiveGet } from "./rest-querier";
 import {
     postRepository,
     deleteIntegrationGitlab,
     postGitlabRepository,
     patchGitlabRepository,
-    GitLabRepositoryUpdate,
     getRepositoryList,
     getForkedRepositoryList,
     getGitlabRepositoryList,
-    GitRepositoryRecursiveGet,
 } from "./rest-querier";
-import { Repository } from "../type";
-import { RecursiveGetInit } from "@tuleap/tlp-fetch";
+import type { Repository } from "../type";
+import type { RecursiveGetInit } from "@tuleap/tlp-fetch";
 
 jest.mock("tlp");
 

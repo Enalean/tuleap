@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EmptyCell, ReportCell, TextCell } from "../report-cells";
-import { BacklogItem } from "../../../../type";
+import type { ReportCell } from "../report-cells";
+import { EmptyCell, TextCell } from "../report-cells";
+import type { BacklogItem } from "../../../../type";
 import { computeTestStats, getTestStatusFromStats } from "../../../BacklogItems/compute-test-stats";
 import { getInternationalizedTestStatus } from "../internationalize-test-status";
 import { retrieveArtifacts } from "./Tracker/artifacts-retriever";
 import { retrieveTrackers } from "./Tracker/trackers-retriever";
 import { transformFieldValueIntoACell } from "./transform-field-value-into-cell";
-import { Artifact } from "./Tracker/artifact";
-import { Tracker } from "./Tracker/tracker";
-import { VueGettextProvider } from "../../../vue-gettext-provider";
+import type { Artifact } from "./Tracker/artifact";
+import type { Tracker } from "./Tracker/tracker";
+import type { VueGettextProvider } from "../../../vue-gettext-provider";
 
 const SUPPORTED_EXTRA_FIELD_TYPES: ReadonlySet<string> = new Set([
     "int",

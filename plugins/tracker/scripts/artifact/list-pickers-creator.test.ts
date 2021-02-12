@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ListPickerCreator } from "./list-pickers-creator";
 import {
     initListPickersInArtifactCreationView,
     initListPickersPostUpdateErrorView,
     listenToggleEditionEvents,
-    ListPickerCreator,
 } from "./list-pickers-creator";
 
 describe("list-pickers-creator", () => {

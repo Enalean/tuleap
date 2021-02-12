@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ArtifactMilestone, BurndownData, BurnupData } from "../type";
+import type { ArtifactMilestone, BurndownData, BurnupData } from "../type";
 export function getBurndownDataFromType(chart_data: ArtifactMilestone): null | BurndownData {
     const iterator_milestone_chart = chart_data.values.values();
 

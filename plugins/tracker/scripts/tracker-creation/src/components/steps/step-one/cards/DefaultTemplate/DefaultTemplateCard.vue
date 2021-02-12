@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Tracker } from "../../../../../store/type";
+import type { Tracker } from "../../../../../store/type";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import SvgTrackerTemplate from "../TrackerTemplate/SvgTrackerTemplate.vue";
 import SvgActivity from "./SvgActivity.vue";

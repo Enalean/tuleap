@@ -53,7 +53,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
-import { MilestoneData } from "../../type";
+import type { MilestoneData } from "../../type";
 
 @Component({
     components: {

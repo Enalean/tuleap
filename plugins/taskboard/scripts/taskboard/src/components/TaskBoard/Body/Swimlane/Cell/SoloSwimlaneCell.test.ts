@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Swimlane, User } from "../../../../../type";
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Card, ColumnDefinition, Swimlane, User } from "../../../../../type";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import SoloSwimlaneCell from "./SoloSwimlaneCell.vue";
 import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
 

@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import GlobalErrorMessage from "./GlobalErrorMessage.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../store/type";
-import { CampaignState } from "../../store/campaign/type";
+import type { RootState } from "../../store/type";
+import type { CampaignState } from "../../store/campaign/type";
 
 describe("GlobalErrorMessage", () => {
     async function createWrapper(campaign: CampaignState): Promise<Wrapper<GlobalErrorMessage>> {

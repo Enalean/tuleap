@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Selection } from "d3-selection";
+import type { Selection } from "d3-selection";
 import { getContainerProperties } from "./chart-badge-services";
 
 const Y_AXIS_TO_CENTER = 5,

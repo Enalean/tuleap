@@ -18,14 +18,14 @@
  */
 
 import { EventManager } from "./EventManager";
-import { SingleSelectionManager } from "../selection/SingleSelectionManager";
-import { DropdownManager } from "../dropdown/DropdownManager";
+import type { SingleSelectionManager } from "../selection/SingleSelectionManager";
+import type { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
-import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
-import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import { SelectionManager } from "../type";
-import { FieldFocusManager } from "../navigation/FieldFocusManager";
+import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
+import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
+import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
+import type { SelectionManager } from "../type";
+import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 describe("event manager", () => {
     let doc: HTMLDocument,

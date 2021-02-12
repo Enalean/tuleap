@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
-import Vuex, { Store } from "vuex";
+import type { State } from "./type";
+import type { Store } from "vuex";
+import Vuex from "vuex";
 import * as getters from "./getters";
 import * as mutations from "./mutations";
 import * as actions from "./actions";

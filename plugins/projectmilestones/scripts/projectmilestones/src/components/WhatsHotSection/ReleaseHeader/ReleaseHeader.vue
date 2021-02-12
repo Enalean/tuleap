@@ -53,7 +53,7 @@ import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 import Vue from "vue";
-import { MilestoneData } from "../../../type";
+import type { MilestoneData } from "../../../type";
 import { Component, Prop } from "vue-property-decorator";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
 import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";

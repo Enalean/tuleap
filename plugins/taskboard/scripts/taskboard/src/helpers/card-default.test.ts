@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card } from "../type";
+import type { Card } from "../type";
 import { injectDefaultPropertiesInCard } from "./card-default";
 
 describe("injectDefaultPropertiesInCard", () => {

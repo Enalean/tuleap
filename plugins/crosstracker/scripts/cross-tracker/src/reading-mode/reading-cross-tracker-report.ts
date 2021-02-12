@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { ReadingReport, Tracker } from "../type";
+import type { ReadingReport, Tracker } from "../type";
 
 export default class ReadingCrossTrackerReport {
     trackers: Map<number, Tracker>;

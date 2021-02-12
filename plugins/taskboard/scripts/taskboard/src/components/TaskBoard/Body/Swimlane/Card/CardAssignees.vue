@@ -55,10 +55,10 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import { Card, Tracker, User } from "../../../../../type";
+import type { Card, Tracker, User } from "../../../../../type";
 import UserAvatar from "./UserAvatar.vue";
 import PeoplePicker from "./Editor/Assignees/PeoplePicker.vue";
-import { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
+import type { UserForPeoplePicker } from "../../../../../store/swimlane/card/type";
 
 const swimlane = namespace("swimlane");
 

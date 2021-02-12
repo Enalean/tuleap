@@ -22,8 +22,8 @@ import ProgramIncrementList from "./ProgramIncrementList.vue";
 import * as retriever from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import * as configuration from "../../../configuration";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import { DefaultData } from "vue/types/options";
-import { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import type { DefaultData } from "vue/types/options";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
 describe("ProgramIncrementList", () => {
     it("Displays the empty state when no artifact are found", async () => {

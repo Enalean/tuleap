@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { CampaignState } from "./type";
-import { RootState } from "../type";
+import type { Module } from "vuex";
+import type { CampaignState } from "./type";
+import type { RootState } from "../type";
 import * as actions from "./campaign-actions";
 import * as mutations from "./campaign-mutations";
 

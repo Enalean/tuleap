@@ -18,9 +18,10 @@
  *
  */
 
-import { ListPickerItem } from "../../type";
+import type { ListPickerItem } from "../../type";
 import { convertBadColorHexToRGB, isColorBad } from "../color-helper";
-import { html, TemplateResult } from "lit-html";
+import type { TemplateResult } from "lit-html";
+import { html } from "lit-html";
 import { ListItemMapBuilder } from "../../items/ListItemMapBuilder";
 import { classMap } from "lit-html/directives/class-map";
 import { styleMap } from "lit-html/directives/style-map";

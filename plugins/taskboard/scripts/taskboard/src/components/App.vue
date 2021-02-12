@@ -31,7 +31,8 @@
 import Vue from "vue";
 import { namespace, State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { ColumnDefinition, TaskboardEvent } from "../type";
+import type { ColumnDefinition } from "../type";
+import { TaskboardEvent } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
 import EventBus from "./../helpers/event-bus";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FullscreenState } from "./type";
+import type { FullscreenState } from "./type";
 
 export function setIsTaskboardInFullscreenMode(
     state: FullscreenState,

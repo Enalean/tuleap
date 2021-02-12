@@ -36,7 +36,7 @@ import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
 import { State } from "vuex-class";
-import { Project, UserHistory } from "../../type";
+import type { Project, UserHistory } from "../../type";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
 
 @Component({

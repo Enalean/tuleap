@@ -18,13 +18,13 @@
  */
 
 import { buildGeneralSection } from "./Section/general-information-builder";
-import { ReportCell, TextCell } from "./report-cells";
+import type { ReportCell, TextCell } from "./report-cells";
 import { buildRequirementsSection } from "./Section/requirements-builder";
-import { BacklogItem, Campaign } from "../../../type";
+import type { BacklogItem, Campaign } from "../../../type";
 import { buildTestResultsSection } from "./Section/test-results-builder";
 import { getPlannedTestCasesAssociatedWithCampaignAndTestExec } from "./get-planned-test-cases";
 import { buildJustificationsSection } from "./Section/justifications-builder";
-import { VueGettextProvider } from "../../vue-gettext-provider";
+import type { VueGettextProvider } from "../../vue-gettext-provider";
 
 export interface ReportSection {
     readonly title?: TextCell;

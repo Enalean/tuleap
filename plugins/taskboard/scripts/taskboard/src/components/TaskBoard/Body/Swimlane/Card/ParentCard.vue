@@ -35,7 +35,7 @@ import { Component, Prop } from "vue-property-decorator";
 import CardInitialEffort from "./CardInitialEffort.vue";
 import { getWidthPercentage } from "../../../../../helpers/progress-bars";
 import BaseCard from "./BaseCard.vue";
-import { Card } from "../../../../../type";
+import type { Card } from "../../../../../type";
 
 @Component({
     components: {

@@ -18,9 +18,10 @@
  */
 
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import CredentialsFormModal from "./CredentialsFormModal.vue";
-import { Store } from "vuex-mock-store";
+import type { Store } from "vuex-mock-store";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 

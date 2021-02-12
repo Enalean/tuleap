@@ -73,7 +73,7 @@
 import Vue from "vue";
 import { State, Mutation, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
+import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
 import { TRACKER_SHORTNAME_FORMAT } from "../../../../constants";
 

@@ -18,9 +18,10 @@
  */
 
 import TrackerXmlFileSelector from "./TrackerXmlFileSelector.vue";
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
-import { State } from "../../../../../store/type";
+import type { State } from "../../../../../store/type";
 import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("TrackerXmlFileSelector", () => {

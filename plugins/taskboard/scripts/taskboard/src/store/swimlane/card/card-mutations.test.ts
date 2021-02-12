@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane, Tracker, User } from "../../../type";
+import type { Card, Swimlane, Tracker, User } from "../../../type";
 import * as mutations from "./card-mutations";
-import { SwimlaneState } from "../type";
-import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
-import { UserForPeoplePicker } from "../../../store/swimlane/card/type";
+import type { SwimlaneState } from "../type";
+import type { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
+import type { UserForPeoplePicker } from "../../../store/swimlane/card/type";
 
 jest.useFakeTimers();
 
