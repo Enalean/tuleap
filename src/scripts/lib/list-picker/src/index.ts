@@ -19,8 +19,9 @@
 
 import french_translations from "../po/fr_FR.po";
 import type { ListPicker, ListPickerOptions } from "./type";
-import { initGettextSync } from "@tuleap/gettext";
 import * as creator from "./list-picker";
+import { initGettextSync } from "@tuleap/gettext";
+import "../themes/style.scss";
 
 export type { ListPicker, ListPickerOptions };
 export function createListPicker(
