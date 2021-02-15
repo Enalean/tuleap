@@ -73,7 +73,6 @@ function ExecutionService(
         removeViewTestExecutionByUUID,
         displayPresencesForAllExecutions,
         displayPresencesByExecution,
-        displayError,
         displayErrorMessage,
         executionsForCampaign,
         addArtifactLink,
@@ -503,10 +502,6 @@ function ExecutionService(
                 });
             });
         }
-    }
-
-    function displayError(execution, response) {
-        execution.error = response.status + ": " + response.data.error.message;
     }
 
     function displayErrorMessage(execution, message) {

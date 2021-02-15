@@ -191,14 +191,21 @@ describe("ExecutionDetailController -", () => {
             });
 
             it("When there is a problem with the update, then the error will be shown on the execution", () => {
-                const error = { status: 500 };
+                const error = {
+                    code: 400,
+                    message: "error",
+                };
+
                 ExecutionRestService.putTestExecution.mockReturnValue($q.reject(error));
-                jest.spyOn(ExecutionService, "displayError").mockImplementation(() => {});
+                jest.spyOn(ExecutionService, "displayErrorMessage").mockImplementation(() => {});
 
                 $scope.pass(execution);
                 $scope.$apply();
 
-                expect(ExecutionService.displayError).toHaveBeenCalledWith(execution, error);
+                expect(ExecutionService.displayErrorMessage).toHaveBeenCalledWith(
+                    execution,
+                    "error"
+                );
             });
         });
 

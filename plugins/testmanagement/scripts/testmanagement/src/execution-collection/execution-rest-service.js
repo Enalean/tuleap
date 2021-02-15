@@ -88,7 +88,15 @@ function ExecutionRestService($http, $q, SharedPropertiesService) {
             put(encodeURI(`/api/v1/testmanagement_executions/${execution_id}`), {
                 headers,
                 body,
-            }).then((response) => response.json())
+            })
+                .then((response) => response.json())
+                .catch((exception) => {
+                    if (Object.prototype.hasOwnProperty.call(exception, "response")) {
+                        return exception.response.json().then((json) => $q.reject(json.error));
+                    }
+
+                    return $q.reject(exception);
+                })
         );
     }
 
