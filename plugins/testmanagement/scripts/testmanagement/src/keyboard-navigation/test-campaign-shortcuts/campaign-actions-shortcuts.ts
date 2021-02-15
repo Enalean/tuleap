@@ -26,7 +26,7 @@ import { addShortcutsGroup } from "@tuleap/core/scripts/keyboard-navigation/add-
 import type { GettextProvider } from "../type";
 
 import { clickOnElement, focusElement } from "../shortcuts-handles/trigger-datashortcut-element";
-import { showNonPassedTests } from "../shortcuts-handles/show-non-passed-tests";
+import { showRemainingTests } from "../shortcuts-handles/show-remaining-tests";
 
 export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): void {
     const edit_campaign: Shortcut = {
@@ -53,11 +53,11 @@ export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): 
         },
     };
 
-    const show_non_passed_tests: Shortcut = {
-        keyboard_inputs: "n",
-        description: gettextCatalog.getString("Show non-passed tests only"),
+    const show_remaining_tests: Shortcut = {
+        keyboard_inputs: "r",
+        description: gettextCatalog.getString("Show remaining tests only"),
         handle: (): void => {
-            showNonPassedTests(document);
+            showRemainingTests(document);
         },
     };
 
@@ -83,7 +83,7 @@ export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): 
             edit_campaign,
             focus_search_filter,
             toggle_automated_tests_filter,
-            show_non_passed_tests,
+            show_remaining_tests,
             focus_test_list,
             show_scores,
         ],
