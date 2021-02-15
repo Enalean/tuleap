@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
+use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
 use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
 use Tuleap\Tracker\FormElement\Field\XML\SubmitPermission;
@@ -32,31 +34,42 @@ use Tuleap\Tracker\FormElement\XML\XMLReferenceByName;
 use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
-use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn;
+use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
 
 final class ScrumTrackerBuilder
 {
-    public const NAME_FIELD_NAME = 'name';
+    public const NAME_FIELD_NAME       = 'name';
+    public const START_DATE_FIELD_NAME = 'start_date';
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
+        $default_permissions = [
+            new ReadPermission('UGROUP_ANONYMOUS'),
+            new SubmitPermission('UGROUP_REGISTERED'),
+            new UpdatePermission('UGROUP_PROJECT_MEMBERS'),
+        ];
+
         return (new XMLTracker($id_generator, 'sprint'))
             ->withName('Sprints')
             ->withColor(TrackerColor::fromName('acid-green'))
             ->withFormElement(
                 (new XMLFieldset($id_generator, 'details'))
                     ->withLabel('Details')
-                    ->withRank(1)
                     ->withFormElements(
                         (new XMLStringField($id_generator, self::NAME_FIELD_NAME))
                             ->withLabel('Name')
-                            ->withPermissions(
-                                new ReadPermission('UGROUP_ANONYMOUS'),
-                                new SubmitPermission('UGROUP_REGISTERED'),
-                                new UpdatePermission('UGROUP_PROJECT_MEMBERS'),
+                            ->withRank(1)
+                            ->withPermissions(...$default_permissions),
+                        (new XMLColumn($id_generator, 'col1'))
+                            ->withRank(2)
+                            ->withFormElements(
+                                (new XMLDateField($id_generator, self::START_DATE_FIELD_NAME))
+                                ->withLabel('Start Date')
+                                ->withDateTime()
+                                ->withPermissions(...$default_permissions),
                             )
                     )
             )
@@ -64,16 +77,14 @@ final class ScrumTrackerBuilder
                 (new XMLReport('Active sprints'))
                     ->withIsDefault(true)
                     ->withCriteria(
-                        new XMLReportCriterion(
-                            new XMLReferenceByName(self::NAME_FIELD_NAME)
-                        )
+                        new XMLReportCriterion(new XMLReferenceByName(self::NAME_FIELD_NAME)),
+                        new XMLReportCriterion(new XMLReferenceByName(self::START_DATE_FIELD_NAME))
                     )
                     ->withRenderers(
                         (new XMLTable('Table'))
                             ->withColumns(
-                                new XMLColumn(
-                                    new XMLReferenceByName(self::NAME_FIELD_NAME)
-                                )
+                                new XMLTableColumn(new XMLReferenceByName(self::NAME_FIELD_NAME)),
+                                new XMLTableColumn(new XMLReferenceByName(self::START_DATE_FIELD_NAME)),
                             )
                     )
             );

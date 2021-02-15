@@ -88,10 +88,10 @@ final class XMLReport
      * @return static
      * @psalm-mutation-free
      */
-    public function withCriteria(XMLReportCriterion $criterion): self
+    public function withCriteria(XMLReportCriterion ...$criterion): self
     {
-        $new             = clone $this;
-        $new->criteria[] = $criterion;
+        $new           = clone $this;
+        $new->criteria = array_merge($new->criteria, $criterion);
         return $new;
     }
 

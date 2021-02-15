@@ -241,7 +241,11 @@ abstract class XMLFormElement
 
         $simplexml_cdata_factory = new \XML_SimpleXMLCDATAFactory();
         $simplexml_cdata_factory->insert($formelement_node, 'name', $this->name);
-        $simplexml_cdata_factory->insert($formelement_node, 'label', $this->label);
+        $label = $this->label;
+        if ($label === '') {
+            $label = $this->name;
+        }
+        $simplexml_cdata_factory->insert($formelement_node, 'label', $label);
         if ($this->description !== '') {
             $simplexml_cdata_factory->insert($formelement_node, 'description', $this->description);
         }

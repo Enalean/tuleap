@@ -21,19 +21,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Container\Column\XML;
+namespace Tuleap\Tracker\FormElement\Field\Date\XML;
 
-use Tracker_FormElementFactory;
-use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
-use Tuleap\Tracker\XML\IDGenerator;
+use PHPUnit\Framework\TestCase;
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertFalse;
 
-final class XMLColumn extends XMLContainer
+final class XMLDateFieldTest extends TestCase
 {
-    /**
-     * @param string|IDGenerator $id
-     */
-    public function __construct($id, string $name)
+    public function testItHasNoPropertiesByDefault(): void
     {
-        parent::__construct($id, Tracker_FormElementFactory::CONTAINER_COLUMN_TYPE, $name);
+        $field = (new XMLDateField('some_id', 'start_date'))
+            ->export(new \SimpleXMLElement('<formElements />'));
+
+        assertFalse(isset($field->properties));
+    }
+
+    public function testItHasDateTimeProperty(): void
+    {
+        $field = (new XMLDateField('some_id', 'start_date'))
+            ->withDateTime()
+            ->export(new \SimpleXMLElement('<formElements />'));
+
+        assertEquals('1', $field->properties['display_time']);
     }
 }

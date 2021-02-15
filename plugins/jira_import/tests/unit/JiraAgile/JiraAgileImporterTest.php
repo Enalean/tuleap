@@ -125,13 +125,48 @@ class JiraAgileImporterTest extends TestCase
         assertEquals($string_field['ID'], (string) $xml->trackers->tracker->reports->report[0]->renderers->renderer[0]->columns->field[0]['REF']);
         assertEquals($string_field['ID'], (string) $xml->trackers->tracker->reports->report[0]->criterias->criteria[0]->field['REF']);
 
-        assertCount(3, $xml->trackers->tracker->permissions->permission);
-        assertEquals($string_field['ID'], $xml->trackers->tracker->permissions->permission[0]['REF']);
-        assertEquals('PLUGIN_TRACKER_FIELD_READ', $xml->trackers->tracker->permissions->permission[0]['type']);
-        assertEquals($string_field['ID'], $xml->trackers->tracker->permissions->permission[1]['REF']);
-        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $xml->trackers->tracker->permissions->permission[1]['type']);
-        assertEquals($string_field['ID'], $xml->trackers->tracker->permissions->permission[2]['REF']);
-        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $xml->trackers->tracker->permissions->permission[2]['type']);
+        $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', (string) $string_field['ID']));
+        assertCount(3, $permissions);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $permissions[0]['type']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $permissions[1]['type']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
+    }
+
+    public function testSprintTrackerHasStartDateField(): void
+    {
+        $jira_agile_importer = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+
+        $start_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="start_date"]');
+
+        assertCount(1, $start_date_field);
+        $id = (string) $start_date_field[0]['ID'];
+        assertEquals('date', $start_date_field[0]['type']);
+        assertEquals('1', $start_date_field[0]->properties['display_time']);
+
+        $start_date_criteria = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/criterias/criteria/field[@REF="%s"]', $id));
+        assertCount(1, $start_date_criteria);
+
+        $start_date_column = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/renderers/renderer/columns/field[@REF="%s"]', $id));
+        assertCount(1, $start_date_column);
+
+        $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', $id));
+        assertCount(3, $permissions);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $permissions[0]['type']);
+        assertEquals('UGROUP_ANONYMOUS', $permissions[0]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $permissions[1]['type']);
+        assertEquals('UGROUP_REGISTERED', $permissions[1]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
+        assertEquals('UGROUP_PROJECT_MEMBERS', $permissions[2]['ugroup']);
     }
 
     public function testItFetchesSprints(): void
@@ -185,7 +220,7 @@ class JiraAgileImporterTest extends TestCase
         );
     }
 
-    public function testItCreatesOneSprintArtifact()
+    public function testItCreatesOneSprintArtifact(): void
     {
         $jira_agile_importer = new JiraAgileImporter(
             $this->getJiraBoradRetrieverWithOneBoard(),
@@ -215,10 +250,39 @@ class JiraAgileImporterTest extends TestCase
         assertNotNull($xml_artifact_node->changeset[0]->submitted_on);
         assertNotNull($xml_artifact_node->changeset[0]->comments);
         assertCount(0, $xml_artifact_node->changeset[0]->comments->comment);
-        assertCount(1, $xml_artifact_node->changeset[0]->field_change);
-        assertEquals('name', $xml_artifact_node->changeset[0]->field_change[0]['field_name']);
-        assertEquals('string', $xml_artifact_node->changeset[0]->field_change[0]['type']);
-        assertEquals('Sprint 1', $xml_artifact_node->changeset[0]->field_change[0]->value);
+
+        $name_field_change = $xml_artifact_node->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="name"]');
+        assertCount(1, $name_field_change);
+        assertEquals('string', $name_field_change[0]['type']);
+        assertEquals('Sprint 1', $name_field_change[0]->value);
+    }
+
+    public function testItCreatesOneSprintArtifactWithStartDate(): void
+    {
+        $jira_agile_importer = new JiraAgileImporter(
+            $this->getJiraBoradRetrieverWithOneBoard(),
+            $this->getJiraSprintRetrieverWithSprints(
+                [
+                    JiraSprint::buildActive(1, 'Sprint 1')
+                        ->withStartDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
+                ]
+            )
+        );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+        );
+
+        $start_date_field_change = $xml->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="start_date"]');
+        assertCount(1, $start_date_field_change);
+        assertEquals('date', $start_date_field_change[0]['type']);
+        assertEquals('2018-01-25T04:04:09+00:00', $start_date_field_change[0]->value);
     }
 
     private function getJiraAgileImport(): JiraAgileImporter

@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Report\Renderer\Table\Column\XML;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReference;
 
-final class XMLColumn
+final class XMLTableColumn
 {
     /**
      * @var XMLReference
