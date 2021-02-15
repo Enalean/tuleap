@@ -18,7 +18,7 @@
  */
 
 import $ from "jquery";
-import { escaper } from "../../../src/scripts/tuleap/escaper.js";
+import { escaper } from "@tuleap/html-escaper";
 
 document.addEventListener("DOMContentLoaded", function () {
     var select_bot = document.querySelector("#select_bot");
