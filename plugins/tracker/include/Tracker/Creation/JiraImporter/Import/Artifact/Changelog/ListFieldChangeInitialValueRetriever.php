@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
@@ -35,16 +35,16 @@ class ListFieldChangeInitialValueRetriever
     private $creation_state_list_value_formatter;
 
     /**
-     * @var JiraAuthorRetriever
+     * @var JiraUserRetriever
      */
-    private $jira_author_retriever;
+    private $jira_user_retriever;
 
     public function __construct(
         CreationStateListValueFormatter $creation_state_list_value_formatter,
-        JiraAuthorRetriever $jira_author_retriever
+        JiraUserRetriever $jira_user_retriever
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
-        $this->jira_author_retriever               = $jira_author_retriever;
+        $this->jira_user_retriever                 = $jira_user_retriever;
     }
 
     /**
@@ -62,7 +62,7 @@ class ListFieldChangeInitialValueRetriever
         }
 
         if ($field_mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE) {
-            $user = $this->jira_author_retriever->getAssignedTuleapUser($changed_field_from);
+            $user = $this->jira_user_retriever->getAssignedTuleapUser($changed_field_from);
             return $this->creation_state_list_value_formatter->formatListValue(
                 (string) $user->getId(),
             );
@@ -72,7 +72,7 @@ class ListFieldChangeInitialValueRetriever
         $selected_users_ids = [];
 
         foreach ($account_ids as $account_id) {
-            $user = $this->jira_author_retriever->getAssignedTuleapUser(
+            $user = $this->jira_user_retriever->getAssignedTuleapUser(
                 trim($account_id)
             );
 

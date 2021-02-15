@@ -28,8 +28,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class IssueSnapshotCollectionBuilder
@@ -64,9 +64,9 @@ class IssueSnapshotCollectionBuilder
     private $logger;
 
     /**
-     * @var JiraAuthorRetriever
+     * @var JiraUserRetriever
      */
-    private $jira_author_retriever;
+    private $jira_user_retriever;
 
     public function __construct(
         ChangelogEntriesBuilder $changelog_entries_builder,
@@ -75,7 +75,7 @@ class IssueSnapshotCollectionBuilder
         ChangelogSnapshotBuilder $changelog_snapshot_builder,
         CommentValuesBuilder $comment_values_builder,
         LoggerInterface $logger,
-        JiraAuthorRetriever $jira_author_retriever
+        JiraUserRetriever $jira_user_retriever
     ) {
         $this->initial_snapshot_builder   = $initial_snapshot_builder;
         $this->changelog_entries_builder  = $changelog_entries_builder;
@@ -83,7 +83,7 @@ class IssueSnapshotCollectionBuilder
         $this->current_snapshot_builder   = $current_snapshot_builder;
         $this->comment_values_builder     = $comment_values_builder;
         $this->logger                     = $logger;
-        $this->jira_author_retriever      = $jira_author_retriever;
+        $this->jira_user_retriever        = $jira_user_retriever;
     }
 
     /**
@@ -99,7 +99,9 @@ class IssueSnapshotCollectionBuilder
         $this->logger->debug("Start build collection of snapshot ...");
 
         $jira_issue_key   = $issue_api_representation->getKey();
-        $artifact_creator = $this->jira_author_retriever->retrieveArtifactSubmitter($issue_api_representation);
+        $artifact_creator = $this->jira_user_retriever->retrieveUserFromAPIData(
+            $issue_api_representation->getFieldByKey('creator')
+        );
 
         $snapshots_collection = [];
         $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_key);
@@ -151,7 +153,7 @@ class IssueSnapshotCollectionBuilder
             $commenter = $comment->getUpdateAuthor();
 
             $comment_snapshot = new Snapshot(
-                $this->jira_author_retriever->retrieveJiraAuthor($commenter),
+                $this->jira_user_retriever->retrieveJiraAuthor($commenter),
                 $comment->getDate(),
                 [],
                 $comment

@@ -35,10 +35,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
 class IssueSnapshotCollectionBuilderTest extends TestCase
 {
@@ -105,9 +105,9 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     private $attachment_collection;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraAuthorRetriever
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserRetriever
      */
-    private $jira_author_retriever;
+    private $jira_user_retriever;
 
     protected function setUp(): void
     {
@@ -119,7 +119,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->changelog_snapshot_builder = Mockery::mock(ChangelogSnapshotBuilder::class);
         $this->comment_values_builder     = Mockery::mock(CommentValuesBuilder::class);
         $this->logger                     = Mockery::mock(LoggerInterface::class);
-        $this->jira_author_retriever      = Mockery::mock(JiraAuthorRetriever::class);
+        $this->jira_user_retriever        = Mockery::mock(JiraUserRetriever::class);
 
         $this->builder = new IssueSnapshotCollectionBuilder(
             $this->changelog_entries_builder,
@@ -128,7 +128,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->changelog_snapshot_builder,
             $this->comment_values_builder,
             $this->logger,
-            $this->jira_author_retriever
+            $this->jira_user_retriever
         );
 
         $this->user           = Mockery::mock(PFUser::class);
@@ -147,10 +147,10 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void
     {
         $this->logger->shouldReceive('debug');
-        $this->jira_author_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
+        $this->jira_user_retriever->shouldReceive('retrieveUserFromAPIData')->andReturn(
             $this->user
         );
-        $this->jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
+        $this->jira_user_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
 
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
@@ -203,10 +203,10 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     public function testItSkipsInCollectionSnapshotsWithoutChangedFileds(): void
     {
         $this->logger->shouldReceive('debug');
-        $this->jira_author_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
+        $this->jira_user_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
             $this->user
         );
-        $this->jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
+        $this->jira_user_retriever->shouldReceive('retrieveUserFromAPIData')->andReturn($this->user);
 
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
@@ -253,10 +253,10 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     public function testItBuildCollectionOfSnapshotWithFieldAndCommentIfSameTimestamp(): void
     {
         $this->logger->shouldReceive('debug');
-        $this->jira_author_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
+        $this->jira_user_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
             $this->user
         );
-        $this->jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
+        $this->jira_user_retriever->shouldReceive('retrieveUserFromAPIData')->andReturn($this->user);
 
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
@@ -318,8 +318,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "description",
                         "Fdescription",
                         "Description",
-                        "text",
-                        null
+                        "text"
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'

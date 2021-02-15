@@ -30,9 +30,9 @@ use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
@@ -49,18 +49,18 @@ class CurrentSnapshotBuilder
     private $creation_state_list_value_formatter;
 
     /**
-     * @var JiraAuthorRetriever
+     * @var JiraUserRetriever
      */
-    private $jira_author_retriever;
+    private $jira_user_retriever;
 
     public function __construct(
         LoggerInterface $logger,
         CreationStateListValueFormatter $creation_state_list_value_formatter,
-        JiraAuthorRetriever $jira_author_retriever
+        JiraUserRetriever $jira_user_retriever
     ) {
         $this->logger                              = $logger;
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
-        $this->jira_author_retriever               = $jira_author_retriever;
+        $this->jira_user_retriever                 = $jira_user_retriever;
     }
 
     /**
@@ -114,7 +114,7 @@ class CurrentSnapshotBuilder
             $mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE &&
             $mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         ) {
-            $user = $this->jira_author_retriever->getAssignedTuleapUser(
+            $user = $this->jira_user_retriever->getAssignedTuleapUser(
                 $value['accountId']
             );
 
@@ -130,7 +130,7 @@ class CurrentSnapshotBuilder
             $selected_users_ids = [];
 
             foreach ($value as $user_representation) {
-                $user = $this->jira_author_retriever->getAssignedTuleapUser(
+                $user = $this->jira_user_retriever->getAssignedTuleapUser(
                     $user_representation['accountId']
                 );
 

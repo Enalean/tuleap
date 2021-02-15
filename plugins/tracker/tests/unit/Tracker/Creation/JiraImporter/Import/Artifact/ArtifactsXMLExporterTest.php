@@ -40,10 +40,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChan
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserInfoQuerier;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -53,6 +49,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
@@ -107,13 +107,14 @@ class ArtifactsXMLExporterTest extends TestCase
         $forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
         $forge_user->shouldReceive('getUserName')->andReturn('Tracker Importer');
 
-        $jira_author_retriever               = new JiraAuthorRetriever(
+        $jira_user_retriever = new JiraUserRetriever(
             $this->logger,
             $this->user_manager,
             new JiraUserOnTuleapCache(new JiraTuleapUsersMapping(), $forge_user),
             Mockery::mock(JiraUserInfoQuerier::class),
             $forge_user
         );
+
         $creation_state_list_value_formatter = new CreationStateListValueFormatter();
         $this->exporter                      = new ArtifactsXMLExporter(
             $this->wrapper,
@@ -150,26 +151,26 @@ class ArtifactsXMLExporterTest extends TestCase
                     new CurrentSnapshotBuilder(
                         $this->logger,
                         $creation_state_list_value_formatter,
-                        $jira_author_retriever
+                        $jira_user_retriever
                     ),
                     new InitialSnapshotBuilder(
                         $this->logger,
                         new ListFieldChangeInitialValueRetriever(
                             $creation_state_list_value_formatter,
-                            $jira_author_retriever
+                            $jira_user_retriever
                         )
                     ),
                     new ChangelogSnapshotBuilder(
                         $creation_state_list_value_formatter,
                         $this->logger,
-                        $jira_author_retriever
+                        $jira_user_retriever
                     ),
                     new CommentValuesBuilder(
                         $this->wrapper,
                         $this->logger
                     ),
                     $this->logger,
-                    $jira_author_retriever
+                    $jira_user_retriever
                 ),
                 new CommentXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
@@ -44,7 +44,7 @@ class JiraTuleapUsersMapping
 
     public function addUserMapping(JiraUser $jira_user, \PFUser $tuleap_user): void
     {
-        $has_been_identified           = (int) $tuleap_user->getId() !== (int) TrackerImporterUser::ID;
+        $has_been_identified           = (int) $tuleap_user->getId() !== TrackerImporterUser::ID;
         $has_email_address_been_shared = $jira_user->getEmailAddress() !== JiraUser::NO_EMAIL_ADDRESS_SHARED;
 
         if ($has_been_identified) {

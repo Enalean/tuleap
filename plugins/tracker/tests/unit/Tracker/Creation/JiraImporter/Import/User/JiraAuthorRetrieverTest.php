@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -39,7 +39,7 @@ final class JiraAuthorRetrieverTest extends TestCase
     private $logger;
 
     /**
-     * @var JiraAuthorRetriever
+     * @var JiraUserRetriever
      */
     private $retriever;
 
@@ -67,7 +67,7 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->logger       = \Mockery::mock(LoggerInterface::class);
         $this->user_cache   = \Mockery::mock(JiraUserOnTuleapCache::class);
         $this->info_querier = \Mockery::mock(JiraUserInfoQuerier::class);
-        $this->retriever    = new JiraAuthorRetriever(
+        $this->retriever    = new JiraUserRetriever(
             $this->logger,
             $this->user_manager,
             $this->user_cache,
@@ -92,20 +92,11 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($tuleap_user, \Mockery::any());
 
-        $submitter = $this->retriever->retrieveArtifactSubmitter(
-            IssueAPIRepresentation::buildFromAPIResponse([
-                'id'  => '10042',
-                'key' => 'key01',
-                'renderedFields' => [],
-                'fields' => [
-                    'creator' => [
-                        'accountId' => '5e8dss456a2d45f3',
-                        'displayName' => 'John Doe',
-                        'emailAddress' => 'johndoe@example.com'
-                    ]
-                ],
-            ])
-        );
+        $submitter = $this->retriever->retrieveUserFromAPIData([
+            'accountId' => '5e8dss456a2d45f3',
+            'displayName' => 'John Doe',
+            'emailAddress' => 'johndoe@example.com'
+        ]);
 
         $this->assertEquals("John Doe", $submitter->getRealName());
     }
@@ -125,20 +116,11 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
 
-        $submitter = $this->retriever->retrieveArtifactSubmitter(
-            IssueAPIRepresentation::buildFromAPIResponse([
-                'id'     => '10042',
-                'key' => 'key01',
-                'renderedFields' => [],
-                'fields' => [
-                    'creator' => [
-                        'accountId' => '5e8dss456a2d45f3',
-                        'displayName' => 'John Doe',
-                        'emailAddress' => 'johndoe@example.com'
-                    ]
-                ],
-            ])
-        );
+        $submitter = $this->retriever->retrieveUserFromAPIData([
+            'accountId' => '5e8dss456a2d45f3',
+            'displayName' => 'John Doe',
+            'emailAddress' => 'johndoe@example.com'
+        ]);
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
     }
@@ -154,20 +136,11 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
 
-        $submitter = $this->retriever->retrieveArtifactSubmitter(
-            IssueAPIRepresentation::buildFromAPIResponse([
-                'id'     => '10042',
-                'key' => 'key01',
-                'renderedFields' => [],
-                'fields' => [
-                    'creator' => [
-                        'accountId' => '5e8dss456a2d45f3',
-                        'displayName' => 'John Doe',
-                        'emailAddress' => 'johndoe@example.com'
-                    ]
-                ],
-            ])
-        );
+        $submitter = $this->retriever->retrieveUserFromAPIData([
+            'accountId' => '5e8dss456a2d45f3',
+            'displayName' => 'John Doe',
+            'emailAddress' => 'johndoe@example.com'
+        ]);
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
     }
@@ -177,19 +150,10 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
 
-        $submitter = $this->retriever->retrieveArtifactSubmitter(
-            IssueAPIRepresentation::buildFromAPIResponse([
-                'id'     => '10042',
-                'key' => 'key01',
-                'renderedFields' => [],
-                'fields' => [
-                    'creator' => [
-                        'accountId' => '5e8dss456a2d45f3',
-                        'displayName' => 'John Doe',
-                    ]
-                ],
-            ])
-        );
+        $submitter = $this->retriever->retrieveUserFromAPIData([
+            'accountId' => '5e8dss456a2d45f3',
+            'displayName' => 'John Doe',
+        ]);
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
     }
@@ -204,21 +168,10 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_manager->shouldReceive('getAllUsersByEmail')->never();
         $this->forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
-        $submitter = $this->retriever->retrieveArtifactSubmitter(
-            IssueAPIRepresentation::buildFromAPIResponse(
-                [
-                    'id'             => '10042',
-                    'key'            => 'key01',
-                    'renderedFields' => [],
-                    'fields'         => [
-                        'creator' => [
-                            'accountId'   => '5e8dss456a2d45f3',
-                            'displayName' => 'John Doe'
-                        ]
-                    ],
-                ]
-            )
-        );
+        $submitter = $this->retriever->retrieveUserFromAPIData([
+            'accountId'   => '5e8dss456a2d45f3',
+            'displayName' => 'John Doe'
+        ]);
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
     }

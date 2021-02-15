@@ -33,11 +33,11 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
 class CurrentSnapshotBuilderTest extends TestCase
 {
@@ -45,12 +45,12 @@ class CurrentSnapshotBuilderTest extends TestCase
 
     public function testItBuildsSnapshotForIssueCurrentData(): void
     {
-        $logger                = Mockery::mock(LoggerInterface::class);
-        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
-        $builder               = new CurrentSnapshotBuilder(
+        $logger              = Mockery::mock(LoggerInterface::class);
+        $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
+        $builder             = new CurrentSnapshotBuilder(
             $logger,
             new CreationStateListValueFormatter(),
-            $jira_author_retriever
+            $jira_user_retriever
         );
 
         $user                          = Mockery::mock(PFUser::class);
@@ -61,8 +61,8 @@ class CurrentSnapshotBuilderTest extends TestCase
 
         $john_doe->shouldReceive('getId')->andReturn(105);
         $mysterio->shouldReceive('getId')->andReturn(106);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('e6a7dae9')->andReturn($john_doe);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('d45a6r4f')->andReturn($mysterio);
+        $jira_user_retriever->shouldReceive('getAssignedTuleapUser')->with('e6a7dae9')->andReturn($john_doe);
+        $jira_user_retriever->shouldReceive('getAssignedTuleapUser')->with('d45a6r4f')->andReturn($mysterio);
         $logger->shouldReceive('debug');
 
         $snapshot = $builder->buildCurrentSnapshot(
@@ -195,11 +195,11 @@ class CurrentSnapshotBuilderTest extends TestCase
             )
         );
 
-        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
-        $builder               = new CurrentSnapshotBuilder(
+        $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
+        $builder             = new CurrentSnapshotBuilder(
             new NullLogger(),
             new CreationStateListValueFormatter(),
-            $jira_author_retriever
+            $jira_user_retriever
         );
 
         $snapshot_owner = UserTestBuilder::aUser()->build();

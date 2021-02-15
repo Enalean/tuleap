@@ -35,11 +35,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
 class InitialSnapshotBuilderTest extends TestCase
 {
@@ -47,13 +47,13 @@ class InitialSnapshotBuilderTest extends TestCase
 
     public function testItBuildsSnapshotForInitialChangeset(): void
     {
-        $logger                = Mockery::mock(LoggerInterface::class);
-        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
-        $generator             = new InitialSnapshotBuilder(
+        $logger              = Mockery::mock(LoggerInterface::class);
+        $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
+        $generator           = new InitialSnapshotBuilder(
             $logger,
             new ListFieldChangeInitialValueRetriever(
                 new CreationStateListValueFormatter(),
-                $jira_author_retriever
+                $jira_user_retriever
             )
         );
 
@@ -109,7 +109,7 @@ class InitialSnapshotBuilderTest extends TestCase
         $john_doe = Mockery::mock(PFUser::class);
         $john_doe->shouldReceive('getId')->andReturn('105');
 
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->andReturnValues([$mysterio, $john_doe]);
+        $jira_user_retriever->shouldReceive('getAssignedTuleapUser')->andReturnValues([$mysterio, $john_doe]);
 
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
