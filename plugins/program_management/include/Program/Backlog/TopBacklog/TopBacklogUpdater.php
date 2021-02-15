@@ -50,7 +50,7 @@ class TopBacklogUpdater
      */
     public function updateTopBacklog(int $potential_program_id, TopBacklogChange $top_backlog_change, \PFUser $user): void
     {
-        $program = $this->build_program->buildExistingProgramProjectForManagement($potential_program_id, $user);
+        $program = $this->build_program->buildExistingProgramProject($potential_program_id, $user);
 
         $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user);
     }

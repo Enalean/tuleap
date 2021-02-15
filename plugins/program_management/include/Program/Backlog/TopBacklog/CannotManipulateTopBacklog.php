@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Program\Program;
 
 final class CannotManipulateTopBacklog extends \RuntimeException
 {
-    public function __construct(ProgramForManagement $program, \PFUser $user)
+    public function __construct(Program $program, \PFUser $user)
     {
         parent::__construct(
             sprintf(
                 'User #%d cannot manipulate the top backlog of the program #%d',
                 $user->getId(),
-                $program->id
+                $program->getId()
             )
         );
     }

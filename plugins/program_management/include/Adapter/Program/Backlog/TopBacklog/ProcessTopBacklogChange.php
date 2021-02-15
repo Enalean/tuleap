@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Program\Program;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
@@ -61,7 +61,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     }
 
     public function processTopBacklogChangeForAProgram(
-        ProgramForManagement $program,
+        Program $program,
         TopBacklogChange $top_backlog_change,
         \PFUser $user
     ): void {
@@ -86,13 +86,13 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      * @param int[] $features_id
      * @return int[]
      */
-    private function filterFeaturesThatCanBeManipulated(array $features_id, \PFUser $user, ProgramForManagement $program): array
+    private function filterFeaturesThatCanBeManipulated(array $features_id, \PFUser $user, Program $program): array
     {
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
-            if ($artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->id) {
+            if ($artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId()) {
                 $filtered_features[] = $feature_id;
             }
         }
