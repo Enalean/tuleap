@@ -23,8 +23,7 @@
 
 import { createModal } from "tlp";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
-
-import { escaper } from "../../../tuleap/escaper.js";
+import { escaper } from "@tuleap/html-escaper";
 import { sanitize } from "dompurify";
 import Gettext from "node-gettext";
 import french_translations from "../po/fr.po";

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { escaper } from "./escaper";
+import { escaper } from "@tuleap/html-escaper";
 import jQuery from "jquery";
 
 function formatItem(item) {

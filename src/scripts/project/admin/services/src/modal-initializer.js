@@ -22,7 +22,7 @@ import Vue from "vue";
 import GettextPlugin from "vue-gettext";
 import { sanitize } from "dompurify";
 import { sprintf } from "sprintf-js";
-import { escaper } from "../../../../tuleap/escaper.js";
+import { escaper } from "@tuleap/html-escaper";
 import french_translations from "../po/fr.po";
 import { gettext_provider } from "./helpers/gettext_provider.js";
 

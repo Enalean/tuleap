@@ -1,0 +1,27 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/html-escaper",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/html-escaper.es.js",
+  "main": "dist/html-escaper.umd.js",
+  "types": "src/escaper.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/html-escaper.es.js",
+      "require": "./dist/html-escaper.umd.js"
+    }
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/vite build",
+    "watch": "$npm_package_config_bin/nodemon --watch src/ --exec '$npm_package_config_bin/vite build --mode development --minify false'"
+  }
+}

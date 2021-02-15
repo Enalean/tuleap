@@ -11,6 +11,7 @@
     "@tuleap/ckeditor-image-upload-form": "file:scripts/lib/ckeditor-image-upload-form",
     "@tuleap/date-helper": "file://./scripts/lib/date-helper",
     "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
+    "@tuleap/html-escaper": "file:scripts/lib/html-escaper",
     "@tuleap/list-picker": "file://./scripts/lib/list-picker",
     "@tuleap/tlp-fetch": "file://./scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:scripts/lib/vue-breadcrumb-privacy",
