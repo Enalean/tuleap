@@ -22,14 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
-
-interface RetrieveProgramIncrement
+/**
+ * @psalm-immutable
+ */
+final class FeaturePlanChange
 {
     /**
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
+     * @var int[]
      */
-    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
+    public $features_id;
+
+    /**
+     * @param int[] $features_id
+     */
+    public function __construct(array $features_id)
+    {
+        $this->features_id = $features_id;
+    }
 }

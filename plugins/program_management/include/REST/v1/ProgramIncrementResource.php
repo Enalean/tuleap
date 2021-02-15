@@ -24,16 +24,16 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\REST\AuthenticatedResource;
-use Tuleap\REST\Header;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 final class ProgramIncrementResource extends AuthenticatedResource
@@ -45,7 +45,6 @@ final class ProgramIncrementResource extends AuthenticatedResource
      * @var RetrieveFeatureContent
      */
     public $program_increment_content_retriever;
-
     /**
      * @var \UserManager
      */

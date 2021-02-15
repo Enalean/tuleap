@@ -20,16 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
 
-interface RetrieveProgramIncrement
+class FeatureToLinkBuilder
 {
-    /**
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
-     */
-    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
+    public function buildFeatureChange(array $feature_to_links): FeaturePlanChange
+    {
+        $feature_change = [];
+        foreach ($feature_to_links as $feature_to_link) {
+            $feature_change[] = $feature_to_link['artifact_id'];
+        }
+
+        return new FeaturePlanChange($feature_change);
+    }
 }

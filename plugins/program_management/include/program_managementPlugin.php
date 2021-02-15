@@ -29,25 +29,6 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogActionBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogActionProcessor;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionActifactSourceInformation;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
-use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
-use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
-use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\WorkerEvent;
-use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -66,16 +47,35 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Synchroniz
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogActionBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogActionProcessor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionActifactSourceInformation;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestonesDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramIncrementConfigurationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestonesDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
@@ -87,12 +87,19 @@ use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementAr
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ProgramManagement\RedirectParameterInjector;
-use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\RedirectParameterInjector;
+use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\ProgramManagement\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Workspace\ComponentInvolvedVerifier;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerEvent;
+use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -209,15 +216,7 @@ final class program_managementPlugin extends Plugin
         return new DisplayProgramBacklogController(
             ProjectManager::instance(),
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
-            new ProgramAdapter(
-                ProjectManager::instance(),
-                new ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
-                    new RestrictedUserCanAccessProjectVerifier(),
-                    \EventManager::instance()
-                ),
-                new ProgramDao()
-            ),
+            $this->getProgramAdapter(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             new ProgramIncrementTrackerConfigurationBuilder(
                 $this->getPlanConfigurationBuilder()
@@ -311,7 +310,14 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
+        $this->planArtifactIfNeeded($event);
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event->getArtifact());
+    }
+
+
+    private function planArtifactIfNeeded(ArtifactUpdated $event): void
+    {
+        $this->getFeaturePlanner()->plan($event);
     }
 
     private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(\Tuleap\Tracker\Artifact\Artifact $artifact): void
@@ -321,7 +327,9 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void
     {
-        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactsFromExplicitTopBacklog([$artifact_deleted->getArtifact()->getID()]);
+        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactsFromExplicitTopBacklog(
+            [$artifact_deleted->getArtifact()->getID()]
+        );
     }
 
     /**
@@ -616,5 +624,32 @@ final class program_managementPlugin extends Plugin
         );
 
         return $component_involved_verifier;
+    }
+
+    private function getProgramAdapter(): ProgramAdapter
+    {
+        return new ProgramAdapter(
+            ProjectManager::instance(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                \EventManager::instance()
+            ),
+            new ProgramDao()
+        );
+    }
+
+    private function getFeaturePlanner(): FeaturePlanner
+    {
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+
+        return new FeaturePlanner(
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new FeatureToLinkBuilder(),
+            $artifact_factory,
+            new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
+            new ContentDao(),
+            new FeaturesLinkedToMilestoneBuilder(new FeaturesLinkedToMilestonesDao())
+        );
     }
 }
