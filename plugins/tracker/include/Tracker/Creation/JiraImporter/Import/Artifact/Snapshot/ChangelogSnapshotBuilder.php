@@ -29,8 +29,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -47,18 +47,18 @@ class ChangelogSnapshotBuilder
     private $logger;
 
     /**
-     * @var JiraAuthorRetriever
+     * @var JiraUserRetriever
      */
-    private $jira_author_retriever;
+    private $jira_user_retriever;
 
     public function __construct(
         CreationStateListValueFormatter $creation_state_list_value_formatter,
         LoggerInterface $logger,
-        JiraAuthorRetriever $jira_author_retriever
+        JiraUserRetriever $jira_user_retriever
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
         $this->logger                              = $logger;
-        $this->jira_author_retriever               = $jira_author_retriever;
+        $this->jira_user_retriever                 = $jira_user_retriever;
     }
 
     /**
@@ -123,7 +123,7 @@ class ChangelogSnapshotBuilder
                 $field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE &&
                 $changed_field_to !== null
             ) {
-                $user              = $this->jira_author_retriever->getAssignedTuleapUser($changed_field_to);
+                $user              = $this->jira_user_retriever->getAssignedTuleapUser($changed_field_to);
                 $fields_snapshot[] = new FieldSnapshot(
                     $field_mapping,
                     $this->creation_state_list_value_formatter->formatListValue(
@@ -145,7 +145,7 @@ class ChangelogSnapshotBuilder
                 $selected_users_ids = [];
 
                 foreach ($account_ids as $account_id) {
-                    $user = $this->jira_author_retriever->getAssignedTuleapUser(
+                    $user = $this->jira_user_retriever->getAssignedTuleapUser(
                         trim($account_id)
                     );
 
@@ -203,7 +203,7 @@ class ChangelogSnapshotBuilder
         }
 
         return new Snapshot(
-            $this->jira_author_retriever->retrieveJiraAuthor($changelog_entry->getChangelogOwner()),
+            $this->jira_user_retriever->retrieveJiraAuthor($changelog_entry->getChangelogOwner()),
             $changelog_entry->getCreated(),
             $fields_snapshot,
             null

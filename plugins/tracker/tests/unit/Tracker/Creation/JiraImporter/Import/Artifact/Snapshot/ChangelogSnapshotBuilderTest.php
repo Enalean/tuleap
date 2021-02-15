@@ -32,11 +32,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
 class ChangelogSnapshotBuilderTest extends TestCase
 {
@@ -44,12 +44,12 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
     public function testItBuildsASnapshotFromChangelogEntry(): void
     {
-        $logger                = Mockery::mock(LoggerInterface::class);
-        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
-        $builder               = new ChangelogSnapshotBuilder(
+        $logger              = Mockery::mock(LoggerInterface::class);
+        $jira_user_retriever = Mockery::mock(JiraUserRetriever::class);
+        $builder             = new ChangelogSnapshotBuilder(
             new CreationStateListValueFormatter(),
             $logger,
-            $jira_author_retriever
+            $jira_user_retriever
         );
 
         $logger->shouldReceive('debug');
@@ -81,9 +81,9 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
         $john_doe->shouldReceive('getId')->andReturn(105);
         $mysterio->shouldReceive('getId')->andReturn(106);
-        $jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($user);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('e8a7dbae5')->andReturn($john_doe);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('a7e8b9c5')->andReturn($mysterio);
+        $jira_user_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($user);
+        $jira_user_retriever->shouldReceive('getAssignedTuleapUser')->with('e8a7dbae5')->andReturn($john_doe);
+        $jira_user_retriever->shouldReceive('getAssignedTuleapUser')->with('a7e8b9c5')->andReturn($mysterio);
 
         $snapshot = $builder->buildSnapshotFromChangelogEntry(
             $current_snapshot,

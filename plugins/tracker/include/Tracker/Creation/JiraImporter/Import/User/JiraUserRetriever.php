@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
@@ -28,7 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use UserManager;
 
-class JiraAuthorRetriever
+class JiraUserRetriever
 {
     /**
      * @var LoggerInterface
@@ -69,16 +69,18 @@ class JiraAuthorRetriever
         $this->default_user      = $default_user;
     }
 
-    public function retrieveArtifactSubmitter(IssueAPIRepresentation $issue): PFUser
+    public function retrieveUserFromAPIData(?array $user_data): PFUser
     {
-        $creator = $issue->getFieldByKey('creator');
-
-        if ($creator === null) {
+        if ($user_data === null) {
             return $this->default_user;
         }
 
+        if (! isset($user_data['displayName'], $user_data['accountId'])) {
+            throw new JiraMinimalUserInformationMissingException();
+        }
+
         return $this->retrieveUser(
-            new JiraUser($creator)
+            new JiraUser($user_data)
         );
     }
 

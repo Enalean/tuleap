@@ -39,9 +39,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChan
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -63,6 +60,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectio
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -237,7 +237,7 @@ class JiraXmlExporter
             throw new \RuntimeException("Unable to find TrackerImporterUser");
         }
 
-        $jira_author_retriever = new JiraAuthorRetriever(
+        $jira_user_retriever = new JiraUserRetriever(
             $logger,
             $user_manager,
             $jira_user_on_tuleap_cache,
@@ -291,26 +291,26 @@ class JiraXmlExporter
                         new CurrentSnapshotBuilder(
                             $logger,
                             $creation_state_list_value_formatter,
-                            $jira_author_retriever
+                            $jira_user_retriever
                         ),
                         new InitialSnapshotBuilder(
                             $logger,
                             new ListFieldChangeInitialValueRetriever(
                                 $creation_state_list_value_formatter,
-                                $jira_author_retriever
+                                $jira_user_retriever
                             )
                         ),
                         new ChangelogSnapshotBuilder(
                             $creation_state_list_value_formatter,
                             $logger,
-                            $jira_author_retriever
+                            $jira_user_retriever
                         ),
                         new CommentValuesBuilder(
                             $wrapper,
                             $logger
                         ),
                         $logger,
-                        $jira_author_retriever
+                        $jira_user_retriever
                     ),
                     new CommentXMLExporter(
                         new XML_SimpleXMLCDATAFactory(),

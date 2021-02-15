@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 use Tracker;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
 class JiraSuccessImportNotifier

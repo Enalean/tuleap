@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class ListFieldChangeInitialValueRetrieverTest extends TestCase
@@ -33,9 +33,9 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|JiraAuthorRetriever
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|JiraUserRetriever
      */
-    private $jira_author_retriever;
+    private $jira_user_retriever;
 
     /**
      * @var ListFieldChangeInitialValueRetriever
@@ -52,10 +52,10 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
         $this->forge_user = \Mockery::mock(\PFUser::class);
         $this->forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
-        $this->jira_author_retriever                     = \Mockery::mock(JiraAuthorRetriever::class);
+        $this->jira_user_retriever                       = \Mockery::mock(JiraUserRetriever::class);
         $this->list_field_change_initial_value_retriever = new ListFieldChangeInitialValueRetriever(
             new CreationStateListValueFormatter(),
-            $this->jira_author_retriever
+            $this->jira_user_retriever
         );
     }
 
@@ -80,7 +80,7 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
     {
         $john_doe = \Mockery::mock(\PFUser::class);
         $john_doe->shouldReceive('getid')->andReturn(105);
-        $this->jira_author_retriever->shouldReceive('getAssignedTuleapUser')
+        $this->jira_user_retriever->shouldReceive('getAssignedTuleapUser')
             ->with('e8a6c4d54')
             ->andReturn($john_doe);
 
@@ -104,11 +104,11 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
         $john_doe = \Mockery::mock(\PFUser::class);
         $john_doe->shouldReceive('getId')->andReturn(105);
 
-        $this->jira_author_retriever->shouldReceive('getAssignedTuleapUser')
+        $this->jira_user_retriever->shouldReceive('getAssignedTuleapUser')
             ->with('e8a6c4d54')
             ->andReturn($john_doe);
 
-        $this->jira_author_retriever->shouldReceive('getAssignedTuleapUser')
+        $this->jira_user_retriever->shouldReceive('getAssignedTuleapUser')
             ->with('a7e9f1b2c')
             ->andReturn($this->forge_user);
 

@@ -26,9 +26,9 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 
 class AsynchronousJiraRunner
 {
