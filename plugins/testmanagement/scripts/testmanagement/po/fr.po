@@ -86,6 +86,9 @@ msgstr "Raccourcis des pages Campagne dans Test Management"
 msgid "Campaigns"
 msgstr "Campagnes"
 
+msgid "Campaigns list page in Test Management"
+msgstr "Liste des campagnes dans Test Management"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -274,6 +277,9 @@ msgstr "Sélectionner les tests"
 msgid "Set focus in comment field"
 msgstr "Donner le focus au champ de saisie de commentaire"
 
+msgid "Set focus in search campaigns field"
+msgstr "Donner le focus au champ de recherche de campagnes"
+
 msgid "Set focus in search filter"
 msgstr "Donner le focus au champ de recherche"
 
@@ -349,6 +355,9 @@ msgstr "Ce test n'a pas de description. Veuillez l'éditer."
 
 msgid "Toggle automated tests"
 msgstr "Afficher ou cacher les tests automatisés"
+
+msgid "Toggle closed campaigns"
+msgstr "Montrer ou cacher les campagnes fermées"
 
 msgid "Toggle filters dropdown"
 msgstr "Ouvrir ou fermer la liste de filtres"
