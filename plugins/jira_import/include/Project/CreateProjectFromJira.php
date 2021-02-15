@@ -30,6 +30,7 @@ use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
+use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -147,6 +148,10 @@ final class CreateProjectFromJira
                 $jira_client,
                 $logger,
             ),
+            new JiraSprintRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            )
         );
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);

@@ -44,7 +44,10 @@ class JiraAgileImporterTest extends TestCase
             }
         };
 
-        $project_board_retriever = new JiraAgileImporter($board_retriever);
+        $project_board_retriever = new JiraAgileImporter(
+            $board_retriever,
+            $this->getJiraSprintRetrieverWithoutSprints(),
+        );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
 
@@ -105,16 +108,79 @@ class JiraAgileImporterTest extends TestCase
         assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $xml->trackers->tracker->permissions->permission[2]['type']);
     }
 
-    private function getJiraAgileImport()
+    public function testItFetchesSprints(): void
     {
-        return new JiraAgileImporter(
-            new class implements JiraBoardsRetriever
+        $board                   = new JiraBoard(1, 'https://example.com', 10000, 'FOO');
+        $project_board_retriever = new JiraAgileImporter(
+            new class ($board) implements JiraBoardsRetriever
             {
+                /**
+                 * @var JiraBoard
+                 */
+                private $fetched_board;
+
+                public function __construct(JiraBoard $fetched_board)
+                {
+                    $this->fetched_board = $fetched_board;
+                }
+
                 public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
                 {
-                    return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
+                    return $this->fetched_board;
                 }
-            }
+            },
+            new class ($board) implements JiraSprintRetriever {
+                /**
+                 * @var JiraBoard
+                 */
+                private $fetched_board;
+
+                public function __construct(JiraBoard $fetched_board)
+                {
+                    $this->fetched_board = $fetched_board;
+                }
+
+                public function getAllSprints(JiraBoard $board): array
+                {
+                    assertSame($this->fetched_board, $board);
+                    return [];
+                }
+            },
         );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $project_board_retriever->exportScrum(new NullLogger(), $xml, 'FOO', new FieldAndValueIDGenerator());
+    }
+
+    private function getJiraAgileImport(): JiraAgileImporter
+    {
+        return new JiraAgileImporter(
+            $this->getJiraBoradRetrieverWithOneBoard(),
+            $this->getJiraSprintRetrieverWithoutSprints(),
+        );
+    }
+
+    private function getJiraBoradRetrieverWithOneBoard(): JiraBoardsRetriever
+    {
+        return new class implements JiraBoardsRetriever
+        {
+            public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
+            {
+                return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
+            }
+        };
+    }
+
+    private function getJiraSprintRetrieverWithoutSprints(): JiraSprintRetriever
+    {
+        return new class implements JiraSprintRetriever
+        {
+
+            public function getAllSprints(JiraBoard $board): array
+            {
+                return [];
+            }
+        };
     }
 }

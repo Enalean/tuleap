@@ -32,10 +32,15 @@ final class JiraAgileImporter
      * @var JiraBoardsRetriever
      */
     private $boards_retriever;
+    /**
+     * @var JiraSprintRetriever
+     */
+    private $sprint_retriever;
 
-    public function __construct(JiraBoardsRetriever $boards_retriever)
+    public function __construct(JiraBoardsRetriever $boards_retriever, JiraSprintRetriever $sprint_retriever)
     {
         $this->boards_retriever = $boards_retriever;
+        $this->sprint_retriever = $sprint_retriever;
     }
 
     public function exportScrum(LoggerInterface $logger, \SimpleXMLElement $project, string $jira_project, IDGenerator $id_generator): void
@@ -46,6 +51,11 @@ final class JiraAgileImporter
 
             $scrum_tracker_builder = new ScrumTrackerBuilder();
             $scrum_tracker_builder->export($project, $id_generator);
+
+            $sprints = $this->sprint_retriever->getAllSprints($board);
+            foreach ($sprints as $sprint) {
+                $logger->debug('Got sprint ' . $sprint->name . ' ' . $sprint->url);
+            }
         }
     }
 }
