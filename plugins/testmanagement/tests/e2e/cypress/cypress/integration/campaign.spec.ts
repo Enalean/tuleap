@@ -96,12 +96,20 @@ describe("TTM campaign", () => {
         });
 
         context("Within the campaign", () => {
-            it("Adds a test", () => {
-                cy.get("[data-test=edit-campaign-button]").click();
+            it("Updates campaign label", () => {
+                cy.get("[data-test=test-campaign-edit-menu-trigger]").click();
+                cy.get("[data-test=test-campaign-rename-campaign]").click();
 
                 cy.get("[data-test=campaign-label]").type(
                     "{selectall}My first campaign with tests"
                 );
+
+                cy.get("[data-test=edit-campaign-label-save-button]").click();
+            });
+
+            it("Adds a test", () => {
+                cy.get("[data-test=edit-campaign-button]").click();
+
                 cy.get("[data-test=add-test-button]").click();
 
                 getStringFieldWithLabel("Summary").type("My first test");

@@ -28,6 +28,7 @@
             aria-haspopup="true"
             aria-controls="test-campaign-edit-menu"
             id="test-campaign-edit-menu-trigger"
+            data-test="test-campaign-edit-menu-trigger"
             title="{{ ::'Edit campaign' | translate }}"
             open-tlp-dropdown
         >
@@ -39,6 +40,7 @@
                 ng-click="$ctrl.openEditCampaignLabelModal()"
                 class="tlp-dropdown-menu-item"
                 role="menuitem"
+                data-test="test-campaign-rename-campaign"
             >
                 <i class="fas fa-pencil-alt tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                 {{ ::'Rename campaign' | translate }}
