@@ -207,7 +207,7 @@ class JiraAgileImporterTest extends TestCase
         assertCount(1, $xml->trackers->tracker[0]->artifacts->artifact);
         $xml_artifact_node = $xml->trackers->tracker[0]->artifacts->artifact[0];
 
-        assertNotEmpty($xml_artifact_node['id']);
+        assertNotEmpty((string) $xml_artifact_node['id']);
         assertCount(1, $xml_artifact_node->changeset);
         assertEquals('username', $xml_artifact_node->changeset[0]->submitted_by['format']);
         assertEquals('forge__tracker_importer_user', $xml_artifact_node->changeset[0]->submitted_by);
