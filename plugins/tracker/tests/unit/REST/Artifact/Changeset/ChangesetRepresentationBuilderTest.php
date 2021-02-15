@@ -26,9 +26,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
 
 final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -46,18 +48,29 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PermissionChecker
+     */
+    private $comment_permission_checker;
 
     protected function setUp(): void
     {
-        $this->user_manager         = \Mockery::mock(\UserManager::class);
-        $this->form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->builder              = new ChangesetRepresentationBuilder(
+        $this->user_manager               = \Mockery::mock(\UserManager::class);
+        $this->form_element_factory       = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->comment_permission_checker = \Mockery::mock(PermissionChecker::class);
+        $this->builder                    = new ChangesetRepresentationBuilder(
             $this->user_manager,
             $this->form_element_factory,
             new CommentRepresentationBuilder(
                 \Mockery::spy(ContentInterpretor::class)
-            )
+            ),
+            $this->comment_permission_checker
         );
+
+        $this->comment_permission_checker
+            ->shouldReceive('userCanSeeComment')
+            ->andReturnTrue()
+            ->byDefault();
 
         \UserHelper::setInstance(\Mockery::spy(\UserHelper::class));
     }
@@ -122,13 +135,13 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         self::assertSame([0 => $string_value], $representation->values);
     }
 
-    public function testBuildWithFieldsSkipsFieldsUserCantRead(): void
+    public function testBuildWithFieldsSkipsFieldsUserCanNotRead(): void
     {
         $user      = $this->buildUser();
         $changeset = $this->buildChangeset();
 
-        $int_field_user_cant_read = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $int_field_user_cant_read->shouldReceive('userCanRead')->andReturnFalse();
+        $int_field_user_can_not_read = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $int_field_user_can_not_read->shouldReceive('userCanRead')->andReturnFalse();
         $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('userCanRead')->andReturnTrue();
         $string_value = new ArtifactFieldValueTextRepresentation(10000, 'string', 'Title', 'overcompensation', 'text');
@@ -136,7 +149,7 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
 
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
             ->once()
-            ->andReturn([$int_field_user_cant_read, $string_field]);
+            ->andReturn([$int_field_user_can_not_read, $string_field]);
 
         $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
 
@@ -199,6 +212,66 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         );
 
         self::assertNull($representation);
+    }
+
+    public function testItReturnsNullIfUserCanNotSeeTheCommentAndFilterModeIsOnFieldsComments(): void
+    {
+        $user      = $this->buildUser();
+        $changeset = $this->buildChangeset();
+
+        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->never();
+
+        $this->comment_permission_checker
+            ->shouldReceive('userCanSeeComment')
+            ->once()
+            ->andReturnFalse();
+
+        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_COMMENTS, $user);
+
+        self::assertNull($representation);
+    }
+
+    public function testItReturnsEmptyCommentIfUserCanNotSeeItAndFilterModeIsOnFieldsAll(): void
+    {
+        $user      = $this->buildUser();
+        $changeset = $this->buildChangeset();
+
+        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
+            ->once()
+            ->andReturn([]);
+
+        $this->comment_permission_checker
+            ->shouldReceive('userCanSeeComment')
+            ->once()
+            ->andReturnFalse();
+
+        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
+
+        self::assertNotNull($representation->last_comment);
+        self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);
+        self::assertEquals("", $representation->last_comment->body);
+        self::assertEquals("text", $representation->last_comment->format);
+        self::assertEquals(null, $representation->last_comment->ugroups);
+        self::assertEquals("", $representation->last_comment->post_processed_body);
+    }
+
+    public function testItReturnsCommentIfUserCanSeeIt(): void
+    {
+        $user      = $this->buildUser();
+        $changeset = $this->buildChangeset();
+
+        $this->form_element_factory->shouldReceive('getUsedFieldsForREST')
+            ->once()
+            ->andReturn([]);
+
+        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
+
+        self::assertNotNull($representation->last_comment);
+        self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);
+        self::assertEquals("A text comment", $representation->last_comment->body);
+        self::assertEquals("text", $representation->last_comment->format);
+        self::assertEquals(null, $representation->last_comment->ugroups);
+        self::assertEquals("A text comment", $representation->last_comment->post_processed_body);
     }
 
     public function testBuildWithFieldsWithoutPermissions(): void

@@ -471,7 +471,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
 
     private function buildChangesetRepresentation(int $changeset_id = 1001): ChangesetRepresentation
     {
-        $comment_representation = new HTMLOrTextCommentRepresentation('Irrelevant', 'Irrelevant', 'text');
+        $comment_representation = new HTMLOrTextCommentRepresentation('Irrelevant', 'Irrelevant', 'text', null);
         return new ChangesetRepresentation(
             $changeset_id,
             110,

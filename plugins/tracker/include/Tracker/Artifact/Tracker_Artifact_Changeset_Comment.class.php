@@ -46,6 +46,9 @@ class Tracker_Artifact_Changeset_Comment
         self::COMMONMARK_COMMENT,
     ];
 
+    /**
+     * @var int|string
+     */
     public $id;
     /**
      *
@@ -106,7 +109,7 @@ class Tracker_Artifact_Changeset_Comment
      */
     public function __construct(
         $id,
-        $changeset,
+        Tracker_Artifact_Changeset $changeset,
         $comment_type_id,
         $canned_response_id,
         $submitted_by,
@@ -390,5 +393,10 @@ class Tracker_Artifact_Changeset_Comment
     protected function getPurifier(): Codendi_HTMLPurifier
     {
         return Codendi_HTMLPurifier::instance();
+    }
+
+    public function getChangeset(): Tracker_Artifact_Changeset
+    {
+        return $this->changeset;
     }
 }

@@ -81,7 +81,7 @@ final class ArtifactPayloadBuilderTest extends TestCase
 
     private function buildChangesetRepresentation(\PFUser $user): ChangesetRepresentation
     {
-        $comment_representation = new HTMLOrTextCommentRepresentation('last comment', 'last comment', 'text');
+        $comment_representation = new HTMLOrTextCommentRepresentation('last comment', 'last comment', 'text', null);
         return new ChangesetRepresentation(
             98,
             101,
