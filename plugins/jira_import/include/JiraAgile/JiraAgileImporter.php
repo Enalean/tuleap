@@ -70,6 +70,14 @@ final class JiraAgileImporter
                 $changeset = $changeset->withFieldChange(new XMLDateValue(ScrumTrackerBuilder::START_DATE_FIELD_NAME, $sprint->start_date));
             }
 
+            if ($sprint->end_date !== null) {
+                $changeset = $changeset->withFieldChange(new XMLDateValue(ScrumTrackerBuilder::END_DATE_FIELD_NAME, $sprint->end_date));
+            }
+
+            if ($sprint->complete_date !== null) {
+                $changeset = $changeset->withFieldChange(new XMLDateValue(ScrumTrackerBuilder::COMPLETED_DATE_FIELD_NAME, $sprint->complete_date));
+            }
+
             $scrum_tracker = $scrum_tracker->withArtifact(
                 (new XMLArtifact($id_generator->getNextId()))
                     ->withChangeset($changeset)

@@ -41,8 +41,10 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class ScrumTrackerBuilder
 {
-    public const NAME_FIELD_NAME       = 'name';
-    public const START_DATE_FIELD_NAME = 'start_date';
+    public const NAME_FIELD_NAME           = 'name';
+    public const START_DATE_FIELD_NAME     = 'start_date';
+    public const END_DATE_FIELD_NAME       = 'end_date';
+    public const COMPLETED_DATE_FIELD_NAME = 'completed_date';
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
@@ -70,6 +72,22 @@ final class ScrumTrackerBuilder
                                 ->withLabel('Start Date')
                                 ->withDateTime()
                                 ->withPermissions(...$default_permissions),
+                            ),
+                        (new XMLColumn($id_generator, 'col2'))
+                            ->withRank(3)
+                            ->withFormElements(
+                                (new XMLDateField($id_generator, self::END_DATE_FIELD_NAME))
+                                    ->withLabel('End Date')
+                                    ->withDateTime()
+                                    ->withPermissions(...$default_permissions),
+                            ),
+                        (new XMLColumn($id_generator, 'col3'))
+                            ->withRank(4)
+                            ->withFormElements(
+                                (new XMLDateField($id_generator, self::COMPLETED_DATE_FIELD_NAME))
+                                    ->withLabel('Completed Date')
+                                    ->withDateTime()
+                                    ->withPermissions(...$default_permissions),
                             )
                     )
             )
@@ -78,13 +96,17 @@ final class ScrumTrackerBuilder
                     ->withIsDefault(true)
                     ->withCriteria(
                         new XMLReportCriterion(new XMLReferenceByName(self::NAME_FIELD_NAME)),
-                        new XMLReportCriterion(new XMLReferenceByName(self::START_DATE_FIELD_NAME))
+                        new XMLReportCriterion(new XMLReferenceByName(self::START_DATE_FIELD_NAME)),
+                        new XMLReportCriterion(new XMLReferenceByName(self::END_DATE_FIELD_NAME)),
+                        new XMLReportCriterion(new XMLReferenceByName(self::COMPLETED_DATE_FIELD_NAME)),
                     )
                     ->withRenderers(
                         (new XMLTable('Table'))
                             ->withColumns(
                                 new XMLTableColumn(new XMLReferenceByName(self::NAME_FIELD_NAME)),
                                 new XMLTableColumn(new XMLReferenceByName(self::START_DATE_FIELD_NAME)),
+                                new XMLTableColumn(new XMLReferenceByName(self::END_DATE_FIELD_NAME)),
+                                new XMLTableColumn(new XMLReferenceByName(self::COMPLETED_DATE_FIELD_NAME)),
                             )
                     )
             );
