@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,28 +16,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Builders;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use Tuleap\Layout\IncludeAssets;
-
-class IncludeAssetsBuilder
+/**
+ * @psalm-immutable
+ */
+final class TopBacklogActionSourceInformation
 {
-    public static function build(): IncludeAssets
-    {
-        return new class extends IncludeAssets {
-            public function __construct()
-            {
-            }
+    /**
+     * @var int
+     */
+    public $artifact_id;
+    /**
+     * @var int
+     */
+    public $tracker_id;
+    /**
+     * @var int
+     */
+    public $project_id;
 
-            public function getFileURL(string $file_name): string
-            {
-                return $file_name;
-            }
-        };
+    public function __construct(int $artifact_id, int $tracker_id, int $project_id)
+    {
+        $this->artifact_id = $artifact_id;
+        $this->tracker_id  = $tracker_id;
+        $this->project_id  = $project_id;
     }
 }

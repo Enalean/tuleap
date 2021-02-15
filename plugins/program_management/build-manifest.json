@@ -5,5 +5,11 @@
             "src": "scripts/program_management",
             "po": "scripts/program_management/po"
         }
+    },
+    "gettext-ts": {
+        "artifact-additional-action": {
+            "src": "scripts/artifact-additional-action/src",
+            "po": "scripts/artifact-additional-action/po"
+        }
     }
 }
