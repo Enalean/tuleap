@@ -24,7 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
+use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue;
 use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLUser;
 
 final class JiraAgileImporter
 {
@@ -43,19 +47,29 @@ final class JiraAgileImporter
         $this->sprint_retriever = $sprint_retriever;
     }
 
-    public function exportScrum(LoggerInterface $logger, \SimpleXMLElement $project, string $jira_project, IDGenerator $id_generator): void
+    public function exportScrum(LoggerInterface $logger, \SimpleXMLElement $project, string $jira_project, IDGenerator $id_generator, \PFUser $import_user): void
     {
         $board = $this->boards_retriever->getFirstScrumBoardForProject($jira_project);
-        if ($board) {
-            $logger->info('Project has Agile configuration to import');
-
-            $scrum_tracker_builder = new ScrumTrackerBuilder();
-            $scrum_tracker_builder->export($project, $id_generator);
-
-            $sprints = $this->sprint_retriever->getAllSprints($board);
-            foreach ($sprints as $sprint) {
-                $logger->debug('Got sprint ' . $sprint->name . ' ' . $sprint->url);
-            }
+        if (! $board) {
+            return;
         }
+        $logger->info('Project has Agile configuration to import');
+
+        $scrum_tracker_builder = new ScrumTrackerBuilder();
+        $scrum_tracker         = $scrum_tracker_builder->get($id_generator);
+
+        $sprints = $this->sprint_retriever->getAllSprints($board);
+        foreach ($sprints as $sprint) {
+            $logger->debug('Create sprint ' . $sprint->name);
+            $scrum_tracker = $scrum_tracker->withArtifact(
+                (new XMLArtifact($id_generator->getNextId()))
+                    ->withChangeset(
+                        (new XMLChangeset(XMLUser::buildUsername($import_user->getUserName()), new \DateTimeImmutable()))
+                            ->withFieldChange(new XMLStringValue(ScrumTrackerBuilder::NAME_FIELD_NAME, $sprint->name))
+                    )
+            );
+        }
+
+        $scrum_tracker->export($project->trackers);
     }
 }

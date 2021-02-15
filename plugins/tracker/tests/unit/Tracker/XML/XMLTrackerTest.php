@@ -24,7 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
+use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
@@ -39,6 +42,7 @@ use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
+use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
 /**
@@ -55,6 +59,9 @@ use function PHPUnit\Framework\assertTrue;
  * @covers \Tuleap\Tracker\Report\XML\XMLReportCriterion
  * @covers \Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable
  * @covers \Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn
+ * @covers \Tuleap\Tracker\Artifact\XML\XMLArtifact
+ * @covers \Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset
+ * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue
  */
 class XMLTrackerTest extends TestCase
 {
@@ -408,5 +415,45 @@ class XMLTrackerTest extends TestCase
 
         assertEquals('table', (string) $node->reports->report[0]->renderers->renderer[0]['type']);
         assertEquals('some_id', (string) $node->reports->report[0]->renderers->renderer[0]->columns->field[0]['REF']);
+    }
+
+    public function testItHasOneArtifactWithAStringFieldValue(): void
+    {
+        $submitted_on = new \DateTimeImmutable();
+        $tracker      = (new XMLTracker('tracker_id', 'bug'))
+            ->withFormElement(
+                new XMLStringField('some_id', 'name')
+            )
+            ->withArtifact(
+                (new XMLArtifact(123))
+                ->withChangeset(
+                    (new XMLChangeset(
+                        XMLUser::buildUsername('jane'),
+                        $submitted_on
+                    ))
+                    ->withFieldChange(
+                        new XMLStringValue(
+                            'name',
+                            'Sprint 1'
+                        )
+                    )
+                )
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
+
+        assertCount(1, $node->artifacts->artifact);
+        assertEquals('123', $node->artifacts->artifact[0]['id']);
+        assertCount(1, $node->artifacts->artifact[0]->changeset);
+        assertEquals('username', $node->artifacts->artifact[0]->changeset[0]->submitted_by['format']);
+        assertEquals('jane', $node->artifacts->artifact[0]->changeset[0]->submitted_by);
+        assertEquals('ISO8601', $node->artifacts->artifact[0]->changeset[0]->submitted_on['format']);
+        assertEquals($submitted_on->format('c'), $node->artifacts->artifact[0]->changeset[0]->submitted_on);
+        assertNotNull($node->artifacts->artifact[0]->changeset[0]->comments);
+        assertCount(0, $node->artifacts->artifact[0]->changeset[0]->comments->comment);
+        assertCount(1, $node->artifacts->artifact[0]->changeset[0]->field_change);
+        assertEquals('name', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['field_name']);
+        assertEquals('string', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['type']);
+        assertEquals('Sprint 1', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
     }
 }
