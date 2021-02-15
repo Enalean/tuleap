@@ -63,4 +63,38 @@ class PermissionChecker
 
         return false;
     }
+
+    /**
+     * @return \ProjectUGroup[]|UserIsNotAllowedToSeeUGroups
+     */
+    public function getUgroupsThatUserCanSeeOnComment(
+        \PFUser $user,
+        Tracker_Artifact_Changeset_Comment $comment
+    ) {
+        $all_ugroups = $comment->getUgroupsCanSeePrivateComment();
+        if ($all_ugroups === null) {
+            return new UserIsNotAllowedToSeeUGroups();
+        }
+
+        if (count($all_ugroups) === 0) {
+            return new UserIsNotAllowedToSeeUGroups();
+        }
+
+        $tracker    = $comment->getChangeset()->getTracker();
+        $project_id = (int) $tracker->getGroupId();
+
+        if ($user->isSuperUser() || $user->isAdmin($project_id) || $tracker->userIsAdmin($user)) {
+            return $all_ugroups;
+        }
+
+        $ugroups_user_can_see = [];
+
+        foreach ($all_ugroups as $ugroup) {
+            if ($user->isMemberOfUGroup($ugroup->getId(), $project_id)) {
+                $ugroups_user_can_see[] = $ugroup;
+            }
+        }
+
+        return count($ugroups_user_can_see) === 0 ? new UserIsNotAllowedToSeeUGroups() : $ugroups_user_can_see;
+    }
 }

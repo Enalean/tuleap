@@ -1,3 +1,6 @@
 name,action,comment
 rest_private_comment_admin,create:A,
 rest_private_comment_member,create:A,
+rest_private_comment_tracker_admin,create:A,
+rest_private_comment_john_snow,create:A,
+rest_private_comment_daenerys,create:A,

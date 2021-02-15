@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
+use Project;
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
 
 class CommentRepresentationBuilder
 {
@@ -38,25 +41,54 @@ class CommentRepresentationBuilder
     }
 
     /**
+     * @param \ProjectUGroup[]|UserIsNotAllowedToSeeUGroups $ugroups
      * @throws InvalidCommentFormatException
      */
-    public function buildRepresentation(\Tracker_Artifact_Changeset_Comment $comment): CommentRepresentation
+    public function buildRepresentation(\Tracker_Artifact_Changeset_Comment $comment, $ugroups): CommentRepresentation
     {
         $format = $comment->bodyFormat;
         if (
             $format === \Tracker_Artifact_Changeset_Comment::HTML_COMMENT
             || $format === \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
         ) {
-            return new HTMLOrTextCommentRepresentation($comment->body, $comment->getPurifiedBodyForHTML(), $format, null);
+            return new HTMLOrTextCommentRepresentation(
+                $comment->body,
+                $comment->getPurifiedBodyForHTML(),
+                $format,
+                $this->buildMinimalUserGroupRepresentation($comment->changeset->getArtifact()->getTracker()->getProject(), $ugroups)
+            );
         }
         if ($format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
             $interpreted = $this->interpreter->getInterpretedContentWithReferences(
                 $comment->body,
                 (int) $comment->changeset->getArtifact()->getTracker()->getGroupId()
             );
-            return new CommonMarkCommentRepresentation($interpreted, $comment->body, null);
+            return new CommonMarkCommentRepresentation(
+                $interpreted,
+                $comment->body,
+                $this->buildMinimalUserGroupRepresentation($comment->changeset->getArtifact()->getTracker()->getProject(), $ugroups)
+            );
         }
 
         throw new InvalidCommentFormatException($format);
+    }
+
+    /**
+     * @param \ProjectUGroup[]|UserIsNotAllowedToSeeUGroups $ugroups
+     * @return MinimalUserGroupRepresentation[]|null
+     */
+    public function buildMinimalUserGroupRepresentation(Project $project, $ugroups): ?array
+    {
+        if ($ugroups instanceof UserIsNotAllowedToSeeUGroups) {
+            return null;
+        }
+
+        $minimal_representation_ugroups = [];
+
+        foreach ($ugroups as $ugroup) {
+            $minimal_representation_ugroups[] = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
+        }
+
+        return $minimal_representation_ugroups;
     }
 }
