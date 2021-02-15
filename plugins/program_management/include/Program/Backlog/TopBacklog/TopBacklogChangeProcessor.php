@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Program\Program;
 
 interface TopBacklogChangeProcessor
 {
     /**
      * @throws CannotManipulateTopBacklog
      */
-    public function processTopBacklogChangeForAProgram(ProgramForManagement $program, TopBacklogChange $top_backlog_change, \PFUser $user): void;
+    public function processTopBacklogChangeForAProgram(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void;
 }

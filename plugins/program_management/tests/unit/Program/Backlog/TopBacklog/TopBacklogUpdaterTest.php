@@ -37,6 +37,7 @@ final class TopBacklogUpdaterTest extends TestCase
         {
             public function buildExistingProgramProject(int $id, \PFUser $user): Program
             {
+                return new Program(102);
                 throw new \LogicException("Not needed");
             }
 
@@ -47,7 +48,7 @@ final class TopBacklogUpdaterTest extends TestCase
 
             public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
             {
-                return new ProgramForManagement(102);
+                throw new \LogicException("Not needed");
             }
         };
 
@@ -55,7 +56,7 @@ final class TopBacklogUpdaterTest extends TestCase
             public $has_been_called = false;
 
             public function processTopBacklogChangeForAProgram(
-                ProgramForManagement $program,
+                Program $program,
                 TopBacklogChange $top_backlog_change,
                 \PFUser $user
             ): void {

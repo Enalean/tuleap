@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -87,7 +87,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->dao->shouldReceive('addArtifactsToTheExplicitTopBacklog')->with([742])->once();
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            new ProgramForManagement(102),
+            new Program(102),
             new TopBacklogChange([742, 790], [741, 789]),
             $user
         );
@@ -107,7 +107,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            new ProgramForManagement(102),
+            new Program(102),
             new TopBacklogChange([964], [963]),
             $user
         );
@@ -121,7 +121,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->expectException(CannotManipulateTopBacklog::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            new ProgramForManagement(102),
+            new Program(102),
             new TopBacklogChange([], [403]),
             UserTestBuilder::aUser()->build()
         );

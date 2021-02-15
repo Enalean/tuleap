@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\Project\ProjectAccessChecker;
 
 class PrioritizeFeaturesPermissionVerifier
@@ -51,23 +51,24 @@ class PrioritizeFeaturesPermissionVerifier
         $this->can_prioritize_features_dao = $can_prioritize_features_dao;
     }
 
-    public function canUserPrioritizeFeatures(ProgramForManagement $program, \PFUser $user): bool
+    public function canUserPrioritizeFeatures(Program $program, \PFUser $user): bool
     {
-        $project = $this->project_manager->getProject($program->id);
+        $program_id = $program->getId();
+        $project    = $this->project_manager->getProject($program_id);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {
             return false;
         }
 
-        if ($user->isAdmin($program->id)) {
+        if ($user->isAdmin($program_id)) {
             return true;
         }
 
-        $ugroups_that_can_prioritize = $this->can_prioritize_features_dao->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID($program->id);
+        $ugroups_that_can_prioritize = $this->can_prioritize_features_dao->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID($program_id);
 
         foreach ($ugroups_that_can_prioritize as $ugroup_that_can_prioritize) {
-            if ($user->isMemberOfUGroup($ugroup_that_can_prioritize, $program->id)) {
+            if ($user->isMemberOfUGroup($ugroup_that_can_prioritize, $program_id)) {
                 return true;
             }
         }
