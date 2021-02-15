@@ -192,6 +192,8 @@ module.exports = {
                     "error",
                     { assertionStyle: "as" },
                 ],
+                // Allow innerHTML in tests
+                "no-unsanitized/method": "off",
             },
         },
         {

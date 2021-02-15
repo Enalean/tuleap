@@ -54,6 +54,9 @@ export const TEXT_FORMAT_TEXT = "text";
 export const TEXT_FORMAT_HTML = "html";
 export const TEXT_FORMAT_COMMONMARK = "commonmark";
 
+export const isValidTextFormat = (format) =>
+    format === TEXT_FORMAT_TEXT || format === TEXT_FORMAT_HTML || format === TEXT_FORMAT_COMMONMARK;
+
 export const FILE_FIELD = "file";
 
 export const FIELD_PERMISSION_READ = "read";

@@ -54,7 +54,7 @@ const config_for_flaming_parrot = {
     entry: {
         "create-view": "./scripts/artifact/create-view.ts",
         "cross-references-fields": "./scripts/form-element/src/cross-references-fields.ts",
-        "edit-view": "./scripts/artifact/edit-view.ts",
+        "edit-view": "./scripts/artifact/edition/edit-view.ts",
         "list-fields": "./scripts/artifact/list-fields.ts",
         "tracker-admin": "./scripts/tracker-admin/index.js",
         "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",

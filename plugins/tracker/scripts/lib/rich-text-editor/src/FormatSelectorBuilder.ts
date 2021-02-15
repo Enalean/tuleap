@@ -18,17 +18,14 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TextFieldFormat } from "../../../constants/fields-constants";
 import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_TEXT,
+    isValidTextFormat,
 } from "../../../constants/fields-constants";
 import type { DisplayInterface, FormatSelectorPresenter } from "./DisplayInterface";
 import type { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
-
-const isValidFormat = (value: string): value is TextFieldFormat =>
-    TEXT_FORMAT_TEXT === value || TEXT_FORMAT_HTML === value || TEXT_FORMAT_COMMONMARK === value;
 
 const SELECTBOX_ID_PREFIX = "rte_format_selectbox";
 const SELECTBOX_NAME_PREFIX = "comment_format";
@@ -66,7 +63,7 @@ export class FormatSelectorBuilder implements DisplayInterface {
             id: SELECTBOX_ID_PREFIX + presenter.id,
             name: selectbox_name,
             onInputCallback: (new_value) => {
-                if (isValidFormat(new_value)) {
+                if (isValidTextFormat(new_value)) {
                     presenter.formatChangedCallback(new_value);
                 }
             },

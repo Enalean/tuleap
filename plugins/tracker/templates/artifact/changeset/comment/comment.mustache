@@ -10,7 +10,10 @@
            id="tracker_artifact_followup_comment_body_format_{{ changeset_id }}"
            name="tracker_artifact_followup_comment_body_format_{{ changeset_id }}"
            value="{{ format }}" />
-    <div class="tracker_artifact_followup_comment_body">
+    <div
+        class="tracker_artifact_followup_comment_body"
+        {{# is_commonmark }}data-commonmark-source="{{ commonmark_source }}"{{/ is_commonmark }}
+    >
         {{# was_cleared }}
             <em>{{# dgettext }}tuleap-tracker | Comment has been cleared{{/ dgettext }}</em>
         {{/ was_cleared }}

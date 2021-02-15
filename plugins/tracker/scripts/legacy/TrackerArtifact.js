@@ -20,7 +20,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global $$:readonly Ajax:readonly $:readonly CKEDITOR:readonly Ajax:readonly Effect:readonly */
+/* global $$:readonly Ajax:readonly $:readonly CKEDITOR:readonly Ajax:readonly */
 
 var codendi = codendi || {};
 codendi.tracker = codendi.tracker || {};
@@ -149,139 +149,6 @@ document.observe("dom:loaded", function () {
                 new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
                 Event.stop(evt);
             });
-    });
-
-    function getTextAreaValueAndHtmlFormat(comment_panel, id) {
-        var content;
-        var htmlFormat;
-
-        if ($("tracker_artifact_followup_comment_body_format_" + id).value == "html") {
-            content = comment_panel.down(".tracker_artifact_followup_comment_body").innerHTML;
-            htmlFormat = true;
-        } else {
-            content = comment_panel.down(".tracker_artifact_followup_comment_body").textContent;
-            htmlFormat = false;
-        }
-
-        return { value: content, htmlFormat: htmlFormat };
-    }
-
-    $$(".tracker_artifact_followup_comment_controls_edit button").each(function (edit) {
-        var id = edit.up(".tracker_artifact_followup").id;
-        var data;
-
-        if (id && id.match(/_\d+$/)) {
-            id = id.match(/_(\d+)$/)[1];
-            edit.observe("click", function (evt) {
-                Event.stop(evt);
-                var comment_panel = $("followup_" + id).down(".tracker_artifact_followup_comment");
-                if (comment_panel.visible()) {
-                    var textarea = new Element("textarea", {
-                        id: "tracker_followup_comment_edit_" + id,
-                        class: "user-mention",
-                    });
-                    var htmlFormat = false;
-
-                    if (comment_panel.empty()) {
-                        textarea.value = "";
-                    } else {
-                        data = getTextAreaValueAndHtmlFormat(comment_panel, id);
-                        textarea.value = data.value;
-                        htmlFormat = data.htmlFormat;
-                    }
-
-                    var rteSpan = new Element("span", { style: "text-align: left;" }).update(
-                        textarea
-                    );
-                    var edit_panel = new Element("div", { style: "text-align: right;" }).update(
-                        rteSpan
-                    );
-                    comment_panel.insert({ before: edit_panel });
-                    var name = "comment_format" + id;
-                    new tuleap.textarea.RTE(textarea, {
-                        toggle: true,
-                        default_in_html: false,
-                        id: id,
-                        name: name,
-                        htmlFormat: htmlFormat,
-                        full_width: true,
-                    });
-
-                    var nb_rows_displayed = 5;
-                    var nb_rows_content = textarea.value.split(/\n/).length;
-                    if (nb_rows_content > nb_rows_displayed) {
-                        nb_rows_displayed = nb_rows_content;
-                    }
-                    textarea.rows = nb_rows_displayed;
-
-                    comment_panel.hide();
-                    textarea.focus();
-                    tuleap.mention.init("#tracker_followup_comment_edit_" + id);
-
-                    var button = new Element("button", { class: "btn btn-primary" })
-                        .update(codendi.locales.tracker_artifact.edit_followup_ok)
-                        .observe("click", function (evt) {
-                            var content;
-                            if (
-                                CKEDITOR.instances &&
-                                CKEDITOR.instances["tracker_followup_comment_edit_" + id]
-                            ) {
-                                content = CKEDITOR.instances[
-                                    "tracker_followup_comment_edit_" + id
-                                ].getData();
-                            } else {
-                                content = $("tracker_followup_comment_edit_" + id).getValue();
-                            }
-                            var format = $("rte_format_selectbox" + id).value;
-                            //eslint-disable-next-line @typescript-eslint/no-unused-vars
-                            var req = new Ajax.Request(location.href, {
-                                parameters: {
-                                    func: "update-comment",
-                                    changeset_id: id,
-                                    content: content,
-                                    comment_format: format,
-                                },
-                                onSuccess: function (transport) {
-                                    if (CKEDITOR.instances["tracker_followup_comment_edit_" + id]) {
-                                        CKEDITOR.instances[
-                                            "tracker_followup_comment_edit_" + id
-                                        ].destroy(true);
-                                    }
-                                    edit_panel.remove();
-                                    comment_panel.update(transport.responseText).show();
-                                    var e = new Effect.Highlight(comment_panel); //eslint-disable-line @typescript-eslint/no-unused-vars
-                                },
-                            });
-                            edit.show();
-                            Event.stop(evt);
-                            return false;
-                        });
-
-                    edit.hide();
-                    var cancel = new Element("a", {
-                        href: "#cancel",
-                        class: "btn",
-                    })
-                        .update(codendi.locales.tracker_artifact.edit_followup_cancel)
-                        .observe("click", function (evt) {
-                            if (CKEDITOR.instances["tracker_followup_comment_edit_" + id]) {
-                                CKEDITOR.instances["tracker_followup_comment_edit_" + id].destroy(
-                                    true
-                                );
-                            }
-                            edit_panel.remove();
-                            comment_panel.show();
-                            Event.stop(evt);
-                            edit.show();
-                        });
-                    edit_panel
-                        .insert(button)
-                        .insert(new Element("span").update("&nbsp;"))
-                        .insert(cancel);
-                }
-                Event.stop(evt);
-            });
-        }
     });
 
     $$(".tracker_artifact_add_attachment").each(function (attachment) {

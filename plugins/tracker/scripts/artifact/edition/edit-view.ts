@@ -19,7 +19,7 @@
 
 import { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { RichTextEditorsCreator } from "./RichTextEditorsCreator";
+import { RichTextEditorsCreator } from "../RichTextEditorsCreator";
 
 // Do not use DOMContentLoaded event because it arrives after jQuery document ready event
 // and it will cause the "submission bar" to stop working.
@@ -44,4 +44,5 @@ document.addEventListener("readystatechange", () => {
 // "submission bar" won't work properly.
 import "./TrackerArtifactEditionSwitcher.js";
 import "./text-follow-up";
-import "./tracker-email-copy-paste-fp";
+import "../tracker-email-copy-paste-fp";
+import "./edit-follow-up-comment.js";

@@ -75,6 +75,8 @@ export const TEXT_FORMAT_TEXT: TextFormat;
 export const TEXT_FORMAT_HTML: HTMLFormat;
 export const TEXT_FORMAT_COMMONMARK: CommonMarkFormat;
 
+export const isValidTextFormat: (format: string) => format is TextFieldFormat;
+
 export const FILE_FIELD: FileFieldIdentifier;
 
 export type ReadPermission = "read";
