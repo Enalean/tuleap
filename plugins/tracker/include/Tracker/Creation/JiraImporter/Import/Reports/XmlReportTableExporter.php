@@ -26,7 +26,7 @@ use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
-use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn;
+use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
 use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
 
 class XmlReportTableExporter
@@ -41,7 +41,7 @@ class XmlReportTableExporter
             ->withRank(0);
         foreach ($column_fields as $column_field) {
             $xml_table = $xml_table->withColumns(
-                new XMLColumn(
+                new XMLTableColumn(
                     new XMLReferenceByID($column_field->getXMLId())
                 )
             );

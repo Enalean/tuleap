@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Report\Renderer\Table\XML;
 use SimpleXMLElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Report\Renderer\XML\XMLRenderer;
-use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn;
+use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
 
 final class XMLTable extends XMLRenderer
 {
@@ -38,7 +38,7 @@ final class XMLTable extends XMLRenderer
      */
     private $chunk_size = 50;
     /**
-     * @var XMLColumn[]
+     * @var XMLTableColumn[]
      * @readonly
      */
     private $columns = [];
@@ -47,10 +47,10 @@ final class XMLTable extends XMLRenderer
      * @return static
      * @psalm-mutation-free
      */
-    public function withColumns(XMLColumn $column): self
+    public function withColumns(XMLTableColumn ...$columns): self
     {
-        $new            = clone $this;
-        $new->columns[] = $column;
+        $new          = clone $this;
+        $new->columns = array_merge($new->columns, $columns);
         return $new;
     }
 

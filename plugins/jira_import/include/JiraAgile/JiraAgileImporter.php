@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateValue;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLUser;
@@ -61,12 +62,17 @@ final class JiraAgileImporter
         $sprints = $this->sprint_retriever->getAllSprints($board);
         foreach ($sprints as $sprint) {
             $logger->debug('Create sprint ' . $sprint->name);
+
+            $changeset = (new XMLChangeset(XMLUser::buildUsername($import_user->getUserName()), new \DateTimeImmutable()))
+                ->withFieldChange(new XMLStringValue(ScrumTrackerBuilder::NAME_FIELD_NAME, $sprint->name));
+
+            if ($sprint->start_date !== null) {
+                $changeset = $changeset->withFieldChange(new XMLDateValue(ScrumTrackerBuilder::START_DATE_FIELD_NAME, $sprint->start_date));
+            }
+
             $scrum_tracker = $scrum_tracker->withArtifact(
                 (new XMLArtifact($id_generator->getNextId()))
-                    ->withChangeset(
-                        (new XMLChangeset(XMLUser::buildUsername($import_user->getUserName()), new \DateTimeImmutable()))
-                            ->withFieldChange(new XMLStringValue(ScrumTrackerBuilder::NAME_FIELD_NAME, $sprint->name))
-                    )
+                    ->withChangeset($changeset)
             );
         }
 

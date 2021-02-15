@@ -39,7 +39,7 @@ final class XMLFieldsetTest extends TestCase
         assertEquals('some_id', (string) $xml['ID']);
         assertEquals(\Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, (string) $xml['type']);
         assertEquals('details', (string) $xml->name);
-        assertEquals('', (string) $xml->label);
+        assertEquals('details', (string) $xml->label);
     }
 
     public function testItHasOneChildFormElement(): void

@@ -21,19 +21,44 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Container\Column\XML;
+namespace Tuleap\Tracker\FormElement\Field\Date\XML;
 
-use Tracker_FormElementFactory;
-use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
+use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 use Tuleap\Tracker\XML\IDGenerator;
 
-final class XMLColumn extends XMLContainer
+final class XMLDateField extends XMLField
 {
+    /**
+     * @var bool
+     */
+    private $display_datetime = false;
+
     /**
      * @param string|IDGenerator $id
      */
     public function __construct($id, string $name)
     {
-        parent::__construct($id, Tracker_FormElementFactory::CONTAINER_COLUMN_TYPE, $name);
+        parent::__construct($id, \Tracker_FormElementFactory::FIELD_DATE_TYPE, $name);
+    }
+
+    /**
+     * @psalm-mutation-free
+     * @return $this
+     */
+    public function withDateTime(): self
+    {
+        $new                   = clone $this;
+        $new->display_datetime = true;
+        return $new;
+    }
+
+    public function export(\SimpleXMLElement $form_elements): \SimpleXMLElement
+    {
+        $field = parent::export($form_elements);
+        if ($this->display_datetime) {
+            $properties = $field->addChild('properties');
+            $properties->addAttribute('display_time', '1');
+        }
+        return $field;
     }
 }

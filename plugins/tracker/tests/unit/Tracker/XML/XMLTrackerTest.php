@@ -38,10 +38,11 @@ use Tuleap\Tracker\FormElement\XML\XMLReferenceByName;
 use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
-use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn;
+use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
+use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
@@ -58,7 +59,7 @@ use function PHPUnit\Framework\assertTrue;
  * @covers \Tuleap\Tracker\Report\XML\XMLReport
  * @covers \Tuleap\Tracker\Report\XML\XMLReportCriterion
  * @covers \Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable
- * @covers \Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLColumn
+ * @covers \Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn
  * @covers \Tuleap\Tracker\Artifact\XML\XMLArtifact
  * @covers \Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset
  * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue
@@ -250,6 +251,17 @@ class XMLTrackerTest extends TestCase
         assertEquals('fieldset2', (string) $node->formElements->formElement[1]['ID']);
     }
 
+    public function testAFieldAlwaysHasALabel(): void
+    {
+        $xml = (new XMLTracker('some_xml_id', 'bug'))
+            ->withFormElement(
+                (new XMLStringField('some_id', 'name'))
+            )
+            ->export(new \SimpleXMLElement('<tracker />'));
+
+        assertNotEmpty((string) $xml->formElements->formElement[0]->label);
+    }
+
     public function testItHasAFieldAtTheRootOfTreeWithPermissions(): void
     {
         $tracker = (new XMLTracker('some_xml_id', 'bug'))
@@ -375,7 +387,7 @@ class XMLTrackerTest extends TestCase
                     ->withRenderers(
                         (new XMLTable('table'))
                         ->withColumns(
-                            new XMLColumn(
+                            new XMLTableColumn(
                                 new XMLReferenceByName('name')
                             )
                         )
@@ -403,7 +415,7 @@ class XMLTrackerTest extends TestCase
                     ->withRenderers(
                         (new XMLTable('table'))
                             ->withColumns(
-                                new XMLColumn(
+                                new XMLTableColumn(
                                     new XMLReferenceByID('some_id')
                                 )
                             )
