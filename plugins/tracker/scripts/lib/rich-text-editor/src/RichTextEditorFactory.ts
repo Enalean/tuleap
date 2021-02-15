@@ -32,24 +32,17 @@ import type { DisplayInterface } from "./DisplayInterface";
 import { FormatSelectorBuilder } from "./FormatSelectorBuilder";
 import type { TextFieldFormat } from "../../../constants/fields-constants";
 import { defaultOptionsIfNotProvided } from "./options-defaulter";
+import { ExistingFormatSelector } from "./ExistingFormatSelector";
 
 export class RichTextEditorFactory {
-    private readonly display_interface: DisplayInterface;
-    private readonly default_format: TextFieldFormat;
     private readonly markdown_converter: HTMLToMarkdownConverterInterface;
     private readonly markdown_renderer: MarkdownToHTMLRendererInterface;
 
-    constructor(doc: Document, private readonly locale: string) {
-        const document_adapter = new FlamingParrotDocumentAdapter(doc);
-        this.default_format = document_adapter.getDefaultFormat();
-
-        const gettext_provider = initGettextSync(
-            "rich-text-editor",
-            french_translations,
-            this.locale
-        );
-
-        this.display_interface = new FormatSelectorBuilder(document_adapter, gettext_provider);
+    private constructor(
+        private readonly display_interface: DisplayInterface,
+        private readonly default_format: TextFieldFormat,
+        private readonly locale: string
+    ) {
         const turndown_service = new TurndownService();
         this.markdown_converter = {
             convert: (html: string): string => turndown_service.turndown(html),
@@ -62,7 +55,7 @@ export class RichTextEditorFactory {
     public createRichTextEditor(
         textarea: HTMLTextAreaElement,
         options: RichTextEditorOptions
-    ): void {
+    ): TextEditor {
         const defaulted_options = defaultOptionsIfNotProvided(this.locale, options);
         const editor = new TextEditor(
             textarea,
@@ -83,5 +76,27 @@ export class RichTextEditorFactory {
             },
         });
         editor.onFormatChange(selected_value);
+        return editor;
+    }
+
+    public static forFlamingParrotWithFormatSelector(
+        doc: Document,
+        locale: string
+    ): RichTextEditorFactory {
+        const gettext_provider = initGettextSync("rich-text-editor", french_translations, locale);
+        const document_adapter = new FlamingParrotDocumentAdapter(doc);
+        const display_interface = new FormatSelectorBuilder(document_adapter, gettext_provider);
+        const default_format = document_adapter.getDefaultFormat();
+        return new RichTextEditorFactory(display_interface, default_format, locale);
+    }
+
+    public static forFlamingParrotWithExistingFormatSelector(
+        doc: Document,
+        locale: string
+    ): RichTextEditorFactory {
+        const document_adapter = new FlamingParrotDocumentAdapter(doc);
+        const default_format = document_adapter.getDefaultFormat();
+        const display_interface = new ExistingFormatSelector(doc);
+        return new RichTextEditorFactory(display_interface, default_format, locale);
     }
 }

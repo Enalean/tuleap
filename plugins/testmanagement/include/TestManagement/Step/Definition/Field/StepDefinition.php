@@ -285,7 +285,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return isset($value[$format_key][$key])
             && in_array(
                 $value[$format_key][$key],
-                [Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT]
+                [Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT]
             );
     }
 

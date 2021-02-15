@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const creator = new RichTextEditorsCreator(
         document,
         new UploadImageFormFactory(document, locale),
-        new RichTextEditorFactory(document, locale)
+        RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale)
     );
     creator.createTextFieldEditors({
         onEditorInit: (editor, textarea) => {

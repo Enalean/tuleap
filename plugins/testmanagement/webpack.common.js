@@ -79,7 +79,7 @@ const webpack_config_for_vue_components = {
     context,
     output,
     externals: {
-        codendi: "codendi",
+        ckeditor4: "CKEDITOR",
     },
     module: {
         rules: [
