@@ -8,7 +8,7 @@ timetracking =
         attribute artifact_id { xsd:long } &
         element user { time_user_content } &
         element minutes { xsd:long } &
-        element step { xsd:string } &
+        element step { xsd:string } ? &
         element day { time_date_content }
     }*
 

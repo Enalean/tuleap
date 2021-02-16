@@ -163,12 +163,17 @@ class XMLImport
 
             $time_day = (new DateTimeImmutable((string) $xml_time->day))->format('Y-m-d');
 
+            $step = '';
+            if (isset($xml_time->step)) {
+                $step = (string) $xml_time->step;
+            }
+
             $this->time_dao->addTime(
                 $time_user->getId(),
                 $artifact_id_mapping->get($time_artifact_id),
                 $time_day,
                 (int) $xml_time->minutes,
-                (string) $xml_time->step
+                $step
             );
         }
     }

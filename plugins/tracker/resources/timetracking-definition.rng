@@ -38,9 +38,11 @@
           <element name="minutes">
             <data type="long"/>
           </element>
-          <element name="step">
-            <data type="string"/>
-          </element>
+          <optional>
+            <element name="step">
+              <data type="string"/>
+            </element>
+          </optional>
           <element name="day">
             <ref name="time_date_content"/>
           </element>
