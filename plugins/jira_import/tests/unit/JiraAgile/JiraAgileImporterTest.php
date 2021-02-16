@@ -132,6 +132,50 @@ class JiraAgileImporterTest extends TestCase
         assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
     }
 
+    public function testSprintTrackerHasNameForTitleSemantic(): void
+    {
+        $jira_agile_importer = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+
+        $name_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="name"]');
+
+        $title_semantic = $xml->xpath('/project/trackers/tracker/semantics/semantic[@type="title"]');
+        assertCount(1, $title_semantic);
+        assertEquals($name_field[0]['ID'], $title_semantic[0]->field['REF']);
+    }
+
+    public function testSprintTrackerHasTimeframeSemanticWithStartAndEndDate(): void
+    {
+        $jira_agile_importer = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+
+        $start_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="start_date"]');
+        $end_date_field   = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="end_date"]');
+
+        $timeframe_semantic = $xml->xpath('/project/trackers/tracker/semantics/semantic[@type="timeframe"]');
+        assertCount(1, $timeframe_semantic);
+        assertEquals($start_date_field[0]['ID'], $timeframe_semantic[0]->start_date_field['REF']);
+        assertEquals($end_date_field[0]['ID'], $timeframe_semantic[0]->end_date_field['REF']);
+    }
+
     public function testSprintTrackerHasStartDateField(): void
     {
         $jira_agile_importer = $this->getJiraAgileImport();

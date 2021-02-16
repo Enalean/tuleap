@@ -27,8 +27,11 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
+use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
+use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
 use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
@@ -56,6 +59,8 @@ use function PHPUnit\Framework\assertTrue;
  * @covers \Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset
  * @covers \Tuleap\Tracker\FormElement\Field\XML\XMLFieldPermission
  * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField
+ * @covers \Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic
+ * @covers \Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic
  * @covers \Tuleap\Tracker\Report\XML\XMLReport
  * @covers \Tuleap\Tracker\Report\XML\XMLReportCriterion
  * @covers \Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable
@@ -427,6 +432,54 @@ class XMLTrackerTest extends TestCase
 
         assertEquals('table', (string) $node->reports->report[0]->renderers->renderer[0]['type']);
         assertEquals('some_id', (string) $node->reports->report[0]->renderers->renderer[0]->columns->field[0]['REF']);
+    }
+
+    public function testItHasAStringFieldWithTitleSemantic(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                new XMLStringField('some_id', 'name')
+            )
+            ->withSemantics(
+                new XMLTitleSemantic(
+                    new XMLReferenceByName('name')
+                )
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<tracker />'));
+
+        assertCount(1, $node->semantics->semantic);
+        assertEquals('title', $node->semantics->semantic[0]['type']);
+        assertEquals('title', $node->semantics->semantic[0]->shortname);
+        assertNotEmpty($node->semantics->semantic[0]->label);
+        assertNotEmpty($node->semantics->semantic[0]->description);
+        assertEquals($node->formElements->formElement[0]['ID'], $node->semantics->semantic[0]->field['REF']);
+    }
+
+    public function testItHasTwoDateFieldsWithTimeframeSemantic(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                new XMLDateField('F1', 'start_date'),
+                new XMLDateField('F2', 'end_date'),
+            )
+            ->withSemantics(
+                new XMLTimeframeSemantic(
+                    new XMLReferenceByName('start_date'),
+                    new XMLReferenceByName('end_date'),
+                )
+            );
+
+
+        $node = $tracker->export(new \SimpleXMLElement('<trackers />'));
+
+        $start_date_field = $node->xpath('/trackers/tracker/formElements/formElement[name="start_date"]');
+        $end_date_field   = $node->xpath('/trackers/tracker/formElements/formElement[name="end_date"]');
+
+        assertCount(1, $node->semantics->semantic);
+        assertEquals('timeframe', $node->semantics->semantic[0]['type']);
+        assertEquals($start_date_field[0]['ID'], $node->semantics->semantic[0]->start_date_field['REF']);
+        assertEquals($end_date_field[0]['ID'], $node->semantics->semantic[0]->end_date_field['REF']);
     }
 
     public function testItHasOneArtifactWithAStringFieldValue(): void
