@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,28 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+import { initArtifactAdditionalAction } from "./artifact-additional-action";
 
-namespace Tuleap\Test\Builders;
-
-use Tuleap\Layout\IncludeAssets;
-
-class IncludeAssetsBuilder
-{
-    public static function build(): IncludeAssets
-    {
-        return new class extends IncludeAssets {
-            public function __construct()
-            {
-            }
-
-            public function getFileURL(string $file_name): string
-            {
-                return $file_name;
-            }
-        };
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    initArtifactAdditionalAction(document);
+});

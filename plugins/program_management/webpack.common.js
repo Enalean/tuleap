@@ -22,6 +22,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 const entry_points = {
     program_management: "./scripts/program_management/index.ts",
+    artifact_additional_action: "./scripts/artifact-additional-action/src/index.ts",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];

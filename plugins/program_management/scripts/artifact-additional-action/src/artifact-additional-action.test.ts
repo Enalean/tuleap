@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,7 +19,7 @@
 
 import { initArtifactAdditionalAction } from "./artifact-additional-action";
 import * as fetch_wrapper from "@tuleap/tlp-fetch";
-import * as feedbacks from "../../../../../src/scripts/tuleap/feedback";
+import * as feedbacks from "@tuleap/core/scripts/tuleap/feedback";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("Artifact additional action", () => {
@@ -32,7 +32,7 @@ describe("Artifact additional action", () => {
     } {
         const local_document = document.implementation.createHTMLDocument();
         const link_element = local_document.createElement("a");
-        link_element.setAttribute("id", "artifact-explicit-backlog-action");
+        link_element.setAttribute("id", "artifact-program-management-top-backlog-action");
         local_document.body.appendChild(link_element);
 
         return { document: local_document };
@@ -48,7 +48,7 @@ describe("Artifact additional action", () => {
     } {
         const local_document = document.implementation.createHTMLDocument();
         const link_element = local_document.createElement("a");
-        link_element.setAttribute("id", "artifact-explicit-backlog-action");
+        link_element.setAttribute("id", "artifact-program-management-top-backlog-action");
         link_element.dataset.projectId = "101";
         local_document.body.appendChild(link_element);
 
@@ -65,7 +65,7 @@ describe("Artifact additional action", () => {
     } {
         const local_document = document.implementation.createHTMLDocument();
         const link_element = local_document.createElement("a");
-        link_element.setAttribute("id", "artifact-explicit-backlog-action");
+        link_element.setAttribute("id", "artifact-program-management-top-backlog-action");
         link_element.dataset.projectId = "101";
         link_element.dataset.artifactId = "201";
         local_document.body.appendChild(link_element);
@@ -94,7 +94,7 @@ describe("Artifact additional action", () => {
     function getLocalAddAction(): LocalAction {
         const local_document = document.implementation.createHTMLDocument();
         const link_element = local_document.createElement("a");
-        link_element.setAttribute("id", "artifact-explicit-backlog-action");
+        link_element.setAttribute("id", "artifact-program-management-top-backlog-action");
         link_element.dataset.projectId = "101";
         link_element.dataset.artifactId = "201";
         link_element.dataset.action = "add";
@@ -144,6 +144,7 @@ describe("Artifact additional action", () => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         add: [{ id: 201 }],
+                        remove: [],
                     }),
                 });
                 expect(current_button_title).not.toBe(local_action.title_element.textContent);
@@ -176,6 +177,7 @@ describe("Artifact additional action", () => {
                 expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
+                        add: [],
                         remove: [{ id: 201 }],
                     }),
                 });

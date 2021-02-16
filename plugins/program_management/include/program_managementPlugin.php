@@ -25,8 +25,13 @@ use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -81,6 +86,7 @@ use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\ProgramManagement\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Workspace\ComponentInvolvedVerifier;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
@@ -132,6 +138,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
         $this->addHook(BuildArtifactFormActionEvent::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
+        $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -407,6 +414,39 @@ final class program_managementPlugin extends Plugin
 
         $redirect = new RedirectParameterInjector();
         $redirect->injectAndInformUserAboutProgramItem($event->getRedirect(), $GLOBALS['Response']);
+    }
+
+    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
+    {
+        $project_manager        = ProjectManager::instance();
+        $project_access_checker = new ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+        $assets                 = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/program_management',
+            '/assets/program_management'
+        );
+        $action_builder         = new ArtifactTopBacklogActionBuilder(
+            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
+            new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
+            new PlanDao(),
+            new ArtifactsExplicitTopBacklogDAO(),
+            new PlannedFeatureDAO(),
+            new \Tuleap\Layout\JavascriptAsset($assets, 'artifact_additional_action.js')
+        );
+
+        $artifact = $event->getArtifact();
+        $tracker  = $artifact->getTracker();
+        $action   = $action_builder->buildTopBacklogActionBuilder(
+            new TopBacklogActionSourceInformation($artifact->getId(), $tracker->getId(), (int) $tracker->getGroupId()),
+            $event->getUser()
+        );
+
+        if ($action !== null) {
+            $event->addAction($action);
+        }
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker

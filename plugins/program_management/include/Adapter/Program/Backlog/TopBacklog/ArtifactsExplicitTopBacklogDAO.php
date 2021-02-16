@@ -28,6 +28,14 @@ use Tuleap\DB\DataAccessObject;
 
 class ArtifactsExplicitTopBacklogDAO extends DataAccessObject
 {
+    public function isInTheExplicitTopBacklog(int $artifact_id): bool
+    {
+        return $this->getDB()->exists(
+            'SELECT COUNT(artifact_id) FROM plugin_program_management_explicit_top_backlog WHERE artifact_id = ?',
+            $artifact_id
+        );
+    }
+
     /**
      * @psalm-param non-empty-array<int> $artifact_ids
      */
