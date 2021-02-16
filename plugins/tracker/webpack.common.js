@@ -62,6 +62,7 @@ const config_for_flaming_parrot = {
         "tracker-report-expert-mode": "./scripts/report/index.js",
         "tracker-semantic-timeframe-option-selector":
             "./scripts/semantic-timeframe-option-selector.js",
+        "modal-v2": "./scripts/modal-v2/modal-in-place.js",
     },
     context,
     output,
@@ -183,7 +184,6 @@ const config_for_legacy_scripts = {
                 "./scripts/legacy/TrackerRichTextEditor.js",
                 "./scripts/legacy/artifactChildren.js",
                 "./scripts/legacy/load-artifactChildren.js",
-                "./scripts/legacy/modal-in-place.js",
                 "./scripts/legacy/FixAggregatesHeaderHeight.js",
                 "./scripts/legacy/TrackerSettings.js",
                 "./scripts/legacy/TrackerCollapseFieldset.js",

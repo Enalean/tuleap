@@ -19,7 +19,7 @@
 
 /* global codendi:readonly CKEDITOR:readonly jQuery:readonly */
 
-var tuleap = tuleap || {};
+var tuleap = window.tuleap || {};
 tuleap.tracker = tuleap.tracker || {};
 tuleap.textarea = tuleap.textarea || {};
 
