@@ -40,6 +40,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
@@ -129,6 +130,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     public const MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY = 6;
 
     public const GLOBAL_ADMIN_URL = 'global-admin';
+
+    private const TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML = "0";
 
     public $id;
     public $group_id;
@@ -2079,6 +2082,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             $xmlElem->addAttribute('is_displayed_in_new_dropdown', (string) true);
         }
 
+        if (! $this->getPrivateCommentEnabledDao()->isTrackerEnabledPrivateComment($this->id)) {
+            $xmlElem->addAttribute('use_private_comments', self::TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML);
+        }
+
         if ($responses = $this->getCannedResponseFactory()->getCannedResponses($this)) {
             foreach ($responses as $response) {
                 $grandchild = $xmlElem->cannedResponses->addChild('cannedResponse');
@@ -3307,6 +3314,14 @@ class Tracker implements Tracker_Dispatchable_Interface
     protected function getDropDownDao(): TrackerInNewDropdownDao
     {
         return new TrackerInNewDropdownDao();
+    }
+
+    /**
+     * protected is need for testing purpose
+     */
+    protected function getPrivateCommentEnabledDao(): TrackerPrivateCommentUGroupEnabledDao
+    {
+        return new TrackerPrivateCommentUGroupEnabledDao();
     }
 
     protected function getInsecureCreationEmailAddress(): string

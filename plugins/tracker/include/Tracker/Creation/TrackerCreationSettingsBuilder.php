@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 class TrackerCreationSettingsBuilder
@@ -30,10 +31,17 @@ class TrackerCreationSettingsBuilder
      * @var TrackerInNewDropdownDao
      */
     private $in_new_dropdown_dao;
+    /**
+     * @var TrackerPrivateCommentUGroupEnabledDao
+     */
+    private $private_comment_dao;
 
-    public function __construct(TrackerInNewDropdownDao $in_new_dropdown_dao)
-    {
+    public function __construct(
+        TrackerInNewDropdownDao $in_new_dropdown_dao,
+        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao
+    ) {
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;
+        $this->private_comment_dao = $private_comment_dao;
     }
 
     public function build(\Tracker $tracker): TrackerCreationSettings
@@ -42,7 +50,8 @@ class TrackerCreationSettingsBuilder
         if ($this->in_new_dropdown_dao->isContaining($tracker->getId())) {
             $is_displayed_in_new_dropdown = true;
         }
+        $is_used_private_comment = $this->private_comment_dao->isTrackerEnabledPrivateComment($tracker->getId());
 
-        return new TrackerCreationSettings($is_displayed_in_new_dropdown);
+        return new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_used_private_comment);
     }
 }

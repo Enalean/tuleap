@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 final class PostCreationProcessorTest extends TestCase
@@ -51,12 +52,25 @@ final class PostCreationProcessorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ReferenceManager
      */
     private $reference_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
+     */
+    private $private_comment_dao;
 
     protected function setUp(): void
     {
         $this->reference_manager   = Mockery::mock(\ReferenceManager::class);
         $this->in_new_dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
-        $this->processor           = new PostCreationProcessor($this->reference_manager, $this->in_new_dropdown_dao);
+        $this->private_comment_dao = Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
+        $this->private_comment_dao
+            ->shouldReceive('disabledPrivateCommentOnTracker')
+            ->never()
+            ->byDefault();
+        $this->processor = new PostCreationProcessor(
+            $this->reference_manager,
+            $this->in_new_dropdown_dao,
+            $this->private_comment_dao
+        );
 
         $this->tracker = Mockery::mock(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(10);
@@ -69,7 +83,7 @@ final class PostCreationProcessorTest extends TestCase
     {
         $this->reference_manager->shouldReceive('createReference')->once();
 
-        $settings = new TrackerCreationSettings(false);
+        $settings = new TrackerCreationSettings(false, true);
 
         $this->processor->postCreationProcess($this->tracker, $settings);
     }
@@ -77,7 +91,7 @@ final class PostCreationProcessorTest extends TestCase
     public function testItAddsTrackerInDropDownIfSettingsSaidSo(): void
     {
         $this->reference_manager->shouldReceive('createReference')->once();
-        $settings = new TrackerCreationSettings(true);
+        $settings = new TrackerCreationSettings(true, true);
         $this->in_new_dropdown_dao->shouldReceive('insert')->with($this->tracker->getId())->once();
 
         $this->processor->postCreationProcess($this->tracker, $settings);
@@ -86,8 +100,17 @@ final class PostCreationProcessorTest extends TestCase
     public function testItDoesNotAddTrackerInDropdown(): void
     {
         $this->reference_manager->shouldReceive('createReference')->once();
-        $settings = new TrackerCreationSettings(false);
+        $settings = new TrackerCreationSettings(false, true);
         $this->in_new_dropdown_dao->shouldReceive('insert')->with($this->tracker->getId())->never();
+
+        $this->processor->postCreationProcess($this->tracker, $settings);
+    }
+
+    public function testItDisablesPrivateCommentOnTracker(): void
+    {
+        $this->reference_manager->shouldReceive('createReference')->once();
+        $settings = new TrackerCreationSettings(false, false);
+        $this->private_comment_dao->shouldReceive('disabledPrivateCommentOnTracker')->with($this->tracker->getId())->once();
 
         $this->processor->postCreationProcess($this->tracker, $settings);
     }
