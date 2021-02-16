@@ -66,7 +66,7 @@ import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
-import { transformCustomMetadataForItemUpdate } from "../../../helpers/metadata-helpers/data-transformatter-helper";
+import { transformCustomMetadataForItemUpdate } from "../../../helpers/metadata-helpers/update-data-transformatter-helper";
 
 export default {
     components: {

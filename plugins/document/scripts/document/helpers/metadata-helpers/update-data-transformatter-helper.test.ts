@@ -22,26 +22,28 @@ import {
     transformCustomMetadataForItemUpdate,
     transformDocumentMetadataForUpdate,
     transformFolderMetadataForRecursionAtUpdate,
-} from "./data-transformatter-helper.js";
+} from "./update-data-transformatter-helper";
+import type { Folder, FolderMetadata, ItemFile, ListValue, Metadata } from "../../type";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
     it("Given an existing folder, then we add specific status update key for update", () => {
-        const item = {
+        const list_value: Array<ListValue> = [
+            {
+                id: 103,
+                value: "Open",
+            } as ListValue,
+        ];
+        const metadata: Metadata = {
+            short_name: "status",
+            list_value: list_value,
+        } as Metadata;
+        const item: Folder = {
             id: 7,
             type: "folder",
-            metadata: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
+            metadata: [metadata],
+        } as Folder;
 
-        const item_to_update = {
+        const item_to_update: Folder = {
             ...item,
             status: {
                 value: "rejected",
@@ -54,42 +56,50 @@ describe("transformFolderMetadataForRecursionAtUpdate", () => {
 });
 
 describe("transformDocumentMetadataForUpdate", () => {
-    it("Given an existing document, then the default status metadata is applied", () => {
-        const item = {
+    it("Given status metadata is used, then the default status metadata is applied", () => {
+        const list_value: Array<ListValue> = [
+            {
+                id: 103,
+                value: "Open",
+            } as ListValue,
+        ];
+        const metadata: Array<Metadata> = [
+            {
+                short_name: "status",
+                list_value: list_value,
+            } as Metadata,
+        ];
+
+        const item: ItemFile = ({
             id: 7,
             type: "file",
-            metadata: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
+            metadata: metadata,
+        } as unknown) as ItemFile;
 
         transformDocumentMetadataForUpdate(item, true);
 
         expect(item.status).toEqual("rejected");
     });
 
-    it("Given an existing document, the status is not updated", () => {
-        const item = {
+    it("Given status is not used, then the status is not updated", () => {
+        const list_value: Array<ListValue> = [
+            {
+                id: 103,
+                value: "Open",
+            } as ListValue,
+        ];
+        const metadata: Array<Metadata> = [
+            {
+                short_name: "status",
+                list_value: list_value,
+            } as Metadata,
+        ];
+
+        const item: ItemFile = ({
             id: 7,
             type: "file",
-            metadata: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
+            metadata: metadata,
+        } as unknown) as ItemFile;
 
         transformDocumentMetadataForUpdate(item, false);
 
@@ -100,7 +110,7 @@ describe("transformDocumentMetadataForUpdate", () => {
 describe("transformCustomMetadataForItemUpdate", () => {
     it(`Given parent has a text value,
         it does not update anything`, () => {
-        const parent_metadata = [
+        const parent_metadata: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 name: "field_1",
@@ -108,7 +118,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 type: "text",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -118,7 +128,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
 
     it(`Given parent has a string value,
         it does not update anything`, () => {
-        const parent_metadata = [
+        const parent_metadata: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 name: "field_1",
@@ -126,7 +136,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 type: "string",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -136,23 +146,24 @@ describe("transformCustomMetadataForItemUpdate", () => {
 
     it(`Given parent has a single list value,
         then the formatted metadata is bound to value`, () => {
-        const parent_metadata = [
+        const list_values: Array<ListValue> = [
+            {
+                id: 110,
+                value: "My value to display",
+            } as ListValue,
+        ];
+        const parent_metadata: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 name: "field_1",
-                list_value: [
-                    {
-                        id: 110,
-                        value: "My value to display",
-                    },
-                ],
+                list_value: list_values,
                 is_multiple_value_allowed: false,
                 type: "list",
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
-        const expected_list = [
+        const expected_list: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 type: "list",
@@ -161,7 +172,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 value: 110,
                 is_required: false,
                 list_value: null,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -179,10 +190,10 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: false,
                 type: "list",
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
-        const expected_list = [
+        const expected_list: Array<Metadata> = [
             {
                 short_name: "custom list metadata",
                 type: "list",
@@ -191,7 +202,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 value: 100,
                 is_required: false,
                 list_value: null,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -201,36 +212,38 @@ describe("transformCustomMetadataForItemUpdate", () => {
 
     it(`Given parent has a multiple list
         then the formatted metadata only keeps list ids`, () => {
-        const parent_metadata = [
+        const list_values: Array<ListValue> = [
             {
-                short_name: "custom list metadata",
-                name: "field_1",
-                list_value: [
-                    {
-                        id: 110,
-                        value: "My value to display",
-                    },
-                    {
-                        id: 120,
-                        value: "My other value to display",
-                    },
-                ],
-                is_multiple_value_allowed: true,
-                type: "list",
-                is_required: false,
+                id: 110,
+                value: "My value to display",
+            },
+            {
+                id: 120,
+                value: "My other value to display",
             },
         ];
+        const parent_metadata: Array<Metadata> = [
+            {
+                short_name: "custom list metadata",
+                name: "field_1",
+                list_value: list_values,
+                is_multiple_value_allowed: true,
+                type: "list",
+                is_required: false,
+            } as Metadata,
+        ];
 
-        const expected_list = [
+        const expected_value: Array<number> = [110, 120];
+        const expected_list: Array<Metadata> = [
             {
                 short_name: "custom list metadata",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: true,
-                list_value: [110, 120],
+                list_value: expected_value,
                 is_required: false,
                 value: null,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -240,7 +253,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
 
     it(`Given parent has a multiple list without any value
         then the formatted metadata should have the 100 id`, () => {
-        const parent_metadata = [
+        const parent_metadata: Array<Metadata> = [
             {
                 short_name: "custom list metadata",
                 name: "field_1",
@@ -248,19 +261,20 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: true,
                 type: "list",
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
-        const expected_list = [
+        const expected_value: Array<number> = [100];
+        const expected_list: Array<Metadata> = [
             {
                 short_name: "custom list metadata",
                 type: "list",
                 name: "field_1",
                 is_multiple_value_allowed: true,
-                list_value: [100],
+                list_value: expected_value,
                 is_required: false,
                 value: null,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -269,7 +283,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
     });
     it(`Given parent has a date value,
         then the formatted date metadata is bound to value with the formatted date`, () => {
-        const parent_metadata = [
+        const parent_metadata: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 name: "field_1",
@@ -277,10 +291,10 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 type: "date",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
-        const expected_list = [
+        const expected_list: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 type: "date",
@@ -288,7 +302,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: false,
                 value: "2019-08-30",
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -297,7 +311,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
     });
     it(`Given parent does not have a date value,
         then the formatted date metadata is bound to value with empty string`, () => {
-        const parent_metadata = [
+        const parent_metadata: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 name: "field_1",
@@ -305,10 +319,10 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 type: "date",
                 is_multiple_value_allowed: false,
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
-        const expected_list = [
+        const expected_list: Array<Metadata> = [
             {
                 short_name: "custom metadata",
                 type: "date",
@@ -316,7 +330,7 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: false,
                 value: "",
                 is_required: false,
-            },
+            } as Metadata,
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -328,15 +342,16 @@ describe("transformCustomMetadataForItemUpdate", () => {
 describe("formatCustomMetadataForFolderUpdate", () => {
     it(`Given an item with metadata to update, a list of metadata short name and a recursion option ,
         then each metadata of the item to update has a recursion option`, () => {
-        const item_to_update = {
+        const folder_metadata: Array<FolderMetadata> = [
+            { short_name: "field_1" } as FolderMetadata,
+            { short_name: "field_2" } as FolderMetadata,
+            { short_name: "field_3" } as FolderMetadata,
+            { short_name: "field_4" } as FolderMetadata,
+        ];
+        const item_to_update: Folder = {
             id: 1,
-            metadata: [
-                { short_name: "field_1" },
-                { short_name: "field_2" },
-                { short_name: "field_3" },
-                { short_name: "field_4" },
-            ],
-        };
+            metadata: folder_metadata,
+        } as Folder;
 
         const metadata_list_to_update = ["field_2", "field_4"];
         const recursion_option = "folders";

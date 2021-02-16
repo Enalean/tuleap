@@ -21,17 +21,28 @@ import { getStatusFromMapping, getStatusMetadata } from "./hardcoded-metadata-ma
 import { updateItemMetadata } from "./value-transformer/status-metadata-helper";
 import { formatDateValue } from "./value-transformer/date-metadata-helper";
 import {
+    assertListIsOnlyMultipleValue,
     formatMetadataListValue,
     formatMetadataMultipleValue,
 } from "./value-transformer/list-value-helper";
+import type { Folder, Item, Metadata } from "../../type";
 
-export function transformFolderMetadataForRecursionAtUpdate(item) {
-    let folder_to_update = JSON.parse(JSON.stringify(item));
+export function transformFolderMetadataForRecursionAtUpdate(item: Folder): Folder {
+    const folder_to_update = JSON.parse(JSON.stringify(item));
+
+    if (!folder_to_update.metadata) {
+        folder_to_update.status = {
+            value: "none",
+            recursion: "none",
+        };
+
+        return folder_to_update;
+    }
 
     const metadata = getStatusMetadata(folder_to_update.metadata);
     folder_to_update.status = {
         value:
-            !metadata || !metadata.list_value[0]
+            !metadata || !metadata.list_value || !assertListIsOnlyMultipleValue(metadata.list_value)
                 ? "none"
                 : getStatusFromMapping(metadata.list_value[0].id),
         recursion: "none",
@@ -41,18 +52,21 @@ export function transformFolderMetadataForRecursionAtUpdate(item) {
 }
 
 export function transformDocumentMetadataForUpdate(
-    document_to_update,
-    is_item_status_metadata_used
-) {
+    document_to_update: Item,
+    is_item_status_metadata_used: boolean
+): void {
     if (!is_item_status_metadata_used) {
         return;
     }
 
     const metadata = getStatusMetadata(document_to_update.metadata);
+    if (!metadata) {
+        return;
+    }
     updateItemMetadata(metadata, document_to_update);
 }
 
-export function transformCustomMetadataForItemUpdate(parent_metadata) {
+export function transformCustomMetadataForItemUpdate(parent_metadata: Array<Metadata>): void {
     parent_metadata.forEach((parent_metadata) => {
         switch (parent_metadata.type) {
             case "date":
@@ -77,15 +91,15 @@ export function transformCustomMetadataForItemUpdate(parent_metadata) {
 }
 
 export function formatCustomMetadataForFolderUpdate(
-    item_to_update,
-    metadata_list_to_update,
-    recursion_option
-) {
-    item_to_update.metadata.forEach((metadata) => {
-        if (metadata_list_to_update.find((short_name) => short_name === metadata.short_name)) {
-            metadata.recursion = recursion_option;
+    item_to_update: Folder,
+    metadata_list_to_update: Array<string>,
+    recursion_option: string
+): void {
+    item_to_update.metadata.forEach((item_metadata) => {
+        if (metadata_list_to_update.find((short_name) => short_name === item_metadata.short_name)) {
+            item_metadata.recursion = recursion_option;
         } else {
-            metadata.recursion = "none";
+            item_metadata.recursion = "none";
         }
     });
 }
