@@ -22,7 +22,7 @@ import { localVue } from "../helpers/local-vue";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import { createStore } from "../store/index.js";
 import TrackerSelection from "./TrackerSelection.vue";
-import * as project_cache from "./projects-cache.js";
+import * as project_cache from "./projects-cache";
 import * as rest_querier from "../api/rest-querier";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 

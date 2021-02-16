@@ -31,11 +31,12 @@ export interface Tracker {
 }
 
 export interface Project {
+    id: number;
     label: string;
 }
 
 export interface Report {
-    trackers: Array<Tracker>;
+    trackers: Map<number, { project: Project; tracker: Tracker }>;
     expert_query: string;
     invalid_trackers: Array<Tracker>;
 }

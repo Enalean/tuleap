@@ -25,7 +25,7 @@ import { createStore } from "./store/index.js";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
+import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import * as rest_querier from "./api/rest-querier";
 
 describe("CrossTrackerWidget", () => {

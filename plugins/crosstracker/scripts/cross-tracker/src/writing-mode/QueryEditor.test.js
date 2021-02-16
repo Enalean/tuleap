@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { localVue } from "../helpers/local-vue";
 import QueryEditor from "./QueryEditor.vue";
-import WritingCrossTrackerReport from "./writing-cross-tracker-report.js";
+import WritingCrossTrackerReport from "./writing-cross-tracker-report";
 
 describe("QueryEditor", () => {
     let writingCrossTrackerReport;

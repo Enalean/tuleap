@@ -18,14 +18,18 @@
  */
 
 import ExtendableError from "extendable-error";
+import type { Project, Report, Tracker } from "../type";
 
 export default class WritingCrossTrackerReport {
+    trackers: Map<number, { project: Project; tracker: Tracker }>;
+    expert_query: string;
+
     constructor() {
         this.trackers = new Map();
         this.expert_query = "";
     }
 
-    addTracker(project, tracker) {
+    addTracker(project: Project, tracker: Tracker): void {
         if (this.trackers.size === 10) {
             throw new TooManyTrackersSelectedError();
         }
@@ -39,20 +43,20 @@ export default class WritingCrossTrackerReport {
         });
     }
 
-    removeTracker(tracker_id) {
+    removeTracker(tracker_id: number): void {
         this.trackers.delete(tracker_id);
     }
 
-    duplicateFromReport(report) {
+    duplicateFromReport(report: Report): void {
         this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
     }
 
-    getTrackerIds() {
+    getTrackerIds(): Array<number> {
         return [...this.trackers.keys()];
     }
 
-    getTrackers() {
+    getTrackers(): IterableIterator<{ project: Project; tracker: Tracker }> {
         return this.trackers.values();
     }
 }

@@ -54,7 +54,7 @@
 import QueryEditor from "./QueryEditor.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
-import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report.js";
+import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report";
 
 export default {
     name: "WritingMode",
