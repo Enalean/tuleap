@@ -35,6 +35,8 @@ use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
 use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
+use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
+use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -90,6 +92,15 @@ final class ScrumTrackerBuilder
                                     ->withPermissions(...$default_permissions),
                             )
                     )
+            )
+            ->withSemantics(
+                new XMLTitleSemantic(
+                    new XMLReferenceByName(self::NAME_FIELD_NAME)
+                ),
+                new XMLTimeframeSemantic(
+                    new XMLReferenceByName(self::START_DATE_FIELD_NAME),
+                    new XMLReferenceByName(self::END_DATE_FIELD_NAME)
+                ),
             )
             ->withReports(
                 (new XMLReport('Active sprints'))

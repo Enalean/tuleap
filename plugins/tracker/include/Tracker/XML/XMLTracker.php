@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Report\XML\XMLReport;
+use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 use Tuleap\Tracker\TrackerColor;
 
 final class XMLTracker
@@ -81,6 +82,11 @@ final class XMLTracker
      * @readonly
      */
     private $reports = [];
+    /**
+     * @var XMLSemantic[]
+     * @readonly
+     */
+    private $semantics = [];
     /**
      * @var XMLArtifact[]
      * @readonly
@@ -193,6 +199,17 @@ final class XMLTracker
      * @psalm-mutation-free
      * @return static
      */
+    public function withSemantics(XMLSemantic ...$semantic): self
+    {
+        $new            = clone $this;
+        $new->semantics = array_merge($new->semantics, $semantic);
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
     public function withArtifact(XMLArtifact $artifact): self
     {
         $new              = clone $this;
@@ -244,10 +261,18 @@ final class XMLTracker
         }
 
         $tracker_xml->addChild('cannedResponses');
+
         $tracker_xml->addChild('formElements');
         if (count($this->form_elements) > 0) {
             foreach ($this->form_elements as $form_element) {
                 $form_element->export($tracker_xml->formElements);
+            }
+        }
+
+        if (count($this->semantics) > 0) {
+            $tracker_xml->addChild('semantics');
+            foreach ($this->semantics as $semantic) {
+                $semantic->export($tracker_xml->semantics, $form_elements_flattened_collection);
             }
         }
 
