@@ -25,7 +25,11 @@
             v-bind:name="'artifact[' + field_id + '][id][]'"
             v-bind:value="step.id"
         />
-        <step-definition-actions v-bind:value="step.description_format" v-on:input="toggleRTE">
+        <step-definition-actions
+            v-bind:value="step.description_format"
+            v-bind:format_select_id="format_select_id"
+            v-on:input="toggleRTE"
+        >
             <step-deletion-action-button-mark-as-deleted
                 v-bind:mark-as-deleted="markAsDeleted"
                 v-bind:is_deletion="true"
@@ -48,11 +52,7 @@
             rows="3"
             v-model="step.raw_description"
         ></textarea>
-        <div
-            class="muted tracker-richtexteditor-help"
-            v-bind:class="{ shown: is_current_step_in_html_format }"
-            v-bind:id="'field_description_' + step.uuid + '_' + field_id + '-help'"
-        ></div>
+        <div class="muted tracker-richtexteditor-help shown" v-bind:id="description_help_id"></div>
 
         <section class="ttm-definition-step-expected">
             <step-definition-arrow-expected />
@@ -79,9 +79,8 @@
                     v-model="step.raw_expected_results"
                 ></textarea>
                 <div
-                    class="muted tracker-richtexteditor-help"
-                    v-bind:class="{ shown: is_current_step_in_html_format }"
-                    v-bind:id="'field_expected_results_' + step.uuid + '_' + field_id + '-help'"
+                    class="muted tracker-richtexteditor-help shown"
+                    v-bind:id="expected_results_help_id"
                 ></div>
             </div>
         </section>
@@ -93,8 +92,10 @@
 import StepDeletionActionButtonMarkAsDeleted from "./StepDeletionActionButtonMarkAsDeleted.vue";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
-import { mapState, mapGetters } from "vuex";
-import { RTE } from "codendi";
+import { mapState } from "vuex";
+import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import { getUploadImageOptions, UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
+import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
 
 export default {
     name: "StepDefinitionEditableStep",
@@ -114,7 +115,6 @@ export default {
             "upload_field_name",
             "upload_max_size",
         ]),
-        ...mapGetters(["is_text"]),
         description_id() {
             return "field_description_" + this.step.uuid + "_" + this.field_id;
         },
@@ -129,7 +129,10 @@ export default {
             return this.expected_results_id + "-help";
         },
         is_current_step_in_html_format() {
-            return !this.is_text(this.step.description_format);
+            return this.step.description_format === TEXT_FORMAT_HTML;
+        },
+        format_select_id() {
+            return "format_" + this.step.uuid + "_" + this.field_id;
         },
     },
     watch: {
@@ -150,34 +153,33 @@ export default {
             this.$emit("mark-as-deleted");
         },
         getEditorsContent() {
-            if (!this.is_text(this.step.description_format)) {
+            if (this.is_current_step_in_html_format) {
                 this.step.raw_description = this.editors[1].getContent();
                 this.step.raw_expected_results = this.editors[0].getContent();
             }
         },
         toggleRTE(event, value) {
             this.step.description_format = value;
-
-            for (const editor of this.editors) {
-                editor.toggle(event, value);
-            }
         },
         loadRTE(field) {
-            const element = this.$refs[field];
-            const is_html = this.is_current_step_in_html_format;
-            const editor = new RTE(element, {
-                toggle: true,
-                default_in_html: false,
-                id: element.id,
-                htmlFormat: is_html,
-                autoresize_when_ready: false,
-            });
+            const text_area = this.$refs[field];
+            const locale = document.body.dataset.userLocale ?? "en_US";
+            const image_upload_factory = new UploadImageFormFactory(document, locale);
+            const help_block = image_upload_factory.createHelpBlock(text_area);
+            const editor = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(
+                document,
+                locale
+            );
 
-            if (is_html) {
-                editor.init_rte();
-            }
-
-            return editor;
+            const options = {
+                format_selectbox_id: this.format_select_id,
+                format_selectbox_value: this.step.description_format,
+                getAdditionalOptions: (textarea) => getUploadImageOptions(textarea),
+                onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
+                onEditorInit: (ckeditor, textarea) =>
+                    image_upload_factory.initiateImageUpload(ckeditor, textarea),
+            };
+            return editor.createRichTextEditor(text_area, options);
         },
         loadEditor() {
             this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];

@@ -73,6 +73,13 @@ export class TextEditor {
         this.options.onFormatChange(new_format);
     }
 
+    public getContent(): string {
+        if (this.ckeditor) {
+            return this.ckeditor.getData();
+        }
+        return this.textarea.value;
+    }
+
     private initCKEditor(): CKEDITOR.editor {
         if (CKEDITOR.instances && CKEDITOR.instances[this.textarea.id]) {
             CKEDITOR.instances[this.textarea.id].destroy(true);

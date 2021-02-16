@@ -22,13 +22,15 @@
         <span>
             <translate>Format:</translate>
             <select
+                v-bind:id="format_select_id"
                 ref="format"
                 class="input-small ttm-definition-step-description-format"
                 v-on:change="input($event)"
                 v-bind:disabled="disabled"
             >
                 <option value="text" v-bind:selected="is_text">Text</option>
-                <option value="html" v-bind:selected="!is_text">HTML</option>
+                <option value="html" v-bind:selected="is_html">HTML</option>
+                <option value="commonmark" v-bind:selected="is_commonmark">Markdown</option>
             </select>
         </span>
         <slot />
@@ -36,7 +38,12 @@
 </template>
 
 <script>
-import { TEXT_FORMAT_HTML } from "../../../tracker/scripts/constants/fields-constants.js";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../../tracker/scripts/constants/fields-constants.js";
+import { mapState } from "vuex";
 
 export default {
     name: "StepDefinitionActions",
@@ -46,10 +53,21 @@ export default {
             type: Boolean,
             default: false,
         },
+        format_select_id: {
+            type: String,
+            default: "",
+        },
     },
     computed: {
+        ...mapState(["field_id"]),
         is_text() {
-            return this.value !== TEXT_FORMAT_HTML;
+            return this.value === TEXT_FORMAT_TEXT;
+        },
+        is_html() {
+            return this.value === TEXT_FORMAT_HTML;
+        },
+        is_commonmark() {
+            return this.value === TEXT_FORMAT_COMMONMARK;
         },
     },
     methods: {

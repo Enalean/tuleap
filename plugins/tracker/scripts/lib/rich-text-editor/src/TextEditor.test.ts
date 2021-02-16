@@ -192,4 +192,53 @@ describe(`TextEditor`, () => {
             }
         );
     });
+    describe("getContent()", () => {
+        it.each([
+            [
+                "some data to return from CKEDITOR",
+                TEXT_FORMAT_HTML,
+                "Return from TEXTAREA",
+                "some data to return from CKEDITOR",
+            ],
+            [
+                "Return from TEXTAREA",
+                TEXT_FORMAT_COMMONMARK,
+                "some data to return from CKEDITOR",
+                "Return from TEXTAREA",
+            ],
+        ])(
+            `returns the '%s' content when the format is %s`,
+            (expected_content, format, ckeditor_content, textarea_content) => {
+                let _data = ckeditor_content;
+                const ckeditor_instance = ({
+                    setData(data: string): void {
+                        _data = data;
+                    },
+                    getData(): string {
+                        return _data;
+                    },
+                    destroy: emptyFunction,
+                } as unknown) as CKEDITOR.editor;
+                jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
+
+                const options = {
+                    locale: "fr_FR",
+                    getAdditionalOptions: emptyOptionsProvider,
+                    onEditorInit: emptyFunction,
+                    onFormatChange: emptyFunction,
+                };
+
+                textarea.value = textarea_content;
+                const editor = new TextEditor(
+                    textarea,
+                    options,
+                    markdown_converter,
+                    markdown_renderer
+                );
+                editor.onFormatChange(format);
+
+                expect(editor.getContent()).toEqual(expected_content);
+            }
+        );
+    });
 });
