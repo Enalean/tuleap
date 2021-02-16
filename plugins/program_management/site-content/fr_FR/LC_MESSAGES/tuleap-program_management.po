@@ -62,6 +62,12 @@ msgstr ""
 "Le service de gestion de programme peut seulement être utilisé dans un "
 "projet défini en tant que programme."
 
+msgid "Top backlog actions"
+msgstr "Actions liées à la planification générale"
+
+msgid "Unchanged"
+msgstr "Inchangé"
+
 msgid ""
 "You are creating a new program increment, it will create associate release "
 "increment in team projects"

@@ -83,7 +83,7 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testBuildsActionForAnUnplannedArtifact(): void
     {
-        $source_information = new TopBacklogActionSourceInformation(888, 140, 102);
+        $source_information = new TopBacklogActionActifactSourceInformation(888, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
@@ -95,7 +95,7 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testBuildsActionForAnArtifactInTheTopBacklog(): void
     {
-        $source_information = new TopBacklogActionSourceInformation(999, 140, 102);
+        $source_information = new TopBacklogActionActifactSourceInformation(999, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(true);
@@ -105,7 +105,7 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testNoActionIsBuiltForArtifactsThatAreNotInAProgramProject(): void
     {
-        $source_information = new TopBacklogActionSourceInformation(400, 140, 102);
+        $source_information = new TopBacklogActionActifactSourceInformation(400, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andThrow(new ProjectIsNotAProgramException(102));
 
         self::assertNull($this->action_builder->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
@@ -113,7 +113,7 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testNoActionIsBuiltForUsersThatCannotPrioritizeFeatures(): void
     {
-        $source_information = new TopBacklogActionSourceInformation(401, 140, 102);
+        $source_information = new TopBacklogActionActifactSourceInformation(401, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(false);
 
@@ -122,7 +122,7 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testNoActionIsBuiltForArtifactsThatAreNotPlannable(): void
     {
-        $source_information = new TopBacklogActionSourceInformation(2, 140, 102);
+        $source_information = new TopBacklogActionActifactSourceInformation(2, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
@@ -133,7 +133,7 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testNoActionIsBuiltForArtifactsThatArePlannedInAProgramIncrement(): void
     {
-        $source_information = new TopBacklogActionSourceInformation(3, 140, 102);
+        $source_information = new TopBacklogActionActifactSourceInformation(3, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);

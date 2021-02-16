@@ -25,11 +25,18 @@ use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactTopBacklogActionBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogActionBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogActionProcessor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionSourceInformation;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionActifactSourceInformation;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
@@ -94,6 +101,8 @@ use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
+use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -139,6 +148,8 @@ final class program_managementPlugin extends Plugin
         $this->addHook(BuildArtifactFormActionEvent::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
         $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
+        $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
+        $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -440,13 +451,62 @@ final class program_managementPlugin extends Plugin
         $artifact = $event->getArtifact();
         $tracker  = $artifact->getTracker();
         $action   = $action_builder->buildTopBacklogActionBuilder(
-            new TopBacklogActionSourceInformation($artifact->getId(), $tracker->getId(), (int) $tracker->getGroupId()),
+            new TopBacklogActionActifactSourceInformation($artifact->getId(), $tracker->getId(), (int) $tracker->getGroupId()),
             $event->getUser()
         );
 
         if ($action !== null) {
             $event->addAction($action);
         }
+    }
+
+    public function trackerMasschangeGetExternalActionsEvent(TrackerMasschangeGetExternalActionsEvent $event): void
+    {
+        $project_manager        = ProjectManager::instance();
+        $project_access_checker = new ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+        $action_builder         = new MassChangeTopBacklogActionBuilder(
+            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
+            new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
+            new PlanDao(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
+        );
+
+        $tracker = $event->getTracker();
+        $action  = $action_builder->buildMassChangeAction(
+            new TopBacklogActionMassChangeSourceInformation($tracker->getId(), (int) $tracker->getGroupId()),
+            $event->getUser()
+        );
+
+        if ($action !== null) {
+            $event->addExternalActions($action);
+        }
+    }
+
+    public function trackerMasschangeProcessExternalActionsEvent(TrackerMasschangeProcessExternalActionsEvent $event): void
+    {
+        $project_manager        = ProjectManager::instance();
+        $project_access_checker = new ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+        $processor              = new MassChangeTopBacklogActionProcessor(
+            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
+            new ProcessTopBacklogChange(
+                Tracker_ArtifactFactory::instance(),
+                new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
+                new ArtifactsExplicitTopBacklogDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            )
+        );
+
+        $processor->processMassChangeAction(
+            MassChangeTopBacklogSourceInformation::fromProcessExternalActionEvent($event)
+        );
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 /**
  * @psalm-immutable
  */
-final class TopBacklogActionSourceInformation
+final class TopBacklogActionMassChangeSourceInformation
 {
-    /**
-     * @var int
-     */
-    public $artifact_id;
     /**
      * @var int
      */
@@ -40,10 +36,9 @@ final class TopBacklogActionSourceInformation
      */
     public $project_id;
 
-    public function __construct(int $artifact_id, int $tracker_id, int $project_id)
+    public function __construct(int $tracker_id, int $project_id)
     {
-        $this->artifact_id = $artifact_id;
-        $this->tracker_id  = $tracker_id;
-        $this->project_id  = $project_id;
+        $this->tracker_id = $tracker_id;
+        $this->project_id = $project_id;
     }
 }
