@@ -56,7 +56,7 @@ body {
     }
 
     .main-project-tabs > .tlp-tabs {
-        background: rgba(0, 0, 0, .3);
+        @include background.background-for-links();
         box-shadow: none;
 
         > .tlp-tab {
@@ -68,8 +68,8 @@ body {
             &:hover,
             &:focus,
             &.tlp-tab-active {
+                @include background.background-for-links();
                 border-top-color: $tlp-ui-white;
-                background: rgba(0, 0, 0, .3);
             }
 
             &:hover > .tlp-tab-menu,
@@ -92,7 +92,7 @@ body {
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
     .breadcrumb-item:not(.breadcrumb-item-disabled):focus-within > .breadcrumb-link {
-        background: rgba(0, 0, 0, .3);
+        @include background.background-for-links();
         color: $tlp-ui-white;
     }
 
@@ -110,13 +110,13 @@ body {
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
-            background: rgba(0, 0, 0, .3);
+            @include background.background-for-links();
             color: $tlp-ui-white;
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
-        background: rgba(0, 0, 0, .3);
+        @include background.background-for-links();
         color: $tlp-ui-white;
 
         > .fas {
