@@ -8,7 +8,7 @@
     "@tuleap/core": "file://../../src",
     "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
-    "javascript-time-ago": "^2.3.2",
+    "javascript-time-ago": "^2.3.4",
     "node-gettext": "^3.0.0",
     "prismjs": "^1.23.0",
     "sprintf-js": "^1.1.2",
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
     "@types/javascript-time-ago": "^2.0.1",
-    "@types/prismjs": "^1.16.2",
+    "@types/prismjs": "^1.16.3",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.1.3",
     "vue-class-component": "^7.2.6",
