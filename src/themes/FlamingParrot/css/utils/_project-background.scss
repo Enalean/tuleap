@@ -62,7 +62,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
     }
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
-        background: rgba(0, 0, 0, .3);
+        @include background.background-for-links();
         color: $white;
     }
 
@@ -79,13 +79,13 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
-            background: rgba(0, 0, 0, .3);
+            @include background.background-for-links();
             color: $white;
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
-        background: rgba(0, 0, 0, .3);
+        @include background.background-for-links();
         color: $white;
 
         > .fas {
@@ -96,8 +96,8 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
     // stylelint-disable selector-no-qualifying-type,max-nesting-depth,selector-max-compound-selectors
     .main-project-tabs > .nav-tabs {
+        @include background.background-for-links();
         margin: 0;
-        background: rgba(0, 0, 0, .3);
         box-shadow: none;
 
         > li {
@@ -117,9 +117,9 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
                 &.active,
                 &:focus,
                 &:hover {
+                    @include background.background-for-links();
                     border-bottom: 0;
                     border-top-color: $white;
-                    background: rgba(0, 0, 0, .3);
 
                     > .caret {
                         border-top-color: $white;
@@ -139,9 +139,9 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
                 }
 
                 > a {
+                    @include background.background-for-links();
                     border-bottom: 0;
                     border-top-color: $white;
-                    background: rgba(0, 0, 0, .3);
                 }
             }
 
