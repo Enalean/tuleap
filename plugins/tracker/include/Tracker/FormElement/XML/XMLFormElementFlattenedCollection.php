@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\XML;
 
 use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 
 /**
  * @psalm-immutable
@@ -75,9 +77,25 @@ final class XMLFormElementFlattenedCollection implements \Countable, \IteratorAg
     public function getByName(string $name): XMLFormElement
     {
         if (! isset($this->form_elements[$name])) {
-            throw new \LogicException('Field `name` doesnt exist in form_elements collection');
+            throw new \LogicException(sprintf('Field `%s` does not exist in form_elements collection', $name));
         }
         return $this->form_elements[$name];
+    }
+
+    public function getBindValueByLabel(string $field_name, string $label): XMLBindStaticValue
+    {
+        $field = $this->getByName($field_name);
+        if (! $field instanceof XMLSelectBoxField) {
+            throw new \LogicException(sprintf('Given field_name `%s` does not have static bind values', $field_name));
+        }
+
+        foreach ($field->bind_values as $bind_value) {
+            if ($bind_value instanceof XMLBindStaticValue && $bind_value->label === $label) {
+                return $bind_value;
+            }
+        }
+
+        throw new \LogicException(sprintf('%s field does not have an %s value with label %s', $field_name, XMLBindStaticValue::class, $label));
     }
 
     public function count(): int

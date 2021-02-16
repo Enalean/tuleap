@@ -176,6 +176,32 @@ class JiraAgileImporterTest extends TestCase
         assertEquals($end_date_field[0]['ID'], $timeframe_semantic[0]->end_date_field['REF']);
     }
 
+    public function testSprintTrackerHasStatusSemantic(): void
+    {
+        $jira_agile_importer = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+
+        $status_field_id     = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]')[0]['ID'];
+        $future_bindvalue_id = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]['ID'];
+        $active_bindvalue_id = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="active"]')[0]['ID'];
+
+        $status_semantic = $xml->xpath('/project/trackers/tracker/semantics/semantic[@type="status"]');
+        assertCount(1, $status_semantic);
+        assertEquals($status_field_id, $status_semantic[0]->field['REF']);
+        assertCount(2, $status_semantic[0]->open_values->open_value);
+        assertEquals($future_bindvalue_id, $status_semantic[0]->open_values->open_value[0]['REF']);
+        assertEquals($active_bindvalue_id, $status_semantic[0]->open_values->open_value[1]['REF']);
+    }
+
     public function testSprintTrackerHasStartDateField(): void
     {
         $jira_agile_importer = $this->getJiraAgileImport();
@@ -276,6 +302,50 @@ class JiraAgileImporterTest extends TestCase
 
         $completed_date_column = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/renderers/renderer/columns/field[@REF="%s"]', $id));
         assertCount(1, $completed_date_column);
+
+        $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', $id));
+        assertCount(3, $permissions);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $permissions[0]['type']);
+        assertEquals('UGROUP_ANONYMOUS', $permissions[0]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $permissions[1]['type']);
+        assertEquals('UGROUP_REGISTERED', $permissions[1]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
+        assertEquals('UGROUP_PROJECT_MEMBERS', $permissions[2]['ugroup']);
+    }
+
+    public function testSprintTrackerHasStatusField(): void
+    {
+        $jira_agile_importer = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+
+        $status_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]')[0];
+
+        $id = (string) $status_field['ID'];
+        assertEquals('sb', $status_field['type']);
+        assertEquals('static', $status_field->bind['type']);
+        assertCount(3, $status_field->bind->items->item);
+        assertEquals('future', $status_field->bind->items->item[0]['label']);
+        assertEquals('active', $status_field->bind->items->item[1]['label']);
+        assertEquals('closed', $status_field->bind->items->item[2]['label']);
+        $active_value_id = $status_field->bind->items->item[1]['ID'];
+
+        $status_criterion_field = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/criterias/criteria/field[@REF="%s"]', $id));
+        assertCount(1, $status_criterion_field);
+        $selected_criterion_value = $status_criterion_field[0]->xpath('../criteria_value/selected_value');
+        assertCount(1, $selected_criterion_value);
+        assertEquals($active_value_id, $selected_criterion_value[0]['REF']);
+
+        $status_column = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/renderers/renderer/columns/field[@REF="%s"]', $id));
+        assertCount(1, $status_column);
 
         $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', $id));
         assertCount(3, $permissions);
