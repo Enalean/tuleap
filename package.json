@@ -8,7 +8,7 @@
     "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
     "moment": "^2.29.1",
-    "moment-timezone": "^0.5.32",
+    "moment-timezone": "^0.5.33",
     "node-htmldiff": "^0.9.3",
     "sprintf-js": "^1.1.2",
     "vue": "^2.6.12",
