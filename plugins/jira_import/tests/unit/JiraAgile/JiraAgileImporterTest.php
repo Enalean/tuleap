@@ -529,6 +529,54 @@ class JiraAgileImporterTest extends TestCase
         assertEquals('2018-01-25T04:04:09+00:00', $completed_date_field_change[0]->value);
     }
 
+    public function testItCreatesSprintsArtifactWithStatus(): void
+    {
+        $jira_agile_importer = new JiraAgileImporter(
+            $this->getJiraBoradRetrieverWithOneBoard(),
+            $this->getJiraSprintRetrieverWithSprints(
+                [
+                    JiraSprint::buildClosed(1, 'Sprint 1'),
+                    JiraSprint::buildActive(2, 'Sprint 2'),
+                    JiraSprint::buildFuture(3, 'Sprint 3'),
+                ]
+            )
+        );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+        );
+
+        $future_id = substr((string) $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]['ID'], 1);
+        $active_id = substr((string) $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="active"]')[0]['ID'], 1);
+        $closed_id = substr((string) $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="closed"]')[0]['ID'], 1);
+
+        $sprints = $xml->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="name"]');
+
+        assertEquals('Sprint 1', $sprints[0]->value);
+        $status_value = $sprints[0]->xpath('../field_change[@field_name="status"]')[0];
+        assertEquals('list', $status_value['type']);
+        assertEquals('static', $status_value['bind']);
+        assertEquals($closed_id, (string) $status_value->value[0]);
+
+        assertEquals('Sprint 2', $sprints[1]->value);
+        $status_value = $sprints[1]->xpath('../field_change[@field_name="status"]')[0];
+        assertEquals('list', $status_value['type']);
+        assertEquals('static', $status_value['bind']);
+        assertEquals($active_id, (string) $status_value->value[0]);
+
+        assertEquals('Sprint 3', $sprints[2]->value);
+        $status_value = $sprints[2]->xpath('../field_change[@field_name="status"]')[0];
+        assertEquals('list', $status_value['type']);
+        assertEquals('static', $status_value['bind']);
+        assertEquals($future_id, (string) $status_value->value[0]);
+    }
+
     private function getJiraAgileImport(): JiraAgileImporter
     {
         return new JiraAgileImporter(

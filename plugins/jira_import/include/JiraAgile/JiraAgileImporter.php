@@ -26,8 +26,10 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
-use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateValue;
-use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue;
+use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
+use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLUser;
 
@@ -64,18 +66,19 @@ final class JiraAgileImporter
             $logger->debug('Create sprint ' . $sprint->name);
 
             $changeset = (new XMLChangeset(XMLUser::buildUsername($import_user->getUserName()), new \DateTimeImmutable()))
-                ->withFieldChange(new XMLStringValue(ScrumTrackerBuilder::NAME_FIELD_NAME, $sprint->name));
+                ->withFieldChange(new XMLStringChangesetValue(ScrumTrackerBuilder::NAME_FIELD_NAME, $sprint->name))
+                ->withFieldChange(new XMLBindStaticChangesetValue(ScrumTrackerBuilder::STATUS_FIELD_NAME, [new XMLBindValueReferenceByLabel(ScrumTrackerBuilder::STATUS_FIELD_NAME, $sprint->state)]));
 
             if ($sprint->start_date !== null) {
-                $changeset = $changeset->withFieldChange(new XMLDateValue(ScrumTrackerBuilder::START_DATE_FIELD_NAME, $sprint->start_date));
+                $changeset = $changeset->withFieldChange(new XMLDateChangesetValue(ScrumTrackerBuilder::START_DATE_FIELD_NAME, $sprint->start_date));
             }
 
             if ($sprint->end_date !== null) {
-                $changeset = $changeset->withFieldChange(new XMLDateValue(ScrumTrackerBuilder::END_DATE_FIELD_NAME, $sprint->end_date));
+                $changeset = $changeset->withFieldChange(new XMLDateChangesetValue(ScrumTrackerBuilder::END_DATE_FIELD_NAME, $sprint->end_date));
             }
 
             if ($sprint->complete_date !== null) {
-                $changeset = $changeset->withFieldChange(new XMLDateValue(ScrumTrackerBuilder::COMPLETED_DATE_FIELD_NAME, $sprint->complete_date));
+                $changeset = $changeset->withFieldChange(new XMLDateChangesetValue(ScrumTrackerBuilder::COMPLETED_DATE_FIELD_NAME, $sprint->complete_date));
             }
 
             $scrum_tracker = $scrum_tracker->withArtifact(

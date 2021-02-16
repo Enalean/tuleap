@@ -28,4 +28,6 @@ use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 interface XMLBindValueReference
 {
     public function getId(XMLFormElementFlattenedCollection $form_elements): string;
+
+    public function getIdForFieldChange(XMLFormElementFlattenedCollection $form_elements): string;
 }

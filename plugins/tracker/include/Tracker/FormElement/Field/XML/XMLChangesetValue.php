@@ -21,34 +21,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML;
+namespace Tuleap\Tracker\FormElement\Field\XML;
 
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
-final class XMLBindValueReferenceByLabel implements XMLBindValueReference
+abstract class XMLChangesetValue
 {
-    /**
-     * @var string
-     */
-    private $label;
     /**
      * @var string
      */
     private $field_name;
 
-    public function __construct(string $field_name, string $label)
+    public function __construct(string $field_name)
     {
-        $this->label      = $label;
         $this->field_name = $field_name;
     }
 
-    public function getId(XMLFormElementFlattenedCollection $form_elements): string
+    public function export(\SimpleXMLElement $changeset_xml, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
-        return $form_elements->getBindValueByLabel($this->field_name, $this->label)->id;
-    }
+        $field_change = $changeset_xml->addChild('field_change');
 
-    public function getIdForFieldChange(XMLFormElementFlattenedCollection $form_elements): string
-    {
-        return $form_elements->getBindValueByLabel($this->field_name, $this->label)->id_for_field_change;
+        $field_change->addAttribute('field_name', $this->field_name);
+
+        return $field_change;
     }
 }

@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
@@ -160,5 +161,40 @@ final class JiraSprintRetrieverFromAPITest extends TestCase
         assertCount(2, $sprints);
         assertEquals(1, $sprints[0]->id);
         assertEquals(2, $sprints[1]->id);
+    }
+
+    public function testItHasOneSprintWithUnSupportedState(): void
+    {
+        $client = new class implements JiraClient
+        {
+            public function getUrl(string $url): ?array
+            {
+                assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);
+
+                return [
+                    "maxResults" => 50,
+                    "startAt"    => 0,
+                    "isLast"     => true,
+                    "values"     => [
+                        [
+                            "id"            => 1,
+                            "self"          => "https://example.com/rest/agile/1.0/sprint/1",
+                            "state"         => "fugu",
+                            "name"          => "Sample Sprint 2",
+                            "startDate"     => "2018-01-25T04:04:09.514Z",
+                            "endDate"       => "2018-02-08T04:24:09.514Z",
+                            "originBoardId" => 1,
+                        ],
+
+                    ],
+                ];
+            }
+        };
+
+        $retriever = new JiraSprintRetrieverFromAPI($client, new NullLogger());
+
+        $this->expectException(UnexpectedFormatException::class);
+
+        $retriever->getAllSprints(JiraBoard::buildFakeBoard());
     }
 }

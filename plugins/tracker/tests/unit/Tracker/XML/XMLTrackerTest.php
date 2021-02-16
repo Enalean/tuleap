@@ -29,9 +29,11 @@ use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
-use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue;
+use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
 use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
@@ -71,7 +73,7 @@ use function PHPUnit\Framework\assertTrue;
  * @covers \Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn
  * @covers \Tuleap\Tracker\Artifact\XML\XMLArtifact
  * @covers \Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset
- * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue
+ * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue
  */
 class XMLTrackerTest extends TestCase
 {
@@ -582,7 +584,7 @@ class XMLTrackerTest extends TestCase
                         $submitted_on
                     ))
                     ->withFieldChange(
-                        new XMLStringValue(
+                        new XMLStringChangesetValue(
                             'name',
                             'Sprint 1'
                         )
@@ -605,5 +607,81 @@ class XMLTrackerTest extends TestCase
         assertEquals('name', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['field_name']);
         assertEquals('string', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['type']);
         assertEquals('Sprint 1', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
+    }
+
+    public function testItHasOneArtifactWithSelectBoxFieldValueReferencedById(): void
+    {
+        $tracker = (new XMLTracker('tracker_id', 'bug'))
+            ->withFormElement(
+                (new XMLSelectBoxField('F1', 'status'))
+                ->withStaticValues(
+                    new XMLBindStaticValue('V1', 'Open'),
+                    new XMLBindStaticValue('V2', 'Closed'),
+                )
+            )
+            ->withArtifact(
+                (new XMLArtifact(123))
+                    ->withChangeset(
+                        (new XMLChangeset(
+                            XMLUser::buildUsername('jane'),
+                            new \DateTimeImmutable()
+                        ))
+                            ->withFieldChange(
+                                new XMLBindStaticChangesetValue(
+                                    'status',
+                                    [
+                                        new XMLBindValueReferenceById('1')
+                                    ]
+                                )
+                            )
+                    )
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
+
+        assertCount(1, $node->artifacts->artifact[0]->changeset[0]->field_change);
+        assertEquals('status', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['field_name']);
+        assertEquals('list', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['type']);
+        assertEquals('static', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['bind']);
+        assertCount(1, $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
+        assertEquals('id', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value['format']);
+        assertEquals('1', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
+    }
+
+    public function testItHasOneArtifactWithSelectBoxFieldValueReferencedByLabel(): void
+    {
+        $tracker = (new XMLTracker('tracker_id', 'bug'))
+            ->withFormElement(
+                (new XMLSelectBoxField('F1', 'status'))
+                    ->withStaticValues(
+                        new XMLBindStaticValue('V1', 'Open'),
+                        new XMLBindStaticValue('V2', 'Closed'),
+                    )
+            )
+            ->withArtifact(
+                (new XMLArtifact(123))
+                    ->withChangeset(
+                        (new XMLChangeset(
+                            XMLUser::buildUsername('jane'),
+                            new \DateTimeImmutable()
+                        ))
+                            ->withFieldChange(
+                                new XMLBindStaticChangesetValue(
+                                    'status',
+                                    [new XMLBindValueReferenceByLabel('status', 'Closed')]
+                                )
+                            )
+                    )
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
+
+        assertCount(1, $node->artifacts->artifact[0]->changeset[0]->field_change);
+        assertEquals('status', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['field_name']);
+        assertEquals('list', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['type']);
+        assertEquals('static', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['bind']);
+        assertCount(1, $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
+        assertEquals('id', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value['format']);
+        assertEquals('2', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
     }
 }

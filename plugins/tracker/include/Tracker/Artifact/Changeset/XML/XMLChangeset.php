@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\XML;
 
 use DateTimeImmutable;
-use Tuleap\Tracker\FormElement\Field\XML\XMLFieldValue;
+use Tuleap\Tracker\FormElement\Field\XML\XMLChangesetValue;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\XML\XMLUser;
 
 final class XMLChangeset
@@ -38,7 +39,7 @@ final class XMLChangeset
      */
     private $submitted_on;
     /**
-     * @var XMLFieldValue[]
+     * @var XMLChangesetValue[]
      */
     private $field_change = [];
 
@@ -51,14 +52,14 @@ final class XMLChangeset
     /**
      * @psalm-mutation-free
      */
-    public function withFieldChange(XMLFieldValue $field_value): self
+    public function withFieldChange(XMLChangesetValue $field_value): self
     {
         $new                 = clone $this;
         $new->field_change[] = $field_value;
         return $new;
     }
 
-    public function export(\SimpleXMLElement $artifact): \SimpleXMLElement
+    public function export(\SimpleXMLElement $artifact, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $changeset_xml = $artifact->addChild('changeset');
 
@@ -74,7 +75,7 @@ final class XMLChangeset
         $changeset_xml->addChild('comments');
 
         foreach ($this->field_change as $field_change) {
-            $field_change->export($changeset_xml);
+            $field_change->export($changeset_xml, $form_elements);
         }
 
         return $changeset_xml;
