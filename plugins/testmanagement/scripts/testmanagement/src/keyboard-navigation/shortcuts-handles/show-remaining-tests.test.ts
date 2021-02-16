@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { showNonPassedTests } from "./show-non-passed-tests";
+import { showRemainingTests } from "./show-remaining-tests";
 
 describe("showNonPassedTests", () => {
     let doc: Document;
@@ -31,7 +31,7 @@ describe("showNonPassedTests", () => {
     });
 
     it("Checks all non-passed filters checkbox inputs", () => {
-        showNonPassedTests(doc);
+        showRemainingTests(doc);
 
         expect(failed_filter.checked).toBe(true);
         expect(blocked_filter.checked).toBe(true);
@@ -39,7 +39,7 @@ describe("showNonPassedTests", () => {
 
     it("Unchecks passed filter checkbox input", () => {
         passed_filter.checked = true;
-        showNonPassedTests(doc);
+        showRemainingTests(doc);
 
         expect(passed_filter.checked).toBe(false);
     });

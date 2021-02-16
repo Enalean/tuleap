@@ -292,8 +292,8 @@ msgstr "Afficher le graphe de dépendances"
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
 
-msgid "Show non-passed tests only"
-msgstr "Afficher les tests non-passés seulement"
+msgid "Show remaining tests only"
+msgstr "N'afficher que les tests restants"
 
 msgid "Show test campaign scores"
 msgstr "Afficher les scores pour la campagne"

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function showNonPassedTests(doc: Document): void {
+export function showRemainingTests(doc: Document): void {
     const event = new InputEvent("change");
 
     const non_passed_filters = doc.querySelectorAll("[data-shortcut-filter-non-passed]");
