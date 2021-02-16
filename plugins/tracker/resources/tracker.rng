@@ -709,9 +709,11 @@
           <element name="minutes">
             <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </element>
-          <element name="step">
-            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-          </element>
+          <optional>
+            <element name="step">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </element>
+          </optional>
           <element name="day">
             <ref name="time_date_content"/>
           </element>

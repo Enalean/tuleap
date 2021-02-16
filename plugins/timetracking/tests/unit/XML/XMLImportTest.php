@@ -199,6 +199,91 @@ final class XMLImportTest extends TestCase
         );
     }
 
+    public function testItImportsTimesWitoutStepByXML(): void
+    {
+        $tracker_mapping          = Mockery::mock(Tracker::class);
+        $created_trackers_objects = [
+            '789' => $tracker_mapping
+        ];
+
+        $artifact_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $artifact_id_mapping->add(152, 9999);
+
+        $xml = new SimpleXMLElement(
+            <<<EOS
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <trackers>
+                    <tracker id="789">
+                        <timetracking is_enabled="true">
+                            <permissions>
+                                <read>
+                                    <ugroup>project_admins</ugroup>
+                                </read>
+                                <write>
+                                    <ugroup>project_members</ugroup>
+                                </write>
+                            </permissions>
+                            <time artifact_id="152">
+                                <user format="ldap">102</user>
+                                <minutes>60</minutes>
+                                <day format="ISO8601">2021-02-01T16:06:35+01:00</day>
+                            </time>
+                        </timetracking>
+                    </tracker>
+                </trackers>
+            </project>
+            EOS
+        );
+
+        $this->timetracking_enabler->shouldReceive('enableTimetrackingForTracker')
+            ->once()
+            ->with($tracker_mapping);
+
+        $ugroup_project_admins = new ProjectUGroup(['ugroup_id' => 3]);
+        $this->ugroup_manager->shouldReceive('getUGroupByName')
+            ->with($this->project, "project_admins")
+            ->once()
+            ->andReturn($ugroup_project_admins);
+
+        $ugroup_project_members = new ProjectUGroup(['ugroup_id' => 4]);
+        $this->ugroup_manager->shouldReceive('getUGroupByName')
+            ->with($this->project, "project_members")
+            ->once()
+            ->andReturn($ugroup_project_members);
+
+        $this->timetracking_ugroup_saver->shouldReceive('saveReaders')
+            ->with($tracker_mapping, [3])
+            ->once();
+
+        $this->timetracking_ugroup_saver->shouldReceive('saveWriters')
+            ->with($tracker_mapping, [4])
+            ->once();
+
+        $user = Mockery::mock(PFUser::class)->shouldReceive('getId')->andReturn(123)->getMock();
+        $this->user_finder->shouldReceive('getUser')
+            ->andReturn($user);
+
+        $this->time_dao->shouldReceive('addTime')
+            ->once()
+            ->with(
+                123,
+                9999,
+                "2021-02-01",
+                "60",
+                ""
+            );
+
+        $this->mockLogInfo();
+
+        $this->xml_import->import(
+            $xml,
+            $this->project,
+            $created_trackers_objects,
+            $artifact_id_mapping
+        );
+    }
+
     public function testItImportsOnlyConfigurationIfNoTimesProvidedInXML(): void
     {
         $tracker_mapping          = Mockery::mock(Tracker::class);
