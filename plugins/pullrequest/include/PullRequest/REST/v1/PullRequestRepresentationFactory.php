@@ -30,8 +30,9 @@ use Tuleap\PullRequest\PullRequestWithGitReference;
 class PullRequestRepresentationFactory
 {
     public const BUILD_STATUS_UNKNOWN = 'unknown';
-    public const BUILD_STATUS_SUCESS  = 'success';
+    public const BUILD_STATUS_SUCCESS = 'success';
     public const BUILD_STATUS_FAIL    = 'fail';
+    public const BUILD_STATUS_PENDING = 'pending';
 
     /**
      * @var AccessControlVerifier
@@ -107,10 +108,12 @@ class PullRequestRepresentationFactory
         );
 
         switch ($commit_status->getStatusName()) {
-            case 'success':
-                return [self::BUILD_STATUS_SUCESS, $commit_status->getDate()->getTimestamp()];
+            case self::BUILD_STATUS_SUCCESS:
+                return [self::BUILD_STATUS_SUCCESS, $commit_status->getDate()->getTimestamp()];
             case 'failure':
                 return [self::BUILD_STATUS_FAIL, $commit_status->getDate()->getTimestamp()];
+            case self::BUILD_STATUS_PENDING:
+                return [self::BUILD_STATUS_PENDING, $commit_status->getDate()->getTimestamp()];
             default:
                 return [self::BUILD_STATUS_UNKNOWN, null];
         }
