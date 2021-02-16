@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -26,6 +26,7 @@ if (ForgeConfig::get('sys_use_trove') == 0) {
     exit_permission_denied();
 }
 
+$request      = HTTPRequest::instance();
 $current_user = $request->getCurrentUser();
 
 $trove_cat_dao = new TroveCatDao();
@@ -41,7 +42,7 @@ if ($request->exist('form_cat')) {
 $special_cat = $request->getValidated('special_cat');
 
 // get info about current folder
-$res_trove_cat = db_query('SELECT * FROM trove_cat WHERE trove_cat_id=' . $form_cat);
+$res_trove_cat = db_query('SELECT * FROM trove_cat WHERE trove_cat_id=' . db_ei($form_cat));
 if (db_numrows($res_trove_cat) < 1) {
     $category = $trove_cat_dao->getParentCategoriesUnderRoot();
     if ($category->count() === 0) {
@@ -50,7 +51,7 @@ if (db_numrows($res_trove_cat) < 1) {
             $Language->getText('softwaremap_trove_list', 'cat_not_exist')
         );
     }
-    $res_trove_cat = $category->getRow();
+    $res_trove_cat = $category;
 }
 $row_trove_cat = db_fetch_array($res_trove_cat);
 
@@ -74,7 +75,7 @@ WHERE " . trove_get_visibility_for_user('g.access', $current_user) . "
   AND g.status = 'A'
   AND g.type = 1
 GROUP BY trove_cat_id) AS t3 USING(trove_cat_id)
-WHERE t.parent = $form_cat
+WHERE t.parent = " . db_ei($form_cat) . "
   AND (
       t2.fullpath_ids LIKE CONCAT(t.trove_cat_id, ' ::%')
    OR t2.fullpath_ids LIKE CONCAT('%:: ', t.trove_cat_id, ' ::%')
@@ -102,7 +103,7 @@ USING ( group_id )
 WHERE " . trove_get_visibility_for_user('access', $current_user) . "
 AND STATUS = 'A'
 AND TYPE =1
-AND trove_cat_root = " . $form_cat;
+AND trove_cat_root = " . db_ei($form_cat);
     $res_nb = db_query($sql);
     $row_nb = db_fetch_array($res_nb);
 
@@ -132,7 +133,7 @@ while ($row_rootcat = db_fetch_array($res_rootcat)) {
 if ($special_cat === 'none') {
     $qry_root_trov = 'SELECT group_id'
         . ' FROM trove_group_link'
-        . ' WHERE trove_cat_root=' . $form_cat
+        . ' WHERE trove_cat_root=' . db_ei($form_cat)
         . ' GROUP BY group_id';
     $res_root_trov = db_query($qry_root_trov);
 
@@ -143,7 +144,7 @@ if ($special_cat === 'none') {
 
     $sql_list_categorized = '';
     if (count($prj_list_categorized) > 0) {
-        $sql_list_categorized = ' AND groups.group_id NOT IN (' . implode(',', $prj_list_categorized) . ') ';
+        $sql_list_categorized = ' AND groups.group_id NOT IN (' . db_ei_implode($prj_list_categorized) . ') ';
     }
     $query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
         . "groups.group_name, "
@@ -179,7 +180,7 @@ if ($special_cat === 'none') {
     . "(" . trove_get_visibility_for_user('groups.access', $current_user) . ") AND "
         . "(groups.type=1) AND "
     . "(groups.status='A') AND "
-    . "trove_group_link.trove_cat_id=$form_cat "
+    . "trove_group_link.trove_cat_id=" . db_ei($form_cat) . " "
     . "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 

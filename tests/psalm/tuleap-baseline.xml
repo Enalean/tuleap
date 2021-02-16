@@ -79716,7 +79716,7 @@
     </UndefinedVariable>
   </file>
   <file src="src/www/softwaremap/trove_list.php">
-    <DeprecatedFunction occurrences="19">
+    <DeprecatedFunction occurrences="25">
       <code>db_fetch_array($res_count)</code>
       <code>db_fetch_array($res_grp)</code>
       <code>db_fetch_array($res_nb)</code>
