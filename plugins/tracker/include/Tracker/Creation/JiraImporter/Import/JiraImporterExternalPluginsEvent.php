@@ -27,6 +27,9 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class JiraImporterExternalPluginsEvent implements Dispatchable
 {
@@ -43,6 +46,23 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
     private $jira_platform_configuration;
 
     /**
+     * @var IssueAPIRepresentationCollection
+     * @psalm-readonly
+     */
+    private $issue_representation_collection;
+
+    /**
+     * @var JiraUserRetriever
+     */
+    private $jira_user_retriever;
+
+    /**
+     * @var JiraClient
+     * @psalm-immutable
+     */
+    private $jira_client;
+
+    /**
      * @var LoggerInterface
      * @psalm-immutable
      */
@@ -51,11 +71,17 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
     public function __construct(
         SimpleXMLElement $xml_tracker,
         PlatformConfiguration $jira_platform_configuration,
+        IssueAPIRepresentationCollection $issue_representation_collection,
+        JiraUserRetriever $jira_user_retriever,
+        JiraClient $jira_client,
         LoggerInterface $logger
     ) {
-        $this->xml_tracker                 = $xml_tracker;
-        $this->logger                      = $logger;
-        $this->jira_platform_configuration = $jira_platform_configuration;
+        $this->xml_tracker                     = $xml_tracker;
+        $this->jira_platform_configuration     = $jira_platform_configuration;
+        $this->issue_representation_collection = $issue_representation_collection;
+        $this->jira_user_retriever             = $jira_user_retriever;
+        $this->jira_client                     = $jira_client;
+        $this->logger                          = $logger;
     }
 
     public function getXmlTracker(): SimpleXMLElement
@@ -71,5 +97,20 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
     public function getJiraPlatformConfiguration(): PlatformConfiguration
     {
         return $this->jira_platform_configuration;
+    }
+
+    public function getIssueRepresentationCollection(): IssueAPIRepresentationCollection
+    {
+        return $this->issue_representation_collection;
+    }
+
+    public function getJiraClient(): JiraClient
+    {
+        return $this->jira_client;
+    }
+
+    public function getJiraUserRetriever(): JiraUserRetriever
+    {
+        return $this->jira_user_retriever;
     }
 }

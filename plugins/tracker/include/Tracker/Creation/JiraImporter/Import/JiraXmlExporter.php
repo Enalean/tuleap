@@ -39,6 +39,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChan
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -162,12 +163,18 @@ class JiraXmlExporter
      */
     private $event_manager;
 
+    /**
+     * @var JiraUserRetriever
+     */
+    private $jira_user_retriever;
+
     public function __construct(
         LoggerInterface $logger,
         ClientWrapper $wrapper,
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
         JiraToTuleapFieldTypeMapper $field_type_mapper,
+        JiraUserRetriever $jira_user_retriever,
         XmlReportExporter $report_exporter,
         PermissionsXMLExporter $permissions_xml_exporter,
         ArtifactsXMLExporter $artifacts_xml_exporter,
@@ -186,6 +193,7 @@ class JiraXmlExporter
         $this->error_collector                      = $error_collector;
         $this->jira_field_retriever                 = $jira_field_retriever;
         $this->field_type_mapper                    = $field_type_mapper;
+        $this->jira_user_retriever                  = $jira_user_retriever;
         $this->report_exporter                      = $report_exporter;
         $this->permissions_xml_exporter             = $permissions_xml_exporter;
         $this->artifacts_xml_exporter               = $artifacts_xml_exporter;
@@ -254,6 +262,7 @@ class JiraXmlExporter
             $error_collector,
             new JiraFieldRetriever($wrapper),
             $jira_field_mapper,
+            $jira_user_retriever,
             new XmlReportExporter(),
             new PermissionsXMLExporter(),
             new ArtifactsXMLExporter(
@@ -429,18 +438,24 @@ class JiraXmlExporter
         );
 
         $this->logger->debug("Export artifact");
+
+        $issue_representation_collection = new IssueAPIRepresentationCollection();
         $this->artifacts_xml_exporter->exportArtifacts(
             $node_tracker,
             $jira_field_mapping_collection,
+            $issue_representation_collection,
             $jira_base_url,
             $jira_project_key,
-            $jira_issue_type_id
+            $jira_issue_type_id,
         );
 
         $this->event_manager->dispatch(
             new JiraImporterExternalPluginsEvent(
                 $node_tracker,
                 $jira_platform_configuration,
+                $issue_representation_collection,
+                $this->jira_user_retriever,
+                $this->wrapper,
                 $this->logger
             )
         );
