@@ -169,6 +169,80 @@ class JiraAgileImporterTest extends TestCase
         assertEquals('UGROUP_PROJECT_MEMBERS', $permissions[2]['ugroup']);
     }
 
+    public function testSprintTrackerHasEndDateField(): void
+    {
+        $jira_agile_importer = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+
+        $end_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="end_date"]');
+
+        assertCount(1, $end_date_field);
+        $id = (string) $end_date_field[0]['ID'];
+        assertEquals('date', $end_date_field[0]['type']);
+        assertEquals('1', $end_date_field[0]->properties['display_time']);
+
+        $end_date_criteria = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/criterias/criteria/field[@REF="%s"]', $id));
+        assertCount(1, $end_date_criteria);
+
+        $end_date_column = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/renderers/renderer/columns/field[@REF="%s"]', $id));
+        assertCount(1, $end_date_column);
+
+        $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', $id));
+        assertCount(3, $permissions);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $permissions[0]['type']);
+        assertEquals('UGROUP_ANONYMOUS', $permissions[0]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $permissions[1]['type']);
+        assertEquals('UGROUP_REGISTERED', $permissions[1]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
+        assertEquals('UGROUP_PROJECT_MEMBERS', $permissions[2]['ugroup']);
+    }
+
+    public function testSprintTrackerHasCompletedDateField(): void
+    {
+        $jira_agile_importer = $this->getJiraAgileImport();
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+
+        $completed_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="completed_date"]');
+
+        assertCount(1, $completed_date_field);
+        $id = (string) $completed_date_field[0]['ID'];
+        assertEquals('date', $completed_date_field[0]['type']);
+        assertEquals('1', $completed_date_field[0]->properties['display_time']);
+
+        $completed_date_criteria = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/criterias/criteria/field[@REF="%s"]', $id));
+        assertCount(1, $completed_date_criteria);
+
+        $completed_date_column = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/renderers/renderer/columns/field[@REF="%s"]', $id));
+        assertCount(1, $completed_date_column);
+
+        $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', $id));
+        assertCount(3, $permissions);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $permissions[0]['type']);
+        assertEquals('UGROUP_ANONYMOUS', $permissions[0]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $permissions[1]['type']);
+        assertEquals('UGROUP_REGISTERED', $permissions[1]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
+        assertEquals('UGROUP_PROJECT_MEMBERS', $permissions[2]['ugroup']);
+    }
+
     public function testItFetchesSprints(): void
     {
         $board                   = new JiraBoard(1, 'https://example.com', 10000, 'FOO');
@@ -283,6 +357,62 @@ class JiraAgileImporterTest extends TestCase
         assertCount(1, $start_date_field_change);
         assertEquals('date', $start_date_field_change[0]['type']);
         assertEquals('2018-01-25T04:04:09+00:00', $start_date_field_change[0]->value);
+    }
+
+    public function testItCreatesOneSprintArtifactWithEndDate(): void
+    {
+        $jira_agile_importer = new JiraAgileImporter(
+            $this->getJiraBoradRetrieverWithOneBoard(),
+            $this->getJiraSprintRetrieverWithSprints(
+                [
+                    JiraSprint::buildActive(1, 'Sprint 1')
+                        ->withEndDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
+                ]
+            )
+        );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+        );
+
+        $end_date_field_change = $xml->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="end_date"]');
+        assertCount(1, $end_date_field_change);
+        assertEquals('date', $end_date_field_change[0]['type']);
+        assertEquals('2018-01-25T04:04:09+00:00', $end_date_field_change[0]->value);
+    }
+
+    public function testItCreatesOneSprintArtifactWithCompletedDate(): void
+    {
+        $jira_agile_importer = new JiraAgileImporter(
+            $this->getJiraBoradRetrieverWithOneBoard(),
+            $this->getJiraSprintRetrieverWithSprints(
+                [
+                    JiraSprint::buildActive(1, 'Sprint 1')
+                        ->withCompleteDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
+                ]
+            )
+        );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+        );
+
+        $completed_date_field_change = $xml->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="completed_date"]');
+        assertCount(1, $completed_date_field_change);
+        assertEquals('date', $completed_date_field_change[0]['type']);
+        assertEquals('2018-01-25T04:04:09+00:00', $completed_date_field_change[0]->value);
     }
 
     private function getJiraAgileImport(): JiraAgileImporter
