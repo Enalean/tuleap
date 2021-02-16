@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
+use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -41,6 +42,7 @@ final class StatusFieldAdapter implements BuildField
     }
 
     /**
+     * @psalm-return Field<Tracker_FormElement_Field_List>
      * @throws FieldRetrievalException
      */
     public function build(ProgramTracker $replication_tracker_data): Field

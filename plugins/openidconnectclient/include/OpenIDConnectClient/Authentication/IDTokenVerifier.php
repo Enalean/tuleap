@@ -32,6 +32,9 @@ use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
+/**
+ * @psalm-type AcceptableIssuerClaimValidator = AzureProviderIssuerClaimValidator|GenericProviderIssuerClaimValidator
+ */
 class IDTokenVerifier
 {
     private const LEEWAY_DATE_INTERVAL = 'PT10S';
@@ -57,6 +60,9 @@ class IDTokenVerifier
      */
     private $jwt_validator;
 
+    /**
+     * @param AcceptableIssuerClaimValidator $issuer_claim_validator
+     */
     public function __construct(
         Parser $parser,
         IssuerClaimValidator $issuer_claim_validator,

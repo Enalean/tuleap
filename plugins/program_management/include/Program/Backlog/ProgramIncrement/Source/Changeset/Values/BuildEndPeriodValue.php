@@ -22,10 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tracker_FormElement_Field_Date;
+use Tracker_FormElement_Field_Numeric;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface BuildEndPeriodValue
 {
+    /**
+     * @psalm-param Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric> $end_period_field_data
+     */
     public function build(Field $end_period_field_data, ReplicationData $replication_data): EndPeriodValue;
 }

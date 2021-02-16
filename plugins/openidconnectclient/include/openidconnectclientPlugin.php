@@ -85,6 +85,9 @@ use Tuleap\User\UserAuthenticationSucceeded;
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+/**
+ * @psalm-import-type AcceptableIssuerClaimValidator from IDTokenVerifier
+ */
 class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const SESSION_LINK_ID_KEY = 'tuleap_oidc_link_id';
@@ -213,6 +216,9 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         }
     }
 
+    /**
+     * @param AcceptableIssuerClaimValidator $issuer_claim_validator
+     */
     private function getFlow(ProviderManager $provider_manager, IssuerClaimValidator $issuer_claim_validator): Flow
     {
         $storage           =& $this->getSessionStorage();

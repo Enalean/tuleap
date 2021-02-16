@@ -22,20 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tracker_FormElement_Field_Date;
+use Tracker_FormElement_Field_Numeric;
+
 final class TimeFrameFields
 {
     /**
-     * @var Field
+     * @psalm-var Field<Tracker_FormElement_Field_Date>
      * @psalm-readonly
      */
     private $start_date;
     /**
-     * @var Field
+     * @psalm-var Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric>
      * @psalm-readonly
      */
     private $end_period_field_data;
 
-
+    /**
+     * @psalm-param Field<Tracker_FormElement_Field_Date> $start_date
+     * @psalm-param Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric> $end_period_field_data
+     */
     private function __construct(
         Field $start_date,
         Field $end_period_field_data
@@ -44,6 +50,10 @@ final class TimeFrameFields
         $this->end_period_field_data = $end_period_field_data;
     }
 
+    /**
+     * @psalm-param Field<Tracker_FormElement_Field_Date> $start_date
+     * @psalm-param Field<Tracker_FormElement_Field_Numeric> $duration
+     */
     public static function fromStartDateAndDuration(
         Field $start_date,
         Field $duration
@@ -51,6 +61,10 @@ final class TimeFrameFields
         return new self($start_date, $duration);
     }
 
+    /**
+     * @psalm-param Field<Tracker_FormElement_Field_Date> $start_date
+     * @psalm-param Field<Tracker_FormElement_Field_Date> $end_date
+     */
     public static function fromStartAndEndDates(
         Field $start_date,
         Field $end_date
@@ -58,11 +72,17 @@ final class TimeFrameFields
         return new self($start_date, $end_date);
     }
 
+    /**
+     * @psalm-return Field<Tracker_FormElement_Field_Date>
+     */
     public function getStartDateField(): Field
     {
         return $this->start_date;
     }
 
+    /**
+     * @psalm-return Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric>
+     */
     public function getEndPeriodField(): Field
     {
         return $this->end_period_field_data;

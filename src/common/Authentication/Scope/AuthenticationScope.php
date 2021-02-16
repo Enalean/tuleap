@@ -25,7 +25,7 @@ namespace Tuleap\Authentication\Scope;
 /**
  * @psalm-immutable
  *
- * @template TScopeIdentifier of \Tuleap\Authentication\Scope\AuthenticationScopeIdentifier
+ * @template-covariant TScopeIdentifier of \Tuleap\Authentication\Scope\AuthenticationScopeIdentifier
  */
 interface AuthenticationScope
 {
