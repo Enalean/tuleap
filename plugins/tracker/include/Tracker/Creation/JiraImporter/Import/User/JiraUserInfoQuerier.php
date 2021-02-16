@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class JiraUserInfoQuerier

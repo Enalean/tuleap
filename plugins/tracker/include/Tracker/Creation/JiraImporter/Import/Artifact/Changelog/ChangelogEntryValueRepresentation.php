@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use DateTimeImmutable;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 /**
  * @psalm-immutable

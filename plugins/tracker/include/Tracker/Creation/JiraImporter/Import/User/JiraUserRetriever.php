@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use UserManager;
 

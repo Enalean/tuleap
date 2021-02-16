@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 /**
  * @psalm-immutable
