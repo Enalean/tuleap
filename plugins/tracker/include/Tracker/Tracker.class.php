@@ -1307,6 +1307,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function buildAndDisplayAdministrationHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, array $params): void
     {
+        EventManager::instance()->processEvent(new \Tuleap\Tracker\Admin\DisplayingTrackerEvent($this));
         $title = ($title ? $title . ' - ' : '') . dgettext('tuleap-tracker', 'Administration');
         if ($this->userIsAdmin()) {
             $breadcrumbs = array_merge(

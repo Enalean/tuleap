@@ -60,6 +60,7 @@ use Tuleap\TestManagement\XML\TrackerXMLExporterChangesetValueStepDefinitionXMLE
 use Tuleap\TestManagement\XML\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Admin\DisplayingTrackerEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
@@ -141,6 +142,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(HistoryQuickLinkCollection::NAME);
             $this->addHook(OverrideArtifactsInFavourOfAnOther::NAME);
             $this->addHook(HeartbeatsEntryCollection::NAME);
+            $this->addHook(DisplayingTrackerEvent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -889,5 +891,26 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     private function isStepField(?SimpleXMLElement $attributes): bool
     {
         return $attributes && isset($attributes['type']) && ((string) $attributes['type'] === StepDefinition::TYPE || (string) $attributes['type'] === StepExecution::TYPE);
+    }
+
+    public function displayingTrackerEvent(DisplayingTrackerEvent $event): void
+    {
+        $tracker = $event->getTracker();
+        $project = $tracker->getProject();
+        if (! $this->isUsedByProject($project)) {
+            return;
+        }
+
+        $config = $this->getConfig();
+
+        $test_exec_tracker_id = $config->getTestExecutionTrackerId($project);
+        if ($test_exec_tracker_id !== $tracker->getId()) {
+            return;
+        }
+
+        $GLOBALS['HTML']->addFeedback(
+            Feedback::WARN,
+            dgettext('tuleap-testmanagement', 'This tracker is a technical base for Test Management. Changing configuration (fields, workflow, ...) should be avoided because it may leads to inconsistencies.'),
+        );
     }
 }
