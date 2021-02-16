@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Wrapper } from "@vue/test-utils";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import UnlinkRepositoryGitlabModal from "./UnlinkRepositoryGitlabModal.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
@@ -26,7 +27,12 @@ import * as api from "../../../api/rest-querier";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("UnlinkRepositoryGitlabModal", () => {
-    let store_options, store, propsData, localVue;
+    let store_options = {},
+        store = {
+            commit: jest.fn(),
+        },
+        localVue;
+
     beforeEach(() => {
         store_options = {
             state: {
@@ -41,7 +47,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         };
     });
 
-    function instantiateComponent() {
+    function instantiateComponent(): Wrapper<UnlinkRepositoryGitlabModal> {
         store = createStoreMock(store_options);
         localVue = createLocalVue();
         localVue.use(VueDOMPurifyHTML);
@@ -50,7 +56,6 @@ describe("UnlinkRepositoryGitlabModal", () => {
             silent: true,
         });
         return shallowMount(UnlinkRepositoryGitlabModal, {
-            propsData,
             mocks: { $store: store },
             localVue,
         });
@@ -84,8 +89,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
             },
         });
 
-        const success_message =
-            "GitLab repository <strong>My project</strong> has been successfully unlinked!";
+        const success_message = "GitLab repository My project has been successfully unlinked!";
 
         await wrapper.vm.$nextTick();
 
