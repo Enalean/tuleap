@@ -28,8 +28,12 @@ use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringValue;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
+use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
 use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;
 use Tuleap\Tracker\TrackerColor;
@@ -334,6 +338,30 @@ class XMLTrackerTest extends TestCase
         assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $node->permissions->permission[2]['type']);
     }
 
+    public function testItHasSelectBoxFieldWithValues(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                (new XMLSelectBoxField('F1', 'status'))
+                    ->withStaticValues(new XMLBindStaticValue('V1', 'Todo'))
+                    ->withStaticValues(new XMLBindStaticValue('V2', 'In progress'))
+                    ->withStaticValues(new XMLBindStaticValue('V3', 'Done'))
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<trackers />'));
+
+        assertEquals('sb', $node->formElements->formElement[0]['type']);
+        assertEquals('status', $node->formElements->formElement[0]->name);
+        assertEquals('static', $node->formElements->formElement[0]->bind['type']);
+        assertCount(3, $node->formElements->formElement[0]->bind->items->item);
+        assertEquals('V1', $node->formElements->formElement[0]->bind->items->item[0]['ID']);
+        assertEquals('Todo', $node->formElements->formElement[0]->bind->items->item[0]['label']);
+        assertEquals('V2', $node->formElements->formElement[0]->bind->items->item[1]['ID']);
+        assertEquals('In progress', $node->formElements->formElement[0]->bind->items->item[1]['label']);
+        assertEquals('V3', $node->formElements->formElement[0]->bind->items->item[2]['ID']);
+        assertEquals('Done', $node->formElements->formElement[0]->bind->items->item[2]['label']);
+    }
+
     public function testItHasAReportThatReferenceAFieldIndexedByName(): void
     {
         $tracker = (new XMLTracker('id', 'bug'))
@@ -377,6 +405,34 @@ class XMLTrackerTest extends TestCase
         assertEquals('some_id', (string) $node->reports->report[0]->criterias->criteria[0]->field['REF']);
     }
 
+    public function testItHasReportCriterionThatReferenceSelectBoxFieldWithValue(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                (new XMLSelectBoxField('F1', 'status'))
+                    ->withStaticValues(new XMLBindStaticValue('V1', 'Todo'))
+                    ->withStaticValues(new XMLBindStaticValue('V2', 'In progress'))
+                    ->withStaticValues(new XMLBindStaticValue('V3', 'Done'))
+            )
+            ->withReports(
+                (new XMLReport('Default'))
+                    ->withCriteria(
+                        (new XMLReportCriterion(new XMLReferenceByName('status')))
+                        ->withSelectedValues(
+                            new XMLBindValueReferenceByLabel('status', 'In progress'),
+                            new XMLBindValueReferenceByLabel('status', 'Done'),
+                        )
+                    )
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<trackers />'));
+
+        assertEquals('F1', $node->reports->report[0]->criterias->criteria[0]->field['REF']);
+        assertEquals('list', $node->reports->report[0]->criterias->criteria[0]->criteria_value['type']);
+        assertCount(2, $node->reports->report[0]->criterias->criteria[0]->criteria_value->selected_value);
+        assertEquals('V2', $node->reports->report[0]->criterias->criteria[0]->criteria_value->selected_value[0]['REF']);
+        assertEquals('V3', $node->reports->report[0]->criterias->criteria[0]->criteria_value->selected_value[1]['REF']);
+    }
 
     public function testItHasAReportWithTableRendererThatReferenceAFieldByName(): void
     {
@@ -480,6 +536,35 @@ class XMLTrackerTest extends TestCase
         assertEquals('timeframe', $node->semantics->semantic[0]['type']);
         assertEquals($start_date_field[0]['ID'], $node->semantics->semantic[0]->start_date_field['REF']);
         assertEquals($end_date_field[0]['ID'], $node->semantics->semantic[0]->end_date_field['REF']);
+    }
+
+    public function testItHasSelectBoxFieldWithStatusSemantic(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                (new XMLSelectBoxField('F1', 'status', 'static'))
+                    ->withStaticValues(new XMLBindStaticValue('V1', 'Todo'))
+                    ->withStaticValues(new XMLBindStaticValue('V2', 'In progress'))
+                    ->withStaticValues(new XMLBindStaticValue('V3', 'Done'))
+            )
+            ->withSemantics(
+                (new XMLStatusSemantic(new XMLReferenceByName('status')))
+                    ->withOpenValues(
+                        new XMLBindValueReferenceByLabel('status', 'Todo'),
+                        new XMLBindValueReferenceByLabel('status', 'In progress'),
+                    )
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<trackers />'));
+
+        $status_field = $node->xpath('/trackers/tracker/formElements/formElement[name="status"]')[0];
+
+        assertEquals('status', $node->semantics->semantic[0]['type']);
+        assertEquals($status_field['ID'], $node->semantics->semantic[0]->field['REF']);
+
+        assertCount(2, $node->semantics->semantic[0]->open_values->open_value);
+        assertEquals('V1', $node->semantics->semantic[0]->open_values->open_value[0]['REF']);
+        assertEquals('V2', $node->semantics->semantic[0]->open_values->open_value[1]['REF']);
     }
 
     public function testItHasOneArtifactWithAStringFieldValue(): void

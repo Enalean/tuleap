@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\XML;
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReference;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReference;
 
@@ -38,6 +39,10 @@ final class XMLReportCriterion
      * @readonly
      */
     private $reference;
+    /**
+     * @var XMLBindValueReference[]
+     */
+    private $selected_values = [];
 
     public function __construct(XMLReference $reference)
     {
@@ -45,7 +50,6 @@ final class XMLReportCriterion
     }
 
     /**
-     * @return static
      * @psalm-mutation-free
      */
     public function withRank(int $rank): self
@@ -55,13 +59,34 @@ final class XMLReportCriterion
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
+    public function withSelectedValues(XMLBindValueReference ...$selected_values): self
+    {
+        $new                  = clone $this;
+        $new->selected_values = array_merge($this->selected_values, $selected_values);
+        return $new;
+    }
+
     public function export(\SimpleXMLElement $criterias, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $criterion = $criterias->addChild('criteria');
         $criterion->addAttribute('rank', (string) $this->rank);
+        if (count($this->selected_values) > 1) {
+            $criterion->addAttribute('is_advanced', '1');
+        }
 
         $field = $criterion->addChild('field');
         $field->addAttribute('REF', $this->reference->getId($form_elements));
+
+        if (count($this->selected_values) > 0) {
+            $criteria_value = $criterion->addChild('criteria_value');
+            $criteria_value->addAttribute('type', 'list');
+            foreach ($this->selected_values as $selected_value) {
+                $criteria_value->addChild('selected_value')->addAttribute('REF', $selected_value->getId($form_elements));
+            }
+        }
 
         return $criterion;
     }

@@ -26,6 +26,9 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
 use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
 use Tuleap\Tracker\FormElement\Field\XML\SubmitPermission;
@@ -35,6 +38,7 @@ use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
 use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
+use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
 use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;
 use Tuleap\Tracker\TrackerColor;
@@ -47,6 +51,10 @@ final class ScrumTrackerBuilder
     public const START_DATE_FIELD_NAME     = 'start_date';
     public const END_DATE_FIELD_NAME       = 'end_date';
     public const COMPLETED_DATE_FIELD_NAME = 'completed_date';
+    public const STATUS_FIELD_NAME         = 'status';
+    public const STATUS_VALUE_FUTURE       = 'future';
+    public const STATUS_VALUE_ACTIVE       = 'active';
+    public const STATUS_VALUE_CLOSED       = 'closed';
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
@@ -90,12 +98,26 @@ final class ScrumTrackerBuilder
                                     ->withLabel('Completed Date')
                                     ->withDateTime()
                                     ->withPermissions(...$default_permissions),
+                            ),
+                        (new XMLSelectBoxField($id_generator, self::STATUS_FIELD_NAME))
+                            ->withRank(5)
+                            ->withLabel('Status')
+                            ->withStaticValues(
+                                new XMLBindStaticValue($id_generator, self::STATUS_VALUE_FUTURE),
+                                new XMLBindStaticValue($id_generator, self::STATUS_VALUE_ACTIVE),
+                                new XMLBindStaticValue($id_generator, self::STATUS_VALUE_CLOSED),
                             )
+                            ->withPermissions(...$default_permissions)
                     )
             )
             ->withSemantics(
                 new XMLTitleSemantic(
                     new XMLReferenceByName(self::NAME_FIELD_NAME)
+                ),
+                (new XMLStatusSemantic(new XMLReferenceByName(self::STATUS_FIELD_NAME)))
+                ->withOpenValues(
+                    new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, self::STATUS_VALUE_FUTURE),
+                    new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, self::STATUS_VALUE_ACTIVE),
                 ),
                 new XMLTimeframeSemantic(
                     new XMLReferenceByName(self::START_DATE_FIELD_NAME),
@@ -106,10 +128,19 @@ final class ScrumTrackerBuilder
                 (new XMLReport('Active sprints'))
                     ->withIsDefault(true)
                     ->withCriteria(
-                        new XMLReportCriterion(new XMLReferenceByName(self::NAME_FIELD_NAME)),
-                        new XMLReportCriterion(new XMLReferenceByName(self::START_DATE_FIELD_NAME)),
-                        new XMLReportCriterion(new XMLReferenceByName(self::END_DATE_FIELD_NAME)),
-                        new XMLReportCriterion(new XMLReferenceByName(self::COMPLETED_DATE_FIELD_NAME)),
+                        (new XMLReportCriterion(new XMLReferenceByName(self::NAME_FIELD_NAME)))
+                            ->withRank(1),
+                        (new XMLReportCriterion(new XMLReferenceByName(self::STATUS_FIELD_NAME)))
+                            ->withRank(2)
+                            ->withSelectedValues(
+                                new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, self::STATUS_VALUE_ACTIVE),
+                            ),
+                        (new XMLReportCriterion(new XMLReferenceByName(self::START_DATE_FIELD_NAME)))
+                            ->withRank(3),
+                        (new XMLReportCriterion(new XMLReferenceByName(self::END_DATE_FIELD_NAME)))
+                            ->withRank(4),
+                        (new XMLReportCriterion(new XMLReferenceByName(self::COMPLETED_DATE_FIELD_NAME)))
+                            ->withRank(5),
                     )
                     ->withRenderers(
                         (new XMLTable('Table'))
@@ -118,6 +149,7 @@ final class ScrumTrackerBuilder
                                 new XMLTableColumn(new XMLReferenceByName(self::START_DATE_FIELD_NAME)),
                                 new XMLTableColumn(new XMLReferenceByName(self::END_DATE_FIELD_NAME)),
                                 new XMLTableColumn(new XMLReferenceByName(self::COMPLETED_DATE_FIELD_NAME)),
+                                new XMLTableColumn(new XMLReferenceByName(self::STATUS_FIELD_NAME)),
                             )
                     )
             );
