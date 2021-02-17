@@ -102,6 +102,7 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
@@ -213,7 +214,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(Event::SERVICE_CLASSNAMES);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->addHook(Event::SERVICE_IS_USED);
-            $this->addHook(Event::REGISTER_PROJECT_CREATION);
+            $this->addHook(RegisterProjectCreationEvent::NAME);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_GENERAL_SETTINGS);
             $this->addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -334,27 +335,23 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\AgileDashboard\AgileDashboardService::class;
     }
 
-    public function register_project_creation($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
+        if ($event->shouldProjectInheritFromTemplate()) {
             $this->getConfigurationManager()->duplicate(
-                $params['group_id'],
-                $params['template_id']
+                (int) $event->getJustCreatedProject()->getID(),
+                (int) $event->getTemplateProject()->getID(),
             );
 
             $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
-
-            $project = ProjectManager::instance()->getProject((int) $params['group_id']);
-            $user    = UserManager::instance()->getCurrentUser();
-
             $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
-                $project,
-                $user
+                $event->getTemplateProject(),
+                UserManager::instance()->getCurrentUser()
             );
 
             (new ProjectsCountModeDao())->inheritBurnupCountMode(
-                (int) $params['template_id'],
-                (int) $params['group_id']
+                (int) $event->getTemplateProject()->getID(),
+                (int) $event->getJustCreatedProject()->getID(),
             );
         }
     }

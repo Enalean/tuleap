@@ -166,12 +166,14 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
+use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\AccessKey\AccessKeyDAO;
@@ -181,7 +183,6 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\PasswordVerifier;
-use Tuleap\Reference\NatureCollection;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -286,7 +287,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::PROJECT_SET_PARENT_PROJECT, 'project_admin_parent_project_modification');
         $this->addHook(Event::PROJECT_UNSET_PARENT_PROJECT, 'project_admin_parent_project_modification');
 
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
@@ -1940,22 +1941,29 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
     }
 
-    public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
+        $template_project     = $event->getTemplateProject();
+        $just_created_project = $event->getJustCreatedProject();
+        $ugroup_mapping       = $event->getUgroupMapping();
+
         $this->getPermissionsManager()->duplicateWithStaticMapping(
-            $params['template_id'],
-            $params['group_id'],
+            (int) $template_project->getID(),
+            (int) $just_created_project->getID(),
             [Git::PERM_ADMIN, Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS],
-            $params['ugroupsMapping']
+            $ugroup_mapping,
         );
 
         $this->getDefaultFineGrainedPermissionReplicator()->replicate(
-            $this->getProjectManager()->getProject($params['template_id']),
-            $params['group_id'],
-            $params['ugroupsMapping']
+            $template_project,
+            $just_created_project->getID(),
+            $ugroup_mapping,
         );
 
-        $this->getMirrorDataMapper()->duplicate($params['template_id'], $params['group_id']);
+        $this->getMirrorDataMapper()->duplicate(
+            $template_project->getID(),
+            $just_created_project->getID()
+        );
     }
 
     private function getDefaultFineGrainedPermissionReplicator()

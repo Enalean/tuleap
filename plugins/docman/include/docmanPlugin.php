@@ -101,6 +101,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
@@ -165,7 +166,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
         $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->addHook(GetPublicAreas::NAME);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION, 'installNewDocman', false);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook('soap', 'soap', false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
@@ -400,17 +401,22 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             );
         }
     }
-    public function installNewDocman($params)
+
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        $controler = $this->getHTTPController();
-        $controler->installDocman($params['ugroupsMapping'], $params['group_id']);
+        $this->getHTTPController()->installDocman(
+            $event->getUgroupMapping(),
+            (int) $event->getJustCreatedProject()->getID(),
+        );
     }
+
     public function service_is_used($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
             if (isset($params['is_used']) && $params['is_used']) {
-                $this->installNewDocman(
-                    ['ugroupsMapping' => false, 'group_id' => $params['group_id']]
+                $this->getHTTPController()->installDocman(
+                    false,
+                    $params['group_id'],
                 );
             }
         }

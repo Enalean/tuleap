@@ -54,6 +54,7 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Dao as PullRequestDao;
@@ -130,7 +131,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(GetProtectedGitReferences::NAME);
         $this->addHook(MarkTechnicalReference::NAME);
         $this->addHook(PostInitGitRepositoryWithDataEvent::NAME);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(GetProjectHistoryEntryValue::NAME);
         $this->addHook(WorkerEvent::NAME);
@@ -604,12 +605,12 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function register_project_creation(array $params) // phpcs:ignore
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $dao = new MergeSettingDAO();
         $dao->duplicateFromProjectTemplate(
-            $params['template_id'],
-            $params['group_id']
+            (int) $event->getTemplateProject()->getID(),
+            (int) $event->getJustCreatedProject()->getID(),
         );
     }
 

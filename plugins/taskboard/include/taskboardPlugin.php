@@ -38,6 +38,7 @@ use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
@@ -89,7 +90,7 @@ class taskboardPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(GetAdditionalScrumAdminSection::NAME);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
@@ -285,14 +286,13 @@ class taskboardPlugin extends Plugin
         );
     }
 
-    /** @see Event::REGISTER_PROJECT_CREATION */
-    public function registerProjectCreation(array $params): void
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        $project_id  = (int) $params['group_id'];
-        $template_id = (int) $params['template_id'];
-
         $duplicator = new TaskboardUsageDuplicator(new TaskboardUsageDao());
-        $duplicator->duplicateUsage($project_id, $template_id);
+        $duplicator->duplicateUsage(
+            (int) $event->getJustCreatedProject()->getID(),
+            (int) $event->getTemplateProject()->getID()
+        );
     }
 
     public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void

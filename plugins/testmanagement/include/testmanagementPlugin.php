@@ -29,6 +29,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
@@ -106,7 +107,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
@@ -202,14 +203,12 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\TestManagement\Service::class;
     }
 
-    public function register_project_creation(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        $project_manager = ProjectManager::instance();
-        $template        = $project_manager->getProject($params['template_id']);
-        $project         = $project_manager->getProject($params['group_id']);
+        $template = $event->getTemplateProject();
 
-        if ($params['project_creation_data']->projectShouldInheritFromTemplate() && $this->isUsedByProject($template)) {
-            $this->allowProjectToUseNature($template, $project);
+        if ($event->shouldProjectInheritFromTemplate() && $this->isUsedByProject($template)) {
+            $this->allowProjectToUseNature($template, $event->getJustCreatedProject());
         }
     }
 
