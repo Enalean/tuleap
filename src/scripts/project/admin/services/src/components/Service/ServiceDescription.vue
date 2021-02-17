@@ -26,7 +26,6 @@
             v-bind:id="id"
             name="description"
             v-bind:placeholder="description_placeholder"
-            size="70"
             maxlength="255"
             v-bind:value="value"
         />
