@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global codendi:readonly CKEDITOR:readonly jQuery:readonly */
+import jQuery from "jquery";
+import CKEDITOR from "ckeditor4";
+import codendi from "codendi";
+import { initMentions } from "@tuleap/mention";
 
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
@@ -238,7 +241,7 @@ tuleap.textarea = tuleap.textarea || {};
             codendi.Toggler.init(tuleap_modal);
             tuleap.dateTimePicker.init();
             codendi.tracker.textboxlist.init();
-            tuleap.mention.init(
+            initMentions(
                 '.tuleap-modal input[type="text"].user-mention, .tuleap-modal textarea.user-mention'
             );
         },

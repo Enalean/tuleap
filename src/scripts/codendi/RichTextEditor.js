@@ -19,6 +19,7 @@
  */
 
 import { getUploadImageOptions, UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
+import { initMentions } from "@tuleap/mention";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 import TurndownService from "turndown";
@@ -186,7 +187,7 @@ codendi.RTE = Class.create({
 
         this.rte.on("instanceReady", function () {
             this.document.getBody().$.contentEditable = true;
-            tuleap.mention.init(this.document.getBody().$);
+            initMentions(this.document.getBody().$);
         });
 
         CKEDITOR.on(

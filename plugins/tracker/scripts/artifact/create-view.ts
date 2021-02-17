@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 However, we don't need to escape this for non default values.
             */
             if (textarea.dataset.fieldDefaultValue !== null) {
-                editor.on("instanceReady", () => {
+                editor.once("instanceReady", () => {
                     const escaped_value = escaper.html(textarea.value);
                     editor.setData(escaped_value);
                 });

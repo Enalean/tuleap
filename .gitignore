@@ -24,7 +24,7 @@ nbproject
 !src/www/scripts/bootstrap/bootstrap-select/*.css
 !src/www/scripts/bootstrap/bootstrap-datetimepicker/css/*.css
 !src/www/scripts/select2/select2.css
-!src/www/scripts/vendor/at/css/*.css
+!src/scripts/lib/mention/vendor/at/css/atwho.min.css
 !src/www/themes/common/css/bootstrap-2.3.0.min.css
 !src/www/themes/common/css/bootstrap-responsive-2.3.0.min.css
 !src/www/themes/common/css/animate.min.css

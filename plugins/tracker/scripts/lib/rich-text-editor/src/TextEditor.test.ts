@@ -23,8 +23,20 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "../../../constants/fields-constants";
-import type { HTMLToMarkdownConverterInterface, MarkdownToHTMLRendererInterface } from "./types";
+import type {
+    HTMLToMarkdownConverterInterface,
+    InternalTextEditorOptions,
+    MarkdownToHTMLRendererInterface,
+} from "./types";
 import CKEDITOR from "ckeditor4";
+import * as mentions from "@tuleap/mention";
+
+jest.mock("@tuleap/mention", () => {
+    // Mock the dependency because jquery...
+    return {
+        initMentions: jest.fn(),
+    };
+});
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 const emptyFunction = (): void => {
@@ -48,7 +60,9 @@ describe(`TextEditor`, () => {
     describe(`onFormatChange()`, () => {
         describe(`when the format changes to "html"`, () => {
             it(`creates a CKEditor with the additional options given`, () => {
-                const replace = jest.spyOn(CKEDITOR, "replace");
+                const replace = jest
+                    .spyOn(CKEDITOR, "replace")
+                    .mockReturnValue(getMockedCKEditorInstance());
                 const additional_options = {
                     extraPlugins: "uploadimage",
                     uploadUrl: "/example/url",
@@ -74,10 +88,26 @@ describe(`TextEditor`, () => {
                 );
             });
 
+            it(`initializes tuleap mentions on the CKEditor when it's ready`, () => {
+                const initMentions = jest.spyOn(mentions, "initMentions");
+                const ckeditor_instance = getMockedCKEditorInstance();
+                const eventHandler = jest.spyOn(ckeditor_instance, "on");
+                jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
+                const editor = new TextEditor(
+                    textarea,
+                    getEmptyOptions(),
+                    markdown_converter,
+                    markdown_renderer
+                );
+                editor.onFormatChange(TEXT_FORMAT_HTML);
+                const onDataReadyCallback = eventHandler.mock.calls[0][1];
+                onDataReadyCallback({} as CKEDITOR.eventInfo);
+
+                expect(initMentions).toHaveBeenCalled();
+            });
+
             it(`calls the given onEditorInit and onFormatChange callbacks`, () => {
-                const ckeditor_instance = ({
-                    setData: emptyFunction,
-                } as unknown) as CKEDITOR.editor;
+                const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
                 const options = {
                     locale: "fr_FR",
@@ -99,29 +129,13 @@ describe(`TextEditor`, () => {
 
             it(`from another format, it converts the textarea's value as Markdown to HTML
                 and sets CKEditor data with it`, () => {
-                let _data = "";
-                const ckeditor_instance = ({
-                    data: "",
-                    setData(data: string): void {
-                        _data = data;
-                    },
-                    getData(): string {
-                        return _data;
-                    },
-                    destroy: emptyFunction,
-                } as unknown) as CKEDITOR.editor;
+                const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-                const options = {
-                    locale: "fr_FR",
-                    getAdditionalOptions: emptyOptionsProvider,
-                    onEditorInit: emptyFunction,
-                    onFormatChange: emptyFunction,
-                };
                 jest.spyOn(markdown_renderer, "render").mockReturnValue(`<p>Some HTML content</p>`);
 
                 const editor = new TextEditor(
                     textarea,
-                    options,
+                    getEmptyOptions(),
                     markdown_converter,
                     markdown_renderer
                 );
@@ -130,34 +144,19 @@ describe(`TextEditor`, () => {
                 editor.onFormatChange(TEXT_FORMAT_HTML);
 
                 expect(markdown_renderer.render).toHaveBeenCalledWith("**markdown** content");
-                expect(_data).toEqual(`<p>Some HTML content</p>`);
+                expect(ckeditor_instance.getData()).toEqual(`<p>Some HTML content</p>`);
             });
         });
 
         describe(`when the format changes from "html" to another format`, () => {
             it(`converts the CKEditor content to Markdown and sets the textarea value with it`, () => {
-                let _data = "";
-                const ckeditor_instance = ({
-                    setData(data: string): void {
-                        _data = data;
-                    },
-                    getData(): string {
-                        return _data;
-                    },
-                    destroy: emptyFunction,
-                } as unknown) as CKEDITOR.editor;
+                const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
-                const options = {
-                    locale: "fr_FR",
-                    getAdditionalOptions: emptyOptionsProvider,
-                    onEditorInit: emptyFunction,
-                    onFormatChange: emptyFunction,
-                };
                 jest.spyOn(markdown_converter, "convert").mockReturnValue("**markdown** content");
 
                 const editor = new TextEditor(
                     textarea,
-                    options,
+                    getEmptyOptions(),
                     markdown_converter,
                     markdown_renderer
                 );
@@ -192,53 +191,65 @@ describe(`TextEditor`, () => {
             }
         );
     });
+
     describe("getContent()", () => {
         it.each([
-            [
-                "some data to return from CKEDITOR",
-                TEXT_FORMAT_HTML,
-                "Return from TEXTAREA",
-                "some data to return from CKEDITOR",
-            ],
-            [
-                "Return from TEXTAREA",
-                TEXT_FORMAT_COMMONMARK,
-                "some data to return from CKEDITOR",
-                "Return from TEXTAREA",
-            ],
+            ["some data to return from CKEDITOR", TEXT_FORMAT_HTML, "Return from TEXTAREA"],
+            ["Return from TEXTAREA", TEXT_FORMAT_COMMONMARK, "some data to return from CKEDITOR"],
         ])(
             `returns the '%s' content when the format is %s`,
-            (expected_content, format, ckeditor_content, textarea_content) => {
-                let _data = ckeditor_content;
-                const ckeditor_instance = ({
-                    setData(data: string): void {
-                        _data = data;
-                    },
-                    getData(): string {
-                        return _data;
-                    },
-                    destroy: emptyFunction,
-                } as unknown) as CKEDITOR.editor;
+            (expected_content, format, other_content) => {
+                const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
 
-                const options = {
-                    locale: "fr_FR",
-                    getAdditionalOptions: emptyOptionsProvider,
-                    onEditorInit: emptyFunction,
-                    onFormatChange: emptyFunction,
-                };
-
-                textarea.value = textarea_content;
                 const editor = new TextEditor(
                     textarea,
-                    options,
+                    getEmptyOptions(),
                     markdown_converter,
                     markdown_renderer
                 );
                 editor.onFormatChange(format);
+                if (format === TEXT_FORMAT_HTML) {
+                    ckeditor_instance.setData(expected_content);
+                    textarea.value = other_content;
+                } else {
+                    ckeditor_instance.setData(other_content);
+                    textarea.value = expected_content;
+                }
 
                 expect(editor.getContent()).toEqual(expected_content);
             }
         );
     });
 });
+
+function getEmptyOptions(): InternalTextEditorOptions {
+    return {
+        locale: "fr_FR",
+        getAdditionalOptions: emptyOptionsProvider,
+        onEditorInit: emptyFunction,
+        onFormatChange: emptyFunction,
+    };
+}
+
+function getMockedCKEditorInstance(): CKEDITOR.editor {
+    let _data = "";
+    const fake_ckeditor_document = createDocument();
+    return ({
+        on: emptyFunction,
+        document: {
+            getBody(): CKEDITOR.dom.element {
+                return ({
+                    $: fake_ckeditor_document.createElement("body"),
+                } as unknown) as CKEDITOR.dom.element;
+            },
+        },
+        setData(data: string): void {
+            _data = data;
+        },
+        getData(): string {
+            return _data;
+        },
+        destroy: emptyFunction,
+    } as unknown) as CKEDITOR.editor;
+}

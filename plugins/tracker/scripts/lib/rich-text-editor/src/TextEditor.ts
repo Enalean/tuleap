@@ -18,6 +18,7 @@
  */
 
 import CKEDITOR from "ckeditor4";
+import { initMentions } from "@tuleap/mention";
 import type { TextFieldFormat } from "../../../constants/fields-constants";
 import { TEXT_FORMAT_HTML } from "../../../constants/fields-constants";
 import type {
@@ -95,6 +96,13 @@ export class TextEditor {
         };
         const editor = CKEDITOR.replace(this.textarea, replace_options);
         this.ckeditor = editor;
+        editor.on("dataReady", () => {
+            // This MUST be called after "dataReady" event because calling setData() on CKEditor will kill the event listeners of @tuleap/mention
+            const ckeditor_document = editor.document.getBody().$;
+            // Set the ckeditor's iframe document <body> to contentEditable=true otherwise @tuleap/mention will filter it out
+            ckeditor_document.contentEditable = "true";
+            initMentions(ckeditor_document);
+        });
         this.options.onEditorInit(editor, this.textarea);
 
         return editor;

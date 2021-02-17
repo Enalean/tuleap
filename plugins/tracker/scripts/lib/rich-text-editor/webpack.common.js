@@ -34,6 +34,7 @@ const webpack_config = {
     },
     externals: {
         ckeditor4: "ckeditor4",
+        jquery: "jquery",
     },
     resolve: {
         extensions: [".ts", ".js"],

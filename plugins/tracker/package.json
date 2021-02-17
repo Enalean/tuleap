@@ -9,6 +9,7 @@
     "@tuleap/ckeditor-image-upload-form": "file:../../src/scripts/lib/ckeditor-image-upload-form",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
     "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
+    "@tuleap/mention": "file:../../src/scripts/lib/mention",
     "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
     "codemirror": "5.22.0",
