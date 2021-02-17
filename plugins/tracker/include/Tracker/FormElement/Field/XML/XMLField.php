@@ -32,6 +32,11 @@ abstract class XMLField extends XMLFormElement
      * @readonly
      */
     private $permissions = [];
+    /**
+     * @var bool
+     * @readonly
+     */
+    private $without_permissions_authorized = false;
 
     /**
      * @psalm-mutation-free
@@ -46,8 +51,22 @@ abstract class XMLField extends XMLFormElement
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
+    public function withoutPermissions(): self
+    {
+        $new                                 = clone $this;
+        $new->without_permissions_authorized = true;
+        return $new;
+    }
+
     public function exportPermissions(\SimpleXMLElement $form_elements): void
     {
+        if (count($this->permissions) === 0 && ! $this->without_permissions_authorized) {
+            throw new XMLFieldWithoutPermissionsException($this->name . ' field has no permissions');
+        }
         foreach ($this->permissions as $permission) {
             $permission->export($form_elements);
         }

@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
+use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotEmpty;
@@ -49,6 +50,7 @@ class JiraAgileImporterTest extends TestCase
         $project_board_retriever = new JiraAgileImporter(
             $board_retriever,
             $this->getJiraSprintRetrieverWithoutSprints(),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
@@ -395,6 +397,7 @@ class JiraAgileImporterTest extends TestCase
                     return [];
                 }
             },
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -414,7 +417,8 @@ class JiraAgileImporterTest extends TestCase
             $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithSprints(
                 [JiraSprint::buildActive(1, 'Sprint 1')]
-            )
+            ),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -454,7 +458,8 @@ class JiraAgileImporterTest extends TestCase
                     JiraSprint::buildActive(1, 'Sprint 1')
                         ->withStartDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
                 ]
-            )
+            ),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -482,7 +487,8 @@ class JiraAgileImporterTest extends TestCase
                     JiraSprint::buildActive(1, 'Sprint 1')
                         ->withEndDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
                 ]
-            )
+            ),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -510,7 +516,8 @@ class JiraAgileImporterTest extends TestCase
                     JiraSprint::buildActive(1, 'Sprint 1')
                         ->withCompleteDate(new \DateTimeImmutable('2018-01-25T04:04:09.514Z'))
                 ]
-            )
+            ),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -539,7 +546,8 @@ class JiraAgileImporterTest extends TestCase
                     JiraSprint::buildActive(2, 'Sprint 2'),
                     JiraSprint::buildFuture(3, 'Sprint 3'),
                 ]
-            )
+            ),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -577,11 +585,48 @@ class JiraAgileImporterTest extends TestCase
         assertEquals($future_id, (string) $status_value->value[0]);
     }
 
+    public function testItLinksIssuesWithSprint(): void
+    {
+        $jira_agile_importer = new JiraAgileImporter(
+            $this->getJiraBoradRetrieverWithOneBoard(),
+            $this->getJiraSprintRetrieverWithSprints(
+                [
+                    JiraSprint::buildActive(1, 'Sprint 1'),
+                ]
+            ),
+            $this->getJiraSprintIssuesRetrieverWithIssues(
+                [
+                    10001, 10004,
+                ]
+            ),
+        );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+        );
+
+        $field = $xml->xpath('/project/trackers/tracker/formElements//formElement[@type="art_link"]');
+        assertCount(1, $field);
+
+        $field_change = $xml->xpath('/project/trackers/tracker/artifacts//field_change[@type="art_link"]');
+        assertCount(1, $field_change);
+        assertCount(2, $field_change[0]->value);
+        assertEquals('10001', $field_change[0]->value[0]);
+        assertEquals('10004', $field_change[0]->value[1]);
+    }
+
     private function getJiraAgileImport(): JiraAgileImporter
     {
         return new JiraAgileImporter(
             $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithoutSprints(),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
         );
     }
 
@@ -618,6 +663,36 @@ class JiraAgileImporterTest extends TestCase
             public function getAllSprints(JiraBoard $board): array
             {
                 return $this->sprints;
+            }
+        };
+    }
+
+    private function getJiraSprintIssuesRetrieverWithoutIssues(): JiraSprintIssuesRetriever
+    {
+        return $this->getJiraSprintIssuesRetrieverWithIssues([]);
+    }
+
+    private function getJiraSprintIssuesRetrieverWithIssues(array $issue_ids): JiraSprintIssuesRetriever
+    {
+        return new class ($issue_ids) implements JiraSprintIssuesRetriever
+        {
+            /**
+             * @var array
+             */
+            private $issue_ids;
+
+            public function __construct(array $issue_ids)
+            {
+                $this->issue_ids = $issue_ids;
+            }
+
+            public function getArtifactLinkChange(JiraSprint $sprint): array
+            {
+                $issues = [];
+                foreach ($this->issue_ids as $id) {
+                    $issues[] = new ArtifactLinkChange($id);
+                }
+                return $issues;
             }
         };
     }
