@@ -76,7 +76,7 @@ class ArtifactTopBacklogActionBuilder
         $this->asset                                   = $asset;
     }
 
-    public function buildTopBacklogActionBuilder(TopBacklogActionSourceInformation $source_information, PFUser $user): ?AdditionalButtonAction
+    public function buildTopBacklogActionBuilder(TopBacklogActionActifactSourceInformation $source_information, PFUser $user): ?AdditionalButtonAction
     {
         try {
             $program = $this->build_program->buildExistingProgramProject($source_information->project_id, $user);
