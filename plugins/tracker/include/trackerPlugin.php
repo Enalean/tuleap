@@ -53,6 +53,7 @@ use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -272,7 +273,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER);
 
         $this->addHook('project_is_deleted', 'project_is_deleted', false);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
         $this->addHook(Event::IMPORT_XML_PROJECT);
@@ -579,21 +580,20 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return $legacy[Service::TRACKERV3];
     }
 
-   /**
-    * Project creation hook
-    *
-    * @param Array $params
-    */
-    public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
-            $tracker_manager = new TrackerManager();
-            $tracker_manager->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
+        if ($event->shouldProjectInheritFromTemplate()) {
+            $template = $event->getTemplateProject();
+            $project  = $event->getJustCreatedProject();
 
-            $project_manager = $this->getProjectManager();
-            $template        = $project_manager->getProject($params['template_id']);
-            $project         = $project_manager->getProject($params['group_id']);
-            $legacy_services = $params['legacy_service_usage'];
+            $tracker_manager = new TrackerManager();
+            $tracker_manager->duplicate(
+                (int) $template->getID(),
+                (int) $project->getID(),
+                $event->getUgroupMapping()
+            );
+
+            $legacy_services = $event->getLegacyServiceUsage();
 
             if (
                 ! $this->isRestricted() &&

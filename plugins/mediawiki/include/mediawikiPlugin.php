@@ -52,6 +52,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\Project\DelegatedUserAccessForProject;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
@@ -73,7 +74,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $this->addHook('permission_get_name');
         $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
 
         $this->addHook(Event::RENAME_PROJECT, 'rename_project');
         $this->addHook('project_is_deleted');
@@ -363,22 +364,23 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $this->pluginInfo;
     }
 
-    public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
+        $just_created_project = $event->getJustCreatedProject();
         if (
-            ! $params['project_creation_data']->projectShouldInheritFromTemplate()
-            && ! $this->serviceIsUsedInTemplate($params['group_id'])
+            ! $event->shouldProjectInheritFromTemplate()
+            && ! $just_created_project->usesService(self::SERVICE_SHORTNAME)
         ) {
             return;
         }
 
-        if ($this->serviceIsUsedInTemplate($params['template_id'])) {
-            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+        if ($event->getTemplateProject()->usesService(self::SERVICE_SHORTNAME)) {
+            $mediawiki_instantiater = $this->getInstantiater((int) $just_created_project->getID());
             if ($mediawiki_instantiater) {
-                $mediawiki_instantiater->instantiateFromTemplate($params['ugroupsMapping']);
+                $mediawiki_instantiater->instantiateFromTemplate($event->getUgroupMapping());
             }
-        } elseif ($this->serviceIsUsedInTemplate($params['group_id'])) {
-            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+        } elseif ($just_created_project->usesService(self::SERVICE_SHORTNAME)) {
+            $mediawiki_instantiater = $this->getInstantiater((int) $just_created_project->getID());
             if ($mediawiki_instantiater) {
                 $mediawiki_instantiater->instantiate();
             }
@@ -428,14 +430,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function get_services_allowed_for_restricted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['allowed_services'][] = $this->getServiceShortname();
-    }
-
-    private function serviceIsUsedInTemplate($project_id)
-    {
-        $project_manager = ProjectManager::instance();
-        $project         = $project_manager->getProject($project_id);
-
-        return $project->usesService(self::SERVICE_SHORTNAME);
     }
 
     public function service_is_used($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

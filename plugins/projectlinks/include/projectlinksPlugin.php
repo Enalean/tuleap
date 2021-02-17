@@ -25,6 +25,7 @@ use FastRoute\RouteCollector;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -46,9 +47,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         // add link - only visible when confirgured by a user from an allowed project
         $this->addHook('project_summary_title', 'projectSummaryTitle', false);
 
-        // only does anythign if template authorised, or linked to
-        $this->addHook(Event::REGISTER_PROJECT_CREATION, 'registerProjectCreation', false);
-
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(NavigationPresenter::NAME);
@@ -919,13 +918,12 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         return $html;
     }
 
-    //========================================================================
-    public function registerProjectCreation($params)
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         // called during new project creation to inherit project links and
         // types from a template
-        $group_id    = $params['group_id'];
-        $template_id = $params['template_id'];
+        $group_id    = (int) $event->getJustCreatedProject()->getID();
+        $template_id = (int) $event->getTemplateProject()->getID();
 
         // 1. copy link types from the template into the new project
         $db_res = db_query("SELECT * FROM plugin_projectlinks_link_type

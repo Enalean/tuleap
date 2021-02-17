@@ -21,20 +21,6 @@
 
 class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-
-    /**
-     * Project creation
-     *
-     * 'reportMapping'         => Array: Tracker v3 map of reports
-     * 'trackerMapping'        => Array: Tracker v3 map of trackers
-     * 'ugroupsMapping'        => Array: Map between ugroups from the template and in project
-     * 'group_id'              => Integer: Id of the new project
-     * 'template_id'           => Integer: Id of the template project
-     * 'project_creation_data' => ProjectCreationData: Data passed for project creation
-     * 'project_administrator' => PFUser: Administrator of the project
-     */
-    public const REGISTER_PROJECT_CREATION = 'register_project_creation';
-
     /**
      * Periodical system check event.
      *

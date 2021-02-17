@@ -26,6 +26,7 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -47,7 +48,7 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::RENAME_PROJECT);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
@@ -106,15 +107,12 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
         return self::SERVICE_SHORTNAME;
     }
 
-    public function register_project_creation($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        $project_template = ProjectManager::instance()->getProject($params['template_id']);
-        $project          = ProjectManager::instance()->getProject($params['group_id']);
-
         $this->getPermissionsManager()->duplicatePermissions(
-            $project_template,
-            $project,
-            $params['ugroupsMapping']
+            $event->getTemplateProject(),
+            $event->getJustCreatedProject(),
+            $event->getUgroupMapping(),
         );
     }
 

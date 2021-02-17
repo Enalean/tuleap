@@ -26,6 +26,7 @@ use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ApproveProjectAdministratorRemoval;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\ProjectOwnership\ProjectAdmin\CannotRemoveProjectOwnerFromTheProjectAdministratorsException;
 use Tuleap\ProjectOwnership\ProjectAdmin\IndexController;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
@@ -62,7 +63,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
 
     public function getHooksAndCallbacks()
     {
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(NavigationPresenter::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
@@ -80,13 +81,13 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         return parent::getHooksAndCallbacks();
     }
 
-    /**
-     * @see \Event::REGISTER_PROJECT_CREATION
-     */
-    public function registerProjectCreation(array $params)
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $dao = new ProjectOwnerDAO();
-        $dao->save($params['group_id'], $params['project_administrator']->getId());
+        $dao->save(
+            (int) $event->getJustCreatedProject()->getID(),
+            (int) $event->getProjectAdministrator()->getId(),
+        );
     }
 
     /**

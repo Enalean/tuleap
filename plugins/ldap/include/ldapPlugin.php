@@ -41,6 +41,7 @@ use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionP
 use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Request\CollectRoutesEvent;
@@ -136,7 +137,7 @@ class LdapPlugin extends Plugin
         $this->addHook('ajax_search_user', 'ajax_search_user', false);
 
         // Project creation
-        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
 
         // Backend SVN
         $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
@@ -830,18 +831,11 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /**
-     * Project creation hook
-     *
-     * If set, activate LDAP based authentication for this new project
-     *
-     * @param Array $params
-     */
-    public function register_project_creation(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         if ($this->isLdapAuthType() && $this->getLdap()->getLDAPParam('svn_auth') == 1) {
             $svnProjectManager = new LDAP_ProjectManager();
-            $svnProjectManager->setLDAPAuthForSVN($params['group_id']);
+            $svnProjectManager->setLDAPAuthForSVN((int) $event->getJustCreatedProject()->getID());
         }
     }
 

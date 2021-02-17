@@ -43,6 +43,7 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\ProjectRegistrationDisabledException;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\UgroupDuplicator;
@@ -433,11 +434,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
 
         if ($data->projectShouldInheritFromTemplate() && $legacy[Service::TRACKERV3]) {
-            [$tracker_mapping, $report_mapping] =
-                $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
-        } else {
-            $tracker_mapping = [];
-            $report_mapping  = [];
+            $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
         }
         $this->initWikiModuleFromTemplate($group_id, $template_group->getID());
 
@@ -450,17 +447,16 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
 
-        // Raise an event for plugin configuration
-        $this->event_manager->processEvent(Event::REGISTER_PROJECT_CREATION, [
-            'reportMapping'         => $report_mapping, // Trackers v3
-            'trackerMapping'        => $tracker_mapping, // Trackers v3
-            'ugroupsMapping'        => $ugroup_mapping,
-            'group_id'              => $group_id,
-            'template_id'           => $template_group->getID(),
-            'project_creation_data' => $data,
-            'legacy_service_usage'  => $legacy,
-            'project_administrator' => $admin_user,
-        ]);
+        $this->event_manager->processEvent(
+            new RegisterProjectCreationEvent(
+                $group,
+                $template_group,
+                $ugroup_mapping,
+                $admin_user,
+                $legacy,
+                $data->projectShouldInheritFromTemplate(),
+            )
+        );
 
         if ($data->projectShouldInheritFromTemplate()) {
             $this->initLayoutFromTemplate($group, $template_group);
@@ -724,9 +720,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping)
     {
-        $group_id        = $group->getID();
-        $tracker_mapping = [];
-        $report_mapping  = [];
+        $group_id = $group->getID();
         if (TrackerV3::instance()->available()) {
             $atf = new ArtifactTypeFactory($template_group);
             //$tracker_error = "";
@@ -739,9 +733,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 if (! $new_at_id) {
                     $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
                 } else {
-                    $report_mapping                      = $report_mapping + $report_mapping_for_this_tracker;
-                    $tracker_mapping[$ath_temp->getID()] = $new_at_id;
-
                     // Copy all the artifacts from the template tracker to the new tracker
                     $ath_new = new ArtifactType($group, $new_at_id);
 
@@ -751,7 +742,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                     //}
 
                     // Create corresponding reference
-                    $ref    = new Reference(
+                    $ref = new Reference(
                         0, // no ID yet
                         strtolower($ath_temp->getItemName()),
                         $GLOBALS['Language']->getText('project_reference', 'reference_art_desc_key'), // description
@@ -762,11 +753,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                         '1', // is_used
                         $group_id
                     );
-                    $result = $this->reference_manager->createReference($ref, true); // Force reference creation because default trackers use reserved keywords
+                    $this->reference_manager->createReference($ref, true); // Force reference creation because default trackers use reserved keywords
                 }
             }
         }
-        return [$tracker_mapping, $report_mapping];
     }
 
     /**
