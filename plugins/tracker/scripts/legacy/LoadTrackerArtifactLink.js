@@ -492,6 +492,7 @@ document.observe("dom:loaded", function () {
             ) {
                 input
                     .up()
+                    .up()
                     .insert(
                         '<br /><em style="color:#666; font-size: 0.9em;">' +
                             codendi.locales.tracker_artifact_link.advanced +
