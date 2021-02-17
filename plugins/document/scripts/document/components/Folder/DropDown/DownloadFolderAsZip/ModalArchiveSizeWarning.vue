@@ -27,15 +27,14 @@
             <h1 class="tlp-modal-title" id="modal-archive-size-warning-label">
                 {{ modal_header_title }}
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
                 ×
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body">
             <div class="download-modal-multiple-warnings-section">

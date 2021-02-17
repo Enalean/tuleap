@@ -28,15 +28,14 @@
             <i class="fa tlp-modal-title-icon" v-bind:class="iconHeaderClass"></i>
             {{ modalTitle }}
         </h1>
-        <div
+        <button
             class="tlp-modal-close"
-            tabindex="0"
-            role="button"
+            type="button"
             data-dismiss="modal"
             v-bind:aria-label="`${$gettext('Close')}`"
         >
             &times;
-        </div>
+        </button>
     </div>
 </template>
 <script>

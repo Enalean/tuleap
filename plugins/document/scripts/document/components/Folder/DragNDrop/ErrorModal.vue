@@ -30,15 +30,14 @@
                     <translate>Oops…</translate>
                 </slot>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="close"
             >
                 &times;
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body" v-bind:class="body_class">
             <slot></slot>

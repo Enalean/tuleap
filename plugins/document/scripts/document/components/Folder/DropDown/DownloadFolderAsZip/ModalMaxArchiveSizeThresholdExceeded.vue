@@ -27,15 +27,14 @@
             <h1 class="tlp-modal-title" id="max-size-threshold-modal-label" v-translate>
                 Maximum archive size threshold exceeded
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
                 ×
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body">
             <p v-translate>
