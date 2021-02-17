@@ -19,8 +19,8 @@
 
 import { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import { escaper } from "@tuleap/html-escaper";
 import { RichTextEditorsCreator } from "./RichTextEditorsCreator";
-import { escaper } from "../../../../src/scripts/tuleap/escaper";
 
 document.addEventListener("DOMContentLoaded", () => {
     const locale = document.body.dataset.userLocale;

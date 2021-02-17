@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
     "mustache": "^4.1.0",
     "sprintf-js": "^1.1.2"
   },
@@ -14,6 +15,7 @@
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

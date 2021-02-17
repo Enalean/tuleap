@@ -1,19 +1,21 @@
 {
-    "author": "Enalean Team",
-    "name": "@tuleap/plugin-svn",
-    "homepage": "https://tuleap.org",
-    "license": "GPL-2.0-or-later",
-    "private": true,
-    "dependencies": {
-        "vue": "^2.6.12",
-        "vue-gettext": "^2.1.12"
-    },
-    "devDependencies": {},
-    "config": {
-        "bin": "../../node_modules/.bin"
-    },
-    "scripts": {
-        "build": "rm -rf ../../src/www/assets/svn && $npm_package_config_bin/webpack --config webpack.prod.js",
-        "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
-    }
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-svn",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
+    "vue": "^2.6.12",
+    "vue-gettext": "^2.1.12"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "rm -rf ../../src/www/assets/svn && $npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+  }
 }

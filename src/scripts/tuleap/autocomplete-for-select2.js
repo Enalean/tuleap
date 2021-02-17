@@ -18,7 +18,7 @@
  */
 
 import { select2 } from "tlp";
-import { escaper } from "./escaper";
+import { escaper } from "@tuleap/html-escaper";
 
 export function autocomplete_projects_for_select2(element, options = {}) {
     options.include_private_projects = options.include_private_projects || 0;

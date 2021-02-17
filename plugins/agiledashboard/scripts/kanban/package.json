@@ -8,6 +8,7 @@
   "dependencies": {
     "@tuleap/angular-async": "file://../../../../src/scripts/lib/angular-async",
     "@tuleap/angular-tlp": "file://../../../../src/scripts/lib/angular-tlp",
+    "@tuleap/html-escaper": "file:../../../../src/scripts/lib/html-escaper",
     "@tuleap/plugin-agiledashboard-card-fields": "file://../lib/card-fields",
     "angular": "^1.8.2",
     "angular-gettext": "^2.4.2",

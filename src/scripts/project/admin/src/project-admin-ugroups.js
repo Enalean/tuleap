@@ -23,7 +23,7 @@ import { sanitize } from "dompurify";
 import Gettext from "node-gettext";
 import { sprintf } from "sprintf-js";
 import french_translations from "../po/fr.po";
-import { escaper } from "../../../tuleap/escaper.js";
+import { escaper } from "@tuleap/html-escaper";
 
 const gettext_provider = new Gettext();
 
