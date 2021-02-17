@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -24,15 +24,9 @@
                 <i class="fas fa-pencil-alt tlp-modal-title-icon"></i>
                 <translate>Detailed times</translate>
             </h1>
-            <div
-                class="tlp-modal-close"
-                tabindex="0"
-                role="button"
-                data-dismiss="modal"
-                aria-label="Close"
-            >
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
                 &times;
-            </div>
+            </button>
         </div>
         <widget-modal-content v-if="current_artifact" data-test="modal-content" />
         <div class="tlp-modal-footer tlp-modal-footer-large">
