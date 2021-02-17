@@ -86,6 +86,7 @@ describe("Artifact additional action", () => {
 
     interface LocalAction {
         document: Document;
+        button_wrapper: HTMLElement;
         link_element: HTMLAnchorElement;
         title_element: HTMLAnchorElement;
         icon: HTMLElement;
@@ -106,10 +107,13 @@ describe("Artifact additional action", () => {
         span_element.setAttribute("class", "additional-artifact-action-title");
         link_element.appendChild(span_element);
         local_document.body.dataset.userLocale = "en_US";
-        local_document.body.appendChild(link_element);
+        const button_wrapper = local_document.createElement("div");
+        button_wrapper.appendChild(link_element);
+        local_document.body.appendChild(button_wrapper);
 
         return {
             document: local_document,
+            button_wrapper,
             link_element: link_element,
             title_element: link_element,
             icon,
@@ -184,6 +188,27 @@ describe("Artifact additional action", () => {
                 expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(
                     false
                 );
+                done();
+            });
+        });
+    });
+
+    it("Does nothing when the action is disabled", () => {
+        return new Promise<void>((done) => {
+            const local_action = getLocalAddAction();
+            local_action.button_wrapper.classList.add("disabled");
+            const spyPatch = jest.spyOn(fetch_wrapper, "patch");
+            const spyClearFeedbacks = jest.spyOn(feedbacks, "clearAllFeedbacks");
+            const spyAddFeedback = jest.spyOn(feedbacks, "addFeedback");
+
+            initArtifactAdditionalAction(local_action.document);
+
+            local_action.link_element.click();
+
+            setImmediate(() => {
+                expect(spyClearFeedbacks).not.toHaveBeenCalled();
+                expect(spyAddFeedback).not.toHaveBeenCalled();
+                expect(spyPatch).not.toHaveBeenCalled();
                 done();
             });
         });
