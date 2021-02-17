@@ -147,7 +147,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     {
         // get it, no matter if summary is enabled or not
         $this->cacheServices();
-        return $this->services[Service::SUMMARY]->getRank();
+        return isset($this->services[Service::SUMMARY]) ? $this->services[Service::SUMMARY]->getRank() : 1;
     }
 
     private function getServiceLink($short_name)
