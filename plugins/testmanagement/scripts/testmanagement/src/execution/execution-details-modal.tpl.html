@@ -14,15 +14,14 @@
         <h1 class="tlp-modal-title" id="execution-details-modal-title">
             {{ modal.execution.definition.summary }}
         </h1>
-        <div
+        <button
             class="tlp-modal-close"
-            tabindex="0"
-            role="button"
+            type="button"
             data-dismiss="modal"
             aria-label="Close"
         >
             ×
-        </div>
+        </button>
     </div>
     <div class="tlp-modal-body execution-details-modal-info">
         <i class="fa fa-check-circle execution-details-modal-info-status" ng-if="modal.execution.status === 'passed'"></i>
