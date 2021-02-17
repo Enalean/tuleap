@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Timetracking\JiraImporter\Worklog\Worklog;
+use Tuleap\Timetracking\JiraImporter\Worklog\WorklogComment;
 use Tuleap\Timetracking\JiraImporter\Worklog\WorklogRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -101,12 +102,16 @@ final class JiraXMLExportTest extends TestCase
                             "emailAddress" => "whatever@example.com",
                             "displayName"  => "What Ever",
                         ]
+                    ),
+                    new WorklogComment(
+                        ["content 01", "content 02"]
                     )
                 )
             ]);
 
         $time_user = Mockery::mock(PFUser::class);
         $time_user->shouldReceive('getUserName')->andReturn('user_time');
+        $time_user->shouldReceive('getId')->andReturn('147');
 
         $this->jira_user_retriever->shouldReceive('retrieveJiraAuthor')
             ->once()
@@ -125,6 +130,7 @@ final class JiraXMLExportTest extends TestCase
         $this->assertSame("300", (string) $xml_tracker->timetracking->time->minutes);
         $this->assertSame("user_time", (string) $xml_tracker->timetracking->time->user);
         $this->assertSame("username", (string) $xml_tracker->timetracking->time->user['format']);
+        $this->assertSame("content 01 content 02", (string) $xml_tracker->timetracking->time->step);
     }
 
     public function testItOnlyEnablesTimetrackingConfigurationIfProviderIsNotKnown(): void

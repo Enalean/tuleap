@@ -23,14 +23,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\JiraImporter;
 
+use PFUser;
 use ProjectUGroup;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfigurationRetriever;
+use Tuleap\Timetracking\JiraImporter\Worklog\WorklogComment;
 use Tuleap\Timetracking\JiraImporter\Worklog\WorklogRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use XML_SimpleXMLCDATAFactory;
 
 class JiraXMLExport
@@ -139,7 +143,35 @@ class JiraXMLExport
                     date('c', $worklog->getStartDate()->getTimestamp()),
                     $format = ['format' => 'ISO8601']
                 );
+
+                $worklog_comment = $worklog->getComment();
+                if ($worklog_comment !== null) {
+                    $this->cdata_factory->insert(
+                        $xml_time,
+                        'step',
+                        $this->getTimeStepTextContent(
+                            $worklog_comment,
+                            $worklog->getAuthor(),
+                            $user_time
+                        )
+                    );
+                }
             }
         }
+    }
+
+    private function getTimeStepTextContent(
+        WorklogComment $worklog_comment,
+        JiraUser $comment_author,
+        PFUser $user_time
+    ): string {
+        $step_content = '';
+        if ((int) $user_time->getId() === TrackerImporterUser::ID) {
+            $step_content = "Time added by " . $comment_author->getDisplayName() . " | ";
+        }
+
+        $step_content .= $worklog_comment->getCommentInTextFormat();
+
+        return $step_content;
     }
 }
