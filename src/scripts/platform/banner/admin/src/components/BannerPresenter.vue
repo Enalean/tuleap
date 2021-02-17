@@ -69,7 +69,6 @@
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <textarea
-                    type="text"
                     ref="embedded_editor"
                     class="tlp-textarea"
                     id="description"

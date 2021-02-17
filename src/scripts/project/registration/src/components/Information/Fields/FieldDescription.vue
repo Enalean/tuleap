@@ -26,7 +26,6 @@
         </label>
 
         <textarea
-            type="text"
             class="tlp-textarea tlp-textarea-large"
             id="field_description"
             name="description"

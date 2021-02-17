@@ -21,7 +21,6 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="tracker-description" v-translate>Description</label>
         <textarea
-            type="text"
             class="tlp-textarea tlp-textarea-large"
             id="tracker-description"
             name="tracker-description"
