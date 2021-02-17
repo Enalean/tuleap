@@ -106,6 +106,10 @@ $tlp-modal-transition: 100ms ease-out;
 }
 
 .tlp-modal-close {
+    padding: 0;
+    border: 0;
+    background-color: unset;
+    color: $tlp-ui-white;
     font-size: 24px;
     font-weight: 600;
     cursor: pointer;

@@ -99,7 +99,7 @@ export class Modal {
             `input:enabled:not([type='hidden']),
             textarea:enabled:not([type='hidden']),
             select:enabled:not([type='hidden']),
-            button:enabled,
+            button:enabled:not([data-dismiss]),
             [href]`
         );
         if (first_form_element instanceof HTMLElement) {
