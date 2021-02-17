@@ -30,15 +30,14 @@
                 <i class="fa fa-plus tlp-modal-title-icon" aria-hidden="true"></i>
                 <translate>Create new campaign</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
                 ×
-            </div>
+            </button>
         </div>
         <create-modal-error-feedback
             v-if="error_message !== ''"
