@@ -491,6 +491,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         if ($this->currentRequestIsForPlugin()) {
             echo $this->getAssets()->getHTMLSnippet('tracker.js');
+            echo $this->getAssets()->getHTMLSnippet('modal-v2.js');
         }
     }
 

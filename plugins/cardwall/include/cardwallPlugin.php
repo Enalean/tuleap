@@ -293,6 +293,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
                 $assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/trackers', '/assets/trackers');
                 echo $assets->getHTMLSnippet('tracker.js');
+                echo $assets->getHTMLSnippet('modal-v2.js');
             }
             echo $this->getAssets()->getHTMLSnippet('cardwall.js');
         }
