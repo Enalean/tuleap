@@ -21,7 +21,11 @@ import { RichTextEditorFactory, RichTextEditorOptions } from "@tuleap/plugin-tra
 import { TextFieldFormat } from "./fields-constants";
 
 const locale = "en_US"; // Retrieve the locale somehow
-const factory = new RichTextEditorFactory(document, locale);
+
+// If you want to have the format selector with the editor, use:
+const factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale);
+// Or if you do not need the format selector, use:
+const factory = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(document, locale);
 
 options: RichTextEditorOptions = {
     format_selectbox_id: "format_id", // html "id" attribute for the Format selectbox

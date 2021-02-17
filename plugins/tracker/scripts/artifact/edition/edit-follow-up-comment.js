@@ -46,7 +46,10 @@ document.observe("dom:loaded", function () {
             id = id.match(/_(\d+)$/)[1];
 
             const locale = getLocaleFromBody(document);
-            const editor_factory = new RichTextEditorFactory(document, locale);
+            const editor_factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(
+                document,
+                locale
+            );
             edit.observe("click", function (evt) {
                 Event.stop(evt);
                 var comment_panel = $("followup_" + id).down(".tracker_artifact_followup_comment");
