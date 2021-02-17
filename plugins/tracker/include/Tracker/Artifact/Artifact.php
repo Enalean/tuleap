@@ -109,6 +109,8 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresen
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -1278,7 +1280,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             (bool) $send_notification,
             (string) $comment_format,
             new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping(),
-            new TrackerNoXMLImportLoggedConfig()
+            new TrackerNoXMLImportLoggedConfig(),
+            []
         );
     }
 
@@ -1305,7 +1308,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             (bool) $send_notification,
             (string) $comment_format,
             new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping(),
-            new TrackerNoXMLImportLoggedConfig()
+            new TrackerNoXMLImportLoggedConfig(),
+            []
         );
     }
 
@@ -2289,7 +2293,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this->getChangesetSaver(),
             new Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
                 $this->getArtifactFactory()
-            )
+            ),
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
         );
     }
 

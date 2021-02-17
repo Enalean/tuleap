@@ -24,6 +24,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
@@ -59,6 +60,10 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @var ParentLinkAction
      */
     private $parent_link_action;
+    /**
+     * @var TrackerPrivateCommentUGroupPermissionInserter
+     */
+    private $comment_ugroup_permission_inserter;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -71,7 +76,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
         DBTransactionExecutor $transaction_executor,
         ArtifactChangesetSaver $artifact_changeset_saver,
-        ParentLinkAction $parent_link_action
+        ParentLinkAction $parent_link_action,
+        TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter
     ) {
         parent::__construct(
             $fields_validator,
@@ -81,17 +87,18 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $field_initializator
         );
 
-        $this->changeset_dao            = $changeset_dao;
-        $this->changeset_comment_dao    = $changeset_comment_dao;
-        $this->reference_manager        = $reference_manager;
-        $this->transaction_executor     = $transaction_executor;
-        $this->artifact_changeset_saver = $artifact_changeset_saver;
-        $this->parent_link_action       = $parent_link_action;
+        $this->changeset_dao                      = $changeset_dao;
+        $this->changeset_comment_dao              = $changeset_comment_dao;
+        $this->reference_manager                  = $reference_manager;
+        $this->transaction_executor               = $transaction_executor;
+        $this->artifact_changeset_saver           = $artifact_changeset_saver;
+        $this->parent_link_action                 = $parent_link_action;
+        $this->comment_ugroup_permission_inserter = $comment_ugroup_permission_inserter;
     }
 
     /**
      * Update an artifact (means create a new changeset)
-     *
+     * @param ProjectUGroup[] $ugroups
      * @throws Tracker_NoChangeException In the validation
      * @throws FieldValidationException
      *
@@ -106,7 +113,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         bool $send_notification,
         string $comment_format,
         CreatedFileURLMapping $url_mapping,
-        TrackerImportConfig $tracker_import_config
+        TrackerImportConfig $tracker_import_config,
+        array $ugroups
     ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
@@ -116,7 +124,18 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         try {
-            $new_changeset = $this->transaction_executor->execute(function () use ($artifact, $fields_data, $comment, $comment_format, $submitter, $submitted_on, $email, $url_mapping, $tracker_import_config) {
+            $new_changeset = $this->transaction_executor->execute(function () use (
+                $artifact,
+                $fields_data,
+                $comment,
+                $comment_format,
+                $submitter,
+                $submitted_on,
+                $email,
+                $url_mapping,
+                $tracker_import_config,
+                $ugroups
+            ) {
                 try {
                     $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
 
@@ -161,7 +180,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                             $submitted_on,
                             $comment_format,
                             $changeset_id,
-                            $url_mapping
+                            $url_mapping,
+                            $ugroups
                         )
                     ) {
                         throw new Tracker_CommentNotStoredException();
@@ -258,6 +278,9 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         return true;
     }
 
+    /**
+     * @param ProjectUGroup[] $ugroups
+     */
     private function storeComment(
         Artifact $artifact,
         $comment,
@@ -265,7 +288,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $submitted_on,
         $comment_format,
         $changeset_id,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
+        array $ugroups
     ): bool {
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
 
@@ -284,6 +308,10 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         );
         if (! $comment_added) {
             return false;
+        }
+
+        if (is_int($comment_added)) {
+            $this->comment_ugroup_permission_inserter->insertUGroupsOnPrivateComment($comment_added, $ugroups);
         }
 
         $this->reference_manager->extractCrossRef(

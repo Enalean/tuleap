@@ -23,6 +23,7 @@ use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
@@ -90,6 +91,10 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
      */
     protected $external_field_extractor;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupExtractor
+     */
+    private $private_comment_extractor;
 
     protected function setUp(): void
     {
@@ -142,7 +147,11 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
         $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact');
-
+        $this->private_comment_extractor = Mockery::mock(TrackerPrivateCommentUGroupExtractor::class);
+        $this->private_comment_extractor
+            ->shouldReceive('extractUGroupsFromXML')
+            ->andReturn([])
+            ->byDefault();
         $this->importer = new Tracker_Artifact_XMLImport(
             $this->rng_validator,
             $this->artifact_creator,
@@ -157,7 +166,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
             Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
             Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
-            $this->external_field_extractor
+            $this->external_field_extractor,
+            $this->private_comment_extractor
         );
 
         $this->tracker_xml_config->shouldReceive('isWithAllData')->andReturnFalse();
@@ -187,7 +197,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
                 Mockery::spy(XMLArtifactSourcePlatformExtractor::class),
                 Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
                 Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
-                $this->external_field_extractor
+                $this->external_field_extractor,
+                $this->private_comment_extractor
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $importer->shouldReceive('importFromXML')->with($this->tracker, Mockery::on(function ($element) {
@@ -340,11 +351,11 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $this->new_changeset_creator->shouldReceive('create')->times(2);
 
         $this->new_changeset_creator->shouldReceive('create')
-            ->with(Mockery::any(), Mockery::any(), 'Some text', Mockery::any(), Mockery::any(), Mockery::any(), Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, Mockery::any())
+            ->with(Mockery::any(), Mockery::any(), 'Some text', Mockery::any(), Mockery::any(), Mockery::any(), Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, Mockery::any(), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->new_changeset_creator->shouldReceive('create')
-            ->with(Mockery::any(), Mockery::any(), '<p>Some text</p>', Mockery::any(), Mockery::any(), Mockery::any(), Tracker_Artifact_Changeset_Comment::HTML_COMMENT, Mockery::any())
+            ->with(Mockery::any(), Mockery::any(), '<p>Some text</p>', Mockery::any(), Mockery::any(), Mockery::any(), Tracker_Artifact_Changeset_Comment::HTML_COMMENT, Mockery::any(), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
@@ -413,11 +424,12 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
         $this->new_changeset_creator->shouldReceive('create')
-            ->with(Mockery::any(), Mockery::any(), 'Some text', Mockery::any(), Mockery::any(), Mockery::any(), Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
+            ->with(Mockery::any(), Mockery::any(), 'Some text', Mockery::any(), Mockery::any(), Mockery::any(), Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
             ->once()
             ->andReturn($changeset);
 
-        $changeset->shouldReceive('updateCommentWithoutNotification')->with('<p>Some text</p>', $this->john_doe, Tracker_Artifact_Changeset_Comment::HTML_COMMENT, strtotime('2014-01-15T11:23:50+01:00'))->once();
+        $changeset->shouldReceive('updateCommentWithoutNotification')->with('<p>Some text</p>', $this->john_doe, Tracker_Artifact_Changeset_Comment::HTML_COMMENT, strtotime('2014-01-15T11:23:50+01:00'), [])->once();
+        $changeset->shouldReceive('getArtifact')->once()->andReturn(Mockery::mock(Artifact::class));
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
@@ -443,6 +455,137 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
                       <submitted_by format="username">john_doe</submitted_by>
                       <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
                       <body format="html">&lt;p&gt;Some text&lt;/p&gt;</body>
+                    </comment>
+                  </comments>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $this->importer->importFromXML(
+            $this->tracker,
+            $xml_element,
+            $this->extraction_path,
+            new TrackerXmlFieldsMapping_InSamePlatform(),
+            $this->url_mapping,
+            $this->config,
+            $this->tracker_xml_config
+        );
+    }
+
+    public function testItCreatesPrivateCommentWithUpdates(): void
+    {
+        $my_group       = Mockery::mock(ProjectUGroup::class);
+        $my_other_group = Mockery::mock(ProjectUGroup::class);
+        $my_best_group  = Mockery::mock(ProjectUGroup::class);
+
+        $this->private_comment_extractor
+            ->shouldReceive('extractUGroupsFromXML')
+            ->with(
+                Mockery::any(),
+                Mockery::on(
+                    function (\SimpleXMLElement $comment): bool {
+                        return (string) $comment->body === "Some text" &&
+                               (string) $comment->private_ugroups->ugroup[0] === "my_group" &&
+                               (string) $comment->private_ugroups->ugroup[1] === "my_other_group";
+                    }
+                )
+            )
+            ->andReturn([$my_group, $my_other_group])
+            ->once();
+
+        $this->private_comment_extractor
+            ->shouldReceive('extractUGroupsFromXML')
+            ->with(
+                Mockery::any(),
+                Mockery::on(
+                    function (\SimpleXMLElement $comment): bool {
+                        return (string) $comment->body === "New comment update" &&
+                               (string) $comment->private_ugroups->ugroup[0] === "my_group" &&
+                               (string) $comment->private_ugroups->ugroup[1] === "the_best_group";
+                    }
+                )
+            )
+            ->andReturn([$my_group, $my_best_group])
+            ->once();
+
+        $this->artifact_creator->shouldReceive('createFirstChangeset')
+            ->with(
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+                false,
+                Mockery::any(),
+                Mockery::type(TrackerXmlImportConfig::class)
+            )
+            ->once()
+            ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
+        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+
+        $this->artifact_creator->shouldReceive('create')->andReturns($this->artifact);
+        $this->artifact_creator->shouldReceive('createBare')->andReturns($this->artifact);
+
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+
+        $this->new_changeset_creator->shouldReceive('create')
+            ->with(
+                Mockery::any(),
+                Mockery::any(),
+                'Some text',
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+                Mockery::any(),
+                Mockery::type(TrackerXmlImportConfig::class),
+                [$my_group, $my_other_group]
+            )
+            ->once()
+            ->andReturn($changeset);
+
+        $changeset->shouldReceive('updateCommentWithoutNotification')
+            ->with(
+                'New comment update',
+                $this->john_doe,
+                Tracker_Artifact_Changeset_Comment::HTML_COMMENT,
+                strtotime('2014-01-15T11:23:50+01:00'),
+                [$my_group, $my_best_group]
+            )
+            ->once();
+        $changeset->shouldReceive('getArtifact')->once()->andReturn(Mockery::mock(Artifact::class));
+
+        $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <comments/>
+                  <field_change field_name="summary" type="string">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                      <body format="text">Some text</body>
+                      <private_ugroups>
+                        <ugroup>my_group</ugroup>
+                        <ugroup>my_other_group</ugroup>
+                      </private_ugroups>
+                    </comment>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
+                      <body format="html">New comment update</body>
+                      <private_ugroups>
+                        <ugroup>my_group</ugroup>
+                        <ugroup>the_best_group</ugroup>
+                      </private_ugroups>
                     </comment>
                   </comments>
                 </changeset>
@@ -739,7 +882,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, $data, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
+            ->with($this->artifact, $data, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -769,7 +912,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), $this->john_doe, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
+            ->with($this->artifact, Mockery::any(), Mockery::any(), $this->john_doe, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -799,7 +942,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
+            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -832,7 +975,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T11:03:50+01:00'), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
+            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T11:03:50+01:00'), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -885,7 +1028,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->new_changeset_creator->shouldReceive('create')
             ->once()
-            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T11:03:50+01:00'), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class))
+            ->with($this->artifact, Mockery::any(), Mockery::any(), Mockery::any(), strtotime('2014-01-15T11:03:50+01:00'), Mockery::any(), Mockery::any(), Mockery::any(), Mockery::type(TrackerXmlImportConfig::class), [])
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
         $this->importer->importFromXML(
@@ -972,7 +1115,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
                 strtotime('2014-01-15T11:03:50+01:00'),
                 Mockery::any(),
                 Mockery::any(),
-                Mockery::any()
+                Mockery::any(),
+                []
             )
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
@@ -987,7 +1131,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
                 strtotime('2014-01-15T11:03:50+01:00'),
                 Mockery::any(),
                 Mockery::any(),
-                Mockery::any()
+                Mockery::any(),
+                []
             )
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
@@ -1002,7 +1147,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
                 strtotime('2014-01-15T11:51:50+01:00'),
                 Mockery::any(),
                 Mockery::any(),
-                Mockery::any()
+                Mockery::any(),
+                []
             )
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
@@ -1393,7 +1539,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
                 Mockery::any(),
                 Mockery::any(),
                 Mockery::any(),
-                Mockery::any()
+                Mockery::any(),
+                []
             )
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
@@ -2210,9 +2357,10 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItCollectsChangesetIdsMapping()
     {
-        $user_finder           = Mockery::mock(User\XML\Import\IFindUserFromXMLReference::class);
-        $new_changeset_creator = Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
-        $artifact_creator      = Mockery::mock(TrackerArtifactCreator::class);
+        $user_finder               = Mockery::mock(User\XML\Import\IFindUserFromXMLReference::class);
+        $new_changeset_creator     = Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
+        $artifact_creator          = Mockery::mock(TrackerArtifactCreator::class);
+        $private_comment_extractor = Mockery::mock(TrackerPrivateCommentUGroupExtractor::class);
 
         $importer = new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),
@@ -2228,7 +2376,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             Mockery::mock(XMLArtifactSourcePlatformExtractor::class),
             Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class),
             Mockery::mock(TrackerArtifactSourceIdDao::class),
-            Mockery::mock(ExternalFieldsExtractor::class)
+            Mockery::mock(ExternalFieldsExtractor::class),
+            $private_comment_extractor
         );
 
         $xml_element = new SimpleXMLElement(

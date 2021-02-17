@@ -22,25 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
-use Tuleap\DB\DataAccessObject;
-
-class TrackerPrivateCommentUGroupPermissionDao extends DataAccessObject
+class TrackerPrivateCommentUGroupPermissionInserter
 {
     /**
-     * @return int[]
+     * @var TrackerPrivateCommentUGroupPermissionDao
      */
-    public function getUgroupIdsOfPrivateComment(int $comment_id): array
-    {
-        $sql = "SELECT ugroup_id FROM plugin_tracker_private_comment_permission
-                WHERE comment_id = ?";
+    private $dao;
 
-        return $this->getDB()->column($sql, [$comment_id]);
+    public function __construct(TrackerPrivateCommentUGroupPermissionDao $dao)
+    {
+        $this->dao = $dao;
     }
 
-    public function insertUGroupPermissionOnPrivateComment(int $comment_id, int $ugroup_id): void
+    /**
+     * @param \ProjectUGroup[] $ugroups
+     */
+    public function insertUGroupsOnPrivateComment(int $comment_id, array $ugroups): void
     {
-        $sql = "INSERT INTO plugin_tracker_private_comment_permission (comment_id, ugroup_id) VALUES (?, ?);";
-
-        $this->getDB()->run($sql, $comment_id, $ugroup_id);
+        foreach ($ugroups as $ugroup) {
+            $this->dao->insertUGroupPermissionOnPrivateComment($comment_id, $ugroup->getId());
+        }
     }
 }

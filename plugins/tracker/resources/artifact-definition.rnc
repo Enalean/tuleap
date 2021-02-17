@@ -29,7 +29,8 @@ artifact =
     comment_content =
         element submitted_by { tracker_user_content },
         element submitted_on { date_content },
-        element body { text_content }
+        element body { text_content } ,
+        element private_ugroups { element ugroup { xsd:string }* }?
 
     text_content =
         attribute format { "text" | "html" | "commonmark" },

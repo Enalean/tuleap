@@ -22,6 +22,7 @@ use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
@@ -91,6 +92,10 @@ class Tracker_Artifact_XMLImport
      * @var ExternalFieldsExtractor
      */
     private $external_fields_extractor;
+    /**
+     * @var TrackerPrivateCommentUGroupExtractor
+     */
+    private $private_comment_ugroup_extractor;
 
     public function __construct(
         XML_RNGValidator $rng_validator,
@@ -106,7 +111,8 @@ class Tracker_Artifact_XMLImport
         XMLArtifactSourcePlatformExtractor $artifact_source_platform_extractor,
         ExistingArtifactSourceIdFromTrackerExtractor $existing_artifact_source_id_extractor,
         TrackerArtifactSourceIdDao $artifact_source_id_dao,
-        ExternalFieldsExtractor $external_fields_extractor
+        ExternalFieldsExtractor $external_fields_extractor,
+        TrackerPrivateCommentUGroupExtractor $private_comment_ugroup_extractor
     ) {
         $this->rng_validator                          = $rng_validator;
         $this->artifact_creator                       = $artifact_creator;
@@ -122,6 +128,7 @@ class Tracker_Artifact_XMLImport
         $this->existing_artifact_source_id_extractor  = $existing_artifact_source_id_extractor;
         $this->tracker_artifact_source_id_dao         = $artifact_source_id_dao;
         $this->external_fields_extractor              = $external_fields_extractor;
+        $this->private_comment_ugroup_extractor       = $private_comment_ugroup_extractor;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive, PFUser $user): void
@@ -604,11 +611,15 @@ class Tracker_Artifact_XMLImport
         ImportedChangesetMapping $changeset_id_mapping,
         TrackerImportConfig $tracker_xml_import_config
     ): void {
-        $initial_comment_body   = '';
-        $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        $initial_comment_body        = '';
+        $initial_comment_format      = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        $ugroups_for_private_comment = [];
+
         if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {
-            $initial_comment_body   = (string) $xml_changeset->comments->comment[0]->body;
-            $initial_comment_format = (string) $xml_changeset->comments->comment[0]->body['format'];
+            $initial_comment_body        = (string) $xml_changeset->comments->comment[0]->body;
+            $initial_comment_format      = (string) $xml_changeset->comments->comment[0]->body['format'];
+            $ugroups_for_private_comment = $this->private_comment_ugroup_extractor
+                ->extractUGroupsFromXML($artifact, $xml_changeset->comments->comment[0]);
         }
 
         $submitted_by = $this->getSubmittedBy($xml_changeset);
@@ -621,7 +632,8 @@ class Tracker_Artifact_XMLImport
             $this->send_notifications,
             $initial_comment_format,
             $url_mapping,
-            $tracker_xml_import_config
+            $tracker_xml_import_config,
+            $ugroups_for_private_comment
         );
         if ($changeset) {
             if ((string) $xml_changeset['id']) {
@@ -641,11 +653,15 @@ class Tracker_Artifact_XMLImport
         if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 1) {
             $all_comments = $xml_changeset->comments->comment;
             for ($i = 1; $i < count($all_comments); ++$i) {
+                $ugroups_for_private_comment = $this->private_comment_ugroup_extractor
+                    ->extractUGroupsFromXML($changeset->getArtifact(), $all_comments[$i]);
+
                 $changeset->updateCommentWithoutNotification(
                     (string) $all_comments[$i]->body,
                     $this->getSubmittedBy($all_comments[$i]),
                     (string) $all_comments[$i]->body['format'],
-                    $this->getSubmittedOn($all_comments[$i])
+                    $this->getSubmittedOn($all_comments[$i]),
+                    $ugroups_for_private_comment
                 );
             }
         }

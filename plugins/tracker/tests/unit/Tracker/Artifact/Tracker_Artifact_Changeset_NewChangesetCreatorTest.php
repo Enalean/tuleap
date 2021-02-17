@@ -33,6 +33,7 @@ use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tracker_Artifact_Changeset_Null;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
@@ -83,6 +84,14 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ParentLinkAction
      */
     private $parent_link_action;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerPrivateCommentUGroupPermissionInserter
+     */
+    private $ugroup_private_comment_inserter;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact_Changeset_CommentDao
+     */
+    private $comment_dao;
 
     protected function setUp(): void
     {
@@ -110,8 +119,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
         $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
         $fields_validator->shouldReceive('validate')->andReturn(true);
 
-        $comment_dao = Mockery::mock(\Tracker_Artifact_Changeset_CommentDao::class);
-        $comment_dao->shouldReceive('createNewVersion')->andReturn(true);
+        $this->comment_dao = Mockery::mock(\Tracker_Artifact_Changeset_CommentDao::class);
+        $this->comment_dao->shouldReceive('createNewVersion')->andReturn(true)->byDefault();
 
         $this->parent_link_action = Mockery::mock(ParentLinkAction::class);
 
@@ -120,18 +129,22 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
         $field_retriever = Mockery::mock(FieldsToBeSavedInSpecificOrderRetriever::class);
         $field_retriever->shouldReceive('getFields')->andReturn([]);
         $this->changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
-        $this->creator         = new Tracker_Artifact_Changeset_NewChangesetCreator(
+
+        $this->ugroup_private_comment_inserter = Mockery::mock(TrackerPrivateCommentUGroupPermissionInserter::class);
+
+        $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $field_retriever,
             $this->changeset_dao,
-            $comment_dao,
+            $this->comment_dao,
             $this->artifact_factory,
             \Mockery::spy(\EventManager::class),
             \Mockery::spy(\ReferenceManager::class),
             $field_initializator,
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             $this->changeset_saver,
-            $this->parent_link_action
+            $this->parent_link_action,
+            $this->ugroup_private_comment_inserter
         );
     }
 
@@ -151,7 +164,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             false,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
             Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-            new TrackerNoXMLImportLoggedConfig()
+            new TrackerNoXMLImportLoggedConfig(),
+            []
         );
     }
 
@@ -181,7 +195,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             false,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
             Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-            new TrackerNoXMLImportLoggedConfig()
+            new TrackerNoXMLImportLoggedConfig(),
+            []
         );
     }
 
@@ -203,7 +218,37 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             false,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
             Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-            new TrackerNoXMLImportLoggedConfig()
+            new TrackerNoXMLImportLoggedConfig(),
+            []
+        );
+    }
+
+    public function testItSavesUgroupPrivateComment(): void
+    {
+        $ugroup = Mockery::mock(\ProjectUGroup::class);
+        $this->comment_dao->shouldReceive('createNewVersion')->once()->andReturn(15);
+
+        $this->ugroup_private_comment_inserter
+            ->shouldReceive('insertUGroupsOnPrivateComment')
+            ->with(15, [$ugroup])
+            ->once();
+
+        $this->changeset_dao->shouldReceive('create')->andReturn(true);
+        $this->artifact_factory->shouldReceive('save')->andReturn(true);
+        $this->workflow->shouldReceive('after')->once();
+        $this->changeset_saver->shouldReceive('saveChangeset')->once();
+
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            '',
+            $this->submitter,
+            $this->submitted_on,
+            false,
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
+            new TrackerNoXMLImportLoggedConfig(),
+            [$ugroup]
         );
     }
 }
