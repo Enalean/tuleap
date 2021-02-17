@@ -38,7 +38,6 @@
             <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
                 <label class="tlp-label" for="description" v-translate>Message</label>
                 <textarea
-                    type="text"
                     ref="embedded_editor"
                     class="tlp-textarea"
                     id="description"

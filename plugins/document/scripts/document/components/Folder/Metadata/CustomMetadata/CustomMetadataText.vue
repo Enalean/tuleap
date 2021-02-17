@@ -36,7 +36,6 @@
             ></i>
         </label>
         <textarea
-            type="text"
             class="tlp-textarea tlp-form-element"
             data-test="document-text-input"
             v-bind:id="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
