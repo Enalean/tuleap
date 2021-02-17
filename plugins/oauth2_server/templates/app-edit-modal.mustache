@@ -14,13 +14,12 @@
         <h1 class="tlp-modal-title" id="oauth2-server-edit-modal-label">
             <i class="fa fa-edit tlp-modal-title-icon"></i> {{# dgettext }}tuleap-oauth2_server | Edit an App {{/ dgettext }}
         </h1>
-        <div
+        <button
             class="tlp-modal-close"
-            tabindex="0"
-            role="button"
+            type="button"
             data-dismiss="modal"
             aria-label="{{# dgettext }}tuleap-oauth2_server | Close {{/ dgettext }}"
-        ></div>
+        ></button>
     </div>
     <div class="tlp-modal-body">
         <input type="hidden" name="app_id" value="{{ id }}">
