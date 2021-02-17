@@ -50,7 +50,6 @@ use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -183,7 +182,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $service_crumb_builder,
             $admin_crumb_builder,
-            new TimeframeChecker($form_element_factory),
+            new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
             new CountElementsModeChecker(new ProjectsCountModeDao()),
             new DBTransactionExecutorWithConnection($db_connection),
             new ArtifactsInExplicitBacklogDao(),
