@@ -29,15 +29,14 @@
                 <i class="fas fa-key tlp-modal-title-icon" aria-hidden="true"></i>
                 <translate id="edit-access-token-gitlab-modal-title">Edit access token</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
                 &times;
-            </div>
+            </button>
         </div>
         <access-token-form-modal
             v-if="display_form_to_edit"

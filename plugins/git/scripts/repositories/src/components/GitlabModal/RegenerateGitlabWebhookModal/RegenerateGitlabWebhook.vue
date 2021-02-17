@@ -24,15 +24,14 @@
                 <i class="fas fa-tlp-webhooks fa-fw tlp-modal-title-icon" aria-hidden="true"></i>
                 <translate id="regenerate-gitlab-webhook">Regenerate the GitLab webhook</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
                 &times;
-            </div>
+            </button>
         </div>
         <div
             class="tlp-modal-feedback"
