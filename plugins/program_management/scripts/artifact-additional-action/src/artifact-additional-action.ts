@@ -44,17 +44,25 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
         throw new Error("Not able to find the user language.");
     }
 
+    const action_button_wrapper = action_button.parentElement;
     const action_button_icon = action_button.querySelector("i");
     const action_button_title = action_button
         .getElementsByClassName("additional-artifact-action-title")
         .item(0);
-    if (action_button_title === null || action_button_icon === null) {
-        throw new Error("Can not find the button title of the additional action");
+    if (
+        action_button_wrapper === null ||
+        action_button_title === null ||
+        action_button_icon === null
+    ) {
+        throw new Error("Cannot find button icon, title or parent element");
     }
 
     action_button.addEventListener(
         "click",
         async (): Promise<void> => {
+            if (action_button_wrapper.classList.contains("disabled")) {
+                return;
+            }
             const gettext_provider = await initGettext(
                 language,
                 "artifact-additional-action",
@@ -68,6 +76,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
             clearAllFeedbacks();
             if (action === "add") {
                 try {
+                    action_button_wrapper.classList.add("disabled");
                     await patch(
                         `/api/v1/projects/${encodeURIComponent(project_id)}/program_backlog`,
                         {
@@ -89,6 +98,8 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                     );
 
                     return;
+                } finally {
+                    action_button_wrapper.classList.remove("disabled");
                 }
 
                 addFeedback(
@@ -103,6 +114,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 action = "remove";
             } else if (action === "remove") {
                 try {
+                    action_button_wrapper.classList.add("disabled");
                     await patch(
                         `/api/v1/projects/${encodeURIComponent(project_id)}/program_backlog`,
                         {
@@ -124,6 +136,8 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                     );
 
                     return;
+                } finally {
+                    action_button_wrapper.classList.remove("disabled");
                 }
                 addFeedback(
                     "info",
