@@ -10,14 +10,13 @@
         >
             {{ reports_modal.kanban_label }} reports
         </h1>
-        <div class="tlp-modal-close"
-            tabindex="0"
-            role="button"
+        <button class="tlp-modal-close"
+            type="button"
             aria-label="{{ Close | translate }}"
             ng-click="reports_modal.close()"
         >
             &times;
-        </div>
+        </button>
     </div>
 
     <div class="tlp-modal-body">
