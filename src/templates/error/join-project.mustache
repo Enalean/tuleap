@@ -3,9 +3,9 @@
         <h1 class="tlp-modal-title" id="join-project-modal">
             <i class="fas fa-long-arrow-alt-right"></i> {{# gettext }}Ask to join this project{{/ gettext }}
         </h1>
-        <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="Close">
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
             &times;
-        </div>
+        </button>
     </div>
     <form action="{{ join_url }}" method="post" name="display_form">
         <div class="tlp-modal-body">

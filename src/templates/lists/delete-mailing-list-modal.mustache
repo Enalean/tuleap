@@ -14,14 +14,13 @@
                 {{# gettext }}Delete a mailing list{{/ gettext }}
             </span>
         </h1>
-        <div class="tlp-modal-close"
-             tabindex="0"
-             role="button"
+        <button class="tlp-modal-close"
+             type="button"
              data-dismiss="modal"
              aria-label="{{# gettext }}Close{{/ gettext }}"
         >
             ×
-        </div>
+        </button>
     </div>
     <div class="tlp-modal-body">
         {{# csrf_token }}

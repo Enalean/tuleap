@@ -30,15 +30,14 @@
                 <i class="fa fa-plus tlp-modal-title-icon"></i>
                 <translate>Add a new service</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
                 ×
-            </div>
+            </button>
         </div>
         <slot name="content" />
         <div class="tlp-modal-footer">
