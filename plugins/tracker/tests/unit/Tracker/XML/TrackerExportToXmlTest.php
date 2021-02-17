@@ -69,6 +69,10 @@ final class TrackerExportToXmlTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
      */
     private $private_comment_enable_dao;
+    /*
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerInNewDropdownDao
+     */
+    private $dropdown_dao;
 
     protected function setUp(): void
     {
@@ -125,9 +129,9 @@ final class TrackerExportToXmlTest extends TestCase
         $webhook_xml_exporter->shouldReceive('exportTrackerWebhooksInXML')->once();
         $this->tracker->shouldReceive('getWebhookXMLExporter')->andReturn($webhook_xml_exporter);
 
-        $dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
-        $dropdown_dao->shouldReceive('isContaining')->andReturnTrue()->once();
-        $this->tracker->shouldReceive('getDropDownDao')->andReturn($dropdown_dao);
+        $this->dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
+        $this->dropdown_dao->shouldReceive('isContaining')->andReturnTrue()->once()->byDefault();
+        $this->tracker->shouldReceive('getDropDownDao')->andReturn($this->dropdown_dao);
 
         $this->private_comment_enable_dao = Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
         $this->private_comment_enable_dao
@@ -245,8 +249,25 @@ final class TrackerExportToXmlTest extends TestCase
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
-        $is_displayed_in_new_dropdown = $xml->is_displayed_in_new_dropdown;
-        $this->assertEquals(0, (int) $is_displayed_in_new_dropdown);
+        $attributes = $xml->attributes();
+        $this->assertTrue(isset($attributes['is_displayed_in_new_dropdown']));
+        $this->assertEquals(1, (int) $attributes['is_displayed_in_new_dropdown']);
+    }
+
+    public function testItDoesNotExportTheTrackerUsageInNewDropDownIfDontUse(): void
+    {
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
+
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $this->dropdown_dao->shouldReceive('isContaining')->andReturnFalse();
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertFalse(isset($attributes['is_displayed_in_new_dropdown']));
     }
 
     public function testItDoesNotExportWhenTrackerUsePrivateComment(): void
