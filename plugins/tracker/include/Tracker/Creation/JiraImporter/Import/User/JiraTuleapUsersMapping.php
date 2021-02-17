@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class JiraTuleapUsersMapping

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class CommentXMLValueEnhancerTest extends TestCase

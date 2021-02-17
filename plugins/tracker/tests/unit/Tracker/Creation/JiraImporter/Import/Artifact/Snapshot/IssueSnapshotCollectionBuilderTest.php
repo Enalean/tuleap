@@ -33,11 +33,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
 class IssueSnapshotCollectionBuilderTest extends TestCase
