@@ -72,7 +72,11 @@ class Tracker_Action_CreateArtifactFromModal
             return;
         }
 
-        $source_artifact->linkArtifact($new_artifact->getId(), $current_user);
+        $source_artifact->linkArtifact(
+            $new_artifact->getId(),
+            $current_user,
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+        );
     }
 
     private function sendJSONErrors()
