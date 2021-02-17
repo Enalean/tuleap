@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -24,15 +24,9 @@
                 <i class="fas fa-code-branch fa-rotate-270 tlp-modal-title-icon"></i>
                 <translate>Create a pull request</translate>
             </h1>
-            <div
-                class="tlp-modal-close"
-                tabindex="0"
-                role="button"
-                data-dismiss="modal"
-                aria-label="Close"
-            >
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
                 &times;
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body">
             <div class="tlp-alert-danger" v-if="create_error_message">
