@@ -17,18 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const escaper = {
-    entityMap: {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-        "/": "&#x2F;",
-    },
-    html: function (text) {
-        return String(text).replace(/[&<>"'/]/g, function fromEntityMap(s) {
-            return escaper.entityMap[s];
-        });
-    },
+const entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+    "/": "&#x2F;",
 };
+
+// Also export "html" so that in UMD tuleap.escaper.html is defined
+export const html = function (text) {
+    return String(text).replace(/[&<>"'/]/g, function fromEntityMap(s) {
+        return entityMap[s];
+    });
+};
+
+export const escaper = { entityMap, html };

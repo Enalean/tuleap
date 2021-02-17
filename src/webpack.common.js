@@ -378,7 +378,7 @@ const fat_combined_files = [
         "./www/scripts/tablekit/tablekit.js",
         "./www/scripts/lytebox/lytebox.js",
         "./www/scripts/lightwindow/lightwindow.js",
-        "../node_modules/@tuleap/html-escaper/dist/html-escaper.umd.js",
+        "./node_modules/@tuleap/html-escaper/dist/html-escaper.umd.js",
         "./www/scripts/codendi/Tracker.js",
         "./www/scripts/codendi/TreeNode.js",
         "./www/scripts/tuleap/tuleap-modal.js",
