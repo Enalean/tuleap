@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\MappingRegistry;
+
 require_once('Widget.class.php');
 
 /**
@@ -126,7 +128,8 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
         $da                = CodendiDataAccess::instance();
         $id                = $da->escapeInt($id);

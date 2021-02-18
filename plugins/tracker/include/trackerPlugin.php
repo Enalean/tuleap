@@ -590,7 +590,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $tracker_manager->duplicate(
                 (int) $template->getID(),
                 (int) $project->getID(),
-                $event->getUgroupMapping()
+                $event->getMappingRegistry()->getUgroupMapping()
             );
 
             $legacy_services = $event->getLegacyServiceUsage();

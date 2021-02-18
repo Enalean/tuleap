@@ -124,6 +124,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public const TRUNCATED_SERVICE_NAME = 'Documents';
     public const SYSTEM_NATURE_NAME     = 'document';
     public const SERVICE_SHORTNAME      = 'docman';
+    public const ITEM_MAPPING_KEY       = 'plugin_docman_item_mapping';
 
     public const ADMIN_BASE_URL = '/admin/document';
     /**
@@ -405,7 +406,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $this->getHTTPController()->installDocman(
-            $event->getUgroupMapping(),
+            $event->getMappingRegistry(),
             (int) $event->getJustCreatedProject()->getID(),
         );
     }
@@ -415,7 +416,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
             if (isset($params['is_used']) && $params['is_used']) {
                 $this->getHTTPController()->installDocman(
-                    false,
+                    null,
                     $params['group_id'],
                 );
             }

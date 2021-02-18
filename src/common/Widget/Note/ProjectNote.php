@@ -25,6 +25,7 @@ use Codendi_Request;
 use Project;
 use TemplateRenderer;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Project\MappingRegistry;
 
 class ProjectNote extends \Widget
 {
@@ -132,7 +133,8 @@ class ProjectNote extends \Widget
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
         return $this->dao->duplicate($new_project->getID(), $id);
     }

@@ -21,11 +21,12 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Project\MappingRegistry;
 
 /**
 * Widget
 */
-/* abstract */ class Widget
+/* abstract */ class Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     public $content_id;
@@ -150,7 +151,8 @@ use Tuleap\Layout\CssAssetCollection;
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
         return $this->getInstanceId();
     }

@@ -377,7 +377,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         if ($event->getTemplateProject()->usesService(self::SERVICE_SHORTNAME)) {
             $mediawiki_instantiater = $this->getInstantiater((int) $just_created_project->getID());
             if ($mediawiki_instantiater) {
-                $mediawiki_instantiater->instantiateFromTemplate($event->getUgroupMapping());
+                $mediawiki_instantiater->instantiateFromTemplate($event->getMappingRegistry()->getUgroupMapping());
             }
         } elseif ($just_created_project->usesService(self::SERVICE_SHORTNAME)) {
             $mediawiki_instantiater = $this->getInstantiater((int) $just_created_project->getID());

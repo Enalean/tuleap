@@ -22,6 +22,7 @@
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\MappingRegistry;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class GraphOnTrackersV5_Widget_Chart extends Widget
@@ -131,7 +132,8 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
         $sql = "INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id)
         SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, chart_id
