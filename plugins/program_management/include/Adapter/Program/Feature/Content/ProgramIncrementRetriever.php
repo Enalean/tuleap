@@ -38,9 +38,10 @@ class ProgramIncrementRetriever implements RetrieveProgramIncrement
      */
     private $build_tracker;
 
-
-    public function __construct(\Tracker_ArtifactFactory $artifact_factory, BuildTracker $build_tracker)
-    {
+    public function __construct(
+        \Tracker_ArtifactFactory $artifact_factory,
+        BuildTracker $build_tracker
+    ) {
         $this->artifact_factory = $artifact_factory;
         $this->build_tracker    = $build_tracker;
     }

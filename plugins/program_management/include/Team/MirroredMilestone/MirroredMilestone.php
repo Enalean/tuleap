@@ -20,16 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Team\MirroredMilestone;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
-
-interface RetrieveProgramIncrement
+/**
+ * @psalm-immutable
+ */
+final class MirroredMilestone
 {
     /**
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
+     * @var int
      */
-    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
+    private $id;
+
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

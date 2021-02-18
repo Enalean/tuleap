@@ -20,16 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
 
-interface RetrieveProgramIncrement
+final class FeatureToLinkBuilderTest extends TestCase
 {
-    /**
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
-     */
-    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
+    use MockeryPHPUnitIntegration;
+
+    public function testItBuildsFeatureToPlan(): void
+    {
+        $feature_to_links = [
+            ['artifact_id' => "123"],
+            ['artifact_id' => "456"]
+        ];
+
+        $builder = new FeatureToLinkBuilder();
+        self::assertEquals(new FeaturePlanChange([123, 456]), $builder->buildFeatureChange($feature_to_links));
+    }
 }

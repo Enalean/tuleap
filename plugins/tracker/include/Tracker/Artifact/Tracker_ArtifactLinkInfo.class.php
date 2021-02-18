@@ -77,12 +77,9 @@ class Tracker_ArtifactLinkInfo
         )->setArtifact($artifact);
     }
 
-    /**
-     * @return int the id of the artifact link
-     */
-    public function getArtifactId()
+    public function getArtifactId(): int
     {
-        return $this->artifact_id;
+        return (int) $this->artifact_id;
     }
 
     /**
@@ -101,12 +98,9 @@ class Tracker_ArtifactLinkInfo
         return $this->group_id;
     }
 
-    /**
-     * @return int the tracker_id of the artifact link
-     */
-    public function getTrackerId()
+    public function getTrackerId(): int
     {
-        return $this->tracker_id;
+        return (int) $this->tracker_id;
     }
 
     /**

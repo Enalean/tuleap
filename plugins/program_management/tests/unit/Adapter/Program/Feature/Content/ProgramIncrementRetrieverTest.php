@@ -32,7 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class FeatureRetrieverTest extends TestCase
+final class ProgramIncrementRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

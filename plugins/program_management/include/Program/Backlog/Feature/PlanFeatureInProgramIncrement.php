@@ -20,16 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 
-interface RetrieveProgramIncrement
+interface PlanFeatureInProgramIncrement
 {
     /**
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
+     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException
+     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
      */
-    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
+    public function plan(ArtifactUpdated $event): void;
 }
