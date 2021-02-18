@@ -170,7 +170,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
             return dgettext('tuleap-agiledashboard', 'Milestones are "Done" when they have their status set to \'closed\' as defined in their tracker\'s semantic.');
         }
 
-        return dgettext('tuleap-agiledashboard', 'All milestones that have a status set to \'open\' (as defined in their tracker\'s semantic) are either "Current" or "Next". The existence and values of their date fields (start_date and duration) decide in which tab(s) they appear.');
+        return dgettext('tuleap-agiledashboard', 'All milestones that have a status set to \'open\' (as defined in their tracker\'s semantic) are either "Current" or "Next". Their timeframe (as defined in tracker semantic) decides in which tab(s) they appear.');
     }
 
     public function add_kanban()

@@ -52,7 +52,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class PlanningControllerTest extends TestCase
 {
@@ -143,7 +143,7 @@ final class PlanningControllerTest extends TestCase
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(AgileDashboardCrumbBuilder::class),
             Mockery::mock(AdministrationCrumbBuilder::class),
-            Mockery::mock(TimeframeChecker::class),
+            Mockery::mock(SemanticTimeframeBuilder::class),
             new DBTransactionExecutorPassthrough(),
             $this->explicit_backlog_dao,
             $this->planning_updater,

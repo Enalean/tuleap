@@ -45,7 +45,7 @@ use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 /**
  * Routes HTTP (and maybe SOAP ?) requests to the appropriate controllers
@@ -134,9 +134,9 @@ class AgileDashboardRouter
     private $admin_crumb_builder;
 
     /**
-     * @var TimeframeChecker
+     * @var SemanticTimeframeBuilder
      */
-    private $timeframe_checker;
+    private $semantic_timeframe_builder;
 
     /**
      * @var CountElementsModeChecker
@@ -199,7 +199,7 @@ class AgileDashboardRouter
         AgileDashboardJSONPermissionsRetriever $permissions_retriever,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
-        TimeframeChecker $timeframe_checker,
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
         CountElementsModeChecker $count_elements_mode_checker,
         DBTransactionExecutor $transaction_executor,
         ArtifactsInExplicitBacklogDao $explicit_backlog_dao,
@@ -228,7 +228,7 @@ class AgileDashboardRouter
         $this->permissions_retriever              = $permissions_retriever;
         $this->service_crumb_builder              = $service_crumb_builder;
         $this->admin_crumb_builder                = $admin_crumb_builder;
-        $this->timeframe_checker                  = $timeframe_checker;
+        $this->semantic_timeframe_builder         = $semantic_timeframe_builder;
         $this->count_elements_mode_checker        = $count_elements_mode_checker;
         $this->transaction_executor               = $transaction_executor;
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
@@ -512,7 +512,7 @@ class AgileDashboardRouter
             Tracker_FormElementFactory::instance(),
             $this->service_crumb_builder,
             $this->admin_crumb_builder,
-            $this->timeframe_checker,
+            $this->semantic_timeframe_builder,
             $this->transaction_executor,
             $this->explicit_backlog_dao,
             $this->planning_updater,

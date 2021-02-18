@@ -24,7 +24,7 @@ use Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvid
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class AgileDashboardRouterTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -78,7 +78,7 @@ final class AgileDashboardRouterTest extends \PHPUnit\Framework\TestCase //phpcs
                 Mockery::mock(Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever::class),
                 Mockery::mock(Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class),
                 Mockery::mock(Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder::class),
-                Mockery::mock(TimeframeChecker::class),
+                Mockery::mock(SemanticTimeframeBuilder::class),
                 Mockery::mock(CountElementsModeChecker::class),
                 Mockery::mock(DBTransactionExecutor::class),
                 Mockery::mock(ArtifactsInExplicitBacklogDao::class),

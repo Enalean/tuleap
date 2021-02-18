@@ -41,7 +41,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 /**
  * Handles the HTTP actions related to a planning.
@@ -107,9 +107,9 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private $admin_crumb_builder;
 
     /**
-     * @var TimeframeChecker
+     * @var SemanticTimeframeBuilder
      */
-    private $timeframe_checker;
+    private $semantic_timeframe_builder;
     /**
      * @var DBTransactionExecutor
      */
@@ -160,7 +160,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
-        TimeframeChecker $timeframe_checker,
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
         DBTransactionExecutor $transaction_executor,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         PlanningUpdater $planning_updater,
@@ -188,7 +188,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->tracker_form_element_factory       = $tracker_form_element_factory;
         $this->service_crumb_builder              = $service_crumb_builder;
         $this->admin_crumb_builder                = $admin_crumb_builder;
-        $this->timeframe_checker                  = $timeframe_checker;
+        $this->semantic_timeframe_builder         = $semantic_timeframe_builder;
         $this->transaction_executor               = $transaction_executor;
         $this->artifacts_in_explicit_backlog_dao  = $artifacts_in_explicit_backlog_dao;
         $this->planning_updater                   = $planning_updater;
@@ -317,7 +317,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     private function getPlanningMilestonesDependingOnTimePeriodOrStatus(Planning $planning)
     {
-        $set_in_time = $this->timeframe_checker->isATimePeriodBuildableInTracker($planning->getPlanningTracker());
+        $set_in_time = $this->semantic_timeframe_builder->getSemantic($planning->getPlanningTracker())->isDefined();
 
         if ($set_in_time) {
             $milestones = $this->getPlanningMilestonesForTimePeriod($planning);
