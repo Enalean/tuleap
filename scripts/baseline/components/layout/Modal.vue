@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -30,9 +30,9 @@
                 <h1 id="modal-label" class="tlp-modal-title" data-test-type="modal-title">
                     {{ modal_content.title }}
                 </h1>
-                <div class="tlp-modal-close" v-bind:aria-label="close_label" data-dismiss="modal">
+                <button class="tlp-modal-close" type="button" v-bind:aria-label="close_label" data-dismiss="modal">
                     ×
-                </div>
+                </button>
             </div>
             <component
                 v-bind:is="modal_content.component"
