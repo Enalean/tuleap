@@ -19,6 +19,10 @@
 
 /* global codendi:readonly CKEDITOR:readonly jQuery:readonly */
 
+import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
+import { RichTextEditorsCreator } from "../artifact/RichTextEditorsCreator";
+
 var tuleap = window.tuleap || {};
 tuleap.tracker = tuleap.tracker || {};
 tuleap.textarea = tuleap.textarea || {};
@@ -56,30 +60,14 @@ tuleap.textarea = tuleap.textarea || {};
             window.location.reload();
         },
 
-        enableRichTextArea: function (element) {
-            var html_id = element.id,
-                id = html_id.match(/_(\d+)$/),
-                htmlFormat = false,
-                name;
-
-            if (id) {
-                id = id[1];
-                name = "artifact[" + id + "][format]";
-
-                if (Element.readAttribute("artifact[" + id + "]_body_format", "value") == "html") {
-                    htmlFormat = true;
-                }
-
-                new tuleap.textarea.RTE(element, {
-                    toggle: true,
-                    default_in_html: false,
-                    id: id,
-                    name: name,
-                    htmlFormat: htmlFormat,
-                    no_resize: true,
-                    resize_enabled: false,
-                });
-            }
+        enableRichTextArea: function () {
+            const locale = document.body.dataset.userLocale ?? "en_US";
+            const editor_creator = new RichTextEditorsCreator(
+                document,
+                new UploadImageFormFactory(document, locale),
+                RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale)
+            );
+            editor_creator.createTextFieldEditors();
         },
 
         displayAutocomputed: function (element) {
@@ -148,10 +136,7 @@ tuleap.textarea = tuleap.textarea || {};
                     self.showArtifactCreationForm(data, tracker_id, artifact_link_id, callback);
                     tuleap.tracker.runTrackerFieldDependencies();
 
-                    $(".tuleap-modal-main-panel form textarea").each(function () {
-                        var element = $(this).get(0); //transform to prototype
-                        self.enableRichTextArea(element);
-                    });
+                    self.enableRichTextArea();
 
                     $(".tracker_artifact_field-computed").each(function () {
                         var $element = $(this);
@@ -202,14 +187,11 @@ tuleap.textarea = tuleap.textarea || {};
                     var modalLoadedEvent = new Event("EditModalLoaded");
                     document.dispatchEvent(modalLoadedEvent);
 
-                    $(".tuleap-modal-main-panel form textarea").each(function () {
-                        var element = $(this).get(0); //transform to prototype
-                        self.enableRichTextArea(element);
+                    self.enableRichTextArea();
 
-                        if (typeof load_callback !== "undefined") {
-                            load_callback();
-                        }
-                    });
+                    if (typeof load_callback !== "undefined") {
+                        load_callback();
+                    }
 
                     $(".tracker_artifact_field").each(function () {
                         var $element = $(this);
