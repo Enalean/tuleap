@@ -88,7 +88,7 @@ class FeaturePlanner implements PlanFeatureInProgramIncrement
         $potential_feature_to_link = $this->content_dao->searchContent(
             new PlannedProgramIncrement($artifact->getId())
         );
-        $feature_list_to_plan      = $this->feature_to_plan_builder->buildFeatureChange($potential_feature_to_link);
+        $feature_list_to_plan      = $this->feature_to_plan_builder->buildFeatureChange($potential_feature_to_link, $program_increment_tracker_id);
 
         $this->db_transaction_executor->execute(
             function () use ($feature_list_to_plan, $user, $program_increment_id, $program_increment_tracker_id) {

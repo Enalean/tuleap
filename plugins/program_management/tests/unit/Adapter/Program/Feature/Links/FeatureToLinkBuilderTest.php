@@ -37,7 +37,12 @@ final class FeatureToLinkBuilderTest extends TestCase
             ['artifact_id' => "456"]
         ];
 
-        $builder = new FeatureToLinkBuilder();
-        self::assertEquals(new FeaturePlanChange([123, 456]), $builder->buildFeatureChange($feature_to_links));
+        $dao     = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $builder = new FeatureToLinkBuilder($dao);
+
+        $dao->shouldReceive('getArtifactsLinkedToId')->with("123", 1)->andReturn([['id' => 789]]);
+        $dao->shouldReceive('getArtifactsLinkedToId')->with("456", 1)->andReturn([['id' => 910]]);
+
+        self::assertEquals(new FeaturePlanChange([789, 910]), $builder->buildFeatureChange($feature_to_links, 1));
     }
 }

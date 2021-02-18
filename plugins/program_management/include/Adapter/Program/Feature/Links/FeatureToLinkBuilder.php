@@ -26,11 +26,25 @@ use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
 
 class FeatureToLinkBuilder
 {
-    public function buildFeatureChange(array $feature_to_links): FeaturePlanChange
+    /**
+     * @var ArtifactsLinkedToParentDao
+     */
+    private $dao;
+
+    public function __construct(ArtifactsLinkedToParentDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    public function buildFeatureChange(array $feature_to_links, int $program_increment_tracker_id): FeaturePlanChange
     {
         $feature_change = [];
         foreach ($feature_to_links as $feature_to_link) {
-            $feature_change[] = $feature_to_link['artifact_id'];
+            $links = $this->dao->getArtifactsLinkedToId((int) $feature_to_link['artifact_id'], $program_increment_tracker_id);
+
+            foreach ($links as $link) {
+                $feature_change[] = $link['id'];
+            }
         }
 
         return new FeaturePlanChange($feature_change);

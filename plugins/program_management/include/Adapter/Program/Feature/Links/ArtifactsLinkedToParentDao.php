@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\DB\DataAccessObject;
 
-class FeaturesLinkedToMilestonesDao extends DataAccessObject
+class ArtifactsLinkedToParentDao extends DataAccessObject
 {
     /**
      * @psalm-return array{id:int}[]
      */
-    public function getFeaturesLinkedToMilestone(int $milestone_id, int $program_increment_id): array
+    public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array
     {
         $sql = "SELECT linked_art.id
                 FROM tracker_artifact parent_art
@@ -43,6 +43,6 @@ class FeaturesLinkedToMilestonesDao extends DataAccessObject
                   AND t.deletion_date IS NULL
                   AND plan.program_increment_tracker_id = ?";
 
-        return $this->getDB()->run($sql, $milestone_id, $program_increment_id);
+        return $this->getDB()->run($sql, $artifact_id, $program_increment_id);
     }
 }

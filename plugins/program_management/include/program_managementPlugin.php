@@ -64,7 +64,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestoneBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestonesDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -784,11 +784,11 @@ final class program_managementPlugin extends Plugin
 
         return new FeaturePlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new FeatureToLinkBuilder(),
+            new FeatureToLinkBuilder(new ArtifactsLinkedToParentDao()),
             $artifact_factory,
             new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
             new ContentDao(),
-            new FeaturesLinkedToMilestoneBuilder(new FeaturesLinkedToMilestonesDao())
+            new FeaturesLinkedToMilestoneBuilder(new ArtifactsLinkedToParentDao())
         );
     }
 }
