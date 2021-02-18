@@ -26,6 +26,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
@@ -61,12 +62,17 @@ class MilestoneElementAdder
      * @var TopBacklogElementsToAddChecker
      */
     private $top_backlog_elements_to_add_checker;
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
         ResourcesPatcher $resources_patcher,
         TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
+        Tracker_ArtifactFactory $artifact_factory,
         DBTransactionExecutor $db_transaction_executor
     ) {
         $this->explicit_backlog_dao                = $explicit_backlog_dao;
@@ -74,6 +80,7 @@ class MilestoneElementAdder
         $this->resources_patcher                   = $resources_patcher;
         $this->db_transaction_executor             = $db_transaction_executor;
         $this->top_backlog_elements_to_add_checker = $top_backlog_elements_to_add_checker;
+        $this->artifact_factory                    = $artifact_factory;
     }
 
 
@@ -87,12 +94,23 @@ class MilestoneElementAdder
     {
         $project_id = (int) $project->getID();
 
-        $this->checkAddedIdsBelongToTheProjectTopBacklogTrackers($project, $user, $add);
+        $add_user_can_see = [];
+        foreach ($add as $added_artifact) {
+            if ($this->artifact_factory->getArtifactByIdUserCanView($user, $added_artifact->id) !== null) {
+                $add_user_can_see[] = $added_artifact;
+            }
+        }
+
+        if (count($add_user_can_see) === 0) {
+            return;
+        }
+
+        $this->checkAddedIdsBelongToTheProjectTopBacklogTrackers($project, $user, $add_user_can_see);
 
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
-            $this->addElementInExplicitBacklog($user, $add, $project_id);
+            $this->addElementInExplicitBacklog($user, $add_user_can_see, $project_id);
         } else {
-            $this->moveArtifactsForStandardBacklog($add, $user);
+            $this->moveArtifactsForStandardBacklog($add_user_can_see, $user);
         }
     }
 

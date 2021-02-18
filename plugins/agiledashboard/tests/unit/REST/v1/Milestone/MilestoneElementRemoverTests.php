@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
+use Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -30,6 +31,7 @@ use Project;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\BacklogRemoveRepresentation;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MilestoneElementRemoverTests extends TestCase
 {
@@ -44,6 +46,11 @@ final class MilestoneElementRemoverTests extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
 
     /**
      * @var MilestoneElementRemover
@@ -69,10 +76,12 @@ final class MilestoneElementRemoverTests extends TestCase
 
         $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
         $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->artifact_factory                  = Mockery::mock(\Tracker_ArtifactFactory::class);
 
         $this->remover = new MilestoneElementRemover(
             $this->explicit_backlog_dao,
-            $this->artifacts_in_explicit_backlog_dao
+            $this->artifacts_in_explicit_backlog_dao,
+            $this->artifact_factory
         );
 
         $this->backlog_remove_representation     = new BacklogRemoveRepresentation();
@@ -93,6 +102,7 @@ final class MilestoneElementRemoverTests extends TestCase
 
         $this->remover->removeElementsFromBacklog(
             $this->project,
+            UserTestBuilder::aUser()->build(),
             [
                 $this->backlog_remove_representation
             ]
@@ -101,6 +111,7 @@ final class MilestoneElementRemoverTests extends TestCase
 
     public function testItThrowsAnExceptionIfAtLeastOneRemovedIdIsNotInExplicitBacklog(): void
     {
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(Mockery::mock(Artifact::class));
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
             ->with(101)
@@ -118,6 +129,7 @@ final class MilestoneElementRemoverTests extends TestCase
 
         $this->remover->removeElementsFromBacklog(
             $this->project,
+            UserTestBuilder::aUser()->build(),
             [
                 $this->backlog_remove_representation
             ]
@@ -126,6 +138,7 @@ final class MilestoneElementRemoverTests extends TestCase
 
     public function testItRemovesItemsFromExplicitBacklog(): void
     {
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(Mockery::mock(Artifact::class));
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
             ->with(101)
@@ -142,6 +155,30 @@ final class MilestoneElementRemoverTests extends TestCase
 
         $this->remover->removeElementsFromBacklog(
             $this->project,
+            UserTestBuilder::aUser()->build(),
+            [
+                $this->backlog_remove_representation
+            ]
+        );
+    }
+
+    public function testDoesNotRemoveFromExplicitBacklogItemsTheUserCannotSee(): void
+    {
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(null);
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->once()
+            ->with(101)
+            ->andReturnTrue();
+
+        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('isArtifactInTopBacklogOfProject');
+
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
+            ->once()
+            ->with(101, []);
+
+        $this->remover->removeElementsFromBacklog(
+            $this->project,
+            UserTestBuilder::aUser()->build(),
             [
                 $this->backlog_remove_representation
             ]

@@ -36,7 +36,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class MilestoneElementAdderTest extends TestCase
+final class MilestoneElementAdderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -70,10 +70,14 @@ class MilestoneElementAdderTest extends TestCase
     private $top_backlog_elements_to_add_checker;
 
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
      */
     private $artifact;
-
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
      */
@@ -87,6 +91,7 @@ class MilestoneElementAdderTest extends TestCase
         $this->explicit_backlog_dao                = Mockery::mock(ExplicitBacklogDao::class);
         $this->unplanned_artifact_adder            = Mockery::mock(UnplannedArtifactsAdder::class);
         $this->top_backlog_elements_to_add_checker = Mockery::mock(TopBacklogElementsToAddChecker::class);
+        $this->artifact_factory                    = Mockery::mock(\Tracker_ArtifactFactory::class);
 
         $this->transaction_executor = new DBTransactionExecutorPassthrough();
 
@@ -95,6 +100,7 @@ class MilestoneElementAdderTest extends TestCase
             $this->unplanned_artifact_adder,
             $this->resources_patcher,
             $this->top_backlog_elements_to_add_checker,
+            $this->artifact_factory,
             $this->transaction_executor
         );
 
@@ -112,6 +118,7 @@ class MilestoneElementAdderTest extends TestCase
         $project->shouldReceive('getID')->andReturn(102);
 
         $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->once();
@@ -135,6 +142,7 @@ class MilestoneElementAdderTest extends TestCase
         $project->shouldReceive('getID')->andReturn(102);
 
         $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->once();
@@ -151,6 +159,24 @@ class MilestoneElementAdderTest extends TestCase
         $this->adder->addElementToBacklog($project, $add, $user);
     }
 
+    public function testDoesNothingWhenUserCannotSeeTheArtifactInExplicitMode(): void
+    {
+        $user    = Mockery::mock(\PFUser::class);
+        $add     = [$this->backlog_add_representation];
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn(102);
+
+        $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(null);
+
+        $this->top_backlog_elements_to_add_checker->shouldNotReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
+        $this->unplanned_artifact_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->shouldNotReceive('removeArtifactFromSource');
+        $this->explicit_backlog_dao->shouldNotReceive('isProjectUsingExplicitBacklog');
+
+        $this->adder->addElementToBacklog($project, $add, $user);
+    }
+
     public function testItDoesNotAddElementToMilestoneIfAtLeastOneArtifactIsNotInTopBacklogTracker(): void
     {
         $user    = Mockery::mock(\PFUser::class);
@@ -159,6 +185,7 @@ class MilestoneElementAdderTest extends TestCase
         $project->shouldReceive('getID')->andReturn(102);
 
         $this->artifact->shouldReceive('getTrackerId')->andReturn(199);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->once()
@@ -181,6 +208,7 @@ class MilestoneElementAdderTest extends TestCase
         $project->shouldReceive('getID')->andReturn(102);
 
         $this->artifact->shouldReceive('getTrackerId')->andReturn(199);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
 
         $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
             ->once()

@@ -265,7 +265,8 @@ class ProjectBacklogResource
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
         if ($add) {
             try {
-                $adder = new MilestoneElementAdder(
+                $artifact_factory = Tracker_ArtifactFactory::instance();
+                $adder            = new MilestoneElementAdder(
                     new ExplicitBacklogDao(),
                     new UnplannedArtifactsAdder(
                         new ExplicitBacklogDao(),
@@ -275,9 +276,10 @@ class ProjectBacklogResource
                     $this->resources_patcher,
                     new TopBacklogElementsToAddChecker(
                         $this->planning_factory,
-                        Tracker_ArtifactFactory::instance()
+                        $artifact_factory
                     ),
-                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                    $artifact_factory,
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 );
                 $adder->addElementToBacklog($project, $add, $user);
             } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
@@ -301,9 +303,10 @@ class ProjectBacklogResource
             try {
                 $adder = new MilestoneElementRemover(
                     new ExplicitBacklogDao(),
-                    new ArtifactsInExplicitBacklogDao()
+                    new ArtifactsInExplicitBacklogDao(),
+                    Tracker_ArtifactFactory::instance()
                 );
-                $adder->removeElementsFromBacklog($project, $remove);
+                $adder->removeElementsFromBacklog($project, $user, $remove);
             } catch (RemoveNotAvailableInClassicBacklogModeException $exception) {
                 throw new RestException(400, $exception->getMessage());
             } catch (ProvidedRemoveIdIsNotInExplicitBacklogException $exception) {

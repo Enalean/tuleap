@@ -38,27 +38,33 @@ class MilestoneElementRemover
      * @var ArtifactsInExplicitBacklogDao
      */
     private $artifacts_in_explicit_backlog_dao;
+    /**
+     * @var \Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        \Tracker_ArtifactFactory $artifact_factory
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
+        $this->artifact_factory                  = $artifact_factory;
     }
 
     /**
      * @throws RemoveNotAvailableInClassicBacklogModeException
      * @throws ProvidedRemoveIdIsNotInExplicitBacklogException
      */
-    public function removeElementsFromBacklog(Project $project, array $removed): void
+    public function removeElementsFromBacklog(Project $project, \PFUser $user, array $removed): void
     {
         $project_id = (int) $project->getID();
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
             throw new RemoveNotAvailableInClassicBacklogModeException();
         }
 
-        $removed_ids = $this->getArtifactIdsFromRemoved($removed);
+        $removed_ids = $this->getArtifactIdsFromRemoved($user, $removed);
 
         $this->checkRemovedIdsBelongToTheProjectTopBacklog($removed_ids, $project_id);
 
@@ -68,11 +74,14 @@ class MilestoneElementRemover
         );
     }
 
-    private function getArtifactIdsFromRemoved(array $removed_items): array
+    private function getArtifactIdsFromRemoved(\PFUser $user, array $removed_items): array
     {
         $ids = [];
         foreach ($removed_items as $removed_item) {
-            $ids[] = (int) $removed_item->id;
+            $id = (int) $removed_item->id;
+            if ($this->artifact_factory->getArtifactByIdUserCanView($user, $id) !== null) {
+                $ids[] = (int) $removed_item->id;
+            }
         }
 
         return $ids;
