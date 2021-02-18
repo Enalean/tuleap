@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
@@ -34,6 +35,7 @@ use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Replication
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -61,6 +63,10 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      * @var PendingArtifactCreationStore
      */
     private $pending_artifact_creation_store;
+    /**
+     * @var FeaturePlanner
+     */
+    private $feature_planner;
 
     public function __construct(
         BuildFieldValues $changeset_collection_adapter,
@@ -68,7 +74,8 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         TrackerCollectionFactory $scale_tracker_factory,
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
-        PendingArtifactCreationStore $pending_artifact_creation_store
+        PendingArtifactCreationStore $pending_artifact_creation_store,
+        FeaturePlanner $feature_planner
     ) {
         $this->changeset_collection_adapter    = $changeset_collection_adapter;
         $this->projects_collection_builder     = $projects_collection_builder;
@@ -76,6 +83,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $this->program_increment_creator       = $program_increment_creator;
         $this->logger                          = $logger;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
+        $this->feature_planner                 = $feature_planner;
     }
 
     public function createProgramIncrements(ReplicationData $replication_data): void
@@ -114,5 +122,11 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
             (int) $replication_data->getArtifact()->getId(),
             (int) $replication_data->getUser()->getId()
         );
+
+        $artifact_updated = new ArtifactUpdated(
+            $replication_data->getFullChangeset()->getArtifact(),
+            $replication_data->getUser()
+        );
+        $this->feature_planner->plan($artifact_updated);
     }
 }
