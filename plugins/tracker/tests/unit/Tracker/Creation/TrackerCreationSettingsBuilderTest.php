@@ -25,24 +25,48 @@ namespace Tuleap\Tracker\Creation;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 final class TrackerCreationSettingsBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerInNewDropdownDao
+     */
+    private $in_new_dropdown_dao;
+    /**
+     * @var TrackerCreationSettingsBuilder
+     */
+    private $builder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
+     */
+    private $private_comment_dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
+     */
+    private $tracker;
+
+    protected function setUp(): void
+    {
+        $this->in_new_dropdown_dao = \Mockery::mock(TrackerInNewDropdownDao::class);
+        $this->private_comment_dao = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
+        $this->tracker             = \Mockery::mock(Tracker::class, ['getId' => 10]);
+
+        $this->builder = new TrackerCreationSettingsBuilder($this->in_new_dropdown_dao, $this->private_comment_dao);
+    }
+
     public function testItBuildTrackerCreationSettings(): void
     {
-        $in_new_dropdown_dao = \Mockery::mock(TrackerInNewDropdownDao::class);
-        $builder             = new TrackerCreationSettingsBuilder($in_new_dropdown_dao);
-        $tracker             = \Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(10);
+        $this->in_new_dropdown_dao->shouldReceive('isContaining')->with(10)->andReturnTrue();
+        $this->private_comment_dao->shouldReceive('isTrackerEnabledPrivateComment')->with(10)->andReturnTrue();
 
-        $expected = new TrackerCreationSettings(true);
-
-        $in_new_dropdown_dao->shouldReceive('isContaining')->with($tracker->getId())->andReturnTrue();
-        $result = $builder->build($tracker);
+        $expected = new TrackerCreationSettings(true, true);
+        $result   = $this->builder->build($this->tracker);
 
         $this->assertEquals($expected->isDisplayedInNewDropdown(), $result->isDisplayedInNewDropdown());
+        $this->assertEquals($expected->isPrivateCommentUsed(), $result->isPrivateCommentUsed());
     }
 }

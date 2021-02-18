@@ -770,8 +770,10 @@ class TrackerXmlImport
             $attributes                   = $xml_element->attributes();
             $is_displayed_in_new_dropdown = isset($attributes['is_displayed_in_new_dropdown']) ?
                 (bool) $attributes['is_displayed_in_new_dropdown'] : false;
+            $is_private_comment_used      = isset($attributes['use_private_comments']) ?
+                PHPCast::toBoolean($attributes['use_private_comments']) : true;
 
-            $settings = new TrackerCreationSettings($is_displayed_in_new_dropdown);
+            $settings = new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_private_comment_used);
 
             if ($tracker_id = $this->tracker_factory->saveObject($tracker, $settings)) {
                 $this->addTrackerProperties($tracker_id, $project, $xml_element);

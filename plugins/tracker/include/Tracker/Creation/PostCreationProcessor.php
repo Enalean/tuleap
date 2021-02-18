@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Tracker_Reference;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 class PostCreationProcessor
@@ -35,18 +36,27 @@ class PostCreationProcessor
      * @var TrackerInNewDropdownDao
      */
     private $in_new_dropdown_dao;
+    /**
+     * @var TrackerPrivateCommentUGroupEnabledDao
+     */
+    private $private_comment_dao;
 
-    public function __construct(\ReferenceManager $reference_manager, TrackerInNewDropdownDao $in_new_dropdown_dao)
-    {
+    public function __construct(
+        \ReferenceManager $reference_manager,
+        TrackerInNewDropdownDao $in_new_dropdown_dao,
+        TrackerPrivateCommentUGroupEnabledDao $private_comment_dao
+    ) {
         $this->reference_manager   = $reference_manager;
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;
+        $this->private_comment_dao = $private_comment_dao;
     }
 
     public static function build(): self
     {
         return new self(
             \ReferenceManager::instance(),
-            new TrackerInNewDropdownDao()
+            new TrackerInNewDropdownDao(),
+            new TrackerPrivateCommentUGroupEnabledDao()
         );
     }
 
@@ -54,6 +64,7 @@ class PostCreationProcessor
     {
         $this->forceReferenceCreation($tracker);
         $this->addTrackerInNewDropDown($tracker, $settings);
+        $this->addTrackerDoestNotUsePrivateComment($tracker, $settings);
     }
 
     private function forceReferenceCreation(\Tracker $tracker): void
@@ -72,6 +83,13 @@ class PostCreationProcessor
     {
         if ($settings->isDisplayedInNewDropdown() === true) {
             $this->in_new_dropdown_dao->insert($tracker->getId());
+        }
+    }
+
+    private function addTrackerDoestNotUsePrivateComment(\Tracker $tracker, TrackerCreationSettings $settings): void
+    {
+        if ($settings->isPrivateCommentUsed() === false) {
+            $this->private_comment_dao->disabledPrivateCommentOnTracker($tracker->getId());
         }
     }
 }

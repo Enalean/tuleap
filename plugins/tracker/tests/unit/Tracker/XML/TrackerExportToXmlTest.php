@@ -34,6 +34,7 @@ use Tracker_Hierarchy;
 use Tracker_HierarchyFactory;
 use Tracker_RulesManager;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
@@ -64,6 +65,10 @@ final class TrackerExportToXmlTest extends TestCase
      * @var Mockery\MockInterface|UGroupRetrieverWithLegacy
      */
     private $ugroup_retriever;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
+     */
+    private $private_comment_enable_dao;
 
     protected function setUp(): void
     {
@@ -123,6 +128,15 @@ final class TrackerExportToXmlTest extends TestCase
         $dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
         $dropdown_dao->shouldReceive('isContaining')->andReturnTrue()->once();
         $this->tracker->shouldReceive('getDropDownDao')->andReturn($dropdown_dao);
+
+        $this->private_comment_enable_dao = Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
+        $this->private_comment_enable_dao
+            ->shouldReceive('isTrackerEnabledPrivateComment')
+            ->with($this->tracker->id)
+            ->andReturnTrue()
+            ->once()
+            ->byDefault();
+        $this->tracker->shouldReceive('getPrivateCommentEnabledDao')->andReturn($this->private_comment_enable_dao);
     }
 
     public function testPermissionsExport(): void
@@ -233,5 +247,41 @@ final class TrackerExportToXmlTest extends TestCase
 
         $is_displayed_in_new_dropdown = $xml->is_displayed_in_new_dropdown;
         $this->assertEquals(0, (int) $is_displayed_in_new_dropdown);
+    }
+
+    public function testItDoesNotExportWhenTrackerUsePrivateComment(): void
+    {
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
+
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertFalse(isset($attributes['use_private_comments']));
+    }
+
+    public function testItExportsWhenTrackerDoesNotUsePrivateComment(): void
+    {
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
+
+        $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
+
+        $this->private_comment_enable_dao
+            ->shouldReceive('isTrackerEnabledPrivateComment')
+            ->with($this->tracker->id)
+            ->andReturnFalse()
+            ->once();
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertTrue(isset($attributes['use_private_comments']));
+
+        $this->assertEquals(0, (string) $attributes['use_private_comments']);
     }
 }
