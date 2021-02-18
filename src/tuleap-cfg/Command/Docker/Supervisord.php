@@ -27,14 +27,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class Supervisord
 {
-    public const UNIT_CROND   = 'crond';
-    public const UNIT_FPM     = 'fpm';
-    public const UNIT_HTTPD   = 'httpd';
-    public const UNIT_MYSQLD  = 'mysqld';
-    public const UNIT_NGINX   = 'nginx';
-    public const UNIT_POSTFIX = 'postfix';
-    public const UNIT_RSYSLOG = 'rsyslog';
-    public const UNIT_SSHD    = 'sshd';
+    public const UNIT_CROND           = 'crond';
+    public const UNIT_FPM             = 'fpm';
+    public const UNIT_HTTPD           = 'httpd';
+    public const UNIT_MYSQLD          = 'mysqld';
+    public const UNIT_NGINX           = 'nginx';
+    public const UNIT_POSTFIX         = 'postfix';
+    public const UNIT_RSYSLOG         = 'rsyslog';
+    public const UNIT_SSHD            = 'sshd';
+    public const UNIT_BACKEND_WORKERS = 'backend_workers';
 
     private const BASE_DIR = __DIR__ . '/../../../../tools/docker/tuleap-aio-c7/supervisor.d';
 
@@ -47,6 +48,7 @@ final class Supervisord
         self::UNIT_POSTFIX,
         self::UNIT_RSYSLOG,
         self::UNIT_SSHD,
+        self::UNIT_BACKEND_WORKERS
     ];
 
     /**

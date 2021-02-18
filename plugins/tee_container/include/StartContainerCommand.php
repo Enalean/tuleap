@@ -81,7 +81,7 @@ final class StartContainerCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('run')
@@ -90,7 +90,7 @@ final class StartContainerCommand extends Command
             ->addOption(self::OPTION_EXEC, '', InputOption::VALUE_REQUIRED, 'Select a command to run inside the container, before supervisord (if any)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
         $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
@@ -128,7 +128,8 @@ final class StartContainerCommand extends Command
                 Supervisord::UNIT_NGINX,
                 Supervisord::UNIT_POSTFIX,
                 Supervisord::UNIT_HTTPD,
-                Supervisord::UNIT_FPM
+                Supervisord::UNIT_FPM,
+                Supervisord::UNIT_BACKEND_WORKERS,
             );
             $supervisord->configure($output);
 
