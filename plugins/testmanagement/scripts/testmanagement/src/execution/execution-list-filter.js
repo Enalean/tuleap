@@ -25,6 +25,8 @@ ExecutionListFilter.$inject = ["$filter"];
 
 function ExecutionListFilter($filter) {
     return function (list, keywords, status) {
+        setFocusableTestTab();
+
         var keyword_list = _.compact(keywords.split(" ")),
             status_list = _.compact(
                 //eslint-disable-next-line you-dont-need-lodash-underscore/map
@@ -96,5 +98,26 @@ function ExecutionListFilter($filter) {
         });
 
         return result;
+    }
+
+    function setFocusableTestTab() {
+        const previous_focusable_test_tab = document.querySelector(
+            "[data-navigation-test-link][tabindex='0']"
+        );
+        const active_test_tab = document.querySelector("[data-navigation-test-link].active");
+        const first_test_tab = document.querySelector("[data-navigation-test-link]");
+
+        if (previous_focusable_test_tab) {
+            previous_focusable_test_tab.setAttribute("tabindex", "-1");
+        }
+
+        if (active_test_tab) {
+            active_test_tab.setAttribute("tabindex", "0");
+            return;
+        }
+
+        if (first_test_tab) {
+            first_test_tab.setAttribute("tabindex", "0");
+        }
     }
 }

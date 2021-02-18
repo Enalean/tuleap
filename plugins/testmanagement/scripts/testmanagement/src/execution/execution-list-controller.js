@@ -31,7 +31,6 @@ ExecutionListCtrl.$inject = [
     "$state",
     "$filter",
     "$element",
-    "$timeout",
     "gettextCatalog",
     "ExecutionService",
     "CampaignService",
@@ -45,7 +44,6 @@ function ExecutionListCtrl(
     $state,
     $filter,
     $element,
-    $timeout,
     gettextCatalog,
     ExecutionService,
     CampaignService,
@@ -198,21 +196,6 @@ function ExecutionListCtrl(
                 ExecutionService.removeAllViewTestExecution();
                 if ($scope.execution_id) {
                     updateViewTestExecution($scope.execution_id, "").then(scrollToCurrentTest);
-                } else {
-                    $timeout(function () {
-                        const first_test_tab = document.querySelector(
-                            "[data-navigation-test-link]"
-                        );
-                        if (first_test_tab) {
-                            first_test_tab.setAttribute("tabindex", "0");
-                            return;
-                        }
-                        if (!shouldShowEmptyState()) {
-                            throw new Error(
-                                "Could not find [data-navigation-test-link] attribute."
-                            );
-                        }
-                    }, 0);
                 }
 
                 ExecutionService.executions_loaded = true;
