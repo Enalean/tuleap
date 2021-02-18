@@ -33,7 +33,8 @@ build: export HOME = "/build"
 build: export TMPDIR = "/build"
 build:
 	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
-    cd /build/src/plugins/botmattermost_git && npm install && npm run build
+	cd /build/src/ && ./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-botmattermost_git --include-dependencies "npm install --no-audit" && \
+	./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-botmattermost_git --include-dependencies "npm run build"	
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
