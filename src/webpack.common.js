@@ -363,7 +363,6 @@ const fat_combined_files = [
         "./www/scripts/viewportchecker/viewport-checker.js",
         "./www/scripts/clamp.js",
         "./www/scripts/codendi/common.js",
-        "./www/scripts/tuleap/massmail_initialize_ckeditor.js",
         "./www/scripts/tuleap/get-style-class-property.js",
         "./scripts/tuleap/listFilter.js",
         "./www/scripts/codendi/feedback.js",
@@ -388,7 +387,6 @@ const fat_combined_files = [
         "./www/scripts/tuleap/search.js",
         "./www/scripts/tuleap/tuleap-mention.js",
         "./www/scripts/tuleap/project-privacy-tooltip.js",
-        "./www/scripts/tuleap/massmail_project_members.js",
         "./www/scripts/tuleap/tuleap-ckeditor-toolbar.js",
     ],
     subset_combined_files = [
