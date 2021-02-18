@@ -448,12 +448,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return new Tracker_Report_Criteria_ArtifactLink_ValueDao();
     }
 
-    private function fetchParentSelector($prefill_parent, $name, Tracker $parent_tracker, PFUser $user, $can_create)
-    {
+    private function fetchParentSelector(
+        string $prefill_parent,
+        string $name,
+        Tracker $parent_tracker,
+        PFUser $user,
+        bool $can_create
+    ): string {
         $purifier                                                = Codendi_HTMLPurifier::instance();
         $possible_parents_getr                                   = new Tracker_Artifact_PossibleParentsRetriever($this->getArtifactFactory());
         $html                                                    = '';
-        $html                                                   .= '<p>';
+        $html                                                   .= '<div class="tracker-artlink-add-parent">';
         [$label, $paginated_possible_parents, $display_selector] = $possible_parents_getr->getPossibleArtifactParents(
             $parent_tracker,
             $user,
@@ -475,7 +480,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         } elseif (count($possible_parents) > 0) {
             $html .= sprintf(dgettext('tuleap-tracker', 'Will have %1$s as parent.'), $possible_parents[0]->fetchDirectLinkToArtifactWithTitle());
         }
-        $html .= '</p>';
+        $html .= '</div>';
         return $html;
     }
 
@@ -591,11 +596,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html .= '</span>';
             $html .= '</div>';
 
-            $is_submit      = $artifact->getId() == -1;
             $parent_tracker = $this->getTracker()->getParent();
 
-            if ($parent_tracker && $is_submit) {
-                $can_create = true;
+            if ($parent_tracker && $artifact->getParentWithoutPermissionChecking() === null) {
+                $can_create = $artifact->getId() == -1;
                 $html      .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
             }
             $html .= '</div>';
