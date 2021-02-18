@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,4 +49,8 @@ function set_value_action_fields(state, getters, root_state) {
 
 export function is_agile_dashboard_used(state) {
     return state.used_services_names.indexOf("agile_dashboard") !== -1;
+}
+
+export function is_program_management_used(state) {
+    return state.used_services_names.indexOf("plugin_program_management") !== -1;
 }

@@ -59,6 +59,7 @@ describe("SetValueAction", () => {
                 current_workflow_field: create("field", { field_id: 455, type: "sb" }),
                 is_workflow_advanced: false,
                 "transitionModal/is_agile_dashboard_used": false,
+                "transitionModal/is_program_management_used": false,
             },
         };
 

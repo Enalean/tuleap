@@ -26,7 +26,8 @@ import RunJobAction from "./PostAction/RunJobAction.vue";
 import SetValueAction from "./PostAction/SetValueAction.vue";
 import FrozenFieldsAction from "./PostAction/FrozenFieldsAction.vue";
 import HiddenFieldsetsAction from "./PostAction/HiddenFieldsetsAction.vue";
-import AddToBacklogPostAction from "./Externals/AddToBacklogPostAction.vue";
+import AddToBacklogAgileDashboardPostAction from "./Externals/AddToBacklogAgileDashboardPostAction.vue";
+import AddToBacklogProgramManagementPostAction from "./Externals/AddToBacklogAgileDashboardPostAction.vue";
 
 describe("PostActionsSection", () => {
     let store;
@@ -134,7 +135,12 @@ describe("PostActionsSection", () => {
             expect(wrapper.findComponent(SetValueAction).exists()).toBe(true);
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);
             expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(true);
-            expect(wrapper.findComponent(AddToBacklogPostAction).exists()).toBe(false);
+            expect(wrapper.findComponent(AddToBacklogAgileDashboardPostAction).exists()).toBe(
+                false
+            );
+            expect(wrapper.findComponent(AddToBacklogProgramManagementPostAction).exists()).toBe(
+                false
+            );
         });
         it("displays all the component which are in the post_actions", async () => {
             store.getters["transitionModal/post_actions"] = [
@@ -158,13 +164,20 @@ describe("PostActionsSection", () => {
                     type: "add_to_top_backlog",
                     unique_id: "new_10",
                 },
+                {
+                    type: "program_management_add_to_top_backlog",
+                    unique_id: "new_11",
+                },
             ];
             await wrapper.vm.$nextTick();
             expect(wrapper.findComponent(RunJobAction).exists()).toBe(true);
             expect(wrapper.findComponent(SetValueAction).exists()).toBe(true);
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(true);
             expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(true);
-            expect(wrapper.findComponent(AddToBacklogPostAction).exists()).toBe(true);
+            expect(wrapper.findComponent(AddToBacklogAgileDashboardPostAction).exists()).toBe(true);
+            expect(wrapper.findComponent(AddToBacklogProgramManagementPostAction).exists()).toBe(
+                true
+            );
         });
 
         it("displays nothing if there is no post action", async () => {
@@ -174,7 +187,12 @@ describe("PostActionsSection", () => {
             expect(wrapper.findComponent(SetValueAction).exists()).toBe(false);
             expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);
             expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(false);
-            expect(wrapper.findComponent(AddToBacklogPostAction).exists()).toBe(false);
+            expect(wrapper.findComponent(AddToBacklogAgileDashboardPostAction).exists()).toBe(
+                false
+            );
+            expect(wrapper.findComponent(AddToBacklogProgramManagementPostAction).exists()).toBe(
+                false
+            );
         });
     });
 });

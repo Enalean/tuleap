@@ -43,6 +43,13 @@ msgstr ""
 msgid "Permission"
 msgstr "Permission"
 
+#, php-format
+msgid ""
+"Post action of type %s can only be defined for plannable tracker of a plan."
+msgstr ""
+"Une post-action de type %s peut uniquement être définie pour les outils de "
+"suivis planifiable d'un plan."
+
 msgid "Program"
 msgstr "Programme"
 
@@ -54,6 +61,13 @@ msgstr "Le service de gestion de programme est désactivé."
 
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
+
+msgid ""
+"The post action cannot be saved because this tracker is not a plannable "
+"tracker of a plan."
+msgstr ""
+"La post-action ne peut pas être enregistrée parce que cet outil de suivi n'est "
+"pas un outil de suivi planifiable d'un plan."
 
 msgid ""
 "The program management service can only be used in a project defined as a "

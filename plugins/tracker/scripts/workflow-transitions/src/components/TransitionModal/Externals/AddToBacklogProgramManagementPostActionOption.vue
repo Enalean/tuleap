@@ -20,11 +20,11 @@
 
 <template>
     <option
-        v-if="is_agile_dashboard_used"
-        v-bind:value="'add_to_top_backlog'"
+        v-if="is_program_management_used"
+        v-bind:value="'program_management_add_to_top_backlog'"
         v-bind:disabled="!add_to_backlog_information.valid"
         v-bind:title="add_to_backlog_information.title"
-        data-test="add-to-backlog"
+        data-test="add-to-backlog-program-management"
     >
         {{ add_to_backlog_information.option }}
     </option>
@@ -35,16 +35,17 @@ import { mapGetters } from "vuex";
 import { EXTERNAL_POST_ACTION_TYPE } from "../../../constants/workflow-constants.js";
 
 export default {
-    name: "AddToBacklogPostActionOption",
+    name: "AddToBacklogProgramManagementPostActionOption",
     props: {
         post_action_type: String,
     },
     computed: {
-        ...mapGetters("transitionModal", ["is_agile_dashboard_used", "post_actions"]),
+        ...mapGetters("transitionModal", ["is_program_management_used", "post_actions"]),
         add_to_backlog_information() {
             if (
                 this.add_to_top_backlog_is_already_present &&
-                this.post_action_type !== EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG
+                this.post_action_type !==
+                    EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT
             ) {
                 return {
                     valid: false,
@@ -61,7 +62,9 @@ export default {
         add_to_top_backlog_is_already_present() {
             return (
                 this.post_actions.filter(
-                    (post_action) => post_action.type === EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG
+                    (post_action) =>
+                        post_action.type ===
+                        EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT
                 ).length > 0
             );
         },
