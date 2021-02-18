@@ -36,6 +36,11 @@ class XMLBindStaticValue
      * @var string
      * @readonly
      */
+    public $id_for_field_change;
+    /**
+     * @var string
+     * @readonly
+     */
     public $label;
 
     /**
@@ -44,9 +49,12 @@ class XMLBindStaticValue
     public function __construct($id, string $label)
     {
         if ($id instanceof IDGenerator) {
-            $this->id = sprintf('V%d', $id->getNextId());
+            $next_id                   = $id->getNextId();
+            $this->id_for_field_change = (string) $next_id;
+            $this->id                  = sprintf('V%d', $next_id);
         } else {
-            $this->id = $id;
+            $this->id_for_field_change = substr($id, 1);
+            $this->id                  = $id;
         }
         $this->label = $label;
     }

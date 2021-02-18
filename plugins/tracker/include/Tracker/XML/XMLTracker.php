@@ -293,7 +293,7 @@ final class XMLTracker
         if (count($this->artifacts) > 0) {
             $tracker_xml->addChild('artifacts');
             foreach ($this->artifacts as $artifact) {
-                $artifact->export($tracker_xml->artifacts);
+                $artifact->export($tracker_xml->artifacts, $form_elements_flattened_collection);
             }
         }
 

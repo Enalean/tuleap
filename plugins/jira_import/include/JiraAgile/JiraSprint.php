@@ -24,12 +24,17 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use DateTimeImmutable;
+use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 
 /**
  * @psalm-immutable
  */
 final class JiraSprint
 {
+    public const STATE_FUTURE = 'future';
+    public const STATE_ACTIVE = 'active';
+    public const STATE_CLOSED = 'closed';
+
     /**
      * @var int
      */
@@ -39,7 +44,7 @@ final class JiraSprint
      */
     public $url;
     /**
-     * @var string
+     * @var self::STATE_*
      */
     public $state;
     /**
@@ -59,6 +64,9 @@ final class JiraSprint
      */
     public $complete_date;
 
+    /**
+     * @param self::STATE_* $state
+     */
     private function __construct(int $id, string $url, string $state, string $name)
     {
         $this->id    = $id;
@@ -93,6 +101,9 @@ final class JiraSprint
      */
     public static function buildFromAPI(array $json): self
     {
+        if (! in_array($json['state'], [self::STATE_ACTIVE, self::STATE_FUTURE, self::STATE_CLOSED], true)) {
+            throw new UnexpectedFormatException(sprintf('According to Jira documentation, %s is not a valid state for Sprints', $json['state']));
+        }
         $self = new self(
             $json['id'],
             $json['self'],
@@ -113,6 +124,16 @@ final class JiraSprint
 
     public static function buildActive(int $id, string $name): self
     {
-        return new self($id, '', 'active', $name);
+        return new self($id, '', self::STATE_ACTIVE, $name);
+    }
+
+    public static function buildFuture(int $id, string $name): self
+    {
+        return new self($id, '', self::STATE_FUTURE, $name);
+    }
+
+    public static function buildClosed(int $id, string $name): self
+    {
+        return new self($id, '', self::STATE_CLOSED, $name);
     }
 }

@@ -21,36 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\Date\XML;
+namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML;
 
-use Tuleap\Tracker\FormElement\Field\XML\XMLFieldValue;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
-final class XMLDateValue extends XMLFieldValue
+final class XMLBindValueReferenceById implements XMLBindValueReference
 {
     /**
-     * @var \DateTimeImmutable
+     * @var string
      */
-    private $value;
+    private $id;
 
-    public function __construct(string $field_name, \DateTimeImmutable $value)
+    public function __construct(string $id)
     {
-        parent::__construct($field_name);
-        $this->value = $value;
+        $this->id = $id;
     }
 
-    public function export(\SimpleXMLElement $changeset_xml): \SimpleXMLElement
+    public function getId(XMLFormElementFlattenedCollection $form_elements): string
     {
-        $field_change = parent::export($changeset_xml);
+        return $this->id;
+    }
 
-        $field_change->addAttribute('type', \Tracker_FormElementFactory::FIELD_DATE_TYPE);
-
-        (new \XML_SimpleXMLCDATAFactory())->insertWithAttributes(
-            $field_change,
-            'value',
-            $this->value->format('c'),
-            ['format' => 'ISO8601'],
-        );
-
-        return $field_change;
+    public function getIdForFieldChange(XMLFormElementFlattenedCollection $form_elements): string
+    {
+        return $this->id;
     }
 }

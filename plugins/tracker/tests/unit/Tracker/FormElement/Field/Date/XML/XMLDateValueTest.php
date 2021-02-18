@@ -24,14 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\Date\XML;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use function PHPUnit\Framework\assertEquals;
 
 final class XMLDateValueTest extends TestCase
 {
     public function testItHasAttributes(): void
     {
-        $value = (new XMLDateValue('start_date', new \DateTimeImmutable()))
-            ->export(new \SimpleXMLElement('<changeset />'));
+        $value = (new XMLDateChangesetValue('start_date', new \DateTimeImmutable()))
+            ->export(new \SimpleXMLElement('<changeset />'), new XMLFormElementFlattenedCollection([]));
 
         assertEquals('start_date', $value['field_name']);
         assertEquals('date', $value['type']);
@@ -40,8 +41,8 @@ final class XMLDateValueTest extends TestCase
     public function testDateValueAsFormat(): void
     {
         $date  = new \DateTimeImmutable('2021-02-15 14:17');
-        $value = (new XMLDateValue('start_date', $date))
-            ->export(new \SimpleXMLElement('<changeset />'));
+        $value = (new XMLDateChangesetValue('start_date', $date))
+            ->export(new \SimpleXMLElement('<changeset />'), new XMLFormElementFlattenedCollection([]));
 
         assertEquals('ISO8601', $value->value['format']);
         assertEquals($date->format('c'), $value->value);

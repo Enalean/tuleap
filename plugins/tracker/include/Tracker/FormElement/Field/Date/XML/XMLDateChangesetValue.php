@@ -21,33 +21,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\StringField\XML;
+namespace Tuleap\Tracker\FormElement\Field\Date\XML;
 
-use Tuleap\Tracker\FormElement\Field\XML\XMLFieldValue;
+use Tuleap\Tracker\FormElement\Field\XML\XMLChangesetValue;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
-final class XMLStringValue extends XMLFieldValue
+final class XMLDateChangesetValue extends XMLChangesetValue
 {
     /**
-     * @var string
+     * @var \DateTimeImmutable
      */
     private $value;
 
-    public function __construct(string $field_name, string $value)
+    public function __construct(string $field_name, \DateTimeImmutable $value)
     {
         parent::__construct($field_name);
         $this->value = $value;
     }
 
-    public function export(\SimpleXMLElement $changeset_xml): \SimpleXMLElement
+    public function export(\SimpleXMLElement $changeset_xml, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
-        $field_change = parent::export($changeset_xml);
+        $field_change = parent::export($changeset_xml, $form_elements);
 
-        $field_change->addAttribute('type', 'string');
+        $field_change->addAttribute('type', \Tracker_FormElementFactory::FIELD_DATE_TYPE);
 
-        (new \XML_SimpleXMLCDATAFactory())->insert(
+        (new \XML_SimpleXMLCDATAFactory())->insertWithAttributes(
             $field_change,
             'value',
-            $this->value
+            $this->value->format('c'),
+            ['format' => 'ISO8601'],
         );
 
         return $field_change;

@@ -21,26 +21,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\XML;
+namespace Tuleap\Tracker\Creation\JiraImporter;
 
-abstract class XMLFieldValue
+class UnexpectedFormatException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $field_name;
-
-    public function __construct(string $field_name)
-    {
-        $this->field_name = $field_name;
-    }
-
-    public function export(\SimpleXMLElement $changeset_xml): \SimpleXMLElement
-    {
-        $field_change = $changeset_xml->addChild('field_change');
-
-        $field_change->addAttribute('field_name', $this->field_name);
-
-        return $field_change;
-    }
 }

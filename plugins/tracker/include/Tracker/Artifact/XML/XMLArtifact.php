@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\XML;
 
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
 final class XMLArtifact
 {
@@ -53,13 +54,13 @@ final class XMLArtifact
         return $new;
     }
 
-    public function export(\SimpleXMLElement $artifacts): \SimpleXMLElement
+    public function export(\SimpleXMLElement $artifacts, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $xml = $artifacts->addChild('artifact');
         $xml->addAttribute('id', (string) $this->id);
 
         foreach ($this->changesets as $changeset) {
-            $changeset->export($xml);
+            $changeset->export($xml, $form_elements);
         }
 
         return $xml;

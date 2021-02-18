@@ -21,34 +21,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML;
+namespace Tuleap\Tracker\FormElement\Field\StringField\XML;
 
+use Tuleap\Tracker\FormElement\Field\XML\XMLChangesetValue;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
-final class XMLBindValueReferenceByLabel implements XMLBindValueReference
+final class XMLStringChangesetValue extends XMLChangesetValue
 {
     /**
      * @var string
      */
-    private $label;
-    /**
-     * @var string
-     */
-    private $field_name;
+    private $value;
 
-    public function __construct(string $field_name, string $label)
+    public function __construct(string $field_name, string $value)
     {
-        $this->label      = $label;
-        $this->field_name = $field_name;
+        parent::__construct($field_name);
+        $this->value = $value;
     }
 
-    public function getId(XMLFormElementFlattenedCollection $form_elements): string
+    public function export(\SimpleXMLElement $changeset_xml, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
-        return $form_elements->getBindValueByLabel($this->field_name, $this->label)->id;
-    }
+        $field_change = parent::export($changeset_xml, $form_elements);
 
-    public function getIdForFieldChange(XMLFormElementFlattenedCollection $form_elements): string
-    {
-        return $form_elements->getBindValueByLabel($this->field_name, $this->label)->id_for_field_change;
+        $field_change->addAttribute('type', 'string');
+
+        (new \XML_SimpleXMLCDATAFactory())->insert(
+            $field_change,
+            'value',
+            $this->value
+        );
+
+        return $field_change;
     }
 }

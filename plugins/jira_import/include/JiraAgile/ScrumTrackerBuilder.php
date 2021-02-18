@@ -52,9 +52,6 @@ final class ScrumTrackerBuilder
     public const END_DATE_FIELD_NAME       = 'end_date';
     public const COMPLETED_DATE_FIELD_NAME = 'completed_date';
     public const STATUS_FIELD_NAME         = 'status';
-    public const STATUS_VALUE_FUTURE       = 'future';
-    public const STATUS_VALUE_ACTIVE       = 'active';
-    public const STATUS_VALUE_CLOSED       = 'closed';
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
@@ -103,9 +100,9 @@ final class ScrumTrackerBuilder
                             ->withRank(5)
                             ->withLabel('Status')
                             ->withStaticValues(
-                                new XMLBindStaticValue($id_generator, self::STATUS_VALUE_FUTURE),
-                                new XMLBindStaticValue($id_generator, self::STATUS_VALUE_ACTIVE),
-                                new XMLBindStaticValue($id_generator, self::STATUS_VALUE_CLOSED),
+                                new XMLBindStaticValue($id_generator, JiraSprint::STATE_FUTURE),
+                                new XMLBindStaticValue($id_generator, JiraSprint::STATE_ACTIVE),
+                                new XMLBindStaticValue($id_generator, JiraSprint::STATE_CLOSED),
                             )
                             ->withPermissions(...$default_permissions)
                     )
@@ -116,8 +113,8 @@ final class ScrumTrackerBuilder
                 ),
                 (new XMLStatusSemantic(new XMLReferenceByName(self::STATUS_FIELD_NAME)))
                 ->withOpenValues(
-                    new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, self::STATUS_VALUE_FUTURE),
-                    new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, self::STATUS_VALUE_ACTIVE),
+                    new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, JiraSprint::STATE_FUTURE),
+                    new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, JiraSprint::STATE_ACTIVE),
                 ),
                 new XMLTimeframeSemantic(
                     new XMLReferenceByName(self::START_DATE_FIELD_NAME),
@@ -133,7 +130,7 @@ final class ScrumTrackerBuilder
                         (new XMLReportCriterion(new XMLReferenceByName(self::STATUS_FIELD_NAME)))
                             ->withRank(2)
                             ->withSelectedValues(
-                                new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, self::STATUS_VALUE_ACTIVE),
+                                new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, JiraSprint::STATE_ACTIVE),
                             ),
                         (new XMLReportCriterion(new XMLReferenceByName(self::START_DATE_FIELD_NAME)))
                             ->withRank(3),
