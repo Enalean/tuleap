@@ -64,6 +64,8 @@ function CampaignEditCtrl(
         tests_list: {},
         test_reports: [],
         filters: {},
+        is_loading: false,
+        is_selecting_from_report: false,
         selectReportTests,
         showAddTestModal,
         toggleCategory,
@@ -82,6 +84,8 @@ function CampaignEditCtrl(
 
         SharedPropertiesService.setCampaignId(campaign_id);
 
+        $scope.is_loading = true;
+
         CampaignService.getCampaign(campaign_id).then((campaign) => {
             $scope.campaign = campaign;
             $scope.filters.search = "";
@@ -91,6 +95,7 @@ function CampaignEditCtrl(
             $q.all([loadDefinitions(), loadExecutions()]).then(function (results) {
                 var definitions = results[0],
                     executions = results[1];
+                $scope.is_loading = false;
                 $scope.tests_list = buildInitialTestsList(definitions, executions);
             });
         });
@@ -198,6 +203,7 @@ function CampaignEditCtrl(
             return $q.when();
         }
 
+        $scope.is_selecting_from_report = true;
         return $q.when(self.loadDefinitions(selected_report)).then((definitions) => {
             Object.values($scope.tests_list).forEach((category) => {
                 Object.values(category.tests).forEach((test) => {
@@ -206,6 +212,7 @@ function CampaignEditCtrl(
                     );
                 });
             });
+            $scope.is_selecting_from_report = false;
         });
     }
 

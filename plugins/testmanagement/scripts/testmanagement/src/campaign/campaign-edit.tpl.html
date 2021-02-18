@@ -15,12 +15,14 @@
                     class="tlp-button-primary tlp-table-actions-element"
                     data-test="add-test-button"
                     ng-click="showAddTestModal()">
-                <i class="fa fa-plus"></i> {{ 'Add a test' | translate }}
+                <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
+                {{ 'Add a test' | translate }}
             </button>
             <div class="tlp-table-actions-spacer"></div>
             <div class="tlp-form-element tlp-table-actions-element">
                 <select class="tlp-select tlp-select-adjusted"
                         ng-model="filters.selected_report"
+                        ng-disabled="is_loading"
                         ng-change="selectReportTests()">
                     <option value="" translate>Pre-select tests from a tracker report</option>
                     <option ng-repeat="report in test_reports" ng-value="report.id">{{ report.label }}</option>
@@ -49,11 +51,27 @@
                     </td>
                 </tr>
             </tbody>
+            <tbody ng-if="is_loading">
+                <tr ng-repeat="i in [].constructor(5) track by $index">
+                    <td>
+                        <i class="far fa-square tlp-skeleton-icon" aria-hidden="true"></i>
+                    </td>
+                    <td class="tlp-table-cell-numeric">
+                        <span class="tlp-skeleton-text"></span>
+                    </td>
+                    <td>
+                        <span class="tlp-skeleton-text"></span>
+                    </td>
+                </tr>
+            </tbody>
             <tbody ng-repeat-start="category in tests_list">
                 <tr ng-click="toggleCategory(category)">
                     <td colspan="3" class="tlp-table-cell-section tlp-table-cell-filterable">
-                        <i class="fa edit-campaign-tests-list-check edit-campaign-tests-list-section-check"
-                           ng-class="categoryCheckmark(category)"></i>
+                        <i class="fas fa-circle-notch fa-spin fa-fw edit-campaign-tests-list-category-check" ng-show="is_selecting_from_report"></i>
+                        <i class="fa fa-fw edit-campaign-tests-list-category-check"
+                           ng-hide="is_selecting_from_report"
+                           ng-class="categoryCheckmark(category)"
+                        ></i>
                         <span class="edit-campaign-tests-list-section-label">{{ category.label }}</span>
                     </td>
                 </tr>
@@ -67,7 +85,9 @@
                     ng-class="diffState(test)"
                     ng-click="toggleTest(test)">
                     <td>
-                        <i class="fa edit-campaign-tests-list-check"
+                        <i class="fas fa-circle-notch fa-spin fa-fw" ng-show="is_selecting_from_report"></i>
+                        <i class="fa fa-fw"
+                           ng-hide="is_selecting_from_report"
                            ng-class="testCheckmark(test)"></i>
                     </td>
                     <td class="tlp-table-cell-numeric tlp-table-cell-filterable">{{ test.definition.id }}</td>
@@ -104,8 +124,9 @@
         <button type="submit"
                 data-test="edit-campaign-save-button"
                 class="tlp-button-primary tlp-modal-action"
-                ng-disabled="submitting_changes || ! editCampaignForm.$valid">
-            <i class="tlp-button-icon fas fa-circle-notch fa-spin" ng-if="submitting_changes"></i>
+                ng-disabled="is_loading || submitting_changes || ! editCampaignForm.$valid"
+        >
+            <i class="tlp-button-icon fas fa-circle-notch fa-spin" ng-if="submitting_changes" aria-hidden="true"></i>
             {{ 'Save changes' | translate }}
         </button>
     </div>
