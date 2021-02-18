@@ -67,7 +67,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
             $this->timestamp,
             $body,
             'html',
-            0
+            0,
+            []
         );
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
@@ -107,7 +108,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
             $this->timestamp,
             $body,
             'html',
-            0
+            0,
+            []
         );
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
@@ -154,7 +156,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
                 $this->timestamp,
                 "",
                 'text',
-                0
+                0,
+                []
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -174,7 +177,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
                 $this->timestamp,
                 " ",
                 'html',
-                1234
+                1234,
+                []
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $user    = $this->getAMockedUser();
@@ -198,7 +202,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
                 $this->timestamp,
                 $body,
                 'html',
-                0
+                0,
+                []
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $user      = $this->getAMockedUser();
@@ -227,7 +232,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
                 $this->timestamp,
                 $body,
                 'html',
-                1234
+                1234,
+                []
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $user      = $this->getAMockedUser();

@@ -102,7 +102,8 @@ final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             1234567890,
             $body,
             $format,
-            0
+            0,
+            []
         );
     }
 }

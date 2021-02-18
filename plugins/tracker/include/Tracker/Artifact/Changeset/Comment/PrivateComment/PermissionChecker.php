@@ -26,16 +26,6 @@ use Tracker_Artifact_Changeset_Comment;
 
 class PermissionChecker
 {
-    /**
-     * @var TrackerPrivateCommentUGroupPermissionDao
-     */
-    private $private_comment_permission_dao;
-
-    public function __construct(TrackerPrivateCommentUGroupPermissionDao $private_comment_permission_dao)
-    {
-        $this->private_comment_permission_dao = $private_comment_permission_dao;
-    }
-
     public function userCanSeeComment(
         \PFUser $user,
         Tracker_Artifact_Changeset_Comment $comment
@@ -55,14 +45,18 @@ class PermissionChecker
             return true;
         }
 
-        $ugroups_id = $this->private_comment_permission_dao->getUgroupIdsOfPrivateComment((int) $comment->id);
+        $ugroups = $comment->getUgroupsCanSeePrivateComment();
 
-        if (count($ugroups_id) === 0) {
+        if ($ugroups === null) {
             return true;
         }
 
-        foreach ($ugroups_id as $ugroup_id) {
-            if ($user->isMemberOfUGroup($ugroup_id, $project_id)) {
+        if (count($ugroups) === 0) {
+            return false;
+        }
+
+        foreach ($ugroups as $ugroup) {
+            if ($user->isMemberOfUGroup($ugroup->getId(), $project_id)) {
                 return true;
             }
         }

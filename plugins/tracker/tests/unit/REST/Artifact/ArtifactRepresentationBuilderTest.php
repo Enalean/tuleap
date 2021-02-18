@@ -503,7 +503,8 @@ final class ArtifactRepresentationBuilderTest extends TestCase
             1234567890,
             'A text comment',
             'text',
-            0
+            0,
+            []
         );
         $changeset->setLatestComment($comment);
         return $changeset;

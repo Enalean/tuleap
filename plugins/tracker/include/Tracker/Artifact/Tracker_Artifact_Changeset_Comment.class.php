@@ -93,6 +93,10 @@ class Tracker_Artifact_Changeset_Comment
         self::HTML_COMMENT => CODENDI_PURIFIER_FULL,
         self::TEXT_COMMENT => CODENDI_PURIFIER_BASIC,
     ];
+    /**
+     * @var ProjectUGroup[]|null
+     */
+    private $ugroups_can_see_private_comment;
 
     /**
      * Constructor
@@ -106,6 +110,7 @@ class Tracker_Artifact_Changeset_Comment
      * @param string                     $body               The comment (aka follow-up comment)
      * @param string                     $bodyFormat         The comment type (text or html follow-up comment)
      * @param int                        $parent_id          The id of the parent (if comment has been modified)
+     * @param ProjectUGroup[]|null       $ugroups_private_comment
      */
     public function __construct(
         $id,
@@ -116,17 +121,19 @@ class Tracker_Artifact_Changeset_Comment
         $submitted_on,
         $body,
         $bodyFormat,
-        $parent_id
+        $parent_id,
+        ?array $ugroups_private_comment
     ) {
-        $this->id                 = $id;
-        $this->changeset          = $changeset;
-        $this->comment_type_id    = $comment_type_id;
-        $this->canned_response_id = $canned_response_id;
-        $this->submitted_by       = $submitted_by;
-        $this->submitted_on       = $submitted_on;
-        $this->body               = $body;
-        $this->bodyFormat         = $bodyFormat;
-        $this->parent_id          = $parent_id;
+        $this->id                              = $id;
+        $this->changeset                       = $changeset;
+        $this->comment_type_id                 = $comment_type_id;
+        $this->canned_response_id              = $canned_response_id;
+        $this->submitted_by                    = $submitted_by;
+        $this->submitted_on                    = $submitted_on;
+        $this->body                            = $body;
+        $this->bodyFormat                      = $bodyFormat;
+        $this->parent_id                       = $parent_id;
+        $this->ugroups_can_see_private_comment = $ugroups_private_comment;
     }
 
     /**
@@ -398,5 +405,13 @@ class Tracker_Artifact_Changeset_Comment
     public function getChangeset(): Tracker_Artifact_Changeset
     {
         return $this->changeset;
+    }
+
+    /**
+     * @return ProjectUGroup[]|null
+     */
+    public function getUgroupsCanSeePrivateComment(): ?array
+    {
+        return $this->ugroups_can_see_private_comment;
     }
 }
