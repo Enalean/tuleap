@@ -98,6 +98,9 @@
                         <submitted_by format="username">rest_private_comment_admin</submitted_by>
                         <submitted_on format="ISO8601"><![CDATA[2018-03-01T15:00:00+01:00]]></submitted_on>
                         <body format="text"><![CDATA[Lorem ipsum]]></body>
+                        <private_ugroups>
+                          <ugroup>project_admins</ugroup>
+                        </private_ugroups>
                       </comment>
                     </comments>
                   </changeset>

@@ -41,6 +41,9 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
@@ -3161,7 +3164,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             ArtifactChangesetSaver::build(),
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction(
                 $this->getTrackerArtifactFactory()
-            )
+            ),
+            new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao())
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
@@ -3179,7 +3183,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $logger),
             new ExistingArtifactSourceIdFromTrackerExtractor($artifact_source_id_dao),
             $artifact_source_id_dao,
-            new ExternalFieldsExtractor(EventManager::instance())
+            new ExternalFieldsExtractor(EventManager::instance()),
+            new TrackerPrivateCommentUGroupExtractor(new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager())
         );
     }
 

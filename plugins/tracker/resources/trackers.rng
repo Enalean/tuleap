@@ -85,6 +85,15 @@
     <element name="body">
       <ref name="text_content"/>
     </element>
+    <optional>
+      <element name="private_ugroups">
+        <zeroOrMore>
+          <element name="ugroup">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+        </zeroOrMore>
+      </element>
+    </optional>
   </define>
   <define name="text_content">
     <attribute name="format">

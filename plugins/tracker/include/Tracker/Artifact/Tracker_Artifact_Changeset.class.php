@@ -22,6 +22,8 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
@@ -474,12 +476,15 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     public function updateComment($body, $user, $comment_format, $timestamp)
     {
-        if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)) {
+        if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp, [])) {
             $this->executePostCreationActions();
         }
     }
 
-    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)
+    /**
+     * @param ProjectUGroup[] $ugroups_for_private_comment
+     */
+    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp, array $ugroups_for_private_comment)
     {
         if ($this->userCanEdit($user)) {
             $commentUpdated = $this->getCommentDao()->createNewVersion(
@@ -494,6 +499,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             unset($this->latest_comment);
 
             if ($commentUpdated) {
+                if (is_int($commentUpdated)) {
+                    $comment_ugroup_permission_inserter = new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao());
+                    $comment_ugroup_permission_inserter
+                        ->insertUGroupsOnPrivateComment($commentUpdated, $ugroups_for_private_comment);
+                }
+
                 $reference_manager = $this->getReferenceManager();
                 $reference_manager->extractCrossRef(
                     $body,

@@ -37,6 +37,7 @@ use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
@@ -229,7 +230,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             $artifact_saver,
-            Mockery::mock(ParentLinkAction::class)
+            Mockery::mock(ParentLinkAction::class),
+            Mockery::mock(TrackerPrivateCommentUGroupPermissionInserter::class)
         );
 
         $creator->create(
@@ -241,7 +243,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             $send_notification,
             $comment_format,
             \Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-            new TrackerNoXMLImportLoggedConfig()
+            new TrackerNoXMLImportLoggedConfig(),
+            []
         );
     }
 
