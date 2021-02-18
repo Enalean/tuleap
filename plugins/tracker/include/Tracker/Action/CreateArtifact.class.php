@@ -130,18 +130,24 @@ class Tracker_Action_CreateArtifact
         return false;
     }
 
-    protected function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request)
-    {
+    protected function redirectToParentCreationIfNeeded(
+        Artifact $artifact,
+        PFUser $current_user,
+        Tracker_Artifact_Redirect $redirect,
+        Codendi_Request $request
+    ): void {
         $parent_tracker = $this->tracker->getParent();
         if ($parent_tracker && count($artifact->getAllAncestors($current_user)) == 0) {
             $art_link = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
 
             if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
                 $art_link_key               = 'artifact[' . $art_link->getId() . '][new_values]';
+                $art_link_type              = 'artifact[' . $art_link->getId() . '][nature]';
                 $redirect_params            = [
-                    'tracker'     => (string) $parent_tracker->getId(),
-                    'func'        => 'new-artifact',
-                    $art_link_key => (string) $artifact->getId()
+                    'tracker'      => (string) $parent_tracker->getId(),
+                    'func'         => 'new-artifact',
+                    $art_link_key  => (string) $artifact->getId(),
+                    $art_link_type => urlencode(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD)
                 ];
                 $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
                 $redirect->query_parameters = $redirect_params;
