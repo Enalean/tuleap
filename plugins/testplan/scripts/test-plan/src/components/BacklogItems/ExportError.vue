@@ -29,15 +29,14 @@
                 <i class="fas fa-exclamation-triangle tlp-modal-title-icon"></i>
                 <translate>Oops, there's an issue</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
                 ×
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body">
             <p v-translate>The export did not succeed, please try again.</p>

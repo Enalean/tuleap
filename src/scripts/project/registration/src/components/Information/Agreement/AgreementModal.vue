@@ -22,15 +22,14 @@
     <div id="modal-big-content" class="tlp-modal" role="dialog" aria-labelledby="term-of-services">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="term-of-services" v-translate>Policy agreement</h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
                 &times;
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body" v-if="is_loading">
             <i class="fas fa-circle-notch fa-spin"></i>

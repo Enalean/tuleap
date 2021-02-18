@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -32,15 +32,14 @@
                 <i class="fa fa-plus tlp-modal-title-icon"></i>
                 <translate>Add project repository</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
                 &times;
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body git-repository-create-modal-body">
             <div

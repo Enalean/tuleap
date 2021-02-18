@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -28,15 +28,9 @@
             <h1 class="tlp-modal-title" id="modal-confirm-workflow-mode-change-label" v-translate>
                 Wait a minute...
             </h1>
-            <div
-                class="tlp-modal-close"
-                tabindex="0"
-                role="button"
-                data-dismiss="modal"
-                aria-label="Close"
-            >
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
                 &times;
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body">
             <slot name="modal-body"></slot>

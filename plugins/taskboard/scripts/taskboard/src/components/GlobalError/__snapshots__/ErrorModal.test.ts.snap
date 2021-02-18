@@ -24,17 +24,16 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       </translate-stub>
     </h1>
      
-    <div
+    <button
       aria-label="Close"
       class="tlp-modal-close"
       data-dismiss="modal"
-      role="button"
-      tabindex="0"
+      type="button"
     >
       
             ×
         
-    </div>
+    </button>
   </div>
    
   <div

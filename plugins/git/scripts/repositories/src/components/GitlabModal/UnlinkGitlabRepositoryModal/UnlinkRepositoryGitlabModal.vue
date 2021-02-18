@@ -30,15 +30,14 @@
                 <i class="fab fa-gitlab tlp-modal-title-icon"></i>
                 <translate>Unlink GitLab repository?</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="close_label"
             >
                 &times;
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body">
             <div

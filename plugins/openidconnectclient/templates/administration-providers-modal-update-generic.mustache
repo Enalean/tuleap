@@ -13,13 +13,12 @@
         >
             <i class="fas fa-pencil-alt tlp-modal-title-icon"></i> {{ update_provider }}
         </h1>
-        <div
+        <button
             class="tlp-modal-close"
-            tabindex="0"
-            role="button"
+            type="button"
             data-dismiss="modal"
             aria-label="Close"
-        >&times;</div>
+        >&times;</button>
     </div>
     <form method="post">
         {{# csrf_token }}
