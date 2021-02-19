@@ -27,11 +27,11 @@ use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
 class FeaturesLinkedToMilestoneBuilder
 {
     /**
-     * @var FeaturesLinkedToMilestonesDao
+     * @var ArtifactsLinkedToParentDao
      */
     private $features_linked_to_milestones_dao;
 
-    public function __construct(FeaturesLinkedToMilestonesDao $features_linked_to_milestones_dao)
+    public function __construct(ArtifactsLinkedToParentDao $features_linked_to_milestones_dao)
     {
         $this->features_linked_to_milestones_dao = $features_linked_to_milestones_dao;
     }
@@ -41,7 +41,7 @@ class FeaturesLinkedToMilestoneBuilder
      */
     public function build(MirroredMilestone $milestone, int $program_increment_id): array
     {
-        $feature_to_unlink = $this->features_linked_to_milestones_dao->getFeaturesLinkedToMilestone($milestone->getId(), $program_increment_id);
+        $feature_to_unlink = $this->features_linked_to_milestones_dao->getArtifactsLinkedToId($milestone->getId(), $program_increment_id);
 
         $fetaure_to_unlink = [];
         foreach ($feature_to_unlink as $unlink) {
