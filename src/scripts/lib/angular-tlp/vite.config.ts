@@ -17,7 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.js"),
+            name: "AngularTlp",
+        },
+        rollupOptions: {
+            external: ["tlp", "angular"],
+            output: {
+                globals: {
+                    tlp: "tlp",
+                    angular: "angular",
+                },
+            },
+        },
+    },
+});
