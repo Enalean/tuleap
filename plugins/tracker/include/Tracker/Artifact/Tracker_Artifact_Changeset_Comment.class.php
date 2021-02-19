@@ -367,6 +367,25 @@ class Tracker_Artifact_Changeset_Comment
         $cdata_factory->insert($comment_node, 'body', $comment_escaped);
 
         $comment_node->body['format'] = $this->bodyFormat;
+        $this->exportPrivateUGroupForComment($comment_node);
+    }
+
+    private function exportPrivateUGroupForComment(SimpleXMLElement $comment_node): void
+    {
+        $ugroups_can_see_comment = $this->getUgroupsCanSeePrivateComment();
+        if ($ugroups_can_see_comment === null) {
+            return;
+        }
+
+        if (count($ugroups_can_see_comment) === 0) {
+            return;
+        }
+
+        $private_ugroups = $comment_node->addChild('private_ugroups');
+        foreach ($ugroups_can_see_comment as $ugroup) {
+            $cdata = new XML_SimpleXMLCDATAFactory();
+            $cdata->insert($private_ugroups, "ugroup", $ugroup->getNormalizedName());
+        }
     }
 
     private function getCommentBodyWithEscapedCrossReferences()
