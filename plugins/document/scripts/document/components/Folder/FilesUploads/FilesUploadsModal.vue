@@ -24,15 +24,14 @@
                 <i class="fa fa-upload tlp-modal-title-icon"></i>
                 <translate>Uploading documents</translate>
             </h1>
-            <div
+            <button
                 class="tlp-modal-close"
-                tabindex="0"
-                role="button"
+                type="button"
                 data-dismiss="modal"
                 v-bind:aria-label="close"
             >
                 &times;
-            </div>
+            </button>
         </div>
         <div class="tlp-modal-body document-uploads-files-list">
             <div
