@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\MappingRegistry;
+
 /**
  * Widget_TrackerRenderer
  *
@@ -144,7 +146,8 @@ abstract class Tracker_Widget_Renderer extends Widget
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
         $sql = "INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id)
         SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, renderer_id

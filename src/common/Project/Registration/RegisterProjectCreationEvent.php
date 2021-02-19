@@ -24,6 +24,7 @@ namespace Tuleap\Project\Registration;
 
 use Project;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Project\MappingRegistry;
 
 class RegisterProjectCreationEvent implements Dispatchable
 {
@@ -38,9 +39,9 @@ class RegisterProjectCreationEvent implements Dispatchable
      */
     private $template_project;
     /**
-     * @var array
+     * @var MappingRegistry
      */
-    private $ugroup_mapping;
+    private $mapping_registry;
     /**
      * @var \PFUser
      */
@@ -57,14 +58,14 @@ class RegisterProjectCreationEvent implements Dispatchable
     public function __construct(
         Project $just_created_project,
         Project $template_project,
-        array $ugroup_mapping,
+        MappingRegistry $mapping_registry,
         \PFUser $project_administrator,
         array $legacy_service_usage,
         bool $should_project_inherit_from_template
     ) {
         $this->just_created_project                 = $just_created_project;
         $this->template_project                     = $template_project;
-        $this->ugroup_mapping                       = $ugroup_mapping;
+        $this->mapping_registry                     = $mapping_registry;
         $this->project_administrator                = $project_administrator;
         $this->legacy_service_usage                 = $legacy_service_usage;
         $this->should_project_inherit_from_template = $should_project_inherit_from_template;
@@ -80,9 +81,9 @@ class RegisterProjectCreationEvent implements Dispatchable
         return $this->template_project;
     }
 
-    public function getUgroupMapping(): array
+    public function getMappingRegistry(): MappingRegistry
     {
-        return $this->ugroup_mapping;
+        return $this->mapping_registry;
     }
 
     public function getProjectAdministrator(): \PFUser

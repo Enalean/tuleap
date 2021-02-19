@@ -21,6 +21,7 @@
 
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\RSS\FeedHTTPClient;
 use Laminas\Feed\Reader\Reader as FeedReader;
 
@@ -29,7 +30,7 @@ use Laminas\Feed\Reader\Reader as FeedReader;
 *
 * Rss reader
 */
-abstract class Widget_Rss extends Widget
+abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $rss_title;
     public $rss_url;
@@ -146,7 +147,8 @@ abstract class Widget_Rss extends Widget
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
         $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url)
         SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, url

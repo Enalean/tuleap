@@ -27,6 +27,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
@@ -112,7 +113,7 @@ class Docman_Controller extends Controler
     }
 
     // Franlky, this is not at all the best place to do this.
-    public function installDocman($ugroupsMapping, $group_id = false)
+    public function installDocman(?MappingRegistry $mapping_registry, $group_id = false)
     {
         $_gid = $group_id ? $group_id : (int) $this->request->get('group_id');
 
@@ -122,43 +123,46 @@ class Docman_Controller extends Controler
             // Docman already install for this project.
             return false;
         } else {
-            $pm          = ProjectManager::instance();
-            $project     = $pm->getProject($_gid);
-            $tmplGroupId = (int) $project->getTemplate();
-            $this->_cloneDocman($tmplGroupId, $project, $ugroupsMapping);
+            $pm                = ProjectManager::instance();
+            $project           = $pm->getProject($_gid);
+            $source_project_id = (int) $project->getTemplate();
+            $this->cloneDocman($source_project_id, $project, $mapping_registry);
         }
     }
 
-    public function _cloneDocman($srcGroupId, Project $destination_project, $ugroupsMapping)
-    {
-        $user       = $this->getUser();
-        $dstGroupId = $destination_project->getID();
+    private function cloneDocman(
+        int $source_project_id,
+        Project $destination_project,
+        ?MappingRegistry $mapping_registry
+    ): void {
+        $user                   = $this->getUser();
+        $destination_project_id = (int) $destination_project->getID();
 
         // Clone Docman permissions
         $dPm = $this->_getPermissionsManager();
-        if ($ugroupsMapping === false) {
-            $dPm->setDefaultDocmanPermissions($dstGroupId);
+        if ($mapping_registry === null) {
+            $dPm->setDefaultDocmanPermissions($destination_project_id);
         } else {
-            $dPm->cloneDocmanPermissions($srcGroupId, $dstGroupId);
+            $dPm->cloneDocmanPermissions($source_project_id, $destination_project_id);
         }
 
         // Clone Metadata definitions
         $metadataMapping = [];
-        $mdFactory       = new Docman_MetadataFactory($srcGroupId);
-        $mdFactory->cloneMetadata($dstGroupId, $metadataMapping);
+        $mdFactory       = new Docman_MetadataFactory($source_project_id);
+        $mdFactory->cloneMetadata($destination_project_id, $metadataMapping);
 
         // Clone Items, Item's permissions and metadata values
         $itemFactory     = $this->getItemFactory();
         $dataRoot        = $this->getProperty('docman_root');
-        $src_root_folder = $itemFactory->getRoot($srcGroupId);
+        $src_root_folder = $itemFactory->getRoot($source_project_id);
         if ($src_root_folder === null) {
-            $itemFactory->createRoot($dstGroupId, 'roottitle_lbl_key');
-            $itemMapping = [];
+            $itemFactory->createRoot($destination_project_id, 'roottitle_lbl_key');
+            $item_mapping = [];
         } else {
-            $itemMapping = $itemFactory->cloneItems(
+            $item_mapping = $itemFactory->cloneItems(
                 $user,
                 $metadataMapping,
-                $ugroupsMapping,
+                $mapping_registry ? $mapping_registry->getUgroupMapping() : false,
                 $dataRoot,
                 $src_root_folder,
                 DestinationCloneItem::fromDestinationProject(
@@ -171,8 +175,12 @@ class Docman_Controller extends Controler
         }
 
         // Clone reports
-        $reportFactory = new Docman_ReportFactory($srcGroupId);
-        $reportFactory->copy($dstGroupId, $metadataMapping, $user, false, $itemMapping);
+        $reportFactory = new Docman_ReportFactory($source_project_id);
+        $reportFactory->copy($destination_project_id, $metadataMapping, $user, false, $item_mapping);
+
+        if ($mapping_registry) {
+            $mapping_registry->setCustomMapping(\DocmanPlugin::ITEM_MAPPING_KEY, $item_mapping);
+        }
     }
 
     public function getLogger()
@@ -456,7 +464,7 @@ class Docman_Controller extends Controler
                 $pm          = ProjectManager::instance();
                 $project     = $pm->getProject($_gid);
                 $tmplGroupId = (int) $project->getTemplate();
-                $this->_cloneDocman($tmplGroupId, $project, false);
+                $this->cloneDocman($tmplGroupId, $project, null);
                 if (! $item_factory->getRoot($_gid)) {
                     $item_factory->createRoot($_gid, 'roottitle_lbl_key');
                 }

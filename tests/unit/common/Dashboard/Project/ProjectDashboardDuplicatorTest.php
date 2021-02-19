@@ -26,6 +26,7 @@ use Project;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
+use Tuleap\Project\MappingRegistry;
 
 class ProjectDashboardDuplicatorTest extends TestCase
 {
@@ -84,7 +85,7 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $this->dao->shouldReceive('duplicateDashboard')->times(2);
 
-        $this->duplicator->duplicate($this->template_project, $this->new_project);
+        $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
     public function testItDuplicatesEachLinesForADashboard()
@@ -100,7 +101,7 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $this->widget_dao->shouldReceive('duplicateLine')->times(2);
 
-        $this->duplicator->duplicate($this->template_project, $this->new_project);
+        $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
     public function testItDuplicatesEachColumnsForALine()
@@ -122,7 +123,7 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $this->widget_dao->shouldReceive('duplicateColumn')->times(2);
 
-        $this->duplicator->duplicate($this->template_project, $this->new_project);
+        $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
     public function testItDuplicatesEachWidgetForAColumn()
@@ -163,7 +164,7 @@ class ProjectDashboardDuplicatorTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $this->duplicator->duplicate($this->template_project, $this->new_project);
+        $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
     public function testItDoesNotDuplicateDisabledProjectWidgetForAColumn()
@@ -204,7 +205,7 @@ class ProjectDashboardDuplicatorTest extends TestCase
             ->once()
             ->andReturnTrue();
 
-        $this->duplicator->duplicate($this->template_project, $this->new_project);
+        $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 
     public function testItDoesNotDuplicateUnknownWidgetForAColumn()
@@ -230,6 +231,6 @@ class ProjectDashboardDuplicatorTest extends TestCase
 
         $this->checker->shouldReceive('isWidgetDisabled')->never();
 
-        $this->duplicator->duplicate($this->template_project, $this->new_project);
+        $this->duplicator->duplicate($this->template_project, $this->new_project, new MappingRegistry([]));
     }
 }

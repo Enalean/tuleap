@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\Widget\WidgetEmbeddedDao;
+use Tuleap\Project\MappingRegistry;
+
 /**
  * Embed an item in the dashboard
  * - Display the content of embedded documents
@@ -162,36 +167,72 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     /**
      * Clone the content of the widget (for templates)
      * @return int the id of the new content
-     * @todo Use dao instead of legacy db functions
      */
     public function cloneContent(
         Project $template_project,
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
-        $sql = "INSERT INTO plugin_docman_widget_embedded (owner_id, owner_type, title, item_id) 
-                SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, item_id
-                FROM plugin_docman_widget_embedded
-                WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' ";
-        $res = db_query($sql);
-        return db_insertid($res);
+        $dao = new WidgetEmbeddedDao();
+
+        if (! $mapping_registry->hasCustomMapping(\DocmanPlugin::ITEM_MAPPING_KEY)) {
+            return $dao->cloneContent(
+                (int) $this->owner_id,
+                (string) $this->owner_type,
+                (int) $owner_id,
+                (string) $owner_type
+            );
+        }
+
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
+        return $transaction_executor->execute(
+            function () use ($id, $dao, $owner_id, $owner_type, $mapping_registry): int {
+                $data = $dao->searchContent($this->owner_id, $this->owner_type, (int) $id);
+                if (! $data) {
+                    return $dao->cloneContent(
+                        $this->owner_id,
+                        $this->owner_type,
+                        (int) $owner_id,
+                        (string) $owner_type
+                    );
+                }
+
+                $item_mapping = $mapping_registry->getCustomMapping(\DocmanPlugin::ITEM_MAPPING_KEY);
+                if (! isset($item_mapping[$data['item_id']])) {
+                    return $dao->insertContent(
+                        (int) $owner_id,
+                        (string) $owner_type,
+                        $data['title'],
+                        $data['item_id'],
+                    );
+                }
+
+                return $dao->insertContent(
+                    (int) $owner_id,
+                    (string) $owner_type,
+                    $data['title'],
+                    $item_mapping[$data['item_id']],
+                );
+            }
+        );
     }
 
     /**
      * Lazy load the content
-     * @param int $id the id of the content
+     * @param int|string $id the id of the content
      */
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM plugin_docman_widget_embedded WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
-        $res = db_query($sql);
-        if ($res && db_numrows($res)) {
-            $data                                        = db_fetch_array($res);
+        $dao  = new WidgetEmbeddedDao();
+        $data = $dao->searchContent($this->owner_id, $this->owner_type, (int) $id);
+        if ($data) {
             $this->plugin_docman_widget_embedded_title   = $data['title'];
-            $this->plugin_docman_widget_embedded_item_id = (int) $data['item_id'];
-            $this->content_id                            = $id;
+            $this->plugin_docman_widget_embedded_item_id = $data['item_id'];
+            $this->content_id                            = (int) $id;
         }
     }
 
@@ -245,8 +286,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
                 $title = ' title = title ';
             }
 
-            $sql  = "UPDATE plugin_docman_widget_embedded 
-                    SET " . $title . ", " . $item_id . " 
+            $sql  = "UPDATE plugin_docman_widget_embedded
+                    SET " . $title . ", " . $item_id . "
                     WHERE owner_id   = " . db_ei($this->owner_id) . "
                       AND owner_type = '" . db_es($this->owner_type) . "'
                       AND id         = " . db_ei((int) $request->get('content_id'));

@@ -112,7 +112,7 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->getPermissionsManager()->duplicatePermissions(
             $event->getTemplateProject(),
             $event->getJustCreatedProject(),
-            $event->getUgroupMapping(),
+            $event->getMappingRegistry()->getUgroupMapping(),
         );
     }
 

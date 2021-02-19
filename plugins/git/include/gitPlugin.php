@@ -1945,7 +1945,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $template_project     = $event->getTemplateProject();
         $just_created_project = $event->getJustCreatedProject();
-        $ugroup_mapping       = $event->getUgroupMapping();
+        $ugroup_mapping       = $event->getMappingRegistry()->getUgroupMapping();
 
         $this->getPermissionsManager()->duplicateWithStaticMapping(
             (int) $template_project->getID(),

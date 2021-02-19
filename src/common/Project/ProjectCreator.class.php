@@ -40,6 +40,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\ProjectRegistrationDisabledException;
@@ -447,11 +448,12 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
 
+        $mapping_registry = new MappingRegistry($ugroup_mapping);
         $this->event_manager->processEvent(
             new RegisterProjectCreationEvent(
                 $group,
                 $template_group,
-                $ugroup_mapping,
+                $mapping_registry,
                 $admin_user,
                 $legacy,
                 $data->projectShouldInheritFromTemplate(),
@@ -459,7 +461,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         );
 
         if ($data->projectShouldInheritFromTemplate()) {
-            $this->initLayoutFromTemplate($group, $template_group);
+            $this->initLayoutFromTemplate($group, $template_group, $mapping_registry);
         }
 
         if ($this->force_activation) {
@@ -774,9 +776,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     //Create the summary page
-    private function initLayoutFromTemplate(Project $new_project, Project $template)
+    private function initLayoutFromTemplate(Project $new_project, Project $template, MappingRegistry $mapping_registry)
     {
-        $this->dashboard_duplicator->duplicate($template, $new_project);
+        $this->dashboard_duplicator->duplicate($template, $new_project, $mapping_registry);
     }
 
     /**

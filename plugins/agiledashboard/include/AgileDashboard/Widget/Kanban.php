@@ -38,6 +38,7 @@ use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\MappingRegistry;
 use Widget;
 
 abstract class Kanban extends Widget
@@ -326,7 +327,8 @@ abstract class Kanban extends Widget
         Project $new_project,
         $id,
         $owner_id,
-        $owner_type
+        $owner_type,
+        MappingRegistry $mapping_registry
     ) {
         $this->loadContent($id);
 
