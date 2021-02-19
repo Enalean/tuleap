@@ -25,6 +25,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
@@ -52,6 +53,7 @@ final class ScrumTrackerBuilder
     public const END_DATE_FIELD_NAME       = 'end_date';
     public const COMPLETED_DATE_FIELD_NAME = 'completed_date';
     public const STATUS_FIELD_NAME         = 'status';
+    public const ARTIFACT_LINK_FIELD_NAME  = 'links';
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
@@ -105,7 +107,14 @@ final class ScrumTrackerBuilder
                                 new XMLBindStaticValue($id_generator, JiraSprint::STATE_CLOSED),
                             )
                             ->withPermissions(...$default_permissions)
-                    )
+                    ),
+                (new XMLFieldset($id_generator, 'links_fieldset'))
+                ->withLabel('Links')
+                ->withFormElements(
+                    (new XMLArtifactLinkField($id_generator, self::ARTIFACT_LINK_FIELD_NAME))
+                    ->withLabel('Links')
+                    ->withPermissions(...$default_permissions)
+                )
             )
             ->withSemantics(
                 new XMLTitleSemantic(

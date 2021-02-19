@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
@@ -43,11 +44,16 @@ final class JiraAgileImporter
      * @var JiraSprintRetriever
      */
     private $sprint_retriever;
+    /**
+     * @var JiraSprintIssuesRetriever
+     */
+    private $sprint_issues_retriever;
 
-    public function __construct(JiraBoardsRetriever $boards_retriever, JiraSprintRetriever $sprint_retriever)
+    public function __construct(JiraBoardsRetriever $boards_retriever, JiraSprintRetriever $sprint_retriever, JiraSprintIssuesRetriever $sprint_issues_retriever)
     {
-        $this->boards_retriever = $boards_retriever;
-        $this->sprint_retriever = $sprint_retriever;
+        $this->boards_retriever        = $boards_retriever;
+        $this->sprint_retriever        = $sprint_retriever;
+        $this->sprint_issues_retriever = $sprint_issues_retriever;
     }
 
     public function exportScrum(LoggerInterface $logger, \SimpleXMLElement $project, string $jira_project, IDGenerator $id_generator, \PFUser $import_user): void
@@ -79,6 +85,11 @@ final class JiraAgileImporter
 
             if ($sprint->complete_date !== null) {
                 $changeset = $changeset->withFieldChange(new XMLDateChangesetValue(ScrumTrackerBuilder::COMPLETED_DATE_FIELD_NAME, $sprint->complete_date));
+            }
+
+            $links = $this->sprint_issues_retriever->getArtifactLinkChange($sprint);
+            if (count($links)) {
+                $changeset = $changeset->withFieldChange(new XMLArtifactLinkChangesetValue(ScrumTrackerBuilder::ARTIFACT_LINK_FIELD_NAME, $links));
             }
 
             $scrum_tracker = $scrum_tracker->withArtifact(

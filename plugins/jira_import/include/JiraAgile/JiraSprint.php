@@ -124,16 +124,16 @@ final class JiraSprint
 
     public static function buildActive(int $id, string $name): self
     {
-        return new self($id, '', self::STATE_ACTIVE, $name);
+        return new self($id, sprintf('https://jira.example.com/rest/agile/1.0/sprint/%d', $id), self::STATE_ACTIVE, $name);
     }
 
     public static function buildFuture(int $id, string $name): self
     {
-        return new self($id, '', self::STATE_FUTURE, $name);
+        return new self($id, sprintf('https://jira.example.com/rest/agile/1.0/sprint/%d', $id), self::STATE_FUTURE, $name);
     }
 
     public static function buildClosed(int $id, string $name): self
     {
-        return new self($id, '', self::STATE_CLOSED, $name);
+        return new self($id, sprintf('https://jira.example.com/rest/agile/1.0/sprint/%d', $id), self::STATE_CLOSED, $name);
     }
 }

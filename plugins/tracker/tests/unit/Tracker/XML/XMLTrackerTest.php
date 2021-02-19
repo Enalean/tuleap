@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticChangesetValue;
@@ -34,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceBy
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue;
+use Tuleap\Tracker\FormElement\Field\XML\XMLFieldWithoutPermissionsException;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByID;
 use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
@@ -48,11 +51,13 @@ use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
 use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
+use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotNull;
+use function PHPUnit\Framework\assertNull;
 use function PHPUnit\Framework\assertTrue;
 
 /**
@@ -267,6 +272,7 @@ class XMLTrackerTest extends TestCase
         $xml = (new XMLTracker('some_xml_id', 'bug'))
             ->withFormElement(
                 (new XMLStringField('some_id', 'name'))
+                ->withoutPermissions()
             )
             ->export(new \SimpleXMLElement('<tracker />'));
 
@@ -303,6 +309,20 @@ class XMLTrackerTest extends TestCase
         assertEquals('field', $node->permissions->permission[2]['scope']);
         assertEquals('UGROUP_PROJECT_MEMBERS', $node->permissions->permission[2]['ugroup']);
         assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $node->permissions->permission[2]['type']);
+    }
+
+    public function testItThrowAnErrorIfDeveloperForgotToSetPermissions(): void
+    {
+        $tracker = (new XMLTracker('some_xml_id', 'bug'))
+            ->withFormElement(
+                (new XMLStringField('some_id', 'name'))
+            );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
+        $this->expectException(XMLFieldWithoutPermissionsException::class);
+
+        $tracker->export($xml);
     }
 
     public function testItHasAFieldInsideAFieldSetWithPermissions(): void
@@ -345,6 +365,7 @@ class XMLTrackerTest extends TestCase
         $tracker = (new XMLTracker('id', 'bug'))
             ->withFormElement(
                 (new XMLSelectBoxField('F1', 'status'))
+                    ->withoutPermissions()
                     ->withStaticValues(new XMLBindStaticValue('V1', 'Todo'))
                     ->withStaticValues(new XMLBindStaticValue('V2', 'In progress'))
                     ->withStaticValues(new XMLBindStaticValue('V3', 'Done'))
@@ -367,7 +388,7 @@ class XMLTrackerTest extends TestCase
     public function testItHasAReportThatReferenceAFieldIndexedByName(): void
     {
         $tracker = (new XMLTracker('id', 'bug'))
-            ->withFormElement(new XMLStringField('some_id', 'name'))
+            ->withFormElement((new XMLStringField('some_id', 'name'))->withoutPermissions())
             ->withReports(
                 (new XMLReport('Default'))
                     ->withCriteria(
@@ -389,7 +410,7 @@ class XMLTrackerTest extends TestCase
             ->withFormElement(
                 (new XMLFieldset('fieldset', 'details'))
                 ->withFormElements(
-                    new XMLStringField('some_id', 'name')
+                    (new XMLStringField('some_id', 'name'))->withoutPermissions()
                 )
             )
             ->withReports(
@@ -412,6 +433,7 @@ class XMLTrackerTest extends TestCase
         $tracker = (new XMLTracker('id', 'bug'))
             ->withFormElement(
                 (new XMLSelectBoxField('F1', 'status'))
+                    ->withoutPermissions()
                     ->withStaticValues(new XMLBindStaticValue('V1', 'Todo'))
                     ->withStaticValues(new XMLBindStaticValue('V2', 'In progress'))
                     ->withStaticValues(new XMLBindStaticValue('V3', 'Done'))
@@ -442,7 +464,8 @@ class XMLTrackerTest extends TestCase
             ->withFormElement(
                 (new XMLFieldset('fieldset', 'details'))
                     ->withFormElements(
-                        new XMLStringField('some_id', 'name')
+                        (new XMLStringField('some_id', 'name'))
+                            ->withoutPermissions()
                     )
             )
             ->withReports(
@@ -470,7 +493,8 @@ class XMLTrackerTest extends TestCase
             ->withFormElement(
                 (new XMLFieldset('fieldset', 'details'))
                     ->withFormElements(
-                        new XMLStringField('some_id', 'name')
+                        (new XMLStringField('some_id', 'name'))
+                            ->withoutPermissions()
                     )
             )
             ->withReports(
@@ -496,7 +520,8 @@ class XMLTrackerTest extends TestCase
     {
         $tracker = (new XMLTracker('id', 'bug'))
             ->withFormElement(
-                new XMLStringField('some_id', 'name')
+                (new XMLStringField('some_id', 'name'))
+                    ->withoutPermissions()
             )
             ->withSemantics(
                 new XMLTitleSemantic(
@@ -518,8 +543,8 @@ class XMLTrackerTest extends TestCase
     {
         $tracker = (new XMLTracker('id', 'bug'))
             ->withFormElement(
-                new XMLDateField('F1', 'start_date'),
-                new XMLDateField('F2', 'end_date'),
+                (new XMLDateField('F1', 'start_date'))->withoutPermissions(),
+                (new XMLDateField('F2', 'end_date'))->withoutPermissions(),
             )
             ->withSemantics(
                 new XMLTimeframeSemantic(
@@ -544,7 +569,8 @@ class XMLTrackerTest extends TestCase
     {
         $tracker = (new XMLTracker('id', 'bug'))
             ->withFormElement(
-                (new XMLSelectBoxField('F1', 'status', 'static'))
+                (new XMLSelectBoxField('F1', 'status'))
+                    ->withoutPermissions()
                     ->withStaticValues(new XMLBindStaticValue('V1', 'Todo'))
                     ->withStaticValues(new XMLBindStaticValue('V2', 'In progress'))
                     ->withStaticValues(new XMLBindStaticValue('V3', 'Done'))
@@ -574,7 +600,8 @@ class XMLTrackerTest extends TestCase
         $submitted_on = new \DateTimeImmutable();
         $tracker      = (new XMLTracker('tracker_id', 'bug'))
             ->withFormElement(
-                new XMLStringField('some_id', 'name')
+                (new XMLStringField('some_id', 'name'))
+                    ->withoutPermissions()
             )
             ->withArtifact(
                 (new XMLArtifact(123))
@@ -614,10 +641,11 @@ class XMLTrackerTest extends TestCase
         $tracker = (new XMLTracker('tracker_id', 'bug'))
             ->withFormElement(
                 (new XMLSelectBoxField('F1', 'status'))
-                ->withStaticValues(
-                    new XMLBindStaticValue('V1', 'Open'),
-                    new XMLBindStaticValue('V2', 'Closed'),
-                )
+                    ->withoutPermissions()
+                    ->withStaticValues(
+                        new XMLBindStaticValue('V1', 'Open'),
+                        new XMLBindStaticValue('V2', 'Closed'),
+                    )
             )
             ->withArtifact(
                 (new XMLArtifact(123))
@@ -653,6 +681,7 @@ class XMLTrackerTest extends TestCase
         $tracker = (new XMLTracker('tracker_id', 'bug'))
             ->withFormElement(
                 (new XMLSelectBoxField('F1', 'status'))
+                    ->withoutPermissions()
                     ->withStaticValues(
                         new XMLBindStaticValue('V1', 'Open'),
                         new XMLBindStaticValue('V2', 'Closed'),
@@ -683,5 +712,44 @@ class XMLTrackerTest extends TestCase
         assertCount(1, $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
         assertEquals('id', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value['format']);
         assertEquals('2', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
+    }
+
+    public function testItHasArtifactLinkFieldWithArtifactValue(): void
+    {
+        $tracker = (new XMLTracker('id', 'bug'))
+            ->withFormElement(
+                (new XMLArtifactLinkField('F1', 'links'))
+                    ->withoutPermissions()
+            )
+            ->withArtifact(
+                (new XMLArtifact(123))
+                    ->withChangeset(
+                        (new XMLChangeset(
+                            XMLUser::buildUsername('jane'),
+                            new \DateTimeImmutable()
+                        ))
+                            ->withFieldChange(
+                                new XMLArtifactLinkChangesetValue(
+                                    'links',
+                                    [
+                                        new ArtifactLinkChange(123),
+                                        new ArtifactLinkChange(444, '_is_child')
+                                    ]
+                                )
+                            )
+                    )
+            );
+
+        $node = $tracker->export(new \SimpleXMLElement('<trackers />'));
+
+        assertEquals('art_link', $node->formElements->formElement[0]['type']);
+        assertCount(1, $node->artifacts->artifact[0]->changeset[0]->field_change);
+        assertEquals('links', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['field_name']);
+        assertEquals('art_link', $node->artifacts->artifact[0]->changeset[0]->field_change[0]['type']);
+        assertCount(2, $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value);
+        assertEquals('123', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value[0]);
+        assertNull($node->artifacts->artifact[0]->changeset[0]->field_change[0]->value[0]['nature']);
+        assertEquals('444', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value[1]);
+        assertEquals('_is_child', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value[1]['nature']);
     }
 }
