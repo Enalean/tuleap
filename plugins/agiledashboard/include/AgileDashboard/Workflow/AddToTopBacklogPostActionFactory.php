@@ -133,12 +133,12 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         return false;
     }
 
-    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
+    public function duplicate(Transition $from_transition, int $to_transition_id, array $field_mapping): void
     {
         $postactions = $this->loadPostActions($from_transition);
         if (count($postactions) > 0) {
             $this->add_to_top_backlog_post_action_dao->createPostActionForTransitionId(
-                (int) $to_transition_id
+                $to_transition_id
             );
         }
     }
