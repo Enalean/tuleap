@@ -34,7 +34,7 @@ class ListPickerIncluderTest extends TestCase
 
     public function testItDoesNotIncludeListPickerWhenBrowsersAreLegacy(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "1");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "1");
 
         $legacy_user_agents = [
             DetectedBrowserTest::IE11_USER_AGENT_STRING,
@@ -52,7 +52,7 @@ class ListPickerIncluderTest extends TestCase
 
     public function testItIncludesListPickerForModernBrowsers(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "1");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "1");
 
         $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
@@ -62,7 +62,7 @@ class ListPickerIncluderTest extends TestCase
 
     public function testItDoesNotIncludeListPickerWhenFeatureFlagIsDisabled(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "0");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "0");
 
         $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
@@ -72,7 +72,7 @@ class ListPickerIncluderTest extends TestCase
 
     public function testItDoesNotIncludeListPickerWhenFeatureIsDisabledForCurrentTracker(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
 
         $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 1);
@@ -82,7 +82,7 @@ class ListPickerIncluderTest extends TestCase
 
     public function testItIncludesListPickerWhenTrackerIdIsNotInTheList(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
 
         $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
@@ -92,22 +92,22 @@ class ListPickerIncluderTest extends TestCase
 
     public function testItReturnsTheTrackerIdsHavingListPickerDisabled(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
         $this->assertEquals([1, 2, 3], ListPickerIncluder::getTrackersHavingListPickerDisabled());
     }
 
     public function testItReturnsTrueWhenListPickerIsEnabledOnPlatform(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "1");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "1");
         $this->assertEquals(true, ListPickerIncluder::isListPickerEnabledOnPlatform());
 
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
         $this->assertEquals(true, ListPickerIncluder::isListPickerEnabledOnPlatform());
     }
 
     public function testItReturnsFalseWhenListPickerIsDisabled(): void
     {
-        \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "0");
+        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "0");
         $this->assertEquals(false, ListPickerIncluder::isListPickerEnabledOnPlatform());
     }
 

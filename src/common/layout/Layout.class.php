@@ -734,10 +734,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     {
         $body_class = isset($params['body_class']) ? $params['body_class'] : [];
 
-        if ($this->getUser()->useLabFeatures()) {
-            $body_class[] = 'lab-mode';
-        }
-
         return implode(' ', $body_class);
     }
 

@@ -1155,9 +1155,6 @@ msgstr ""
 msgid "Enable accessibility mode"
 msgstr "Activer le mode d'accessiblilité"
 
-msgid "Enable lab mode"
-msgstr "Activer le mode experimental"
-
 msgid "Enabled"
 msgstr "Activé"
 
@@ -1210,9 +1207,6 @@ msgstr "Forums existants"
 
 msgid "Existing mailing lists"
 msgstr "Listes de diffusion existantes"
-
-msgid "Experimental"
-msgstr "Expérimental"
 
 msgid "Expiration date is not well formed."
 msgstr "La date d'expiration n'est pas au bon format."
@@ -3299,13 +3293,6 @@ msgstr "Tentative de poster une réponse sur un fil de discussion inexistant."
 
 msgid "Trying to post without a forum ID"
 msgstr "Tentative de poster un message sans identifiant (ID) de forum"
-
-msgid ""
-"Tuleap experimental features in preview mode for bleeding edge users. Only "
-"use it if you know what you are doing."
-msgstr ""
-"Fonctionnalités expérimentales de Tuleap en avant première pour les "
-"intrépides. N'activez ce mode que si vous savez ce que vous faites."
 
 msgid ""
 "Tuleap helps teams to deliver awesome applications, better, faster, and "

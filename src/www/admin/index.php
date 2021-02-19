@@ -20,8 +20,6 @@
   */
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
-use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
-use Tuleap\Admin\Homepage\StatisticsPresenter;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
 use Tuleap\Layout\IncludeAssets;
@@ -73,16 +71,6 @@ $actif_users       = $nb_users_by_status->getNbActive();
 $hold_users        = $nb_users_by_status->getNbSuspended();
 $deleted_users     = $nb_users_by_status->getNbDeleted();
 
-db_query("SELECT COUNT(DISTINCT(p.user_id)) AS count
-          FROM user_preferences p
-          JOIN user u USING (user_id)
-          WHERE preference_name = 'use_lab_features'
-            AND preference_value = 1
-            AND (status = 'A'
-              OR status = 'R')");
-$row      = db_fetch_array();
-$mode_lab = $row['count'];
-
 if (ForgeConfig::get('sys_user_approval') == 1) {
     $pending_users = $realpending_users;
 } else {
@@ -132,17 +120,7 @@ function stats_getactiveusers($since)
     }
 }
 
-$additional_statistics = [
-    new StatisticsPresenter(
-        $GLOBALS['Language']->getText('admin_main', 'mode_lab_users'),
-        [
-            new StatisticsBadgePresenter(
-                "$mode_lab " . $GLOBALS['Language']->getText('admin_main', 'mode_lab_users_nb_users'),
-                StatisticsBadgePresenter::LEVEL_SECONDARY
-            )
-        ]
-    )
-];
+$additional_statistics = [];
 EventManager::instance()->processEvent(
     Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS,
     [

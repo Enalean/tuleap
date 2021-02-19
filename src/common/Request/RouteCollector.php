@@ -144,7 +144,6 @@ use Tuleap\User\Account\ConfirmNewEmailController;
 use Tuleap\User\Account\DisplayAccountInformationController;
 use Tuleap\User\Account\DisplayAppearanceController;
 use Tuleap\User\Account\DisplayEditionController;
-use Tuleap\User\Account\DisplayExperimentalController;
 use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\DisplaySecurityController;
@@ -153,7 +152,6 @@ use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UpdateAccountInformationController;
 use Tuleap\User\Account\UpdateAppearancePreferences;
 use Tuleap\User\Account\UpdateEditionController;
-use Tuleap\User\Account\UpdateExperimentalPreferences;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
 use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
@@ -370,20 +368,6 @@ class RouteCollector
             new ThemeVariant(),
             new SelectedDateDisplayPreferenceValidator()
         );
-    }
-
-    public static function getExperimentalController(): DispatchableWithRequest
-    {
-        return new DisplayExperimentalController(
-            EventManager::instance(),
-            TemplateRendererFactory::build(),
-            DisplayExperimentalController::getCSRFToken()
-        );
-    }
-
-    public static function postExperimentalController(): DispatchableWithRequest
-    {
-        return new UpdateExperimentalPreferences(DisplayExperimentalController::getCSRFToken());
     }
 
     public static function getAccountSecurity(): DispatchableWithRequest
@@ -944,9 +928,6 @@ class RouteCollector
 
             $r->get('/appearance', [self::class, 'getAppearanceController']);
             $r->post('/appearance', [self::class, 'postAppearanceController']);
-
-            $r->get('/experimental', [self::class, 'getExperimentalController']);
-            $r->post('/experimental', [self::class, 'postExperimentalController']);
 
             $r->get('/security', [self::class, 'getAccountSecurity']);
             $r->post('/security/session', [self::class, 'postAccountSecuritySession']);

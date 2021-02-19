@@ -42,7 +42,8 @@ final class GetWhitelistedKeys implements Dispatchable
 {
     public const NAME = 'getWhitelistedKeys';
 
-    private const TLP_CONFIG_ATTRIBUTE = 'tlp-config-key';
+    private const TLP_CONFIG_ATTRIBUTE              = 'tlp-config-key';
+    private const TLP_CONFIG_FEATURE_FLAG_ATTRIBUTE = 'tlp-config-feature-flag-key';
 
     /**
      * @var class-string[]
@@ -142,6 +143,9 @@ final class GetWhitelistedKeys implements Dispatchable
                 $const_value = $const->getValue();
                 if ($doc->hasTag(self::TLP_CONFIG_ATTRIBUTE) && is_string($const_value)) {
                     $this->white_listed_keys[$const_value] = $doc->getSummary();
+                }
+                if ($doc->hasTag(self::TLP_CONFIG_FEATURE_FLAG_ATTRIBUTE) && is_string($const_value)) {
+                    $this->white_listed_keys[\ForgeConfig::FEATURE_FLAG_PREFIX . $const_value] = $doc->getSummary();
                 }
             }
         }

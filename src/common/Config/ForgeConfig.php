@@ -26,8 +26,8 @@
  */
 class ForgeConfig
 {
-
-    public const AUTH_TYPE_LDAP = 'ldap';
+    public const AUTH_TYPE_LDAP      = 'ldap';
+    public const FEATURE_FLAG_PREFIX = 'feature_flag_';
 
     /**
      * Hold the configuration variables
@@ -192,5 +192,13 @@ class ForgeConfig
     public static function getCacheDir()
     {
         return self::get('codendi_cache_dir');
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getFeatureFlag(string $key)
+    {
+        return self::get(self::FEATURE_FLAG_PREFIX . $key);
     }
 }

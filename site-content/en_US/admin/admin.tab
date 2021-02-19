@@ -101,8 +101,6 @@ admin_main	lastday_users	active last 24 hours
 admin_main	lastweek_users	active last week
 admin_main	lastmonth_users	active last month
 admin_main	last3months_users	active last 3 months
-admin_main	mode_lab_users	Active or restricted users using mode lab
-admin_main	mode_lab_users_nb_users	users
 admin_main	stat_projects	Projects statistics
 admin_main	status_project	Per status
 admin_main	stat_users	Users statistics

@@ -74,11 +74,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public const UNIX_STATUS_SUSPENDED         = 'S';
     public const UNIX_STATUS_DELETED           = 'D';
 
-    /**
-     * Name of the preference for lab features
-     */
-    public const PREF_NAME_LAB_FEATURE = 'use_lab_features';
-
     public const PREFERENCE_DISPLAY_DENSITY = 'display_density';
     public const DISPLAY_DENSITY_CONDENSED  = 'condensed';
 
@@ -1539,16 +1534,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             $this->user_id .
             DIRECTORY_SEPARATOR .
             'avatar';
-    }
-
-    public function useLabFeatures(): bool
-    {
-        return (bool) $this->getPreference(self::PREF_NAME_LAB_FEATURE);
-    }
-
-    public function setLabFeatures(bool $is_enabled): void
-    {
-        $this->setPreference(self::PREF_NAME_LAB_FEATURE, $is_enabled ? '1' : '0');
     }
 
      /**

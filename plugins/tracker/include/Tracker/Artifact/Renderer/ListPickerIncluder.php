@@ -30,9 +30,9 @@ final class ListPickerIncluder
     /**
      * Feature flag to have list pickers in lieu of <select> in artifact views
      *
-     * @tlp-config-key
+     * @tlp-config-feature-flag-key
      */
-    public const FORGE_CONFIG_KEY = 'feature_flag_use_list_pickers_in_trackers_and_modals';
+    public const FORGE_CONFIG_KEY = 'use_list_pickers_in_trackers_and_modals';
 
     public static function includeListPickerAssets(HTTPRequest $request, int $tracker_id): void
     {
@@ -62,7 +62,7 @@ final class ListPickerIncluder
 
     public static function isListPickerEnabledOnPlatform(): bool
     {
-        return \ForgeConfig::get(self::FORGE_CONFIG_KEY) !== "0";
+        return \ForgeConfig::getFeatureFlag(self::FORGE_CONFIG_KEY) !== "0";
     }
 
     /**
@@ -70,7 +70,7 @@ final class ListPickerIncluder
      */
     public static function getTrackersHavingListPickerDisabled(): array
     {
-        $config_value               = \ForgeConfig::get(self::FORGE_CONFIG_KEY);
+        $config_value               = \ForgeConfig::getFeatureFlag(self::FORGE_CONFIG_KEY);
         $tracker_id_prefix_position = strpos($config_value, "t:");
         if ($tracker_id_prefix_position === false) {
             return [];
