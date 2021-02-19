@@ -24,7 +24,7 @@ import { initMentions } from "@tuleap/mention";
 
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
-import { RichTextEditorsCreator } from "../artifact/RichTextEditorsCreator";
+import { RichTextEditorsCreator } from "../artifact/rich-text-editor-creator/RichTextEditorsCreator";
 
 var tuleap = window.tuleap || {};
 tuleap.tracker = tuleap.tracker || {};
