@@ -1,6 +1,6 @@
 # @tuleap/plugin-tracker-rich-text-editor
 
-Depends on `ckeditor4` module. Provide it as `externals` in webpack configuration:
+Depends on `ckeditor4` and `jquery`. Provide them as `externals` in webpack configuration:
 
 ```javascript
 // webpack.config.js
@@ -8,11 +8,12 @@ Depends on `ckeditor4` module. Provide it as `externals` in webpack configuratio
     //...
     externals: {
         "ckeditor4": "CKEDITOR",
+        "jquery": "jQuery",
     },
     //...
 }
 ```
-Also, make sure to include CKEDITOR sources in PHP **before** loading this module.
+Also, make sure to include jQuery and CKEDITOR sources in PHP **before** loading this module.
 
 ## Usage:
 
@@ -24,12 +25,13 @@ const locale = "en_US"; // Retrieve the locale somehow
 
 // If you want to have the format selector with the editor, use:
 const factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale);
-// Or if you do not need the format selector, use:
+// Or if the format selector is created by other means, use:
 const factory = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(document, locale);
 
 options: RichTextEditorOptions = {
     format_selectbox_id: "format_id", // html "id" attribute for the Format selectbox
     format_selectbox_name: "format_name", // html "name" attribute for the Format selectbox
+    format_selectbox_value: "text", // "text" | "html" | "commonmark". The initial value of the Format selectbox
     getAdditionalOptions: (textarea: HTMLTextAreaElement) => {
         // Add additional CKEditor options, or return empty object
         return {};
@@ -43,6 +45,6 @@ options: RichTextEditorOptions = {
     }
 }
 
-factory.createRichTextEditor(textarea, options);
-
+const editor = factory.createRichTextEditor(textarea, options);
+editor.getContent(); // Get the content of either the CKEditor or the textarea, depending on the chosen format
 ```

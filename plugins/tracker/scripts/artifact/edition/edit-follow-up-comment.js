@@ -24,12 +24,11 @@
     $$:readonly
     $:readonly
     Effect:readonly
-    CKEDITOR:readonly
     Ajax:readonly
-    codendi:readonly
-    tuleap:readonly
 */
 
+import CKEDITOR from "ckeditor4";
+import codendi from "codendi";
 import {
     createEditFollowupEditor,
     getFormatOrDefault,
@@ -37,6 +36,7 @@ import {
     getTextAreaValue,
 } from "./edit-follow-up-comment-helpers";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import { initMentions } from "@tuleap/mention";
 
 document.observe("dom:loaded", function () {
     $$(".tracker_artifact_followup_comment_controls_edit button").each(function (edit) {
@@ -79,7 +79,7 @@ document.observe("dom:loaded", function () {
 
                     comment_panel.hide();
                     textarea.focus();
-                    tuleap.mention.init("#tracker_followup_comment_edit_" + id);
+                    initMentions("#tracker_followup_comment_edit_" + id);
 
                     var button = new Element("button", { class: "btn btn-primary" })
                         .update(codendi.locales.tracker_artifact.edit_followup_ok)

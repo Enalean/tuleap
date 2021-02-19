@@ -9,6 +9,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
+    "@tuleap/mention": "file:../../../../../src/scripts/lib/mention",
     "marked": "^1.2.5",
     "turndown": "^7.0.0"
   },

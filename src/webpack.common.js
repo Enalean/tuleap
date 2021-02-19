@@ -189,6 +189,7 @@ const webpack_config_for_rich_text_editor = {
     externals: {
         ckeditor4: "CKEDITOR",
         tuleap: "tuleap",
+        jquery: "jQuery",
     },
     module: {
         rules: [
@@ -358,8 +359,6 @@ const fat_combined_files = [
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.fr.js",
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker-fix-prototypejs-conflict.js",
         "./www/scripts/select2/select2.min.js",
-        "./www/scripts/vendor/at/js/caret.min.js",
-        "./www/scripts/vendor/at/js/atwho.min.js",
         "./www/scripts/viewportchecker/viewport-checker.js",
         "./www/scripts/clamp.js",
         "./www/scripts/codendi/common.js",
@@ -385,7 +384,6 @@ const fat_combined_files = [
         "./www/scripts/tuleap/datetimepicker.js",
         "./www/scripts/tuleap/svn.js",
         "./www/scripts/tuleap/search.js",
-        "./www/scripts/tuleap/tuleap-mention.js",
         "./www/scripts/tuleap/project-privacy-tooltip.js",
         "./www/scripts/tuleap/tuleap-ckeditor-toolbar.js",
     ],

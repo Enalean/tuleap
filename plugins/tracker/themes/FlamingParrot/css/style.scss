@@ -19,6 +19,7 @@
 
 @import '../../default/css/style';
 @import './tracker-creation';
+@import '~@tuleap/mention';
 
 @mixin definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white) {
     /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
