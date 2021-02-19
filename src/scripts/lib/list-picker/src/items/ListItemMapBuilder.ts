@@ -41,7 +41,13 @@ export class ListItemMapBuilder {
         const useless_options = [];
 
         for (const option of this.source_select_box.options) {
-            if (option.value === "" || option.value === "?") {
+            if (option.value === "") {
+                // Do not remove, otherwise the default value will be the first value of the list
+                // and no placeholder is shown.
+                continue;
+            }
+
+            if (option.value === "?") {
                 useless_options.push(option);
                 continue;
             }

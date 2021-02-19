@@ -209,14 +209,19 @@ describe("ListItemBuilder", () => {
         ]);
     });
 
-    it("should ignore options with empty value attribute and remove them from the source <select> options", async () => {
+    it("should ignore options with empty value attribute BUT does not remove them from the source <select> options", async () => {
+        const empty_option = document.createElement("option");
+        empty_option.setAttribute("id", "empty-option");
+        empty_option.setAttribute("value", "");
+        select.appendChild(empty_option);
+
         appendSimpleOptionsToSourceSelectBox(select);
         const map = await builder.buildListPickerItemsMap();
         const item_with_empty_value = Array.from(map.values()).find((item) => {
             return item.value === "";
         });
         expect(item_with_empty_value).toBeUndefined();
-        expect(select.querySelector("option[value='']")).toBeNull();
+        expect(select.querySelector("option[value='']")).not.toBeNull();
     });
 
     it("should ignore empty options in the angular-modal remove it from the source <select> options", async () => {
