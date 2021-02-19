@@ -3,6 +3,7 @@
 **/bin/*
 **/coverage/*
 **/dist/*
+**/types/**/*.d.ts
 **/node_modules/*
 **/vendor/*
 src/common/wiki/phpwiki/

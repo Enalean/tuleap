@@ -2,7 +2,9 @@
     "extends": "../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
         "lib": ["DOM"],
-        "outDir": "dist/"
+        "outDir": "types/",
+        "emitDeclarationOnly": true,
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.test.ts"]
 }
