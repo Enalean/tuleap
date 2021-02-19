@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\MappingRegistry;
+use Tuleap\Tracker\Widget\WidgetRendererDao;
+
 /**
  * Widget_MyTrackerRenderer
  *
@@ -34,6 +39,59 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
             self::ID,
             HTTPRequest::instance()->get('group_id'),
             \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
+        );
+    }
+
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $owner_id,
+        $owner_type,
+        MappingRegistry $mapping_registry
+    ): int {
+        $dao = new WidgetRendererDao();
+
+        if (! $mapping_registry->hasCustomMapping(Tracker_Report_RendererFactory::MAPPING_KEY)) {
+            return $dao->cloneContent(
+                (int) $this->owner_id,
+                (string) $this->owner_type,
+                (int) $owner_id,
+                (string) $owner_type
+            );
+        }
+
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
+        return $transaction_executor->execute(
+            function () use ($id, $dao, $owner_id, $owner_type, $mapping_registry): int {
+                $data = $dao->searchContent($this->owner_id, $this->owner_type, (int) $id);
+                if (! $data) {
+                    return $dao->cloneContent(
+                        $this->owner_id,
+                        $this->owner_type,
+                        (int) $owner_id,
+                        (string) $owner_type
+                    );
+                }
+
+                $item_mapping = $mapping_registry->getCustomMapping(Tracker_Report_RendererFactory::MAPPING_KEY);
+                if (! isset($item_mapping[$data['renderer_id']])) {
+                    return $dao->insertContent(
+                        (int) $owner_id,
+                        (string) $owner_type,
+                        $data['title'],
+                        $data['renderer_id'],
+                    );
+                }
+
+                return $dao->insertContent(
+                    (int) $owner_id,
+                    (string) $owner_type,
+                    $data['title'],
+                    $item_mapping[$data['renderer_id']],
+                );
+            }
         );
     }
 

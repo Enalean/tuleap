@@ -24,6 +24,7 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
@@ -808,11 +809,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
      *
      * @param int $from_project_id
      * @param int $to_project_id
-     * @param Array   $ugroup_mapping
      */
-    public function duplicate($from_project_id, $to_project_id, $ugroup_mapping)
+    public function duplicate($from_project_id, $to_project_id, MappingRegistry $mapping_registry)
     {
-        $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $ugroup_mapping);
+        $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $mapping_registry);
         $this->duplicateReferences($from_project_id);
     }
 

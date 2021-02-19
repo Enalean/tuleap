@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -1709,13 +1710,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         EventManager::instance()->processEvent($event);
     }
 
-    public function duplicate($from_report, $formElement_mapping)
+    public function duplicate($from_report, $formElement_mapping, MappingRegistry $mapping_registry)
     {
         //Duplicate criteria
         Tracker_Report_CriteriaFactory::instance()->duplicate($from_report, $this, $formElement_mapping);
 
         //Duplicate renderers
-        Tracker_Report_RendererFactory::instance()->duplicate($from_report, $this, $formElement_mapping);
+        Tracker_Report_RendererFactory::instance()->duplicate($from_report, $this, $formElement_mapping, $mapping_registry);
     }
 
     /**

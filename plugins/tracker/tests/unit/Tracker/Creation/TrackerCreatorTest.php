@@ -27,6 +27,7 @@ use Mockery;
 use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\Project\MappingRegistry;
 
 final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
 {
@@ -104,7 +105,7 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
         $this->tracker_factory->shouldReceive('create')->withArgs(
             [
                 $project->getId(),
-                -1,
+                Mockery::type(MappingRegistry::class),
                 "101",
                 "Tracker Name",
                 "",
@@ -135,7 +136,7 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
         $this->tracker_factory->shouldReceive('create')->withArgs(
             [
                 $project->getId(),
-                -1,
+                Mockery::type(MappingRegistry::class),
                 "101",
                 "Tracker Name",
                 "",

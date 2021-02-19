@@ -30,6 +30,7 @@ use Tracker_Exception;
 use TrackerFactory;
 use TrackerFromXmlException;
 use TrackerXmlImport;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use UserManager;
@@ -132,7 +133,7 @@ class TrackerCreator
         $this->creation_data_checker->checkAtTrackerDuplication($itemname, $atid_template, $user);
         $duplicate = $this->tracker_factory->create(
             $project->getId(),
-            -1,
+            new MappingRegistry([]),
             $atid_template,
             $name,
             $description,

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\MappingRegistry;
+
 class Tracker_ReportFactory
 {
     /**
@@ -142,11 +144,12 @@ class Tracker_ReportFactory
         );
     }
 
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping, MappingRegistry $mapping_registry)
     {
         $report_mapping = [];
         foreach ($this->getReportsByTrackerId($from_tracker_id, null) as $from_report) {
-            $new_report                            = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null);
+            $new_report = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null, $mapping_registry);
+
             $report_mapping[$from_report->getId()] = $new_report->getId();
         }
 
@@ -163,14 +166,19 @@ class Tracker_ReportFactory
      *
      * @return Tracker_Report the new report
      */
-    public function duplicateReport($from_report, $to_tracker_id, $field_mapping, $current_user_id)
-    {
+    public function duplicateReport(
+        $from_report,
+        $to_tracker_id,
+        $field_mapping,
+        $current_user_id,
+        MappingRegistry $mapping_registry
+    ) {
         $report = null;
         //duplicate report info
         if ($id = $this->getDao()->duplicate($from_report->id, $to_tracker_id)) {
             //duplicate report
             $report = $this->getReportById($id, $current_user_id);
-            $report->duplicate($from_report, $field_mapping);
+            $report->duplicate($from_report, $field_mapping, $mapping_registry);
         }
         return $report;
     }

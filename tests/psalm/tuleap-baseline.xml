@@ -48671,6 +48671,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php">
+    <MissingParamType occurrences="3">
+      <code>$id</code>
+      <code>$owner_id</code>
+      <code>$owner_type</code>
+    </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>isAjax</code>
     </MissingReturnType>
