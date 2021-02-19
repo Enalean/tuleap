@@ -5,16 +5,23 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "main": "dist/filter-inline-table.js",
-  "types": "dist/filter-inline-table.d.ts",
+  "module": "dist/filter-inline-table.es.js",
+  "main": "dist/filter-inline-table.umd.js",
+  "types": "types/filter-inline-table.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/filter-inline-table.es.js",
+      "require": "./dist/filter-inline-table.umd.js"
+    }
+  },
   "dependencies": {},
   "devDependencies": {},
   "config": {
     "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "build": "$npm_package_config_bin/concurrently \"rm -rf types/ && $npm_package_config_bin/tsc\" \"$npm_package_config_bin/vite build\"",
+    "watch": "$npm_package_config_bin/concurrently \"rm -rf types/ && $npm_package_config_bin/tsc -w\" \"$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.ts\" --ext ts --exec '$npm_package_config_bin/vite build --mode development --minify false'\"",
     "test": "$npm_package_config_bin/jest"
   }
 }
