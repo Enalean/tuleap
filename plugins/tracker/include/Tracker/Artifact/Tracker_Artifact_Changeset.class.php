@@ -22,8 +22,10 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
@@ -549,8 +551,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         }
 
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
+            $comment_id                      = $row['id'];
+            $ugroups_can_see_private_comment = $this
+                ->getPrivateCommentPermissionRetriever()
+                ->getUGroupsCanSeePrivateComment($this->artifact->getTracker(), (int) $comment_id);
+
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment(
-                $row['id'],
+                $comment_id,
                 $this,
                 $row['comment_type_id'],
                 $row['canned_response_id'],
@@ -558,7 +565,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 $row['submitted_on'],
                 $row['body'],
                 $row['body_format'],
-                $row['parent_id']
+                $row['parent_id'],
+                $ugroups_can_see_private_comment
             );
         }
         return $this->latest_comment;
@@ -581,6 +589,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     protected function getChangesetDao()
     {
         return new Tracker_Artifact_ChangesetDao();
+    }
+
+    protected function getPrivateCommentPermissionRetriever(): TrackerPrivateCommentUGroupPermissionRetriever
+    {
+        return new TrackerPrivateCommentUGroupPermissionRetriever(new TrackerPrivateCommentUGroupPermissionDao(), new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager());
     }
 
     /**

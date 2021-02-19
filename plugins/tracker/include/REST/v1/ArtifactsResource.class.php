@@ -79,7 +79,6 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedExcep
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
@@ -204,7 +203,7 @@ class ArtifactsResource extends AuthenticatedResource
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                 ),
-                new PermissionChecker(new TrackerPrivateCommentUGroupPermissionDao())
+                new PermissionChecker()
             )
         );
         $this->moved_value_builder = new MovedArtifactValueBuilder();

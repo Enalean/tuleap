@@ -20,6 +20,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
+
 class Tracker_Artifact_ChangesetFactoryBuilder
 {
     public static function build(): Tracker_Artifact_ChangesetFactory
@@ -29,7 +33,8 @@ class Tracker_Artifact_ChangesetFactoryBuilder
             new Tracker_Artifact_Changeset_ValueDao(),
             new Tracker_Artifact_Changeset_CommentDao(),
             new Tracker_Artifact_ChangesetJsonFormatter(TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')),
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            new TrackerPrivateCommentUGroupPermissionRetriever(new TrackerPrivateCommentUGroupPermissionDao(), new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager())
         );
     }
 }

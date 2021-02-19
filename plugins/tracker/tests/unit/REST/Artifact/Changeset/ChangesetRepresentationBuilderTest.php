@@ -336,7 +336,8 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             1234567890,
             ($has_comment) ? 'A text comment' : '',
             'text',
-            0
+            0,
+            []
         );
         $changeset->setLatestComment($comment);
         return $changeset;

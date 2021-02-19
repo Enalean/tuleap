@@ -49,10 +49,6 @@ class PermissionCheckerTest extends TestCase
      */
     private $changeset;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupPermissionDao
-     */
-    private $dao;
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
      */
     private $tracker;
@@ -67,21 +63,9 @@ class PermissionCheckerTest extends TestCase
         $this->changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
         $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->comment = new Tracker_Artifact_Changeset_Comment(
-            525,
-            $this->changeset,
-            null,
-            null,
-            110,
-            1234567890,
-            'A text comment',
-            'text',
-            0
-        );
+        $this->comment = $this->buildComment([]);
 
-        $this->dao = \Mockery::mock(TrackerPrivateCommentUGroupPermissionDao::class);
-
-        $this->checker = new PermissionChecker($this->dao);
+        $this->checker = new PermissionChecker();
     }
 
     public function testReturnsTrueIfUserIsSiteAdmin(): void
@@ -111,10 +95,11 @@ class PermissionCheckerTest extends TestCase
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
 
-        $this->dao
-            ->shouldReceive('getUgroupIdsOfPrivateComment')
-            ->with(525)
-            ->andReturn([1, 2, 3]);
+        $ugroup_1 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
+        $ugroup_2 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
+        $ugroup_3 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+
+        $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
 
         $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
         $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnTrue();
@@ -122,17 +107,24 @@ class PermissionCheckerTest extends TestCase
         $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
     }
 
-    public function testReturnsTrueIfCommentIsNotInPrivateGroupAndUserIsNotAdmin(): void
+    public function testReturnsFalseIfThereAreNoUGroupsButCommentIsPrivate(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
 
-        $this->dao
-            ->shouldReceive('getUgroupIdsOfPrivateComment')
-            ->with(525)
-            ->andReturn([]);
+        $this->user->shouldReceive('isMemberOfUGroup')->never();
+
+        $this->assertFalse($this->checker->userCanSeeComment($this->user, $this->comment));
+    }
+
+    public function testReturnsTrueIfPrivateCommentIsNull(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
 
         $this->user->shouldReceive('isMemberOfUGroup')->never();
+
+        $this->comment = $this->buildComment(null);
 
         $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
     }
@@ -142,15 +134,35 @@ class PermissionCheckerTest extends TestCase
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
 
-        $this->dao
-            ->shouldReceive('getUgroupIdsOfPrivateComment')
-            ->with(525)
-            ->andReturn([1, 2, 3]);
+        $ugroup_1 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
+        $ugroup_2 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
+        $ugroup_3 = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+
+        $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
 
         $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
         $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
         $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
 
         $this->assertFalse($this->checker->userCanSeeComment($this->user, $this->comment));
+    }
+
+    /**
+     * @param \ProjectUGroup[]|null $ugroups
+     */
+    private function buildComment(?array $ugroups): Tracker_Artifact_Changeset_Comment
+    {
+        return new Tracker_Artifact_Changeset_Comment(
+            525,
+            $this->changeset,
+            null,
+            null,
+            110,
+            1234567890,
+            'A text comment',
+            'text',
+            0,
+            $ugroups
+        );
     }
 }

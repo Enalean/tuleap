@@ -32,7 +32,8 @@ class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_
             (int) $changeset->getSubmittedOn(),
             '',
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-            -1
+            -1,
+            null
         );
     }
 }

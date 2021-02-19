@@ -122,7 +122,8 @@ final class CommentPresenterTest extends TestCase
             $changeset_submission_timestamp,
             $body,
             $format,
-            $parent_id
+            $parent_id,
+            []
         );
     }
 }

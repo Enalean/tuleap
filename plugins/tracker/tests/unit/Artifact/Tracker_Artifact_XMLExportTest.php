@@ -141,7 +141,8 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
             $timestamp_01,
             '<b> My comment 01</b>',
             'html',
-            0
+            0,
+            []
         );
 
         $comment_02 = new Tracker_Artifact_Changeset_Comment(
@@ -153,7 +154,8 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
             $timestamp_02,
             '<b> My comment 02</b>',
             'html',
-            0
+            0,
+            []
         );
 
         $comment_03 = new Tracker_Artifact_Changeset_Comment(
@@ -165,7 +167,8 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
             $timestamp_03,
             '<b> My comment 03</b>',
             'html',
-            0
+            0,
+            []
         );
 
         $comment_04 = new Tracker_Artifact_Changeset_Comment(
@@ -177,7 +180,8 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
             $timestamp_04,
             '<b> My comment 04</b>',
             'html',
-            0
+            0,
+            []
         );
 
         $changeset_01->shouldReceive('getComment')->andReturns($comment_01);

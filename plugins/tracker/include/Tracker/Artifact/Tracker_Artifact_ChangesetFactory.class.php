@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
 
 class Tracker_Artifact_ChangesetFactory
 {
@@ -38,19 +39,25 @@ class Tracker_Artifact_ChangesetFactory
      * @var Tracker_FormElementFactory
      */
     private $tracker_form_element_factory;
+    /**
+     * @var TrackerPrivateCommentUGroupPermissionRetriever
+     */
+    private $private_comment_permission_retriever;
 
     public function __construct(
         Tracker_Artifact_ChangesetDao $dao,
         Tracker_Artifact_Changeset_ValueDao $changeset_value_dao,
         Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
         Tracker_Artifact_ChangesetJsonFormatter $json_formatter,
-        Tracker_FormElementFactory $tracker_form_element_factory
+        Tracker_FormElementFactory $tracker_form_element_factory,
+        TrackerPrivateCommentUGroupPermissionRetriever $private_comment_permission_retriever
     ) {
-        $this->dao                          = $dao;
-        $this->changeset_value_dao          = $changeset_value_dao;
-        $this->changeset_comment_dao        = $changeset_comment_dao;
-        $this->json_formatter               = $json_formatter;
-        $this->tracker_form_element_factory = $tracker_form_element_factory;
+        $this->dao                                  = $dao;
+        $this->changeset_value_dao                  = $changeset_value_dao;
+        $this->changeset_comment_dao                = $changeset_comment_dao;
+        $this->json_formatter                       = $json_formatter;
+        $this->tracker_form_element_factory         = $tracker_form_element_factory;
+        $this->private_comment_permission_retriever = $private_comment_permission_retriever;
     }
 
     /**
@@ -168,9 +175,13 @@ class Tracker_Artifact_ChangesetFactory
     private function setCommentsFromCache(array $cache, Tracker_Artifact_Changeset $changeset)
     {
         if (isset($cache[$changeset->getId()])) {
-            $row     = $cache[$changeset->getId()];
+            $row                     = $cache[$changeset->getId()];
+            $comment_id              = $row['id'];
+            $ugroups_private_comment = $this->private_comment_permission_retriever
+                ->getUGroupsCanSeePrivateComment($changeset->getTracker(), (int) $comment_id);
+
             $comment = new Tracker_Artifact_Changeset_Comment(
-                $row['id'],
+                $comment_id,
                 $changeset,
                 $row['comment_type_id'],
                 $row['canned_response_id'],
@@ -178,7 +189,8 @@ class Tracker_Artifact_ChangesetFactory
                 $row['submitted_on'],
                 $row['body'],
                 $row['body_format'],
-                $row['parent_id']
+                $row['parent_id'],
+                $ugroups_private_comment
             );
             $changeset->setLatestComment($comment);
         }
