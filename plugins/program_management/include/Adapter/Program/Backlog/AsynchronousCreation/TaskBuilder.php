@@ -26,6 +26,7 @@ use BackendLogger;
 use ProjectManager;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
+use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_DescriptionFactory;
 use Tracker_Semantic_StatusFactory;
@@ -46,9 +47,16 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Synchroniz
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleValueAdapter as TitleValueAdapterAlias;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestonesDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestonesDao;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
@@ -70,6 +78,14 @@ class TaskBuilder
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $logger               = BackendLogger::getDefaultLogger("program_management_syslog");
 
+        $feature_planner              = new FeaturePlanner(
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new FeatureToLinkBuilder(),
+            Tracker_ArtifactFactory::instance(),
+            new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
+            new ContentDao(),
+            new FeaturesLinkedToMilestoneBuilder(new FeaturesLinkedToMilestonesDao())
+        );
         $artifact_creator             = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
                 Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
@@ -116,7 +132,8 @@ class TaskBuilder
             new TrackerCollectionFactory(new PlanningAdapter(\PlanningFactory::build())),
             $mirror_creator,
             $logger,
-            new PendingArtifactCreationDao()
+            new PendingArtifactCreationDao(),
+            $feature_planner
         );
     }
 }
