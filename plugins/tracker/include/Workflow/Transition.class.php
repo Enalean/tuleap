@@ -192,7 +192,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     }
 
     /**
-     * @return int
+     * @return int|string
      */
     public function getGroupId()
     {

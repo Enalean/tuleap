@@ -255,6 +255,13 @@ msgstr ""
 "L'artefact est ajouté à la planification générale de scrum (Tableau de bord "
 "agile). S'il est déjà présent, rien ne sera fait."
 
+msgid ""
+"The artifact is added to the top backlog. If it's already present, nothing "
+"is done."
+msgstr ""
+"L'artefact est ajouté à la planification générale. S'il est déjà présent, "
+"rien ne sera fait."
+
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""
 "Le champ sur lequel sont basées les transitions ne contient aucune valeur"

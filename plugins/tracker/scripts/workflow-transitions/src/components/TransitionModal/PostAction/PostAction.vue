@@ -47,7 +47,12 @@
                     >
                         {{ hidden_fieldsets_information.option }}
                     </option>
-                    <add-to-backlog-post-action-option v-bind:post_action_type="post_action_type" />
+                    <add-to-backlog-agile-dashboard-post-action-option
+                        v-bind:post_action_type="post_action_type"
+                    />
+                    <add-to-backlog-program-management-post-action-option
+                        v-bind:post_action_type="post_action_type"
+                    />
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>
@@ -89,11 +94,15 @@ import {
 } from "../../../../../constants/fields-constants.js";
 import { mapGetters, mapState } from "vuex";
 import { compare } from "../../../support/string.js";
-import AddToBacklogPostActionOption from "../Externals/AddToBacklogPostActionOption.vue";
+import AddToBacklogAgileDashboardPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";
+import AddToBacklogProgramManagementPostActionOption from "../Externals/AddToBacklogProgramManagementPostActionOption.vue";
 
 export default {
     name: "PostAction",
-    components: { AddToBacklogPostActionOption },
+    components: {
+        AddToBacklogProgramManagementPostActionOption,
+        AddToBacklogAgileDashboardPostActionOption,
+    },
     props: {
         post_action: {
             type: Object,

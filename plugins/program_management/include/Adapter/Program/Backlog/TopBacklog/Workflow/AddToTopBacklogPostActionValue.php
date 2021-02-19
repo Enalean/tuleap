@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_program_management_team_projects;
-DROP TABLE IF EXISTS plugin_program_management_pending_mirrors;
-DROP TABLE IF EXISTS plugin_program_management_plan;
-DROP TABLE IF EXISTS plugin_program_management_can_prioritize_features;
-DROP TABLE IF EXISTS plugin_program_management_explicit_top_backlog;
-DROP TABLE IF EXISTS plugin_program_management_workflow_action_add_top_backlog;
+declare(strict_types=1);
 
-DELETE FROM service WHERE short_name = 'plugin_program_management';
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
+
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
+use Tuleap\Tracker\Workflow\Update\PostAction;
+
+final class AddToTopBacklogPostActionValue implements PostAction
+{
+    public function accept(PostActionVisitor $visitor): void
+    {
+        $visitor->visitExternalPostActionValue($this);
+    }
+}

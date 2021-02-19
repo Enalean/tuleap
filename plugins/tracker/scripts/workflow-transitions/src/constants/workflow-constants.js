@@ -26,7 +26,8 @@ const POST_ACTION_TYPE = {
 };
 
 const EXTERNAL_POST_ACTION_TYPE = {
-    ADD_TO_BACKLOG: "add_to_top_backlog",
+    ADD_TO_BACKLOG_AGILE_DASHBOARD: "add_to_top_backlog",
+    ADD_TO_BACKLOG_PROGRAM_MANAGEMENT: "program_management_add_to_top_backlog",
 };
 
 const DATE_FIELD_VALUE = {

@@ -23,7 +23,8 @@ import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import PostAction from "./PostAction.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import AddToBacklogPostActionOption from "../Externals/AddToBacklogPostActionOption.vue";
+import AddToBacklogAgileDashboardPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";
+import AddToBacklogProgramManagementPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";
 
 describe("PostAction", () => {
     let store;
@@ -138,7 +139,12 @@ describe("PostAction", () => {
     describe("Spawning of the component", () => {
         it("displays the content of the PostAction component", () => {
             expect(wrapper.find("[data-test=post-action-action-card]").exists()).toBe(true);
-            expect(wrapper.findComponent(AddToBacklogPostActionOption).exists()).toBe(true);
+            expect(wrapper.findComponent(AddToBacklogAgileDashboardPostActionOption).exists()).toBe(
+                true
+            );
+            expect(
+                wrapper.findComponent(AddToBacklogProgramManagementPostActionOption).exists()
+            ).toBe(true);
         });
     });
 });

@@ -20,12 +20,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../support/local-vue.js";
-import AddToBacklogPostAction from "./AddToBacklogPostAction.vue";
+import AddToBacklogAgileDashboardPostAction from "./AddToBacklogAgileDashboardPostAction.vue";
 import PostAction from "../PostAction/PostAction.vue";
 
-describe("AddToBacklogPostAction", () => {
+describe("AddToBacklogAgileDashboardPostAction", () => {
     it("spawns the component", () => {
-        const wrapper = shallowMount(AddToBacklogPostAction, {
+        const wrapper = shallowMount(AddToBacklogAgileDashboardPostAction, {
             propsData: { post_action: { type: "add_to_backlog" } },
             localVue,
         });

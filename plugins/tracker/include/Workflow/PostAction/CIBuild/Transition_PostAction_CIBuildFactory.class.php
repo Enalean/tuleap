@@ -124,7 +124,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::duplicate()
      */
-    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
+    public function duplicate(Transition $from_transition, int $to_transition_id, array $field_mapping)
     {
         $this->dao->duplicate($from_transition->getId(), $to_transition_id);
     }

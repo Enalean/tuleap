@@ -63,7 +63,7 @@ interface Transition_PostActionSubFactory
      * @param Array $field_mapping the field mapping
      *
      */
-    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping);
+    public function duplicate(Transition $from_transition, int $to_transition_id, array $field_mapping);
 
     /**
      * Creates a postaction Object

@@ -20,11 +20,11 @@
 
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
-import AddToBacklogPostActionOption from "./AddToBacklogPostActionOption.vue";
+import AddToBacklogProgramManagementPostActionOption from "./AddToBacklogProgramManagementPostActionOption.vue";
 import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 
-describe("AddToBacklogPostActionOption", () => {
+describe("AddToBacklogProgramManagementPostActionOption", () => {
     let store, wrapper;
     beforeEach(() => {
         const store_options = {
@@ -35,11 +35,11 @@ describe("AddToBacklogPostActionOption", () => {
             },
             getters: {
                 "transitionModal/post_actions": [],
-                "transitionModal/is_agile_dashboard_used": false,
+                "transitionModal/is_program_management_used": false,
             },
         };
         store = createStoreMock(store_options);
-        wrapper = shallowMount(AddToBacklogPostActionOption, {
+        wrapper = shallowMount(AddToBacklogProgramManagementPostActionOption, {
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
             localVue,
@@ -57,7 +57,7 @@ describe("AddToBacklogPostActionOption", () => {
 
     it('returns the "already present" option because the post action is already used', () => {
         store.getters["transitionModal/post_actions"] = [
-            create("post_action", { type: "add_to_top_backlog" }),
+            create("post_action", { type: "program_management_add_to_top_backlog" }),
         ];
         expect(wrapper.vm.add_to_backlog_information).toEqual({
             option: "Add to the top backlog (already used)",
@@ -66,7 +66,7 @@ describe("AddToBacklogPostActionOption", () => {
         });
     });
 
-    it("does not display the option when the Agile Dashboard service is not used", () => {
+    it("does not display the option when the Program Management service is not used", () => {
         expect(wrapper.find("[data-test=add-to-backlog]").exists()).toBe(false);
     });
 });

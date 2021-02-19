@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2021 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -22,11 +22,10 @@
     <post-action v-bind:post_action="post_action">
         <div
             class="tracker-workflow-transition-modal-action-details-element tlp-form-element"
-            data-test="add-to-backlog-post-action-description"
+            data-test="add-to-backlog-program-management-post-action-description"
         >
             <p class="tlp-text-info" v-translate>
-                The artifact is added to Scrum top backlog (Agile Dashboard). If it's already
-                present, nothing is done.
+                The artifact is added to the top backlog. If it's already present, nothing is done.
             </p>
         </div>
     </post-action>
@@ -36,7 +35,7 @@
 import PostAction from "../PostAction/PostAction.vue";
 
 export default {
-    name: "AddToBackLogPostAction",
+    name: "AddToBackLogProgramManagementPostAction",
     components: { PostAction },
     props: {
         post_action: {

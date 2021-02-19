@@ -55,6 +55,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDA
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionActifactSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostAction;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionFactory;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionJSONParser;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionRepresentation;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestoneBuilder;
@@ -86,6 +92,7 @@ use Tuleap\ProgramManagement\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\ProgramTracker;
@@ -110,7 +117,17 @@ use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
+use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
+use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
+use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
+use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
+use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -157,6 +174,16 @@ final class program_managementPlugin extends Plugin
         $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
         $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
         $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
+        $this->addHook(GetExternalPostActionPluginsEvent::NAME);
+        $this->addHook(GetExternalSubFactoriesEvent::NAME);
+        $this->addHook(PostActionVisitExternalActionsEvent::NAME);
+        $this->addHook(GetExternalPostActionJsonParserEvent::NAME);
+        $this->addHook(GetWorkflowExternalPostActionsValueUpdater::NAME);
+        $this->addHook(GetExternalSubFactoryByNameEvent::NAME);
+        $this->addHook(ExternalPostActionSaveObjectEvent::NAME);
+        $this->addHook(CheckPostActionsForTracker::NAME);
+        $this->addHook(WorkflowDeletionEvent::NAME);
+        $this->addHook(TransitionDeletionEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -496,25 +523,137 @@ final class program_managementPlugin extends Plugin
 
     public function trackerMasschangeProcessExternalActionsEvent(TrackerMasschangeProcessExternalActionsEvent $event): void
     {
-        $project_manager        = ProjectManager::instance();
-        $project_access_checker = new ProjectAccessChecker(
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
-            new RestrictedUserCanAccessProjectVerifier(),
-            \EventManager::instance()
-        );
-        $processor              = new MassChangeTopBacklogActionProcessor(
-            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
-            new ProcessTopBacklogChange(
-                Tracker_ArtifactFactory::instance(),
-                new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
-                new ArtifactsExplicitTopBacklogDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            )
+        $processor = new MassChangeTopBacklogActionProcessor(
+            $this->getProgramAdapter(),
+            $this->getTopBacklogChangeProcessor()
         );
 
         $processor->processMassChangeAction(
             MassChangeTopBacklogSourceInformation::fromProcessExternalActionEvent($event)
         );
+    }
+
+    public function getExternalPostActionPluginsEvent(GetExternalPostActionPluginsEvent $event): void
+    {
+        $tracker_id = $event->getTracker()->getId();
+        if ((new PlanDao())->isPlannable($tracker_id)) {
+            $event->addServiceNameUsed($this->getServiceShortname());
+        }
+    }
+
+    public function getExternalSubFactoriesEvent(GetExternalSubFactoriesEvent $event): void
+    {
+        $event->addFactory(
+            $this->getAddToTopBacklogPostActionFactory()
+        );
+    }
+
+    private function getAddToTopBacklogPostActionFactory(): AddToTopBacklogPostActionFactory
+    {
+        return new AddToTopBacklogPostActionFactory(
+            new AddToTopBacklogPostActionDAO(),
+            $this->getProgramAdapter(),
+            $this->getTopBacklogChangeProcessor()
+        );
+    }
+
+    private function getTopBacklogChangeProcessor(): TopBacklogChangeProcessor
+    {
+        $project_access_checker = new ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+        return new ProcessTopBacklogChange(
+            Tracker_ArtifactFactory::instance(),
+            new PrioritizeFeaturesPermissionVerifier(ProjectManager::instance(), $project_access_checker, new CanPrioritizeFeaturesDAO()),
+            new ArtifactsExplicitTopBacklogDAO(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
+    }
+
+    public function postActionVisitExternalActionsEvent(PostActionVisitExternalActionsEvent $event): void
+    {
+        $post_action = $event->getPostAction();
+
+        if (! $post_action instanceof AddToTopBacklogPostAction) {
+            return;
+        }
+
+        $representation = AddToTopBacklogPostActionRepresentation::buildFromPostAction($post_action);
+        $event->setRepresentation($representation);
+    }
+
+    public function getExternalPostActionJsonParserEvent(GetExternalPostActionJsonParserEvent $event): void
+    {
+        $event->addParser(
+            new AddToTopBacklogPostActionJSONParser(new PlanDao())
+        );
+    }
+
+    public function getWorkflowExternalPostActionsValueUpdater(GetWorkflowExternalPostActionsValueUpdater $event): void
+    {
+        $event->addValueUpdater(
+            new AddToTopBacklogPostActionValueUpdater(
+                new AddToTopBacklogPostActionDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            )
+        );
+    }
+
+    public function getExternalSubFactoryByNameEvent(GetExternalSubFactoryByNameEvent $event): void
+    {
+        if ($event->getPostActionShortName() === AddToTopBacklogPostAction::SHORT_NAME) {
+            $event->setFactory(
+                $this->getAddToTopBacklogPostActionFactory()
+            );
+        }
+    }
+
+    public function externalPostActionSaveObjectEvent(ExternalPostActionSaveObjectEvent $event): void
+    {
+        $post_action = $event->getPostAction();
+        if (! $post_action instanceof AddToTopBacklogPostAction) {
+            return;
+        }
+
+        $factory = $this->getAddToTopBacklogPostActionFactory();
+        $factory->saveObject($post_action);
+    }
+
+    public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
+    {
+        $plan_store            = new PlanDao();
+        $tracker               = $event->getTracker();
+        $external_post_actions = $event->getPostActions()->getExternalPostActionsValue();
+        foreach ($external_post_actions as $post_action) {
+            if (
+                $post_action instanceof AddToTopBacklogPostAction &&
+                ! $plan_store->isPlannable($tracker->getId())
+            ) {
+                $message = dgettext(
+                    'tuleap-program_management',
+                    'The post action cannot be saved because this tracker is not a plannable tracker of a plan.'
+                );
+
+                $event->setErrorMessage($message);
+                $event->setPostActionsNonEligible();
+            }
+        }
+    }
+
+    public function workflowDeletionEvent(WorkflowDeletionEvent $event): void
+    {
+        $workflow_id = (int) $event->getWorkflow()->getId();
+
+        (new AddToTopBacklogPostActionDAO())->deleteWorkflowPostActions($workflow_id);
+    }
+
+    public function transitionDeletionEvent(TransitionDeletionEvent $event): void
+    {
+        $transition_id = (int) $event->getTransition()->getId();
+
+        (new AddToTopBacklogPostActionDAO())->deleteTransitionPostActions($transition_id);
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker

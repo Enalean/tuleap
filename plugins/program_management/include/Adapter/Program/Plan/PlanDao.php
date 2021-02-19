@@ -37,6 +37,7 @@ final class PlanDao extends DataAccessObject implements PlanStore
         $this->getDB()->tryFlatTransaction(function () use ($plan): void {
             $this->setUpPlan($plan);
             $this->cleanUpTopBacklogs();
+            $this->cleanUpWorkflowPostActions();
         });
     }
 
@@ -83,6 +84,16 @@ final class PlanDao extends DataAccessObject implements PlanStore
                 JOIN tracker ON (tracker.id = tracker_artifact.tracker_id)
                 JOIN plugin_program_management_plan ON (plugin_program_management_plan.plannable_tracker_id != tracker.id)';
         $this->getDB()->run($sql_top_backlog_clean_up);
+    }
+
+    private function cleanUpWorkflowPostActions(): void
+    {
+        $sql_workflow_post_action_clean_up = 'DELETE plugin_program_management_workflow_action_add_top_backlog.*
+                FROM plugin_program_management_workflow_action_add_top_backlog
+                JOIN tracker_workflow_transition ON (plugin_program_management_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
+                JOIN tracker_workflow ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+                JOIN plugin_program_management_plan ON (plugin_program_management_plan.plannable_tracker_id != tracker_workflow.tracker_id)';
+        $this->getDB()->run($sql_workflow_post_action_clean_up);
     }
 
     public function isPlannable(int $plannable_tracker_id): bool
