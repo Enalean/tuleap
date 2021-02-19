@@ -54,7 +54,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
         $this->user_manager->shouldReceive('getUserById')->withArgs([101])->andReturn($user);
     }
 
-    public function testItExportsToXML(): void
+    public function testItExportsToXMLWithoutPrivateUGroupsIfNoUGroup(): void
     {
         $body = '<b> My comment 01</b>';
 
@@ -92,6 +92,94 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
 
         $this->assertEquals((string) $changeset_node->comment->body, $body);
         $this->assertEquals($changeset_node->comment->body['format'], 'html');
+        $this->assertFalse(isset($changeset_node->comment->private_ugroups));
+    }
+
+    public function testItExportsToXMLWithoutPrivateUGroupsIfUgroupIsNull(): void
+    {
+        $body = '<b> My comment 01</b>';
+
+        $comment = new Tracker_Artifact_Changeset_Comment(
+            1,
+            $this->changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            $body,
+            'html',
+            0,
+            null
+        );
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <comments/>';
+
+        $changeset_node    = new SimpleXMLElement($xml);
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+
+        $comment->exportToXML($changeset_node, $user_xml_exporter);
+
+        $this->assertNotNull($changeset_node->comment);
+        $this->assertNotNull($changeset_node->comment->submitted_by);
+        $this->assertNotNull($changeset_node->comment->submitted_on);
+        $this->assertNotNull($changeset_node->comment->body);
+
+        $this->assertEquals((string) $changeset_node->comment->submitted_by, 'ldap_01');
+        $this->assertEquals($changeset_node->comment->submitted_by['format'], 'ldap');
+
+        $this->assertEquals((string) $changeset_node->comment->submitted_on, '2015-06-09T17:18:27+02:00');
+        $this->assertEquals($changeset_node->comment->submitted_on['format'], 'ISO8601');
+
+        $this->assertEquals((string) $changeset_node->comment->body, $body);
+        $this->assertEquals($changeset_node->comment->body['format'], 'html');
+        $this->assertFalse(isset($changeset_node->comment->private_ugroups));
+    }
+
+    public function testItExportsToXMLWithPrivateUGroups(): void
+    {
+        $ugroup_1 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => "ugroup_1"]);
+        $ugroup_2 = Mockery::mock(ProjectUGroup::class, ['getNormalizedName' => "ugroup_2"]);
+        $body     = '<b> My comment 01</b>';
+
+        $comment = new Tracker_Artifact_Changeset_Comment(
+            1,
+            $this->changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            $body,
+            'html',
+            0,
+            [$ugroup_1, $ugroup_2]
+        );
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <comments/>';
+
+        $changeset_node    = new SimpleXMLElement($xml);
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+
+        $comment->exportToXML($changeset_node, $user_xml_exporter);
+
+        $this->assertNotNull($changeset_node->comment);
+        $this->assertNotNull($changeset_node->comment->submitted_by);
+        $this->assertNotNull($changeset_node->comment->submitted_on);
+        $this->assertNotNull($changeset_node->comment->body);
+
+        $this->assertEquals((string) $changeset_node->comment->submitted_by, 'ldap_01');
+        $this->assertEquals($changeset_node->comment->submitted_by['format'], 'ldap');
+
+        $this->assertEquals((string) $changeset_node->comment->submitted_on, '2015-06-09T17:18:27+02:00');
+        $this->assertEquals($changeset_node->comment->submitted_on['format'], 'ISO8601');
+
+        $this->assertEquals((string) $changeset_node->comment->body, $body);
+        $this->assertEquals($changeset_node->comment->body['format'], 'html');
+        $this->assertTrue(isset($changeset_node->comment->private_ugroups));
+        $this->assertCount(2, $changeset_node->comment->private_ugroups->ugroup);
+        $this->assertEquals("ugroup_1", (string) $changeset_node->comment->private_ugroups->ugroup[0]);
+        $this->assertEquals("ugroup_2", (string) $changeset_node->comment->private_ugroups->ugroup[1]);
     }
 
     public function testItExportsToXMLWithCrossReferencesEscaped(): void
@@ -133,6 +221,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
 
         $this->assertEquals((string) $changeset_node->comment->body, $escaped_body);
         $this->assertEquals($changeset_node->comment->body['format'], 'html');
+        $this->assertFalse(isset($changeset_node->comment->private_ugroups));
     }
 
     public function testCheckCommentFormat(): void
