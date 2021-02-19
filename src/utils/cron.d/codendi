@@ -1,25 +1,8 @@
 #
 # -- WARNING -- WARNING -- WARNING -- WARNING -- WARNING -- WARNING --
-# ------------------  EDIT THE CORRECT FILE  -------------------------
+# DO NOT EDIT
+# This file is deployed and managed by Tuleap.
 #
-# This file is copied to /etc/cron.d/tuleap from
-# /usr/share/tuleap/src/utils/cron.d/codendi when the tuleap service is started via its
-# init.d script and the file /etc/cron.d/tuleap is removed when the
-# service is stopped.  Therefore any edits made directly to
-# /etc/cron.d/tuleap will be lost anytime the tuleap service
-# restarts.
-#
-# To make changes edit the master copy /usr/share/tuleap/src/utils/cron.d/tuleap and then
-# restart the service to pick up the changes (/sbin/service tuleap restart).
-#
-# The reason this is done this way is because the tuleap cron jobs
-# should only be invoked if the tuleap service is enabled and not
-# just as a consequence of installing the rpm as was the case
-# previously. The file /etc/cron.d/tuleap cannot simply be linked to
-# the master copy in /usr/share/tuleap/src/utils/cron.d/codendi because for security reasons cron
-# will not process crontab files that are links or writeable by
-# anybody else but root, thus the file must be copied into /etc/cron.d
-# with the right ownership and permissions.
 
 #
 # The launch of the tasks is randomized to avoid high load on servers running multiple Tuleap instances
