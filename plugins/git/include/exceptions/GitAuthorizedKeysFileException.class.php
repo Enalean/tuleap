@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,13 +19,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class GitAuthorizedKeysFileException extends Exception
+declare(strict_types=1);
+
+final class GitAuthorizedKeysFileException extends Exception
 {
 
-    public function __construct($authorized_keys_file)
+    public function __construct(string $authorized_keys_file)
     {
-        parent::__construct($authorized_keys_file . ' is empty' .
-            '. In order to retrieve a file with the gitolite admin public key, run the script : '
-            . ForgeConfig::get('codendi_dir') . '/plugins/git/bin/recreate_authorized_keys.sh');
+        parent::__construct(
+            $authorized_keys_file . ' is empty. This is not expected, please check the system event logs to find the cause of the issue.'
+        );
     }
 }
