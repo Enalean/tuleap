@@ -5,7 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "main": "dist/index.js",
+  "module": "dist/ckeditor-image-upload.es.js",
+  "main": "dist/ckeditor-image-upload.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ckeditor-image-upload.es.js",
+      "require": "./dist/ckeditor-image-upload.umd.js"
+    }
+  },
   "dependencies": {
     "@tuleap/tlp-fetch": "file://../tlp-fetch",
     "tus-js-client": "^2.2.0"
@@ -15,8 +22,8 @@
     "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "build": "$npm_package_config_bin/vite build",
+    "watch": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.js\" --ext js --exec '$npm_package_config_bin/vite build --mode development --minify false'",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }

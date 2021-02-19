@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,24 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+import { defineConfig } from "vite";
+import * as path from "path";
 
-const context = __dirname;
-const webpack_config = {
-    entry: {
-        index: "./src/index.js",
+export default defineConfig({
+    build: {
+        brotliSize: false,
+        lib: {
+            entry: path.resolve(__dirname, "src/index.js"),
+            name: "TuleapCkeditorUploadImage",
+        },
     },
-    context,
-    output: {
-        path: path.join(context, "./dist/"),
-        library: "TuleapCkeditorUploadImage",
-        libraryTarget: "umd",
-    },
-    module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)],
-    },
-    plugins: [webpack_configurator.getCleanWebpackPlugin()],
-};
-
-module.exports = [webpack_config];
+});
