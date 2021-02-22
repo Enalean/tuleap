@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+import { defineConfig } from "vite";
+import { createPOGettextPlugin } from "../../../../tools/utils/scripts/rollup-plugin-po-gettext";
+import * as path from "path";
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+export default defineConfig({
+    plugins: [createPOGettextPlugin()],
+    build: {
+        brotliSize: false,
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "ListPicker",
+        },
+    },
+});

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+import type { Plugin, TransformResult } from "rollup";
+import { dataToEsm } from "@rollup/pluginutils";
+import { po } from "gettext-parser";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+export function createPOGettextPlugin(): Plugin {
+    return {
+        name: "po-gettext",
+        transform(source: string, id: string): TransformResult {
+            if (id.slice(-3) !== ".po") {
+                return null;
+            }
+
+            return {
+                code: dataToEsm(po.parse(source, "utf-8")),
+            };
+        },
+    };
+}
