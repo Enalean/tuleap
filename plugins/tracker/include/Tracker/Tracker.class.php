@@ -51,6 +51,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
@@ -1514,7 +1515,9 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
         EventManager::instance()->processEvent($event);
-        \Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder::includeListPickerAssets(HTTPRequest::instance(), $this->getId());
+
+        $this->includeJavascriptAssetsForMassChange();
+
         $this->renderer->renderToPage(
             'masschange',
             new Tracker_Masschange_Presenter(
@@ -3376,5 +3379,12 @@ class Tracker implements Tracker_Dispatchable_Interface
         $GLOBALS['HTML']->includeFooterJavascriptFile(
             $this->getIncludeAssets()->getFileURL('tracker-email-copy-paste-fp.js')
         );
+    }
+
+    private function includeJavascriptAssetsForMassChange(): void
+    {
+        ListPickerIncluder::includeListPickerAssets(HTTPRequest::instance(), $this->getId());
+        $assets = $this->getIncludeAssets();
+        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('mass-change.js'));
     }
 }
