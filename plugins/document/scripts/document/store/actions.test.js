@@ -483,6 +483,11 @@ describe("Store actions", () => {
                 description: "",
                 type: TYPE_FILE,
                 file_properties: { file: file_name_properties },
+                permissions_for_groups: [
+                    { can_manage: [{ id: 166_4 }] },
+                    { can_read: [{ id: 166_3 }] },
+                    { can_write: [{ id: 166_5 }] },
+                ],
             };
 
             getItem.mockReturnValue(Promise.resolve(item));

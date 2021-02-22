@@ -22,6 +22,7 @@ import {
     addNewFolder,
     addNewLink,
     addNewWiki,
+    addNewFile,
     createNewVersion,
     getDocumentManagerServiceInformation,
     getFolderContent,
@@ -202,6 +203,41 @@ describe("rest-querier", () => {
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/folders", {
+                headers: expect.objectContaining({ "content-type": "application/json" }),
+                body: item,
+            });
+        });
+    });
+    describe("addNewFile()", () => {
+        it("Create a new file", async () => {
+            const item = JSON.stringify({
+                title: "my new file",
+                description: "",
+                type: "file",
+                permissions_for_groups: [
+                    { can_manage: [{ id: 166_4 }] },
+                    { can_read: [{ id: 166_3 }] },
+                    { can_write: [{ id: 166_5 }] },
+                ],
+            });
+            const tlpPost = jest.spyOn(tlp, "post");
+            mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
+
+            await addNewFile(
+                {
+                    title: "my new file",
+                    description: "",
+                    type: "file",
+                    permissions_for_groups: [
+                        { can_manage: [{ id: 166_4 }] },
+                        { can_read: [{ id: 166_3 }] },
+                        { can_write: [{ id: 166_5 }] },
+                    ],
+                },
+                2
+            );
+
+            expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/files", {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
                 body: item,
             });
