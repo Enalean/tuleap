@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "vite";
-import { createPOGettextPlugin } from "../../../../tools/utils/scripts/rollup-plugin-po-gettext";
+import {
+    defineConfig,
+    createPOGettextPlugin,
+} from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
 export default defineConfig({
     plugins: [createPOGettextPlugin()],
     build: {
-        brotliSize: false,
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "ListPicker",

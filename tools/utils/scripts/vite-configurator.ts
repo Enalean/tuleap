@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,14 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
-import * as path from "path";
+import type { BuildOptions, UserConfig, UserConfigExport } from "vite";
+import { defineConfig as viteDefineConfig } from "vite";
+import { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 
-export default defineConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/filter-inline-table.ts"),
-            name: "FilterInlineTable",
+type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize">;
+type UserConfigWithoutBuild = Omit<UserConfig, "build">;
+type OverloadedUserConfig = UserConfigWithoutBuild & { build: OverloadedBuildOptions };
+
+export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
+    return viteDefineConfig({
+        ...config,
+        build: {
+            ...config.build,
+            brotliSize: false,
         },
-    },
-});
+    });
+}
+
+export { createPOGettextPlugin };
