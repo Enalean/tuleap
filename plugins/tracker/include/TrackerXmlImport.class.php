@@ -257,11 +257,9 @@ class TrackerXmlImport
     }
 
     /**
-     *
-     * @param type $attribute_name
      * @return String | bool the attribute value in String, False if this attribute does not exist
      */
-    private function getXmlTrackerAttribute(SimpleXMLElement $xml_tracker, $attribute_name)
+    private function getXmlTrackerAttribute(SimpleXMLElement $xml_tracker, string $attribute_name)
     {
         $tracker_attributes = $xml_tracker->attributes();
         if (! $tracker_attributes[$attribute_name]) {
@@ -313,7 +311,7 @@ class TrackerXmlImport
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             $tracker_created                           = $this->instantiateTrackerFromXml($project, $xml_tracker, $configuration);
             $created_trackers_objects[$xml_tracker_id] = $tracker_created;
-            $created_trackers_mapping                  = array_merge($created_trackers_mapping, [$xml_tracker_id => $tracker_created->getId()]);
+            $created_trackers_mapping                  = $created_trackers_mapping + [$xml_tracker_id => $tracker_created->getId()];
         }
 
         foreach ($this->renderers_xml_mapping as $xml_reference => $renderer_xml_mapping) {

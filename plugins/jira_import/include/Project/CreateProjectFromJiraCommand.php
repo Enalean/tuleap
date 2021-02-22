@@ -43,14 +43,15 @@ final class CreateProjectFromJiraCommand extends Command
 {
     public const NAME = 'import-project:from-jira';
 
-    private const OPT_JIRA_HOST    = 'jira-host';
-    private const OPT_JIRA_USER    = 'jira-user';
-    private const OPT_JIRA_TOKEN   = 'jira-token';
-    private const OPT_JIRA_PROJECT = 'jira-project-id';
-    private const OPT_TULEAP_USER  = 'tuleap-user';
-    private const OPT_SHORTNAME    = 'shortname';
-    private const OPT_FULLNAME     = 'fullname';
-    private const OPT_OUTPUT       = 'output';
+    private const OPT_JIRA_HOST            = 'jira-host';
+    private const OPT_JIRA_USER            = 'jira-user';
+    private const OPT_JIRA_TOKEN           = 'jira-token';
+    private const OPT_JIRA_PROJECT         = 'jira-project-id';
+    private const OPT_JIRA_EPIC_ISSUE_TYPE = 'jira-epic-issue-type';
+    private const OPT_TULEAP_USER          = 'tuleap-user';
+    private const OPT_SHORTNAME            = 'shortname';
+    private const OPT_FULLNAME             = 'fullname';
+    private const OPT_OUTPUT               = 'output';
 
     /**
      * @var UserManager
@@ -83,6 +84,7 @@ final class CreateProjectFromJiraCommand extends Command
             ->addOption(self::OPT_JIRA_USER, '', InputOption::VALUE_REQUIRED, 'User email to access the platform')
             ->addOption(self::OPT_JIRA_TOKEN, '', InputOption::VALUE_REQUIRED, 'User Token to access the platform')
             ->addOption(self::OPT_JIRA_PROJECT, '', InputOption::VALUE_REQUIRED, 'ID of the Jira project to import (you will be prompted if not provided)')
+            ->addOption(self::OPT_JIRA_EPIC_ISSUE_TYPE, '', InputOption::VALUE_REQUIRED, 'Name of the epic issue type of the Jira project to import (default is Epic if not provided)')
             ->addOption(self::OPT_TULEAP_USER, '', InputOption::VALUE_REQUIRED, 'Login name of the user who will be admin of the project')
             ->addOption(self::OPT_SHORTNAME, '', InputOption::VALUE_REQUIRED, 'Short name of the Tuleap project to create')
             ->addOption(self::OPT_FULLNAME, '', InputOption::VALUE_REQUIRED, 'Full name of the Tuleap project to create')
@@ -147,14 +149,36 @@ final class CreateProjectFromJiraCommand extends Command
             $archive_path = false;
         }
 
+        $jira_epic_issue_type = $input->getOption(self::OPT_JIRA_EPIC_ISSUE_TYPE);
+        if (! is_string($jira_epic_issue_type)) {
+            $jira_epic_issue_type = "Epic";
+        }
+
         $output->writeln(sprintf("Create project %s", $shortname));
 
         try {
             if ($archive_path !== false) {
-                $this->create_project_from_jira->generateArchive($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname, $archive_path);
+                $this->create_project_from_jira->generateArchive(
+                    $logger,
+                    $jira_client,
+                    $jira_credentials,
+                    $jira_project,
+                    $shortname,
+                    $fullname,
+                    $jira_epic_issue_type,
+                    $archive_path
+                );
                 $output->writeln("XML file generated: $archive_path");
             } else {
-                $project = $this->create_project_from_jira->create($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
+                $project = $this->create_project_from_jira->create(
+                    $logger,
+                    $jira_client,
+                    $jira_credentials,
+                    $jira_project,
+                    $shortname,
+                    $fullname,
+                    $jira_epic_issue_type
+                );
                 $output->writeln(sprintf('Project %d created', $project->getID()));
                 $output->writeln("Import completed");
             }
