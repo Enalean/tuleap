@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
+use Tuleap\Tracker\FormElement\Field\Integer\XML\XMLIntegerField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
@@ -54,6 +55,7 @@ final class ScrumTrackerBuilder
     public const COMPLETED_DATE_FIELD_NAME = 'completed_date';
     public const STATUS_FIELD_NAME         = 'status';
     public const ARTIFACT_LINK_FIELD_NAME  = 'links';
+    private const CAPACITY_FIELD_NAME      = 'capacity';
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
@@ -74,39 +76,42 @@ final class ScrumTrackerBuilder
                             ->withLabel('Name')
                             ->withRank(1)
                             ->withPermissions(...$default_permissions),
-                        (new XMLColumn($id_generator, 'col1'))
+                        (new XMLColumn($id_generator, 'details1'))
                             ->withRank(2)
                             ->withFormElements(
                                 (new XMLDateField($id_generator, self::START_DATE_FIELD_NAME))
-                                ->withLabel('Start Date')
-                                ->withDateTime()
-                                ->withPermissions(...$default_permissions),
-                            ),
-                        (new XMLColumn($id_generator, 'col2'))
-                            ->withRank(3)
-                            ->withFormElements(
+                                    ->withLabel('Start Date')
+                                    ->withDateTime()
+                                    ->withRank(1)
+                                    ->withPermissions(...$default_permissions),
                                 (new XMLDateField($id_generator, self::END_DATE_FIELD_NAME))
                                     ->withLabel('End Date')
                                     ->withDateTime()
+                                    ->withRank(2)
                                     ->withPermissions(...$default_permissions),
-                            ),
-                        (new XMLColumn($id_generator, 'col3'))
-                            ->withRank(4)
-                            ->withFormElements(
                                 (new XMLDateField($id_generator, self::COMPLETED_DATE_FIELD_NAME))
                                     ->withLabel('Completed Date')
                                     ->withDateTime()
+                                    ->withRank(3)
+                                    ->withPermissions(...$default_permissions),
+                                (new XMLIntegerField($id_generator, self::CAPACITY_FIELD_NAME))
+                                    ->withLabel('Capacity')
+                                    ->withRank(4)
                                     ->withPermissions(...$default_permissions),
                             ),
-                        (new XMLSelectBoxField($id_generator, self::STATUS_FIELD_NAME))
-                            ->withRank(5)
-                            ->withLabel('Status')
-                            ->withStaticValues(
-                                new XMLBindStaticValue($id_generator, JiraSprint::STATE_FUTURE),
-                                new XMLBindStaticValue($id_generator, JiraSprint::STATE_ACTIVE),
-                                new XMLBindStaticValue($id_generator, JiraSprint::STATE_CLOSED),
-                            )
-                            ->withPermissions(...$default_permissions)
+                        (new XMLColumn($id_generator, 'details2'))
+                            ->withRank(3)
+                            ->withFormElements(
+                                (new XMLSelectBoxField($id_generator, self::STATUS_FIELD_NAME))
+                                    ->withRank(1)
+                                    ->withLabel('Status')
+                                    ->withStaticValues(
+                                        new XMLBindStaticValue($id_generator, JiraSprint::STATE_FUTURE),
+                                        new XMLBindStaticValue($id_generator, JiraSprint::STATE_ACTIVE),
+                                        new XMLBindStaticValue($id_generator, JiraSprint::STATE_CLOSED),
+                                    )
+                                    ->withPermissions(...$default_permissions),
+                            ),
                     ),
                 (new XMLFieldset($id_generator, 'links_fieldset'))
                 ->withLabel('Links')
