@@ -69,7 +69,10 @@ class MailSender
             $mail_enhancer->setMessageId($message_id);
         }
 
-        $server_url = HTTPRequest::instance()->getServerUrl();
+        $server_url     = HTTPRequest::instance()->getServerUrl();
+        $components     = parse_url($server_url);
+        $list_id_domain = isset($components['host']) ? $components['host'] : 'localhost';
+        $list_id        = "<artifact-${artifactId}.${list_id_domain}>";
 
         $breadcrumbs[] = '<a href="' . $server_url . '/projects/' . $project_unix_name . '" />' . $hp->purify($project->getPublicName()) . '</a>';
         $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?tracker=' . (int) $tracker->getId() . '" />' . $hp->purify($changeset->getTracker()->getName()) . '</a>';
@@ -81,6 +84,7 @@ class MailSender
         $mail_enhancer->addHeader("X-Codendi-Project", $project->getUnixName());
         $mail_enhancer->addHeader("X-Codendi-Tracker", $tracker_name);
         $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $artifactId);
+        $mail_enhancer->addHeader("List-Id", $list_id);
         $mail_enhancer->addHeader('From', $from);
 
         foreach ($headers as $header) {
