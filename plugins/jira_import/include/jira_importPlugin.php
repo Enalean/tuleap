@@ -64,7 +64,7 @@ final class jira_importPlugin extends Plugin
 
     public function getDependencies(): array
     {
-        return ['tracker'];
+        return ['tracker', 'agiledashboard', 'cardwall'];
     }
 
     public function collectCLICommands(CLICommandsCollector $commands_collector): void
