@@ -37,22 +37,25 @@ final class JiraTrackerBuilderTest extends TestCase
         $wrapper     = \Mockery::mock(ClientWrapper::class);
         $project_key = "IE";
 
-        $tracker_one = ["id" => "epic", "name" => "Epics"];
-        $tracker_two = ["id" => "issue", "name" => "Issues"];
+        $tracker_one = ["id" => "epic", "name" => "Epics", "subtask" => false];
+        $tracker_two = ["id" => "issue", "name" => "Issues", "subtask" => false];
 
 
         $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
 
         $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . $project_key)->andReturn($project_details);
 
-        $expected_tracker_list = [
-            ['id' => 'epic', 'name' => 'Epics'],
-            ['id' => 'issue', 'name' => 'Issues'],
-        ];
-
         $result = $builder->build($wrapper, $project_key);
 
-        $this->assertEquals($expected_tracker_list, $result);
+        $this->assertCount(2, $result);
+
+        $this->assertSame("epic", $result[0]->getId());
+        $this->assertSame("Epics", $result[0]->getName());
+        $this->assertSame(['id' => 'epic', 'name' => 'Epics'], $result[0]->toArray());
+
+        $this->assertSame("issue", $result[1]->getId());
+        $this->assertSame("Issues", $result[1]->getName());
+        $this->assertSame(['id' => 'issue', 'name' => 'Issues'], $result[1]->toArray());
     }
 
     public function testItThrowsAnExceptionIfJiraRepresentationHasChanged(): void
@@ -64,7 +67,6 @@ final class JiraTrackerBuilderTest extends TestCase
 
         $tracker_one = ["id" => "epic", "ezezezez" => "Epics"];
         $tracker_two = ["id" => "issue", "name" => "Issues"];
-
 
         $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
 
