@@ -408,7 +408,15 @@ function uploadVersionAndAssignUploader(item, context, uploaded_file, new_versio
 
 async function createNewFile(
     context,
-    { title, description, file_properties, status, obsolescence_date, metadata },
+    {
+        title,
+        description,
+        file_properties,
+        status,
+        obsolescence_date,
+        metadata,
+        permissions_for_groups,
+    },
     parent,
     should_display_fake_item
 ) {
@@ -424,6 +432,7 @@ async function createNewFile(
             status: status,
             obsolescence_date: obsolescence_date,
             metadata: metadata,
+            permissions_for_groups: permissions_for_groups,
         },
         parent.id
     );
