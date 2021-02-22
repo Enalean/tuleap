@@ -34,4 +34,25 @@
     <email><![CDATA[rest_private_comment_member@example.com]]></email>
     <ldapid/>
   </user>
+  <user>
+    <id>112</id>
+    <username>rest_private_comment_tracker_admin</username>
+    <realname><![CDATA[Rest private comment tracker admin]]></realname>
+    <email><![CDATA[rest_private_comment_tracker_admin@example.com]]></email>
+    <ldapid/>
+  </user>
+  <user>
+    <id>113</id>
+    <username>rest_private_comment_john_snow</username>
+    <realname><![CDATA[Rest private comment john snow]]></realname>
+    <email><![CDATA[rest_private_comment_john_snow@example.com]]></email>
+    <ldapid/>
+  </user>
+  <user>
+    <id>114</id>
+    <username>rest_private_comment_daenerys</username>
+    <realname><![CDATA[Rest private comment daenerys]]></realname>
+    <email><![CDATA[rest_private_comment_daenerys@example.com]]></email>
+    <ldapid/>
+  </user>
 </users>

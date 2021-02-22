@@ -27,6 +27,7 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
@@ -70,6 +71,11 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         $this->comment_permission_checker
             ->shouldReceive('userCanSeeComment')
             ->andReturnTrue()
+            ->byDefault();
+
+        $this->comment_permission_checker
+            ->shouldReceive('getUgroupsThatUserCanSeeOnComment')
+            ->andReturn(new UserIsNotAllowedToSeeUGroups())
             ->byDefault();
 
         \UserHelper::setInstance(\Mockery::spy(\UserHelper::class));
@@ -251,7 +257,7 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);
         self::assertEquals("", $representation->last_comment->body);
         self::assertEquals("text", $representation->last_comment->format);
-        self::assertEquals(null, $representation->last_comment->ugroups);
+        self::assertNull($representation->last_comment->ugroups);
         self::assertEquals("", $representation->last_comment->post_processed_body);
     }
 
@@ -264,13 +270,21 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->once()
             ->andReturn([]);
 
+        $project_ugroup = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1, 'getName' => 'MyGroup', 'getNormalizedName' => 'MyGroup']);
+
+        $this->comment_permission_checker
+            ->shouldReceive('getUgroupsThatUserCanSeeOnComment')
+            ->once()
+            ->andReturn([$project_ugroup]);
+
         $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
 
         self::assertNotNull($representation->last_comment);
         self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);
         self::assertEquals("A text comment", $representation->last_comment->body);
         self::assertEquals("text", $representation->last_comment->format);
-        self::assertEquals(null, $representation->last_comment->ugroups);
+        self::assertNotNull($representation->last_comment->ugroups);
+        self::assertEquals('MyGroup', $representation->last_comment->ugroups[0]->label);
         self::assertEquals("A text comment", $representation->last_comment->post_processed_body);
     }
 
@@ -324,6 +338,7 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
     ): \Tracker_Artifact_Changeset {
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(110);
+        $tracker->shouldReceive('getProject')->andReturn(\Project::buildForTest());
         $artifact = \Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(24, $artifact, $submitted_by, 1234567890, null);

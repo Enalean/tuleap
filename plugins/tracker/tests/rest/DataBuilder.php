@@ -28,10 +28,13 @@ require_once __DIR__ . '/TrackerBase.php';
 
 class DataBuilder extends REST_TestDataBuilder
 {
-    public const USER_TESTER_NAME       = 'rest_api_tracker_admin_1';
-    public const MY_ARTIFACTS_USER_NAME = 'rest_my_artifacts';
-    public const PRIVATE_COMMENT_ADMIN  = 'rest_private_comment_admin';
-    public const PRIVATE_COMMENT_MEMBER = 'rest_private_comment_member';
+    public const USER_TESTER_NAME                   = 'rest_api_tracker_admin_1';
+    public const MY_ARTIFACTS_USER_NAME             = 'rest_my_artifacts';
+    public const PRIVATE_COMMENT_PROJECT_ADMIN_NAME = 'rest_private_comment_admin';
+    public const PRIVATE_COMMENT_MEMBER_NAME        = 'rest_private_comment_member';
+    public const PRIVATE_COMMENT_TRACKER_ADMIN_NAME = 'rest_private_comment_tracker_admin';
+    public const PRIVATE_COMMENT_JOHN_SNOW_NAME     = 'rest_private_comment_john_snow';
+    public const PRIVATE_COMMENT_DAENERYS_NAME      = 'rest_private_comment_daenerys';
 
     /**
      * @var ArtifactsDeletionConfigDAO
@@ -64,8 +67,11 @@ class DataBuilder extends REST_TestDataBuilder
     {
         $this->initPassword(self::USER_TESTER_NAME, self::STANDARD_PASSWORD);
         $this->initPassword(self::MY_ARTIFACTS_USER_NAME, self::STANDARD_PASSWORD);
-        $this->initPassword(self::PRIVATE_COMMENT_ADMIN, self::STANDARD_PASSWORD);
-        $this->initPassword(self::PRIVATE_COMMENT_MEMBER, self::STANDARD_PASSWORD);
+        $this->initPassword(self::PRIVATE_COMMENT_PROJECT_ADMIN_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::PRIVATE_COMMENT_MEMBER_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::PRIVATE_COMMENT_TRACKER_ADMIN_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::PRIVATE_COMMENT_JOHN_SNOW_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::PRIVATE_COMMENT_DAENERYS_NAME, self::STANDARD_PASSWORD);
     }
 
     private function setUpWorkflowsInSimpleMode()

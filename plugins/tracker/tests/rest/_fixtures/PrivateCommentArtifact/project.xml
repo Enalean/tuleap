@@ -36,6 +36,21 @@
                 <member format="username">rest_private_comment_admin</member>
             </members>
         </ugroup>
+      <ugroup name="ugroup_tracker_admin" description="">
+          <members>
+              <member format="username">rest_private_comment_tracker_admin</member>
+          </members>
+      </ugroup>
+      <ugroup name="ugroup_john_snow" description="">
+          <members>
+              <member format="username">rest_private_comment_john_snow</member>
+          </members>
+      </ugroup>
+      <ugroup name="ugroup_daenerys" description="">
+          <members>
+              <member format="username">rest_private_comment_daenerys</member>
+          </members>
+      </ugroup>
     </ugroups>
     <trackers>
         <tracker id="T104" parent_id="0" instantiate_for_new_projects="1">
@@ -84,6 +99,7 @@
             <workflow/>
             <permissions>
                 <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="tracker" ugroup="ugroup_tracker_admin" type="PLUGIN_TRACKER_ADMIN"/>
                 <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F8" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F8" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -99,7 +115,8 @@
                         <submitted_on format="ISO8601"><![CDATA[2018-03-01T15:00:00+01:00]]></submitted_on>
                         <body format="text"><![CDATA[Lorem ipsum]]></body>
                         <private_ugroups>
-                          <ugroup>project_admins</ugroup>
+                          <ugroup>ugroup_john_snow</ugroup>
+                          <ugroup>ugroup_daenerys</ugroup>
                         </private_ugroups>
                       </comment>
                     </comments>

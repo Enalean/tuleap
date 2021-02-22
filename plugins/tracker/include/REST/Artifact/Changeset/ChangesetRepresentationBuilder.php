@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
+use PFUser;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -73,7 +74,7 @@ class ChangesetRepresentationBuilder
             ? []
             : $this->getRESTFieldValues($changeset, $current_user);
 
-        return $this->buildFromFieldValues($changeset, $last_comment, $field_values);
+        return $this->buildFromFieldValues($changeset, $last_comment, $field_values, $current_user);
     }
 
     private function getRESTFieldValues(\Tracker_Artifact_Changeset $changeset, \PFUser $user): array
@@ -100,7 +101,7 @@ class ChangesetRepresentationBuilder
     ): ChangesetRepresentation {
         $last_comment = $this->getCommentOrDefaultWithNullWithoutPermission($changeset);
         $field_values = $this->getRESTFieldValuesWithoutPermissions($changeset, $user);
-        return $this->buildFromFieldValues($changeset, $last_comment, $field_values);
+        return $this->buildFromFieldValues($changeset, $last_comment, $field_values, $user);
     }
 
     private function getRESTFieldValuesWithoutPermissions(\Tracker_Artifact_Changeset $changeset, \PFUser $user): array
@@ -119,7 +120,8 @@ class ChangesetRepresentationBuilder
     private function buildFromFieldValues(
         \Tracker_Artifact_Changeset $changeset,
         \Tracker_Artifact_Changeset_Comment $last_comment,
-        array $values
+        array $values,
+        PFUser $user
     ): ChangesetRepresentation {
         $submitted_by_id      = (int) $changeset->getSubmittedBy();
         $submitted_by_user    = $this->user_manager->getUserById($submitted_by_id);
@@ -138,7 +140,10 @@ class ChangesetRepresentationBuilder
             $submitted_by_details,
             (int) $changeset->getSubmittedOn(),
             $changeset->getEmail(),
-            $this->comment_builder->buildRepresentation($last_comment),
+            $this->comment_builder->buildRepresentation(
+                $last_comment,
+                $this->comment_permission_checker->getUgroupsThatUserCanSeeOnComment($user, $last_comment)
+            ),
             $values,
             $last_modified_by,
             (int) $last_comment->getSubmittedOn()

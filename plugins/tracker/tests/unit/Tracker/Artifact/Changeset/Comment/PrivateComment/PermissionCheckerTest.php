@@ -147,6 +147,122 @@ class PermissionCheckerTest extends TestCase
         $this->assertFalse($this->checker->userCanSeeComment($this->user, $this->comment));
     }
 
+    public function testGetAllUGroupsIfUserIsSiteAdmin(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->once()->andReturnTrue();
+
+        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
+        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
+        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
+
+        $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
+
+        $this->assertIsArray($ugroups);
+        $this->assertCount(3, $ugroups);
+    }
+
+    public function testGetAllUGroupsIfUserIsProjectAdmin(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnTrue();
+
+        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
+        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
+        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
+        $ugroups       = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
+
+        $this->assertIsArray($ugroups);
+        $this->assertCount(3, $ugroups);
+    }
+
+    public function testGetAllUGroupsIfUserIsTrackerAdmin(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+
+        $this->tracker->shouldReceive('userIsAdmin')->andReturn(true)->once();
+
+        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
+        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
+        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
+        $ugroups       = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
+
+        $this->assertIsArray($ugroups);
+        $this->assertCount(3, $ugroups);
+    }
+
+    public function testGetUGroupsThatUserIsMemberOfAndUserIsNotAdmin(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+
+        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnTrue();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnTrue();
+
+        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
+        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
+        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
+        $ugroups       = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
+
+        $this->assertIsArray($ugroups);
+        $this->assertCount(2, $ugroups);
+        $this->assertEquals(1, $ugroups[0]->getId());
+        $this->assertEquals(3, $ugroups[1]->getId());
+    }
+
+    public function testGetUserIsNotAllowedToSeeUGroupsIfUserIsNotMemberOfUGroupsAndUserIsNotAdmin(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
+
+        $ugroup_1      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 1]);
+        $ugroup_2      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 2]);
+        $ugroup_3      = \Mockery::mock(\ProjectUGroup::class, ['getId' => 3]);
+        $this->comment = $this->buildComment([$ugroup_1, $ugroup_2, $ugroup_3]);
+        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
+
+        $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
+
+        $this->assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
+    }
+
+    public function testGetUserIsNotAllowedToSeeUGroupsIfUGroupsIsNull(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->never();
+        $this->user->shouldReceive('isAdmin')->with(101)->never();
+
+        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
+
+        $this->comment = $this->buildComment(null);
+
+        $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
+
+        $this->assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
+    }
+
+    public function testGetUserIsNotAllowedToSeeUGroupsIfThereAreNoGroups(): void
+    {
+        $this->user->shouldReceive('isSuperUser')->never();
+        $this->user->shouldReceive('isAdmin')->with(101)->never();
+
+        $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
+        $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
+
+        $ugroups = $this->checker->getUgroupsThatUserCanSeeOnComment($this->user, $this->comment);
+
+        $this->assertInstanceOf(UserIsNotAllowedToSeeUGroups::class, $ugroups);
+    }
+
     /**
      * @param \ProjectUGroup[]|null $ugroups
      */

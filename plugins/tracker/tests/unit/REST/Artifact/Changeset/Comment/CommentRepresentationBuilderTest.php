@@ -23,9 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ProjectUGroup;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
 
 final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -49,20 +51,50 @@ final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
     public function testItBuildsTextCommentRepresentation(): void
     {
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('A text comment', \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)
+            $this->buildComment('A text comment', \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT),
+            new UserIsNotAllowedToSeeUGroups()
         );
         self::assertSame('text', $representation->format);
         self::assertSame('A text comment', $representation->body);
+        self::assertNull($representation->ugroups);
+        self::assertNotEmpty($representation->post_processed_body);
+    }
+
+    public function testItBuildsTextCommentRepresentationWithPrivateUgroups(): void
+    {
+        $representation = $this->builder->buildRepresentation(
+            $this->buildComment('A text comment', \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT),
+            [$this->buildProjectUGroup()]
+        );
+        self::assertSame('text', $representation->format);
+        self::assertSame('A text comment', $representation->body);
+        self::assertNotNull($representation->ugroups);
+        self::assertEquals('developers', $representation->ugroups[0]->label);
         self::assertNotEmpty($representation->post_processed_body);
     }
 
     public function testItBuildsHTMLCommentRepresentation(): void
     {
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('<p>An HTML comment</p>', \Tracker_Artifact_Changeset_Comment::HTML_COMMENT)
+            $this->buildComment('<p>An HTML comment</p>', \Tracker_Artifact_Changeset_Comment::HTML_COMMENT),
+            new UserIsNotAllowedToSeeUGroups()
         );
         self::assertSame('html', $representation->format);
         self::assertSame('<p>An HTML comment</p>', $representation->body);
+        self::assertNull($representation->ugroups);
+        self::assertNotEmpty($representation->post_processed_body);
+    }
+
+    public function testItBuildsHTMLCommentRepresentationWithPrivateComment(): void
+    {
+        $representation = $this->builder->buildRepresentation(
+            $this->buildComment('<p>An HTML comment</p>', \Tracker_Artifact_Changeset_Comment::HTML_COMMENT),
+            [$this->buildProjectUGroup()]
+        );
+        self::assertSame('html', $representation->format);
+        self::assertSame('<p>An HTML comment</p>', $representation->body);
+        self::assertNotNull($representation->ugroups);
+        self::assertEquals('developers', $representation->ugroups[0]->label);
         self::assertNotEmpty($representation->post_processed_body);
     }
 
@@ -72,23 +104,42 @@ final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             ->andReturn('<p>A <strong>CommonMark</strong> comment');
 
         $representation = $this->builder->buildRepresentation(
-            $this->buildComment('A **CommonMark** comment', \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT)
+            $this->buildComment('A **CommonMark** comment', \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT),
+            new UserIsNotAllowedToSeeUGroups()
         );
         self::assertSame('html', $representation->format);
         self::assertSame('<p>A <strong>CommonMark</strong> comment', $representation->body);
+        self::assertNull($representation->ugroups);
+        self::assertSame($representation->body, $representation->post_processed_body);
+    }
+
+    public function testItBuildsCommonMarkCommentRepresentationWithPrivateUgroups(): void
+    {
+        $this->interpreter->shouldReceive('getInterpretedContentWithReferences')
+            ->andReturn('<p>A <strong>CommonMark</strong> comment');
+
+        $representation = $this->builder->buildRepresentation(
+            $this->buildComment('A **CommonMark** comment', \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT),
+            [$this->buildProjectUGroup()]
+        );
+        self::assertSame('html', $representation->format);
+        self::assertSame('<p>A <strong>CommonMark</strong> comment', $representation->body);
+        self::assertNotNull($representation->ugroups);
+        self::assertEquals('developers', $representation->ugroups[0]->label);
         self::assertSame($representation->body, $representation->post_processed_body);
     }
 
     public function testItThrowsWhenFormatIsUnknown(): void
     {
         $this->expectException(InvalidCommentFormatException::class);
-        $this->builder->buildRepresentation($this->buildComment('Irrelevant', 'invalid'));
+        $this->builder->buildRepresentation($this->buildComment('Irrelevant', 'invalid'), []);
     }
 
     private function buildComment(string $body, string $format): \Tracker_Artifact_Changeset_Comment
     {
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(110);
+        $tracker->shouldReceive('getProject')->andReturn(\Project::buildForTest());
         $artifact = \Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
@@ -105,5 +156,10 @@ final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             0,
             []
         );
+    }
+
+    private function buildProjectUGroup(): ProjectUGroup
+    {
+        return new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers', 'group_id' => 101]);
     }
 }
