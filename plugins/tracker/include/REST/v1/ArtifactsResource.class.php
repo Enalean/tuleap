@@ -388,6 +388,19 @@ class ArtifactsResource extends AuthenticatedResource
      *   }<br/>
      * }<br/>
      * </pre>
+     * <p>Text field values can be rendered as two formats: HTML or Text. Text field values rendered as HTML can have two source formats: HTML itself or CommonMark (Markdown).<br/>
+     * Text field values that are already written in HTML have the following structure:</p>
+     * <pre><code>{<br/>
+     *   &quot;value&quot;: &quot;&lt;p&gt;HTML string&lt;/p&gt;&quot;,<br/>
+     *   &quot;format&quot;: &quot;html&quot;<br/>
+     * }</code></pre>
+     * <p>Text field values that are written in CommonMark format (Markdown) have an additional "commonmark" property that contains the source.
+     * Notice that they also have format "html":</p>
+     * <pre><code>{<br/>
+     *   &quot;value&quot;: &quot;&lt;p&gt;&lt;strong&gt;Markdown&lt;/strong&gt; string&lt;/p&gt;&quot;,<br/>
+     *   &quot;format&quot;: &quot;html&quot;,<br/>
+     *   &quot;commonmark&quot;: &quot;\*\*Markdown\*\* string&quot;<br/>
+     * }</code></pre>
      *
      * @url GET {id}
      * @access hybrid
@@ -569,6 +582,24 @@ class ArtifactsResource extends AuthenticatedResource
      * Get changesets
      *
      * Get the changesets of a given artifact
+     * <br/>
+     * <br/>
+     * Comments can be rendered as two formats: HTML or Text. Comments rendered as HTML can have two source formats: HTML itself or CommonMark (Markdown).<br/>
+     * Comments that are already written in HTML have the following structure:
+     * <pre><code>{<br/>
+     *   &quot;body&quot;: &quot;&lt;p&gt;HTML with art #123&lt;/p&gt;&quot;,<br/>
+     *   &quot;post_processed_body&quot;: &quot;&lt;p&gt;HTML with &lt;a href=&quot;...&amp;aid=123&quot;&gt;art #123&lt;/a&gt;&lt;/p&gt;&quot;,<br/>
+     *   &quot;format&quot;: &quot;html&quot;<br/>
+     * }</code></pre>
+     * <p>Comments that are written in CommonMark format (Markdown) have an additional "commonmark" property that contains the source.
+     * Notice that they also have format "html":</p>
+     * <pre><code>{<br/>
+     *   &quot;body&quot;: &quot;&lt;p&gt;&lt;strong&gt;Markdown&lt;/strong&gt; with art #123&lt;/p&gt;&quot;,<br/>
+     *   &quot;post_processed_body&quot;: &quot;&lt;p&gt;&lt;strong&gt;Markdown&lt;/strong&gt; with &lt;a href=&quot;...&amp;aid=123&quot;&gt;art #123&lt;/a&gt;&lt;/p&gt;&quot;,<br/>
+     *   &quot;format&quot;: &quot;html&quot;,<br/>
+     *   &quot;commonmark&quot;: &quot;\*\*Markdown\*\* with art #123&quot;<br/>
+     * }</code></pre>
+     * <p>"post_processed_body" will have its references (for example "art #123") converted to links.</p>
      *
      * @url GET {id}/changesets
      * @access hybrid
