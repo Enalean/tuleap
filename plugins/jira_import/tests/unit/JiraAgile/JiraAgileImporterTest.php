@@ -138,15 +138,7 @@ class JiraAgileImporterTest extends TestCase
     {
         $jira_agile_importer = $this->getJiraAgileImport();
 
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
-
-        $jira_agile_importer->exportScrum(
-            new NullLogger(),
-            $xml,
-            'FOO',
-            new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
-        );
+        $xml = $this->getXMLAfterExport($jira_agile_importer);
 
         $name_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="name"]');
 
@@ -159,15 +151,7 @@ class JiraAgileImporterTest extends TestCase
     {
         $jira_agile_importer = $this->getJiraAgileImport();
 
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
-
-        $jira_agile_importer->exportScrum(
-            new NullLogger(),
-            $xml,
-            'FOO',
-            new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
-        );
+        $xml = $this->getXMLAfterExport($jira_agile_importer);
 
         $start_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="start_date"]');
         $end_date_field   = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="end_date"]');
@@ -182,15 +166,7 @@ class JiraAgileImporterTest extends TestCase
     {
         $jira_agile_importer = $this->getJiraAgileImport();
 
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
-
-        $jira_agile_importer->exportScrum(
-            new NullLogger(),
-            $xml,
-            'FOO',
-            new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
-        );
+        $xml = $this->getXMLAfterExport($jira_agile_importer);
 
         $status_field_id     = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]')[0]['ID'];
         $future_bindvalue_id = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]['ID'];
@@ -208,15 +184,7 @@ class JiraAgileImporterTest extends TestCase
     {
         $jira_agile_importer = $this->getJiraAgileImport();
 
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
-
-        $jira_agile_importer->exportScrum(
-            new NullLogger(),
-            $xml,
-            'FOO',
-            new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
-        );
+        $xml = $this->getXMLAfterExport($jira_agile_importer);
 
         $start_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="start_date"]');
 
@@ -245,15 +213,7 @@ class JiraAgileImporterTest extends TestCase
     {
         $jira_agile_importer = $this->getJiraAgileImport();
 
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
-
-        $jira_agile_importer->exportScrum(
-            new NullLogger(),
-            $xml,
-            'FOO',
-            new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
-        );
+        $xml = $this->getXMLAfterExport($jira_agile_importer);
 
         $end_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="end_date"]');
 
@@ -282,15 +242,7 @@ class JiraAgileImporterTest extends TestCase
     {
         $jira_agile_importer = $this->getJiraAgileImport();
 
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
-
-        $jira_agile_importer->exportScrum(
-            new NullLogger(),
-            $xml,
-            'FOO',
-            new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
-        );
+        $xml = $this->getXMLAfterExport($jira_agile_importer);
 
         $completed_date_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="completed_date"]');
 
@@ -319,15 +271,7 @@ class JiraAgileImporterTest extends TestCase
     {
         $jira_agile_importer = $this->getJiraAgileImport();
 
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
-
-        $jira_agile_importer->exportScrum(
-            new NullLogger(),
-            $xml,
-            'FOO',
-            new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
-        );
+        $xml = $this->getXMLAfterExport($jira_agile_importer);
 
         $status_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]')[0];
 
@@ -348,6 +292,25 @@ class JiraAgileImporterTest extends TestCase
 
         $status_column = $xml->xpath(sprintf('/project/trackers/tracker/reports/report/renderers/renderer/columns/field[@REF="%s"]', $id));
         assertCount(1, $status_column);
+
+        $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', $id));
+        assertCount(3, $permissions);
+        assertEquals('PLUGIN_TRACKER_FIELD_READ', $permissions[0]['type']);
+        assertEquals('UGROUP_ANONYMOUS', $permissions[0]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $permissions[1]['type']);
+        assertEquals('UGROUP_REGISTERED', $permissions[1]['ugroup']);
+        assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
+        assertEquals('UGROUP_PROJECT_MEMBERS', $permissions[2]['ugroup']);
+    }
+
+    public function testSprintTrackerHasCapacityField(): void
+    {
+        $xml = $this->getXMLAfterExport($this->getJiraAgileImport());
+
+        $field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="capacity"]')[0];
+
+        assertEquals('int', $field['type']);
+        $id = (string) $field['ID'];
 
         $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', $id));
         assertCount(3, $permissions);
@@ -695,5 +658,19 @@ class JiraAgileImporterTest extends TestCase
                 return $issues;
             }
         };
+    }
+
+    private function getXMLAfterExport(JiraAgileImporter $jira_agile_importer): \SimpleXMLElement
+    {
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->build()
+        );
+        return $xml;
     }
 }

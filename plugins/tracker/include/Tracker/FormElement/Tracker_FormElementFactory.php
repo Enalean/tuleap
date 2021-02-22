@@ -34,6 +34,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     public const FIELD_STRING_TYPE           = 'string';
     public const FIELD_TEXT_TYPE             = 'text';
     public const FIELD_FLOAT_TYPE            = 'float';
+    public const FIELD_INTEGER_TYPE          = 'int';
     public const FIELD_DATE_TYPE             = 'date';
     public const FIELD_LAST_UPDATE_DATE_TYPE = 'lud';
     public const FIELD_SUBMITTED_ON_TYPE     = 'subon';
@@ -76,7 +77,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         self::FIELD_MULTI_SELECT_BOX_TYPE => Tracker_FormElement_Field_MultiSelectbox::class,
         self::FIELD_FILE_TYPE             => Tracker_FormElement_Field_File::class,
         'cb'                              => Tracker_FormElement_Field_Checkbox::class,
-        'int'                             => Tracker_FormElement_Field_Integer::class,
+        self::FIELD_INTEGER_TYPE          => Tracker_FormElement_Field_Integer::class,
         'tbl'                             => Tracker_FormElement_Field_OpenList::class,
         self::FIELD_ARTIFACT_LINKS        => Tracker_FormElement_Field_ArtifactLink::class,
         'perm'                            => Tracker_FormElement_Field_PermissionsOnArtifact::class,
@@ -358,7 +359,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function getNumericFieldByName(Tracker $tracker, $name)
     {
-        return $this->getFieldByNameAndType($tracker, ['int', 'float', 'computed'], $name);
+        return $this->getFieldByNameAndType($tracker, [self::FIELD_INTEGER_TYPE, self::FIELD_FLOAT_TYPE, 'computed'], $name);
     }
 
     public function getDateFieldByNameForUser(Tracker $tracker, PFUser $user, $name)
@@ -675,7 +676,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getUsedIntFields($tracker)
     {
-        return $this->getUsedFormElementsByType($tracker, 'int');
+        return $this->getUsedFormElementsByType($tracker, self::FIELD_INTEGER_TYPE);
     }
 
     /**
@@ -684,7 +685,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getUsedNumericFields($tracker)
     {
-        return $this->getUsedFormElementsByType($tracker, ['int', 'float']);
+        return $this->getUsedFormElementsByType($tracker, [self::FIELD_INTEGER_TYPE, self::FIELD_FLOAT_TYPE]);
     }
 
     /**
@@ -693,7 +694,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getUsedPotentiallyContainingNumericValueFields(Tracker $tracker)
     {
-        return $this->getUsedFormElementsByType($tracker, ['int', 'float', 'computed', 'sb', 'rb']);
+        return $this->getUsedFormElementsByType($tracker, [self::FIELD_INTEGER_TYPE, self::FIELD_FLOAT_TYPE, 'computed', 'sb', 'rb']);
     }
 
     /**
@@ -904,7 +905,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getUsedNumericFieldById($tracker, $field_id)
     {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, ['int', 'float', 'computed']);
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, [self::FIELD_INTEGER_TYPE, self::FIELD_FLOAT_TYPE, 'computed']);
     }
 
     /**
@@ -915,7 +916,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getUsedPotentiallyContainingNumericValueFieldById($tracker, $field_id)
     {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, ['int', 'float', 'computed', 'sb', 'rb']);
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, [self::FIELD_INTEGER_TYPE, self::FIELD_FLOAT_TYPE, 'computed', 'sb', 'rb']);
     }
 
     /**
