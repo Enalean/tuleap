@@ -390,6 +390,28 @@ class CampaignsResource
      * Get executions
      *
      * Get executions of a given campaign
+     * <br/>
+     * <br/>
+     * Test steps can be rendered as two formats: HTML or Text. Test steps rendered as HTML can have two source formats: HTML itself or CommonMark (Markdown).<br/>
+     * Test steps that are already written in HTML have the following structure:
+     * <pre><code>{<br/>
+     *   &quot;description&quot;: &quot;&lt;p&gt;HTML description&lt;/p&gt;&quot;,<br/>
+     *   &quot;description_format&quot;: &quot;html&quot;<br/>
+     *   &quot;expected_results&quot;: &quot;HTML expected results&quot;,<br/>
+     *   &quot;expected_results_format&quot;: &quot;html&quot;,<br/>
+     *   "rank": 1<br/>
+     * }</code></pre>
+     * <p>Test steps that are written in CommonMark format (Markdown) have an additional "commonmark" property that contains the source.
+     * Notice that they also have format "html":</p>
+     * <pre><code>{<br/>
+     *   &quot;description&quot;: &quot;&lt;p&gt;&lt;strong&gt;Markdown&lt;/strong&gt; description&lt;/p&gt;&quot;,<br/>
+     *   &quot;description_format&quot;: &quot;html&quot;<br/>
+     *   &quot;commonmark_description&quot;: &quot;\*\*Markdown\*\* description&quot;,<br/>
+     *   &quot;expected_results&quot;: &quot;&lt;strong&gt;Markdown&lt;/strong&gt; expected results&quot;,<br/>
+     *   &quot;expected_results_format&quot;: &quot;html&quot;,<br/>
+     *   &quot;commonmark_expected_results&quot;: &quot;\*\*Markdown\*\* expected results&quot;,<br/>
+     *   "rank": 1<br/>
+     * }</code></pre>
      *
      * @url GET {id}/testmanagement_executions
      *
