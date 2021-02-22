@@ -52,12 +52,16 @@ class PermissionCheckerTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
      */
     private $tracker;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
+     */
+    private $enabled_dao;
 
     protected function setUp(): void
     {
         $this->user = \Mockery::mock(\PFUser::class);
 
-        $this->tracker = \Mockery::mock(Tracker::class, ['getGroupId' => 101]);
+        $this->tracker = \Mockery::mock(Tracker::class, ['getGroupId' => 101, 'getId' => 200]);
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(false)->byDefault();
 
         $this->changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
@@ -65,7 +69,25 @@ class PermissionCheckerTest extends TestCase
 
         $this->comment = $this->buildComment([]);
 
-        $this->checker = new PermissionChecker();
+        $this->enabled_dao = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
+        $this->enabled_dao
+            ->shouldReceive('isTrackerEnabledPrivateComment')
+            ->with(200)
+            ->andReturnTrue()
+            ->byDefault();
+
+        $this->checker = new PermissionChecker($this->enabled_dao);
+    }
+
+    public function testReturnsTrueIfTrackerDoesNotUsePrivateComment(): void
+    {
+        $this->enabled_dao
+            ->shouldReceive('isTrackerEnabledPrivateComment')
+            ->with(200)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
     }
 
     public function testReturnsTrueIfUserIsSiteAdmin(): void

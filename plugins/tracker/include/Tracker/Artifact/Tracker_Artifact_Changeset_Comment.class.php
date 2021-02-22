@@ -20,6 +20,9 @@
  */
 
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentPresenterBuilder;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_Changeset_Comment
@@ -190,16 +193,14 @@ class Tracker_Artifact_Changeset_Comment
      */
     public function fetchFollowUp(PFUser $current_user)
     {
-        if ($this->hasEmptyBody()) {
+        $presenter_builder = new CommentPresenterBuilder(new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao()), UserHelper::instance());
+        $presenter         = $presenter_builder->getCommentPresenter($this, $current_user);
+
+        if (! $presenter) {
             return null;
         }
 
-        $presenter = new \Tuleap\Tracker\Artifact\Changeset\Comment\CommentPresenter(
-            $this,
-            UserHelper::instance(),
-            $current_user
-        );
-        $renderer  = TemplateRendererFactory::build()->getRenderer(
+        $renderer = TemplateRendererFactory::build()->getRenderer(
             __DIR__ . '/../../../templates/artifact/changeset/comment'
         );
         return $renderer->renderToString('comment', $presenter);
