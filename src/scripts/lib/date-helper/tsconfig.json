@@ -1,9 +1,8 @@
 {
     "extends": "../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["ES2015"],
-        "outDir": "types/",
-        "emitDeclarationOnly": true
+        "lib": [],
+        "outDir": "types/"
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]

@@ -5,8 +5,15 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "main": "dist/rich-text-editor.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/plugin-tracker-rich-text-editor.es.js",
+  "main": "dist/plugin-tracker-rich-text-editor.umd.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-tracker-rich-text-editor.es.js",
+      "require": "./dist/plugin-tracker-rich-text-editor.umd.js"
+    }
+  },
   "dependencies": {
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
     "@tuleap/mention": "file:../../../../../src/scripts/lib/mention",
@@ -22,8 +29,12 @@
     "bin": "../../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "build": "$npm_package_config_bin/run-p build:*",
+    "build:vite": "$npm_package_config_bin/vite build",
+    "build:types": "rm -rf types/ && $npm_package_config_bin/tsc",
+    "watch": "$npm_package_config_bin/run-p watch:*",
+    "watch:vite": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.ts\" --watch themes/ --ext ts,scss --exec '$npm_package_config_bin/vite build --mode development --minify false'",
+    "watch:types": "rm -rf types/ && $npm_package_config_bin/tsc -w --preserveWatchOutput",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }

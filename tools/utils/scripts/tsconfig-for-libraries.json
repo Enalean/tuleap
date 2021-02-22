@@ -2,9 +2,10 @@
     "compilerOptions": {
         "target": "ES2019",
         "module": "ES2015",
-        "lib": ["ES2015"],
+        "lib": [],
         "strict": true,
         "declaration": true,
+        "emitDeclarationOnly": true,
         "sourceMap": true,
         "allowSyntheticDefaultImports": true,
         "isolatedModules": true,

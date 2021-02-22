@@ -80,6 +80,7 @@ const webpack_config_for_vue_components = {
     output,
     externals: {
         ckeditor4: "CKEDITOR",
+        jquery: "jQuery",
     },
     module: {
         rules: [

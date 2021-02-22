@@ -17,7 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
+import {
+    defineConfig,
+    createPOGettextPlugin,
+} from "../../../../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+export default defineConfig({
+    plugins: [createPOGettextPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "PluginTrackerRichTextEditor",
+        },
+        rollupOptions: {
+            external: ["ckeditor4", "jquery"],
+            output: {
+                globals: {
+                    ckeditor4: "ckeditor4",
+                    jquery: "jquery",
+                },
+            },
+        },
+    },
+});

@@ -3,8 +3,7 @@
     "compilerOptions": {
         "lib": ["DOM", "DOM.Iterable"],
         "outDir": "types/",
-        "experimentalDecorators": true,
-        "emitDeclarationOnly": true
+        "experimentalDecorators": true
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]
