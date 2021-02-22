@@ -91,7 +91,7 @@ class FileRepresentation
     public $computed_md5;
 
     /**
-     * @var UserRepresentation {@type UserRepresentation}
+     * @var null | UserRepresentation {@type UserRepresentation}
      */
     public $owner;
 
@@ -120,9 +120,14 @@ class FileRepresentation
         return "";
     }
 
-    private static function getUser(FRSFile $file): UserRepresentation
+    private static function getUser(FRSFile $file): ?UserRepresentation
     {
         $owner = UserManager::instance()->getUserById($file->getUserId());
+
+        if (! $owner) {
+            return null;
+        }
+
         return UserRepresentation::build($owner);
     }
 
