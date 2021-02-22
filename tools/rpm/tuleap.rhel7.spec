@@ -949,10 +949,10 @@ if [ $1 -eq 1 ]; then
 fi
 
 # Clean old tuleap cache file
-%{__rm} -f %{APP_CACHE_DIR}/tuleap_hooks_cache
+/usr/bin/rm -rf %{APP_CACHE_DIR}/tuleap_hooks_cache
 
 %post core-cvs
-%{__ln_s} %{APP_DATA_DIR}/cvslocks /var/lock/cvs
+/usr/bin/ln -s %{APP_DATA_DIR}/cvslocks /var/lock/cvs
 if [ ! -f %{_sysconfdir}/shells ] ; then
     echo "%{APP_LIBBIN_DIR}/cvssh" > %{_sysconfdir}/shells
     echo "%{APP_LIBBIN_DIR}/cvssh-restricted" > %{_sysconfdir}/shells
