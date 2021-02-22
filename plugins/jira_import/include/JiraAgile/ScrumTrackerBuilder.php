@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\Semantic\XML\XMLDoneSemantic;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
@@ -49,6 +51,7 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class ScrumTrackerBuilder
 {
+    public const DETAILS_RIGHT_COLUMN_NAME = 'details2';
     public const NAME_FIELD_NAME           = 'name';
     public const START_DATE_FIELD_NAME     = 'start_date';
     public const END_DATE_FIELD_NAME       = 'end_date';
@@ -56,6 +59,16 @@ final class ScrumTrackerBuilder
     public const STATUS_FIELD_NAME         = 'status';
     public const ARTIFACT_LINK_FIELD_NAME  = 'links';
     private const CAPACITY_FIELD_NAME      = 'capacity';
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
+
+    public function __construct(EventDispatcherInterface $event_dispatcher)
+    {
+        $this->event_dispatcher = $event_dispatcher;
+    }
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
@@ -65,7 +78,7 @@ final class ScrumTrackerBuilder
             new UpdatePermission('UGROUP_PROJECT_MEMBERS'),
         ];
 
-        return (new XMLTracker($id_generator, 'sprint'))
+        $tracker = (new XMLTracker($id_generator, 'sprint'))
             ->withName('Sprints')
             ->withColor(TrackerColor::fromName('acid-green'))
             ->withFormElement(
@@ -99,7 +112,7 @@ final class ScrumTrackerBuilder
                                     ->withRank(4)
                                     ->withPermissions(...$default_permissions),
                             ),
-                        (new XMLColumn($id_generator, 'details2'))
+                        (new XMLColumn($id_generator, self::DETAILS_RIGHT_COLUMN_NAME))
                             ->withRank(3)
                             ->withFormElements(
                                 (new XMLSelectBoxField($id_generator, self::STATUS_FIELD_NAME))
@@ -134,6 +147,10 @@ final class ScrumTrackerBuilder
                     new XMLReferenceByName(self::START_DATE_FIELD_NAME),
                     new XMLReferenceByName(self::END_DATE_FIELD_NAME)
                 ),
+                (new XMLDoneSemantic())
+                ->withDoneValues(
+                    new XMLBindValueReferenceByLabel(self::STATUS_FIELD_NAME, JiraSprint::STATE_CLOSED)
+                )
             )
             ->withReports(
                 (new XMLReport('Active sprints'))
@@ -164,5 +181,9 @@ final class ScrumTrackerBuilder
                             )
                     )
             );
+
+        $event = $this->event_dispatcher->dispatch(new ScrumTrackerStructureEvent($tracker, $id_generator));
+        assert($event instanceof ScrumTrackerStructureEvent);
+        return $event->tracker;
     }
 }

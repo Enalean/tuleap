@@ -197,6 +197,7 @@ final class CreateProjectFromJira
                 $jira_client,
                 $logger,
             ),
+            \EventManager::instance(),
         );
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
