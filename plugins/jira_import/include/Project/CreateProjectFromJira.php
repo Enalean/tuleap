@@ -137,8 +137,8 @@ final class CreateProjectFromJira
 
     private function generateFromJira(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname): \SimpleXMLElement
     {
-        $jira_trackers = $this->jira_tracker_builder->build($jira_client, $jira_project);
-        if (count($jira_trackers) === 0) {
+        $jira_issue_types = $this->jira_tracker_builder->build($jira_client, $jira_project);
+        if (count($jira_issue_types) === 0) {
             throw new \RuntimeException("There are no Jira issue types to import");
         }
 
@@ -192,13 +192,13 @@ final class CreateProjectFromJira
 
         $trackers_xml = $xml_element->addChild('trackers');
 
-        foreach ($jira_trackers as $jira_tracker) {
-            $logger->info(sprintf("Import tracker %s", $jira_tracker['name']));
+        foreach ($jira_issue_types as $jira_issue_type) {
+            $logger->info(sprintf("Import tracker %s", $jira_issue_type->getName()));
 
-            $tracker_fullname = $jira_tracker['name'];
-            $tracker_itemname = str_replace('-', '_', $jira_tracker['name']);
+            $tracker_fullname = $jira_issue_type->getName();
+            $tracker_itemname = str_replace('-', '_', $jira_issue_type->getName());
 
-            $tracker     = (new XMLTracker($jira_tracker['id'], $tracker_itemname))->withName($tracker_fullname);
+            $tracker     = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
             $tracker_xml = $tracker->export($trackers_xml);
 
             $jira_exporter->exportJiraToXml(
@@ -206,7 +206,7 @@ final class CreateProjectFromJira
                 $tracker_xml,
                 $jira_credentials->getJiraUrl(),
                 $jira_project,
-                $jira_tracker['id'],
+                $jira_issue_type->getId(),
                 $field_id_generator
             );
         }

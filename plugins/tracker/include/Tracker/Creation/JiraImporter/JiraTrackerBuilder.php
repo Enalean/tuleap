@@ -27,7 +27,7 @@ class JiraTrackerBuilder
 {
     /**
      * @throws JiraConnectionException
-     * @return array<array{id: string, name: string}>
+     * @return IssueType[]
      */
     public function build(ClientWrapper $wrapper, string $project_key): array
     {
@@ -38,14 +38,8 @@ class JiraTrackerBuilder
             return $tracker_list;
         }
 
-        foreach ($project_details['issueTypes'] as $tracker) {
-            if (! isset($tracker['id']) || ! isset($tracker['name'])) {
-                throw new \LogicException('Tracker does not have an id or a name');
-            }
-            $tracker_list[] = [
-                "id"   => (string) $tracker['id'],
-                "name" => (string) $tracker['name']
-            ];
+        foreach ($project_details['issueTypes'] as $json_issue_type) {
+            $tracker_list[] = IssueType::buildFromAPIResponse($json_issue_type);
         }
 
         return $tracker_list;
