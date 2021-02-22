@@ -20,13 +20,13 @@
 import type { GettextProvider } from "./type";
 
 import { setupCampaignsListShortcuts } from "./campaigns-list-shortcuts";
-import { setupNavigationShortcuts } from "./test-campaign-shortcuts/navigation-shortcuts";
-import { setupCampaignActionsShortcuts } from "./test-campaign-shortcuts/campaign-actions-shortcuts";
-import { setupTestActionsShortcuts } from "./test-campaign-shortcuts/test-actions-shortcuts";
+import { setupTestsListNavigation } from "./campaign/navigation-in-tests-list";
+import { setupCampaignShortcuts } from "./campaign/campaign-shortcuts";
+import { setupTestExecutionShortcuts } from "./campaign/test-execution-shortcuts";
 
 export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): void {
+    setupTestExecutionShortcuts(gettextCatalog);
+    setupCampaignShortcuts(gettextCatalog);
+    setupTestsListNavigation(gettextCatalog);
     setupCampaignsListShortcuts(gettextCatalog);
-    setupNavigationShortcuts(gettextCatalog);
-    setupCampaignActionsShortcuts(gettextCatalog);
-    setupTestActionsShortcuts(gettextCatalog);
 }

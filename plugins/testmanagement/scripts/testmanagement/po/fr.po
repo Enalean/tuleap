@@ -80,14 +80,8 @@ msgstr "Campagne"
 msgid "Campaign label"
 msgstr "Label de la campagne"
 
-msgid "Campaign page shortcuts in Test Management"
-msgstr "Raccourcis des pages Campagne dans Test Management"
-
 msgid "Campaigns"
 msgstr "Campagnes"
-
-msgid "Campaigns list page in Test Management"
-msgstr "Liste des campagnes dans Test Management"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -128,6 +122,10 @@ msgstr "Éditer le test"
 msgid "Edit this test"
 msgstr "Éditer ce test"
 
+msgctxt "Keyboard input"
+msgid "End"
+msgstr "Fin"
+
 msgid ""
 "Enter the id of the bug you want to link to \"{{ modal.test_summary }}\". "
 "The description of this test will be added as a follow-up comment to the "
@@ -159,6 +157,10 @@ msgstr "Rapports de l’outil de suivi de définition des tests"
 
 msgid "Hide closed campaigns"
 msgstr "Cacher les campagnes fermées"
+
+msgctxt "Keyboard input"
+msgid "Home,↖"
+msgstr "Début,↖"
 
 msgid "Id"
 msgstr "Id"
@@ -217,14 +219,11 @@ msgstr "Marquer le test comme passé avec succès"
 msgid "Milestone tests"
 msgstr "Tests du jalon"
 
-msgid "Navigation in Test Management"
-msgstr "Navigation dans Test Management"
+msgid "Navigation in campaign tests list"
+msgstr "Navigation dans la liste de tests d'une campagne"
 
-msgid ""
-"Navigation shortcuts are available when a test is selected in tests list"
-msgstr ""
-"Les raccourcis de navigation sont disponibles lorsqu'un test est sélectionné "
-"dans la liste"
+msgid "Navigation in tests list when a test is selected."
+msgstr "Navigation dans la liste de tests lorsqu'un test est sélectionné."
 
 msgid "New campaign"
 msgstr "Nouvelle campagne"
@@ -286,8 +285,14 @@ msgstr "Donner le focus au champ de recherche"
 msgid "Set focus in tests list"
 msgstr "Donner le focus à la liste de tests"
 
-msgid "Show dependencies graph"
-msgstr "Afficher le graphe de dépendances"
+msgid "Shortcuts available in a campaign page."
+msgstr "Raccourcis disponibles dans la page d'une campagne."
+
+msgid "Shortcuts available in test campaigns list page."
+msgstr "Raccourcis disponibles dans la page listant les campagnes."
+
+msgid "Shortcuts available on the test currently open in a campaign."
+msgstr "Raccourcis disponibles dans une campagne pour le test affiché."
 
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
@@ -301,17 +306,20 @@ msgstr "Afficher les scores pour la campagne"
 msgid "Summary"
 msgstr "Résumé"
 
+msgid "Test campaign"
+msgstr "Campagne de tests"
+
 msgid "Test campaigns"
 msgstr "Campagne de tests"
+
+msgid "Test campaigns list"
+msgstr "Liste des campagnes de test"
 
 msgid "Test description"
 msgstr "Description du test"
 
-msgid "Test shortcuts are available on the test currently open."
-msgstr "Les raccourcis de test sont disponibles pour le test affiché."
-
-msgid "Test shortcuts in Test Management"
-msgstr "Raccourcis de test dans Test Management"
+msgid "Test execution"
+msgstr "Exécution d'un test"
 
 msgid "Test summary"
 msgstr "Résumé du test"

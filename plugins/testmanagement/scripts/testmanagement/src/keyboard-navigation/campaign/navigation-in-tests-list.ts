@@ -28,7 +28,7 @@ import { Direction } from "../type";
 
 import { moveFocus } from "../shortcuts-handles/move-focus";
 
-export function setupNavigationShortcuts(gettextCatalog: GettextProvider): void {
+export function setupTestsListNavigation(gettextCatalog: GettextProvider): void {
     const move_to_next_test: Shortcut = {
         keyboard_inputs: "k,down",
         displayed_inputs: "k,↓",
@@ -49,7 +49,7 @@ export function setupNavigationShortcuts(gettextCatalog: GettextProvider): void 
 
     const move_to_last_test: Shortcut = {
         keyboard_inputs: "end",
-        displayed_inputs: "End",
+        displayed_inputs: gettextCatalog.getString("End", null, "Keyboard input"),
         description: gettextCatalog.getString("Select last test tab from test list"),
         handle: (): void => {
             moveFocus(document, Direction.bottom);
@@ -58,7 +58,7 @@ export function setupNavigationShortcuts(gettextCatalog: GettextProvider): void 
 
     const move_to_first_test: Shortcut = {
         keyboard_inputs: "home",
-        displayed_inputs: "Home,↖",
+        displayed_inputs: gettextCatalog.getString("Home,↖", null, "Keyboard input"),
         description: gettextCatalog.getString("Select first test tab from test list"),
         handle: (): void => {
             moveFocus(document, Direction.top);
@@ -66,10 +66,8 @@ export function setupNavigationShortcuts(gettextCatalog: GettextProvider): void 
     };
 
     const test_management_navigation_shortcuts_group: ShortcutsGroup = {
-        title: gettextCatalog.getString("Navigation in Test Management"),
-        details: gettextCatalog.getString(
-            "Navigation shortcuts are available when a test is selected in tests list"
-        ),
+        title: gettextCatalog.getString("Navigation in campaign tests list"),
+        details: gettextCatalog.getString("Navigation in tests list when a test is selected."),
         shortcuts: [
             move_to_next_test,
             move_to_previous_test,
