@@ -26,10 +26,24 @@ use Tracker_Artifact_Changeset_Comment;
 
 class PermissionChecker
 {
+    /**
+     * @var TrackerPrivateCommentUGroupEnabledDao
+     */
+    private $enabled_dao;
+
+    public function __construct(TrackerPrivateCommentUGroupEnabledDao $enabled_dao)
+    {
+        $this->enabled_dao = $enabled_dao;
+    }
+
     public function userCanSeeComment(
         \PFUser $user,
         Tracker_Artifact_Changeset_Comment $comment
     ): bool {
+        if (! $this->enabled_dao->isTrackerEnabledPrivateComment($comment->getChangeset()->getTracker()->getId())) {
+            return true;
+        }
+
         if ($user->isSuperUser()) {
             return true;
         }

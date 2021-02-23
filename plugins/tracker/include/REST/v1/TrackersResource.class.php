@@ -48,6 +48,7 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -477,7 +478,7 @@ class TrackersResource extends AuthenticatedResource
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                 ),
-                new PermissionChecker()
+                new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao())
             )
         );
 

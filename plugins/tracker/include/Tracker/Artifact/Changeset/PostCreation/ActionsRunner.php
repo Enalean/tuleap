@@ -37,6 +37,7 @@ use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
@@ -145,7 +146,7 @@ class ActionsRunner
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                         ),
-                        new PermissionChecker()
+                        new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao())
                     )
                 )
             )
