@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
@@ -60,7 +61,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
+            UserTestBuilder::aUser()->build(),
+            [],
+            'Epic'
         );
     }
 
@@ -75,7 +78,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
+            UserTestBuilder::aUser()->build(),
+            [],
+            'Epic'
         );
 
         assertCount(1, $xml->trackers->tracker);
@@ -96,7 +101,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
+            UserTestBuilder::aUser()->build(),
+            [],
+            'Epic'
         );
 
         assertEquals(\Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, (string) $xml->trackers->tracker->formElements->formElement[0]['type']);
@@ -116,7 +123,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
+            UserTestBuilder::aUser()->build(),
+            [],
+            'Epic'
         );
 
         assertEquals(\Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE, (string) $xml->trackers->tracker->formElements->formElement[0]['type']);
@@ -370,7 +379,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
+            UserTestBuilder::aUser()->build(),
+            [],
+            'Epic'
         );
     }
 
@@ -391,7 +402,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic'
         );
 
         assertCount(1, $xml->trackers->tracker[0]->artifacts->artifact);
@@ -432,7 +445,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic'
         );
 
         $start_date_field_change = $xml->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="start_date"]');
@@ -461,7 +476,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic'
         );
 
         $end_date_field_change = $xml->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="end_date"]');
@@ -490,7 +507,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic'
         );
 
         $completed_date_field_change = $xml->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="completed_date"]');
@@ -520,7 +539,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic'
         );
 
         $future_id = substr((string) $xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]['ID'], 1);
@@ -571,7 +592,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build()
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic'
         );
 
         $field = $xml->xpath('/project/trackers/tracker/formElements//formElement[@type="art_link"]');
@@ -582,6 +605,39 @@ class JiraAgileImporterTest extends TestCase
         assertCount(2, $field_change[0]->value);
         assertEquals('10001', $field_change[0]->value[0]);
         assertEquals('10004', $field_change[0]->value[1]);
+    }
+
+    public function testItExportSprintPlanning(): void
+    {
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $this->getJiraAgileImport()->exportScrum(
+            new NullLogger(),
+            $xml,
+            'FOO',
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [
+                new IssueType("10000", "Epic", false),
+                new IssueType("10001", "Bug", false),
+                new IssueType("10002", "Subtask", true),
+                new IssueType("10003", "Story", false),
+            ],
+            'Epic'
+        );
+
+        $this->assertTrue(isset($xml->agiledashboard->plannings->planning));
+        $xml_planning = $xml->agiledashboard->plannings->planning;
+
+        $this->assertSame("Sprint plan", (string) $xml_planning['name']);
+        $this->assertSame("Sprint plan", (string) $xml_planning['plan_title']);
+        $this->assertSame("T1", (string) $xml_planning['planning_tracker_id']);
+        $this->assertSame("Backlog", (string) $xml_planning['backlog_title']);
+
+        $this->assertTrue(isset($xml_planning->backlogs));
+        $this->assertCount(2, $xml_planning->backlogs->children());
+        $this->assertSame("10001", (string) $xml_planning->backlogs->backlog[0]);
+        $this->assertSame("10003", (string) $xml_planning->backlogs->backlog[1]);
     }
 
     private function getJiraAgileImport(): JiraAgileImporter
@@ -669,7 +725,9 @@ class JiraAgileImporterTest extends TestCase
             $xml,
             'FOO',
             new FieldAndValueIDGenerator(),
-            UserTestBuilder::aUser()->build()
+            UserTestBuilder::aUser()->build(),
+            [],
+            "Epic"
         );
         return $xml;
     }

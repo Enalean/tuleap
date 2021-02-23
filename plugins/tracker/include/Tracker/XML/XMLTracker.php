@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -298,5 +298,10 @@ final class XMLTracker
         }
 
         return $tracker_xml;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 }

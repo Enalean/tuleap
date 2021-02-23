@@ -70,6 +70,11 @@ class IssueType
         return $this->name;
     }
 
+    public function isSubtask(): bool
+    {
+        return $this->is_subtask;
+    }
+
     public function toArray(): array
     {
         return [

@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticChangesetValue;
@@ -56,8 +57,18 @@ final class JiraAgileImporter
         $this->sprint_issues_retriever = $sprint_issues_retriever;
     }
 
-    public function exportScrum(LoggerInterface $logger, \SimpleXMLElement $project, string $jira_project, IDGenerator $id_generator, \PFUser $import_user): void
-    {
+    /**
+     * @param IssueType[] $jira_issue_types
+     */
+    public function exportScrum(
+        LoggerInterface $logger,
+        \SimpleXMLElement $project,
+        string $jira_project,
+        IDGenerator $id_generator,
+        \PFUser $import_user,
+        array $jira_issue_types,
+        string $jira_epic_issue_type
+    ): void {
         $board = $this->boards_retriever->getFirstScrumBoardForProject($jira_project);
         if (! $board) {
             return;
@@ -99,5 +110,32 @@ final class JiraAgileImporter
         }
 
         $scrum_tracker->export($project->trackers);
+
+        $this->exportPlanningConfiguration($logger, $project, $scrum_tracker, $jira_issue_types, $jira_epic_issue_type);
+    }
+
+    private function exportPlanningConfiguration(
+        LoggerInterface $logger,
+        \SimpleXMLElement $project,
+        \Tuleap\Tracker\XML\XMLTracker $scrum_tracker,
+        array $jira_issue_types,
+        string $jira_epic_issue_type
+    ): void {
+        $logger->debug("Export agiledashboard planning configuration");
+
+        $xml_planning = $project->addChild('agiledashboard')->addChild('plannings')->addChild('planning');
+        $xml_planning->addAttribute("name", "Sprint plan");
+        $xml_planning->addAttribute("plan_title", "Sprint plan");
+        $xml_planning->addAttribute("planning_tracker_id", $scrum_tracker->getId());
+        $xml_planning->addAttribute("backlog_title", "Backlog");
+
+        $xml_backlogs = $xml_planning->addChild("backlogs");
+        foreach ($jira_issue_types as $issue_type) {
+            if ($issue_type->isSubtask() === true || $issue_type->getName() === $jira_epic_issue_type) {
+                continue;
+            }
+
+            $xml_backlogs->addChild("backlog", $issue_type->getId());
+        }
     }
 }

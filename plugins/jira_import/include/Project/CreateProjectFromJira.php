@@ -103,11 +103,27 @@ final class CreateProjectFromJira
         $this->platform_configuration_collection_builder = $platform_configuration_collection_builder;
     }
 
-    public function create(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname): \Project
-    {
+    public function create(
+        LoggerInterface $logger,
+        ClientWrapper $jira_client,
+        JiraCredentials $jira_credentials,
+        string $jira_project,
+        string $shortname,
+        string $fullname,
+        string $jira_epic_issue_type
+    ): \Project {
         try {
-            $xml_element = $this->generateFromJira($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
-            $archive     = new JiraProjectArchive($xml_element);
+            $xml_element = $this->generateFromJira(
+                $logger,
+                $jira_client,
+                $jira_credentials,
+                $jira_project,
+                $shortname,
+                $fullname,
+                $jira_epic_issue_type
+            );
+
+            $archive = new JiraProjectArchive($xml_element);
             return $this->createProject($logger, $xml_element, $archive);
         } catch (\XML_ParseException $exception) {
             $this->logParseErrors($logger, $exception);
@@ -115,10 +131,27 @@ final class CreateProjectFromJira
         }
     }
 
-    public function generateArchive(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname, string $archive_path): void
-    {
+    public function generateArchive(
+        LoggerInterface $logger,
+        ClientWrapper $jira_client,
+        JiraCredentials $jira_credentials,
+        string $jira_project,
+        string $shortname,
+        string $fullname,
+        string $jira_epic_issue_type,
+        string $archive_path
+    ): void {
         try {
-            $xml_element = $this->generateFromJira($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
+            $xml_element = $this->generateFromJira(
+                $logger,
+                $jira_client,
+                $jira_credentials,
+                $jira_project,
+                $shortname,
+                $fullname,
+                $jira_epic_issue_type
+            );
+
             $xml_element->saveXML($archive_path);
         } catch (\XML_ParseException $exception) {
             $this->logParseErrors($logger, $exception);
@@ -135,8 +168,15 @@ final class CreateProjectFromJira
         }
     }
 
-    private function generateFromJira(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname): \SimpleXMLElement
-    {
+    private function generateFromJira(
+        LoggerInterface $logger,
+        ClientWrapper $jira_client,
+        JiraCredentials $jira_credentials,
+        string $jira_project,
+        string $shortname,
+        string $fullname,
+        string $jira_epic_issue_type
+    ): \SimpleXMLElement {
         $jira_issue_types = $this->jira_tracker_builder->build($jira_client, $jira_project);
         if (count($jira_issue_types) === 0) {
             throw new \RuntimeException("There are no Jira issue types to import");
@@ -178,7 +218,10 @@ final class CreateProjectFromJira
         $xml_element['access']    = 'private';
 
         foreach ($xml_element->services->service as $service) {
-            if ((string) $service['shortname'] === \trackerPlugin::SERVICE_SHORTNAME) {
+            if (
+                (string) $service['shortname'] === \trackerPlugin::SERVICE_SHORTNAME ||
+                (string) $service['shortname'] === \AgileDashboardPlugin::PLUGIN_SHORTNAME
+            ) {
                 $service['enabled'] = '1';
             }
         }
@@ -211,7 +254,15 @@ final class CreateProjectFromJira
             );
         }
 
-        $jira_agile_importer->exportScrum($logger, $xml_element, $jira_project, $field_id_generator, $import_user);
+        $jira_agile_importer->exportScrum(
+            $logger,
+            $xml_element,
+            $jira_project,
+            $field_id_generator,
+            $import_user,
+            $jira_issue_types,
+            $jira_epic_issue_type
+        );
 
         return $this->addWidgetOnDashboard($xml_element, [ProjectHeartbeat::NAME]);
     }
