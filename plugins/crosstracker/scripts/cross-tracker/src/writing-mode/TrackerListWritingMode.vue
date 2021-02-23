@@ -28,6 +28,7 @@
                 <i
                     class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
                     v-on:click="removeTracker(tracker)"
+                    v-bind:data-test="`remove-tracker-${tracker.id}`"
                 ></i>
                 {{ tracker.tracker_label }}
             </span>
@@ -38,16 +39,18 @@
         </span>
     </div>
 </template>
-<script>
-export default {
-    name: "TrackerListWritingMode",
-    props: {
-        trackers: Array,
-    },
-    methods: {
-        removeTracker(tracker) {
-            this.$emit("tracker-removed", tracker);
-        },
-    },
-};
+<script lang="ts">
+import Vue from "vue";
+import { Prop, Component } from "vue-property-decorator";
+import type { Tracker } from "../type";
+
+@Component
+export default class TrackerListWritingMode extends Vue {
+    @Prop({ required: true })
+    readonly trackers!: Array<Tracker>;
+
+    removeTracker(tracker: Tracker): void {
+        this.$emit("tracker-removed", tracker);
+    }
+}
 </script>

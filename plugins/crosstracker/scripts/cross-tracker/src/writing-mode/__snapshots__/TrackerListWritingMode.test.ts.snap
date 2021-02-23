@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackerListWritingMode renders a list of trackers 1`] = `
+<div
+  class="cross-tracker-form-trackers-selected"
+>
+  <span
+    class="tlp-badge-primary tlp-badge-outline cross-tracker-selected-tracker"
+  >
+    <span>
+      <i
+        class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
+        data-test="remove-tracker-1"
+      />
+      
+            
+        
+    </span>
+     
+    <span>
+      <i
+        class="fa fa-archive cross-tracker-report-archive-icon"
+      />
+      
+            
+        
+    </span>
+  </span>
+  <span
+    class="tlp-badge-primary tlp-badge-outline cross-tracker-selected-tracker"
+  >
+    <span>
+      <i
+        class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
+        data-test="remove-tracker-2"
+      />
+      
+            
+        
+    </span>
+     
+    <span>
+      <i
+        class="fa fa-archive cross-tracker-report-archive-icon"
+      />
+      
+            
+        
+    </span>
+  </span>
+</div>
+`;
