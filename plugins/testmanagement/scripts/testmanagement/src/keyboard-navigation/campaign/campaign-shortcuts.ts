@@ -28,12 +28,12 @@ import type { GettextProvider } from "../type";
 import { clickOnElement, focusElement } from "../shortcuts-handles/trigger-datashortcut-element";
 import { showRemainingTests } from "../shortcuts-handles/show-remaining-tests";
 
-export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): void {
-    const edit_campaign: Shortcut = {
+export function setupCampaignShortcuts(gettextCatalog: GettextProvider): void {
+    const select_tests: Shortcut = {
         keyboard_inputs: "e",
-        description: gettextCatalog.getString("Edit campaign"),
+        description: gettextCatalog.getString("Select tests"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-edit-campaign]");
+            clickOnElement(document, "[data-shortcut-select-tests]");
         },
     };
 
@@ -69,23 +69,15 @@ export function setupCampaignActionsShortcuts(gettextCatalog: GettextProvider): 
         },
     };
 
-    const show_scores: Shortcut = {
-        keyboard_inputs: "g",
-        description: gettextCatalog.getString("Show test campaign scores"),
-        handle: (): void => {
-            clickOnElement(document, "[data-shortcut-campaign-scores]");
-        },
-    };
-
     const test_management_campaign_shortcuts_group: ShortcutsGroup = {
-        title: gettextCatalog.getString("Campaign page shortcuts in Test Management"),
+        title: gettextCatalog.getString("Test campaign"),
+        details: gettextCatalog.getString("Shortcuts available in a campaign page."),
         shortcuts: [
-            edit_campaign,
-            focus_search_filter,
-            toggle_automated_tests_filter,
-            show_remaining_tests,
+            select_tests,
             focus_test_list,
-            show_scores,
+            focus_search_filter,
+            show_remaining_tests,
+            toggle_automated_tests_filter,
         ],
     };
     addShortcutsGroup(document, test_management_campaign_shortcuts_group);

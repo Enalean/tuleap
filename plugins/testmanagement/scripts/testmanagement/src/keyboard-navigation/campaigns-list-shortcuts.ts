@@ -22,7 +22,9 @@ import type {
     ShortcutsGroup,
 } from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
 import { addShortcutsGroup } from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
+
 import type { GettextProvider } from "./type";
+
 import { clickOnElement, focusElement } from "./shortcuts-handles/trigger-datashortcut-element";
 
 export function setupCampaignsListShortcuts(gettextCatalog: GettextProvider): void {
@@ -43,7 +45,8 @@ export function setupCampaignsListShortcuts(gettextCatalog: GettextProvider): vo
     };
 
     const campaigns_list_shortcuts_group: ShortcutsGroup = {
-        title: gettextCatalog.getString("Campaigns list page in Test Management"),
+        title: gettextCatalog.getString("Test campaigns list"),
+        details: gettextCatalog.getString("Shortcuts available in test campaigns list page."),
         shortcuts: [focus_search_field, toggle_closed_campaigns],
     };
     addShortcutsGroup(document, campaigns_list_shortcuts_group);

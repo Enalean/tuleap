@@ -27,7 +27,7 @@ import type { GettextProvider } from "../type";
 
 import { clickOnElement, focusElement } from "../shortcuts-handles/trigger-datashortcut-element";
 
-export function setupTestActionsShortcuts(gettextCatalog: GettextProvider): void {
+export function setupTestExecutionShortcuts(gettextCatalog: GettextProvider): void {
     const mark_as_success: Shortcut = {
         keyboard_inputs: "m + p",
         description: gettextCatalog.getString("Mark test as passed"),
@@ -84,18 +84,10 @@ export function setupTestActionsShortcuts(gettextCatalog: GettextProvider): void
         },
     };
 
-    const show_dependency_graph: Shortcut = {
-        keyboard_inputs: "t + d",
-        description: gettextCatalog.getString("Show dependencies graph"),
-        handle: (): void => {
-            clickOnElement(document, "[data-shortcut-dependency-graph]");
-        },
-    };
-
     const test_management_actions_shortcuts_group: ShortcutsGroup = {
-        title: gettextCatalog.getString("Test shortcuts in Test Management"),
+        title: gettextCatalog.getString("Test execution"),
         details: gettextCatalog.getString(
-            "Test shortcuts are available on the test currently open."
+            "Shortcuts available on the test currently open in a campaign."
         ),
         shortcuts: [
             mark_as_success,
@@ -105,7 +97,6 @@ export function setupTestActionsShortcuts(gettextCatalog: GettextProvider): void
             edit_test,
             new_bug,
             link_bug,
-            show_dependency_graph,
         ],
     };
     addShortcutsGroup(document, test_management_actions_shortcuts_group);

@@ -25,5 +25,5 @@ export enum Direction {
 }
 
 export interface GettextProvider {
-    getString(translatable_string: string): string;
+    getString(translatable_string: string, scope?: null, context?: string): string;
 }
