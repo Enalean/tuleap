@@ -18,11 +18,13 @@
  */
 
 import hotkeys from "hotkeys-js";
-import { handleCreateShortcut } from "./handle-create-shortcut";
-import { handleSearchShortcut } from "./handle-search-shortcut";
-import { handleDashboardShortcut } from "./handle-dashboard-shortcut";
-import { handleHelpShortcut } from "./handle-help-shortcut";
-import { HOTKEYS_SCOPE_NO_MODAL } from "./handle-modals-events";
+
+import { handleCreateShortcut } from "./handle-global-shortcuts/handle-create-shortcut";
+import { handleSearchShortcut } from "./handle-global-shortcuts/handle-search-shortcut";
+import { handleDashboardShortcut } from "./handle-global-shortcuts/handle-dashboard-shortcut";
+import { handleHelpShortcut } from "./handle-global-shortcuts/handle-help-shortcut";
+
+import { HOTKEYS_SCOPE_NO_MODAL } from "@tuleap/keyboard-shortcuts";
 
 hotkeys("c", HOTKEYS_SCOPE_NO_MODAL, () => {
     handleCreateShortcut();

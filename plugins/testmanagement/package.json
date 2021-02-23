@@ -10,6 +10,7 @@
     "@tuleap/ckeditor-image-upload-form": "file:../../src/scripts/lib/ckeditor-image-upload-form",
     "@tuleap/core": "file://../../src",
     "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
+    "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
     "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
     "@tuleap/plugin-tracker": "file://../tracker",
     "@tuleap/plugin-tracker-rich-text-editor": "file:../tracker/scripts/lib/rich-text-editor",

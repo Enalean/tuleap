@@ -17,17 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    Shortcut,
-    ShortcutsGroup,
-} from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
-import { addShortcutsGroup } from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
-
+import type { Shortcut, ShortcutsGroup } from "./setup-shortcuts";
 import type { GettextProvider } from "./type";
 
 import { clickOnElement, focusElement } from "./shortcuts-handles/trigger-datashortcut-element";
 
-export function setupCampaignsListShortcuts(gettextCatalog: GettextProvider): void {
+export function createCampaignsListShortcutsGroup(gettextCatalog: GettextProvider): ShortcutsGroup {
     const focus_search_field: Shortcut = {
         keyboard_inputs: "f",
         description: gettextCatalog.getString("Set focus in search campaigns field"),
@@ -44,10 +39,9 @@ export function setupCampaignsListShortcuts(gettextCatalog: GettextProvider): vo
         },
     };
 
-    const campaigns_list_shortcuts_group: ShortcutsGroup = {
+    return {
         title: gettextCatalog.getString("Test campaigns list"),
         details: gettextCatalog.getString("Shortcuts available in test campaigns list page."),
         shortcuts: [focus_search_field, toggle_closed_campaigns],
     };
-    addShortcutsGroup(document, campaigns_list_shortcuts_group);
 }

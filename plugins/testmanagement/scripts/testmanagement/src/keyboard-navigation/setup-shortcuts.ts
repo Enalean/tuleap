@@ -17,16 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { addShortcutsGroup } from "@tuleap/keyboard-shortcuts";
+
+import type { Shortcut, ShortcutsGroup } from "@tuleap/keyboard-shortcuts";
+export type { Shortcut, ShortcutsGroup };
+
 import type { GettextProvider } from "./type";
 
-import { setupCampaignsListShortcuts } from "./campaigns-list-shortcuts";
-import { setupTestsListNavigation } from "./campaign/navigation-in-tests-list";
-import { setupCampaignShortcuts } from "./campaign/campaign-shortcuts";
-import { setupTestExecutionShortcuts } from "./campaign/test-execution-shortcuts";
+import { createCampaignsListShortcutsGroup } from "./campaigns-list-shortcuts";
+import { createTestsListNavigation } from "./campaign/navigation-in-tests-list";
+import { createCampaignShortcutsGroup } from "./campaign/campaign-shortcuts";
+import { createTestExecutionShortcutsGroup } from "./campaign/test-execution-shortcuts";
 
 export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): void {
-    setupTestExecutionShortcuts(gettextCatalog);
-    setupCampaignShortcuts(gettextCatalog);
-    setupTestsListNavigation(gettextCatalog);
-    setupCampaignsListShortcuts(gettextCatalog);
+    const shortcuts_groups = [
+        createTestExecutionShortcutsGroup(gettextCatalog),
+        createCampaignShortcutsGroup(gettextCatalog),
+        createTestsListNavigation(gettextCatalog),
+        createCampaignsListShortcutsGroup(gettextCatalog),
+    ];
+
+    shortcuts_groups.forEach((group) => {
+        addShortcutsGroup(document, group);
+    });
 }
