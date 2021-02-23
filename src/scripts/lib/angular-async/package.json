@@ -5,7 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "main": "dist/angular-async.js",
+  "module": "dist/angular-async.es.js",
+  "main": "dist/angular-async.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/angular-async.es.js",
+      "require": "./dist/angular-async.umd.js"
+    }
+  },
   "dependencies": {},
   "peerDependencies": {
     "angular": "^1.8.0"
@@ -15,7 +22,7 @@
     "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+    "build": "$npm_package_config_bin/vite build",
+    "watch": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.js\" --ext js --exec '$npm_package_config_bin/vite build --mode development --minify false'"
   }
 }
