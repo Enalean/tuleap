@@ -5,8 +5,15 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "main": "dist/index.js",
+  "module": "dist/ckeditor-image-upload-form.es.js",
+  "main": "dist/ckeditor-image-upload-form.umd.js",
   "types": "src/ckeditor-image-upload-form.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/ckeditor-image-upload-form.es.js",
+      "require": "./dist/ckeditor-image-upload-form.umd.js"
+    }
+  },
   "dependencies": {
     "@tuleap/ckeditor-image-upload": "file:../ckeditor-image-upload",
     "@tuleap/gettext": "file:../gettext",
@@ -21,8 +28,8 @@
     "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "build": "$npm_package_config_bin/vite build",
+    "watch": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.js\" --ext js --exec '$npm_package_config_bin/vite build --mode development --minify false'",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
