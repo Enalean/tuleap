@@ -28,7 +28,7 @@
 @import 'includes/swimlane-sticky-header';
 @import 'includes/button-bar';
 @import 'includes/project-header-background';
-@import '../scripts/taskboard/src/helpers/drag-and-drop/drekkenov';
+@import '~@tuleap/drag-and-drop';
 
 .header-taskboard-pinned {
     width: calc(100% - #{$sidebar-expanded-width});

@@ -37,8 +37,8 @@ import type {
     Drekkenov,
     PossibleDropCallbackParameter,
     SuccessfulDropCallbackParameter,
-} from "../../helpers/drag-and-drop/drekkenov";
-import { init } from "../../helpers/drag-and-drop/drekkenov";
+} from "@tuleap/drag-and-drop";
+import { init } from "@tuleap/drag-and-drop";
 import type { Card, ColumnDefinition, Swimlane } from "../../type";
 import {
     canMove,
