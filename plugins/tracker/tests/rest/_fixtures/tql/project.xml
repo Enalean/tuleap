@@ -279,6 +279,31 @@
               <value format="id">20</value>
             </field_change>
           </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-03-01T18:43:45+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2017-03-01T18:43:45+01:00]]></submitted_on>
+                <body format="text"><![CDATA[It's a private followup]]></body>
+                <private_ugroups>
+                  <ugroup>Contractors</ugroup>
+                </private_ugroups>
+              </comment>
+            </comments>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-04-01T18:43:45+01:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2017-04-01T18:43:45+01:00]]></submitted_on>
+                <body format="text"><![CDATA[Everybody can see it]]></body>
+              </comment>
+            </comments>
+          </changeset>
         </artifact>
         <artifact id="899">
           <changeset>
