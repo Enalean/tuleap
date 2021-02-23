@@ -41,9 +41,10 @@ class CommentFromWhereBuilder
                         AND match(TCCF_$suffix.stripped_body) against ($value IN BOOLEAN MODE)
                      )
                      INNER JOIN  tracker_changeset AS TC_$suffix  ON TC_$suffix.id = TCC_$suffix.changeset_id
+                     LEFT JOIN plugin_tracker_private_comment_permission PCP_$suffix on TCC_$suffix.id = PCP_$suffix.comment_id
                  ) ON TC_$suffix.artifact_id = artifact.id";
 
-        $where = "TCC_$suffix.changeset_id IS NOT NULL";
+        $where = "TCC_$suffix.changeset_id IS NOT NULL AND PCP_$suffix.comment_id IS NULL";
 
         return new FromWhere($from, $where);
     }
