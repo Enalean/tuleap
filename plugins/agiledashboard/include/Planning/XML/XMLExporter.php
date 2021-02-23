@@ -32,9 +32,6 @@ use SimpleXMLElement;
 class XMLExporter
 {
     public const NODE_PLANNINGS    = 'plannings';
-    public const NODE_PLANNING     = 'planning';
-    public const NODE_BACKLOGS     = 'backlogs';
-    private const NODE_BACKLOG     = 'backlog';
     private const NODE_PERMISSIONS = 'permissions';
     private const NODE_PERMISSION  = 'permission';
 
@@ -73,28 +70,23 @@ class XMLExporter
 
             $this->checkId($planning_tracker_id, PlanningParameters::PLANNING_TRACKER_ID);
 
-            $planning_node = $plannings_node->addChild(self::NODE_PLANNING);
+            $backlog_tracker_ids = [];
+            foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
+                $planning_backlog_tracker_id = $this->getFormattedTrackerId($backlog_tracker->getId());
+                $this->checkId($planning_backlog_tracker_id, XMLPlanning::NODE_BACKLOG);
+                $backlog_tracker_ids[] = $planning_backlog_tracker_id;
+            }
 
-            $planning_node->addAttribute(PlanningParameters::NAME, $planning_name);
-            $planning_node->addAttribute(PlanningParameters::PLANNING_TITLE, $planning_title);
-            $planning_node->addAttribute(PlanningParameters::PLANNING_TRACKER_ID, $planning_tracker_id);
-            $planning_node->addAttribute(PlanningParameters::BACKLOG_TITLE, $planning_backlog_title);
+            $planning_node = (new XMLPlanning(
+                $planning_name,
+                $planning_title,
+                $planning_tracker_id,
+                $planning_backlog_title,
+                $backlog_tracker_ids
+            ))
+                ->export($plannings_node);
 
-            $this->exportBacklogTrackers($planning_node, $planning);
             $this->exportPermissions($planning_node, $planning);
-        }
-    }
-
-    /**
-     * @throws AgileDashboard_XMLExporterUnableToGetValueException
-     */
-    private function exportBacklogTrackers(SimpleXMLElement $planning_node, Planning $planning)
-    {
-        $backlog_nodes = $planning_node->addChild(self::NODE_BACKLOGS);
-        foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
-            $planning_backlog_tracker_id = $this->getFormattedTrackerId($backlog_tracker->getId());
-            $this->checkId($planning_backlog_tracker_id, self::NODE_BACKLOG);
-            $backlog_nodes->addChild(self::NODE_BACKLOG, $this->getFormattedTrackerId($backlog_tracker->getId()));
         }
     }
 

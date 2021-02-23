@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
+use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
 
 /**
  * Transforms imported xml into php values
@@ -78,7 +79,7 @@ class AgileDashboard_XMLImporter
     private function toArrayBacklogIds(SimpleXMLElement $planning_node, array $tracker_mappings)
     {
         $backlog_tracker_ids = [];
-        foreach ($planning_node->{XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
+        foreach ($planning_node->{XMLPlanning::NODE_BACKLOGS}->children() as $backlog) {
             $backlog_tracker_ids[] = $this->getTrackerIdFromMappings(
                 (string) $backlog,
                 $tracker_mappings
