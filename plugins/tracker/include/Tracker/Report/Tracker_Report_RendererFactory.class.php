@@ -248,7 +248,8 @@ class Tracker_Report_RendererFactory
                 $this->getReportRendererById($id, $to_report)
                      ->duplicate(
                          $this->getReportRendererById($row['id'], $from_report),
-                         $field_mapping
+                         $field_mapping,
+                         $mapping_registry,
                      );
             }
         }

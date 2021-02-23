@@ -25,6 +25,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -1740,7 +1741,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Duplicate the renderer
      */
-    public function duplicate($from_report_id, $field_mapping)
+    public function duplicate($from_report_id, $field_mapping, MappingRegistry $mapping_registry): void
     {
         //duplicate sort
         $this->getSortDao()->duplicate($from_report_id->id, $this->id, $field_mapping);

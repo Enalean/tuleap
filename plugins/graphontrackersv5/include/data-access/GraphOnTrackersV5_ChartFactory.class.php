@@ -19,9 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\MappingRegistry;
+
 class GraphOnTrackersV5_ChartFactory
 {
     public const CHART_REMOVED = 'removed';
+    public const MAPPING_KEY   = 'plugin_graphontrackers_chart_mapping';
 
     protected $charts;
     protected $chart_factories;
@@ -311,11 +314,19 @@ class GraphOnTrackersV5_ChartFactory
     /**
      * Duplicate the charts
      */
-    public function duplicate($from_renderer, $to_renderer, $field_mapping)
+    public function duplicate($from_renderer, $to_renderer, $field_mapping, MappingRegistry $mapping_registry)
     {
         $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
         foreach ($this->getCharts($from_renderer) as $chart) {
             if ($id = $dao->duplicate($chart->getId(), $to_renderer->id)) {
+                if (! $mapping_registry->hasCustomMapping(self::MAPPING_KEY)) {
+                    $chart_mapping = new ArrayObject();
+                    $mapping_registry->setCustomMapping(self::MAPPING_KEY, $chart_mapping);
+                } else {
+                    $chart_mapping = $mapping_registry->getCustomMapping(self::MAPPING_KEY);
+                }
+                $chart_mapping[$chart->getId()] = $id;
+
                 $this->getChart($to_renderer, $id)->duplicate($chart, $field_mapping);
             }
         }

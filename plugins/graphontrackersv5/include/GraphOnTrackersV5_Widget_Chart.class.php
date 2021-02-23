@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\GraphOnTrackersV5\Widget\WidgetChartDao;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -135,13 +138,51 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $owner_type,
         MappingRegistry $mapping_registry
     ) {
-        $sql = "INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id)
-        SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, chart_id
-        FROM plugin_graphontrackersv5_widget_chart
-        WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' ";
-        $res = db_query($sql);
-        return db_insertid($res);
+        $dao = new WidgetChartDao();
+
+        if (! $mapping_registry->hasCustomMapping(GraphOnTrackersV5_ChartFactory::MAPPING_KEY)) {
+            return $dao->cloneContent(
+                (int) $this->owner_id,
+                (string) $this->owner_type,
+                (int) $owner_id,
+                (string) $owner_type
+            );
+        }
+
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
+        return $transaction_executor->execute(
+            function () use ($id, $dao, $owner_id, $owner_type, $mapping_registry): int {
+                $data = $dao->searchContent($this->owner_id, $this->owner_type, (int) $id);
+                if (! $data) {
+                    return $dao->cloneContent(
+                        $this->owner_id,
+                        $this->owner_type,
+                        (int) $owner_id,
+                        (string) $owner_type
+                    );
+                }
+
+                $item_mapping = $mapping_registry->getCustomMapping(GraphOnTrackersV5_ChartFactory::MAPPING_KEY);
+                if (! isset($item_mapping[$data['chart_id']])) {
+                    return $dao->insertContent(
+                        (int) $owner_id,
+                        (string) $owner_type,
+                        $data['title'],
+                        $data['chart_id'],
+                    );
+                }
+
+                return $dao->insertContent(
+                    (int) $owner_id,
+                    (string) $owner_type,
+                    $data['title'],
+                    $item_mapping[$data['chart_id']],
+                );
+            }
+        );
     }
+
     public function loadContent($id)
     {
         $sql = "SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
