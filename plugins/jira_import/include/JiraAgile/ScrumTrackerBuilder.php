@@ -24,16 +24,24 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\FormElement\Burnup\XML\XMLBurnupField;
 use Tuleap\AgileDashboard\Semantic\XML\XMLDoneSemantic;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Burndown\XML\XMLBurndownField;
+use Tuleap\Tracker\FormElement\Field\CrossReference\XML\XMLCrossReferenceField;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\Integer\XML\XMLIntegerField;
+use Tuleap\Tracker\FormElement\Field\LastModifiedBy\XML\XMLLastModifiedByField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateDate\XML\XMLLastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
+use Tuleap\Tracker\FormElement\Field\SubmittedBy\XML\XMLSubmittedByField;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\XML\XMLSubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
 use Tuleap\Tracker\FormElement\Field\XML\SubmitPermission;
 use Tuleap\Tracker\FormElement\Field\XML\UpdatePermission;
@@ -51,14 +59,17 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class ScrumTrackerBuilder
 {
-    public const DETAILS_RIGHT_COLUMN_NAME = 'details2';
-    public const NAME_FIELD_NAME           = 'name';
-    public const START_DATE_FIELD_NAME     = 'start_date';
-    public const END_DATE_FIELD_NAME       = 'end_date';
-    public const COMPLETED_DATE_FIELD_NAME = 'completed_date';
-    public const STATUS_FIELD_NAME         = 'status';
-    public const ARTIFACT_LINK_FIELD_NAME  = 'links';
-    private const CAPACITY_FIELD_NAME      = 'capacity';
+    public const DETAILS_RIGHT_COLUMN_NAME    = 'details2';
+    public const NAME_FIELD_NAME              = 'name';
+    public const START_DATE_FIELD_NAME        = 'start_date';
+    public const END_DATE_FIELD_NAME          = 'end_date';
+    public const COMPLETED_DATE_FIELD_NAME    = 'completed_date';
+    public const STATUS_FIELD_NAME            = 'status';
+    public const ARTIFACT_LINK_FIELD_NAME     = 'links';
+    private const CAPACITY_FIELD_NAME         = 'capacity';
+    private const CROSS_REFERENCES_FIELD_NAME = 'references';
+    private const BURNDOWN_FIELD_NAME         = 'burndown';
+    private const BURNUP_FIELD_NAME           = 'burnup';
 
     /**
      * @var EventDispatcherInterface
@@ -72,10 +83,13 @@ final class ScrumTrackerBuilder
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
-        $default_permissions = [
+        $default_permissions   = [
             new ReadPermission('UGROUP_ANONYMOUS'),
             new SubmitPermission('UGROUP_REGISTERED'),
             new UpdatePermission('UGROUP_PROJECT_MEMBERS'),
+        ];
+        $read_only_permissions = [
+            new ReadPermission('UGROUP_ANONYMOUS'),
         ];
 
         $tracker = (new XMLTracker($id_generator, 'sprint'))
@@ -127,12 +141,57 @@ final class ScrumTrackerBuilder
                             ),
                     ),
                 (new XMLFieldset($id_generator, 'links_fieldset'))
-                ->withLabel('Links')
-                ->withFormElements(
-                    (new XMLArtifactLinkField($id_generator, self::ARTIFACT_LINK_FIELD_NAME))
-                    ->withLabel('Links')
-                    ->withPermissions(...$default_permissions)
-                )
+                    ->withLabel('Content')
+                    ->withFormElements(
+                        (new XMLArtifactLinkField($id_generator, self::ARTIFACT_LINK_FIELD_NAME))
+                            ->withRank(1)
+                            ->withLabel('Links')
+                            ->withPermissions(...$default_permissions),
+                        (new XMLCrossReferenceField($id_generator, self::CROSS_REFERENCES_FIELD_NAME))
+                            ->withRank(2)
+                            ->withLabel('References')
+                            ->withPermissions(...$default_permissions),
+                        (new XMLBurndownField($id_generator, self::BURNDOWN_FIELD_NAME))
+                            ->withRank(3)
+                            ->withLabel('Burndown')
+                            ->withPermissions(...$default_permissions),
+                        (new XMLBurnupField($id_generator, self::BURNUP_FIELD_NAME))
+                            ->withRank(4)
+                            ->withLabel('Burnup')
+                            ->withPermissions(...$default_permissions),
+                    ),
+                (new XMLFieldset($id_generator, 'access_information'))
+                    ->withLabel('Access Information')
+                    ->withFormElements(
+                        (new XMLColumn($id_generator, 'access_information_left_column'))
+                            ->withRank(1)
+                            ->withFormElements(
+                                (new XMLArtifactIdField($id_generator, 'artifact_id'))
+                                    ->withRank(1)
+                                    ->withLabel('Artifact ID')
+                                    ->withPermissions(...$read_only_permissions),
+                                (new XMLSubmittedOnField($id_generator, 'submitted_on'))
+                                    ->withRank(2)
+                                    ->withLabel('Submitted on')
+                                    ->withPermissions(...$read_only_permissions),
+                                (new XMLSubmittedByField($id_generator, 'submitted_by'))
+                                    ->withRank(3)
+                                    ->withLabel('Submitted by')
+                                    ->withPermissions(...$read_only_permissions),
+                            ),
+                        (new XMLColumn($id_generator, 'access_information_right_column'))
+                            ->withRank(2)
+                            ->withFormElements(
+                                (new XMLLastUpdateDateField($id_generator, 'last_update_date'))
+                                    ->withRank(1)
+                                    ->withLabel('Last update date')
+                                    ->withPermissions(...$read_only_permissions),
+                                (new XMLLastModifiedByField($id_generator, 'last_updated_by'))
+                                    ->withRank(2)
+                                    ->withLabel('Last updated by')
+                                    ->withPermissions(...$read_only_permissions),
+                            ),
+                    ),
             )
             ->withSemantics(
                 new XMLTitleSemantic(
