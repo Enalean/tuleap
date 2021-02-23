@@ -46,7 +46,7 @@
     "@shopify/jest-dom-mocks": "^2.10.0",
     "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
-    "@types/d3-scale": "^3.2.1",
+    "@types/d3-scale": "^3.2.2",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.0.0",
     "@types/dompurify": "^2.0.4",

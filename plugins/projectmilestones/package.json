@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
-    "d3-array": "^2.9.1",
+    "d3-array": "^2.11.0",
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.0.0",
     "sprintf-js": "^1.1.2",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
-    "@types/d3-array": "^2.8.0",
+    "@types/d3-array": "^2.9.0",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.0.0",
     "@types/sprintf-js": "^1.1.2",
