@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-class MappingRegistry
+final class MappingRegistry
 {
     /**
      * @var array
@@ -30,7 +30,7 @@ class MappingRegistry
     private $ugroup_mapping;
 
     /**
-     * @var array<string, array>
+     * @var array<string, array|\ArrayObject>
      */
     private $custom_mappings;
 
@@ -44,7 +44,10 @@ class MappingRegistry
         return $this->ugroup_mapping;
     }
 
-    public function setCustomMapping(string $key, array $mapping): void
+    /**
+     * @param array|\ArrayObject $mapping
+     */
+    public function setCustomMapping(string $key, $mapping): void
     {
         $this->custom_mappings[$key] = $mapping;
     }
@@ -54,7 +57,10 @@ class MappingRegistry
         return isset($this->custom_mappings[$key]);
     }
 
-    public function getCustomMapping(string $key): array
+    /**
+     * @return array|\ArrayObject
+     */
+    public function getCustomMapping(string $key)
     {
         if (! $this->hasCustomMapping($key)) {
             throw new \RuntimeException('Unable to find mapping ' . $key);

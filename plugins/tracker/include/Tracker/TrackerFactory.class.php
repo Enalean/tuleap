@@ -19,6 +19,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Creation\PostCreationProcessor;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -369,7 +370,7 @@ class TrackerFactory
      * @return mixed array(Tracker object, field_mapping array)
      * @throws TrackerIsInvalidException
      */
-    public function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, ?string $color, $ugroup_mapping = false)
+    public function create($project_id, MappingRegistry $mapping_registry, $id_template, $name, $description, $itemname, ?string $color, $ugroup_mapping = false)
     {
         $this->getTrackerChecker()->checkAtProjectCreation((int) $project_id, $name, $itemname);
         $template_tracker = $this->getTrackerChecker()->checkAndRetrieveTrackerTemplate((int) $id_template);
@@ -416,7 +417,12 @@ class TrackerFactory
             }
         }
         // Duplicate Reports
-        $report_mapping = Tracker_ReportFactory::instance()->duplicate($id_template, $id, $field_mapping);
+        $report_mapping = Tracker_ReportFactory::instance()->duplicate(
+            $id_template,
+            $id,
+            $field_mapping,
+            $mapping_registry
+        );
 
         // Duplicate Semantics
         Tracker_SemanticFactory::instance()->duplicate($id_template, $id, $field_mapping);
@@ -510,10 +516,9 @@ class TrackerFactory
      *
      * @param int $from_project_id
      * @param int $to_project_id
-     * @param array $ugroup_mapping the ugroup mapping
      *
      */
-    public function duplicate($from_project_id, $to_project_id, $ugroup_mapping)
+    public function duplicate($from_project_id, $to_project_id, MappingRegistry $mapping_registry)
     {
         $tracker_mapping        = [];
         $field_mapping          = [];
@@ -532,9 +537,9 @@ class TrackerFactory
                     $field_mapping,
                     $report_mapping,
                     $tracker,
-                    $from_project_id,
+                    $mapping_registry,
                     $to_project_id,
-                    $ugroup_mapping
+                    $mapping_registry->getUgroupMapping()
                 );
                 /*
                  * @todo
@@ -559,7 +564,7 @@ class TrackerFactory
             'field_mapping'     => $field_mapping,
             'report_mapping'    => $report_mapping,
             'group_id'          => $to_project_id,
-            'ugroups_mapping'   => $ugroup_mapping,
+            'ugroups_mapping'   => $mapping_registry->getUgroupMapping(),
             'source_project_id' => $from_project_id
         ]);
     }
@@ -595,13 +600,13 @@ class TrackerFactory
         array $field_mapping,
         array $report_mapping,
         Tracker $tracker,
-        $from_project_id,
+        MappingRegistry $mapping_registry,
         $to_project_id,
         $ugroup_mapping
     ) {
         $tracker_and_field_and_report_mapping = $this->create(
             $to_project_id,
-            $from_project_id,
+            $mapping_registry,
             $tracker->getId(),
             $tracker->getName(),
             $tracker->getDescription(),

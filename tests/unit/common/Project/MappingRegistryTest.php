@@ -57,4 +57,13 @@ class MappingRegistryTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $registry->getCustomMapping('whatever');
     }
+
+    public function testCustomMappingAsArrayObject(): void
+    {
+        $registry = new MappingRegistry([1 => 2]);
+        $registry->setCustomMapping('whatever', new \ArrayObject([3 => 4]));
+        $registry->getCustomMapping('whatever')[5] = 6;
+
+        self::assertEquals([3 => 4, 5 => 6], $registry->getCustomMapping('whatever')->getArrayCopy());
+    }
 }

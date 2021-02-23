@@ -21,6 +21,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Project\MappingRegistry;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerFactoryDuplicationTest extends TestCase
@@ -57,17 +58,24 @@ class TrackerFactoryDuplicationTest extends TestCase
 
         $t_new = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(555)->getMock();
 
-        $this->tracker_factory->shouldReceive('create')->with(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null)->once()->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
+        $mapping_registry = new MappingRegistry([]);
+        $this->tracker_factory
+            ->shouldReceive('create')
+            ->with(999, $mapping_registry, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', [])
+            ->once()
+            ->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
         $this->hierarchy_factory->shouldReceive('duplicate')->once();
 
-        $this->tracker_factory->duplicate(100, 999, null);
+        $this->tracker_factory->duplicate(100, 999, $mapping_registry);
     }
 
     public function testDuplicateDuplicatesSharedFields(): void
     {
         $t1 = $this->givenADuplicatableTracker(123);
         $t2 = $this->givenADuplicatableTracker(567);
+
+        $mapping_registry = new MappingRegistry([]);
 
         $trackers = [$t1, $t2];
         $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(100)->andReturns($trackers);
@@ -86,19 +94,47 @@ class TrackerFactoryDuplicationTest extends TestCase
         $full_field_mapping   = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
         $to_project_id        = 999;
         $from_project_id      = 100;
-        $this->tracker_factory->shouldReceive('create')->with($to_project_id, $from_project_id, 123, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), null)->andReturns([
-            'tracker' => $t_new1,
-            'field_mapping' => $t_new1_field_mapping,
-            'report_mapping' => []
-        ]);
-        $this->tracker_factory->shouldReceive('create')->with($to_project_id, $from_project_id, 567, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), null)->andReturns([
-            'tracker' => $t_new2,
-            'field_mapping' => $t_new2_field_mapping,
-            'report_mapping' => []
-        ]);
+        $this->tracker_factory
+            ->shouldReceive('create')
+            ->with(
+                $to_project_id,
+                $mapping_registry,
+                123,
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+                []
+            )
+            ->andReturns(
+                [
+                    'tracker'        => $t_new1,
+                    'field_mapping'  => $t_new1_field_mapping,
+                    'report_mapping' => []
+                ]
+            );
+        $this->tracker_factory
+            ->shouldReceive('create')
+            ->with(
+                $to_project_id,
+                $mapping_registry,
+                567,
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any(),
+                []
+            )
+            ->andReturns(
+                [
+                    'tracker'        => $t_new2,
+                    'field_mapping'  => $t_new2_field_mapping,
+                    'report_mapping' => []
+                ]
+            );
 
         $this->formelement_factory->shouldReceive('fixOriginalFieldIdsAfterDuplication')->with($to_project_id, $from_project_id, $full_field_mapping)->once();
-        $this->tracker_factory->duplicate($from_project_id, $to_project_id, []);
+        $this->tracker_factory->duplicate($from_project_id, $to_project_id, $mapping_registry);
     }
 
     public function testDuplicateIgnoresNonDuplicatableTrackers(): void
@@ -111,7 +147,7 @@ class TrackerFactoryDuplicationTest extends TestCase
 
         $this->tracker_factory->shouldReceive('create')->never();
 
-        $this->tracker_factory->duplicate(100, 999, null);
+        $this->tracker_factory->duplicate(100, 999, new MappingRegistry([]));
     }
 
     private function givenADuplicatableTracker($tracker_id): Tracker
@@ -130,15 +166,21 @@ class TrackerFactoryDuplicationTest extends TestCase
         $t1->shouldReceive('getDescription')->andReturns('Bug Tracker');
         $t1->shouldReceive('getItemname')->andReturns('bug');
 
+        $mapping_registry = new MappingRegistry([]);
+
         $trackers = [$t1];
         $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(100)->andReturns($trackers);
 
         $t_new = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(555)->getMock();
 
-        $this->tracker_factory->shouldReceive('create')->with(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null)->once()->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
+        $this->tracker_factory
+            ->shouldReceive('create')
+            ->with(999, $mapping_registry, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', [])
+            ->once()
+            ->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
         $this->trigger_rules_manager->shouldReceive('duplicate')->once();
 
-        $this->tracker_factory->duplicate(100, 999, null);
+        $this->tracker_factory->duplicate(100, 999, $mapping_registry);
     }
 }

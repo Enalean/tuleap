@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\MappingRegistry;
+
 class ServiceTracker extends Service
 {
 
@@ -59,7 +61,7 @@ class ServiceTracker extends Service
     public function duplicate(int $to_project_id, array $ugroup_mapping): void
     {
         $tracker_manager = $this->getTrackerManager();
-        $tracker_manager->duplicate($this->project->getId(), $to_project_id, $ugroup_mapping);
+        $tracker_manager->duplicate($this->project->getId(), $to_project_id, new MappingRegistry($ugroup_mapping));
     }
 
     /**

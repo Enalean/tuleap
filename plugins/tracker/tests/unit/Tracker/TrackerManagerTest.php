@@ -23,6 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -238,6 +239,6 @@ class TrackerManagerTest extends TestCase
 
         $rm->shouldReceive('createReference')->with($r2)->once();
 
-        $tm->duplicate($source_project_id, $destinatnion_project_id, $u_group_mapping);
+        $tm->duplicate($source_project_id, $destinatnion_project_id, new MappingRegistry($u_group_mapping));
     }
 }

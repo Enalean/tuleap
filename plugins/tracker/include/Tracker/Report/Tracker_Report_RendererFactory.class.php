@@ -19,11 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 class Tracker_Report_RendererFactory
 {
-
+    public const MAPPING_KEY = 'plugin_tracker_renderer';
 
     /**
      * A protected constructor; prevents direct creation of object
@@ -221,10 +222,18 @@ class Tracker_Report_RendererFactory
     }
 
 
-    public function duplicate($from_report, $to_report, $field_mapping)
+    public function duplicate($from_report, $to_report, $field_mapping, MappingRegistry $mapping_registry)
     {
         foreach ($this->getDao()->searchByReportId($from_report->id) as $row) {
             if ($id = $this->getDao()->duplicate($row['id'], $to_report->id)) {
+                if (! $mapping_registry->hasCustomMapping(self::MAPPING_KEY)) {
+                    $renderer_mapping = new ArrayObject();
+                    $mapping_registry->setCustomMapping(self::MAPPING_KEY, $renderer_mapping);
+                } else {
+                    $renderer_mapping = $mapping_registry->getCustomMapping(self::MAPPING_KEY);
+                }
+                $renderer_mapping[$row['id']] = $id;
+
                 switch ($row['renderer_type']) {
                     case Tracker_Report_Renderer::TABLE:
                         $this->getTableDao()->duplicate($row['id'], $id);
