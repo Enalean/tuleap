@@ -36,46 +36,46 @@ class PermissionChecker
         $this->enabled_dao = $enabled_dao;
     }
 
-    public function userCanSeeComment(
+    public function isPrivateCommentForUser(
         \PFUser $user,
         Tracker_Artifact_Changeset_Comment $comment
     ): bool {
         if (! $this->enabled_dao->isTrackerEnabledPrivateComment($comment->getChangeset()->getTracker()->getId())) {
-            return true;
+            return false;
         }
 
         if ($user->isSuperUser()) {
-            return true;
+            return false;
         }
 
         $tracker    = $comment->getChangeset()->getTracker();
         $project_id = (int) $tracker->getGroupId();
 
         if ($user->isAdmin($project_id)) {
-            return true;
+            return false;
         }
 
         if ($tracker->userIsAdmin($user)) {
-            return true;
+            return false;
         }
 
         $ugroups = $comment->getUgroupsCanSeePrivateComment();
 
         if ($ugroups === null) {
-            return true;
+            return false;
         }
 
         if (count($ugroups) === 0) {
-            return false;
+            return true;
         }
 
         foreach ($ugroups as $ugroup) {
             if ($user->isMemberOfUGroup($ugroup->getId(), $project_id)) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
