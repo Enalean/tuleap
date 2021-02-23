@@ -129,7 +129,7 @@ class XMLExporterTest extends TestCase
 
         foreach ($this->agiledasboard_node->plannings->children() as $planning) {
             $this->assertCount(1, $planning->children());
-            $this->assertEquals(XMLExporter::NODE_PLANNING, $planning->getName());
+            $this->assertEquals(XMLPlanning::NODE_PLANNING, $planning->getName());
         }
     }
 
@@ -153,7 +153,7 @@ class XMLExporterTest extends TestCase
                 $expected_planning_tracker_id,
                 (string) $attributes[PlanningParameters::PLANNING_TRACKER_ID]
             );
-            foreach ($planning->{XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
+            foreach ($planning->{XMLPlanning::NODE_BACKLOGS}->children() as $backlog) {
                 $this->assertEquals($expected_backlog_tracker_id, (string) $backlog);
             }
         }
