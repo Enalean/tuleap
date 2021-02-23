@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "vite";
+import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import * as path from "path";
 
 export default defineConfig({
     build: {
-        brotliSize: false,
         lib: {
             entry: path.resolve(__dirname, "src/escaper.js"),
             name: "tuleap.escaper",

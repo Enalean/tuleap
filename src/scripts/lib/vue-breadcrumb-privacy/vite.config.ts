@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "vite";
+import { defineConfig } from "../../../../tools/utils/scripts/vite-configurator";
 import { createVuePlugin } from "vite-plugin-vue2";
 import * as path from "path";
 
 export default defineConfig({
     plugins: [createVuePlugin()],
     build: {
-        brotliSize: false,
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "BreadcrumbPrivacy",
