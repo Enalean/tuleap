@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2014. All Rights Reserved.
+// Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
 // This file is part of Tuleap
 //
 // Codendi

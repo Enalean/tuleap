@@ -2,7 +2,7 @@
  * The MIT License
  *
  * Copyright (c) 2013 Brian Matthews
- * Copyright (c) 2015 Enalean
+ * Copyright (c) Enalean 2015 - Present
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

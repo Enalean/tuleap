@@ -1,6 +1,6 @@
 // lightwindow.js v2.0
 //
-// Copyright (c) 2007 stickmanlabs, Enalean (c) 2013
+// Copyright (c) 2007 stickmanlabs, Enalean (c) 2013 - Present
 // Author: Kevin P Miller | http://www.stickmanlabs.com
 // Contributors: Enalean
 //

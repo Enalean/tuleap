@@ -1,6 +1,6 @@
 #!/usr/bin/perl -UT
 
-# Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+# Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #

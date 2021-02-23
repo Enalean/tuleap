@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017-2019. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  *

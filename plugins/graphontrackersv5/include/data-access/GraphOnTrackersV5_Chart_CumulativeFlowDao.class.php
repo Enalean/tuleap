@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Originally written by Yoann CELTON, 2013. Jtekt Europe SAS.
  *

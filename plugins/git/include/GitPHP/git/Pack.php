@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  * Copyright (c) 2011 Christopher Han <xiphux@gmail.com>
  *
  * Based on code from Glip by Patrik Fimml

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 # Tuleap
-# Copyright (c) Enalean, 2018. All Rights Reserved.
+# Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #

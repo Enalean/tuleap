@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright 2007, STMicroelectronics
  *
  * Originally written by Sabri LABBENE <sabri.labbene@st.com>

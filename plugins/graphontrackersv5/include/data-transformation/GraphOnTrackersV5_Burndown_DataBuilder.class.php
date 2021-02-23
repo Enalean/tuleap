@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  * Copyright (c) Xerox, 2008. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2008. Xerox Codendi Team.

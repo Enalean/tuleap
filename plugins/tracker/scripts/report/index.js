@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Enalean. All rights reserved
+ * Copyright (c) Enalean 2017 - Presentplugins/tracker/tests/unit/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactoryTest.php. All rights reserved
  *
  * This file is a part of Tuleap.
  *

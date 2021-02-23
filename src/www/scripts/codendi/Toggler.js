@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2011. All rights reserved
- * Copyright (c) Enalean SAS, 2011-2015. All rights reserved
+ * Copyright (c) Enalean SAS, 2011 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
