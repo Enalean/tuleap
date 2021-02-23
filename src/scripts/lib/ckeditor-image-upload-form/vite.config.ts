@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+import {
+    createPOGettextPlugin,
+    defineConfig,
+} from "../../../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+export default defineConfig({
+    plugins: [createPOGettextPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.js"),
+            name: "TuleapCkeditorImageUploadForm",
+        },
+    },
+});
