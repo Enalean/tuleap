@@ -22,7 +22,6 @@ const base_config = require("../../../../tests/jest/jest.base.config.js");
 module.exports = {
     ...base_config,
     displayName: "tracker/artifact-modal",
-    setupFiles: ["./tests/jest.setup.js"],
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",

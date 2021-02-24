@@ -94,7 +94,10 @@ import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
 import { mapState } from "vuex";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { getUploadImageOptions, UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
+import {
+    getUploadImageOptions,
+    UploadImageFormFactory,
+} from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
 
 export default {

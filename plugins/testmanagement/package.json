@@ -7,12 +7,12 @@
   "dependencies": {
     "@tuleap/angular-tlp": "file://../../src/scripts/lib/angular-tlp",
     "@tuleap/ckeditor-image-upload": "file://../../src/scripts/lib/ckeditor-image-upload",
-    "@tuleap/ckeditor-image-upload-form": "file:../../src/scripts/lib/ckeditor-image-upload-form",
     "@tuleap/core": "file://../../src",
     "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
     "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
     "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
     "@tuleap/plugin-tracker": "file://../tracker",
+    "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "file:../tracker/scripts/lib/artifact-ckeditor-image-upload",
     "@tuleap/plugin-tracker-rich-text-editor": "file:../tracker/scripts/lib/rich-text-editor",
     "@types/unist": "^2.0.3",
     "angular": "^1.8.2",

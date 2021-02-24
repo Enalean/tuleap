@@ -1,0 +1,34 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-artifact-ckeditor-image-upload",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/plugin-tracker-artifact-ckeditor-image-upload.es.js",
+  "main": "dist/plugin-tracker-artifact-ckeditor-image-upload.umd.js",
+  "types": "src/definitions.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-tracker-artifact-ckeditor-image-upload.es.js",
+      "require": "./dist/plugin-tracker-artifact-ckeditor-image-upload.umd.js"
+    }
+  },
+  "dependencies": {
+    "@tuleap/ckeditor-image-upload": "file:../../../../../src/scripts/lib/ckeditor-image-upload",
+    "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
+    "css.escape": "^1.5.1",
+    "pretty-kibibytes": "^4.0.4",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/vite build",
+    "watch": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.js\" --ext js --exec '$npm_package_config_bin/vite build --mode development --minify false'",
+    "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+  }
+}

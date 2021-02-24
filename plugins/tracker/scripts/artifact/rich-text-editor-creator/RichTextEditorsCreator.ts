@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
-import { getUploadImageOptions } from "@tuleap/ckeditor-image-upload-form";
+import type { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
+import { getUploadImageOptions } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import type {
     RichTextEditorFactory,
     RichTextEditorOptions,

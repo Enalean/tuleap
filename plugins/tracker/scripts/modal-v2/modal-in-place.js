@@ -23,7 +23,7 @@ import codendi from "codendi";
 import { initMentions } from "@tuleap/mention";
 
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
+import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { RichTextEditorsCreator } from "../artifact/rich-text-editor-creator/RichTextEditorsCreator";
 
 var tuleap = window.tuleap || {};
