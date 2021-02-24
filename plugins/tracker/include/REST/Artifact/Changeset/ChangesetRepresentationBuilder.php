@@ -163,7 +163,7 @@ class ChangesetRepresentationBuilder
             return new \Tracker_Artifact_Changeset_CommentNull($changeset);
         }
 
-        if (! $this->comment_permission_checker->userCanSeeComment($user, $comment)) {
+        if ($this->comment_permission_checker->isPrivateCommentForUser($user, $comment)) {
             return new \Tracker_Artifact_Changeset_CommentNull($changeset);
         }
 

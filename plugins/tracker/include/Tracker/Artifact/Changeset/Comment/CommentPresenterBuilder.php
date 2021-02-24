@@ -48,7 +48,7 @@ class CommentPresenterBuilder
             return null;
         }
 
-        if (! $this->permission_checker->userCanSeeComment($user, $comment)) {
+        if ($this->permission_checker->isPrivateCommentForUser($user, $comment)) {
             return null;
         }
 

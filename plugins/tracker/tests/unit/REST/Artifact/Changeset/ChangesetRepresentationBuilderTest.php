@@ -69,8 +69,8 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         );
 
         $this->comment_permission_checker
-            ->shouldReceive('userCanSeeComment')
-            ->andReturnTrue()
+            ->shouldReceive('isPrivateCommentForUser')
+            ->andReturnFalse()
             ->byDefault();
 
         $this->comment_permission_checker
@@ -228,9 +228,9 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->never();
 
         $this->comment_permission_checker
-            ->shouldReceive('userCanSeeComment')
+            ->shouldReceive('isPrivateCommentForUser')
             ->once()
-            ->andReturnFalse();
+            ->andReturnTrue();
 
         $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_COMMENTS, $user);
 
@@ -247,9 +247,9 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->andReturn([]);
 
         $this->comment_permission_checker
-            ->shouldReceive('userCanSeeComment')
+            ->shouldReceive('isPrivateCommentForUser')
             ->once()
-            ->andReturnFalse();
+            ->andReturnTrue();
 
         $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
 

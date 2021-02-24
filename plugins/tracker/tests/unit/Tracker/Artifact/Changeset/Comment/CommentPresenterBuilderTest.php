@@ -84,20 +84,20 @@ class CommentPresenterBuilderTest extends TestCase
 
     public function testGetNullIfUserCanNotSeeComment(): void
     {
-        $this->permission_checker->shouldReceive('userCanSeeComment')
+        $this->permission_checker->shouldReceive('isPrivateCommentForUser')
             ->with($this->user, $this->comment)
             ->once()
-            ->andReturnFalse();
+            ->andReturnTrue();
         $presenter = $this->builder->getCommentPresenter($this->comment, $this->user);
         $this->assertNull($presenter);
     }
 
     public function testGetCommentPresenterIfUserCanSeeCommentAndItIsNotEmpty(): void
     {
-        $this->permission_checker->shouldReceive('userCanSeeComment')
+        $this->permission_checker->shouldReceive('isPrivateCommentForUser')
             ->with($this->user, $this->comment)
             ->once()
-            ->andReturnTrue();
+            ->andReturnFalse();
         $presenter = $this->builder->getCommentPresenter($this->comment, $this->user);
         $this->assertInstanceOf(CommentPresenter::class, $presenter);
     }

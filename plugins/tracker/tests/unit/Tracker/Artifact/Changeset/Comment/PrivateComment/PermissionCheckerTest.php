@@ -79,7 +79,7 @@ class PermissionCheckerTest extends TestCase
         $this->checker = new PermissionChecker($this->enabled_dao);
     }
 
-    public function testReturnsTrueIfTrackerDoesNotUsePrivateComment(): void
+    public function testReturnsFalseIfTrackerDoesNotUsePrivateComment(): void
     {
         $this->enabled_dao
             ->shouldReceive('isTrackerEnabledPrivateComment')
@@ -87,32 +87,32 @@ class PermissionCheckerTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
-    public function testReturnsTrueIfUserIsSiteAdmin(): void
+    public function testReturnsFalseIfUserIsSiteAdmin(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnTrue();
-        $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
-    public function testReturnsTrueIfUserIsProjectAdmin(): void
+    public function testReturnsFalseIfUserIsProjectAdmin(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnTrue();
 
-        $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
-    public function testReturnsTrueIfUserIsTrackerAdmin(): void
+    public function testReturnsFalseIfUserIsTrackerAdmin(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true)->once();
-        $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
-    public function testReturnsTrueIfUserIsMemberOfStaticUgroupAndNotAdmin(): void
+    public function testReturnsFalseIfUserIsMemberOfStaticUgroupAndNotAdmin(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
@@ -126,20 +126,20 @@ class PermissionCheckerTest extends TestCase
         $this->user->shouldReceive('isMemberOfUGroup')->with(1, 101)->andReturnFalse();
         $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnTrue();
 
-        $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
-    public function testReturnsFalseIfThereAreNoUGroupsButCommentIsPrivate(): void
+    public function testReturnsTrueIfThereAreNoUGroupsButCommentIsPrivate(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
 
         $this->user->shouldReceive('isMemberOfUGroup')->never();
 
-        $this->assertFalse($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertTrue($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
-    public function testReturnsTrueIfPrivateCommentIsNull(): void
+    public function testReturnsFalseIfPrivateCommentIsNull(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
@@ -148,10 +148,10 @@ class PermissionCheckerTest extends TestCase
 
         $this->comment = $this->buildComment(null);
 
-        $this->assertTrue($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
-    public function testReturnsFalseIfUserIsNotMemberOfStaticUgroupAndNotAdmin(): void
+    public function testReturnsTrueIfUserIsNotMemberOfStaticUgroupAndNotAdmin(): void
     {
         $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
         $this->user->shouldReceive('isAdmin')->with(101)->once()->andReturnFalse();
@@ -166,7 +166,7 @@ class PermissionCheckerTest extends TestCase
         $this->user->shouldReceive('isMemberOfUGroup')->with(2, 101)->andReturnFalse();
         $this->user->shouldReceive('isMemberOfUGroup')->with(3, 101)->andReturnFalse();
 
-        $this->assertFalse($this->checker->userCanSeeComment($this->user, $this->comment));
+        $this->assertTrue($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testGetAllUGroupsIfUserIsSiteAdmin(): void
