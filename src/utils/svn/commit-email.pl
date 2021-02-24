@@ -7,7 +7,7 @@
 # For usage, see the usage subroutine or run the script with no
 # command line arguments.
 #
-# Copyright Enalean (c) 2015-2018. All rights reserved.
+# Copyright Enalean (c) 2015 - Present. All rights reserved.
 #
 # $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
 # $LastChangedDate: 2012-03-23 08:59:24 +0000 (Fri, 23 Mar 2012) $

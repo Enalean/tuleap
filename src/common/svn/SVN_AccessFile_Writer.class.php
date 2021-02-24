@@ -1,7 +1,7 @@
 <?php
 // vim: sts=4:sw=4:et
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *

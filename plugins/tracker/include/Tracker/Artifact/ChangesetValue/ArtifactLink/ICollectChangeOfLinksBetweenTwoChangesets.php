@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) Enalean SAS, 2016 - 2017. All Rights Reserved.
+ * Copyright (C) Enalean SAS, 2016 - Present. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

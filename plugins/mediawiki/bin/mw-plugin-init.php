@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  * Copyright (C) 2010  Olaf Lenz
  *
  * This file is part of Tuleap.

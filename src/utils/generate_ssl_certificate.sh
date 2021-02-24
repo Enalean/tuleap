@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # This file is part of Tuleap
-# Copyright (c) Enalean, 2015. All rights reserved
+# Copyright (c) Enalean, 2015 - Present. All rights reserved
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #

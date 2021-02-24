@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) France Telecom, 2012. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * Tuleap is free software; you can redistribute it and/or modify

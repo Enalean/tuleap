@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2010 Roland Mas, Olaf Lenz
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is part of Tuleap.
  *

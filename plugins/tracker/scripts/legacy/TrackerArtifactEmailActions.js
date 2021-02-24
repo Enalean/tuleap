@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2011 — 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *

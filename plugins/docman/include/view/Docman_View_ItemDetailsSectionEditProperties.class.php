@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006

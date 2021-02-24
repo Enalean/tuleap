@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - presnet. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
