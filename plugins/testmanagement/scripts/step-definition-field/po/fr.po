@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
+msgid "...to Get"
+msgstr "...pour Voir"
+
 msgid "Add step"
 msgstr "Ajouter une étape"
 
@@ -21,8 +24,14 @@ msgstr "Supprimer"
 msgid "Expected results"
 msgstr "Résultats attendus"
 
+msgid "For your information..."
+msgstr "Pour votre information..."
+
 msgid "Format:"
 msgstr "Format :"
+
+msgid "Help"
+msgstr "Aide"
 
 msgid "Reorder steps"
 msgstr "Réordonner les étapes"
@@ -32,6 +41,9 @@ msgstr "Arrêter de réordonner les étapes"
 
 msgid "There isn't any step defined yet. Start by adding one."
 msgstr "Aucune étape n'est définie. Commencez par en ajouter une."
+
+msgid "Type..."
+msgstr "Ecrivez..."
 
 msgid "Undo deletion"
 msgstr "Annuler la suppression"
