@@ -32,13 +32,13 @@ class ArtifactsLinkedToParentDao extends DataAccessObject
     public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array
     {
         $sql = "SELECT linked_art.id
-                FROM tracker_artifact parent_art
+                FROM tracker_artifact AS parent_art
                          INNER JOIN tracker_field                           AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                          INNER JOIN tracker_changeset_value                 AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                          INNER JOIN tracker_changeset_value_artifactlink    AS artlink    ON (artlink.changeset_value_id = cv.id)
                          INNER JOIN tracker_artifact                        AS linked_art ON (linked_art.id = artlink.artifact_id)
                          INNER JOIN tracker                                 AS t          ON (t.id = linked_art.tracker_id)
-                         INNER JOIN plugin_program_management_plan          AS plan       ON t.id = plan.plannable_tracker_id
+                         INNER JOIN plugin_program_management_plan          AS plan       ON parent_art.tracker_id = plan.plannable_tracker_id
                 WHERE parent_art.id  = ?
                   AND t.deletion_date IS NULL
                   AND plan.program_increment_tracker_id = ?";
