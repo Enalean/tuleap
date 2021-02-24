@@ -178,7 +178,7 @@ final class CreateProjectFromJira
         string $fullname,
         string $jira_epic_issue_type
     ): \SimpleXMLElement {
-        $jira_issue_types = $this->jira_tracker_builder->build($jira_client, $jira_project);
+        $jira_issue_types = $this->jira_tracker_builder->buildFromProjectKey($jira_client, $jira_project);
         if (count($jira_issue_types) === 0) {
             throw new \RuntimeException("There are no Jira issue types to import");
         }
@@ -255,7 +255,7 @@ final class CreateProjectFromJira
                 $tracker_xml,
                 $jira_credentials->getJiraUrl(),
                 $jira_project,
-                $jira_issue_type->getId(),
+                $jira_issue_type,
                 $field_id_generator
             );
         }

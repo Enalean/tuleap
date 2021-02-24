@@ -34,7 +34,6 @@ use TrackerFactory;
 use TrackerFromXmlException;
 use TrackerFromXmlImportCannotBeCreatedException;
 use TrackerXmlImport;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
@@ -137,9 +136,8 @@ class FromJiraTrackerCreator
         string $itemname,
         string $description,
         string $color,
-        ConcealedString $jira_token,
-        string $jira_username,
-        string $jira_url,
+        JiraCredentials $jira_credentials,
+        JiraClient $jira_client,
         string $jira_project_id,
         string $jira_issue_type_id,
         \PFUser $user
@@ -150,13 +148,19 @@ class FromJiraTrackerCreator
 
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
 
-        $jira_credentials = new JiraCredentials($jira_url, $jira_username, $jira_token);
-        $jira_exporter    = $this->getJiraExporter($jira_credentials);
+        $jira_exporter = $this->getJiraExporter($jira_credentials);
 
         $platform_configuration_collection = $this->platform_configuration_retriever->getJiraPlatformConfiguration(
-            ClientWrapper::build($jira_credentials),
+            $jira_client,
             $this->logger
         );
+
+        $jira_tracker_builder = new JiraTrackerBuilder();
+        $issue_type           = $jira_tracker_builder->buildFromIssueTypeId($jira_client, $jira_issue_type_id);
+        if (! $issue_type) {
+            $this->logger->error('Cannot get issue type ' . $jira_issue_type_id);
+            throw new TrackerCreationHasFailedException('Cannot get issue type ' . $jira_issue_type_id);
+        }
 
         $tracker_for_export = (new XMLTracker('T200', $itemname))
             ->withName($name)
@@ -170,9 +174,9 @@ class FromJiraTrackerCreator
         $jira_exporter->exportJiraToXml(
             $platform_configuration_collection,
             $tracker_xml,
-            $jira_url,
+            $jira_credentials->getJiraUrl(),
             $jira_project_id,
-            $jira_issue_type_id,
+            $issue_type,
             new FieldAndValueIDGenerator()
         );
 

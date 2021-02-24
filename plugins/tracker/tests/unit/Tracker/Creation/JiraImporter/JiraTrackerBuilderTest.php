@@ -25,6 +25,9 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertFalse;
+use function PHPUnit\Framework\assertNull;
 
 final class JiraTrackerBuilderTest extends TestCase
 {
@@ -45,7 +48,7 @@ final class JiraTrackerBuilderTest extends TestCase
 
         $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . $project_key)->andReturn($project_details);
 
-        $result = $builder->build($wrapper, $project_key);
+        $result = $builder->buildFromProjectKey($wrapper, $project_key);
 
         $this->assertCount(2, $result);
 
@@ -73,6 +76,41 @@ final class JiraTrackerBuilderTest extends TestCase
         $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . $project_key)->andReturn($project_details);
 
         $this->expectException(\LogicException::class);
-        $builder->build($wrapper, $project_key);
+        $builder->buildFromProjectKey($wrapper, $project_key);
+    }
+
+    public function testItBuildOneIssueType(): void
+    {
+        $builder = new JiraTrackerBuilder();
+
+        $wrapper = \Mockery::mock(ClientWrapper::class);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015')->once()->andReturn(
+            [
+                "self" => "https://jira.example.com/rest/api/3/issuetype/10015",
+                "id" => "10015",
+                "description" => "",
+                "iconUrl" => "https:/jira.example.com/secure/viewavatar?size=medium&avatarId=10300&avatarType=issuetype",
+                "name" => "Activities-from-Jira",
+                "untranslatedName" => "Activities-from-Jira",
+                "subtask" => false,
+                "avatarId" => 10300,
+            ]
+        );
+
+        $issue_type = $builder->buildFromIssueTypeId($wrapper, '10015');
+
+        assertEquals('10015', $issue_type->getId());
+        assertFalse($issue_type->isSubtask());
+        assertEquals('Activities-from-Jira', $issue_type->getName());
+    }
+
+    public function testItReturnsNullWhenClientDoesntHaveResponse(): void
+    {
+        $builder = new JiraTrackerBuilder();
+
+        $wrapper = \Mockery::mock(ClientWrapper::class);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/10015')->once()->andReturnNull();
+
+        assertNull($builder->buildFromIssueTypeId($wrapper, '10015'));
     }
 }

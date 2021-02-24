@@ -69,7 +69,7 @@ class JiraTrackersListController implements DispatchableWithRequest, Dispatchabl
 
         try {
             $wrapper             = $this->wrapper_builder->buildFromRequest($request);
-            $project_issue_types = $this->jira_tracker_builder->build($wrapper, $variables['jira_project_key']);
+            $project_issue_types = $this->jira_tracker_builder->buildFromProjectKey($wrapper, $variables['jira_project_key']);
 
             $json_content = [];
             foreach ($project_issue_types as $issue_type) {

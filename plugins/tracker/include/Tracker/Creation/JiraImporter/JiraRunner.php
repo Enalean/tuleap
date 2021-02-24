@@ -168,15 +168,22 @@ class JiraRunner
                 $this->key_factory->getEncryptionKey()
             );
 
+            $jira_credentials = new JiraCredentials(
+                $pending_import->getJiraServer(),
+                $pending_import->getJiraUser(),
+                $token
+            );
+
+            $jira_client = ClientWrapper::build($jira_credentials);
+
             $tracker = $this->tracker_creator->createFromJira(
                 $pending_import->getProject(),
                 $pending_import->getTrackerName(),
                 $pending_import->getTrackerShortname(),
                 $pending_import->getTrackerDescription(),
                 $pending_import->getTrackerColor(),
-                $token,
-                $pending_import->getJiraUser(),
-                $pending_import->getJiraServer(),
+                $jira_credentials,
+                $jira_client,
                 $pending_import->getJiraProjectId(),
                 $pending_import->getJiraIssueTypeId(),
                 $pending_import->getUser()
