@@ -19,6 +19,7 @@
 
 import type { Drekkenov, DrekkenovInitOptions } from "./types";
 import { DrekkenovState } from "./DrekkenovState";
+import "../themes/style.css";
 
 export type {
     Drekkenov,

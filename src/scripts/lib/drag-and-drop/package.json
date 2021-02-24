@@ -1,0 +1,32 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/drag-and-drop",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/drag-and-drop.es.js",
+  "main": "dist/drag-and-drop.umd.js",
+  "types": "types/index.d.ts",
+  "style": "dist/style.css",
+  "exports": {
+    ".": {
+      "import": "./dist/drag-and-drop.es.js",
+      "require": "./dist/drag-and-drop.umd.js"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/run-p build:*",
+    "build:vite": "$npm_package_config_bin/vite build",
+    "build:types": "rm -rf types/ && $npm_package_config_bin/tsc",
+    "watch": "$npm_package_config_bin/run-p watch:*",
+    "watch:vite": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.ts\" --ext ts --exec '$npm_package_config_bin/vite build --mode development --minify false'",
+    "watch:types": "rm -rf types/ && $npm_package_config_bin/tsc -w --preserveWatchOutput",
+    "test": "$npm_package_config_bin/jest"
+  }
+}

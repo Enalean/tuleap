@@ -24,7 +24,7 @@ import { createStoreMock } from "../../../../../../../src/scripts/vue-components
 import type { ColumnDefinition, Swimlane } from "../../type";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import type { RootState } from "../../store/type";
-import * as drekkenov from "../../helpers/drag-and-drop/drekkenov";
+import * as drekkenov from "@tuleap/drag-and-drop";
 import ErrorModal from "../GlobalError/ErrorModal.vue";
 
 async function createWrapper(
