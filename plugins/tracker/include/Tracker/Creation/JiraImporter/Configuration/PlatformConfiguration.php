@@ -29,6 +29,10 @@ final class PlatformConfiguration
      * @var string[]
      */
     private $allowed_configuration_names = [];
+    /**
+     * @var ?string
+     */
+    private $story_points_field;
 
     public function isConfigurationAllowed(string $configuration_name): bool
     {
@@ -38,5 +42,23 @@ final class PlatformConfiguration
     public function addAllowedConfiguration(string $configuration_name): void
     {
         $this->allowed_configuration_names[] = $configuration_name;
+    }
+
+    public function setStoryPointsField(string $field): void
+    {
+        $this->story_points_field = $field;
+    }
+
+    public function hasStoryPointsField(): bool
+    {
+        return $this->story_points_field !== null;
+    }
+
+    public function getStoryPointsField(): string
+    {
+        if ($this->story_points_field === null) {
+            throw new \RuntimeException('There is no Story Points field configured. Developer should have checked with `hasStoryPointsField`.');
+        }
+        return $this->story_points_field;
     }
 }

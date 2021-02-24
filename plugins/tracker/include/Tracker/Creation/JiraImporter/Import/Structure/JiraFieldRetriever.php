@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\XML\IDGenerator;
 
@@ -32,10 +33,15 @@ class JiraFieldRetriever
      * @var ClientWrapper
      */
     private $wrapper;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(ClientWrapper $wrapper)
+    public function __construct(ClientWrapper $wrapper, LoggerInterface $logger)
     {
         $this->wrapper = $wrapper;
+        $this->logger  = $logger;
     }
 
     /**
@@ -46,6 +52,7 @@ class JiraFieldRetriever
         $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=" . urlencode($jira_project_key) .
             "&issuetypeIds=" . urlencode($jira_issue_type_id) . "&expand=projects.issuetypes.fields";
 
+        $this->logger->debug('GET ' . $meta_url);
         $project_meta_content = $this->wrapper->getUrl($meta_url);
 
         $fields_by_id = [];

@@ -61,6 +61,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectio
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\StoryPointFieldExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
@@ -168,6 +169,10 @@ class JiraXmlExporter
      * @var JiraUserRetriever
      */
     private $jira_user_retriever;
+    /**
+     * @var StoryPointFieldExporter
+     */
+    private $story_point_field_exporter;
 
     public function __construct(
         LoggerInterface $logger,
@@ -182,6 +187,7 @@ class JiraXmlExporter
         SemanticsXMLExporter $semantics_xml_exporter,
         ContainersXMLCollectionBuilder $containers_xml_collection_builder,
         AlwaysThereFieldsExporter $always_there_fields_exporter,
+        StoryPointFieldExporter $story_point_field_exporter,
         XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
         XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
         XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
@@ -201,6 +207,7 @@ class JiraXmlExporter
         $this->semantics_xml_exporter               = $semantics_xml_exporter;
         $this->containers_xml_collection_builder    = $containers_xml_collection_builder;
         $this->always_there_fields_exporter         = $always_there_fields_exporter;
+        $this->story_point_field_exporter           = $story_point_field_exporter;
         $this->xml_report_all_issues_exporter       = $xml_report_all_issues_exporter;
         $this->xml_report_open_issues_exporter      = $xml_report_open_issues_exporter;
         $this->xml_report_done_issues_exporter      = $xml_report_done_issues_exporter;
@@ -261,7 +268,7 @@ class JiraXmlExporter
             $logger,
             $wrapper,
             $error_collector,
-            new JiraFieldRetriever($wrapper),
+            new JiraFieldRetriever($wrapper, $logger),
             $jira_field_mapper,
             $jira_user_retriever,
             new XmlReportExporter(),
@@ -340,6 +347,10 @@ class JiraXmlExporter
             new AlwaysThereFieldsExporter(
                 $field_xml_exporter
             ),
+            new StoryPointFieldExporter(
+                $field_xml_exporter,
+                $logger,
+            ),
             new XmlReportAllIssuesExporter(
                 $default_criteria_exporter,
                 $report_table_exporter
@@ -398,7 +409,15 @@ class JiraXmlExporter
         $this->always_there_fields_exporter->exportFields(
             $containers_collection,
             $jira_field_mapping_collection,
-            $status_values_collection
+            $status_values_collection,
+        );
+
+        $this->logger->debug("Export Story Points field");
+        $this->story_point_field_exporter->exportFields(
+            $jira_platform_configuration,
+            $containers_collection,
+            $jira_field_mapping_collection,
+            $issue_type,
         );
 
         $this->logger->debug("Export custom jira fields");
@@ -407,7 +426,8 @@ class JiraXmlExporter
             $jira_field_mapping_collection,
             $field_id_generator,
             $jira_project_key,
-            $issue_type
+            $issue_type,
+            $jira_platform_configuration,
         );
 
         $this->logger->debug("Export semantics");
@@ -473,15 +493,17 @@ class JiraXmlExporter
         FieldMappingCollection $jira_field_mapping_collection,
         IDGenerator $id_generator,
         string $jira_project_id,
-        IssueType $issue_type
+        IssueType $issue_type,
+        PlatformConfiguration $platform_configuration
     ): void {
+        $this->logger->debug("Start exporting jira field structure (custom fields) ...");
         $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $issue_type->getId(), $id_generator);
-        $this->logger->debug("Start exporting jira field structure ...");
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,
                 $containers_collection,
-                $jira_field_mapping_collection
+                $jira_field_mapping_collection,
+                $platform_configuration,
             );
         }
         $this->logger->debug("Field structure exported successfully");

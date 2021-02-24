@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 
@@ -57,7 +58,8 @@ class JiraToTuleapFieldTypeMapper
     public function exportFieldToXml(
         JiraFieldAPIRepresentation $jira_field,
         ContainersXMLCollection $containers_collection,
-        FieldMappingCollection $jira_field_mapping_collection
+        FieldMappingCollection $jira_field_mapping_collection,
+        PlatformConfiguration $platform_configuration
     ): void {
         $id               = $jira_field->getId();
         $jira_field_label = $jira_field->getLabel();
@@ -65,6 +67,11 @@ class JiraToTuleapFieldTypeMapper
 
         // ignore this jira always there mapping who is created like a custom one
         if ($jira_field_label === "Flagged") {
+            return;
+        }
+
+        if ($platform_configuration->hasStoryPointsField() && $platform_configuration->getStoryPointsField() === $jira_field->getId()) {
+            $this->logger->debug('Field ' . $jira_field->getId() . ' is managed in dedicated converter.');
             return;
         }
 

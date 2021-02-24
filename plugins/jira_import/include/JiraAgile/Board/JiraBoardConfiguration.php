@@ -31,14 +31,27 @@ final class JiraBoardConfiguration
     /**
      * @var JiraBoardConfigurationColumn[]
      */
-    private $columns;
+    public $columns;
+    /**
+     * @var string|null
+     */
+    public $estimation_field;
 
     /**
      * @param JiraBoardConfigurationColumn[] $columns
      */
-    public function __construct(array $columns)
+    public function __construct(array $columns, ?string $estimation_field)
     {
-        $this->columns = $columns;
+        $this->columns          = $columns;
+        $this->estimation_field = $estimation_field;
+    }
+
+    /**
+     * @param JiraBoardConfigurationColumn[] $columns
+     */
+    public static function buildWithoutEstimationField(array $columns): self
+    {
+        return new self($columns, null);
     }
 
     public static function buildFromAPIResponse(array $response): self
@@ -56,14 +69,11 @@ final class JiraBoardConfiguration
             $columns[] = JiraBoardConfigurationColumn::buildFromAPIResponse($column_response);
         }
 
-        return new self($columns);
-    }
+        $estimation_field = null;
+        if (isset($response['estimation']['type'], $response['estimation']['field']['fieldId']) && $response['estimation']['type'] === 'field') {
+            $estimation_field = $response['estimation']['field']['fieldId'];
+        }
 
-    /**
-     * @return JiraBoardConfigurationColumn[]
-     */
-    public function getColumns(): array
-    {
-        return $this->columns;
+        return new self($columns, $estimation_field);
     }
 }

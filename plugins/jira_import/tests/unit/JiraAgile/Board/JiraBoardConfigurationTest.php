@@ -43,14 +43,38 @@ final class JiraBoardConfigurationTest extends TestCase
                         "statuses" => []
                     ]
                 ]
-            ]
+            ],
+            "estimation"   => [
+                "type"  => "none",
+            ],
         ];
 
         $board_configuration = JiraBoardConfiguration::buildFromAPIResponse($response);
 
-        assertCount(2, $board_configuration->getColumns());
+        assertCount(2, $board_configuration->columns);
 
-        assertSame("To Do", $board_configuration->getColumns()[0]->name);
-        assertSame("Done", $board_configuration->getColumns()[1]->name);
+        assertSame("To Do", $board_configuration->columns[0]->name);
+        assertSame("Done", $board_configuration->columns[1]->name);
+    }
+
+    public function testItHasEstimationField(): void
+    {
+        $response = [
+            "columnConfig" => [
+                "columns" => [
+                ]
+            ],
+            "estimation"   => [
+                "type"  => "field",
+                "field" => [
+                    "fieldId"     => "customfield_10014",
+                    "displayName" => "Story Points",
+                ],
+            ],
+        ];
+
+        $board_configuration = JiraBoardConfiguration::buildFromAPIResponse($response);
+
+        assertSame("customfield_10014", $board_configuration->estimation_field);
     }
 }
