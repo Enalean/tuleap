@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning\XML;
 
 use PlanningParameters;
+use PlanningPermissionsManager;
 use SimpleXMLElement;
 
 final class XMLPlanning
@@ -31,6 +32,9 @@ final class XMLPlanning
     public const NODE_PLANNING = 'planning';
     public const NODE_BACKLOGS = 'backlogs';
     public const NODE_BACKLOG  = 'backlog';
+
+    private const NODE_PERMISSIONS = 'permissions';
+    private const NODE_PERMISSION  = 'permission';
 
     /**
      * @var string
@@ -63,6 +67,12 @@ final class XMLPlanning
     private $backlog_tracker_ids;
 
     /**
+     * @var string[]
+     * @readonly
+     */
+    private $priority_change_permissions = [];
+
+    /**
      * @param array<int|string> $backlog_tracker_ids
      */
     public function __construct(
@@ -79,6 +89,17 @@ final class XMLPlanning
         $this->backlog_tracker_ids = $backlog_tracker_ids;
     }
 
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
+    public function withPriorityChangePermission(string ...$ugroup_name): self
+    {
+        $new                              = clone $this;
+        $new->priority_change_permissions = array_merge($this->priority_change_permissions, $ugroup_name);
+        return $new;
+    }
+
     public function export(SimpleXMLElement $plannings_xml): SimpleXMLElement
     {
         $planning_xml = $plannings_xml->addChild(self::NODE_PLANNING);
@@ -91,6 +112,15 @@ final class XMLPlanning
         $backlogs_xml = $planning_xml->addChild(self::NODE_BACKLOGS);
         foreach ($this->backlog_tracker_ids as $backlog_tracker_id) {
             $backlogs_xml->addChild(self::NODE_BACKLOG, (string) $backlog_tracker_id);
+        }
+
+        if (count($this->priority_change_permissions) > 0) {
+            $xml_permissions = $planning_xml->addChild(self::NODE_PERMISSIONS);
+            foreach ($this->priority_change_permissions as $permission) {
+                $xml_permission = $xml_permissions->addChild(self::NODE_PERMISSION);
+                $xml_permission->addAttribute('ugroup', $permission);
+                $xml_permission->addAttribute('type', PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
+            }
         }
 
         return $planning_xml;

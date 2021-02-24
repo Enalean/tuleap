@@ -31,9 +31,7 @@ use SimpleXMLElement;
 
 class XMLExporter
 {
-    public const NODE_PLANNINGS    = 'plannings';
-    private const NODE_PERMISSIONS = 'permissions';
-    private const NODE_PERMISSION  = 'permission';
+    public const NODE_PLANNINGS = 'plannings';
 
     /**
      * @todo move me to tracker class
@@ -70,27 +68,42 @@ class XMLExporter
 
             $this->checkId($planning_tracker_id, PlanningParameters::PLANNING_TRACKER_ID);
 
-            $backlog_tracker_ids = [];
-            foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
-                $planning_backlog_tracker_id = $this->getFormattedTrackerId($backlog_tracker->getId());
-                $this->checkId($planning_backlog_tracker_id, XMLPlanning::NODE_BACKLOG);
-                $backlog_tracker_ids[] = $planning_backlog_tracker_id;
-            }
+            $backlog_tracker_ids = $this->getBacklogTrackerIds($planning);
 
-            $planning_node = (new XMLPlanning(
+            (new XMLPlanning(
                 $planning_name,
                 $planning_title,
                 $planning_tracker_id,
                 $planning_backlog_title,
                 $backlog_tracker_ids
             ))
+                ->withPriorityChangePermission(
+                    ...$this->getPriorityChangePermissionUgroups($planning)
+                )
                 ->export($plannings_node);
-
-            $this->exportPermissions($planning_node, $planning);
         }
     }
 
-    private function exportPermissions(SimpleXMLElement $planning_node, Planning $planning)
+    /**
+     * @return string[]
+     * @throws AgileDashboard_XMLExporterUnableToGetValueException
+     */
+    private function getBacklogTrackerIds(Planning $planning): array
+    {
+        $backlog_tracker_ids = [];
+        foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
+            $planning_backlog_tracker_id = $this->getFormattedTrackerId($backlog_tracker->getId());
+            $this->checkId($planning_backlog_tracker_id, XMLPlanning::NODE_BACKLOG);
+            $backlog_tracker_ids[] = $planning_backlog_tracker_id;
+        }
+
+        return $backlog_tracker_ids;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getPriorityChangePermissionUgroups(Planning $planning): array
     {
         $ugroups = $this->planning_permissions_manager->getGroupIdsWhoHasPermissionOnPlanning(
             $planning->getId(),
@@ -98,23 +111,16 @@ class XMLExporter
             PlanningPermissionsManager::PERM_PRIORITY_CHANGE
         );
 
+        $priority_change_ugroups = [];
         if (! empty($ugroups)) {
             foreach ($ugroups as $ugroup_id) {
                 if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100) {
-                    if (! isset($planning_node->permissions)) {
-                        $permission_nodes = $planning_node->addChild(self::NODE_PERMISSIONS);
-                    } else {
-                        $permission_nodes = $planning_node->permissions;
-                    }
-
-                    $permission_node = $permission_nodes->addChild(self::NODE_PERMISSION);
-                    $permission_node->addAttribute('ugroup', $ugroup);
-                    $permission_node->addAttribute('type', PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
-
-                    unset($permission_node);
+                    $priority_change_ugroups[] = $ugroup;
                 }
             }
         }
+
+        return $priority_change_ugroups;
     }
 
     private function getFormattedTrackerId($tracker_id): string
