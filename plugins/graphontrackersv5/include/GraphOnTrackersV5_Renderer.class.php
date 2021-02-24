@@ -22,6 +22,7 @@
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -310,9 +311,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     /**
      * Duplicate the renderer
      */
-    public function duplicate($from_renderer, $field_mapping)
+    public function duplicate($from_renderer, $field_mapping, MappingRegistry $mapping_registry): void
     {
-        $this->getChartFactory()->duplicate($from_renderer, $this, $field_mapping);
+        $this->getChartFactory()->duplicate($from_renderer, $this, $field_mapping, $mapping_registry);
     }
 
     public function afterProcessRequest($engine, $request, $current_user)

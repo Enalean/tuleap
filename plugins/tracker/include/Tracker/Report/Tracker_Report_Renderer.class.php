@@ -24,6 +24,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
 use Tuleap\Tracker\Widget\WidgetWithAssetDependencies;
 use Tuleap\Widget\WidgetFactory;
@@ -233,7 +234,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     /**
      * Duplicate the renderer
      */
-    abstract public function duplicate($from_report_id, $field_mapping);
+    abstract public function duplicate($from_report_id, $field_mapping, MappingRegistry $mapping_registry): void;
 
     /**
      * Display a link to let the user go back to report

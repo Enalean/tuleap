@@ -24,6 +24,7 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
@@ -276,7 +277,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         return $success;
     }
 
-    public function duplicate($from_renderer, $field_mapping)
+    public function duplicate($from_renderer, $field_mapping, MappingRegistry $mapping_registry): void
     {
     }
 
