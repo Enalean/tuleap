@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\XML;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
@@ -751,5 +752,38 @@ class XMLTrackerTest extends TestCase
         assertNull($node->artifacts->artifact[0]->changeset[0]->field_change[0]->value[0]['nature']);
         assertEquals('444', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value[1]);
         assertEquals('_is_child', $node->artifacts->artifact[0]->changeset[0]->field_change[0]->value[1]['nature']);
+    }
+
+    public function testItAppendsElementsAtTheRootOfHierarchy(): void
+    {
+        $tracker = (new XMLTracker('T1', 'bug'))
+            ->withFormElement(
+                (new XMLFieldset('F1', 'details'))
+            );
+
+        $tracker = $tracker->appendFormElement('details', (new XMLStringField('F2', 'Summary'))->withoutPermissions());
+
+        $node = $tracker->export(new \SimpleXMLElement('<trackers />'));
+
+        assertEquals('F1', $node->formElements->formElement[0]['ID']);
+        assertEquals('F2', $node->formElements->formElement[0]->formElements->formElement[0]['ID']);
+    }
+
+    public function testItAppendsElementsNestedInHierarchy(): void
+    {
+        $tracker = (new XMLTracker('T1', 'bug'))
+            ->withFormElement(
+                (new XMLFieldset('F1', 'details'))
+                ->withFormElements(
+                    new XMLColumn('F2', 'details2')
+                )
+            );
+
+        $tracker = $tracker->appendFormElement('details2', (new XMLStringField('F3', 'Summary'))->withoutPermissions());
+
+        $node = $tracker->export(new \SimpleXMLElement('<trackers />'));
+
+        assertEquals('F2', $node->formElements->formElement[0]->formElements->formElement[0]['ID']);
+        assertEquals('F3', $node->formElements->formElement[0]->formElements->formElement[0]->formElements->formElement[0]['ID']);
     }
 }

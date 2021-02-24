@@ -44,12 +44,34 @@ abstract class XMLContainer extends XMLFormElement
     }
 
     /**
+     * @psalm-mutation-free
      * @return static
      */
     public function withFormElements(XMLFormElement ...$form_elements): self
     {
         $new                = clone $this;
         $new->form_elements = array_merge($new->form_elements, $form_elements);
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
+    public function appendFormElements(string $name, XMLFormElement $form_element): self
+    {
+        if ($this->name === $name) {
+            return $this->withFormElements($form_element);
+        }
+        $new                = clone $this;
+        $new->form_elements = [];
+        foreach ($this->form_elements as $parent) {
+            if ($parent instanceof XMLContainer) {
+                $new->form_elements[] = $parent->appendFormElements($name, $form_element);
+            } else {
+                $new->form_elements[] = $parent;
+            }
+        }
         return $new;
     }
 

@@ -28,12 +28,14 @@ use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
+use Tuleap\JiraImport\JiraAgile\ScrumTrackerStructureEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\BeforeEvent;
+use Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 use Tuleap\Velocity\VelocityChartPresenter;
@@ -72,6 +74,10 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent::NAME);
+
+        if (defined('TULEAP_PLUGIN_JIRA_IMPORT')) {
+            $this->addHook(ScrumTrackerStructureEvent::NAME);
+        }
 
         return parent::getHooksAndCallbacks();
     }
@@ -305,5 +311,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             __DIR__ . '/../../../src/www/assets/velocity',
             '/assets/velocity'
         );
+    }
+
+    public function scrumTrackerStructureEvent(ScrumTrackerStructureEvent $event): void
+    {
+        $event->tracker = (new AddVelocityToScrumTemplate())
+            ->addVelocityToStructure($event->tracker, $event->id_generator);
     }
 }

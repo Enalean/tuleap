@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
@@ -50,12 +51,17 @@ final class JiraAgileImporter
      * @var JiraSprintIssuesRetriever
      */
     private $sprint_issues_retriever;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
-    public function __construct(JiraBoardsRetriever $boards_retriever, JiraSprintRetriever $sprint_retriever, JiraSprintIssuesRetriever $sprint_issues_retriever)
+    public function __construct(JiraBoardsRetriever $boards_retriever, JiraSprintRetriever $sprint_retriever, JiraSprintIssuesRetriever $sprint_issues_retriever, EventDispatcherInterface $event_dispatcher)
     {
         $this->boards_retriever        = $boards_retriever;
         $this->sprint_retriever        = $sprint_retriever;
         $this->sprint_issues_retriever = $sprint_issues_retriever;
+        $this->event_dispatcher        = $event_dispatcher;
     }
 
     /**
@@ -76,7 +82,7 @@ final class JiraAgileImporter
         }
         $logger->info('Project has Agile configuration to import');
 
-        $scrum_tracker_builder = new ScrumTrackerBuilder();
+        $scrum_tracker_builder = new ScrumTrackerBuilder($this->event_dispatcher);
         $scrum_tracker         = $scrum_tracker_builder->get($id_generator);
 
         $sprints = $this->sprint_retriever->getAllSprints($board);

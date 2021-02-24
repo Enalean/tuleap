@@ -38,6 +38,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
 
+define('TULEAP_PLUGIN_JIRA_IMPORT', '1');
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class jira_importPlugin extends Plugin
 {

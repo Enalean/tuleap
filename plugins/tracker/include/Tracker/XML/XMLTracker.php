@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\XML;
 use SimpleXMLElement;
 use Tracker;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Report\XML\XMLReport;
@@ -181,6 +182,24 @@ final class XMLTracker
     {
         $new                = clone $this;
         $new->form_elements = array_merge($this->form_elements, $form_elements);
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     * @return static
+     */
+    public function appendFormElement(string $name, XMLFormElement $form_element): self
+    {
+        $new                = clone $this;
+        $new->form_elements = [];
+        foreach ($this->form_elements as $element) {
+            if ($element instanceof XMLContainer) {
+                $new->form_elements[] = $element->appendFormElements($name, $form_element);
+            } else {
+                $new->form_elements[] = $element;
+            }
+        }
         return $new;
     }
 
