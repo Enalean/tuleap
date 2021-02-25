@@ -90,6 +90,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\AsynchronousArtifactsDeletionActionsRunner;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunnerDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
@@ -1497,6 +1498,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $ugroups_to_notify_dao = new UgroupsToNotifyDao();
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
+
+        $private_comment_permissions_dao = new TrackerPrivateCommentUGroupPermissionDao();
+        $private_comment_permissions_dao->deleteUgroupPermissionForPrivateComment($ugroup->getId());
     }
 
     public function project_admin_remove_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
