@@ -92,11 +92,16 @@ class UserDetailsPresenter
         array $unix_status,
         bool $user_has_rest_read_only_administration_delegation
     ) {
-        $this->id     = $user->getId();
-        $this->name   = $user->getRealName();
-        $this->login  = $user->getUnixName();
-        $this->email  = $user->getEmail();
-        $this->expiry = (new DateTimeImmutable())->setTimestamp((int) $user->getExpiryDate())->format('Y-m-d');
+        $this->id    = $user->getId();
+        $this->name  = $user->getRealName();
+        $this->login = $user->getUnixName();
+        $this->email = $user->getEmail();
+
+        if ((int) $user->getExpiryDate() !== 0) {
+            $this->expiry = (new DateTimeImmutable())->setTimestamp((int) $user->getExpiryDate())->format('Y-m-d');
+        } else {
+            $this->expiry = "";
+        }
 
         $this->has_avatar = $user->hasAvatar();
         $this->avatar_url = $user->getAvatarUrl();
