@@ -18,18 +18,16 @@
  */
 
 import hotkeys from "hotkeys-js";
-import { HOTKEYS_SCOPE_NO_MODAL } from "./handle-modals-events";
-import { createShortcutsGroupInHelpModal } from "./add-to-help-modal";
-import type { Shortcut, ShortcutsGroup } from "./type";
 
-export type { Shortcut, ShortcutsGroup };
+export const HOTKEYS_SCOPE_NO_MODAL = "scope-no-modal";
+const HOTKEYS_SCOPE_MODAL_SHOWN = "scope-modal-shown";
 
-export function addShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
-    shortcuts_group.shortcuts.forEach((shortcut) => {
-        hotkeys(shortcut.keyboard_inputs, HOTKEYS_SCOPE_NO_MODAL, (event) => {
-            event.preventDefault();
-            shortcut.handle(event);
-        });
-    });
-    createShortcutsGroupInHelpModal(doc, shortcuts_group);
-}
+hotkeys.setScope(HOTKEYS_SCOPE_NO_MODAL);
+
+document.addEventListener("tlp-modal-shown", () => {
+    hotkeys.setScope(HOTKEYS_SCOPE_MODAL_SHOWN);
+});
+
+document.addEventListener("tlp-modal-hidden", () => {
+    hotkeys.setScope(HOTKEYS_SCOPE_NO_MODAL);
+});

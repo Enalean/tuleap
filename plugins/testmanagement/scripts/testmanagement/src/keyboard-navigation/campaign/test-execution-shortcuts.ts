@@ -17,17 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    Shortcut,
-    ShortcutsGroup,
-} from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
-import { addShortcutsGroup } from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
-
+import type { Shortcut, ShortcutsGroup } from "../setup-shortcuts";
 import type { GettextProvider } from "../type";
 
 import { clickOnElement, focusElement } from "../shortcuts-handles/trigger-datashortcut-element";
 
-export function setupTestExecutionShortcuts(gettextCatalog: GettextProvider): void {
+export function createTestExecutionShortcutsGroup(gettextCatalog: GettextProvider): ShortcutsGroup {
     const mark_as_success: Shortcut = {
         keyboard_inputs: "m + p",
         description: gettextCatalog.getString("Mark test as passed"),
@@ -84,7 +79,7 @@ export function setupTestExecutionShortcuts(gettextCatalog: GettextProvider): vo
         },
     };
 
-    const test_management_actions_shortcuts_group: ShortcutsGroup = {
+    return {
         title: gettextCatalog.getString("Test execution"),
         details: gettextCatalog.getString(
             "Shortcuts available on the test currently open in a campaign."
@@ -99,5 +94,4 @@ export function setupTestExecutionShortcuts(gettextCatalog: GettextProvider): vo
             link_bug,
         ],
     };
-    addShortcutsGroup(document, test_management_actions_shortcuts_group);
 }

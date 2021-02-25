@@ -17,18 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    Shortcut,
-    ShortcutsGroup,
-} from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
-import { addShortcutsGroup } from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
-
+import type { Shortcut, ShortcutsGroup } from "../setup-shortcuts";
 import type { GettextProvider } from "../type";
 import { Direction } from "../type";
 
 import { moveFocus } from "../shortcuts-handles/move-focus";
 
-export function setupTestsListNavigation(gettextCatalog: GettextProvider): void {
+export function createTestsListNavigation(gettextCatalog: GettextProvider): ShortcutsGroup {
     const move_to_next_test: Shortcut = {
         keyboard_inputs: "k,down",
         displayed_inputs: "k,↓",
@@ -65,7 +60,7 @@ export function setupTestsListNavigation(gettextCatalog: GettextProvider): void 
         },
     };
 
-    const test_management_navigation_shortcuts_group: ShortcutsGroup = {
+    return {
         title: gettextCatalog.getString("Navigation in campaign tests list"),
         details: gettextCatalog.getString("Navigation in tests list when a test is selected."),
         shortcuts: [
@@ -75,5 +70,4 @@ export function setupTestsListNavigation(gettextCatalog: GettextProvider): void 
             move_to_first_test,
         ],
     };
-    addShortcutsGroup(document, test_management_navigation_shortcuts_group);
 }

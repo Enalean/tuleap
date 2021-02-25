@@ -1,0 +1,33 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/keyboard-shortcuts",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/keyboard-shortcuts.es.js",
+  "main": "dist/keyboard-shortcuts.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/keyboard-shortcuts.es.js",
+      "require": "./dist/keyboard-shortcuts.umd.js"
+    }
+  },
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "hotkeys-js": "^3.8.2"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/run-p build:*",
+    "build:vite": "$npm_package_config_bin/vite build",
+    "build:types": "rm -rf types/ && $npm_package_config_bin/tsc",
+    "watch": "$npm_package_config_bin/run-p watch:*",
+    "watch:vite": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.ts\" --ext ts --exec '$npm_package_config_bin/vite build --mode development --minify false'",
+    "watch:types": "rm -rf types/ && $npm_package_config_bin/tsc -w --preserveWatchOutput",
+    "test": "$npm_package_config_bin/jest"
+  }
+}
