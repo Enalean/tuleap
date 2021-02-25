@@ -477,7 +477,8 @@ class JiraXmlExporter
                 $issue_representation_collection,
                 $this->jira_user_retriever,
                 $this->wrapper,
-                $this->logger
+                $this->logger,
+                $jira_field_mapping_collection,
             )
         );
 
