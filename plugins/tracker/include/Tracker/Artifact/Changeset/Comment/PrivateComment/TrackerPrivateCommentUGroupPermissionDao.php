@@ -43,4 +43,9 @@ class TrackerPrivateCommentUGroupPermissionDao extends DataAccessObject
 
         $this->getDB()->run($sql, $comment_id, $ugroup_id);
     }
+
+    public function deleteUgroupPermissionForPrivateComment(int $ugroup_id): void
+    {
+        $this->getDB()->delete("plugin_tracker_private_comment_permission", ["ugroup_id" => $ugroup_id]);
+    }
 }
