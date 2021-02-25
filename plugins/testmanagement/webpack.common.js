@@ -79,11 +79,12 @@ const webpack_config_for_vue_components = {
     context,
     output,
     externals: {
-        ckeditor4: "CKEDITOR",
         jquery: "jQuery",
+        ckeditor4: "CKEDITOR",
     },
     module: {
         rules: [
+            webpack_configurator.rule_vue_images,
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,

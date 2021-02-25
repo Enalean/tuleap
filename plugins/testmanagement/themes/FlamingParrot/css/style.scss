@@ -53,6 +53,10 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        .button-commonmark-syntax-helper {
+            opacity: 1;
+        }
     }
 
     .step-definition-drag-icon {
@@ -181,7 +185,7 @@
     }
 
     .ttm-definition-step-description-format {
-        margin: 0;
+        margin: 0 5px 0 0;
     }
 
     .ttm-definition-step-expected,
@@ -232,34 +236,44 @@
         margin: 0;
     }
 
+    .ttm-definition-step-actions-format-and-helper-container {
+        display: flex;
+        align-items: center;
+    }
 }
 
 body {
     @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
+    @import 'includes/popovers';
     @include definitions($main, $white);
 
     &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
+        @import 'includes/popovers';
         @include definitions($main, $white);
     }
 
     &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-green';
+        @import 'includes/popovers';
         @include definitions($main, $white);
     }
 
     &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
+        @import 'includes/popovers';
         @include definitions($main, $white);
     }
 
     &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
+        @import 'includes/popovers';
         @include definitions($main, $white);
     }
 
     &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-red';
+        @import 'includes/popovers';
         @include definitions($main, $white);
     }
 }

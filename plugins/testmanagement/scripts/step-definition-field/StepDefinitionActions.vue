@@ -19,7 +19,7 @@
 
 <template>
     <div class="ttm-definition-step-actions">
-        <span>
+        <div class="ttm-definition-step-actions-format-and-helper-container">
             <translate>Format:</translate>
             <select
                 v-bind:id="format_select_id"
@@ -32,7 +32,8 @@
                 <option value="html" v-bind:selected="is_html">HTML</option>
                 <option value="commonmark" v-bind:selected="is_commonmark">Markdown</option>
             </select>
-        </span>
+            <commonmark-syntax-helper v-if="is_commonmark" />
+        </div>
         <slot />
     </div>
 </template>
@@ -44,9 +45,11 @@ import {
     TEXT_FORMAT_TEXT,
 } from "../../../tracker/scripts/constants/fields-constants.js";
 import { mapState } from "vuex";
+import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
 
 export default {
     name: "StepDefinitionActions",
+    components: { CommonmarkSyntaxHelper },
     props: {
         value: String,
         disabled: {
