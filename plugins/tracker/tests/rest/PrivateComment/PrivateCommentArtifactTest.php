@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Tests\REST\Artifacts;
+namespace Tuleap\Tracker\Tests\REST\PrivateComment;
 
 use Tuleap\Tracker\REST\DataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
@@ -199,7 +199,7 @@ class PrivateCommentArtifactTest extends TrackerBase
         );
     }
 
-    public function testMemberInNoUgroupCanNotSeePrivateComment(): void
+    public function testMemberNotInUgroupCanNotSeePrivateComment(): void
     {
         $response = $this->getResponse(
             $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),

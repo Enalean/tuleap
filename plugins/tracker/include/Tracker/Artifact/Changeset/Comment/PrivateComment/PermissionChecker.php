@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
+use PFUser;
+use Tracker;
 use Tracker_Artifact_Changeset_Comment;
 
 class PermissionChecker
@@ -40,22 +42,8 @@ class PermissionChecker
         \PFUser $user,
         Tracker_Artifact_Changeset_Comment $comment
     ): bool {
-        if (! $this->enabled_dao->isTrackerEnabledPrivateComment($comment->getChangeset()->getTracker()->getId())) {
-            return false;
-        }
-
-        if ($user->isSuperUser()) {
-            return false;
-        }
-
-        $tracker    = $comment->getChangeset()->getTracker();
-        $project_id = (int) $tracker->getGroupId();
-
-        if ($user->isAdmin($project_id)) {
-            return false;
-        }
-
-        if ($tracker->userIsAdmin($user)) {
+        $tracker = $comment->getChangeset()->getTracker();
+        if (! $this->privateCheckMustBeDoneForUser($user, $tracker)) {
             return false;
         }
 
@@ -69,10 +57,34 @@ class PermissionChecker
             return true;
         }
 
+        $project_id = (int) $tracker->getGroupId();
         foreach ($ugroups as $ugroup) {
             if ($user->isMemberOfUGroup($ugroup->getId(), $project_id)) {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    public function privateCheckMustBeDoneForUser(PFUser $user, Tracker $tracker): bool
+    {
+        if (! $this->enabled_dao->isTrackerEnabledPrivateComment($tracker->getId())) {
+            return false;
+        }
+
+        if ($user->isSuperUser()) {
+            return false;
+        }
+
+        $project_id = (int) $tracker->getGroupId();
+
+        if ($user->isAdmin($project_id)) {
+            return false;
+        }
+
+        if ($tracker->userIsAdmin($user)) {
+            return false;
         }
 
         return true;

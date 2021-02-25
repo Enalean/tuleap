@@ -88,7 +88,7 @@ class TrackerBase extends RestBase
     /**
      * @var mixed
      */
-    private $private_comment_tracker_id;
+    protected $private_comment_tracker_id;
     /**
      * @var int
      */
