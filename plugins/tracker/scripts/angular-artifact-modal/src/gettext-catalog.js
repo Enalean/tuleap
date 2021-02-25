@@ -39,3 +39,5 @@ export const getUploadSizeExceeded = () =>
 export const getUploadError = () => gettextCatalog.getString("Unable to upload the file");
 export const getNoPasteMessage = () =>
     gettextCatalog.getString("You are not allowed to paste images here");
+export const getCommonMarkSyntaxHelperPopoverTitle = () =>
+    gettextCatalog.getString("For your information...");

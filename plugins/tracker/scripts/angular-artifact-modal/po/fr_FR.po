@@ -72,6 +72,9 @@ msgstr "Quota d'envoi de fichiers autorisé"
 msgid "Follow-ups"
 msgstr "Commentaires"
 
+msgid "For your information..."
+msgstr "Pour votre information..."
+
 msgid "HTML"
 msgstr "HTML"
 
