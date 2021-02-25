@@ -26,6 +26,9 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
+use Tuleap\Cardwall\XML\XMLCardwall;
+use Tuleap\Cardwall\XML\XMLCardwallColumn;
+use Tuleap\Cardwall\XML\XMLCardwallTracker;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
@@ -177,14 +180,13 @@ final class JiraAgileImporter
             return;
         }
 
-        $xml_cardwall_trackers = $project->addChild('cardwall')->addChild('trackers');
-        $xml_cardwall_tracker  = $xml_cardwall_trackers->addChild('tracker');
-        $xml_cardwall_tracker->addAttribute("id", $scrum_tracker->getId());
-
-        $xml_cardwall_columns = $xml_cardwall_tracker->addChild("columns");
+        $xml_tracker = new XMLCardwallTracker($scrum_tracker->getId());
         foreach ($board_configuration->getColumns() as $configuration_column) {
-            $xml_cardwall_column = $xml_cardwall_columns->addChild("column");
-            $xml_cardwall_column->addAttribute("label", $configuration_column->name);
+            $xml_tracker = $xml_tracker->withColumn(new XMLCardwallColumn($configuration_column->name));
         }
+
+        (new XMLCardwall())
+            ->withTracker($xml_tracker)
+            ->export($project);
     }
 }
