@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
+use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
@@ -56,12 +57,23 @@ final class JiraAgileImporter
      */
     private $event_dispatcher;
 
-    public function __construct(JiraBoardsRetriever $boards_retriever, JiraSprintRetriever $sprint_retriever, JiraSprintIssuesRetriever $sprint_issues_retriever, EventDispatcherInterface $event_dispatcher)
-    {
-        $this->boards_retriever        = $boards_retriever;
-        $this->sprint_retriever        = $sprint_retriever;
-        $this->sprint_issues_retriever = $sprint_issues_retriever;
-        $this->event_dispatcher        = $event_dispatcher;
+    /**
+     * @var JiraBoardConfigurationRetriever
+     */
+    private $board_configuration_retriever;
+
+    public function __construct(
+        JiraBoardsRetriever $boards_retriever,
+        JiraSprintRetriever $sprint_retriever,
+        JiraSprintIssuesRetriever $sprint_issues_retriever,
+        JiraBoardConfigurationRetriever $board_configuration_retriever,
+        EventDispatcherInterface $event_dispatcher
+    ) {
+        $this->boards_retriever              = $boards_retriever;
+        $this->sprint_retriever              = $sprint_retriever;
+        $this->sprint_issues_retriever       = $sprint_issues_retriever;
+        $this->board_configuration_retriever = $board_configuration_retriever;
+        $this->event_dispatcher              = $event_dispatcher;
     }
 
     /**
@@ -119,6 +131,7 @@ final class JiraAgileImporter
         $scrum_tracker->export($project->trackers);
 
         $this->exportPlanningConfiguration($logger, $project, $scrum_tracker, $jira_issue_types, $jira_epic_issue_type);
+        $this->exportCardwallConfiguration($logger, $project, $scrum_tracker, $board);
     }
 
     private function exportPlanningConfiguration(
@@ -149,5 +162,29 @@ final class JiraAgileImporter
             $backlog_tracker_ids
         ))
             ->export($xml_plannings);
+    }
+
+    private function exportCardwallConfiguration(
+        LoggerInterface $logger,
+        \SimpleXMLElement $project,
+        \Tuleap\Tracker\XML\XMLTracker $scrum_tracker,
+        JiraBoard $jira_board
+    ): void {
+        $logger->debug("Export cardwall planning configuration");
+
+        $board_configuration = $this->board_configuration_retriever->getScrumBoardConfiguration($jira_board);
+        if ($board_configuration === null) {
+            return;
+        }
+
+        $xml_cardwall_trackers = $project->addChild('cardwall')->addChild('trackers');
+        $xml_cardwall_tracker  = $xml_cardwall_trackers->addChild('tracker');
+        $xml_cardwall_tracker->addAttribute("id", $scrum_tracker->getId());
+
+        $xml_cardwall_columns = $xml_cardwall_tracker->addChild("columns");
+        foreach ($board_configuration->getColumns() as $configuration_column) {
+            $xml_cardwall_column = $xml_cardwall_columns->addChild("column");
+            $xml_cardwall_column->addAttribute("label", $configuration_column->name);
+        }
     }
 }

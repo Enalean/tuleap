@@ -28,7 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
 {
-    private const BOARD_URL     = '/rest/agile/1.0/board';
+    public const BOARD_URL      = '/rest/agile/1.0/board';
     private const TYPE_PARAM    = 'type';
     private const SCRUM_TYPE    = 'scrum';
     private const TYPE_START_AT = 'startAt';

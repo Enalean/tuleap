@@ -28,6 +28,7 @@ use ProjectCreationData;
 use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
+use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
 use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
@@ -197,7 +198,11 @@ final class CreateProjectFromJira
                 $jira_client,
                 $logger,
             ),
-            \EventManager::instance(),
+            new JiraBoardConfigurationRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
+            \EventManager::instance()
         );
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
