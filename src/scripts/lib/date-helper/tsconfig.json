@@ -1,8 +1,8 @@
 {
     "extends": "../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": [],
-        "outDir": "types/"
+        "outDir": "types/",
+        "types": ["jest"]
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]

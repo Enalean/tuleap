@@ -1,11 +1,9 @@
 {
     "extends": "../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": [
-            "dom"
-        ],
+        "lib": ["ES2016", "DOM"],
         "outDir": "types/",
-        "emitDeclarationOnly": true
+        "types": ["jest"]
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]

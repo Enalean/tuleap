@@ -1,9 +1,8 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "esnext"
+        "module": "esnext",
+        "types": ["jest", "node"]
     },
-    "include": [
-        "scripts/program_management/**/*"
-    ]
+    "include": ["scripts/program_management/**/*"]
 }

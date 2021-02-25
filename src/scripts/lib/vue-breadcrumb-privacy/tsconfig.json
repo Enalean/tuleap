@@ -1,8 +1,9 @@
 {
     "extends": "../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["DOM", "DOM.Iterable"],
+        "lib": ["ES2015", "DOM", "DOM.Iterable"],
         "outDir": "types/",
+        "types": ["jest"],
         "experimentalDecorators": true
     },
     "include": ["src/**/*"],

@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "ES2019",
         "module": "ES2015",
-        "lib": [],
+        "lib": ["ES2015"],
         "strict": true,
         "declaration": true,
         "emitDeclarationOnly": true,
@@ -10,6 +10,7 @@
         "allowSyntheticDefaultImports": true,
         "isolatedModules": true,
         "moduleResolution": "Node",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "types": []
     }
 }
