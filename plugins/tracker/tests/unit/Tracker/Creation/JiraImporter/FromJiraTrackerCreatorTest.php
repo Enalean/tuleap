@@ -80,6 +80,12 @@ class FromJiraTrackerCreatorTest extends TestCase
 
     public function testItDuplicatedATrackerFromJira(): void
     {
+        $jira_client = Mockery::mock(JiraClient::class)
+            ->shouldReceive('getUrl')
+            ->once()
+            ->andReturn(['id' => '10005', 'name' => 'Story', 'subtask' => false])
+            ->getMock();
+
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
 
@@ -88,7 +94,7 @@ class FromJiraTrackerCreatorTest extends TestCase
         $this->platform_configuration_retriever->shouldReceive('getJiraPlatformConfiguration')
             ->once()
             ->with(
-                Mockery::type(ClientWrapper::class),
+                $jira_client,
                 $this->logger
             )
             ->andReturn(
@@ -122,9 +128,8 @@ class FromJiraTrackerCreatorTest extends TestCase
             'my_tracker',
             'tracker desc',
             'inca-silver',
-            new ConcealedString('azerty123'),
-            'user@example.com',
-            'https://example.com',
+            new JiraCredentials('https://example.com', 'user@example.com', new ConcealedString('azerty123')),
+            $jira_client,
             'Jira project',
             'Story',
             Mockery::mock(\PFUser::class)

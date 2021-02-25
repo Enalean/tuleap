@@ -91,7 +91,7 @@ final class JiraTrackersListControllerTest extends \PHPUnit\Framework\TestCase
         $wrapper = Mockery::mock(ClientWrapper::class);
         $wrapper->shouldReceive('getUrl')->andReturn([]);
 
-        $this->project_builder->shouldReceive('build')->andReturn([]);
+        $this->project_builder->shouldReceive('buildFromProjectKey')->andReturn([]);
         $this->wrapper_builder->shouldReceive('buildFromRequest')->andReturn($wrapper);
 
         $this->layout->shouldReceive('sendJSON')->with([]);

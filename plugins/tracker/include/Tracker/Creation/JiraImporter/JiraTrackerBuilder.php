@@ -29,7 +29,7 @@ class JiraTrackerBuilder
      * @throws JiraConnectionException
      * @return IssueType[]
      */
-    public function build(ClientWrapper $wrapper, string $project_key): array
+    public function buildFromProjectKey(ClientWrapper $wrapper, string $project_key): array
     {
         $project_details = $wrapper->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/project/' . urlencode($project_key));
 
@@ -43,5 +43,20 @@ class JiraTrackerBuilder
         }
 
         return $tracker_list;
+    }
+
+    /**
+     * @throws JiraConnectionException
+     * @throws \JsonException
+     */
+    public function buildFromIssueTypeId(JiraClient $wrapper, string $issue_type_id): ?IssueType
+    {
+        $json = $wrapper->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/issuetype/' . urlencode($issue_type_id));
+        if (! $json) {
+            return null;
+        }
+        return IssueType::buildFromAPIResponse(
+            $json
+        );
     }
 }

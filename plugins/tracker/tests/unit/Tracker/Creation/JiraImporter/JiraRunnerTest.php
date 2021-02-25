@@ -229,12 +229,13 @@ final class JiraRunnerTest extends TestCase
                 'Imported issues from jira',
                 'inca-silver',
                 Mockery::on(
-                    function (ConcealedString $token) {
-                        return $token->getString() === 'secret';
+                    function (JiraCredentials $credentials) {
+                        return $credentials->getJiraUrl() === 'https://jira.example.com' &&
+                            $credentials->getJiraUsername() === 'user@example.com' &&
+                            $credentials->getJiraToken()->getString() === 'secret';
                     }
                 ),
-                'user@example.com',
-                'https://jira.example.com',
+                Mockery::type(JiraClient::class),
                 'Jira project',
                 '10003',
                 $user,

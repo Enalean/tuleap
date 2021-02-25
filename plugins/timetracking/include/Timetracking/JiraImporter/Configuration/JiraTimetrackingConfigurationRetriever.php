@@ -25,6 +25,7 @@ namespace Tuleap\Timetracking\JiraImporter\Configuration;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class JiraTimetrackingConfigurationRetriever
 {
@@ -32,7 +33,7 @@ class JiraTimetrackingConfigurationRetriever
     public const EXPECTED_VALUE    = 'JIRA';
 
     /**
-     * @var ClientWrapper
+     * @var JiraClient
      */
     private $jira_client;
 
@@ -41,7 +42,7 @@ class JiraTimetrackingConfigurationRetriever
      */
     private $logger;
 
-    public function __construct(ClientWrapper $jira_client, LoggerInterface $logger)
+    public function __construct(JiraClient $jira_client, LoggerInterface $logger)
     {
         $this->jira_client = $jira_client;
         $this->logger      = $logger;

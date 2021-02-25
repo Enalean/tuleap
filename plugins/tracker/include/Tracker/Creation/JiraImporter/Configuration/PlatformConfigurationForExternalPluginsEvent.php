@@ -25,17 +25,17 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Configuration;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Event\Dispatchable;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class PlatformConfigurationForExternalPluginsEvent implements Dispatchable
 {
     public const NAME = 'platformConfigurationForExternalPluginsEvent';
 
     /**
-     * @var ClientWrapper
+     * @var JiraClient
      * @psalm-readonly
      */
-    private $wrapper;
+    private $jira_client;
 
     /**
      * @var PlatformConfiguration
@@ -49,18 +49,18 @@ class PlatformConfigurationForExternalPluginsEvent implements Dispatchable
     private $logger;
 
     public function __construct(
-        ClientWrapper $wrapper,
+        JiraClient $jira_client,
         PlatformConfiguration $platform_configuration,
         LoggerInterface $logger
     ) {
-        $this->wrapper                = $wrapper;
+        $this->jira_client            = $jira_client;
         $this->platform_configuration = $platform_configuration;
         $this->logger                 = $logger;
     }
 
-    public function getWrapper(): ClientWrapper
+    public function getJiraClient(): JiraClient
     {
-        return $this->wrapper;
+        return $this->jira_client;
     }
 
     public function addConfigurationInCollection(string $configuration_name): void

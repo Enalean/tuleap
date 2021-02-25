@@ -438,7 +438,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
 
     public function platformConfigurationForExternalPluginsEvent(PlatformConfigurationForExternalPluginsEvent $event): void
     {
-        $configuration = (new JiraTimetrackingConfigurationRetriever($event->getWrapper(), $event->getLogger()))
+        $configuration = (new JiraTimetrackingConfigurationRetriever($event->getJiraClient(), $event->getLogger()))
             ->getJiraTimetrackingConfiguration();
 
         if ($configuration !== null) {

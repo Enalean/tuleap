@@ -64,6 +64,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -365,10 +366,10 @@ class JiraXmlExporter
         SimpleXMLElement $node_tracker,
         string $jira_base_url,
         string $jira_project_key,
-        string $jira_issue_type_id,
+        IssueType $issue_type,
         IDGenerator $field_id_generator
     ): void {
-        $this->logger->debug("Start export Jira to XML: " . $jira_issue_type_id);
+        $this->logger->debug("Start export Jira to XML: " . $issue_type->getId());
 
         if (! isset($node_tracker->formElements)) {
             throw new \RuntimeException('XML node should have a `formElements` child');
@@ -389,7 +390,7 @@ class JiraXmlExporter
         $this->logger->debug("Handle status");
         $status_values_collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
-            $jira_issue_type_id,
+            $issue_type->getId(),
             $field_id_generator,
         );
 
@@ -406,7 +407,7 @@ class JiraXmlExporter
             $jira_field_mapping_collection,
             $field_id_generator,
             $jira_project_key,
-            $jira_issue_type_id
+            $issue_type
         );
 
         $this->logger->debug("Export semantics");
@@ -446,7 +447,7 @@ class JiraXmlExporter
             $issue_representation_collection,
             $jira_base_url,
             $jira_project_key,
-            $jira_issue_type_id,
+            $issue_type->getId(),
         );
 
         $this->event_manager->dispatch(
@@ -472,9 +473,9 @@ class JiraXmlExporter
         FieldMappingCollection $jira_field_mapping_collection,
         IDGenerator $id_generator,
         string $jira_project_id,
-        string $jira_issue_type_id
+        IssueType $issue_type
     ): void {
-        $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $jira_issue_type_id, $id_generator);
+        $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $issue_type->getId(), $id_generator);
         $this->logger->debug("Start exporting jira field structure ...");
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(

@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Configuration;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class PlatformConfigurationRetriever
 {
@@ -39,7 +39,7 @@ class PlatformConfigurationRetriever
         $this->event_dispatcher = $event_dispatcher;
     }
 
-    public function getJiraPlatformConfiguration(ClientWrapper $wrapper, LoggerInterface $logger): PlatformConfiguration
+    public function getJiraPlatformConfiguration(JiraClient $wrapper, LoggerInterface $logger): PlatformConfiguration
     {
         $logger->debug("Get Jira platform configurations.");
         $platform_configuration = new PlatformConfiguration();
