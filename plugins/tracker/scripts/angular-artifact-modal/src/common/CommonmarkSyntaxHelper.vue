@@ -33,7 +33,7 @@
         <section class="tlp-popover" ref="popover_helper">
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title">For your information...</h1>
+                <h1 class="tlp-popover-title">{{ for_your_information }}</h1>
             </div>
             <div class="tlp-popover-body">
                 <table class="tlp-table">
@@ -152,6 +152,7 @@
 <script>
 import { createPopover } from "tlp";
 import {
+    getCommonMarkSyntaxHelperPopoverTitle,
     getSyntaxHelperLabel,
     getSyntaxHelperTitle,
     getSyntaxHelperToGet,
@@ -173,6 +174,9 @@ export default {
         },
         to_get() {
             return getSyntaxHelperToGet();
+        },
+        for_your_information() {
+            return getCommonMarkSyntaxHelperPopoverTitle();
         },
     },
     mounted() {
