@@ -20,6 +20,7 @@
 @import '../../default/css/style';
 @import './tracker-creation';
 @import '~@tuleap/mention';
+@import '~@tuleap/plugin-tracker-rich-text-editor';
 
 @mixin definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white) {
     /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
@@ -242,6 +243,8 @@ body {
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
         @import '../../../../../src/themes/tlp/src/scss/components/cards';
         @import '../../../../../src/themes/tlp/src/scss/components/badges';
+        @import '../../../../../src/themes/tlp/src/scss/components/popovers';
+        @import '../../../../../src/themes/tlp/src/scss/components/tables';
     }
 
     &.FlamingParrot_Blue { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
@@ -252,6 +255,8 @@ body {
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
         @import '../../../../../src/themes/tlp/src/scss/components/cards';
         @import '../../../../../src/themes/tlp/src/scss/components/badges';
+        @import '../../../../../src/themes/tlp/src/scss/components/popovers';
+        @import '../../../../../src/themes/tlp/src/scss/components/tables';
     }
 
     &.FlamingParrot_Green { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
@@ -262,6 +267,8 @@ body {
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
         @import '../../../../../src/themes/tlp/src/scss/components/cards';
         @import '../../../../../src/themes/tlp/src/scss/components/badges';
+        @import '../../../../../src/themes/tlp/src/scss/components/popovers';
+        @import '../../../../../src/themes/tlp/src/scss/components/tables';
     }
 
     &.FlamingParrot_BlueGrey { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
@@ -272,6 +279,8 @@ body {
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
         @import '../../../../../src/themes/tlp/src/scss/components/cards';
         @import '../../../../../src/themes/tlp/src/scss/components/badges';
+        @import '../../../../../src/themes/tlp/src/scss/components/popovers';
+        @import '../../../../../src/themes/tlp/src/scss/components/tables';
     }
 
     &.FlamingParrot_Purple { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
@@ -282,6 +291,8 @@ body {
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
         @import '../../../../../src/themes/tlp/src/scss/components/cards';
         @import '../../../../../src/themes/tlp/src/scss/components/badges';
+        @import '../../../../../src/themes/tlp/src/scss/components/popovers';
+        @import '../../../../../src/themes/tlp/src/scss/components/tables';
     }
 
     &.FlamingParrot_Red { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
@@ -292,5 +303,7 @@ body {
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
         @import '../../../../../src/themes/tlp/src/scss/components/cards';
         @import '../../../../../src/themes/tlp/src/scss/components/badges';
+        @import '../../../../../src/themes/tlp/src/scss/components/popovers';
+        @import '../../../../../src/themes/tlp/src/scss/components/tables';
     }
 }

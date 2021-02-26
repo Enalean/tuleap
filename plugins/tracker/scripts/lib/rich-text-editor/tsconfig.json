@@ -3,7 +3,7 @@
     "compilerOptions": {
         "lib": ["ES2015", "DOM", "DOM.Iterable"],
         "outDir": "types/",
-        "types": ["ckeditor", "jest"]
+        "types": ["ckeditor", "jest", "bootstrap"]
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]

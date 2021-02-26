@@ -8,6 +8,7 @@
   "module": "dist/plugin-tracker-rich-text-editor.es.js",
   "main": "dist/plugin-tracker-rich-text-editor.umd.js",
   "types": "types/index.d.ts",
+  "style": "dist/style.css",
   "exports": {
     ".": {
       "import": "./dist/plugin-tracker-rich-text-editor.es.js",
@@ -24,6 +25,9 @@
     "@types/ckeditor": "^4.9.10",
     "@types/marked": "^1.2.1",
     "@types/turndown": "^5.0.0"
+  },
+  "peerDependencies": {
+    "jquery": ">=1.7.0 <4.0.0"
   },
   "config": {
     "bin": "../../../../../node_modules/.bin"

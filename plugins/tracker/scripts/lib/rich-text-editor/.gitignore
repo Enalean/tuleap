@@ -1,2 +1,3 @@
 dist/
 types/
+!themes/*.css
