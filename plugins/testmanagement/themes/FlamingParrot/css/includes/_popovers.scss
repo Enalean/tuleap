@@ -18,14 +18,6 @@
  *
  */
 
-$tlp-popover-radius: 4px;
-$tlp-popover-arrow-size: 10px;
-$tlp-popover-shadow: 0 0 0 1px transparentize($tlp-theme-sidebar-background-color, .97),
-    0 6px 12px -5px transparentize($tlp-theme-sidebar-background-color, .85);
-$tlp-popover-hover-transition-show: 75ms ease-out 500ms;
-$tlp-popover-hover-transition-hide: 75ms ease-out 250ms;
-$tlp-popover-click-transition: 75ms ease-out;
-
 .popover {
     max-width: none;
     padding: 0;
@@ -39,91 +31,4 @@ $tlp-popover-click-transition: 75ms ease-out;
 .popover-h2-indentation,
 .popover-blockquote-indentation {
     display: inline;
-}
-
-.tlp-popover {
-    display: flex;
-    position: absolute;
-    z-index: 1000;
-    flex-direction: column;
-    width: 400px;
-    transition: opacity $tlp-popover-hover-transition-hide,
-        transform $tlp-popover-hover-transition-hide,
-        box-shadow $tlp-popover-hover-transition-hide;
-    border-radius: $tlp-popover-radius;
-    opacity: 0;
-    box-shadow: none;
-    pointer-events: none;
-}
-
-.tlp-popover-header {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-top-left-radius: $tlp-popover-radius;
-    border-top-right-radius: $tlp-popover-radius;
-    background: $tlp-theme-color;
-}
-
-.tlp-popover-title {
-    margin: 0;
-    color: $tlp-ui-white;
-    font-size: 16px;
-    line-height: 24px;
-    text-transform: none;
-}
-
-$tlp-table-cell-padding: (6px / 2) 6px;
-
-%tlp-table-th {
-    padding: $tlp-table-cell-padding;
-    background: $tlp-table-header-background;
-    color: $tlp-theme-color;
-    font-weight: 600;
-
-    &.tlp-table-cell-numeric {
-        text-align: right;
-    }
-}
-
-
-.tlp-table {
-    width: 100%;
-    font-size: .875rem;
-    line-height: 1.375rem;
-
-    /* stylelint-disable selector-no-qualifying-type */
-    > thead > tr > th {
-        @extend %tlp-table-th;
-
-        border-bottom: 2px solid $tlp-theme-color;
-    }
-
-    > tfoot > tr > th {
-        @extend %tlp-table-th;
-
-        border-top: 2px solid $tlp-theme-color;
-    }
-
-    > tbody {
-        > tr:nth-child(even) > td {
-            background: $tlp-table-row-background-even;
-        }
-
-        > tr:nth-child(odd) > td {
-            background: $tlp-table-row-background-odd;
-        }
-
-        > tr:hover > td,
-        > tr:focus-within > td {
-            background: mix($tlp-theme-color, $tlp-ui-white, 15%);
-        }
-
-        > tr > td {
-            padding: $tlp-table-cell-padding;
-            line-height: 1.5rem;
-            vertical-align: middle;
-        }
-    }
-    /* stylelint-enable */
 }
