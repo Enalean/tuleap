@@ -43,6 +43,9 @@ class FieldMappingCollection
 
     public function addMapping(FieldMapping $field_mapping): void
     {
+        if (isset($this->mapping[$field_mapping->getJiraFieldId()])) {
+            throw new \LogicException('There is already a field registered in mapping with ID ' . $field_mapping->getJiraFieldId() . '. It\'s likely that you try to add the same field two times in the configuration');
+        }
         $this->mapping[$field_mapping->getJiraFieldId()] = $field_mapping;
     }
 

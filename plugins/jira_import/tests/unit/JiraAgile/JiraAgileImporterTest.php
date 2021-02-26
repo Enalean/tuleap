@@ -28,7 +28,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfiguration;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationColumn;
-use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
@@ -43,28 +42,6 @@ use function PHPUnit\Framework\assertTrue;
 
 final class JiraAgileImporterTest extends TestCase
 {
-    public function testItHasNoBoards(): void
-    {
-        $board_retriever = new class implements JiraBoardsRetriever
-        {
-            public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
-            {
-                assertSame('FOO', $jira_project_key);
-                return null;
-            }
-        };
-
-        $jira_agile_importer = new JiraAgileImporter(
-            $board_retriever,
-            $this->getJiraSprintRetrieverWithoutSprints(),
-            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
-            new \EventManager(),
-        );
-
-        $this->getXMLAfterExport($jira_agile_importer);
-    }
-
     public function testItHasASprintTracker(): void
     {
         $xml = $this->getXMLAfterExport($this->getJiraAgileImport());
@@ -98,10 +75,8 @@ final class JiraAgileImporterTest extends TestCase
         };
 
         $jira_agile_importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithoutSprints(),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             $dispatcher,
         );
 
@@ -336,23 +311,6 @@ final class JiraAgileImporterTest extends TestCase
     {
         $board               = new JiraBoard(1, 'https://example.com', 10000, 'FOO');
         $jira_agile_importer = new JiraAgileImporter(
-            new class ($board) implements JiraBoardsRetriever
-            {
-                /**
-                 * @var JiraBoard
-                 */
-                private $fetched_board;
-
-                public function __construct(JiraBoard $fetched_board)
-                {
-                    $this->fetched_board = $fetched_board;
-                }
-
-                public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
-                {
-                    return $this->fetched_board;
-                }
-            },
             new class ($board) implements JiraSprintRetriever {
                 /**
                  * @var JiraBoard
@@ -371,22 +329,30 @@ final class JiraAgileImporterTest extends TestCase
                 }
             },
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
 
-        $this->getXMLAfterExport($jira_agile_importer);
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $jira_agile_importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            $board,
+            JiraBoardConfiguration::buildWithoutEstimationField([]),
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic',
+        );
     }
 
     public function testItCreatesOneSprintArtifact(): void
     {
         $jira_agile_importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithSprints(
                 [JiraSprint::buildActive(1, 'Sprint 1')]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
 
@@ -413,7 +379,6 @@ final class JiraAgileImporterTest extends TestCase
     public function testItCreatesOneSprintArtifactWithStartDate(): void
     {
         $jira_agile_importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildActive(1, 'Sprint 1')
@@ -421,7 +386,6 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
 
@@ -436,7 +400,6 @@ final class JiraAgileImporterTest extends TestCase
     public function testItCreatesOneSprintArtifactWithEndDate(): void
     {
         $jira_agile_importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildActive(1, 'Sprint 1')
@@ -444,7 +407,6 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
 
@@ -459,7 +421,6 @@ final class JiraAgileImporterTest extends TestCase
     public function testItCreatesOneSprintArtifactWithCompletedDate(): void
     {
         $jira_agile_importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildActive(1, 'Sprint 1')
@@ -467,7 +428,6 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
 
@@ -482,7 +442,6 @@ final class JiraAgileImporterTest extends TestCase
     public function testItCreatesSprintsArtifactWithStatus(): void
     {
         $jira_agile_importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildClosed(1, 'Sprint 1'),
@@ -491,7 +450,6 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
 
@@ -525,7 +483,6 @@ final class JiraAgileImporterTest extends TestCase
     public function testItLinksIssuesWithSprint(): void
     {
         $jira_agile_importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithSprints(
                 [
                     JiraSprint::buildActive(1, 'Sprint 1'),
@@ -536,7 +493,6 @@ final class JiraAgileImporterTest extends TestCase
                     10001, 10004,
                 ]
             ),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
 
@@ -559,7 +515,8 @@ final class JiraAgileImporterTest extends TestCase
         $this->getJiraAgileImport()->exportScrum(
             new NullLogger(),
             $xml,
-            'FOO',
+            $this->getJiraBoard(),
+            JiraBoardConfiguration::buildWithoutEstimationField([]),
             new FieldAndValueIDGenerator(),
             UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
             [
@@ -590,28 +547,22 @@ final class JiraAgileImporterTest extends TestCase
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
         $importer = new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithoutSprints(),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            new class implements JiraBoardConfigurationRetriever {
-                public function getScrumBoardConfiguration(JiraBoard $jira_board): ?JiraBoardConfiguration
-                {
-                    return new JiraBoardConfiguration(
-                        [
-                            new JiraBoardConfigurationColumn("To Do"),
-                            new JiraBoardConfigurationColumn("On Going"),
-                            new JiraBoardConfigurationColumn("Done"),
-                        ]
-                    );
-                }
-            },
             new \EventManager(),
         );
 
         $importer->exportScrum(
             new NullLogger(),
             $xml,
-            'FOO',
+            $this->getJiraBoard(),
+            JiraBoardConfiguration::buildWithoutEstimationField(
+                [
+                    new JiraBoardConfigurationColumn("To Do"),
+                    new JiraBoardConfigurationColumn("On Going"),
+                    new JiraBoardConfigurationColumn("Done"),
+                ],
+            ),
             new FieldAndValueIDGenerator(),
             UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
             [],
@@ -635,23 +586,15 @@ final class JiraAgileImporterTest extends TestCase
     private function getJiraAgileImport(): JiraAgileImporter
     {
         return new JiraAgileImporter(
-            $this->getJiraBoradRetrieverWithOneBoard(),
             $this->getJiraSprintRetrieverWithoutSprints(),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            $this->getBoardConfigurationRetrieverWithoutConfiguration(),
             new \EventManager(),
         );
     }
 
-    private function getJiraBoradRetrieverWithOneBoard(): JiraBoardsRetriever
+    private function getJiraBoard(): JiraBoard
     {
-        return new class implements JiraBoardsRetriever
-        {
-            public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
-            {
-                return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
-            }
-        };
+        return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
     }
 
     private function getJiraSprintRetrieverWithoutSprints(): JiraSprintRetriever
@@ -710,17 +653,6 @@ final class JiraAgileImporterTest extends TestCase
         };
     }
 
-    private function getBoardConfigurationRetrieverWithoutConfiguration(): JiraBoardConfigurationRetriever
-    {
-        return new class implements JiraBoardConfigurationRetriever
-        {
-            public function getScrumBoardConfiguration(JiraBoard $jira_board): ?JiraBoardConfiguration
-            {
-                return null;
-            }
-        };
-    }
-
     private function getXMLAfterExport(JiraAgileImporter $jira_agile_importer): \SimpleXMLElement
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -728,7 +660,8 @@ final class JiraAgileImporterTest extends TestCase
         $jira_agile_importer->exportScrum(
             new NullLogger(),
             $xml,
-            'FOO',
+            $this->getJiraBoard(),
+            JiraBoardConfiguration::buildWithoutEstimationField([]),
             new FieldAndValueIDGenerator(),
             UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
             [],

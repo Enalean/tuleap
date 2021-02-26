@@ -185,20 +185,39 @@ final class CreateProjectFromJira
 
         $this->artifact_link_type_importer->import($jira_client);
 
-        $jira_agile_importer = new JiraAgileImporter(
-            new JiraBoardsRetrieverFromAPI(
+        $platform_configuration_collection = $this->platform_configuration_collection_builder->getJiraPlatformConfiguration(
+            $jira_client,
+            $logger
+        );
+
+        $board_retriever = new JiraBoardsRetrieverFromAPI(
+            $jira_client,
+            $logger,
+        );
+
+        $board               = $board_retriever->getFirstScrumBoardForProject($jira_project);
+        $board_configuration = null;
+        if ($board) {
+            $board_configuration_retriever = new JiraBoardConfigurationRetrieverFromAPI(
                 $jira_client,
                 $logger,
-            ),
+            );
+            $board_configuration           = $board_configuration_retriever->getScrumBoardConfiguration($board);
+            if ($board_configuration === null) {
+                throw new \RuntimeException('Cannot fetch configuration for board ' . $board->id);
+            }
+            if ($board_configuration->estimation_field) {
+                $logger->debug('Agile: estimation field: ' . $board_configuration->estimation_field);
+                $platform_configuration_collection->setStoryPointsField($board_configuration->estimation_field);
+            }
+        }
+
+        $jira_agile_importer = new JiraAgileImporter(
             new JiraSprintRetrieverFromAPI(
                 $jira_client,
                 $logger,
             ),
             new JiraSprintIssuesRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            new JiraBoardConfigurationRetrieverFromAPI(
                 $jira_client,
                 $logger,
             ),
@@ -234,11 +253,6 @@ final class CreateProjectFromJira
 
         $field_id_generator = new FieldAndValueIDGenerator();
 
-        $platform_configuration_collection = $this->platform_configuration_collection_builder->getJiraPlatformConfiguration(
-            $jira_client,
-            $logger
-        );
-
         $trackers_xml = $xml_element->addChild('trackers');
 
         foreach ($jira_issue_types as $jira_issue_type) {
@@ -260,15 +274,18 @@ final class CreateProjectFromJira
             );
         }
 
-        $jira_agile_importer->exportScrum(
-            $logger,
-            $xml_element,
-            $jira_project,
-            $field_id_generator,
-            $import_user,
-            $jira_issue_types,
-            $jira_epic_issue_type
-        );
+        if ($board && $board_configuration) {
+            $jira_agile_importer->exportScrum(
+                $logger,
+                $xml_element,
+                $board,
+                $board_configuration,
+                $field_id_generator,
+                $import_user,
+                $jira_issue_types,
+                $jira_epic_issue_type
+            );
+        }
 
         return $this->addWidgetOnDashboard($xml_element, [ProjectHeartbeat::NAME]);
     }

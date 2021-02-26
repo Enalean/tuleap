@@ -26,18 +26,21 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
+use function PHPUnit\Framework\assertEquals;
 
 final class JiraToTuleapFieldTypeMapperTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -73,7 +76,13 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger         = Mockery::mock(LoggerInterface::class);
+        $this->logger         = new class extends AbstractLogger {
+            public $messages = [];
+            public function log($level, $message, array $context = [])
+            {
+                $this->messages[$level][] = $message;
+            }
+        };
         $this->field_exporter = Mockery::mock(FieldXmlExporter::class);
         $this->mapper         = new JiraToTuleapFieldTypeMapper(
             $this->field_exporter,
@@ -124,7 +133,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -159,7 +169,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -194,7 +205,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -229,7 +241,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -264,7 +277,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -301,7 +315,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -338,7 +353,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -378,7 +394,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -418,7 +435,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -458,7 +476,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -498,7 +517,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -538,7 +558,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            new PlatformConfiguration(),
         );
     }
 
@@ -554,12 +575,46 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
-        $this->logger->shouldReceive('debug')->with(" |_ Field votes_id (votes) ignored ")->once();
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->containers_collection,
+            $collection,
+            new PlatformConfiguration(),
+        );
+
+        assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
+    }
+
+    public function testStoryPointsFieldIsNotAddedTwiceWhenConfiguredOnTheCreationScreen(): void
+    {
+        $story_points_jira_field_id = 'customfield_10014';
+
+        $jira_field = new JiraFieldAPIRepresentation(
+            $story_points_jira_field_id,
+            'Story points',
+            false,
+            'com.atlassian.jira.plugin.system.customfieldtypes:float',
+            []
+        );
+
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $collection->addMapping(new ScalarFieldMapping(
+            $story_points_jira_field_id,
+            'F1234',
+            'story_points',
+            Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
+        ));
+
+        $platform_configuration = new PlatformConfiguration();
+        $platform_configuration->setStoryPointsField($story_points_jira_field_id);
+
+        $this->field_exporter->shouldNotReceive('exportField');
 
         $this->mapper->exportFieldToXml(
             $jira_field,
             $this->containers_collection,
-            $collection
+            $collection,
+            $platform_configuration,
         );
     }
 }

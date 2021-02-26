@@ -29,7 +29,7 @@ use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
 use Tuleap\Cardwall\XML\XMLCardwall;
 use Tuleap\Cardwall\XML\XMLCardwallColumn;
 use Tuleap\Cardwall\XML\XMLCardwallTracker;
-use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetriever;
+use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfiguration;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
@@ -39,14 +39,11 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStati
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue;
 use Tuleap\Tracker\XML\IDGenerator;
+use Tuleap\Tracker\XML\XMLTracker;
 use Tuleap\Tracker\XML\XMLUser;
 
 final class JiraAgileImporter
 {
-    /**
-     * @var JiraBoardsRetriever
-     */
-    private $boards_retriever;
     /**
      * @var JiraSprintRetriever
      */
@@ -60,23 +57,14 @@ final class JiraAgileImporter
      */
     private $event_dispatcher;
 
-    /**
-     * @var JiraBoardConfigurationRetriever
-     */
-    private $board_configuration_retriever;
-
     public function __construct(
-        JiraBoardsRetriever $boards_retriever,
         JiraSprintRetriever $sprint_retriever,
         JiraSprintIssuesRetriever $sprint_issues_retriever,
-        JiraBoardConfigurationRetriever $board_configuration_retriever,
         EventDispatcherInterface $event_dispatcher
     ) {
-        $this->boards_retriever              = $boards_retriever;
-        $this->sprint_retriever              = $sprint_retriever;
-        $this->sprint_issues_retriever       = $sprint_issues_retriever;
-        $this->board_configuration_retriever = $board_configuration_retriever;
-        $this->event_dispatcher              = $event_dispatcher;
+        $this->sprint_retriever        = $sprint_retriever;
+        $this->sprint_issues_retriever = $sprint_issues_retriever;
+        $this->event_dispatcher        = $event_dispatcher;
     }
 
     /**
@@ -85,16 +73,13 @@ final class JiraAgileImporter
     public function exportScrum(
         LoggerInterface $logger,
         \SimpleXMLElement $project,
-        string $jira_project,
+        JiraBoard $board,
+        JiraBoardConfiguration $board_configuration,
         IDGenerator $id_generator,
         \PFUser $import_user,
         array $jira_issue_types,
         string $jira_epic_issue_type
     ): void {
-        $board = $this->boards_retriever->getFirstScrumBoardForProject($jira_project);
-        if (! $board) {
-            return;
-        }
         $logger->info('Project has Agile configuration to import');
 
         $scrum_tracker_builder = new ScrumTrackerBuilder($this->event_dispatcher);
@@ -134,13 +119,16 @@ final class JiraAgileImporter
         $scrum_tracker->export($project->trackers);
 
         $this->exportPlanningConfiguration($logger, $project, $scrum_tracker, $jira_issue_types, $jira_epic_issue_type);
-        $this->exportCardwallConfiguration($logger, $project, $scrum_tracker, $board);
+        $this->exportCardwallConfiguration($logger, $project, $scrum_tracker, $board_configuration);
     }
 
+    /**
+     * @param IssueType[] $jira_issue_types
+     */
     private function exportPlanningConfiguration(
         LoggerInterface $logger,
         \SimpleXMLElement $project,
-        \Tuleap\Tracker\XML\XMLTracker $scrum_tracker,
+        XMLTracker $scrum_tracker,
         array $jira_issue_types,
         string $jira_epic_issue_type
     ): void {
@@ -170,18 +158,13 @@ final class JiraAgileImporter
     private function exportCardwallConfiguration(
         LoggerInterface $logger,
         \SimpleXMLElement $project,
-        \Tuleap\Tracker\XML\XMLTracker $scrum_tracker,
-        JiraBoard $jira_board
+        XMLTracker $scrum_tracker,
+        JiraBoardConfiguration $board_configuration
     ): void {
         $logger->debug("Export cardwall planning configuration");
 
-        $board_configuration = $this->board_configuration_retriever->getScrumBoardConfiguration($jira_board);
-        if ($board_configuration === null) {
-            return;
-        }
-
         $xml_tracker = new XMLCardwallTracker($scrum_tracker->getId());
-        foreach ($board_configuration->getColumns() as $configuration_column) {
+        foreach ($board_configuration->columns as $configuration_column) {
             $xml_tracker = $xml_tracker->withColumn(new XMLCardwallColumn($configuration_column->name));
         }
 
