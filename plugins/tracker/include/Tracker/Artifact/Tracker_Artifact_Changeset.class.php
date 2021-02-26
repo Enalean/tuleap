@@ -217,21 +217,20 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     {
         $html = '';
 
-        //The comment
-        if ($comment = $this->getComment()) {
-            $follow_up = $comment->fetchFollowUp($current_user);
-            $html     .= '<div class="tracker_artifact_followup_comment">';
-            $html     .= $follow_up;
-            $html     .= '</div>';
+        $follow_up = $this->getComment()->fetchFollowUp($current_user);
+        if ($follow_up) {
+            $html .= '<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_' . $this->getId() . '">';
+            $html .= $follow_up;
+            $html .= '</div>';
 
-            if ($follow_up && $diff_to_previous) {
+            if ($diff_to_previous) {
                 $html .= '<hr size="1" />';
             }
         }
 
         //The changes
         if ($diff_to_previous) {
-            $html .= '<ul class="tracker_artifact_followup_changes">';
+            $html .= '<ul class="tracker_artifact_followup_changes" data-test="tracker_artifact_followup_changes_followup_' . $this->getId() . '">';
             $html .= $diff_to_previous;
             $html .= '</ul>';
         }
@@ -382,10 +381,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return $this->getSubmitter()->getAvatarUrl();
     }
 
-    /**
-     * @return string
-     */
-    public function getFollowUpClassnames($diff_to_previous)
+    public function getFollowUpClassnames($diff_to_previous, PFUser $user): string
     {
         $classnames = '';
 
@@ -395,7 +391,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             $classnames .= ' tracker_artifact_followup-with_changes ';
         }
 
-        if ($comment && ! $comment->hasEmptyBody()) {
+        if ($comment && ! $comment->hasEmptyBodyForUser($user)) {
             $classnames .= ' tracker_artifact_followup-with_comment ';
         }
 
@@ -861,5 +857,23 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         );
 
         return $displayer->display((int) $this->getId());
+    }
+
+    public function getFollowUpHTML(PFUser $user, Tracker_Artifact_Followup_Item $previous_item): ?string
+    {
+        $diff_to_previous = $this->diffToPreviousArtifactView($user, $previous_item);
+        $comment_content  = $this->getComment()->fetchFollowUp($user);
+
+        if ($diff_to_previous === "" && $comment_content === null) {
+            return null;
+        }
+
+        $classnames    = 'tracker_artifact_followup ';
+        $classnames   .= $this->getFollowUpClassnames($diff_to_previous, $user);
+        $comment_html  = '<li id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up" data-changeset-id="followup_' . $this->getId() . '">';
+        $comment_html .= $this->fetchFollowUp($diff_to_previous, $user);
+        $comment_html .= '</li>';
+
+        return $comment_html;
     }
 }

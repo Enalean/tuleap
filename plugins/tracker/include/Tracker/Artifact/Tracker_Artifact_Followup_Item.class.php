@@ -23,7 +23,7 @@ abstract class Tracker_Artifact_Followup_Item
 
     abstract public function getFollowUpDate();
 
-    abstract public function getFollowUpClassnames($diff_to_previous);
+    abstract public function getFollowUpClassnames($diff_to_previous, PFUser $user);
 
     abstract public function fetchFollowUp($diff_to_previous, PFUser $current_user);
 
@@ -32,6 +32,18 @@ abstract class Tracker_Artifact_Followup_Item
     abstract public function getSubmitterUrl();
 
     abstract public function getFollowupContent(string $diff_to_previous, \PFUser $current_user): string;
+
+    public function getFollowUpHTML(PFUser $user, Tracker_Artifact_Followup_Item $previous_item): ?string
+    {
+        $diff_to_previous = $this->diffToPreviousArtifactView($user, $previous_item);
+        $classnames       = 'tracker_artifact_followup ';
+        $classnames      .= $this->getFollowUpClassnames($diff_to_previous, $user);
+        $comment_html     = '<li id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up">';
+        $comment_html    .= $this->fetchFollowUp($diff_to_previous, $user);
+        $comment_html    .= '</li>';
+
+        return $comment_html;
+    }
 
     /**
      * Return diff between this followup and previous one (HTML code)

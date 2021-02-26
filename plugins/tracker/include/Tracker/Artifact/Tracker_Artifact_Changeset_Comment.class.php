@@ -215,6 +215,14 @@ class Tracker_Artifact_Changeset_Comment
         return empty($this->body);
     }
 
+    public function hasEmptyBodyForUser(PFUser $user): bool
+    {
+        $presenter_builder = new CommentPresenterBuilder(new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao()), UserHelper::instance());
+        $presenter         = $presenter_builder->getCommentPresenter($this, $user);
+
+        return $presenter === null;
+    }
+
     /**
      * Returns the HTML code of this comment
      *
