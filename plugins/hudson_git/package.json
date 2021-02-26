@@ -5,16 +5,16 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {},
+  "devDependencies": {
+    "@types/bootstrap": "^3.4.0",
+    "@types/jquery": "^3.5.1",
+    "jquery": "^3.5.1"
+  },
   "config": {
     "bin": "../../node_modules/.bin"
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
-  },
-  "devDependencies": {
-    "@types/bootstrap": "^3.4.0",
-    "@types/jquery": "^3.5.1",
-    "jquery": "^3.5.1"
   }
 }

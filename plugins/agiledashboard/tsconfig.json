@@ -1,9 +1,8 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "esNext"
+        "module": "esNext",
+        "types": ["jest", "node"]
     },
-    "include": [
-        "scripts/**/*"
-    ]
+    "include": ["scripts/**/*"]
 }
