@@ -245,9 +245,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     public function fetchFollowUp($diff_to_previous, PFUser $current_user)
     {
-        $html = '';
+        $follow_up_content = $this->getFollowupContent($diff_to_previous, $current_user);
+        if ($follow_up_content === "") {
+            return "";
+        }
 
-        $html .= $this->getAvatar();
+        $html = $this->getAvatar();
 
         $html .= '<div class="tracker_artifact_followup_header">';
         $html .= $this->getPermalink();
@@ -259,14 +262,17 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
         // The content
         $html .= '<div class="tracker_artifact_followup_content">';
-        $html .= $this->getFollowupContent($diff_to_previous, $current_user);
+        $html .= $follow_up_content;
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';
         return $html;
     }
 
-    private function fetchChangesetActionButtons()
+    /**
+     * Need protected for test purpose
+     */
+    protected function fetchChangesetActionButtons()
     {
         $html        = '';
         $edit_button = $this->fetchEditButton();
@@ -847,7 +853,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return $this->id === $artifact_last_changeset->getId();
     }
 
-    private function fetchImportedFromXmlData(): string
+    /**
+     * Need protected for test purpose
+     */
+    protected function fetchImportedFromXmlData(): string
     {
         $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../../templates/artifact");
         $displayer = new ChangesetFromXmlDisplayer(
@@ -862,16 +871,16 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function getFollowUpHTML(PFUser $user, Tracker_Artifact_Followup_Item $previous_item): ?string
     {
         $diff_to_previous = $this->diffToPreviousArtifactView($user, $previous_item);
-        $comment_content  = $this->getComment()->fetchFollowUp($user);
+        $comment_content  = $this->fetchFollowUp($diff_to_previous, $user);
 
-        if ($diff_to_previous === "" && $comment_content === null) {
+        if ($comment_content === "") {
             return null;
         }
 
         $classnames    = 'tracker_artifact_followup ';
         $classnames   .= $this->getFollowUpClassnames($diff_to_previous, $user);
         $comment_html  = '<li id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up" data-changeset-id="followup_' . $this->getId() . '">';
-        $comment_html .= $this->fetchFollowUp($diff_to_previous, $user);
+        $comment_html .= $comment_content;
         $comment_html .= '</li>';
 
         return $comment_html;
