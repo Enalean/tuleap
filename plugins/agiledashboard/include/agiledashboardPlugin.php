@@ -92,6 +92,7 @@ use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
@@ -276,6 +277,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
             $this->addHook(DefaultTemplatesXMLFileCollection::NAME);
+            $this->addHook(GetWhitelistedKeys::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -604,6 +606,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $result['message']        = 'Agile Dashboard';
             $params['result']         = $result;
         }
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    {
+        $event->addConfigClass(ScrumForMonoMilestoneChecker::class);
     }
 
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $event)

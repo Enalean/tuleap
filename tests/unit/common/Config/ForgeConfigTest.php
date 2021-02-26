@@ -141,6 +141,14 @@ class ForgeConfigTest extends TestCase
         $this->assertFalse(ForgeConfig::areAnonymousAllowed());
     }
 
+    public function testFeatureFlag(): void
+    {
+        ForgeConfig::set('feature_flag_list_picker', true);
+
+        $this->assertTrue(ForgeConfig::getFeatureFlag('list_picker'));
+        $this->assertFalse(ForgeConfig::getFeatureFlag('another_flag'));
+    }
+
     public function testItReturnsEmptyArrayIfRestrictedUserFileIsTheDefaultOne(): void
     {
         $default_file = __DIR__ . '/../../../../site-content/en_US/include/restricted_user_permissions.txt';

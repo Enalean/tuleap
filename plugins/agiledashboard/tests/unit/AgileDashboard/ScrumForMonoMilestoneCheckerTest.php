@@ -25,10 +25,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\ForgeConfigSandbox;
 
 class ScrumForMonoMilestoneCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \PlanningFactory
@@ -112,11 +114,11 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsTrueWhenOnePlanningIsDefinedAndUserIsInLabMode(): void
+    public function testItReturnsTrueWhenOnePlanningIsDefinedAndFeatureFlagIsActivated(): void
     {
         $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(false);
         $this->planning_factory->shouldReceive('getPlannings')->andReturns([1]);
-        $this->user->shouldReceive('useLabFeatures')->andReturns(true);
+        \ForgeConfig::set('feature_flag_allow_scrum_mono_milestone_usage', 1);
 
         $this->assertTrue(
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable(
@@ -126,11 +128,11 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
         );
     }
 
-    public function testItReturnsFalseWhenOnePlanningIsDefinedAndUserIsNotInLabMode(): void
+    public function testItReturnsFalseWhenOnePlanningIsDefinedAndFeatureFlagIsNotActivated(): void
     {
         $this->scrum_mono_milestone_dao->shouldReceive('isMonoMilestoneActivatedForProject')->andReturns(false);
         $this->planning_factory->shouldReceive('getPlannings')->andReturns([1]);
-        $this->user->shouldReceive('useLabFeatures')->andReturns(false);
+        \ForgeConfig::set('feature_flag_allow_scrum_mono_milestone_usage', 0);
 
         $this->assertFalse(
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable(

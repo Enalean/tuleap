@@ -26,6 +26,14 @@ use PlanningFactory;
 class ScrumForMonoMilestoneChecker
 {
     public const NUMBER_MAXIMUM_OF_PLANNING = 1;
+
+    /**
+     * Feature flag to allow users to configure scrum v2 (mono milestone) in their projects
+     *
+     * @tlp-config-feature-flag-key
+     */
+    public const FEATURE_FLAG_KEY = 'allow_scrum_mono_milestone_usage';
+
     /**
      * @var ScrumForMonoMilestoneDao
      */
@@ -70,7 +78,7 @@ class ScrumForMonoMilestoneChecker
     {
         return $this->isMonoMilestoneEnabled($project_id) === true ||
             (
-                $user->useLabFeatures() == true
+                \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)
                 && $this->isOneOrLessPlanningDefined($user, $project_id, self::NUMBER_MAXIMUM_OF_PLANNING + 1) === true
             );
     }

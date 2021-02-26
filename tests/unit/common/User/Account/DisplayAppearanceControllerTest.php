@@ -43,7 +43,7 @@ class DisplayAppearanceControllerTest extends TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var DisplayExperimentalController
+     * @var DisplayAppearanceController
      */
     private $controller;
     /**

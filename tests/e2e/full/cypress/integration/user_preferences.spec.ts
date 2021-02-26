@@ -458,28 +458,4 @@ describe("User preferences", () => {
             });
         });
     });
-
-    describe("in the [Experimental] tab", () => {
-        beforeEach(() => {
-            cy.visit("account/experimental");
-        });
-
-        it("the user can activate the lab mode", () => {
-            cy.get("[data-test=user-prefs-lab-mode-checkbox]").click();
-            cy.get("[data-test=user-prefs-experimental-tab-submit-button]").click();
-
-            assertFeedbackContainsMessage("User preferences successfully updated");
-
-            cy.get("[data-test=user-prefs-lab-mode-checkbox]").should("be.checked");
-        });
-
-        it("the user can deactivate the lab mode", () => {
-            cy.get("[data-test=user-prefs-lab-mode-checkbox]").click();
-            cy.get("[data-test=user-prefs-experimental-tab-submit-button]").click();
-
-            assertFeedbackContainsMessage("User preferences successfully updated");
-
-            cy.get("[data-test=user-prefs-lab-mode-checkbox]").should("not.be.checked");
-        });
-    });
 });
