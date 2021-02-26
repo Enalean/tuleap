@@ -23,6 +23,8 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Masschange\MasschangeUpdater;
@@ -51,6 +53,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\CommentFromWhereBuilderFactory;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\TrackerCreationSuccess\SuccessPresenter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
@@ -103,17 +106,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      * @var InvalidComparisonCollectorVisitor
      */
     private $collector;
-    /**
-     * @var QueryBuilderVisitor
-     */
-    private $query_builder;
+
     /** @var IProvideFromAndWhereSQLFragments */
     private $additional_from_where;
-
-    /**
-     * @var CommentFromWhereBuilder
-     */
-    private $comment_from_where_builder;
 
     /**
      * Constructor
@@ -157,30 +152,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $this->updated_at          = $updated_at;
 
         $this->parser = new ParserCacheProxy(new Parser());
-
-        $this->comment_from_where_builder = new CommentFromWhereBuilder();
-
-        $this->query_builder = new QueryBuilderVisitor(
-            new QueryBuilder\EqualFieldComparisonVisitor(),
-            new QueryBuilder\NotEqualFieldComparisonVisitor(),
-            new QueryBuilder\LesserThanFieldComparisonVisitor(),
-            new QueryBuilder\GreaterThanFieldComparisonVisitor(),
-            new QueryBuilder\LesserThanOrEqualFieldComparisonVisitor(),
-            new QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor(),
-            new QueryBuilder\BetweenFieldComparisonVisitor(),
-            new QueryBuilder\InFieldComparisonVisitor(),
-            new QueryBuilder\NotInFieldComparisonVisitor(),
-            new QueryBuilder\SearchableVisitor($this->getFormElementFactory()),
-            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder($this->comment_from_where_builder),
-            new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataLesserThanOrEqualComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataGreaterThanOrEqualComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataBetweenComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder()
-        );
     }
 
     public function setProjectId($id)
@@ -448,7 +419,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             return;
         }
 
-        $from_where = $this->comment_from_where_builder->getFromWhereWithComment(
+        $from_where = $this->getCommentFromWhereBuilder()->getFromWhereWithComment(
             $comment_criterion->getValue(),
             self::COMMENT_CRITERION_NAME
         );
@@ -1988,7 +1959,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $expression = $this->parser->parse($this->expert_query);
 
             if ($this->canExecuteExpertQuery($expression)) {
-                $from_where = $this->query_builder->buildFromWhere($expression, $this->getTracker());
+                $from_where = $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker());
 
                 $additional_from  = $from_where->getFromAsArray();
                 $additional_where = [$from_where->getWhere()];
@@ -2120,5 +2091,44 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
 
         return $this->collector;
+    }
+
+    private function getCommentFromWhereBuilder(): CommentFromWhereBuilder
+    {
+        $factory = new CommentFromWhereBuilderFactory(
+            new PermissionChecker(
+                new TrackerPrivateCommentUGroupEnabledDao()
+            )
+        );
+
+        return $factory->buildCommentFromWhereBuilderForTracker(
+            $this->getCurrentUser(),
+            $this->getTracker()
+        );
+    }
+
+    private function getQueryBuilder(): QueryBuilderVisitor
+    {
+        return new QueryBuilderVisitor(
+            new QueryBuilder\EqualFieldComparisonVisitor(),
+            new QueryBuilder\NotEqualFieldComparisonVisitor(),
+            new QueryBuilder\LesserThanFieldComparisonVisitor(),
+            new QueryBuilder\GreaterThanFieldComparisonVisitor(),
+            new QueryBuilder\LesserThanOrEqualFieldComparisonVisitor(),
+            new QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor(),
+            new QueryBuilder\BetweenFieldComparisonVisitor(),
+            new QueryBuilder\InFieldComparisonVisitor(),
+            new QueryBuilder\NotInFieldComparisonVisitor(),
+            new QueryBuilder\SearchableVisitor($this->getFormElementFactory()),
+            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder($this->getCommentFromWhereBuilder()),
+            new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataLesserThanOrEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataGreaterThanOrEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataBetweenComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder()
+        );
     }
 }

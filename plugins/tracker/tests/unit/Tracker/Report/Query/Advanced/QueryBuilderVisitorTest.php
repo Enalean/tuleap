@@ -42,7 +42,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\CommentWithoutPrivateCheckFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\FromWhere;
 
 final class QueryBuilderVisitorTest extends TestCase
@@ -154,7 +154,7 @@ final class QueryBuilderVisitorTest extends TestCase
             new QueryBuilder\InFieldComparisonVisitor(),
             new QueryBuilder\NotInFieldComparisonVisitor(),
             new QueryBuilder\SearchableVisitor($formelement_factory),
-            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(new CommentFromWhereBuilder()),
+            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(new CommentWithoutPrivateCheckFromWhereBuilder()),
             new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder(),

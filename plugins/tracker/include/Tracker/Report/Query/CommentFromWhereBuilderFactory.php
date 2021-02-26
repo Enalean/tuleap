@@ -22,8 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query;
 
-interface CommentFromWhereBuilder
+use PFUser;
+use Tracker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+
+class CommentFromWhereBuilderFactory
 {
-    public function getFromWhereWithComment(string $value, string $suffix): FromWhere;
-    public function getFromWhereWithoutComment(string $suffix): FromWhere;
+    /**
+     * @var PermissionChecker
+     */
+    private $permission_checker;
+
+    public function __construct(PermissionChecker $permission_checker)
+    {
+        $this->permission_checker = $permission_checker;
+    }
+
+    public function buildCommentFromWhereBuilderForTracker(PFUser $user, Tracker $tracker): CommentFromWhereBuilder
+    {
+        if ($this->permission_checker->privateCheckMustBeDoneForUser($user, $tracker)) {
+            return new CommentWithPrivateCheckFromWhereBuilder(
+                $user,
+                $tracker
+            );
+        } else {
+            return new CommentWithoutPrivateCheckFromWhereBuilder();
+        }
+    }
 }
