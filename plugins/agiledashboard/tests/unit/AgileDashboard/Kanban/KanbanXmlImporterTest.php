@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Kanban;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
@@ -80,7 +81,7 @@ class KanbanXmlImporterTest extends TestCase
         $this->mappings_registry                     = new \Tuleap\XML\MappingsRegistry();
 
         $this->user                = new PFUser(['user_id' => 101, 'language_id' => 'en']);
-        $this->project             = \Mockery::spy(\Project::class, ['getID' => 100, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project             = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
         $this->kanban_xml_importer = new KanbanXmlImporter(
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->kanban_manager,
@@ -136,6 +137,7 @@ class KanbanXmlImporterTest extends TestCase
             '<?xml version="1.0" encoding="UTF-8"?>
             <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
               <agiledashboard>
+                <plannings />
                 <kanban_list title="Kanban">
                     <kanban tracker_id="T22" name="My personal kanban">
                       <column wip="1" REF="V383"/>
@@ -148,7 +150,66 @@ class KanbanXmlImporterTest extends TestCase
         );
         $field_mapping = \Mockery::spy(\TrackerXmlFieldsMapping::class);
 
-        $this->agile_dashboard_configuration_manager->shouldReceive('updateConfiguration')->once();
+        $this->agile_dashboard_configuration_manager
+            ->shouldReceive('updateConfiguration')
+            ->with(
+                101,
+                0,
+                1,
+                Mockery::any(),
+                Mockery::any(),
+            )->once();
+        $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
+        $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
+
+        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(\Mockery::spy(\AgileDashboard_Kanban::class));
+        $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
+            ->times(3)
+            ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
+
+        $this->kanban_xml_importer->import(
+            $xml,
+            [
+                'T22' => 50
+            ],
+            $this->project,
+            $field_mapping,
+            $this->user,
+            $this->mappings_registry
+        );
+    }
+
+    public function testItActivatesScrumAsWellOnlyIfThereAreImportedPlannings(): void
+    {
+        $xml           = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
+              <agiledashboard>
+                <plannings>
+                    <planning name="Release Planning" />
+                    <planning name="Sprint Planning" />
+                </plannings>
+                <kanban_list title="Kanban">
+                    <kanban tracker_id="T22" name="My personal kanban">
+                      <column wip="1" REF="V383"/>
+                      <column wip="2" REF="V384"/>
+                      <column wip="3" REF="V385"/>
+                    </kanban>
+                </kanban_list>
+              </agiledashboard>
+            </project>'
+        );
+        $field_mapping = \Mockery::spy(\TrackerXmlFieldsMapping::class);
+
+        $this->agile_dashboard_configuration_manager
+            ->shouldReceive('updateConfiguration')
+            ->with(
+                101,
+                1,
+                1,
+                Mockery::any(),
+                Mockery::any(),
+            )->once();
         $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
         $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
 
@@ -175,6 +236,7 @@ class KanbanXmlImporterTest extends TestCase
             '<?xml version="1.0" encoding="UTF-8"?>
             <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
               <agiledashboard>
+                <plannings />
                 <kanban_list title="Kanban">
                   <kanban tracker_id="T22" name="My personal kanban" />
                 </kanban_list>
@@ -183,7 +245,15 @@ class KanbanXmlImporterTest extends TestCase
         );
         $field_mapping = \Mockery::spy(\TrackerXmlFieldsMapping::class);
 
-        $this->agile_dashboard_configuration_manager->shouldReceive('updateConfiguration')->once();
+        $this->agile_dashboard_configuration_manager
+            ->shouldReceive('updateConfiguration')
+            ->with(
+                101,
+                0,
+                1,
+                Mockery::any(),
+                Mockery::any(),
+            )->once();
         $this->kanban_manager->shouldReceive('createKanban')->with('My personal kanban', 50)->once()->andReturn(9);
 
         $this->kanban_xml_importer->import(
@@ -204,6 +274,7 @@ class KanbanXmlImporterTest extends TestCase
             '<?xml version="1.0" encoding="UTF-8"?>
             <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
               <agiledashboard>
+                <plannings />
                 <kanban_list title="Kanban">
                     <kanban tracker_id="T22" name="My personal kanban">
                       <column wip="1" REF="V383"/>
@@ -217,7 +288,15 @@ class KanbanXmlImporterTest extends TestCase
         );
         $field_mapping = \Mockery::spy(\TrackerXmlFieldsMapping::class);
 
-        $this->agile_dashboard_configuration_manager->shouldReceive('updateConfiguration')->once();
+        $this->agile_dashboard_configuration_manager
+            ->shouldReceive('updateConfiguration')
+            ->with(
+                101,
+                0,
+                1,
+                Mockery::any(),
+                Mockery::any(),
+            )->once();
         $this->kanban_manager->shouldReceive('createKanban')->times(2)->andReturn(9, 10);
         $this->kanban_column_manager->shouldReceive('updateWipLimit')->times(3);
 
@@ -245,6 +324,7 @@ class KanbanXmlImporterTest extends TestCase
             '<?xml version="1.0" encoding="UTF-8"?>
             <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
               <agiledashboard>
+                <plannings />
                 <kanban_list title="Kanban">
                     <kanban tracker_id="T22" name="My personal kanban" ID="K03">
                       <column wip="1" REF="V383"/>
