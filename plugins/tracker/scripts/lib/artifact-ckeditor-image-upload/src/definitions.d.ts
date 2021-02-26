@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "@tuleap/ckeditor-image-upload-form" {
+declare module "@tuleap/plugin-tracker-artifact-ckeditor-image-upload" {
     interface HelpBlock {
         onFormatChange(new_format: string): void;
     }

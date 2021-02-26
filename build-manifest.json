@@ -12,10 +12,6 @@
         "project-admin": {
             "src": "src/scripts/project/admin/src",
             "po": "src/scripts/project/admin/po"
-        },
-        "ckeditor-image-upload-form": {
-            "src": "src/scripts/lib/ckeditor-image-upload-form/src",
-            "po": "src/scripts/lib/ckeditor-image-upload-form/po"
         }
     },
     "gettext-ts": {

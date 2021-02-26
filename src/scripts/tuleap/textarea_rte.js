@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "regenerator-runtime/runtime";
-
 /* global Class:readonly Builder:readonly $:readonly */
 var tuleap = window.tuleap || {};
 tuleap.textarea = tuleap.textarea || {};

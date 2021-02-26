@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,18 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    createPOGettextPlugin,
-    defineConfig,
-} from "../../../../tools/utils/scripts/vite-configurator";
-import * as path from "path";
+const base_config = require("../../../../../tests/jest/jest.base.config.js");
 
-export default defineConfig({
-    plugins: [createPOGettextPlugin()],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.js"),
-            name: "TuleapCkeditorImageUploadForm",
-        },
-    },
-});
+module.exports = {
+    ...base_config,
+    displayName: "@tuleap/plugin-tracker-artifact-ckeditor-image-upload",
+};

@@ -33,8 +33,7 @@
     "@vue/test-utils": "^1.1.3",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2",
-    "angular-sanitize": "^1.8.2",
-    "regenerator-runtime": "^0.13.7"
+    "angular-sanitize": "^1.8.2"
   },
   "scripts": {
     "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""

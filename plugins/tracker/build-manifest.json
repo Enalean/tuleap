@@ -4,6 +4,10 @@
         "burndown-chart": {
             "src": "scripts/burndown-chart/src",
             "po": "scripts/burndown-chart/po"
+        },
+        "ckeditor-image-upload-form": {
+            "src": "scripts/lib/artifact-ckeditor-image-upload/src",
+            "po": "scripts/lib/artifact-ckeditor-image-upload/po"
         }
     },
     "gettext-ts": {

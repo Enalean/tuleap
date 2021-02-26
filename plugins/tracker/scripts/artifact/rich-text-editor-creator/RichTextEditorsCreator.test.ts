@@ -18,14 +18,9 @@
  *
  */
 
-import type { UploadImageFormFactory } from "@tuleap/ckeditor-image-upload-form";
+import type { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "./RichTextEditorsCreator";
-
-jest.mock("@tuleap/ckeditor-image-upload-form", () => {
-    // Mock this module, otherwise we get an error because regeneratorRuntime is missing
-    return {};
-});
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
