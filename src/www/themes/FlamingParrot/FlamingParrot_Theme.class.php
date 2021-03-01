@@ -70,13 +70,18 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
      * @var VersionPresenter
      */
     private $tuleap_version;
+    /**
+     * @var DetectedBrowser
+     */
+    private $detected_browser;
 
     public function __construct($root)
     {
         parent::__construct($root);
 
-        $this->renderer       = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->tuleap_version = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+        $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->tuleap_version   = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+        $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
     }
@@ -239,6 +244,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->getNotificationPlaceholder(),
             $help_dropdown_presenter,
             $body_class,
+            $this->detected_browser->isACompletelyBrokenBrowser(),
             InviteBuddiesPresenter::build($current_user),
             $platform_banner,
         ));
@@ -429,7 +435,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     private function displayBrowserDeprecationMessage(): void
     {
         $browser_deprecation_message = BrowserDeprecationMessage::fromDetectedBrowser(
-            DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())
+            $this->detected_browser
         );
         if ($browser_deprecation_message === null) {
             return;

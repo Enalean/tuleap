@@ -50,6 +50,11 @@ class FlamingParrot_BodyPresenter
      * @var bool
      * @psalm-readonly
      */
+    public $is_a_broken_browser;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
     public $has_platform_banner;
     /**
      * @var bool
@@ -72,6 +77,7 @@ class FlamingParrot_BodyPresenter
         $notifications_placeholder,
         HelpDropdownPresenter $help_dropdown_presenter,
         $body_class,
+        bool $is_a_broken_browser,
         InviteBuddiesPresenter $invite_buddies_presenter,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
@@ -80,6 +86,7 @@ class FlamingParrot_BodyPresenter
         $this->notifications_placeholder = $notifications_placeholder;
         $this->body_class                = $body_class;
         $this->help_dropdown             = $help_dropdown_presenter;
+        $this->is_a_broken_browser       = $is_a_broken_browser;
         $this->invite_buddies_presenter  = $invite_buddies_presenter;
 
         $this->has_platform_banner        = $platform_banner !== null;

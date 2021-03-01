@@ -25,6 +25,7 @@ use EventManager;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\CssAsset;
@@ -89,7 +90,8 @@ class HeaderPresenterBuilder
         ?ProjectContextPresenter $project_context,
         ?SwitchToPresenter $switch_to,
         IDetectIfLogoIsCustomized $customized_logo_detector,
-        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
+        DetectedBrowser $detected_browser
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->current_user             = $current_user;
@@ -137,6 +139,7 @@ class HeaderPresenterBuilder
             $is_svg_logo_customized,
             InviteBuddiesPresenter::build($current_user),
             $platform_banner,
+            $detected_browser->isACompletelyBrokenBrowser()
         );
     }
 

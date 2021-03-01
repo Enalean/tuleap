@@ -105,6 +105,11 @@ final class DetectedBrowser
         return $this->name === self::EDGE_LEGACY;
     }
 
+    public function isACompletelyBrokenBrowser(): bool
+    {
+        return $this->isIE();
+    }
+
     public function isAnOutdatedBrowser(): bool
     {
         if ($this->isIE() || $this->isEdgeLegacy()) {

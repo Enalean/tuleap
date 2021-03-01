@@ -42,13 +42,15 @@ final class DetectedBrowserTest extends TestCase
         ?string $expected_browser_name,
         bool $expected_is_ie,
         bool $expected_edge_legacy,
-        bool $expected_browser_is_outdated
+        bool $expected_browser_is_outdated,
+        bool $expected_browser_is_completely_broken
     ): void {
         $detected_browser = self::buildDetectedBrowserFromSpecificUserAgentString($user_agent);
         self::assertEquals($expected_browser_name, $detected_browser->getName());
         self::assertEquals($expected_is_ie, $detected_browser->isIE());
         self::assertEquals($expected_edge_legacy, $detected_browser->isEdgeLegacy());
         self::assertEquals($expected_browser_is_outdated, $detected_browser->isAnOutdatedBrowser());
+        self::assertEquals($expected_browser_is_completely_broken, $detected_browser->isACompletelyBrokenBrowser());
     }
 
     public function dataProviderBrowserUA(): array
@@ -60,12 +62,14 @@ final class DetectedBrowserTest extends TestCase
                 true,
                 false,
                 true,
+                true,
             ],
             'Old IE' => [
                 self::OLD_IE_USER_AGENT_STRING,
                 'Internet Explorer',
                 true,
                 false,
+                true,
                 true,
             ],
             'Edge Legacy' => [
@@ -74,10 +78,12 @@ final class DetectedBrowserTest extends TestCase
                 false,
                 true,
                 true,
+                false,
             ],
             'Edge' => [
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3738.0 Safari/537.36 Edg/75.0.107.0',
                 'Edge',
+                false,
                 false,
                 false,
                 false,
@@ -88,6 +94,7 @@ final class DetectedBrowserTest extends TestCase
                 false,
                 false,
                 false,
+                false,
             ],
             'Very Old Firefox' => [
                 self::VERY_OLD_FIREFOX_USER_AGENT_STRING,
@@ -95,10 +102,12 @@ final class DetectedBrowserTest extends TestCase
                 false,
                 false,
                 true,
+                false,
             ],
             'Chrome' => [
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36',
                 'Chrome',
+                false,
                 false,
                 false,
                 false,
@@ -109,6 +118,7 @@ final class DetectedBrowserTest extends TestCase
                 false,
                 false,
                 true,
+                false,
             ],
             'Chromium' => [
                 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
@@ -116,10 +126,12 @@ final class DetectedBrowserTest extends TestCase
                 false,
                 false,
                 false,
+                false,
             ],
             'curl' => [
                 'curl/7.71.1',
                 null,
+                false,
                 false,
                 false,
                 false,
@@ -138,6 +150,7 @@ final class DetectedBrowserTest extends TestCase
         self::assertFalse($detected_browser->isIE());
         self::assertFalse($detected_browser->isEdgeLegacy());
         self::assertFalse($detected_browser->isAnOutdatedBrowser());
+        self::assertFalse($detected_browser->isACompletelyBrokenBrowser());
     }
 
     private static function buildDetectedBrowserFromSpecificUserAgentString(string $user_agent): DetectedBrowser
