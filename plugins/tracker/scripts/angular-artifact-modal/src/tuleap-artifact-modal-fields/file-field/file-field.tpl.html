@@ -48,6 +48,7 @@
         ng-model="file_upload.file"
         ng-disabled="file_field.isDisabled()"
         ng-required="{{ file_field.field.required }}"
+        data-test="file-field-file-input"
     >
     <div class="tuleap-artifact-modal-field-file-new-file-description">
         <input type="text"
@@ -55,6 +56,7 @@
             ng-model="file_upload.description"
             ng-disabled="file_field.isDisabled()"
             placeholder="{{ 'File description' | translate }}"
+            data-test="file-field-description-input"
         >
         <button type="button"
             class="tlp-button-secondary tlp-button-outline tlp-button-small"

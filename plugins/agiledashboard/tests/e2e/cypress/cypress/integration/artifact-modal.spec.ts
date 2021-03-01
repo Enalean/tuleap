@@ -76,6 +76,11 @@ describe(`Artifact Modal`, function () {
                     cy.get("[data-test=computed-field-input]").type("8");
                 });
 
+                getFieldWithLabel("Attachments", "[data-test=file-field]").within(() => {
+                    cy.get("[data-test=file-field-file-input]").attachFile("attachment.json");
+                    cy.get("[data-test=file-field-description-input]").type("My JSON attachment");
+                });
+
                 getFieldWithLabel("Permissions", "[data-test=permission-field]").within(() => {
                     cy.get("[data-test=permission-field-checkbox]").check();
                     cy.get("[data-test=permission-field-select]").select([
