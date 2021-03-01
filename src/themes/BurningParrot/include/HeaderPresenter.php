@@ -189,6 +189,11 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $platform_banner_importance;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_a_broken_browser;
 
     public function __construct(
         PFUser $user,
@@ -210,7 +215,8 @@ class HeaderPresenter
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
         InviteBuddiesPresenter $invite_buddies_presenter,
-        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
+        bool $is_a_broken_browser
     ) {
         $this->date_time_format            = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone               = TimezoneRetriever::getUserTimezone($user);
@@ -253,6 +259,7 @@ class HeaderPresenter
                 Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE,
             );
         }
+        $this->is_a_broken_browser = $is_a_broken_browser;
     }
 
     private function buildFeedbacks($feedback_logs)

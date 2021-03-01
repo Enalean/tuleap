@@ -77,6 +77,11 @@ class BurningParrotTheme extends BaseLayout
      */
     private $version;
 
+    /**
+     * @var DetectedBrowser
+     */
+    private $detected_browser;
+
     /** @var PFUser */
     private $user;
 
@@ -84,7 +89,6 @@ class BurningParrotTheme extends BaseLayout
     private $request;
 
     private $show_sidebar = false;
-
     /** @var EventManager */
     private $event_manager;
     /**
@@ -95,12 +99,13 @@ class BurningParrotTheme extends BaseLayout
     public function __construct($root, PFUser $user)
     {
         parent::__construct($root);
-        $this->user            = $user;
-        $this->project_manager = ProjectManager::instance();
-        $this->event_manager   = EventManager::instance();
-        $this->request         = HTTPRequest::instance();
-        $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->version         = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+        $this->user             = $user;
+        $this->project_manager  = ProjectManager::instance();
+        $this->event_manager    = EventManager::instance();
+        $this->request          = HTTPRequest::instance();
+        $this->renderer         = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->version          = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+        $this->detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($this->request);
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
@@ -215,7 +220,8 @@ class BurningParrotTheme extends BaseLayout
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
                 \BackendLogger::getDefaultLogger(),
             ),
-            $this->getPlatformBannerWithScript($this->user, 'platform/platform-banner-bp.js')
+            $this->getPlatformBannerWithScript($this->user, 'platform/platform-banner-bp.js'),
+            $this->detected_browser
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
@@ -298,7 +304,7 @@ class BurningParrotTheme extends BaseLayout
         $this->includeFooterJavascriptSnippet($this->getFooterSiteJs());
 
         $browser_deprecation_message = BrowserDeprecationMessage::fromDetectedBrowser(
-            DetectedBrowser::detectFromTuleapHTTPRequest($this->request)
+            $this->detected_browser
         );
         if ($browser_deprecation_message !== null) {
             $this->addJavascriptAsset(new JavascriptAsset(new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'), 'browser-deprecation-bp.js'));
