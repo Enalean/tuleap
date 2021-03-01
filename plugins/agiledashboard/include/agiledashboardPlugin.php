@@ -73,7 +73,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneDuplicator;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
-use Tuleap\AgileDashboard\Semantic\XML\AddInitialEffortSemantic;
+use Tuleap\AgileDashboard\Semantic\XML\SemanticsExporter;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigDAO;
@@ -2172,10 +2172,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function jiraImporterExternalPluginsEvent(JiraImporterExternalPluginsEvent $event): void
     {
-        (new AddInitialEffortSemantic())->process(
+        (new SemanticsExporter())->process(
             $event->getXmlTracker(),
             $event->getJiraPlatformConfiguration(),
-            $event->getFieldMappingCollection()
+            $event->getFieldMappingCollection(),
+            $event->getStatusValuesCollection(),
         );
     }
 }

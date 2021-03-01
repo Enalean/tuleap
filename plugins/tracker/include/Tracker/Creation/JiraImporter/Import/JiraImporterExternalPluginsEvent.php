@@ -30,6 +30,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class JiraImporterExternalPluginsEvent implements Dispatchable
@@ -74,6 +75,10 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
      * @readonly
      */
     private $field_mapping_collection;
+    /**
+     * @var StatusValuesCollection
+     */
+    private $status_values_collection;
 
     public function __construct(
         SimpleXMLElement $xml_tracker,
@@ -82,7 +87,8 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
         JiraUserRetriever $jira_user_retriever,
         JiraClient $jira_client,
         LoggerInterface $logger,
-        FieldMappingCollection $field_mapping_collection
+        FieldMappingCollection $field_mapping_collection,
+        StatusValuesCollection $status_values_collection
     ) {
         $this->xml_tracker                     = $xml_tracker;
         $this->jira_platform_configuration     = $jira_platform_configuration;
@@ -91,6 +97,7 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
         $this->jira_client                     = $jira_client;
         $this->logger                          = $logger;
         $this->field_mapping_collection        = $field_mapping_collection;
+        $this->status_values_collection        = $status_values_collection;
     }
 
     public function getXmlTracker(): SimpleXMLElement
@@ -126,5 +133,10 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
     public function getFieldMappingCollection(): FieldMappingCollection
     {
         return $this->field_mapping_collection;
+    }
+
+    public function getStatusValuesCollection(): StatusValuesCollection
+    {
+        return $this->status_values_collection;
     }
 }
