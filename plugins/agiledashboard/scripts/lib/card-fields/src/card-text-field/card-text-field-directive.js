@@ -1,4 +1,4 @@
-import "./card-text-field.tpl.html";
+import tpl from "./card-text-field.tpl.html?raw";
 import striptags from "striptags";
 import { decode } from "he";
 
@@ -11,7 +11,7 @@ export default () => {
             card_field: "=field",
             filter_terms: "@filterTerms",
         },
-        templateUrl: "card-text-field.tpl.html",
+        template: tpl,
         link,
     };
 

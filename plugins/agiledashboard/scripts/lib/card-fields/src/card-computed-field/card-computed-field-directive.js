@@ -1,4 +1,4 @@
-import "./card-computed-field.tpl.html";
+import tpl from "./card-computed-field.tpl.html?raw";
 
 export default cardComputedField;
 
@@ -9,6 +9,6 @@ function cardComputedField() {
             card_field: "=field",
             filter_terms: "=filterTerms",
         },
-        templateUrl: "card-computed-field.tpl.html",
+        template: tpl,
     };
 }

@@ -1,4 +1,4 @@
-import "./card-fields.tpl.html";
+import tpl from "./card-fields.tpl.html?raw";
 import controller from "./card-fields-controller.js";
 
 export default () => {
@@ -7,7 +7,7 @@ export default () => {
         controller,
         controllerAs: "card_ctrl",
         bindToController: true,
-        templateUrl: "card-fields.tpl.html",
+        template: tpl,
         scope: {
             item: "=item",
             filter_terms: "=filterTerms",

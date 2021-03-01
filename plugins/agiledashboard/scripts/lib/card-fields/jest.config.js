@@ -24,6 +24,6 @@ module.exports = {
     displayName: "card-fields",
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy",
+        "^.+\\.html\\?raw$": "identity-obj-proxy",
     },
 };
