@@ -28,6 +28,7 @@ use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
@@ -58,15 +59,21 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
 
     /**
      * @var JiraClient
-     * @psalm-immutable
+     * @readonly
      */
     private $jira_client;
 
     /**
      * @var LoggerInterface
-     * @psalm-immutable
+     * @readonly
      */
     private $logger;
+
+    /**
+     * @var FieldMappingCollection
+     * @readonly
+     */
+    private $field_mapping_collection;
 
     public function __construct(
         SimpleXMLElement $xml_tracker,
@@ -74,7 +81,8 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
         IssueAPIRepresentationCollection $issue_representation_collection,
         JiraUserRetriever $jira_user_retriever,
         JiraClient $jira_client,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        FieldMappingCollection $field_mapping_collection
     ) {
         $this->xml_tracker                     = $xml_tracker;
         $this->jira_platform_configuration     = $jira_platform_configuration;
@@ -82,6 +90,7 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
         $this->jira_user_retriever             = $jira_user_retriever;
         $this->jira_client                     = $jira_client;
         $this->logger                          = $logger;
+        $this->field_mapping_collection        = $field_mapping_collection;
     }
 
     public function getXmlTracker(): SimpleXMLElement
@@ -112,5 +121,10 @@ class JiraImporterExternalPluginsEvent implements Dispatchable
     public function getJiraUserRetriever(): JiraUserRetriever
     {
         return $this->jira_user_retriever;
+    }
+
+    public function getFieldMappingCollection(): FieldMappingCollection
+    {
+        return $this->field_mapping_collection;
     }
 }

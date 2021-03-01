@@ -73,6 +73,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneDuplicator;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
+use Tuleap\AgileDashboard\Semantic\XML\AddInitialEffortSemantic;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigDAO;
@@ -120,6 +121,7 @@ use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
@@ -278,6 +280,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
             $this->addHook(DefaultTemplatesXMLFileCollection::NAME);
             $this->addHook(GetWhitelistedKeys::NAME);
+            $this->addHook(JiraImporterExternalPluginsEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2165,5 +2168,14 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($project);
         EventManager::instance()->dispatch($block_scrum_access);
         return ! $block_scrum_access->isScrumAccessEnabled();
+    }
+
+    public function jiraImporterExternalPluginsEvent(JiraImporterExternalPluginsEvent $event): void
+    {
+        (new AddInitialEffortSemantic())->process(
+            $event->getXmlTracker(),
+            $event->getJiraPlatformConfiguration(),
+            $event->getFieldMappingCollection()
+        );
     }
 }
