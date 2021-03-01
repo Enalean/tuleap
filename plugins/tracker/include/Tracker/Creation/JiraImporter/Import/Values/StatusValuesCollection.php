@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Values;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 
@@ -48,18 +49,18 @@ class StatusValuesCollection
     private $closed_values = [];
 
     /**
-     * @var ClientWrapper
+     * @var JiraClient
      */
-    private $wrapper;
+    private $jira_client;
     /**
      * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(ClientWrapper $wrapper, LoggerInterface $logger)
+    public function __construct(JiraClient $jira_client, LoggerInterface $logger)
     {
-        $this->wrapper = $wrapper;
-        $this->logger  = $logger;
+        $this->jira_client = $jira_client;
+        $this->logger      = $logger;
     }
 
     public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): void
@@ -68,7 +69,7 @@ class StatusValuesCollection
         $statuses_url = ClientWrapper::JIRA_CORE_BASE_URL . "/project/" . urlencode($jira_project_key) . "/statuses";
 
         $this->logger->debug("  GET " . $statuses_url);
-        $statuses_content = $this->wrapper->getUrl($statuses_url);
+        $statuses_content = $this->jira_client->getUrl($statuses_url);
 
         if ($statuses_content === null) {
             $this->logger->debug("No statuses defined");
@@ -86,6 +87,13 @@ class StatusValuesCollection
         }
 
         $this->logger->debug("Status collection successfully built.");
+    }
+
+    public function initCollectionWithValues(array $open_values, array $closed_values): void
+    {
+        $this->closed_values = $closed_values;
+        $this->open_values   = $open_values;
+        $this->all_values    = array_merge($open_values, $closed_values);
     }
 
     private function addStatusInCollections(array $status, IDGenerator $id_generator): void
