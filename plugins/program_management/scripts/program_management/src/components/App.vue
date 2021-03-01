@@ -51,15 +51,54 @@ import {
     projectShortName,
     projectPrivacy,
     projectFlags,
+    canCreateProgramIncrement,
 } from "../configuration";
 import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
 import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import { init } from "@tuleap/drag-and-drop";
+import type { Drekkenov } from "@tuleap/drag-and-drop";
+import { canMove, invalid, isConsideredInDropzone, isContainer } from "../helpers/drag-drop";
 
 @Component({
     components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb },
 })
 export default class App extends Vue {
+    private drek!: Drekkenov | undefined;
+
+    beforeDestroy(): void {
+        if (this.drek) {
+            this.drek.destroy();
+        }
+    }
+
+    mounted(): void {
+        if (!canCreateProgramIncrement()) {
+            return;
+        }
+
+        this.drek = init({
+            mirror_container: this.$el,
+            isDropZone: isContainer,
+            isDraggable: canMove,
+            isInvalidDragHandle: invalid,
+            isConsideredInDropzone,
+            doesDropzoneAcceptDraggable: (): boolean => {
+                return false;
+            },
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onDragStart: (): void => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onDragEnter: (): void => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onDragLeave: (): void => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onDrop: (): void => {},
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            cleanupAfterDragCallback: (): void => {},
+        });
+    }
+
     public projectPublicName(): string {
         return getProjectPublicName();
     }

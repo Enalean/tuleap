@@ -1,8 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ElementCard Displays a card with accessibility pattern 1`] = `
+exports[`ElementCard Displays a draggable card with accessibility pattern 1`] = `
 <div
-  class="element-card element-card-lake_placid_blue element-card-background-peggy_pink_text element-card-with-accessibility"
+  class="element-card element-card-lake_placid_blue element-draggable-item element-card-background-peggy_pink_text element-card-with-accessibility"
+  data-draggable="true"
 >
   <div
     class="element-card-content"
@@ -12,6 +13,7 @@ exports[`ElementCard Displays a card with accessibility pattern 1`] = `
     >
       <a
         class="element-card-xref element-card-xref-lake_placid_blue"
+        data-not-drag-handle="true"
         href="/plugins/tracker/?aid=100"
       >
         
@@ -33,9 +35,10 @@ exports[`ElementCard Displays a card with accessibility pattern 1`] = `
 </div>
 `;
 
-exports[`ElementCard Displays a card without accessibility pattern 1`] = `
+exports[`ElementCard Displays a not draggable card without accessibility pattern 1`] = `
 <div
   class="element-card element-card-lake_placid_blue"
+  data-draggable="true"
 >
   <div
     class="element-card-content"
@@ -45,6 +48,7 @@ exports[`ElementCard Displays a card without accessibility pattern 1`] = `
     >
       <a
         class="element-card-xref element-card-xref-lake_placid_blue"
+        data-not-drag-handle="true"
         href="/plugins/tracker/?aid=100"
       >
         

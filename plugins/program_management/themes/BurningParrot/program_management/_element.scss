@@ -94,6 +94,7 @@
 }
 
 .element-card-xref {
+    width: max-content;
     margin: 0 0 $tlp-small-spacing 0;
     font-size: .65rem;
 
@@ -120,4 +121,8 @@
 
 .element-skeleton-title {
     width: 300px;
+}
+
+.element-draggable-item {
+    cursor: move;
 }

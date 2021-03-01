@@ -27,8 +27,9 @@ import * as configuration from "../../configuration";
 describe("ElementCard", () => {
     let component_options: ShallowMountOptions<ElementCard>;
 
-    it("Displays a card with accessibility pattern", async () => {
+    it("Displays a draggable card with accessibility pattern", async () => {
         jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(true);
+        jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
         component_options = {
             propsData: {
                 element: {
@@ -48,8 +49,9 @@ describe("ElementCard", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Displays a card without accessibility pattern", async () => {
+    it("Displays a not draggable card without accessibility pattern", async () => {
         jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(false);
+        jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(false);
         component_options = {
             propsData: {
                 element: {

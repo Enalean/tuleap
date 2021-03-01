@@ -17,13 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShallowMountOptions } from "@vue/test-utils";
+import type { ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
+import * as drekkenov from "@tuleap/drag-and-drop";
+import * as configuration from "../configuration";
 
 describe("App", () => {
     let component_options: ShallowMountOptions<App>;
+
+    async function createWrapper(): Promise<Wrapper<App>> {
+        return shallowMount(App, {
+            localVue: await createProgramManagementLocalVue(),
+            propsData: {
+                project_public_name: "Public name",
+                project_short_name: "short-name",
+            },
+        });
+    }
 
     it("Displays the backlog section", async () => {
         component_options = {
@@ -36,5 +48,29 @@ describe("App", () => {
 
         const wrapper = shallowMount(App, component_options);
         expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(true);
+    });
+
+    describe(`mounted()`, () => {
+        it(`will create a "drek"`, async () => {
+            jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
+            const init = jest.spyOn(drekkenov, "init");
+            await createWrapper();
+
+            expect(init).toHaveBeenCalled();
+        });
+    });
+
+    describe(`destroy()`, () => {
+        it(`will destroy the "drek"`, async () => {
+            jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
+            const mock_drek = {
+                destroy: jest.fn(),
+            };
+            jest.spyOn(drekkenov, "init").mockImplementation(() => mock_drek);
+            const wrapper = await createWrapper();
+            wrapper.destroy();
+
+            expect(mock_drek.destroy).toHaveBeenCalled();
+        });
     });
 });
