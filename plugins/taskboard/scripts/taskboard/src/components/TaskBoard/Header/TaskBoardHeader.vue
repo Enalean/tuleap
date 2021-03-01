@@ -23,7 +23,7 @@
         <div
             class="taskboard-header taskboard-cell-swimlane-header"
             v-bind:class="taskboard_cell_swimlane_header_classes"
-            v-if="backlog_trackers_have_children"
+            v-if="backlog_items_have_children"
         ></div>
         <template v-for="column of columns">
             <collapsed-header-cell
@@ -58,6 +58,6 @@ export default class TaskBoardHeader extends Vue {
     readonly taskboard_cell_swimlane_header_classes!: string[];
 
     @State
-    readonly backlog_trackers_have_children!: boolean;
+    readonly backlog_items_have_children!: boolean;
 }
 </script>

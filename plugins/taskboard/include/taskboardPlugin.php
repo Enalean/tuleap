@@ -146,7 +146,8 @@ class taskboardPlugin extends Plugin
                 $agiledashboard_plugin->getMilestonePaneFactory(),
                 ColumnPresenterCollectionRetriever::build(),
                 new AgileDashboard_BacklogItemDao(),
-                TrackerPresenterCollectionBuilder::build()
+                TrackerPresenterCollectionBuilder::build(),
+                Tracker_ArtifactFactory::instance()
             ),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(

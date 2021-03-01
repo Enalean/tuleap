@@ -79,6 +79,9 @@ export default class AddCard extends Vue {
     readonly setIsACellAddingInPlace!: () => void;
 
     @Mutation
+    readonly setBacklogItemsHaveChildren!: () => void;
+
+    @Mutation
     readonly clearIsACellAddingInPlace!: () => void;
 
     cancel(): void {
@@ -104,6 +107,8 @@ export default class AddCard extends Vue {
             label: this.label,
         };
         this.addCard(payload);
+        //add info in state that children are defined
+        this.setBacklogItemsHaveChildren();
         this.deferResetOfLabel();
     }
 
