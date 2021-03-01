@@ -41,7 +41,7 @@ const done: ColumnDefinition = {
     is_collapsed: true,
 } as ColumnDefinition;
 
-function createWrapper(backlog_trackers_have_children: boolean): Wrapper<TaskBoardHeader> {
+function createWrapper(backlog_items_have_children: boolean): Wrapper<TaskBoardHeader> {
     return shallowMount(TaskBoardHeader, {
         mocks: {
             $store: createStoreMock({
@@ -50,7 +50,7 @@ function createWrapper(backlog_trackers_have_children: boolean): Wrapper<TaskBoa
                         columns: [todo, ongoing, done],
                     },
                     swimlane: {},
-                    backlog_trackers_have_children: backlog_trackers_have_children,
+                    backlog_items_have_children: backlog_items_have_children,
                 },
                 getters: {
                     "swimlane/taskboard_cell_swimlane_header_classes": [],

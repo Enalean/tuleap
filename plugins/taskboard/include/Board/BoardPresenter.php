@@ -60,7 +60,7 @@ class BoardPresenter
     /**
      * @var bool
      */
-    public $backlog_trackers_have_children;
+    public $backlog_items_have_children;
 
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
@@ -69,7 +69,7 @@ class BoardPresenter
         array $columns,
         array $tracker_structures,
         bool $has_content,
-        bool $backlog_trackers_have_children
+        bool $backlog_items_have_children
     ) {
         $project = $milestone->getProject();
 
@@ -88,8 +88,8 @@ class BoardPresenter
         $this->json_encoded_trackers = (string) json_encode($tracker_structures, JSON_THROW_ON_ERROR);
         $this->has_content           = $has_content;
 
-        $hide_preference_name                 = 'plugin_taskboard_hide_closed_items_' . $milestone->getArtifactId();
-        $this->are_closed_items_displayed     = empty($user->getPreference($hide_preference_name));
-        $this->backlog_trackers_have_children = $backlog_trackers_have_children;
+        $hide_preference_name              = 'plugin_taskboard_hide_closed_items_' . $milestone->getArtifactId();
+        $this->are_closed_items_displayed  = empty($user->getPreference($hide_preference_name));
+        $this->backlog_items_have_children = $backlog_items_have_children;
     }
 }

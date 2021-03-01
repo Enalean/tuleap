@@ -34,7 +34,7 @@ const swimlane: Swimlane = {
 
 async function createWrapper(
     is_fullscreen: boolean,
-    backlog_trackers_have_children: boolean
+    backlog_items_have_children: boolean
 ): Promise<Wrapper<SwimlaneHeader>> {
     return shallowMount(SwimlaneHeader, {
         localVue: await createTaskboardLocalVue(),
@@ -43,7 +43,7 @@ async function createWrapper(
                 state: {
                     swimlane: {} as SwimlaneState,
                     fullscreen: {} as FullscreenState,
-                    backlog_trackers_have_children: backlog_trackers_have_children,
+                    backlog_items_have_children: backlog_items_have_children,
                 },
                 getters: {
                     "swimlane/taskboard_cell_swimlane_header_classes": is_fullscreen

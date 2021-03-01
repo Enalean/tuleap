@@ -55,9 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
     const user_has_accessibility_mode = Boolean(document.body.dataset.userHasAccessibilityMode);
     const are_closed_items_displayed = Boolean(vue_mount_point.dataset.areClosedItemsDisplayed);
-    const backlog_trackers_have_children = Boolean(
-        vue_mount_point.dataset.backlogTrackersHaveChildren
-    );
+    const backlog_items_have_children = Boolean(vue_mount_point.dataset.backlogItemsHaveChildren);
     const trackers: Array<Tracker> =
         typeof vue_mount_point.dataset.trackers !== "undefined"
             ? JSON.parse(vue_mount_point.dataset.trackers)
@@ -80,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         milestone_id,
         milestone_title,
         are_closed_items_displayed,
-        backlog_trackers_have_children,
+        backlog_items_have_children,
         card_being_dragged: null,
         trackers,
         is_a_cell_adding_in_place: false,

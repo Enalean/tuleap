@@ -46,6 +46,10 @@ export function setIsACellAddingInPlace(state: State): void {
     state.is_a_cell_adding_in_place = true;
 }
 
+export function setBacklogItemsHaveChildren(state: State): void {
+    state.backlog_items_have_children = true;
+}
+
 export function clearIsACellAddingInPlace(state: State): void {
     state.is_a_cell_adding_in_place = false;
 }

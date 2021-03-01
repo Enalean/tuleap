@@ -30,7 +30,7 @@ export interface State {
     milestone_id: number;
     milestone_title: string;
     are_closed_items_displayed: boolean;
-    backlog_trackers_have_children: boolean;
+    backlog_items_have_children: boolean;
     card_being_dragged: DraggedCard | null;
     trackers: Tracker[];
     is_a_cell_adding_in_place: boolean;

@@ -22,7 +22,7 @@
     <div
         class="taskboard-cell taskboard-cell-swimlane-header"
         v-bind:class="taskboard_cell_swimlane_header_classes"
-        v-if="backlog_trackers_have_children"
+        v-if="backlog_items_have_children"
     >
         <i
             class="fa fa-minus-square taskboard-swimlane-toggle"
@@ -59,7 +59,7 @@ export default class SwimlaneHeader extends Vue {
     readonly taskboard_cell_swimlane_header_classes!: string[];
 
     @State
-    readonly backlog_trackers_have_children!: boolean;
+    readonly backlog_items_have_children!: boolean;
 
     get additional_classnames(): string {
         return `tlp-swatch-${this.swimlane.card.color}`;
