@@ -37,6 +37,7 @@ use TrackerXmlImport;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -177,7 +178,8 @@ class FromJiraTrackerCreator
             $jira_credentials->getJiraUrl(),
             $jira_project_id,
             $issue_type,
-            new FieldAndValueIDGenerator()
+            new FieldAndValueIDGenerator(),
+            new LinkedIssuesCollection(),
         );
 
         try {

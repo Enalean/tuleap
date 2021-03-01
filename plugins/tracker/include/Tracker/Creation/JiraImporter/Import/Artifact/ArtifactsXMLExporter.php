@@ -87,6 +87,7 @@ class ArtifactsXMLExporter
         SimpleXMLElement $tracker_node,
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentationCollection $issue_representation_collection,
+        LinkedIssuesCollection $linked_issues_collection,
         string $jira_base_url,
         string $jira_project_id,
         string $jira_issue_type_name
@@ -105,7 +106,8 @@ class ArtifactsXMLExporter
             $jira_issues_response,
             $jira_base_url,
             $jira_field_mapping_collection,
-            $issue_representation_collection
+            $issue_representation_collection,
+            $linked_issues_collection
         );
 
         $count_loop = 1;
@@ -122,7 +124,8 @@ class ArtifactsXMLExporter
                 $jira_issues_response,
                 $jira_base_url,
                 $jira_field_mapping_collection,
-                $issue_representation_collection
+                $issue_representation_collection,
+                $linked_issues_collection
             );
 
             $is_last = (int) $jira_issues_response['total'] <=
@@ -182,7 +185,8 @@ class ArtifactsXMLExporter
         array $jira_issues_response,
         string $jira_base_url,
         FieldMappingCollection $jira_field_mapping_collection,
-        IssueAPIRepresentationCollection $issue_representation_collection
+        IssueAPIRepresentationCollection $issue_representation_collection,
+        LinkedIssuesCollection $linked_issues_collection
     ): void {
         if (! isset($jira_issues_response['issues'])) {
             return;
@@ -217,6 +221,7 @@ class ArtifactsXMLExporter
                 $jira_field_mapping_collection,
                 $issue_api_representation,
                 $attachment_collection,
+                $linked_issues_collection,
                 $jira_base_url
             );
 

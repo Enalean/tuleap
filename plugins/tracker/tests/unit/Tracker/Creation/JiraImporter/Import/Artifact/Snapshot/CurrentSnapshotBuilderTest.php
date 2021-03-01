@@ -33,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
@@ -68,7 +69,8 @@ class CurrentSnapshotBuilderTest extends TestCase
         $snapshot = $builder->buildCurrentSnapshot(
             $user,
             $jira_issue_api,
-            $jira_field_mapping_collection
+            $jira_field_mapping_collection,
+            new LinkedIssuesCollection(),
         );
 
         $this->assertSame(1587820210, $snapshot->getDate()->getTimestamp());
@@ -207,7 +209,8 @@ class CurrentSnapshotBuilderTest extends TestCase
         $snapshot = $builder->buildCurrentSnapshot(
             $snapshot_owner,
             $this->buildIssueAPIResponseWithLinksAndSubTasks(),
-            $jira_field_mapping_collection
+            $jira_field_mapping_collection,
+            new LinkedIssuesCollection(),
         );
 
         $fields = $snapshot->getAllFieldsSnapshot();
@@ -233,6 +236,66 @@ class CurrentSnapshotBuilderTest extends TestCase
                 ],
                 'renderedFields' => []
             ]
+        );
+    }
+
+    public function testItAddsTheLinkedIssuesThatAreDefinedInOuterScope(): void
+    {
+        $jira_field_mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $jira_field_mapping_collection->addMapping(
+            new ScalarFieldMapping(
+                AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
+                'F001',
+                'Links',
+                Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+            )
+        );
+
+        $builder = new CurrentSnapshotBuilder(
+            new NullLogger(),
+            new CreationStateListValueFormatter(),
+            Mockery::mock(JiraUserRetriever::class)
+        );
+
+        $linked_issues = (new LinkedIssuesCollection())
+            ->withChild('SP-36', '10005');
+
+        $snapshot = $builder->buildCurrentSnapshot(
+            UserTestBuilder::aUser()->build(),
+            IssueAPIRepresentation::buildFromAPIResponse(
+                [
+                    'id'             => '10042',
+                    'self'           => 'https://jira_instance/rest/api/3/issue/10042',
+                    'key'            => 'SP-36',
+                    'fields'         => [
+                        'updated'    => '2020-04-25T14:10:10.823+0100',
+                        'issuelinks' => [],
+                        'subtasks'   => [],
+                    ],
+                    'renderedFields' => []
+                ]
+            ),
+            $jira_field_mapping_collection,
+            $linked_issues
+        );
+
+        $fields = $snapshot->getAllFieldsSnapshot();
+        self::assertCount(1, $fields);
+        self::assertEquals(
+            new ArtifactLinkValue(
+                [
+                    [
+                        'type' => [
+                            'name' => '_is_child'
+                        ],
+                        'outwardIssue' => [
+                            'id' => '10005',
+                        ]
+                    ]
+                ],
+                []
+            ),
+            $fields[0]->getValue()
         );
     }
 }

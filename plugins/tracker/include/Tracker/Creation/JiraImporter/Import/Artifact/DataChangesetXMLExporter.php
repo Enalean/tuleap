@@ -81,6 +81,7 @@ class DataChangesetXMLExporter
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentation $issue_api_representation,
         AttachmentCollection $attachment_collection,
+        LinkedIssuesCollection $linked_issues_collection,
         string $jira_base_url
     ): void {
         $this->logger->debug("Start exporting data in changeset XML...");
@@ -88,6 +89,7 @@ class DataChangesetXMLExporter
             $issue_api_representation,
             $attachment_collection,
             $jira_field_mapping_collection,
+            $linked_issues_collection,
             $jira_base_url
         );
 

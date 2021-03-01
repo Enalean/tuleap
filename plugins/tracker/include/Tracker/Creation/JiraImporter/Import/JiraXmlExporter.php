@@ -40,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBu
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -378,7 +379,8 @@ class JiraXmlExporter
         string $jira_base_url,
         string $jira_project_key,
         IssueType $issue_type,
-        IDGenerator $field_id_generator
+        IDGenerator $field_id_generator,
+        LinkedIssuesCollection $linked_issues_collection
     ): void {
         $this->logger->debug("Start export Jira to XML: " . $issue_type->getId());
 
@@ -465,6 +467,7 @@ class JiraXmlExporter
             $node_tracker,
             $jira_field_mapping_collection,
             $issue_representation_collection,
+            $linked_issues_collection,
             $jira_base_url,
             $jira_project_key,
             $issue_type->getId(),

@@ -30,8 +30,11 @@ use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
 use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
+use Tuleap\JiraImport\JiraAgile\IssuesLinkedToEpicsRetriever;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
+use Tuleap\JiraImport\JiraAgile\JiraEpicIssuesRetrieverFromAPI;
+use Tuleap\JiraImport\JiraAgile\JiraEpicRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
@@ -44,6 +47,7 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\ProjectMilestones\Widget\DashboardProjectMilestones;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
@@ -193,6 +197,8 @@ final class CreateProjectFromJira
             $logger
         );
 
+        $linked_issues_collection = new LinkedIssuesCollection();
+
         $board_retriever = new JiraBoardsRetrieverFromAPI(
             $jira_client,
             $logger,
@@ -213,6 +219,18 @@ final class CreateProjectFromJira
                 $logger->debug('Agile: estimation field: ' . $board_configuration->estimation_field);
                 $platform_configuration_collection->setStoryPointsField($board_configuration->estimation_field);
             }
+
+            $issues_linked_to_epics_retriever = new IssuesLinkedToEpicsRetriever(
+                new JiraEpicRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+                new JiraEpicIssuesRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+            );
+            $linked_issues_collection         = $issues_linked_to_epics_retriever->getLinkedIssues($board);
         }
 
         $jira_agile_importer = new JiraAgileImporter(
@@ -277,7 +295,8 @@ final class CreateProjectFromJira
                 $jira_credentials->getJiraUrl(),
                 $jira_project,
                 $jira_issue_type,
-                $field_id_generator
+                $field_id_generator,
+                $linked_issues_collection
             );
         }
 
