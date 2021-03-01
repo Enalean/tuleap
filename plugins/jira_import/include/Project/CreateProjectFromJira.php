@@ -40,6 +40,7 @@ use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\ProjectMilestones\Widget\DashboardProjectMilestones;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
@@ -51,6 +52,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Widget\ProjectHeartbeat;
 use Tuleap\Tracker\XML\XMLTracker;
+use Tuleap\Widget\ProjectMembers\ProjectMembers;
 use User\XML\Import\IFindUserFromXMLReference;
 use UserManager;
 
@@ -287,24 +289,23 @@ final class CreateProjectFromJira
             );
         }
 
-        return $this->addWidgetOnDashboard($xml_element, [ProjectHeartbeat::NAME]);
+        return $this->addWidgetOnDashboard($xml_element);
     }
 
     /**
      * @param string[] $widget_names
      */
-    private function addWidgetOnDashboard(\SimpleXMLElement $xml_element, array $widget_names): \SimpleXMLElement
+    private function addWidgetOnDashboard(\SimpleXMLElement $xml_element): \SimpleXMLElement
     {
         $xml_dashboard = $xml_element->addChild('dashboards')->addChild("dashboard");
         $xml_dashboard->addAttribute('name', 'Dashboard');
 
-        foreach ($widget_names as $widget_name) {
-            $xml_dashboard
-                ->addChild("line")
-                ->addChild("column")
-                ->addChild("widget")
-                ->addAttribute("name", $widget_name);
-        }
+        $xml_dashboard_line     = $xml_dashboard->addChild("line");
+        $xml_dashboard_column01 = $xml_dashboard_line->addChild("column");
+        $xml_dashboard_column01->addChild("widget")->addAttribute("name", DashboardProjectMilestones::NAME);
+        $xml_dashboard_column01->addChild("widget")->addAttribute("name", ProjectMembers::NAME);
+        $xml_dashboard_column02 = $xml_dashboard_line->addChild("column");
+        $xml_dashboard_column02->addChild("widget")->addAttribute("name", ProjectHeartbeat::NAME);
 
         return $xml_element;
     }
