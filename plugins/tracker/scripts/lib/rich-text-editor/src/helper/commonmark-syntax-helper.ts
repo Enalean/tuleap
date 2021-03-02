@@ -57,7 +57,7 @@ export function getCommonMarkSyntaxPopoverHelperContent(gettext_provider: Gettex
                             <td><h2 class="popover-h2-indentation">Heading 2</h2></td>
                         </tr>
                         <tr>
-                            <td>[Link](https://example.com)</td>
+                            <td class="popover-link-indentation">[Link](https://example.com)</td>
                             <td><a href="https://example.com">Link</a></td>
                         </tr>
                         <tr>
