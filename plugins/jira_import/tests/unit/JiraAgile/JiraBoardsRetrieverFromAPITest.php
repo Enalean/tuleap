@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertNull;
 use function PHPUnit\Framework\assertSame;
@@ -44,7 +45,7 @@ class JiraBoardsRetrieverFromAPITest extends TestCase
 
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(UnexpectedFormatException::class);
 
         $retriever->getFirstScrumBoardForProject('FOO');
     }

@@ -43,7 +43,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends TestCase
             {
                 $this->called++;
 
-                assertEquals("/rest/agile/1.0/board/1/backlog?startAt=0&jql=issuetype+not+in+subtaskIssueTypes%28%29", $url);
+                assertEquals("/rest/agile/1.0/board/1/backlog?jql=issuetype+not+in+subtaskIssueTypes%28%29&startAt=0", $url);
 
                 return [
                     "maxResults" => 50,
@@ -72,7 +72,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends TestCase
             {
                 $this->called++;
 
-                assertEquals('/rest/agile/1.0/board/1/backlog?startAt=0&jql=issuetype+not+in+subtaskIssueTypes%28%29', $url);
+                assertEquals('/rest/agile/1.0/board/1/backlog?jql=issuetype+not+in+subtaskIssueTypes%28%29&startAt=0', $url);
 
                 return [
                     "maxResults" => 50,
@@ -181,7 +181,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends TestCase
                     ];
                 }
                 if ($this->called === 1) {
-                    assertEquals('/rest/agile/1.0/board/1/backlog?startAt=1&jql=issuetype+not+in+subtaskIssueTypes%28%29', $url);
+                    assertEquals('/rest/agile/1.0/board/1/backlog?jql=issuetype+not+in+subtaskIssueTypes%28%29&startAt=1', $url);
                     $this->called++;
                     return [
                         "maxResults" => 50,

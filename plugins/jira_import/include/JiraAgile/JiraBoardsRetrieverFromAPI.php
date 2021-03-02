@@ -28,10 +28,10 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
 {
-    public const BOARD_URL      = '/rest/agile/1.0/board';
-    private const TYPE_PARAM    = 'type';
-    private const SCRUM_TYPE    = 'scrum';
-    private const TYPE_START_AT = 'startAt';
+    public const BOARD_URL   = '/rest/agile/1.0/board';
+    private const TYPE_PARAM = 'type';
+    private const SCRUM_TYPE = 'scrum';
+
     /**
      * @var JiraClient
      */
@@ -53,41 +53,24 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
      */
     public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard
     {
-        $start_at = 0;
-        do {
-            $url = $this->getBoardUrl($start_at);
-            $this->logger->info('GET ' . $url);
-            $json = $this->client->getUrl($url);
-            $this->assertBoardResponseStructure($json);
-            if ($json['total'] === 0) {
-                return null;
+        $iterator = JiraCollectionBuilder::iterateUntilIsLast(
+            $this->client,
+            $this->logger,
+            $this->getBoardUrl(),
+            'values',
+        );
+        foreach ($iterator as $json_board) {
+            $this->assertBoardValuesResponseStructure($json_board);
+            if ($json_board['location']['projectKey'] === $jira_project_key) {
+                return new JiraBoard($json_board['id'], $json_board['self'], $json_board['location']['projectId'], $json_board['location']['projectKey']);
             }
-            foreach ($json['values'] as $json_board) {
-                $this->assertBoardValuesResponseStructure($json_board);
-                if ($json_board['location']['projectKey'] === $jira_project_key) {
-                    return new JiraBoard($json_board['id'], $json_board['self'], $json_board['location']['projectId'], $json_board['location']['projectKey']);
-                }
-                $start_at++;
-            }
-        } while ($json['isLast'] !== true);
-
+        }
         return null;
     }
 
-    public function getBoardUrl(int $start_at): string
+    public function getBoardUrl(): string
     {
-        return self::BOARD_URL . '?' . http_build_query([self::TYPE_PARAM => self::SCRUM_TYPE, self::TYPE_START_AT => $start_at]);
-    }
-
-    /**
-     * @param string|array|null $json
-     * @psalm-assert array{total: int, isLast: bool, values: array} $json
-     */
-    private function assertBoardResponseStructure($json): void
-    {
-        if (! isset($json['total'], $json['values'], $json['isLast'])) {
-            throw new \RuntimeException(sprintf('%s route did not return the expected format: `total` or `values` key are missing', self::BOARD_URL));
-        }
+        return self::BOARD_URL . '?' . http_build_query([self::TYPE_PARAM => self::SCRUM_TYPE]);
     }
 
     /**
