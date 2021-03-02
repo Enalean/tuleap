@@ -32,12 +32,8 @@ describe("Empty Followup", () => {
             .first()
             .should("have.attr", "data-changeset-id")
             .then((id) => {
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_changes_" + id + "]").should(
-                    "not.exist"
-                );
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_comment_" + id + "]").should(
+                cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("not.exist");
+                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
                     "This is hidden"
                 );
@@ -47,10 +43,8 @@ describe("Empty Followup", () => {
             .eq(1)
             .should("have.attr", "data-changeset-id")
             .then((id) => {
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_changes_" + id + "]").should("exist");
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_comment_" + id + "]").should(
+                cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
+                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
                     "This comment is only seen by admin"
                 );
@@ -60,10 +54,8 @@ describe("Empty Followup", () => {
             .eq(2)
             .should("have.attr", "data-changeset-id")
             .then((id) => {
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_changes_" + id + "]").should("exist");
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_comment_" + id + "]").should(
+                cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
+                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
                     "Changes are shown but comment is hidden"
                 );
@@ -73,10 +65,8 @@ describe("Empty Followup", () => {
             .eq(3)
             .should("have.attr", "data-changeset-id")
             .then((id) => {
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_changes_" + id + "]").should("exist");
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_comment_" + id + "]").should(
+                cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
+                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
                     "This comment is shown"
                 );
@@ -96,22 +86,16 @@ describe("Empty Followup", () => {
             .first()
             .should("have.attr", "data-changeset-id")
             .then((id) => {
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_changes_" + id + "]").should("exist");
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_comment_" + id + "]").should(
-                    "not.exist"
-                );
+                cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
+                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should("not.exist");
             });
 
         cy.get("[data-test=artifact-follow-up]")
             .eq(1)
             .should("have.attr", "data-changeset-id")
             .then((id) => {
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_changes_" + id + "]").should("exist");
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("[data-test=tracker_artifact_followup_comment_" + id + "]").should(
+                cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
+                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should(
                     "contain",
                     "This comment is shown"
                 );
