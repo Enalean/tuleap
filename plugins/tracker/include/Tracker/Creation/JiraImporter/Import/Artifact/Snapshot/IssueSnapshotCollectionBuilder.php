@@ -28,6 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
@@ -94,6 +95,7 @@ class IssueSnapshotCollectionBuilder
         IssueAPIRepresentation $issue_api_representation,
         AttachmentCollection $attachment_collection,
         FieldMappingCollection $jira_field_mapping_collection,
+        LinkedIssuesCollection $linked_issues_collection,
         string $jira_base_url
     ): array {
         $this->logger->debug("Start build collection of snapshot ...");
@@ -109,7 +111,8 @@ class IssueSnapshotCollectionBuilder
         $current_snapshot = $this->current_snapshot_builder->buildCurrentSnapshot(
             $artifact_creator,
             $issue_api_representation,
-            $jira_field_mapping_collection
+            $jira_field_mapping_collection,
+            $linked_issues_collection
         );
 
         $initial_snapshot = $this->initial_snapshot_builder->buildInitialSnapshot(

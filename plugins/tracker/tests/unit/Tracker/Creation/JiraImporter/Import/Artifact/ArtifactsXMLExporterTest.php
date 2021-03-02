@@ -41,6 +41,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBu
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -299,6 +300,7 @@ class ArtifactsXMLExporterTest extends TestCase
             $tracker_node,
             $mapping_collection,
             $issue_collection,
+            new LinkedIssuesCollection(),
             $jira_base_url,
             $jira_project_id,
             $jira_issue_name
@@ -439,6 +441,7 @@ class ArtifactsXMLExporterTest extends TestCase
             $tracker_node,
             $mapping_collection,
             $issue_collection,
+            new LinkedIssuesCollection(),
             $jira_base_url,
             $jira_project_id,
             $jira_issue_name

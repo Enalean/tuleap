@@ -34,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
@@ -185,6 +186,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->jira_issue_api,
             $this->attachment_collection,
             $this->jira_field_mapping_collection,
+            new LinkedIssuesCollection(),
             $this->jira_base_url
         );
 
@@ -237,6 +239,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->jira_issue_api,
             $this->attachment_collection,
             $this->jira_field_mapping_collection,
+            new LinkedIssuesCollection(),
             $this->jira_base_url
         );
 
@@ -291,6 +294,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->jira_issue_api,
             $this->attachment_collection,
             $this->jira_field_mapping_collection,
+            new LinkedIssuesCollection(),
             $this->jira_base_url
         );
 

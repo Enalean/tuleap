@@ -30,6 +30,7 @@ use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
@@ -69,7 +70,8 @@ class CurrentSnapshotBuilder
     public function buildCurrentSnapshot(
         PFUser $snapshot_owner,
         IssueAPIRepresentation $issue_api_representation,
-        FieldMappingCollection $jira_field_mapping_collection
+        FieldMappingCollection $jira_field_mapping_collection,
+        LinkedIssuesCollection $linked_issues_collection
     ): Snapshot {
         $this->logger->debug("Build current snapshot...");
 
@@ -79,7 +81,8 @@ class CurrentSnapshotBuilder
             $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
 
             if ($mapping !== null && $value !== null) {
-                $field_value       = $this->getBoundValue($mapping, $value, $issue_api_representation->getFields());
+                $field_value = $this->getBoundValue($mapping, $value, $issue_api_representation, $linked_issues_collection);
+
                 $field_snapshots[] = new FieldSnapshot(
                     $mapping,
                     $field_value,
@@ -108,7 +111,8 @@ class CurrentSnapshotBuilder
     private function getBoundValue(
         FieldMapping $mapping,
         $value,
-        array $all_fields
+        IssueAPIRepresentation $issue_api_representation,
+        LinkedIssuesCollection $linked_issues_collection
     ) {
         if (
             $mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE &&
@@ -147,7 +151,18 @@ class CurrentSnapshotBuilder
         }
 
         if ($mapping->getType() === \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS) {
-            return new ArtifactLinkValue($value, $all_fields[AlwaysThereFieldsExporter::JIRA_SUB_TASKS_NAME]);
+            $added_values = [];
+            foreach ($linked_issues_collection->getChildren($issue_api_representation->getKey()) as $child) {
+                $added_values[] = [
+                    'type' => [
+                        'name' => '_is_child'
+                    ],
+                    'outwardIssue' => [
+                        'id' => $child,
+                    ]
+                ];
+            }
+            return new ArtifactLinkValue(array_merge($value, $added_values), $issue_api_representation->getFields()[AlwaysThereFieldsExporter::JIRA_SUB_TASKS_NAME]);
         }
 
         return $value;
