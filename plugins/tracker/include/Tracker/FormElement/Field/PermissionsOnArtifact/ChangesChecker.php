@@ -43,6 +43,10 @@ class ChangesChecker
             return true;
         }
 
+        if (empty($old_value->getPerms()) && ! empty($new_value['u_groups'])) {
+            return true;
+        }
+
         $ugroups_diff = array_diff($old_value->getPerms(), $new_value['u_groups']);
         return count($ugroups_diff) > 0;
     }

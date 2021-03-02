@@ -82,6 +82,19 @@ final class ChangesCheckerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
     }
 
+    public function testShouldBeTrueIfUgroupsSelectedForPermissionsOnArtifactChangedButNoUgroupInLastChangeset()
+    {
+        $this->old_value->shouldReceive('getUsed')->andReturn("1");
+        $this->old_value->shouldReceive('getPerms')->andReturn([]);
+
+        $new_values = [
+            'use_artifact_permissions' => "1",
+            "u_groups" => [3]
+        ];
+
+        $this->assertTrue($this->checker->hasChanges($this->old_value, $new_values));
+    }
+
     public function testShouldBeFalseIfNothingChanged()
     {
         $this->old_value->shouldReceive('getUsed')->andReturn("1");
