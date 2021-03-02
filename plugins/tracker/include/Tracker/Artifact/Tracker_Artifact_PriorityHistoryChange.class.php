@@ -143,7 +143,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $this->prioritized_on;
     }
 
-    public function getFollowUpClassnames($diff_to_previous)
+    public function getFollowUpClassnames($diff_to_previous, PFUser $user): string
     {
         return 'tracker_artifact_followup-priority';
     }

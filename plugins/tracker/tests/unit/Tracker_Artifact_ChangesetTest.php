@@ -35,6 +35,10 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset_ValueDao
      */
     private $dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     */
+    private $user;
 
 
     protected function setUp(): void
@@ -43,7 +47,8 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->dao = \Mockery::spy(\Tracker_Artifact_Changeset_ValueDao::class);
+        $this->dao  = \Mockery::spy(\Tracker_Artifact_Changeset_ValueDao::class);
+        $this->user = Mockery::mock(PFUser::class);
     }
 
     public function testItContainsChanges(): void
@@ -67,12 +72,12 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-with_changes') . '/';
-        $this->assertMatchesRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
-        $this->assertMatchesRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
-        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
-        $this->assertMatchesRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes', $this->user));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes', $this->user));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes', $this->user));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes', $this->user));
 
-        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false, $this->user));
     }
 
     public function testItContainsComment(): void
@@ -96,12 +101,12 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-with_comment') . '/';
-        $this->assertMatchesRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false));
-        $this->assertMatchesRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
-        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
-        $this->assertMatchesRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false, $this->user));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes', $this->user));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes', $this->user));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes', $this->user));
 
-        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes', $this->user));
     }
 
     public function testItContainsSystemUser(): void
@@ -125,12 +130,12 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-by_system_user') . '/';
-        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false));
-        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
-        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
-        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false, $this->user));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes', $this->user));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes', $this->user));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes', $this->user));
 
-        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes', $this->user));
     }
 
     /**
@@ -159,6 +164,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
     {
         $empty_comment = Mockery::mock(Tracker_Artifact_Changeset_Comment::class);
         $empty_comment->shouldReceive('hasEmptyBody')->andReturn(true);
+        $empty_comment->shouldReceive('hasEmptyBodyForUser')->andReturn(true);
 
         return $empty_comment;
     }
@@ -170,6 +176,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
     {
         $comment = Mockery::mock(Tracker_Artifact_Changeset_Comment::class);
         $comment->shouldReceive('hasEmptyBody')->andReturn(false);
+        $comment->shouldReceive('hasEmptyBodyForUser')->andReturn(false);
 
         return $comment;
     }
@@ -304,5 +311,86 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $changeset->shouldReceive('getFormElementFactory')->andReturns($formelement_factory);
 
         $changeset->delete($user);
+    }
+
+    public function testItGetNullIfNoChangesAndNoComment(): void
+    {
+        $user = \Mockery::spy(\PFUser::class)->shouldReceive('isSuperUser')->andReturns(true)->getMock();
+
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
+
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $comment = $this->getEmptyComment();
+        $comment->shouldReceive('fetchFollowUp')->andReturn(null);
+
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+
+        $changeset->shouldReceive('getValues')->once()->andReturn([]);
+
+        $follow_up_content = $changeset->getFollowUpHTML($user, $changeset);
+
+        self::assertNull($follow_up_content);
+    }
+
+    public function testItGetFollowUpWithOnlyChanges(): void
+    {
+        $user = \Mockery::spy(\PFUser::class)->shouldReceive('isSuperUser')->andReturns(true)->getMock();
+
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
+
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $comment = $this->getEmptyComment();
+        $comment->shouldReceive('fetchFollowUp')->andReturn(null);
+
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+
+        $changeset
+            ->shouldReceive('diffToPreviousArtifactView')
+            ->once()
+            ->andReturn("<div></div>");
+
+        $changeset
+            ->shouldReceive('fetchFollowUp')
+            ->once()
+            ->andReturn("<div class='tracker_followup_changes'></div>");
+
+        $follow_up_content = $changeset->getFollowUpHTML($user, $changeset);
+
+        self::assertStringContainsString("tracker_artifact_followup-with_changes", $follow_up_content);
+        self::assertStringNotContainsString("tracker_artifact_followup-with_comments", $follow_up_content);
+    }
+
+    public function testItGetFollowUpWithOnlyComments(): void
+    {
+        $user = \Mockery::spy(\PFUser::class)->shouldReceive('isSuperUser')->andReturns(true)->getMock();
+
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
+
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $comment = $this->getComment();
+        $comment->shouldReceive('fetchFollowUp')->andReturn("<div></div>");
+
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+
+        $changeset
+            ->shouldReceive('diffToPreviousArtifactView')
+            ->once()
+            ->andReturn("");
+
+        $changeset
+            ->shouldReceive('fetchFollowUp')
+            ->once()
+            ->andReturn("<div class='tracker_followup_changes'></div>");
+
+        $follow_up_content = $changeset->getFollowUpHTML($user, $changeset);
+
+        self::assertStringNotContainsString("tracker_artifact_followup-with_changes", $follow_up_content);
+        self::assertStringContainsString("tracker_artifact_followup-with_comment", $follow_up_content);
     }
 }
