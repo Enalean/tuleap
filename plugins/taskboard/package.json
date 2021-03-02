@@ -9,7 +9,7 @@
     "dompurify": "^2.2.6",
     "fscreen": "^1.2.0",
     "mustache": "^4.1.0",
-    "p-retry": "^4.2.0",
+    "p-retry": "^4.4.0",
     "vue": "^2.6.12",
     "vue-dompurify-html": "^2.3.0",
     "vuex": "^3.6.2"
