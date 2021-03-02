@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,8 +15,41 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-export { RichTextEditorFactory } from "./RichTextEditorFactory";
-export type { RichTextEditorOptions } from "./types";
-import "../themes/popovers.css";
+.popover {
+    max-width: none;
+    padding: 0;
+}
+
+.popover-content {
+    padding: 0;
+}
+
+.popover-h1-indentation,
+.popover-h2-indentation,
+.popover-blockquote-indentation {
+    display: inline;
+}
+
+.popover-image-indentation {
+    width: 62px;
+    height: 59px;
+    background-image: url('../assets/image_example_commonmark.png');
+}
+
+
+.rte_format { /* stylelint-disable-line selector-class-pattern */
+    display: flex;
+    align-items: baseline;
+}
+
+.commonmark-button-help {
+    display: none;
+    margin: 0 0 0 5px;
+}
+
+.commonmark-button-help-show {
+    display: inline;
+}

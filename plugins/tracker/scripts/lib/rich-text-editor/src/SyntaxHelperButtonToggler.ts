@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,8 +15,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-export { RichTextEditorFactory } from "./RichTextEditorFactory";
-export type { RichTextEditorOptions } from "./types";
-import "../themes/popovers.css";
+import $ from "jquery";
+
+export class SyntaxHelperButtonToggler {
+    constructor(private readonly button: HTMLButtonElement) {}
+
+    public show(): void {
+        this.button.classList.add("commonmark-button-help-show");
+    }
+
+    public hideAndDismissPopover(): void {
+        this.button.classList.remove("commonmark-button-help-show");
+        $(this.button).popover("hide");
+    }
+}

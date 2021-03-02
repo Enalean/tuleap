@@ -17,13 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SyntaxButtonPresenter } from "./FlamingParrotDocumentAdapter";
 import {
     FlamingParrotDocumentAdapter,
     HTML_FORMAT_CLASSNAME,
 } from "./FlamingParrotDocumentAdapter";
-import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../../constants/fields-constants";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
+
+const emptyFunction = (): void => {
+    //Do nothing
+};
+
+interface FakeBootstrap {
+    popover(): void;
+}
+
+jest.mock("jquery", () => {
+    return {
+        default: (): FakeBootstrap => {
+            return { popover: emptyFunction };
+        },
+    };
+});
 
 describe(`FlamingParrotDocumentAdapter`, () => {
     let doc: Document, adapter: FlamingParrotDocumentAdapter;
@@ -85,17 +106,19 @@ describe(`FlamingParrotDocumentAdapter`, () => {
         });
     });
 
-    describe(`createSelectBoxWrapper()`, () => {
+    describe(`createFormatWrapper()`, () => {
         it(`given a presenter, it creates an HTML div element wrapping a selectbox`, () => {
             const selectbox = doc.createElement("select");
+            const button_helper = doc.createElement("button");
             const presenter = {
                 label: "orgue",
-                child: selectbox,
+                selectbox,
+                button_helper,
             };
 
-            const wrapper = adapter.createSelectBoxWrapper(presenter);
+            const wrapper = adapter.createFormatWrapper(presenter);
             expect(wrapper.outerHTML).toEqual(
-                `<div class="rte_format">orgue<select></select></div>`
+                `<div class="rte_format">orgue<select></select><button></button></div>`
             );
         });
     });
@@ -105,9 +128,38 @@ describe(`FlamingParrotDocumentAdapter`, () => {
             const textarea = doc.createElement("textarea");
             const wrapper = doc.createElement("div");
             doc.body.append(textarea);
-
             adapter.insertFormatWrapper(textarea, wrapper);
             expect(wrapper.nextElementSibling).toBe(textarea);
         });
+    });
+    describe("createCommonMarkSyntaxHelperButton()", () => {
+        it(`creates and display the 'Help' button if the format is 'commonmark'`, () => {
+            const format = TEXT_FORMAT_COMMONMARK;
+            const button_presenter: SyntaxButtonPresenter = {
+                label: "Help",
+                popover_content: `<div>Call Casting</div>`,
+            };
+
+            const button = adapter.createCommonMarkSyntaxHelperButton(button_presenter, format);
+
+            expect(button.outerHTML).toEqual(
+                `<button type="button" class="btn btn-small commonmark-button-help commonmark-button-help-show"><i class="fas fa-question-circle help-button-icon"></i>Help</button>`
+            );
+        });
+        it.each([[TEXT_FORMAT_TEXT], [TEXT_FORMAT_HTML]])(
+            `creates BUT DOES NOT display the 'Help' button if the format is '%s'`,
+            (format) => {
+                const button_presenter: SyntaxButtonPresenter = {
+                    label: "Help",
+                    popover_content: `<div>On the dark side, if you keep cold, it's a cold case</div>`,
+                };
+
+                const button = adapter.createCommonMarkSyntaxHelperButton(button_presenter, format);
+
+                expect(button.outerHTML).toEqual(
+                    `<button type="button" class="btn btn-small commonmark-button-help"><i class="fas fa-question-circle help-button-icon"></i>Help</button>`
+                );
+            }
+        );
     });
 });

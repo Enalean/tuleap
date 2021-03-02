@@ -28,14 +28,36 @@ import {
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
+const emptyFunction = (): void => {
+    //Do nothing
+};
+
+interface FakeBootstrap {
+    popover(): void;
+}
+
+jest.mock("jquery", () => {
+    return {
+        default: (): FakeBootstrap => {
+            return { popover: emptyFunction };
+        },
+    };
+});
+
 describe(`FormatSelectorBuilder`, () => {
-    let doc: Document, builder: FormatSelectorBuilder, textarea: HTMLTextAreaElement;
+    let doc: Document,
+        builder: FormatSelectorBuilder,
+        textarea: HTMLTextAreaElement,
+        document_adapter: FlamingParrotDocumentAdapter;
+
     beforeEach(() => {
         doc = createDocument();
         const gettext_provider = {
             gettext: (english: string): string => english,
         };
-        const document_adapter = new FlamingParrotDocumentAdapter(doc);
+
+        document_adapter = new FlamingParrotDocumentAdapter(doc);
+
         builder = new FormatSelectorBuilder(document_adapter, gettext_provider);
         textarea = doc.createElement("textarea");
         doc.body.append(textarea);
@@ -90,7 +112,7 @@ describe(`FormatSelectorBuilder`, () => {
                         <option value="text">Text</option>
                         <option value="html">HTML</option>
                         <option value="commonmark">Markdown</option>
-                      </select></div>
+                      </select><button type="button" class="btn btn-small commonmark-button-help"><i class="fas fa-question-circle help-button-icon"></i>Help</button></div>
                 `);
             });
 
@@ -103,6 +125,31 @@ describe(`FormatSelectorBuilder`, () => {
                 selectbox.dispatchEvent(new InputEvent("input"));
                 expect(presenter.formatChangedCallback).toHaveBeenCalledWith("html");
             });
+
+            it(`displays the '?Help button if the new input value is 'Markdown'`, () => {
+                builder.insertFormatSelectbox(textarea, presenter);
+
+                const wrapper = getWrapperFromTextarea(textarea);
+                const selectbox = getSelectboxFromWrapper(wrapper);
+                selectbox.value = "commonmark";
+                selectbox.dispatchEvent(new InputEvent("input"));
+                const button = getButtonFromSelectBox(selectbox);
+                expect(button.classList.contains("commonmark-button-help-show")).toBe(true);
+            });
+
+            it.each([[TEXT_FORMAT_TEXT], [TEXT_FORMAT_HTML]])(
+                `does NOT display the '?Help button if the new input value is '%s', and dismiss the popover if the format change`,
+                (format) => {
+                    builder.insertFormatSelectbox(textarea, presenter);
+
+                    const wrapper = getWrapperFromTextarea(textarea);
+                    const selectbox = getSelectboxFromWrapper(wrapper);
+                    selectbox.value = format;
+                    selectbox.dispatchEvent(new InputEvent("input"));
+                    const button = getButtonFromSelectBox(selectbox);
+                    expect(button.classList.contains("commonmark-button-help-show")).toBe(false);
+                }
+            );
 
             it(`given a presenter without a name, it defaults the selectbox name to
                 a prefix + the presenter id`, () => {
@@ -131,4 +178,12 @@ function getSelectboxFromWrapper(wrapper: HTMLDivElement): HTMLSelectElement {
         throw new Error("Expected to find the selectbox in its wrapper");
     }
     return selectbox;
+}
+
+function getButtonFromSelectBox(selectbox: HTMLSelectElement): HTMLButtonElement {
+    const button = selectbox.nextElementSibling;
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error("Expected to find the button in next to selectbox");
+    }
+    return button;
 }

@@ -18,6 +18,7 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
+import type { TextFieldFormat } from "../../../constants/fields-constants";
 import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_COMMONMARK,
@@ -26,6 +27,8 @@ import {
 } from "../../../constants/fields-constants";
 import type { DisplayInterface, FormatSelectorPresenter } from "./DisplayInterface";
 import type { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
+import { getCommonMarkSyntaxPopoverHelperContent } from "./helper/commonmark-syntax-helper";
+import { SyntaxHelperButtonToggler } from "./SyntaxHelperButtonToggler";
 
 const SELECTBOX_ID_PREFIX = "rte_format_selectbox";
 const SELECTBOX_NAME_PREFIX = "comment_format";
@@ -56,6 +59,16 @@ export class FormatSelectorBuilder implements DisplayInterface {
             is_selected: presenter.selected_value === TEXT_FORMAT_COMMONMARK,
         });
 
+        const button_helper = this.doc.createCommonMarkSyntaxHelperButton(
+            {
+                label: this.gettext_provider.gettext("Help"),
+                popover_content: getCommonMarkSyntaxPopoverHelperContent(this.gettext_provider),
+            },
+            presenter.selected_value
+        );
+
+        const button_helper_toggler = new SyntaxHelperButtonToggler(button_helper);
+
         const selectbox_name = presenter.name
             ? presenter.name
             : SELECTBOX_NAME_PREFIX + presenter.id;
@@ -64,17 +77,35 @@ export class FormatSelectorBuilder implements DisplayInterface {
             name: selectbox_name,
             onInputCallback: (new_value) => {
                 if (isValidTextFormat(new_value)) {
-                    presenter.formatChangedCallback(new_value);
+                    this.handleInputValueChangeCallback(
+                        button_helper_toggler,
+                        new_value,
+                        presenter
+                    );
                 }
             },
             options: [text_option, html_option, markdown_option],
         });
 
-        const wrapper = this.doc.createSelectBoxWrapper({
+        const wrapper = this.doc.createFormatWrapper({
             label: this.gettext_provider.gettext("Format:"),
-            child: selectbox,
+            selectbox,
+            button_helper,
         });
 
         this.doc.insertFormatWrapper(textarea, wrapper);
+    }
+
+    private handleInputValueChangeCallback(
+        button_toggler: SyntaxHelperButtonToggler,
+        new_value: TextFieldFormat,
+        presenter: FormatSelectorPresenter
+    ): void {
+        presenter.formatChangedCallback(new_value);
+        if (new_value === TEXT_FORMAT_COMMONMARK) {
+            button_toggler.show();
+        } else {
+            button_toggler.hideAndDismissPopover();
+        }
     }
 }
