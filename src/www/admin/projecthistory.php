@@ -41,7 +41,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
 $project = ProjectManager::instance()->getProject($group_id ?? 0);
 
 if (! $project || $project->isError()) {
-    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit', 'error_group'));
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Invalid project was passed in.'));
     $GLOBALS['Response']->redirect('/admin');
 }
 
@@ -57,7 +57,7 @@ $results        = $dao->groupGetHistory($offset, $limit, $group_id, $history_fil
 
 $renderer = new AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
-    $Language->getText('admin_groupedit', 'title'),
+    _('Editing Project'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
     'project-history',
     new ProjectHistoryPresenter(

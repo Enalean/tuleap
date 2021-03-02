@@ -54,13 +54,13 @@ class Admin_ProjectListExporter
     private function buildCsvHeader()
     {
         $csv_header      = "";
-        $documents_title =  ['group_id'     => $GLOBALS['Language']->getText('admin_grouplist', 'id_group'),
-                                  'project_name' => $GLOBALS['Language']->getText('admin_groupedit', 'grp_name'),
-                                  'unix_name'    => $GLOBALS['Language']->getText('admin_groupedit', 'unix_grp'),
+        $documents_title =  ['group_id'     => _('Id group'),
+                                  'project_name' => _('Project Name'),
+                                  'unix_name'    => _('Unix Group Name'),
                                   'status'       => $GLOBALS['Language']->getText('global', 'status'),
-                                  'type'         => $GLOBALS['Language']->getText('admin_groupedit', 'group_type'),
-                                  'public'       => $GLOBALS['Language']->getText('admin_groupedit', 'public'),
-                                  'members'      => $GLOBALS['Language']->getText('admin_grouplist', 'members')];
+                                  'type'         => _('Project Type'),
+                                  'public'       => _('Public?'),
+                                  'members'      => _('Members')];
         $csv_header     .= build_csv_header($this->column_list, $documents_title);
         return $csv_header;
     }
@@ -115,19 +115,19 @@ class Admin_ProjectListExporter
         $status = "";
         switch ($status_code) {
             case Project::STATUS_ACTIVE:
-                $status = $GLOBALS['Language']->getText('admin_groupedit', 'status_A');
+                $status = _('Active');
                 break;
             case Project::STATUS_PENDING:
-                $status = $GLOBALS['Language']->getText('admin_groupedit', 'status_P');
+                $status = _('Pending');
                 break;
             case Project::STATUS_SUSPENDED:
-                $status = $GLOBALS['Language']->getText('admin_groupedit', 'status_H');
+                $status = _('Suspended');
                 break;
             case Project::STATUS_DELETED:
-                $status = $GLOBALS['Language']->getText('admin_groupedit', 'status_D');
+                $status = _('Deleted');
                 break;
             case Project::STATUS_SYSTEM:
-                $status = $GLOBALS['Language']->getText('admin_groupedit', 'status_s');
+                $status = _('System');
                 break;
         }
         return $status;

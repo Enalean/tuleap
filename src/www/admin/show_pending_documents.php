@@ -124,7 +124,7 @@ $em->processEvent($event);
 $purifier = Codendi_HTMLPurifier::instance();
 
 $renderer = new AdminPageRenderer();
-$renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), false);
+$renderer->header(_('Editing Project'), false);
 
 ?>
 <div class="tlp-framed-vertically">
@@ -178,7 +178,7 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, Pen
     $html .= '<section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">' . $GLOBALS['Language']->getText('admin_groupedit', 'archived_files') . '</h1>
+            <h1 class="tlp-pane-title">' . _('Deleted files') . '</h1>
         </div>
         <section class="tlp-pane-section">
             <table class="tlp-table">
@@ -362,7 +362,7 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
     $tabbed_content .= '<section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">' . $GLOBALS['Language']->getText('admin_groupedit', 'archived_wiki') . '</h1>
+            <h1 class="tlp-pane-title">' . _('Deleted wiki attachments') . '</h1>
         </div>
         <section class="tlp-pane-section">
             <table class="tlp-table">

@@ -161,8 +161,8 @@ class ProjectDetailsPresenter
         $this->unix_name_label                           = $GLOBALS['Language']->getText('admin_project', 'unix_name_label');
         $this->save_label                                = $GLOBALS['Language']->getText('admin_project', 'save_label');
         $this->status_label                              = $GLOBALS['Language']->getText('admin_project', 'status_label');
-        $this->type_label                                = $GLOBALS['Language']->getText('admin_groupedit', 'group_type');
-        $this->built_from_label                          = $GLOBALS['Language']->getText('admin_groupedit', 'built_from_template');
+        $this->type_label                                = _('Project Type');
+        $this->built_from_label                          = _('Built from template');
         $this->instructions_label                        = $GLOBALS['Language']->getText('admin_project', 'instructions_label');
         $this->send_email_label                          = $GLOBALS['Language']->getText('admin_project', 'send_email_label');
         $this->instructions_desc                         = $GLOBALS['Language']->getText('admin_project', 'instructions_desc');
@@ -209,13 +209,13 @@ class ProjectDetailsPresenter
     private function getAssignableProjectStatuses(Project $project)
     {
         $status = [
-            Project::STATUS_ACTIVE => $GLOBALS['Language']->getText('admin_groupedit', 'status_A'),
-            Project::STATUS_SUSPENDED => $GLOBALS['Language']->getText('admin_groupedit', 'status_H'),
-            Project::STATUS_DELETED => $GLOBALS['Language']->getText('admin_groupedit', 'status_D'),
+            Project::STATUS_ACTIVE => _('Active'),
+            Project::STATUS_SUSPENDED => _('Suspended'),
+            Project::STATUS_DELETED => _('Deleted'),
         ];
 
         if ($project->getStatus() === Project::STATUS_PENDING) {
-            $status[Project::STATUS_PENDING] = $GLOBALS['Language']->getText('admin_groupedit', 'status_P');
+            $status[Project::STATUS_PENDING] = _('Pending');
         }
 
         return $status;

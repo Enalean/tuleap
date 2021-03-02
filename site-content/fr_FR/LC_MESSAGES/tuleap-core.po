@@ -351,6 +351,9 @@ msgstr "Actions"
 msgid "Activate synchronized project membership management"
 msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 
+msgid "Active"
+msgstr "Actif"
+
 msgid "Add"
 msgstr "Ajouter"
 
@@ -637,6 +640,9 @@ msgstr ""
 "La navigation dans l'arbre CVS donne un bon aperçu de l'état courant du code "
 "source de ce projet. Vous pouvez aussi voir l'historique complet des "
 "fichiers du dépôt."
+
+msgid "Built from template"
+msgstr "Créé à partir du modèle"
 
 msgid "By"
 msgstr "De"
@@ -1096,7 +1102,13 @@ msgid "Delete?"
 msgstr "Détruire ?"
 
 msgid "Deleted"
-msgstr "Détruire"
+msgstr "Détruit"
+
+msgid "Deleted files"
+msgstr "Fichiers supprimés"
+
+msgid "Deleted wiki attachments"
+msgstr "Pièces jointes wiki supprimées"
 
 msgid "Description"
 msgstr "Description"
@@ -1196,6 +1208,9 @@ msgstr "Éditer les paramètres"
 
 msgid "Edit widget"
 msgstr "Éditer le widget"
+
+msgid "Editing Project"
+msgstr "Editer un projet"
 
 msgid "Editing reference patterns"
 msgstr "Éditer les modèles de référence"
@@ -1539,6 +1554,9 @@ msgstr "L'insertion a échoué"
 msgid "Id"
 msgstr "Id"
 
+msgid "Id group"
+msgstr "Identifiant du groupe"
+
 msgid "Id, unix name..."
 msgstr "Id, nom unix…"
 
@@ -1617,11 +1635,17 @@ msgstr ""
 msgid "Invalid List Name"
 msgstr "Nom de liste invalide"
 
+msgid "Invalid Short Name"
+msgstr "Nom court du projet invalide"
+
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
 "Le nom du groupe %s est invalide. Merci d'utiliser uniquement des caractères "
 "alphanumériques."
+
+msgid "Invalid project was passed in."
+msgstr "Projet invalide passé en paramètre."
 
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
@@ -2187,6 +2211,9 @@ msgstr "Le mot de passe a été mis à jour avec succès"
 msgid "Passwords do not match"
 msgstr "Les deux mots de passe soumis sont différents"
 
+msgid "Pending"
+msgstr "En attente"
+
 msgid "Pending projects"
 msgstr "Projets en attente"
 
@@ -2387,11 +2414,17 @@ msgstr "Historique du projet"
 msgid "Project Latest News"
 msgstr "Dernières annonces du projet"
 
+msgid "Project Name"
+msgstr "Nom du projet"
+
 msgid "Project Registration"
 msgstr "Enregistrement d'un projet"
 
 msgid "Project Team"
 msgstr "Équipe du projet"
+
+msgid "Project Type"
+msgstr "Type de projet"
 
 msgid "Project access error"
 msgstr "Erreur d'accès au projet"
@@ -2472,6 +2505,12 @@ msgstr "Nom du projet"
 msgid "Project name shouldn't exceed 40 characters."
 msgstr "Le nom du projet ne doit pas dépasser 40 caractères."
 
+msgid ""
+"Project name update will be effective only after system event processing."
+msgstr ""
+"La mise à jour du nom du projet ne sera effective qu'après le traitement de "
+"l'événement système correspondant."
+
 msgid "Project name..."
 msgstr "Nom du projet..."
 
@@ -2532,6 +2571,14 @@ msgstr "Visibilité des projets"
 msgid "Projects..."
 msgstr "Projets…"
 
+#, php-format
+msgid ""
+"Propagation of project's name update on system queued (%1$s -> %2$s). It "
+"will be processed in a little while."
+msgstr ""
+"Le changement du nom du projet sur le système va être traité dans quelques "
+"instants (%1$s -> %2$s)."
+
 msgid "Provided release note URL is not well formed"
 msgstr "Le lien de la release note n'est pas au bon format."
 
@@ -2556,6 +2603,9 @@ msgid ""
 msgstr ""
 "Publique signifie que tous les utilisateurs peuvent s'abonner, et que les "
 "archives sont publiques"
+
+msgid "Public?"
+msgstr "Public ?"
 
 msgid "Purple"
 msgstr "Violet"
@@ -2989,6 +3039,9 @@ msgstr "Mis à jour avec succès."
 msgid "Summary"
 msgstr "Résumé"
 
+msgid "Suspended"
+msgstr "Suspendu"
+
 msgid "Switch to new project creation flow"
 msgstr "Basculer sur la nouvelle interface de création de projet"
 
@@ -3217,6 +3270,13 @@ msgstr ""
 "PermissionsOverrider.php`. Cette fonctionnalité est dépréciée sans "
 "remplacement, vous devriez supprimer le fichier. La fonctionnalité sera "
 "retirée fin mars 2021."
+
+msgid ""
+"There is already an event scheduled to rename this project. Please check <a "
+"href=\"/admin/system_events/\">System Event Monitor</a>."
+msgstr ""
+"Il y a déjà une opération de renommage prévue pour ce projet. Merci de "
+"consulter les <a href=\"/admin/system_events/\">Événements Système</a>."
 
 msgid "There is no users group bound to this one."
 msgstr "Il n'y a pas de groupe lié à celui-ci."
@@ -3560,6 +3620,9 @@ msgstr "La mise à jour des préférences utilisateur a échoué"
 msgid "Unauthorized action for anonymous"
 msgstr "Cette action n'est pas autorisée pour les anonymes"
 
+msgid "Unix Group Name"
+msgstr "Nom du groupe unix"
+
 msgid "Unix name"
 msgstr "Now unix"
 
@@ -3604,6 +3667,9 @@ msgstr "Mis à jour avec succès"
 
 msgid "Update your email preferences"
 msgstr "Mettre à jour vos préférences"
+
+msgid "Updating Project Info"
+msgstr "Mise à jour des infos du projet"
 
 msgid "Upload text file"
 msgstr "Téléverser un fichier texte"
@@ -4462,3 +4528,6 @@ msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"
+
+#~ msgid "Project Admin"
+#~ msgstr "Administration du Projet"
