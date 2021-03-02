@@ -53,3 +53,12 @@
 .commonmark-button-help-show {
     display: inline;
 }
+
+/* Classes needed for the modal v2 */
+.popover-h1-indentation {
+    white-space: nowrap;
+}
+
+.popover-link-indentation {
+    white-space: nowrap;
+}
