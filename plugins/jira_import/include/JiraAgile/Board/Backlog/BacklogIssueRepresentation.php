@@ -21,8 +21,41 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 
-class UnexpectedFormatException extends \Exception
+/**
+ * @psalm-immutable
+ */
+final class BacklogIssueRepresentation
 {
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $key;
+
+    public function __construct(int $id, string $key)
+    {
+        $this->id  = $id;
+        $this->key = $key;
+    }
+
+    public static function buildFromAPIResponse(array $response): self
+    {
+        if (
+            ! isset($response['id']) ||
+            ! isset($response['key'])
+        ) {
+            throw new BoardBacklogAPIResponseNotWellFormedException();
+        }
+
+        $id  = (int) $response['id'];
+        $key = $response['key'];
+
+        return new self($id, $key);
+    }
 }

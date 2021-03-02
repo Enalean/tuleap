@@ -21,8 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 
-class UnexpectedFormatException extends \Exception
+use Tuleap\JiraImport\JiraAgile\JiraBoard;
+
+interface JiraBoardBacklogRetriever
 {
+    /**
+     * @return BacklogIssueRepresentation[]
+     */
+    public function getBoardBacklogIssues(JiraBoard $jira_board): array;
 }

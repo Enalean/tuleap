@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\Planning\XML\XMLPlanning;
 use Tuleap\Cardwall\XML\XMLCardwall;
 use Tuleap\Cardwall\XML\XMLCardwallColumn;
 use Tuleap\Cardwall\XML\XMLCardwallTracker;
+use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetriever;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfiguration;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
@@ -53,6 +54,10 @@ final class JiraAgileImporter
      */
     private $sprint_issues_retriever;
     /**
+     * @var JiraBoardBacklogRetriever
+     */
+    private $backlog_retriever;
+    /**
      * @var EventDispatcherInterface
      */
     private $event_dispatcher;
@@ -60,10 +65,12 @@ final class JiraAgileImporter
     public function __construct(
         JiraSprintRetriever $sprint_retriever,
         JiraSprintIssuesRetriever $sprint_issues_retriever,
+        JiraBoardBacklogRetriever $backlog_retriever,
         EventDispatcherInterface $event_dispatcher
     ) {
         $this->sprint_retriever        = $sprint_retriever;
         $this->sprint_issues_retriever = $sprint_issues_retriever;
+        $this->backlog_retriever       = $backlog_retriever;
         $this->event_dispatcher        = $event_dispatcher;
     }
 
@@ -118,8 +125,34 @@ final class JiraAgileImporter
 
         $scrum_tracker->export($project->trackers);
 
-        $this->exportPlanningConfiguration($logger, $project, $scrum_tracker, $jira_issue_types, $jira_epic_issue_type);
+        $xml_agiledashboard = $project->addChild('agiledashboard');
+
+        $this->exportBacklog($logger, $xml_agiledashboard, $board);
+        $this->exportPlanningConfiguration($logger, $xml_agiledashboard, $scrum_tracker, $jira_issue_types, $jira_epic_issue_type);
         $this->exportCardwallConfiguration($logger, $project, $scrum_tracker, $board_configuration);
+    }
+
+    private function exportBacklog(
+        LoggerInterface $logger,
+        \SimpleXMLElement $xml_agiledashboard,
+        JiraBoard $board
+    ): void {
+        $logger->debug("Export backlog");
+
+        $xml_agiledashboard->addChild("admin")
+            ->addChild("scrum")
+            ->addChild("explicit_backlog")
+            ->addAttribute("is_used", "1");
+
+        $backlog_issues = $this->backlog_retriever->getBoardBacklogIssues($board);
+        if (empty($backlog_issues)) {
+            return;
+        }
+
+        $xml_top_backlog = $xml_agiledashboard->addChild("top_backlog");
+        foreach ($backlog_issues as $backlog_issue) {
+            $xml_top_backlog->addChild("artifact")->addAttribute("artifact_id", (string) $backlog_issue->id);
+        }
     }
 
     /**
@@ -127,14 +160,14 @@ final class JiraAgileImporter
      */
     private function exportPlanningConfiguration(
         LoggerInterface $logger,
-        \SimpleXMLElement $project,
+        \SimpleXMLElement $xml_agiledashboard,
         XMLTracker $scrum_tracker,
         array $jira_issue_types,
         string $jira_epic_issue_type
     ): void {
         $logger->debug("Export agiledashboard planning configuration");
 
-        $xml_plannings = $project->addChild('agiledashboard')->addChild('plannings');
+        $xml_plannings = $xml_agiledashboard->addChild('plannings');
 
         $backlog_tracker_ids = [];
         foreach ($jira_issue_types as $issue_type) {

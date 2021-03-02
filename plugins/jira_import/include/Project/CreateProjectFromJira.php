@@ -28,6 +28,7 @@ use ProjectCreationData;
 use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
+use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
@@ -220,6 +221,10 @@ final class CreateProjectFromJira
                 $logger,
             ),
             new JiraSprintIssuesRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
+            new JiraBoardBacklogRetrieverFromAPI(
                 $jira_client,
                 $logger,
             ),

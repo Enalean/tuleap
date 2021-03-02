@@ -26,6 +26,8 @@ namespace Tuleap\JiraImport\JiraAgile;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
+use Tuleap\JiraImport\JiraAgile\Board\Backlog\BacklogIssueRepresentation;
+use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetriever;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfiguration;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationColumn;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -77,6 +79,7 @@ final class JiraAgileImporterTest extends TestCase
         $jira_agile_importer = new JiraAgileImporter(
             $this->getJiraSprintRetrieverWithoutSprints(),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             $dispatcher,
         );
 
@@ -329,6 +332,7 @@ final class JiraAgileImporterTest extends TestCase
                 }
             },
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
 
@@ -353,6 +357,7 @@ final class JiraAgileImporterTest extends TestCase
                 [JiraSprint::buildActive(1, 'Sprint 1')]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
 
@@ -386,6 +391,7 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
 
@@ -407,6 +413,7 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
 
@@ -428,6 +435,7 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
 
@@ -450,6 +458,7 @@ final class JiraAgileImporterTest extends TestCase
                 ]
             ),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
 
@@ -493,6 +502,7 @@ final class JiraAgileImporterTest extends TestCase
                     10001, 10004,
                 ]
             ),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
 
@@ -546,11 +556,7 @@ final class JiraAgileImporterTest extends TestCase
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
 
-        $importer = new JiraAgileImporter(
-            $this->getJiraSprintRetrieverWithoutSprints(),
-            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
-            new \EventManager(),
-        );
+        $importer = $this->getJiraAgileImport();
 
         $importer->exportScrum(
             new NullLogger(),
@@ -583,11 +589,55 @@ final class JiraAgileImporterTest extends TestCase
         assertSame("Done", (string) $xml_cardwall_tracker->columns->column[2]['label']);
     }
 
+    public function testItExportsTopBacklog(): void
+    {
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
+
+        $importer = new JiraAgileImporter(
+            $this->getJiraSprintRetrieverWithoutSprints(),
+            $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithIssues([
+                10000,
+                10001,
+                10002,
+            ]),
+            new \EventManager(),
+        );
+
+        $importer->exportScrum(
+            new NullLogger(),
+            $xml,
+            $this->getJiraBoard(),
+            JiraBoardConfiguration::buildWithoutEstimationField(
+                [
+                    new JiraBoardConfigurationColumn("To Do"),
+                    new JiraBoardConfigurationColumn("On Going"),
+                    new JiraBoardConfigurationColumn("Done"),
+                ],
+            ),
+            new FieldAndValueIDGenerator(),
+            UserTestBuilder::aUser()->withUserName('forge__tracker_importer_user')->build(),
+            [],
+            'Epic'
+        );
+
+        assertTrue(isset($xml->agiledashboard->admin->scrum->explicit_backlog));
+        assertSame("1", (string) $xml->agiledashboard->admin->scrum->explicit_backlog['is_used']);
+
+        assertTrue(isset($xml->agiledashboard->top_backlog));
+        assertCount(3, $xml->agiledashboard->top_backlog->children());
+
+        assertSame("10000", (string) $xml->agiledashboard->top_backlog->artifact[0]['artifact_id']);
+        assertSame("10001", (string) $xml->agiledashboard->top_backlog->artifact[1]['artifact_id']);
+        assertSame("10002", (string) $xml->agiledashboard->top_backlog->artifact[2]['artifact_id']);
+    }
+
     private function getJiraAgileImport(): JiraAgileImporter
     {
         return new JiraAgileImporter(
             $this->getJiraSprintRetrieverWithoutSprints(),
             $this->getJiraSprintIssuesRetrieverWithoutIssues(),
+            $this->getJiraBoardBacklogRetrieverWithoutIssues(),
             new \EventManager(),
         );
     }
@@ -647,6 +697,39 @@ final class JiraAgileImporterTest extends TestCase
                 $issues = [];
                 foreach ($this->issue_ids as $id) {
                     $issues[] = new ArtifactLinkChange($id);
+                }
+                return $issues;
+            }
+        };
+    }
+
+    private function getJiraBoardBacklogRetrieverWithoutIssues(): JiraBoardBacklogRetriever
+    {
+        return $this->getJiraBoardBacklogRetrieverWithIssues([]);
+    }
+
+    /**
+     * @param int[] $issue_ids
+     */
+    private function getJiraBoardBacklogRetrieverWithIssues(array $issue_ids): JiraBoardBacklogRetriever
+    {
+        return new class ($issue_ids) implements JiraBoardBacklogRetriever
+        {
+            /**
+             * @var array
+             */
+            private $issue_ids;
+
+            public function __construct(array $issue_ids)
+            {
+                $this->issue_ids = $issue_ids;
+            }
+
+            public function getBoardBacklogIssues(JiraBoard $board): array
+            {
+                $issues = [];
+                foreach ($this->issue_ids as $id) {
+                    $issues[] = new BacklogIssueRepresentation($id, "key-$id");
                 }
                 return $issues;
             }
