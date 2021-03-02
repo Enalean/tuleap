@@ -21,8 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 
-class UnexpectedFormatException extends \Exception
+use RuntimeException;
+
+class BoardBacklogAPIResponseNotWellFormedException extends RuntimeException
 {
 }
