@@ -21,6 +21,7 @@
 
 namespace Tuleap\Request;
 
+use ArtifactTypeFactory;
 use Codendi_HTMLPurifier;
 use ConfigDao;
 use EventManager;
@@ -31,6 +32,8 @@ use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use MailingListDao;
 use MailManager;
 use PermissionsOverrider_PermissionsOverriderManager;
+use ProjectHistoryDao;
+use ProjectManager;
 use ReferenceManager;
 use SVN_TokenHandler;
 use TemplateRendererFactory;
@@ -118,6 +121,7 @@ use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Home;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\ProjectAdministratorsIncludingDelegationDAO;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundAdministrationController;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
@@ -148,6 +152,7 @@ use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
+use Tuleap\User\Account\RemoveFromProjectController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UpdateAccountInformationController;
 use Tuleap\User\Account\UpdateAppearancePreferences;
@@ -167,6 +172,7 @@ use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenCreateController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\Widget\WidgetFactory;
+use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -476,6 +482,29 @@ class RouteCollector
     public static function postLogoutAccount(): LogoutController
     {
         return new LogoutController(\UserManager::instance());
+    }
+
+    public static function postAccountRemoveFromProject(): RemoveFromProjectController
+    {
+        $user_manager    = \UserManager::instance();
+        $project_manager = ProjectManager::instance();
+        return new RemoveFromProjectController(
+            HTTPFactoryBuilder::responseFactory(),
+            new \CSRFSynchronizerToken(RemoveFromProjectController::CSRF_TOKEN_NAME),
+            $user_manager,
+            $project_manager,
+            new \Tuleap\Project\UserRemover(
+                $project_manager,
+                EventManager::instance(),
+                new ArtifactTypeFactory(false),
+                new \Tuleap\Project\UserRemoverDao(),
+                $user_manager,
+                new ProjectHistoryDao(),
+                new UGroupManager()
+            ),
+            new ProjectAdministratorsIncludingDelegationDAO(),
+            new SapiEmitter()
+        );
     }
 
     public static function getUsersName()
@@ -935,6 +964,8 @@ class RouteCollector
 
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);
+
+            $r->post('/remove_from_project/{project_id:\d+}', [self::class, 'postAccountRemoveFromProject']);
         });
         $r->get('/.well-known/change-password', [self::class, 'getWellKnownUrlChangePassword']);
 

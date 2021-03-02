@@ -62,6 +62,10 @@ msgid "%s - Account suspension notification"
 msgstr "%s - Notification de suspension de compte"
 
 #, php-format
+msgid "%s : user %s removed from project '%s'"
+msgstr "%s : utilisateur %s enlevé du projet '%s'"
+
+#, php-format
 msgid "%s ago"
 msgstr "il y a %s"
 
@@ -1737,6 +1741,9 @@ msgstr "Utilisée pour la dernière fois par"
 msgid "Last used on"
 msgstr "Utilisée pour la dernière fois le"
 
+msgid "Leave project"
+msgstr "Quitter le project"
+
 msgid "Legacy default template"
 msgstr "Modèle par défaut (déprécié)"
 
@@ -3313,6 +3320,22 @@ msgstr ""
 msgid "This message cannot be hidden until it has been taken into account"
 msgstr ""
 "Ce message ne peut pas être caché tant qu'il n'a pas été pris en compte."
+
+#, php-format
+msgid ""
+"This message is being sent to notify the administrator(s) of\n"
+"project '%s' that user %s has chosen to\n"
+"remove him/herself from the project.\n"
+"\n"
+"Follow this link to see the current members of your project:\n"
+"%s\n"
+"\n"
+msgstr ""
+"Ce message est envoyé pour prévenir le(s) administrateurs du\n"
+"projet '%s' que l'utilisateur '%s' a quitté le projet.nSuivez le lien ci-"
+"dessous pour voir la liste des membres actuels du projet :\n"
+"%s\n"
+"\n"
 
 msgid "This operation cannot be undone."
 msgstr "Cette opération ne peut pas être annulée."

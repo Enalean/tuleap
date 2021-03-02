@@ -28,6 +28,7 @@ use HTTPRequest;
 use Project;
 use RSS;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\User\Account\RemoveFromProjectController;
 use UserManager;
 
 /**
@@ -95,9 +96,8 @@ class MyProjects extends \Widget
             $html .= '<p class="empty-pane-text">' . $GLOBALS['Language']->getText('my_index', 'not_member') . '</p>';
             $html .= '</div>';
         } else {
-            $html           .= '<table cellspacing="0" class="tlp-table widget_my_projects" data-test="dashboard-my-projects">';
+            $html           .= '<table cellspacing="0" class="tlp-table" data-test="dashboard-my-projects">';
             $i               = 0;
-            $prevIsPublic    = false;
             $disable_contact = (bool) ForgeConfig::get(self::CONFIG_DISABLE_CONTACT);
             while ($row = db_fetch_array($result)) {
                 if (
@@ -106,14 +106,6 @@ class MyProjects extends \Widget
                     $user->isRestricted()
                 ) {
                     continue;
-                }
-                $tdClass = '';
-                if (
-                    $display_privacy
-                    && $prevIsPublic
-                    && ! in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)
-                ) {
-                    $tdClass .= ' widget_my_projects_first_public';
                 }
 
                 $html .= '<tr class="' . util_get_alt_row_color($i++) . '" >';
@@ -137,17 +129,17 @@ class MyProjects extends \Widget
                             $privacy = 'fas fa-lock-open';
                         }
                     }
-                    $html .= '<td class="widget_my_projects_privacy' . $tdClass . '"><i class="' . $privacy . ' dashboard-widget-my-projects-icons"></i></td>';
+                    $html .= '<td><i class="' . $privacy . ' dashboard-widget-my-projects-icons"></i></td>';
                 }
 
                 // Project name
-                $html .= '<td class="widget_my_projects_project_name' . $tdClass . '"><a href="/projects/' . urlencode($row['unix_group_name']) . '/">';
+                $html .= '<td class="dashboard-widget-my-projects-project-name"><a href="/projects/' . urlencode($row['unix_group_name']) . '/">';
                 $html .= Codendi_HTMLPurifier::instance()->purify($row['group_name']);
                 $html .= '</a></td>';
 
                 // Admin link
-                $html .= '<td class="widget_my_projects_actions' . $tdClass . '">';
-                if ($row['admin_flags'] == 'A') {
+                $html .= '<td>';
+                if ($row['admin_flags'] === 'A') {
                     $html .= '<a href="/project/admin/?group_id=' . $row['group_id'] . '">[' . $GLOBALS['Language']->getText('my_index', 'admin_link') . ']</a>';
                 } else {
                     $html .= '&nbsp;';
@@ -156,32 +148,34 @@ class MyProjects extends \Widget
 
                 if ($disable_contact === false) {
                     // Mailing tool
-                    $html .= '<td class="' . $tdClass . '">';
+                    $html .= '<td>';
                     $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="' . $row['group_id'] . '" title="' . $GLOBALS['Language']->getText('my_index', 'send_mail', $hp->purify($row['group_name'])) . '" data-toggle="modal"><span class="far fa-envelope"></span></a>';
                     $html .= '</td>';
                 }
 
                 // Remove from project
-                $html .= '<td class="widget_my_projects_remove' . $tdClass . '">';
-                if ($row['admin_flags'] != 'A') {
-                    $link  = 'rmproject.php?group_id=' . urlencode($row['group_id']);
-                    $warn  = $GLOBALS['Language']->getText('my_index', 'quit_proj');
-                    $html .= '<a href="' . $link . '" onClick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')"><i class="far fa-trash-alt"></i></a>';
+                $html .= '<td class="tlp-table-cell-actions">';
+                if ($row['admin_flags'] !== 'A') {
+                    $link       = '/account/remove_from_project/' . urlencode((string) $row['group_id']);
+                    $csrf_token = new CSRFSynchronizerToken(RemoveFromProjectController::CSRF_TOKEN_NAME);
+                    $warn       = $GLOBALS['Language']->getText('my_index', 'quit_proj');
+                    $html      .= '<form method="post" action="' . $hp->purify($link) . '" onclick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">';
+                    $html      .= $csrf_token->fetchHTMLInput();
+                    $html      .= '<button type="submit" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"><i class="tlp-button-icon far fa-trash-alt" aria-hidden="true"></i>' . _('Leave project') . '</button>';
+                    $html      .= '</form>';
                 } else {
                     $html .= '&nbsp;';
                 }
                 $html .= '</td>';
 
                 $html .= '</tr>';
-
-                $prevIsPublic = ($row['access'] !== Project::ACCESS_PRIVATE);
             }
 
             if ($display_privacy) {
                 // Legend
                 $html .= '<tr>';
-                $html .= '<td colspan="5" class="widget_my_projects_legend">';
-                $html .= '<span class="widget_my_projects_legend_title dashboard-widget-my-projects-legend-title">' . $GLOBALS['Language']->getText('my_index', 'my_projects_legend') . '</span>';
+                $html .= '<td colspan="5">';
+                $html .= '<span class="dashboard-widget-my-projects-legend-title">' . $GLOBALS['Language']->getText('my_index', 'my_projects_legend') . '</span>';
                 $icons = [
                     ['classname' => 'fa-lock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'private')],
                     ['classname' => 'fa-lock-open', 'label' => $GLOBALS['Language']->getText('project_privacy', 'public')]
