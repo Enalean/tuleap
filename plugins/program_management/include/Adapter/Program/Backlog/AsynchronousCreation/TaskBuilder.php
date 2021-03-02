@@ -50,7 +50,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleValue
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
@@ -84,7 +84,7 @@ class TaskBuilder
             Tracker_ArtifactFactory::instance(),
             new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
             new ContentDao(),
-            new FeaturesLinkedToMilestoneBuilder(new ArtifactsLinkedToParentDao())
+            new UserStoriesLinkedToMilestoneBuilder(new ArtifactsLinkedToParentDao())
         );
         $artifact_creator             = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(

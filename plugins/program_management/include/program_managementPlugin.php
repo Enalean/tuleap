@@ -63,7 +63,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
@@ -788,7 +788,7 @@ final class program_managementPlugin extends Plugin
             $artifact_factory,
             new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
             new ContentDao(),
-            new FeaturesLinkedToMilestoneBuilder(new ArtifactsLinkedToParentDao())
+            new UserStoriesLinkedToMilestoneBuilder(new ArtifactsLinkedToParentDao())
         );
     }
 }

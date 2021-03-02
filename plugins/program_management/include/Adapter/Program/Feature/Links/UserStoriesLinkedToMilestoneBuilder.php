@@ -24,30 +24,38 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
 
-class FeaturesLinkedToMilestoneBuilder
+class UserStoriesLinkedToMilestoneBuilder
 {
     /**
      * @var ArtifactsLinkedToParentDao
      */
-    private $features_linked_to_milestones_dao;
+    private $user_stories_linked_to_milestones_dao;
 
-    public function __construct(ArtifactsLinkedToParentDao $features_linked_to_milestones_dao)
+    public function __construct(ArtifactsLinkedToParentDao $user_stories_linked_to_milestones_dao)
     {
-        $this->features_linked_to_milestones_dao = $features_linked_to_milestones_dao;
+        $this->user_stories_linked_to_milestones_dao = $user_stories_linked_to_milestones_dao;
     }
 
     /**
      * @return int[]
      */
-    public function build(MirroredMilestone $milestone, int $program_increment_id): array
+    public function build(MirroredMilestone $milestone): array
     {
-        $feature_to_unlink = $this->features_linked_to_milestones_dao->getArtifactsLinkedToId($milestone->getId(), $program_increment_id);
+        $potential_user_stories = $this->user_stories_linked_to_milestones_dao->getUserStoriesOfMirroredMilestone($milestone->getId());
 
-        $fetaure_to_unlink = [];
-        foreach ($feature_to_unlink as $unlink) {
-            $fetaure_to_unlink[$unlink['id']] = 1;
+        $user_stories = [];
+        foreach ($potential_user_stories as $unlink) {
+            if (
+                ! $this->user_stories_linked_to_milestones_dao->isLinkedToASprintInMirroredMilestones(
+                    $unlink['id'],
+                    $unlink['release_tracker_id'],
+                    $unlink['project_id']
+                )
+            ) {
+                $user_stories[$unlink['id']] = $unlink['id'];
+            }
         }
 
-        return $fetaure_to_unlink;
+        return $user_stories;
     }
 }

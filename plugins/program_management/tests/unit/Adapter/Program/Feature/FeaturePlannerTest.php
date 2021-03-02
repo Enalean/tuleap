@@ -28,8 +28,8 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeaturesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
@@ -92,7 +92,7 @@ final class FeaturePlannerTest extends TestCase
         $this->tracker_artifact_factory             = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->mirrored_milestone_retriever         = \Mockery::mock(MirroredMilestoneRetriever::class);
         $this->content_dao                          = \Mockery::mock(ContentDao::class);
-        $this->features_linked_to_milestone_builder = \Mockery::mock(FeaturesLinkedToMilestoneBuilder::class);
+        $this->features_linked_to_milestone_builder = \Mockery::mock(UserStoriesLinkedToMilestoneBuilder::class);
         $this->planner                              = new FeaturePlanner(
             $db_transaction_executor,
             $this->feature_to_plan_builder,
@@ -109,9 +109,8 @@ final class FeaturePlannerTest extends TestCase
         $artifact->shouldReceive('getId')->andReturn(1);
         $artifact->shouldReceive('getTrackerId')->andReturn(10);
 
-        $user      = UserTestBuilder::aUser()->build();
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $event     = new ArtifactUpdated($artifact, $user);
+        $user  = UserTestBuilder::aUser()->build();
+        $event = new ArtifactUpdated($artifact, $user);
 
         $feature_id = 1234;
         $this->content_dao->shouldReceive('searchContent')->once()
@@ -129,15 +128,62 @@ final class FeaturePlannerTest extends TestCase
         $field_artifact_link = \Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $field_artifact_link->shouldReceive('getId')->andReturn(1);
         $milestone->shouldReceive('getAnArtifactLinkField')->andReturn($field_artifact_link);
-        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->with($milestone_id)->andReturn($milestone);
+        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->with($milestone_id)->andReturn(
+            $milestone
+        );
 
-        $milestone_exiting_feature_link = 200;
+        $milestone_exiting_feature_link       = 200;
+        $other_milestone_exiting_feature_link = 300;
         $this->features_linked_to_milestone_builder->shouldReceive('build')->andReturn(
-            [[$milestone_exiting_feature_link => 1]]
+            [$milestone_exiting_feature_link => 1, $other_milestone_exiting_feature_link => 1]
         );
 
         $fields_data[$field_artifact_link->getId()]['new_values']     = "1234";
-        $fields_data[$field_artifact_link->getId()]['removed_values'] = [[$milestone_exiting_feature_link => 1]];
+        $fields_data[$field_artifact_link->getId()]['removed_values'] = [
+            $milestone_exiting_feature_link       => $milestone_exiting_feature_link,
+            $other_milestone_exiting_feature_link => $other_milestone_exiting_feature_link
+        ];
+
+        $milestone->shouldReceive('createNewChangeset')->with($fields_data, "", $user)->once();
+
+        $this->planner->plan($event);
+    }
+
+    public function testItDoesNotRemoveValuesIfTheyAreKeptInTheArtifact(): void
+    {
+        $artifact = \Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn(1);
+        $artifact->shouldReceive('getTrackerId')->andReturn(10);
+
+        $user  = UserTestBuilder::aUser()->build();
+        $event = new ArtifactUpdated($artifact, $user);
+
+        $feature_id = 1234;
+        $this->content_dao->shouldReceive('searchContent')->once()
+            ->andReturn(['artifact_id' => 101]);
+        $this->feature_to_plan_builder->shouldReceive('buildFeatureChange')->andReturn(
+            new FeaturePlanChange([$feature_id])
+        );
+
+        $milestone_id = 666;
+        $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
+            ->once()->andReturn([new MirroredMilestone($milestone_id)]);
+
+        $milestone = \Mockery::mock(Artifact::class);
+        $milestone->shouldReceive('getId')->andReturn($milestone_id);
+        $field_artifact_link = \Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
+        $field_artifact_link->shouldReceive('getId')->andReturn(1);
+        $milestone->shouldReceive('getAnArtifactLinkField')->andReturn($field_artifact_link);
+        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->with($milestone_id)->andReturn(
+            $milestone
+        );
+
+        $this->features_linked_to_milestone_builder->shouldReceive('build')->andReturn(
+            [1234 => 1]
+        );
+
+        $fields_data[$field_artifact_link->getId()]['new_values']     = "1234";
+        $fields_data[$field_artifact_link->getId()]['removed_values'] = [];
 
         $milestone->shouldReceive('createNewChangeset')->with($fields_data, "", $user)->once();
 
