@@ -93,14 +93,6 @@ bookmark_delete	deleted	Favori détruit !
 bookmark_edit	title	Modifier un favori
 #
 #-----------------------------------------------
-# Script: SF/www/my/rmproject.php
-#
-bookmark_rmproject	err_notmember	Vous n'êtes pas membre de ce projet.
-bookmark_rmproject	err_removing	Vous ne pouvez enlever un administrateur du projet. Oter d'abord les droits d'administrateur de cet utilisateur avant de l'enlever à nouveau du projet.
-bookmark_rmproject	mail_subject	$1 : utilisateur $2 enlevé du projet '$3'
-bookmark_rmproject	mail_body	Ce message est envoyé pour prévenir le(s) administrateurs du\nprojet '$1' que l'utilisateur '$2' a quitté le projet.\n\nSuivez le lien ci-dessous pour voir la liste des membres actuels du projet :\n$3\n\n
-#
-#-----------------------------------------------
 # Script: SF/www/my/redirect.php
 #
 my_redirect	page_title	Redirection vers

@@ -30,6 +30,10 @@
     color: $tlp-ui-dimmed;
 }
 
+.dashboard-widget-my-projects-project-name {
+    width: 100%;
+}
+
 .empty-project-box-inside {
     fill: desaturate(lighten($tlp-theme-color, 20%), 10%);
 }
