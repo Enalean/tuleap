@@ -45,7 +45,9 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
 
         if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
-            return $row['date'];
+            if ($row !== false) {
+                return $row['date'];
+            }
         }
 
         return false;
@@ -63,7 +65,9 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
 
         if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
-            return $row['date'];
+            if ($row !== false) {
+                return $row['date'];
+            }
         }
 
         return false;
@@ -79,7 +83,9 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
-            return 'date = "' . $row['date'] . '"';
+            if ($row !== false) {
+                return 'date = "' . $row['date'] . '"';
+            }
         }
         return false;
     }
@@ -94,7 +100,9 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
-            return 'date = "' . $row['date'] . '"';
+            if ($row !== false) {
+                return 'date = "' . $row['date'] . '"';
+            }
         }
         return false;
     }
