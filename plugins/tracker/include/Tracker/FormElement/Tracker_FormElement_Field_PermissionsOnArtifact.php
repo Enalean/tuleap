@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
 use Tuleap\User\UserGroup\NameTranslator;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field
 {
 
@@ -614,7 +615,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
         ?bool $is_submission = null
     ): bool {
-        if ($last_changeset_value === null && $this->isRequired() == true && $this->isAtLeastOneUGroupSelected($submitted_value) === false) {
+        if ($last_changeset_value === null && $this->isRequired() === true && $this->isAtLeastOneUGroupSelected($submitted_value) === false) {
             $this->addRequiredError();
 
             return false;
@@ -638,7 +639,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return isset($submitted_value['u_groups']) === true && count($submitted_value['u_groups']) > 0;
     }
 
-    private function isSelectBoxChecked($submitted_value)
+    private function isSelectBoxChecked($submitted_value): bool
     {
         return (isset($submitted_value['use_artifact_permissions']) === true && (bool) $submitted_value['use_artifact_permissions'] === true);
     }
