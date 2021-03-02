@@ -38,6 +38,10 @@ msgid "%1$s message(s) deleted"
 msgstr "%1$s message(s) détruit(s)"
 
 #, php-format
+msgid "%1$s users will receive this email."
+msgstr "%1$s utilisateurs vont recevoir ce courrier électronique."
+
+#, php-format
 msgid "%d member"
 msgid_plural "%d members"
 msgstr[0] "%d membre"
@@ -450,6 +454,12 @@ msgstr "Authentification requise"
 msgid "All users must be logged in and restricted users are enabled"
 msgstr "Authentification requise et utilisateurs restreints"
 
+#, php-format
+msgid "All users, regardless of their preferences (%1$s users)"
+msgstr ""
+"Tous les utilisateurs quelles que soient leurs préférences (%1$s "
+"utilisateurs)"
+
 msgid "Allow for all projects"
 msgstr "Autoriser pour tous les projets"
 
@@ -770,6 +780,9 @@ msgstr "Impossible d'éditer le tableau de bord demandé."
 
 msgid "Cannot update users group."
 msgstr "Impossible de mettre à jour le groupe utilisateur"
+
+msgid "Catchy email subject line"
+msgstr "Phrase d'accroche"
 
 msgid "Categories"
 msgstr "Catégories"
@@ -1866,6 +1879,9 @@ msgstr "Gestion des modèles de référence système"
 msgid "Mass emailing"
 msgstr "Envoi d'emails en masse"
 
+msgid "Massmail sending"
+msgstr "Envoi du courrier"
+
 msgid "Massmail to project members is disabled."
 msgstr "L'envoi de mails vers les membres du projet est désactivé."
 
@@ -1938,6 +1954,9 @@ msgstr "Le message envoyé à l'administrateur ne doit pas être vide."
 
 msgid "Message to project administrators"
 msgstr "Message aux administrateurs de projet"
+
+msgid "Message..."
+msgstr "Message..."
 
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr "Information manquante. Veuillez saisir les informations demandées."
@@ -2126,6 +2145,10 @@ msgstr "Aucun projet à valider"
 
 msgid "No users to validate"
 msgstr "Aucun utilisateur à valider"
+
+msgid "No valid email to send the preview."
+msgstr ""
+"Aucune adresse valide à laquelle envoyer le message de prévisualisation."
 
 msgid "Nobody"
 msgstr "Personne"
@@ -2369,6 +2392,12 @@ msgstr "Préférences"
 msgid "Preview"
 msgstr "Aperçu"
 
+msgid "Preview could not be sent"
+msgstr "La prévisualisation n'a pas pu être envoyée"
+
+msgid "Preview sent"
+msgstr "La prévisualisation a été envoyée"
+
 msgid "Preview:"
 msgstr "Aperçu :"
 
@@ -2432,6 +2461,10 @@ msgstr "Erreur d'accès au projet"
 msgid "Project administration"
 msgstr "Administration du projet"
 
+#, php-format
+msgid "Project administrators (%1$s users)"
+msgstr "Administrateurs des projets (%1$s utilisateurs)"
+
 msgid "Project administrators can choose project visibility"
 msgstr "Les administrateurs de projet peuvent choisir la visibilité du projet"
 
@@ -2456,6 +2489,10 @@ msgstr "Modération de la création de projets"
 
 msgid "Project creation moderation settings"
 msgstr "Paramètres de création de projets"
+
+#, php-format
+msgid "Project developers (%1$s users)"
+msgstr "Développeurs des projets (%1$s utilisateurs)"
 
 msgid "Project does not exist"
 msgstr "Le projet n'existe pas"
@@ -2864,8 +2901,25 @@ msgstr "Point virgule"
 msgid "Send an email when the project visibility changes"
 msgstr "Envoyer un email lorsque la visibilité d'un projet change"
 
+msgid "Send email"
+msgstr "Envoyer le courrier électronique"
+
 msgid "Send invitation"
 msgstr "Envoyer l'invitation"
+
+#, php-format
+msgid ""
+"Send only to users subscribed to \"Additional Community Mailings\" (%1$s "
+"users)"
+msgstr ""
+"Abonnés à l'option \"Courrier électronique supplémentaire au sujet de la "
+"communauté\" (%1$s utilisateurs)"
+
+msgid "Send preview"
+msgstr "Envoyer une prévisualisation"
+
+msgid "Send to"
+msgstr "Destinataires"
 
 msgid "Service is not allowed in project."
 msgstr "Le service n'est pas autorisé dans le projet."
@@ -2929,6 +2983,10 @@ msgstr "Afficher %1$s"
 
 msgid "Site administration"
 msgstr "Administration du site"
+
+#, php-format
+msgid "Site administrators (%1$s users)"
+msgstr "Administrateurs du site (%1$s utilisateurs)"
 
 msgid "Site content customisations"
 msgstr "Personnalisations du site content"
@@ -3216,6 +3274,10 @@ msgstr ""
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
+
+#, php-format
+msgid "The sending of the mail has been <a href=\"%1$s\">put in the queue</a>"
+msgstr "L'envoi du message a été <a href=\"%1$s\">placé en file d'attente</a>"
 
 msgid ""
 "The service cannot be opened in a new tab and in an iframe simultaneously. "
@@ -3781,6 +3843,12 @@ msgstr "Utilisateurs validés en attente"
 
 msgid "Users statistics"
 msgstr "Statistiques utilisateurs"
+
+#, php-format
+msgid "Users that agreed to receive \"Site Updates\" (%1$s users)"
+msgstr ""
+"Abonnés à l'option \"Courrier électronique à propos des mises à jour du site"
+"\" (%1$s utilisateurs)"
 
 #, php-format
 msgid "Validated users <a href=\"%1$s\"><B>pending email activation</B></a>"
@@ -4528,6 +4596,3 @@ msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"
-
-#~ msgid "Project Admin"
-#~ msgstr "Administration du Projet"

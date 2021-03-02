@@ -46,17 +46,17 @@ class MassmailPresenter
         $this->recipients = $recipients;
         $this->csrf       = $csrf;
 
-        $this->subtitle            = $GLOBALS['Language']->getText('admin_massmail', 'header');
-        $this->send_email_label    = $GLOBALS['Language']->getText('admin_massmail', 'send_email_label');
-        $this->destination_label   = $GLOBALS['Language']->getText('admin_massmail', 'destination_label');
-        $this->subject_label       = $GLOBALS['Language']->getText('admin_massmail', 'subject_label');
-        $this->subject_placeholder = $GLOBALS['Language']->getText('admin_massmail', 'subject_placeholder');
-        $this->content_label       = $GLOBALS['Language']->getText('admin_massmail', 'content_label');
-        $this->content_placeholder = $GLOBALS['Language']->getText('admin_massmail', 'content_placeholder');
-        $this->preview_label       = $GLOBALS['Language']->getText('admin_massmail', 'preview_label');
-        $this->send_preview_label  = $GLOBALS['Language']->getText('admin_massmail', 'send_preview_label');
-        $this->confirmation_title  = $GLOBALS['Language']->getText('admin_massmail', 'confirmation_title');
-        $this->confirmation_body   = $GLOBALS['Language']->getText('admin_massmail', 'confirmation_body');
+        $this->subtitle            = _('Email');
+        $this->send_email_label    = _('Send email');
+        $this->destination_label   = _('Send to');
+        $this->subject_label       = _('Subject');
+        $this->subject_placeholder = _('Catchy email subject line');
+        $this->content_label       = _('Content');
+        $this->content_placeholder = _('Message...');
+        $this->preview_label       = _('Preview');
+        $this->send_preview_label  = _('Send preview');
+        $this->confirmation_title  = _('Massmail sending');
+        $this->confirmation_body   = _('Please confirm your action.');
         $this->cancel              = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 }

@@ -60,7 +60,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
         );
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText('admin_massmail', 'massmail_queued', '/admin/system_events/?queue=default'),
+            sprintf(_('The sending of the mail has been <a href="%1$s">put in the queue</a>'), '/admin/system_events/?queue=default'),
             CODENDI_PURIFIER_LIGHT
         );
         $GLOBALS['Response']->redirect('/admin/massmail.php');
@@ -108,7 +108,7 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
             $GLOBALS['Response']->sendJSON(
                 [
                     'success' => false,
-                    'message' => $GLOBALS['Language']->getText('admin_massmail_execute', 'no_mails')
+                    'message' => _('No valid email to send the preview.')
                 ]
             );
             exit;
@@ -119,14 +119,14 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
             $GLOBALS['Response']->sendJSON(
                 [
                     'success' => true,
-                    'message' => $GLOBALS['Language']->getText('admin_massmail_execute', 'sending')
+                    'message' => _('Preview sent')
                 ]
             );
         } else {
             $GLOBALS['Response']->sendJSON(
                 [
                     'success' => false,
-                    'message' => $GLOBALS['Language']->getText('admin_massmail_execute', 'no_sending')
+                    'message' => _('Preview could not be sent')
                 ]
             );
         }
