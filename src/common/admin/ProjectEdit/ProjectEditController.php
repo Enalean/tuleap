@@ -89,7 +89,7 @@ class ProjectEditController
         $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/';
 
         $renderer->renderANoFramedPresenter(
-            $GLOBALS['Language']->getText('admin_groupedit', 'title'),
+            _('Editing Project'),
             $template_path,
             self::TEMPLATE,
             $this->details_presenter
@@ -116,7 +116,7 @@ class ProjectEditController
 
             $this->dao->updateProjectStatusAndType($form_status, $project_type, $project_id);
 
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_groupedit', 'feedback_info'));
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, _('Updating Project Info'));
 
             $this->propagateStatusChange($project, $form_status);
 
@@ -168,15 +168,15 @@ class ProjectEditController
     {
         switch ($status_code) {
             case Project::STATUS_ACTIVE:
-                return $GLOBALS['Language']->getText('admin_groupedit', 'status_A');
+                return _('Active');
             case Project::STATUS_PENDING:
-                return $GLOBALS['Language']->getText('admin_groupedit', 'status_P');
+                return _('Pending');
             case Project::STATUS_SUSPENDED:
-                return $GLOBALS['Language']->getText('admin_groupedit', 'status_H');
+                return _('Suspended');
             case Project::STATUS_DELETED:
-                return $GLOBALS['Language']->getText('admin_groupedit', 'status_D');
+                return _('Deleted');
             case Project::STATUS_SYSTEM:
-                return $GLOBALS['Language']->getText('admin_groupedit', 'status_s');
+                return _('System');
         }
 
         throw new \RuntimeException("Unknown status $status_code");
@@ -185,7 +185,7 @@ class ProjectEditController
     private function renameProject(Project $project, $new_name)
     {
         if (! $this->system_event_manager->canRenameProject($project)) {
-            $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('admin_groupedit', 'rename_project_already_queued'), CODENDI_PURIFIER_DISABLED);
+            $GLOBALS['Response']->addFeedback(Feedback::WARN, _('There is already an event scheduled to rename this project. Please check <a href="/admin/system_events/">System Event Monitor</a>.'), CODENDI_PURIFIER_DISABLED);
 
             return;
         }
@@ -198,7 +198,7 @@ class ProjectEditController
         $rule = new Rule_ProjectName();
 
         if (! $rule->isValid($new_name)) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_groupedit', 'invalid_short_name'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Invalid Short Name'));
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $rule->getErrorMessage());
 
             return;
@@ -217,19 +217,12 @@ class ProjectEditController
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText(
-                'admin_groupedit',
-                'rename_project_msg',
-                [
-                    $project->getUnixName(false),
-                    $new_name
-                ]
-            )
+            sprintf(_('Propagation of project\'s name update on system queued (%1$s -> %2$s). It will be processed in a little while.'), $project->getUnixName(false), $new_name)
         );
 
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
-            $GLOBALS['Language']->getText('admin_groupedit', 'rename_project_warn')
+            _('Project name update will be effective only after system event processing.')
         );
     }
 

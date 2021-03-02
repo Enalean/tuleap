@@ -119,7 +119,7 @@ if ($project && ! $project->isError()) {
     $startDate = date('Y-m-d', mktime(0, 0, 0, date('m') - $statDuration, date('d'), date('y')));
 
     $params['group'] = $groupId;
-    $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin') . ': ' . $project->getPublicName();
+    $params['title'] = _('Project Admin') . ': ' . $project->getPublicName();
     project_admin_header($params, \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
 
     echo '<h2>' . dgettext('tuleap-statistics', 'Disk usage') . '</h2>';

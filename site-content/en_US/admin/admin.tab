@@ -93,63 +93,6 @@ admin_approve_pending_users	user_deleted_success	User has been successfully dele
 
 #
 #-----------------------------------------------
-# Script: SF/www/admin/groupedit-add.php
-#
-admin_groupedit_add	title	Adding a Project Group
-admin_groupedit_add	desc_name	New descriptive group name
-admin_groupedit_add	unix_name	New unix group name
-#
-#-----------------------------------------------
-# Script: SF/www/admin/groupedit.php
-#
-admin_groupedit	title	Editing Project
-admin_groupedit	feedback_info	Updating Project Info
-admin_groupedit	error_group	Invalid project was passed in.
-admin_groupedit	proj_edit	Edit Project Details
-admin_groupedit	proj_admin	Project Admin
-admin_groupedit	proj_member	View/Edit Project Members
-admin_groupedit	pending_data	Show pending project data
-admin_groupedit	group_type	Project Type
-admin_groupedit	status_A	Active
-admin_groupedit	status_P	Pending
-admin_groupedit	status_H	Suspended
-admin_groupedit	status_D	Deleted
-admin_groupedit	status_s	System
-admin_groupedit	public	Public?
-admin_groupedit	home_box	Home Box
-admin_groupedit	http_domain	HTTP Domain
-admin_groupedit	other	Other
-admin_groupedit	send_email	Send New Project Instruction Email
-admin_groupedit	other_info	Other Information
-admin_groupedit	grp_name	Project Name
-admin_groupedit	unix_grp	Unix Group Name
-admin_groupedit	description	Description
-admin_groupedit	built_from_template	Built from template
-admin_groupedit	rename_project_title	Rename Project
-admin_groupedit	rename_project_label	Rename Project to
-admin_groupedit	rename_project_msg	Propagation of project's name update on system queued ($1 -> $2). It will be processed in a little while.
-admin_groupedit	rename_project_warn	Project name update will be effective only after system event processing.
-admin_groupedit	rename_project_already_queued	There is already an event scheduled to rename this project. Please check <a href="/admin/system_events/">System Event Monitor</a>.
-admin_groupedit	invalid_short_name	Invalid Short Name
-admin_groupedit	manage_access	Manage Access
-admin_groupedit	archived_wiki	Deleted wiki attachments
-admin_groupedit	archived_files	Deleted files
-
-#
-#-----------------------------------------------
-# Script: SF/www/admin/grouplist.php
-#
-admin_grouplist	title	Project List
-admin_grouplist	add_group	Add Project
-admin_grouplist	for_categ	Project List for Category
-admin_grouplist	begins_with	Projects that begin with $1
-admin_grouplist	all_categ	All Categories
-admin_grouplist	click	(click to edit)
-admin_grouplist	categ	Categories
-admin_grouplist	members	Members
-admin_grouplist	id_group	Id group
-#
-#-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
 #
 admin_lastlogins	title	Most recent logins

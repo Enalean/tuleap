@@ -43,7 +43,7 @@ $project_id      = $request->get('group_id');
 $project         = $project_manager->getProject($project_id);
 
 if (! $project || $project->isError()) {
-    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit', 'error_group'));
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Invalid project was passed in.'));
     $GLOBALS['Response']->redirect('/admin');
 }
 

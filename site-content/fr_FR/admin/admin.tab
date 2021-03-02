@@ -83,63 +83,7 @@ admin_approve_pending_users	users_validated_success	Les utilisateurs ont été v
 admin_approve_pending_users	user_validated_success	L'utilisateur a été validé avec succès
 admin_approve_pending_users	users_deleted_success	Les utilisateurs ont été supprimés avec succès
 admin_approve_pending_users	user_deleted_success	L'utilisateur a été supprimé avec succès
-#
-#-----------------------------------------------
-# Script: SF/www/admin/groupedit-add.php
-#
-admin_groupedit_add	title	Ajouter un groupe
-admin_groupedit_add	desc_name	Description du nouveau groupe
-admin_groupedit_add	unix_name	Nom unix du nouveau groupe
-#
-#-----------------------------------------------
-# Script: SF/www/admin/groupedit.php
-#
-admin_groupedit	title	Editer un projet
-admin_groupedit	feedback_info	Mise à jour des infos du projet
-admin_groupedit	error_group	Projet invalide passé en paramètre.
-admin_groupedit	proj_edit	Editer les détails d'un projet
-admin_groupedit	proj_admin	Administration du Projet
-admin_groupedit	proj_member	Voir/Editer les membres d'un projet
-admin_groupedit	pending_data	Voir les données de projet en attente
-admin_groupedit	group_type	Type de projet
-admin_groupedit	status_A	Actif
-admin_groupedit	status_P	En attente
-admin_groupedit	status_H	Suspendu
-admin_groupedit	status_D	Détruit
-admin_groupedit	status_s	Système
-admin_groupedit	public	Public ?
-admin_groupedit	home_box	Serveur maison
-admin_groupedit	http_domain	Domaine HTTP
-admin_groupedit	other	Autre
-admin_groupedit	send_email	Envoyer les instructions pour un nouveau projet
-admin_groupedit	other_info	Autre information
-admin_groupedit	grp_name	Nom du projet
-admin_groupedit	unix_grp	Nom du groupe unix
-admin_groupedit	description	Description
-admin_groupedit	built_from_template	Créé à partir du modèle
-admin_groupedit	rename_project_title	Renommage du Projet
-admin_groupedit	rename_project_label	Renommage du Projet en
-admin_groupedit	rename_project_msg	Le changement du nom du projet sur le système va être traité dans quelques instants ($1 -> $2).
-admin_groupedit	rename_project_warn	La mise à jour du nom du projet ne sera effective qu'après le traitement de l'événement système correspondant.
-admin_groupedit	rename_project_already_queued	Il y a déjà une opération de renommage prévue pour ce projet. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
-admin_groupedit	invalid_short_name	Nom court du projet invalide
-admin_groupedit	manage_access	Gérer l'accès
-admin_groupedit	archived_wiki	Pièces jointes wiki supprimées
-admin_groupedit	archived_files	Fichiers supprimés
 
-#
-#-----------------------------------------------
-# Script: SF/www/admin/grouplist.php
-#
-admin_grouplist	title	Liste des groupes
-admin_grouplist	add_group	Ajouter un groupe
-admin_grouplist	for_categ	Liste de groupes pour la catégorie
-admin_grouplist	begins_with	Groupe commençant par $1
-admin_grouplist	all_categ	Toutes les catégories
-admin_grouplist	click	(cliquer pour éditer)
-admin_grouplist	categ	Catégories
-admin_grouplist	members	Membres
-admin_grouplist	id_group	Identifiant du groupe
 #
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
