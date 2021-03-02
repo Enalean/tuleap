@@ -10,7 +10,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
+
+msgid " New user"
+msgstr " Nouvel utilisateur"
 
 msgid " Please avoid to upload too big file (< 500kB)."
 msgstr " Merci de ne pas uploader un trop gros fichier (<500Ko)."
@@ -427,6 +430,12 @@ msgstr "Tous les groupes"
 
 msgid "All members of %s will remain project members."
 msgstr "Tous les membres de %s resteront membres du projet."
+
+msgid "All projects"
+msgstr "Tous les projets"
+
+msgid "All users"
+msgstr "Tous les utilisateurs"
 
 msgid "All users must be logged in"
 msgstr "Authentification requise"
@@ -1118,6 +1127,9 @@ msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
 msgid "Do not reply to this mail."
 msgstr "Ne répondez pas à ce courriel."
 
+msgid "Doc"
+msgstr "Doc"
+
 msgid "Documentation"
 msgstr "Documentation"
 
@@ -1216,6 +1228,9 @@ msgstr "Note détaillée envoyée par e-mail à : %1$s"
 
 msgid "Email was not updated"
 msgstr "L'adresse de courriel n'a pas été mise à jour"
+
+msgid "Email, username..."
+msgstr "Email, nom d'utilisateur…"
 
 msgid "Emergency"
 msgstr "Urgent"
@@ -1406,11 +1421,20 @@ msgstr "Rubriques d'aide"
 msgid "Global access"
 msgstr "Accès global"
 
+msgid "Global access rights"
+msgstr "Droits d'accès globaux"
+
+msgid "Global configuration"
+msgstr "Configuration globale"
+
 msgid "Global permissions"
 msgstr "Permissions globales"
 
 msgid "Global shortcuts"
 msgstr "Raccourcis globaux"
+
+msgid "Global utils"
+msgstr "Utilitaires globaux"
 
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
@@ -1510,6 +1534,9 @@ msgstr "L'insertion a échoué"
 
 msgid "Id"
 msgstr "Id"
+
+msgid "Id, unix name..."
+msgstr "Id, nom unix…"
 
 msgid ""
 "If enabled, an email will be sent to all the project members if the "
@@ -1790,6 +1817,9 @@ msgstr "Listes de diffusion (Service Listes)"
 msgid "Mailing lists administration"
 msgstr "Administration des listes de diffusion"
 
+msgid "Manage SVN"
+msgstr "Gérer SVN"
+
 msgid "Manage all plugins"
 msgstr "Gérer tous les plugins"
 
@@ -1801,6 +1831,9 @@ msgstr "Gestion des modèles de référence projet"
 
 msgid "Manage system reference patterns"
 msgstr "Gestion des modèles de référence système"
+
+msgid "Mass emailing"
+msgstr "Envoi d'emails en masse"
 
 msgid "Massmail to project members is disabled."
 msgstr "L'envoi de mails vers les membres du projet est désactivé."
@@ -1992,6 +2025,9 @@ msgstr "Nouvel utilisateur"
 msgid "News"
 msgstr "Annonces"
 
+msgid "News approval"
+msgstr "Approbation des annonces"
+
 msgid "News {{ user_group_name }} can see"
 msgstr "Annonces que {{ user_group_name }} peuvent voir"
 
@@ -2147,6 +2183,9 @@ msgstr "Les deux mots de passe soumis sont différents"
 msgid "Pending projects"
 msgstr "Projets en attente"
 
+msgid "Pending trackers removal"
+msgstr "Outils de suivi en attente"
+
 msgid "Pending users"
 msgstr "Utilisateurs en attente"
 
@@ -2165,6 +2204,9 @@ msgstr "Permission"
 
 msgid "Permission Request"
 msgstr "Demande de permission"
+
+msgid "Permission delegation"
+msgstr "Délégation de permission"
 
 msgid "Permission denied"
 msgstr "Permission refusée"
@@ -2283,6 +2325,9 @@ msgstr "Posté par"
 
 msgid "Posting Failed"
 msgstr "L'envoi du message a échoué"
+
+msgid "Predefined project references"
+msgstr "Références de projets prédéfinis"
 
 msgid "Preferences"
 msgstr "Préférences"
@@ -2459,7 +2504,7 @@ msgid "Project web pages (Home Page Service)"
 msgstr "Pages web de project (Service Site Web)"
 
 msgid "Projects"
-msgstr "ProjetS"
+msgstr "Projets"
 
 msgid "Projects created from this template"
 msgstr "Projets créés à partir de ce modèle"
@@ -2953,7 +2998,7 @@ msgid "System"
 msgstr "Système"
 
 msgid "System events"
-msgstr "Evénements système"
+msgstr "Évènements système"
 
 msgid "System events (last 48 hours)"
 msgstr "Evénements système (dernières 48 heures)"
@@ -3641,6 +3686,9 @@ msgstr ""
 "contenu. Certains utilisateurs peuvent être restreints (les utilisateurs "
 "restreints ont accès uniquement aux projets et aux services auxquels les "
 "autorisations leur sont spécifiquement accordées)."
+
+msgid "Users pending email activation"
+msgstr "Utilisateurs validés en attente"
 
 msgid "Users statistics"
 msgstr "Statistiques utilisateurs"
