@@ -932,7 +932,7 @@ fi
 chmod 750 /var/lib/gitolite
 
 %pre core-cvs
-%{__rm} -rf /var/lock/cvs
+/usr/bin/rm -rf /var/lock/cvs
 
 #
 #
