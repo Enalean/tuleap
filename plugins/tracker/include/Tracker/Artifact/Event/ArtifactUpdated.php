@@ -40,11 +40,16 @@ class ArtifactUpdated implements Dispatchable
      * @var PFUser
      */
     private $user;
+    /**
+     * @var \Project
+     */
+    private $project;
 
-    public function __construct(Artifact $artifact, PFUser $user)
+    public function __construct(Artifact $artifact, PFUser $user, \Project $project)
     {
         $this->artifact = $artifact;
         $this->user     = $user;
+        $this->project  = $project;
     }
 
     /**
@@ -61,5 +66,10 @@ class ArtifactUpdated implements Dispatchable
     public function getUser(): PFUser
     {
         return $this->user;
+    }
+
+    public function getProject(): \Project
+    {
+        return $this->project;
     }
 }

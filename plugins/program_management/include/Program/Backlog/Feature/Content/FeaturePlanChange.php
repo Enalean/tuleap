@@ -30,13 +30,13 @@ final class FeaturePlanChange
     /**
      * @var int[]
      */
-    public $features_id;
+    public $user_stories;
 
     /**
-     * @param int[] $features_id
+     * @param int[] $user_stories
      */
-    public function __construct(array $features_id)
+    public function __construct(array $user_stories)
     {
-        $this->features_id = $features_id;
+        $this->user_stories = $user_stories;
     }
 }

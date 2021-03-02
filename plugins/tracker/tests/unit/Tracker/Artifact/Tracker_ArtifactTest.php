@@ -41,6 +41,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserXMLExporter;
 use Workflow;
 
@@ -131,10 +132,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $user->shouldReceive('getId')->andReturns(1234);
         $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturns(666);
-        $tracker->shouldReceive('getItemName')->andReturns('foobar');
-        $tracker->shouldReceive('getFormElements')->andReturns([]);
+        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(["group_id" => 101]))->build();
 
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
@@ -348,10 +346,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $user->shouldReceive('getId')->andReturns(1234);
         $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturns(666);
-        $tracker->shouldReceive('getItemName')->andReturns('foobar');
-        $tracker->shouldReceive('getFormElements')->andReturns([]);
+        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(["group_id" => 101]))->build();
 
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
@@ -603,10 +598,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $user->shouldReceive('getId')->andReturns(1234);
         $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturns(666);
-        $tracker->shouldReceive('getItemName')->andReturns('foobar');
-        $tracker->shouldReceive('getFormElements')->andReturns([]);
+        $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(["group_id" => 101]))->build();
 
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 

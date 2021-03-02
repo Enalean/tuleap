@@ -227,7 +227,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                 $artifact->getChangeset((int) $new_changeset->getId())->executePostCreationActions();
             }
 
-            $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter));
+            $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter, $artifact->getTracker()->getProject()));
 
             return $new_changeset;
         } catch (PDOException $exception) {
