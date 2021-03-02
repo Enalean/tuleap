@@ -48,25 +48,23 @@ final class JiraSprintIssuesRetrieverFromAPI implements JiraSprintIssuesRetrieve
     public function getArtifactLinkChange(JiraSprint $sprint): array
     {
         $issue_ids = [];
-        do {
-            $issues_url = $this->getUrlWithoutHost($sprint, count($issue_ids));
-            $this->logger->info('Fetch sprint issues: ' . $issues_url);
-            $json = $this->client->getUrl($issues_url);
-            if (! isset($json['issues'], $json['total'])) {
-                throw new UnexpectedFormatException($issues_url . ' is supposed to return a payload with `total` and `issues`');
+        $iterator  = JiraCollectionBuilder::iterateUntilTotal(
+            $this->client,
+            $this->logger,
+            $this->getUrlWithoutHost($sprint),
+            'issues',
+        );
+        foreach ($iterator as $issue) {
+            if (! isset($issue['id']) || ! is_numeric($issue['id'])) {
+                throw new UnexpectedFormatException(sprintf('%s `issues` are supposed to have numerical `id`, `%s` given', $this->getUrlWithoutHost($sprint), $issue['id']));
             }
-            foreach ($json['issues'] as $issue) {
-                if (! isset($issue['id']) || ! is_numeric($issue['id'])) {
-                    throw new UnexpectedFormatException(sprintf('%s `issues` are supposed to have numerical `id`, `%s` given', $issues_url, $issue['id']));
-                }
-                $issue_ids[] = new ArtifactLinkChange((int) $issue['id']);
-            }
-        } while ($json['total'] !== count($issue_ids));
+            $issue_ids[] = new ArtifactLinkChange((int) $issue['id']);
+        }
         return $issue_ids;
     }
 
-    private function getUrlWithoutHost(JiraSprint $sprint, int $start_at): string
+    private function getUrlWithoutHost(JiraSprint $sprint): string
     {
-        return parse_url($sprint->url, PHP_URL_PATH) . '/issue?' . http_build_query(['fields' => 'id', 'startAt' => $start_at]);
+        return parse_url($sprint->url, PHP_URL_PATH) . '/issue?' . http_build_query(['fields' => 'id']);
     }
 }

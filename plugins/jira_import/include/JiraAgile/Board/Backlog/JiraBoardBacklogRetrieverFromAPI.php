@@ -26,8 +26,8 @@ namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 use Psr\Log\LoggerInterface;
 use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
+use Tuleap\JiraImport\JiraAgile\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 
 final class JiraBoardBacklogRetrieverFromAPI implements JiraBoardBacklogRetriever
 {
@@ -53,30 +53,18 @@ final class JiraBoardBacklogRetrieverFromAPI implements JiraBoardBacklogRetrieve
     public function getBoardBacklogIssues(JiraBoard $jira_board): array
     {
         $backlog_issues = [];
-
-        $start_at = 0;
-        do {
-            $url = $this->getBoardBacklogURL($jira_board, $start_at);
-            $this->logger->info('GET ' . $url);
-            $json = $this->client->getUrl($url);
-            if (! isset($json['issues'], $json['total'])) {
-                throw new UnexpectedFormatException($url . ' is supposed to return a payload with `total` and `issues`');
-            }
-            foreach ($json['issues'] as $issue) {
-                $backlog_issues[] = BacklogIssueRepresentation::buildFromAPIResponse($issue);
-                $start_at++;
-            }
-        } while ($start_at < $json['total']);
-
+        $iterator       = JiraCollectionBuilder::iterateUntilTotal($this->client, $this->logger, $this->getBoardBacklogURL($jira_board), 'issues');
+        foreach ($iterator as $issue) {
+            $backlog_issues[] = BacklogIssueRepresentation::buildFromAPIResponse($issue);
+        }
         return $backlog_issues;
     }
 
-    private function getBoardBacklogURL(JiraBoard $jira_board, int $start_at): string
+    private function getBoardBacklogURL(JiraBoard $jira_board): string
     {
         return JiraBoardsRetrieverFromAPI::BOARD_URL . '/' . (string) $jira_board->id . '/backlog?' .
             http_build_query(
                 [
-                    "startAt" => $start_at,
                     "jql"     => "issuetype not in subtaskIssueTypes()"
                 ]
             );

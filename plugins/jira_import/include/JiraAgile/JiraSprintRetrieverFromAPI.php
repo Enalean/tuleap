@@ -28,8 +28,6 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 final class JiraSprintRetrieverFromAPI implements JiraSprintRetriever
 {
-    private const PARAM_START_AT = 'startAt';
-
     /**
      * @var JiraClient
      */
@@ -53,24 +51,20 @@ final class JiraSprintRetrieverFromAPI implements JiraSprintRetriever
     public function getAllSprints(JiraBoard $board): array
     {
         $sprints  = [];
-        $start_at = 0;
-        do {
-            $sprint_url = $this->getSprintUrl($board, $start_at);
-            $this->logger->info('Get Sprints at ' . $sprint_url);
-            $json = $this->client->getUrl($sprint_url);
-            if (! isset($json['isLast'], $json['values'])) {
-                throw new \RuntimeException(sprintf('%s route did not return the expected format: `isLast` or `values` key are missing', $this->getSprintUrl($board, $start_at)));
-            }
-            foreach ($json['values'] as $json_sprint) {
-                $sprints[] = JiraSprint::buildFromAPI($json_sprint);
-                $start_at++;
-            }
-        } while ($json['isLast'] !== true);
+        $iterator = JiraCollectionBuilder::iterateUntilIsLast(
+            $this->client,
+            $this->logger,
+            $this->getSprintUrl($board),
+            'values',
+        );
+        foreach ($iterator as $sprint) {
+            $sprints[] = JiraSprint::buildFromAPI($sprint);
+        }
         return $sprints;
     }
 
-    private function getSprintUrl(JiraBoard $board, int $start_at): string
+    private function getSprintUrl(JiraBoard $board): string
     {
-        return parse_url($board->url, PHP_URL_PATH) . '/sprint?' . http_build_query([self::PARAM_START_AT => $start_at]);
+        return parse_url($board->url, PHP_URL_PATH) . '/sprint';
     }
 }
