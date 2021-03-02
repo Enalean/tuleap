@@ -45,8 +45,8 @@ class UserListPresenter
         $this->title               = $title;
         $this->search_fields       = $search_fields;
         $this->results             = $results;
-        $this->new_user            = $GLOBALS['Language']->getText('admin_main', 'new_user');
-        $this->detail_button_label = $GLOBALS['Language']->getText('admin_main', 'detail_button_label');
+        $this->new_user            = _('New user');
+        $this->detail_button_label = _('Details');
 
         $this->are_there_pending_users     = $pending_users_count > 0;
         $this->purified_pending_users_text = Codendi_HTMLPurifier::instance()->purify(

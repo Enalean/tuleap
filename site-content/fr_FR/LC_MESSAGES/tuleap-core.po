@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid " Please avoid to upload too big file (< 500kB)."
+msgstr " Merci de ne pas uploader un trop gros fichier (<500Ko)."
+
 #, php-format
 msgid ""
 "\"%s\" label already exists. If you save your modifications, both labels "
@@ -120,6 +123,43 @@ msgid ""
 msgstr ""
 "<A HREF=\"%1$s\"><u>Connectez-vous en premier</u></A><span class=\"highlight"
 "\"> pour poster un message</span>"
+
+#, php-format
+msgid ""
+"<h4><i class=\"fa fa-exclamation-triangle\"></i> Your local.inc file is "
+"outdated!</h4><p>It appears that your local.inc file contains definitions of "
+"variables that are unused and it may lead to confusion.</p><p>Please edit "
+"<code>%1$s</code> and remove the following variables: <code>$sys_allow_anon</"
+"code> and <code>$sys_allow_restricted_users</code>.</p>"
+msgstr ""
+"<h4><i class=\"fa fa-exclamation-triangle\"></i> Votre fichier local.inc "
+"n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des "
+"définitions de variables qui ne sont plus utilisées et pourrait entraîner "
+"des confusions.</p><p>Merci d'éditer <code>%1$s</code> et de supprimer les "
+"variables suivantes : <code>$sys_allow_anon</code> et <code>"
+"$sys_allow_restricted_users</code>.</p>"
+
+msgid ""
+"<h4>ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap "
+"RPMs without running forgeupgrade command. Please check <a href=\"/doc/en/"
+"installation-guide/update.html\">upgrade documentation</a>.</p>"
+msgstr ""
+"<h4>ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs "
+"de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. "
+"Merci de vous référer à <a href=\"/doc/fr/installation-guide/update.html"
+"\">la documentation sur la procédure de mise à jour</a>.</p>"
+
+#, php-format
+msgid ""
+"<h4>Heads up!</h4><p>Currently there are <a href=\"/admin/userlist.php?"
+"status_values[]=R\">%1$s user(s)</a> that have restricted status. Changing "
+"current access mode will not change their status, they will need to be dealt "
+"with manually.</p>"
+msgstr ""
+"<h4>Attention !</h4><p>Il y a actuellement <a href=\"/admin/userlist.php?"
+"status_values[]=R\">%1$s utilisateur(s)</a> qui ont le status restreint. "
+"Changer le mode d'accès ne modifiera pas leur status, ils devront être gérés "
+"manuellement.</p>"
 
 msgid "<i>Disabled</i>"
 msgstr "<i>Inactif</i>"
@@ -244,6 +284,9 @@ msgstr "Accès refusé"
 
 msgid "Access Logs"
 msgstr "Journal des accès"
+
+msgid "Access control"
+msgstr "Droits d'accès"
 
 msgid "Access controls"
 msgstr "Droits d'accès"
@@ -385,6 +428,12 @@ msgstr "Tous les groupes"
 msgid "All members of %s will remain project members."
 msgstr "Tous les membres de %s resteront membres du projet."
 
+msgid "All users must be logged in"
+msgstr "Authentification requise"
+
+msgid "All users must be logged in and restricted users are enabled"
+msgstr "Authentification requise et utilisateurs restreints"
+
 msgid "Allow for all projects"
 msgstr "Autoriser pour tous les projets"
 
@@ -473,6 +522,15 @@ msgstr[1] "Et %d autres groupes que vous ne pouvez pas administrer."
 msgid "Anonymous user"
 msgstr "Utilisateur anonyme"
 
+msgid "Anonymous users can access the platform"
+msgstr "Accès anonyme autorisé"
+
+msgid ""
+"Anonymous users can browse the public part of the site without logging in."
+msgstr ""
+"Les utilisateurs anonymes peuvent accéder aux parties publiques de la "
+"plateforme."
+
 msgid "Appearance & language"
 msgstr "Apparence et langue"
 
@@ -500,6 +558,9 @@ msgstr "Demander à rejoindre"
 
 msgid "Ask to join this project"
 msgstr "Demander à rejoindre ce projet"
+
+msgid "Authenticated users (Registered + Restricted) label"
+msgstr "Label pour les utilisateurs authentifiés (enregistrés + retreints)"
 
 msgid "Author"
 msgstr "Auteur"
@@ -797,6 +858,9 @@ msgstr "Élevée"
 msgid "Configuration updated"
 msgstr "Configuration mise à jour"
 
+msgid "Configure homepage"
+msgstr "Configurer la page d'accueil"
+
 msgid "Configure how project creation is controlled by administrators"
 msgstr ""
 "Paramètrage du contrôle de la création de projets par les administrateurs"
@@ -883,6 +947,9 @@ msgstr "Le lien vers la release note a été mis à jour avec succès."
 
 msgid "Customisation"
 msgstr "Personnalisation"
+
+msgid "Customize homepage"
+msgstr "Personnalisation de la page d'accueil"
 
 msgid "DELETE FAILED!"
 msgstr "Échec de la destruction !"
@@ -988,6 +1055,9 @@ msgstr "Détruire un message"
 msgid "Delete binding"
 msgstr "Supprimer le lien"
 
+msgid "Delete current logo"
+msgstr "Supprimer le logo"
+
 msgid "Delete dashboard"
 msgstr "Supprimer le tableau de bord"
 
@@ -1051,11 +1121,22 @@ msgstr "Ne répondez pas à ce courriel."
 msgid "Documentation"
 msgstr "Documentation"
 
+msgid "Done events"
+msgstr "Evénements terminés"
+
 msgid "Download agreement"
 msgstr "Accord de téléchargement"
 
 msgid "E-mail notification on commits"
 msgstr "Notification e-mail sur les commits"
+
+#, php-format
+msgid "E.g %1$s employees"
+msgstr "E.g employés %1$s"
+
+#, php-format
+msgid "E.g %1$s employees & subco"
+msgstr "E.g employés %1$s & présta"
 
 msgid "ERROR - no group_id"
 msgstr "ERREUR - pas de group_id"
@@ -1164,6 +1245,9 @@ msgstr "Activé ?"
 msgid "Enter comma separated list of emails"
 msgstr "Entrez une liste d'emails séparés par une virgule"
 
+msgid "Enter meaningful headline..."
+msgstr "Entrez une accroche percutante..."
+
 msgid ""
 "Enter people to invite to %s. We will send an invitation email on your "
 "behalf."
@@ -1202,6 +1286,15 @@ msgstr "Erreur lors de l'insertion dans forum_saved_place"
 msgid "Error updating time in forum_saved_place"
 msgstr "Erreur lors de la mise de la date et de l'heure dans forum_saved_place"
 
+msgid "Errors"
+msgstr "Erreurs"
+
+msgid "Events in error"
+msgstr "Evénements en erreur"
+
+msgid "Events in warning"
+msgstr "Evénements en alerte"
+
 msgid "Existing Forums"
 msgstr "Forums existants"
 
@@ -1228,6 +1321,10 @@ msgstr "Champs personnalisés"
 
 msgid "File"
 msgstr "Fichier"
+
+#, php-format
+msgid "File upload error (error code: %1$s)"
+msgstr "Erreur lors de l'upload du fichier (erreur %1$s)"
 
 msgid "Files"
 msgstr "Fichiers"
@@ -1361,6 +1458,9 @@ msgstr ""
 msgid "Header background"
 msgstr "Image de fond de l'entête"
 
+msgid "Headline"
+msgstr "Accroche"
+
 msgid "Heartbeat"
 msgstr "Activité"
 
@@ -1389,6 +1489,9 @@ msgstr "Historique"
 
 msgid "Homepage"
 msgstr "Page d'accueil"
+
+msgid "Homepage logo"
+msgstr "Logo de la page d'accueil"
 
 msgid "How many invitations a user can send per day?"
 msgstr "Combien d'invitations un utilisateur peut-il envoyer par jour ?"
@@ -1687,6 +1790,9 @@ msgstr "Listes de diffusion (Service Listes)"
 msgid "Mailing lists administration"
 msgstr "Administration des listes de diffusion"
 
+msgid "Manage all plugins"
+msgstr "Gérer tous les plugins"
+
 msgid "Manage help links"
 msgstr "Gestion des liens d'aide"
 
@@ -1858,6 +1964,9 @@ msgstr ""
 "changement, <strong>cliquez sur le lien</strong> qui se trouvera dans le "
 "message de confirmation que vous allez recevoir (à la nouvelle adresse)."
 
+msgid "New events"
+msgstr "Nouveaux événements"
+
 msgid "New mailing list"
 msgstr "Nouvelle liste de diffusion"
 
@@ -1876,6 +1985,9 @@ msgstr "Nouveau projet enregistré : %s"
 
 msgid "New reference pattern"
 msgstr "Nouveau modèle de référence"
+
+msgid "New user"
+msgstr "Nouvel utilisateur"
 
 msgid "News"
 msgstr "Annonces"
@@ -1941,6 +2053,12 @@ msgstr "Forum non surveillé"
 
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
+
+msgid "No projects to validate"
+msgstr "Aucun projet à valider"
+
+msgid "No users to validate"
+msgstr "Aucun utilisateur à valider"
 
 msgid "Nobody"
 msgstr "Personne"
@@ -2026,9 +2144,18 @@ msgstr "Le mot de passe a été mis à jour avec succès"
 msgid "Passwords do not match"
 msgstr "Les deux mots de passe soumis sont différents"
 
+msgid "Pending projects"
+msgstr "Projets en attente"
+
+msgid "Pending users"
+msgstr "Utilisateurs en attente"
+
 msgid "People in this group will be able to manage project members."
 msgstr ""
 "Les personnes dans ce groupe seront capables de gérer les membres du projet."
+
+msgid "Per activities"
+msgstr "Utilisateurs actifs"
 
 msgid "Per group"
 msgstr "Par groupe"
@@ -2063,6 +2190,9 @@ msgid ""
 msgstr ""
 "Personnalisez votre projet en ajoutant une image de fond dans l'entête des "
 "tableaux de bord et de l'administration."
+
+msgid "Platform access control"
+msgstr "Droits d'accès de la plateforme"
 
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
@@ -2138,6 +2268,9 @@ msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
 
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
+
+msgid "Plugins"
+msgstr "Plugins"
 
 msgid "Post Comment"
 msgstr "Poster un commentaire"
@@ -2331,8 +2464,15 @@ msgstr "ProjetS"
 msgid "Projects created from this template"
 msgstr "Projets créés à partir de ce modèle"
 
+#, php-format
+msgid "Projects in <a href=\"%1$s\"><B>P</B> (pending) status</A>"
+msgstr "Projets en statut <a href=\"%1$s\"><B>P</B> (en attente)</A>"
+
 msgid "Projects in category"
 msgstr "Projets dans la catégorie selectionnée"
+
+msgid "Projects statistics"
+msgstr "Statistiques projets"
 
 msgid "Projects visibility"
 msgstr "Visibilité des projets"
@@ -2451,6 +2591,9 @@ msgstr "Références"
 msgid "Registered users"
 msgstr "Utilisateurs enregistrés"
 
+msgid "Registered users label"
+msgstr "Label pour les utilisateurs enregistrés"
+
 msgid "Relative date first"
 msgstr "Date relative en premier"
 
@@ -2496,6 +2639,9 @@ msgstr "Lignes supprimées"
 msgid "Repeat new password"
 msgstr "Répétez le nouveau mot de passe"
 
+msgid "Replace the current logo"
+msgstr "Remplacer le logo actuellement utilisé"
+
 msgid "Repository History"
 msgstr "Historique du dépôt"
 
@@ -2511,6 +2657,12 @@ msgstr "Les utilisateurs restreints peuvent créer des projets"
 msgid "Restricted users removal"
 msgstr "Suppression des utilisateurs restreints"
 
+msgid "Review pending projects"
+msgstr "Valider les projets"
+
+msgid "Review pending users"
+msgstr "Valider les utilisateurs"
+
 msgid "Revision"
 msgstr "Révision"
 
@@ -2519,6 +2671,9 @@ msgstr "Supprimer les jetons SVN sélectionnés"
 
 msgid "Revoke selected access keys"
 msgstr "Révoquer les clés d'accès sélectionnées"
+
+msgid "Running events"
+msgstr "Evénements en cours d'exécution"
 
 msgid "SOAP API"
 msgstr "API SOAP"
@@ -2552,6 +2707,9 @@ msgstr "Sauvegarder cette position"
 
 msgid "Save categories"
 msgstr "Sauvegarder les catégories"
+
+msgid "Save configuration"
+msgstr "Sauvegarder la configuration"
 
 msgid "Save delegated permissions"
 msgstr "Sauvegarder les permissions déléguées"
@@ -2667,6 +2825,9 @@ msgstr ""
 msgid "Show %1$s"
 msgstr "Afficher %1$s"
 
+msgid "Site administration"
+msgstr "Administration du site"
+
 msgid "Site content customisations"
 msgstr "Personnalisations du site content"
 
@@ -2675,6 +2836,9 @@ msgstr "Page d'accueil"
 
 msgid "Site news"
 msgstr "News du site"
+
+msgid "Site news approval"
+msgstr "Approbation annonces site"
 
 msgid "Skip to main content"
 msgstr "Aller au contenu principal"
@@ -2787,6 +2951,12 @@ msgstr "Gestion synchronisée de l'appartenance au projet"
 
 msgid "System"
 msgstr "Système"
+
+msgid "System events"
+msgstr "Evénements système"
+
+msgid "System events (last 48 hours)"
+msgstr "Evénements système (dernières 48 heures)"
 
 msgid "System groups"
 msgstr "Groupes système"
@@ -3340,6 +3510,9 @@ msgstr "Mettre à jour le statut du forum"
 msgid "Update failed"
 msgstr "La mise à jour a échoué"
 
+msgid "Update information"
+msgstr "Mettre à jour les informations"
+
 msgid "Update label"
 msgstr "Mettre à jour le label"
 
@@ -3366,6 +3539,12 @@ msgstr "Mettre à jour vos préférences"
 
 msgid "Upload text file"
 msgstr "Téléverser un fichier texte"
+
+msgid "Upload your own logo"
+msgstr "Uploadez votre propre logo"
+
+msgid "Uploaded file is too big"
+msgstr "Le fichier est trop gros"
 
 msgid "Use as project flag"
 msgstr "Utilisée en tant que marqueur de projet"
@@ -3439,13 +3618,52 @@ msgstr "Groupes d'utilisateurs"
 msgid "Users groups bound to this one"
 msgstr "Groupes liés à celui-ci"
 
+#, php-format
+msgid "Users in <a href=\"%1$s\"><B>P</B> (pending) status</a>"
+msgstr "Utilisateurs en statut <a href=\"%1$s\"><B>P</B> (en attente)</a>"
+
 msgid "Users must be able to send at least one invitation by day."
 msgstr ""
 "Les utilisateurs doivent être en mesure d'envoyer au moins une invitation "
 "par jour."
 
+msgid "Users must first login before going further."
+msgstr ""
+"Tous les utilisateurs doivent s'authentifier avant de pouvoir accéder au "
+"contenu."
+
+msgid ""
+"Users must first login before going further. Some users may be restricted "
+"(restricted users have to be specifically granted access to projects and "
+"services)."
+msgstr ""
+"Tous les utilisateurs doivent s'authentifier avant de pouvoir accéder au "
+"contenu. Certains utilisateurs peuvent être restreints (les utilisateurs "
+"restreints ont accès uniquement aux projets et aux services auxquels les "
+"autorisations leur sont spécifiquement accordées)."
+
+msgid "Users statistics"
+msgstr "Statistiques utilisateurs"
+
+#, php-format
+msgid "Validated users <a href=\"%1$s\"><B>pending email activation</B></a>"
+msgstr ""
+"Utilisateurs validés en <a href=\"%1$s\"> attente d'activation par e-mail</a>"
+
+msgid "View all projects"
+msgstr "Voir tous les projets"
+
+msgid "View all system events"
+msgstr "Voir tous les événements système"
+
+msgid "View all users"
+msgstr "Voir tous les utilisateurs"
+
 msgid "View members"
 msgstr "Voir les membres"
+
+msgid "View most recent logins"
+msgstr "Afficher les connections récentes"
 
 msgid "Visibility"
 msgstr "Visibilité"
@@ -3459,6 +3677,9 @@ msgstr ""
 
 msgid "Want to monitor this forum?"
 msgstr "Surveiller ce forum ?"
+
+msgid "Warnings"
+msgstr "Alertes"
 
 msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "
@@ -3570,6 +3791,15 @@ msgid ""
 msgstr ""
 "Wow, attendez une minute. Vous êtes sur le point de supprimer le label <b>"
 "%s</b>. Merci de confirmer votre action."
+
+msgid ""
+"Writing a compelling headline is a necessary step in order to encourage your "
+"users to sign in. Choose a catchy headline to summarize what Tuleap in your "
+"context is about. Don't be verbose though, keep the headline short."
+msgstr ""
+"Écrire une accroche percutante est nécessaire pour inciter les visiteurs à "
+"s'inscrire. Choisissez une accroche attirante qui décrit ce qu'est Tuleap "
+"dans votre environnement. Ne soyez pas trop verbeux cependant ;)"
 
 msgid "Year"
 msgstr "Année"
@@ -3794,6 +4024,23 @@ msgstr[0] "Vous ne pouvez envoyer plus qu'une seule invitation."
 msgstr[1] "Vous pouvez encore envoyer %s invitations."
 
 msgid ""
+"You can override default names for the two special groups. This only applies "
+"for git permissions at the moment."
+msgstr ""
+"Vous pouvez redéfinir les noms des deux groups spéciaux suivants. Pour le "
+"moment, cela s'applique uniquement au service Git."
+
+msgid ""
+"You can upload your own logo. In order to not ruin the design of the "
+"homepage, your logo should have a transparent background and a height of "
+"100px."
+msgstr ""
+"Vous pouvez afficher votre propre logo sur la page d'accueil. Afin de ne pas "
+"trop perturber le design de la page d'accueil, nous vous demandons "
+"d'uploader une image au format png avec un fond transparent et une hauteur "
+"de 100px."
+
+msgid ""
 "You can use SVN tokens as a replacement for your password on projects "
 "selected by the administrator."
 msgstr ""
@@ -3940,6 +4187,12 @@ msgstr ""
 "Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
 "pouvoir l'enlever des rédacteurs"
 
+msgid "You should send a png image"
+msgstr "Merci d'uploader une image au format png"
+
+msgid "You should send an image with height smaller than 100px"
+msgstr "L'image excède les 100px de hauteur"
+
 msgid ""
 "You still have <code>$sys_display_homepage_news</code> variable defined in "
 "local.inc. It's now stored in DB, you should remove it from the file to "
@@ -3983,6 +4236,9 @@ msgstr "Votre avatar"
 msgid "Your browser is not supported."
 msgstr "Votre navigateur n'est pas supporté."
 
+msgid "Your catchy headline"
+msgstr "Votre accroche"
+
 #, php-format
 msgid ""
 "Your email change is complete. Your new email address is <strong>%s</strong>"
@@ -4019,11 +4275,29 @@ msgstr "[%s] Confirmation de changement d'e-mail"
 msgid "activate"
 msgstr "activer"
 
+msgid "active"
+msgstr "actif"
+
+msgid "active last 24 hours"
+msgstr "actifs les dernières 24 heures"
+
+msgid "active last 3 months"
+msgstr "actifs les 3 derniers mois"
+
+msgid "active last month"
+msgstr "actifs le mois dernier"
+
+msgid "active last week"
+msgstr "actifs la semaine dernière"
+
 msgid "commits at once"
 msgstr "commits à la fois"
 
 msgid "deactivate"
 msgstr "désactiver"
+
+msgid "deleted"
+msgstr "supprimés"
 
 msgid "edit"
 msgstr "éditer"
@@ -4066,6 +4340,9 @@ msgstr ""
 "en partie<br>L'adresse e-mail semble invalide. la notification e-mail est "
 "désactivée."
 
+msgid "pending"
+msgstr "en attente"
+
 msgid "people monitoring"
 msgstr "Forum sous surveillance"
 
@@ -4081,6 +4358,9 @@ msgstr "projet"
 msgid "reply"
 msgstr "répondre"
 
+msgid "restricted"
+msgstr "restreint"
+
 msgid "sorted by"
 msgstr "trié par"
 
@@ -4095,6 +4375,9 @@ msgstr "système"
 
 msgid "view"
 msgstr "consulter"
+
+msgid "waiting"
+msgstr "en attente"
 
 msgid "your account will be automatically suspended on {{suspension_date}}."
 msgstr "votre compte sera désactivé automatiquement le {{suspension_date}}."

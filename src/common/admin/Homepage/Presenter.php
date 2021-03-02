@@ -74,18 +74,18 @@ class Admin_Homepage_Presenter
         $this->use_custom_logo = Admin_Homepage_LogoFinder::isCustomLogoUsed();
         $this->warn_local_inc  = ForgeConfig::get('sys_display_homepage_news', -1) === -1 ? false : true;
 
-        $this->save                 = $GLOBALS['Language']->getText('admin_main', 'save_conf');
-        $this->logo                 = $GLOBALS['Language']->getText('admin_main', 'homepage_logo');
-        $this->upload               = $GLOBALS['Language']->getText('admin_main', 'homepage_upload_logo');
-        $this->replace_upload       = $GLOBALS['Language']->getText('admin_main', 'homepage_replace_logo');
-        $this->remove_custom_logo   = $GLOBALS['Language']->getText('admin_main', 'remove_custom_logo');
-        $this->or_label             = $GLOBALS['Language']->getText('admin_main', 'homepage_or_label');
-        $this->headline             = $GLOBALS['Language']->getText('admin_main', 'headline');
-        $this->logo_help            = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help');
-        $this->logo_help_end        = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help_end');
-        $this->headline_help        = $GLOBALS['Language']->getText('admin_main', 'headline_help');
-        $this->placeholder_headline = $GLOBALS['Language']->getText('admin_main', 'placeholder_headline');
-        $this->customize_title      = $GLOBALS['Language']->getText('admin_main', 'customize_title');
-        $this->label_language       = $GLOBALS['Language']->getText('admin_main', 'label_language');
+        $this->save                 = _('Save configuration');
+        $this->logo                 = _('Homepage logo');
+        $this->upload               = _('Upload your own logo');
+        $this->replace_upload       = _('Replace the current logo');
+        $this->remove_custom_logo   = _('Delete current logo');
+        $this->or_label             = _('or');
+        $this->headline             = _('Headline');
+        $this->logo_help            = _('You can upload your own logo. In order to not ruin the design of the homepage, your logo should have a transparent background and a height of 100px.');
+        $this->logo_help_end        = _(' Please avoid to upload too big file (< 500kB).');
+        $this->headline_help        = _('Writing a compelling headline is a necessary step in order to encourage your users to sign in. Choose a catchy headline to summarize what Tuleap in your context is about. Don\'t be verbose though, keep the headline short.');
+        $this->placeholder_headline = _('Enter meaningful headline...');
+        $this->customize_title      = _('Customize homepage');
+        $this->label_language       = _('Your catchy headline');
     }
 }

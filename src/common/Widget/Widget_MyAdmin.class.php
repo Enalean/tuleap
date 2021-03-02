@@ -103,7 +103,7 @@ class Widget_MyAdmin extends Widget
         $i              = 0;
         $html_my_admin .= $this->_get_admin_row(
             $i++,
-            $GLOBALS['Language']->getText('admin_main', 'pending_user', ["/admin/approve_pending_users.php?page=pending"]),
+            sprintf(_('Users in <a href="%1$s"><B>P</B> (pending) status</a>'), "/admin/approve_pending_users.php?page=pending"),
             $pending_users,
             $this->_get_color($pending_users)
         );
@@ -111,7 +111,7 @@ class Widget_MyAdmin extends Widget
         if (ForgeConfig::get('sys_user_approval') == 1) {
             $html_my_admin .= $this->_get_admin_row(
                 $i++,
-                $GLOBALS['Language']->getText('admin_main', 'validated_user', ["/admin/approve_pending_users.php?page=validated"]),
+                sprintf(_('Validated users <a href="%1$s"><B>pending email activation</B></a>'), "/admin/approve_pending_users.php?page=validated"),
                 $validated_users,
                 $this->_get_color($validated_users)
             );
@@ -121,7 +121,7 @@ class Widget_MyAdmin extends Widget
 
         $html_my_admin .= $this->_get_admin_row(
             $i++,
-            '<a href="/admin/news/">' . $GLOBALS['Language']->getText('admin_main', 'site_news_approval') . '</a>',
+            '<a href="/admin/news/">' . _('Site news approval') . '</a>',
             $pending_news,
             $this->_get_color($pending_news)
         );
@@ -150,7 +150,7 @@ class Widget_MyAdmin extends Widget
 
         return $this->_get_admin_row(
             $i++,
-            $GLOBALS['Language']->getText('admin_main', 'pending_group', ["/admin/approve-pending.php"]),
+            sprintf(_('Projects in <a href="%1$s"><B>P</B> (pending) status</A>'), "/admin/approve-pending.php"),
             $pending_projects,
             $this->_get_color($pending_projects)
         );

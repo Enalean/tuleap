@@ -113,8 +113,8 @@ class AdminSidebarPresenter
 
         $this->links_nav_doc = $GLOBALS['Language']->getText('admin_sidebar', 'links_nav_doc');
 
-        $this->plugins_section_title = $GLOBALS['Language']->getText('admin_main', 'header_plugins');
-        $this->plugins_manage_all    = $GLOBALS['Language']->getText('admin_main', 'manage_all_plugins');
+        $this->plugins_section_title = _('Plugins');
+        $this->plugins_manage_all    = _('Manage all plugins');
     }
 
     public function isTherePendingUsers()

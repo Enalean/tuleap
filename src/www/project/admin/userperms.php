@@ -187,7 +187,7 @@ $js = "new UserAutoCompleter('search_user',
                           true);";
 $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
-echo '<INPUT class="btn" type="submit" name ="searchUser" value="' . $Language->getText('admin_main', 'search') . '"></div>';
+echo '<INPUT class="btn" type="submit" name ="searchUser" value="' . _('Search') . '"></div>';
 echo '</FORM>';
 
 $frs_permission_manager = FRSPermissionManager::build();

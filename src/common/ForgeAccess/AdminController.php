@@ -76,7 +76,7 @@ class ForgeAccess_AdminController
 
     public function index()
     {
-        $title      = $GLOBALS['Language']->getText('admin_main', 'configure_access_controls');
+        $title      = _('Access control');
         $admin_page = new AdminPageRenderer();
 
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-access-mode.js');
@@ -111,7 +111,7 @@ class ForgeAccess_AdminController
         if ($updated) {
             $this->response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('admin_main', 'successfully_updated')
+                _('Successfully updated.')
             );
         }
         $this->redirectToIndex();
@@ -180,7 +180,7 @@ class ForgeAccess_AdminController
         if ($updated) {
             $this->response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('admin_main', 'successfully_updated')
+                _('Successfully updated.')
             );
         }
         $this->redirectToIndex();

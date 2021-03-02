@@ -105,24 +105,16 @@ class ForgeAccess_AdminPresenter
         $this->access_regular    = ($current_access_mode === ForgeAccess::REGULAR);
         $this->access_restricted = ($current_access_mode === ForgeAccess::RESTRICTED);
 
-        $this->btn_submit                = $GLOBALS['Language']->getText('admin_main', 'btn_update_information');
-        $this->localinc_obsolete_message = $GLOBALS['Language']->getText(
-            'admin_main',
-            'localinc_obsolete_message',
-            $this->localinc_path
-        );
+        $this->btn_submit                = _('Update information');
+        $this->localinc_obsolete_message = sprintf(_('<h4><i class="fa fa-exclamation-triangle"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>%1$s</code> and remove the following variables: <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>'), $this->localinc_path);
 
-        $this->access_anonymous_label           = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_label');
-        $this->access_anonymous_desc            = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_desc');
-        $this->access_regular_label             = $GLOBALS['Language']->getText('admin_main', 'access_regular_label');
-        $this->access_regular_desc              = $GLOBALS['Language']->getText('admin_main', 'access_regular_desc');
-        $this->access_restricted_label          = $GLOBALS['Language']->getText('admin_main', 'access_restrited_label');
-        $this->access_restricted_desc           = $GLOBALS['Language']->getText('admin_main', 'access_restrited_desc');
-        $this->current_restricted_users_message = $GLOBALS['Language']->getText(
-            'admin_main',
-            'current_restricted_users_message',
-            $this->nb_restricted_users
-        );
+        $this->access_anonymous_label           = _('Anonymous users can access the platform');
+        $this->access_anonymous_desc            = _('Anonymous users can browse the public part of the site without logging in.');
+        $this->access_regular_label             = _('All users must be logged in');
+        $this->access_regular_desc              = _('Users must first login before going further.');
+        $this->access_restricted_label          = _('All users must be logged in and restricted users are enabled');
+        $this->access_restricted_desc           = _('Users must first login before going further. Some users may be restricted (restricted users have to be specifically granted access to projects and services).');
+        $this->current_restricted_users_message = sprintf(_('<h4>Heads up!</h4><p>Currently there are <a href="/admin/userlist.php?status_values[]=R">%1$s user(s)</a> that have restricted status. Changing current access mode will not change their status, they will need to be dealt with manually.</p>'), $this->nb_restricted_users);
 
         if ($ugroup_authenticated_users != false) {
             $this->ugroup_authenticated_users = $ugroup_authenticated_users;
@@ -130,15 +122,15 @@ class ForgeAccess_AdminPresenter
         if ($ugroup_registered_users != false) {
             $this->ugroup_registered_users = $ugroup_registered_users;
         }
-        $this->ugroup_authenticated_users_placeholder = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_placeholder', [ForgeConfig::get('sys_org_name')]);
-        $this->ugroup_registered_users_placeholder    = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_placeholder', [ForgeConfig::get('sys_org_name')]);
+        $this->ugroup_authenticated_users_placeholder = sprintf(_('E.g %1$s employees & subco'), ForgeConfig::get('sys_org_name'));
+        $this->ugroup_registered_users_placeholder    = sprintf(_('E.g %1$s employees'), ForgeConfig::get('sys_org_name'));
 
-        $this->ugroup_authenticated_users_label = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_label');
-        $this->ugroup_registered_users_label    = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_label');
+        $this->ugroup_authenticated_users_label = _('Authenticated users (Registered + Restricted) label');
+        $this->ugroup_registered_users_label    = _('Registered users label');
 
-        $this->customize_ugroups_label_info = $GLOBALS['Language']->getText('admin_main', 'customize_ugroups_label_info');
+        $this->customize_ugroups_label_info = _('You can override default names for the two special groups. This only applies for git permissions at the moment.');
 
-        $this->platform_access_control_label = $GLOBALS['Language']->getText('admin_main', 'platform_access_control');
+        $this->platform_access_control_label = _('Platform access control');
     }
 
     private function isLocalIncObsolete()

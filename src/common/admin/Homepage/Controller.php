@@ -79,7 +79,7 @@ class Admin_Homepage_Controller
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-homepage.js');
 
-        $title     = $GLOBALS['Language']->getText('admin_main', 'configure_homepage');
+        $title     = _('Configure homepage');
         $headlines = $this->getHeadlines();
         $presenter = new Admin_Homepage_Presenter(
             $this->csrf,
@@ -126,7 +126,7 @@ class Admin_Homepage_Controller
         if (! $this->response->feedbackHasWarningsOrErrors()) {
             $this->response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('admin_main', 'successfully_updated')
+                _('Successfully updated.')
             );
         }
         $this->redirectToIndex();
@@ -194,13 +194,13 @@ class Admin_Homepage_Controller
             case UPLOAD_ERR_FORM_SIZE:
                 $this->response->addFeedback(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText('admin_main', 'logo_too_big')
+                    _('Uploaded file is too big')
                 );
                 return;
             default:
                 $this->response->addFeedback(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText('admin_main', 'upload_error', $uploaded_logo['error'])
+                    sprintf(_('File upload error (error code: %1$s)'), $uploaded_logo['error'])
                 );
                 return;
         }
@@ -209,7 +209,7 @@ class Admin_Homepage_Controller
         if (! $imageinfo || $imageinfo['mime'] !== 'image/png') {
             $this->response->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('admin_main', 'no_png')
+                _('You should send a png image')
             );
             return;
         }
@@ -218,7 +218,7 @@ class Admin_Homepage_Controller
         if ($imageinfo[$height_index] > 100) {
             $this->response->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('admin_main', '100px')
+                _('You should send an image with height smaller than 100px')
             );
             return;
         }

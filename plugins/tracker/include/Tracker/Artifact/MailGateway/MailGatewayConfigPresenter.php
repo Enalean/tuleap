@@ -65,7 +65,6 @@ class MailGatewayConfigPresenter
         $this->token_desc               = dgettext('tuleap-tracker', 'Users can interact with trackers by email. Authentication is done through token that is injected in the headers of the email. This decreases the risk of a forged email, we can moderately trust the sender.<br>As of today, only reply (add a follow-up comment) by email is supported by this option.');
         $this->insecure                 = dgettext('tuleap-tracker', 'Insecure email gateway');
         $this->insecure_desc            = dgettext('tuleap-tracker', 'Users can interact with trackers by email. Authentication is not done at all.<span class="text-error"><i class="fas fa-exclamation-triangle"></i> With this option we <strong>cannot trust the sender of the email</strong>. This means that villains can easily forge an email and pretend to be someone they are not.</span><br>As of today, users can create artifacts and reply (add a follow-up comment) by email with this option.');
-        $this->save_conf                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
 
         $this->sections = new EmailGateWayPresenter();
 

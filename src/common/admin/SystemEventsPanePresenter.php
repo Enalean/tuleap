@@ -32,7 +32,7 @@ class HomepagePanePresenter
     {
         $this->sections = $sections;
 
-        $this->pane_title     = $GLOBALS['Language']->getText('admin_main', 'system_events_pane_title');
-        $this->view_all_label = $GLOBALS['Language']->getText('admin_main', 'system_events_view_all_label');
+        $this->pane_title     = _('System events (last 48 hours)');
+        $this->view_all_label = _('View all system events');
     }
 }

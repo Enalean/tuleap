@@ -36,7 +36,7 @@ class Widget_MySystemEvent extends Widget
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('admin_main', 'system_event');
+        return _('System events');
     }
 
     /**
