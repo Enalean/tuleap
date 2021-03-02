@@ -51,12 +51,12 @@ class UsersStatisticsPresenter
         $this->last3months_users       = number_format($last3months_users);
         $this->additional_statistics   = $additional_statistics;
 
-        $this->lastday_users_label     = $GLOBALS['Language']->getText('admin_main', 'lastday_users');
-        $this->lastweek_users_label    = $GLOBALS['Language']->getText('admin_main', 'lastweek_users');
-        $this->lastmonth_users_label   = $GLOBALS['Language']->getText('admin_main', 'lastmonth_users');
-        $this->last3months_users_label = $GLOBALS['Language']->getText('admin_main', 'last3months_users');
-        $this->recent_logins_label     = $GLOBALS['Language']->getText('admin_main', 'stat_login');
-        $this->per_activities          = $GLOBALS['Language']->getText('admin_main', 'active_users');
-        $this->homepage_all_users      = $GLOBALS['Language']->getText('admin_main', 'homepage_all_users');
+        $this->lastday_users_label     = _('active last 24 hours');
+        $this->lastweek_users_label    = _('active last week');
+        $this->lastmonth_users_label   = _('active last month');
+        $this->last3months_users_label = _('active last 3 months');
+        $this->recent_logins_label     = _('View most recent logins');
+        $this->per_activities          = _('Per activities');
+        $this->homepage_all_users      = _('View all users');
     }
 }

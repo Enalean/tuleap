@@ -65,12 +65,12 @@ class HomepagePaneSectionPresenter
         $this->has_warning_or_error      = $this->has_warning || $this->has_error;
         $this->has_warning_without_error = $this->has_warning && ! $this->has_error;
 
-        $this->new_label_tooltip     = $GLOBALS['Language']->getText('admin_main', 'new_label_tooltip');
-        $this->running_label_tooltip = $GLOBALS['Language']->getText('admin_main', 'running_label_tooltip');
-        $this->done_label_tooltip    = $GLOBALS['Language']->getText('admin_main', 'done_label_tooltip');
-        $this->warning_label_tooltip = $GLOBALS['Language']->getText('admin_main', 'warning_label_tooltip');
-        $this->error_label_tooltip   = $GLOBALS['Language']->getText('admin_main', 'error_label_tooltip');
-        $this->warning_label         = $GLOBALS['Language']->getText('admin_main', 'warning_label');
-        $this->error_label           = $GLOBALS['Language']->getText('admin_main', 'error_label');
+        $this->new_label_tooltip     = _('New events');
+        $this->running_label_tooltip = _('Running events');
+        $this->done_label_tooltip    = _('Done events');
+        $this->warning_label_tooltip = _('Events in warning');
+        $this->error_label_tooltip   = _('Events in error');
+        $this->warning_label         = _('Warnings');
+        $this->error_label           = _('Errors');
     }
 }

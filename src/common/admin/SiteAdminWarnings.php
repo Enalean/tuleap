@@ -61,7 +61,7 @@ final class SiteAdminWarnings
         if (! ForgeConfig::get('disable_forge_upgrade_warnings')) {
             $this->forge_upgrade_config->loadDefaults();
             if (! $this->forge_upgrade_config->isSystemUpToDate()) {
-                $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . $GLOBALS['Language']->getText('admin_main', 'forgeupgrade') . '</div>';
+                $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<h4>ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="/doc/en/installation-guide/update.html">upgrade documentation</a>.</p>') . '</div>';
             }
         }
 

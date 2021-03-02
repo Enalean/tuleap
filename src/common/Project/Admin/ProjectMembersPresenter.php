@@ -62,6 +62,6 @@ class ProjectMembersPresenter
         $this->pending_label     = $GLOBALS['Language']->getText('admin_project', 'pending_label');
         $this->members_label     = $GLOBALS['Language']->getText('admin_project', 'members_label');
 
-        $this->detail_button_label = $GLOBALS['Language']->getText('admin_main', 'detail_button_label');
+        $this->detail_button_label = _('Details');
     }
 }

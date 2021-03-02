@@ -56,7 +56,10 @@
                         </div>
 
                         <div class="tlp-pane-section-submit">
-                            <button type="submit" class="tlp-button-primary"><i class="fa fa-save tlp-button-icon"></i> {{ save_conf }}</button>
+                            <button type="submit" class="tlp-button-primary">
+                                <i class="fa fa-save tlp-button-icon" aria-hidden="true"></i>
+                                {{# dgettext }}tuleap-tracker | Save configuration{{/ dgettext }}
+                            </button>
                         </div>
                     </form>
                 </section>

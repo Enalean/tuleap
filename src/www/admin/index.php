@@ -87,23 +87,23 @@ $purifier               = Codendi_HTMLPurifier::instance();
 $statistics_users_graph = [];
 
 if ($actif_users > 0) {
-    $statistics_users_graph[] = ['key' => 'active', 'label' => $Language->getText('admin_main', 'statusactif_user'), 'count' => $actif_users];
+    $statistics_users_graph[] = ['key' => 'active', 'label' => _('active'), 'count' => $actif_users];
 }
 
 if ($hold_users > 0) {
-    $statistics_users_graph[] = ['key' => 'suspended', 'label' => $Language->getText('admin_main', 'statushold_user'), 'count' => $hold_users];
+    $statistics_users_graph[] = ['key' => 'suspended', 'label' => _('suspended'), 'count' => $hold_users];
 }
 
 if ($deleted_users > 0) {
-    $statistics_users_graph[] = ['key' => 'deleted', 'label' => $Language->getText('admin_main', 'statusdeleted_user'), 'count' => $deleted_users];
+    $statistics_users_graph[] = ['key' => 'deleted', 'label' => _('deleted'), 'count' => $deleted_users];
 }
 
 if ($validated_users + $realpending_users > 0) {
-    $statistics_users_graph[] = ['key' => 'waiting', 'label' => $Language->getText('admin_main', 'statuspending_user'), 'count' => $validated_users + $realpending_users];
+    $statistics_users_graph[] = ['key' => 'waiting', 'label' => _('waiting'), 'count' => $validated_users + $realpending_users];
 }
 
 if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
-    $statistics_users_graph[] = ['key' => 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'count' => $restricted_users];
+    $statistics_users_graph[] = ['key' => 'restricted', 'label' => _('restricted'), 'count' => $restricted_users];
 }
 
 function stats_getactiveusers($since)
@@ -144,27 +144,27 @@ $user_statistics_presenter = new UsersStatisticsPresenter(
 );
 $renderer                  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/admin/homepage/');
 
-$user_stats = new Widget_Static($Language->getText('admin_main', 'stat_users'));
+$user_stats = new Widget_Static(_('Users statistics'));
 $user_stats->setIcon('fa-pie-chart');
 $user_stats->setAdditionalClass('siteadmin-homepage-statistics');
 $user_stats->setContent($renderer->renderToString('users-statistics', $user_statistics_presenter));
 
-$project_stats = new Widget_Static($Language->getText('admin_main', 'stat_projects'));
+$project_stats = new Widget_Static(_('Projects statistics'));
 $project_stats->setIcon('fa-pie-chart');
 $project_stats->setAdditionalClass('siteadmin-homepage-statistics');
 
 $statistics_projects_graph = [];
 
 if (isset($project_count[Project::STATUS_ACTIVE])) {
-    $statistics_projects_graph[] = ['key' => 'active', 'label' => $Language->getText('admin_main', 'sstat_reg_act_g'), 'count' => $project_count[Project::STATUS_ACTIVE]];
+    $statistics_projects_graph[] = ['key' => 'active', 'label' => _('active'), 'count' => $project_count[Project::STATUS_ACTIVE]];
 }
 
 if (isset($project_count[Project::STATUS_PENDING])) {
-    $statistics_projects_graph[] = ['key' => 'pending', 'label' => $Language->getText('admin_main', 'sstat_pend_g'), 'count' => $project_count[Project::STATUS_PENDING]];
+    $statistics_projects_graph[] = ['key' => 'pending', 'label' => _('pending'), 'count' => $project_count[Project::STATUS_PENDING]];
 }
 
 if (isset($project_count[Project::STATUS_DELETED])) {
-    $statistics_projects_graph[] = ['key' => 'deleted', 'label' => $Language->getText('admin_main', 'sstat_deleted'), 'count' => $project_count[Project::STATUS_DELETED]];
+    $statistics_projects_graph[] = ['key' => 'deleted', 'label' => _('deleted'), 'count' => $project_count[Project::STATUS_DELETED]];
 }
 
 if (isset($project_count[Project::STATUS_SUSPENDED])) {
@@ -182,20 +182,20 @@ $project_stats->setContent('
     </section>
     <div class="tlp-pane-spacer"></div>
     <section class="tlp-pane-section">
-        <a href="/admin/grouplist.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="' . $Language->getText('admin_main', 'homepage_all_projects') . '">' . $Language->getText('admin_main', 'homepage_all_projects') . '</a>
+        <a href="/admin/grouplist.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="' . _('View all projects') . '">' . _('View all projects') . '</a>
     </section>
 ');
 
 if (ForgeConfig::get('sys_user_approval') == 1) {
-    $pending_action = '<p class="siteadmin-homepage-no-validation">' . $Language->getText('admin_main', 'review_pending_users_empty') . '</p>';
+    $pending_action = '<p class="siteadmin-homepage-no-validation">' . _('No users to validate') . '</p>';
     $pending_class  = '';
 
     if ($pending_users != 0) {
-        $pending_action = '<a href="approve_pending_users.php?page=pending" class="tlp-button-primary tlp-button-wide">' . $Language->getText('admin_main', 'review_pending_users') . '</a>';
+        $pending_action = '<a href="approve_pending_users.php?page=pending" class="tlp-button-primary tlp-button-wide">' . _('Review pending users') . '</a>';
         $pending_class  = 'tlp-text-warning';
     }
 
-    $wUser = new Widget_Static($Language->getText('admin_main', 'header_user'));
+    $wUser = new Widget_Static(_('Pending users'));
     $wUser->setAdditionalClass('siteadmin-homepage-users');
     $wUser->setIcon('fa-group');
     $wUser->setContent('
@@ -218,15 +218,15 @@ if (ForgeConfig::get('sys_user_approval') == 1) {
 }
 
 if (ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1) {
-    $groups_pending       = '<p class="siteadmin-homepage-no-validation">' . $Language->getText('admin_main', 'review_pending_projects_empty') . '</p>';
+    $groups_pending       = '<p class="siteadmin-homepage-no-validation">' . _('No projects to validate') . '</p>';
     $groups_pending_class = '';
 
     if ($project_pending_count > 0) {
-        $groups_pending       = '<a href="approve-pending.php" class="tlp-button-primary tlp-button-wide">' . $Language->getText('admin_main', 'review_pending_projects') . '</a>';
+        $groups_pending       = '<a href="approve-pending.php" class="tlp-button-primary tlp-button-wide">' . _('Review pending projects') . '</a>';
         $groups_pending_class = 'tlp-text-warning';
     }
 
-    $wProject = new Widget_Static($Language->getText('admin_main', 'header_group'));
+    $wProject = new Widget_Static(_('Pending projects'));
     $wProject->setAdditionalClass('siteadmin-homepage-projects');
     $wProject->setIcon('fa-archive');
     $wProject->setContent('
@@ -251,7 +251,7 @@ $site_admin_warnings = new \Tuleap\Admin\SiteAdminWarnings(
 
 // Start output
 $siteadmin = new \Tuleap\Admin\AdminPageRenderer();
-$siteadmin->header($Language->getText('admin_main', 'title'));
+$siteadmin->header(_('Site administration'));
 
 global $feedback;
 echo html_feedback_top($feedback);
