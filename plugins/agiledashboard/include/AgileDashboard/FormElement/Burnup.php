@@ -265,12 +265,12 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     public static function getFactoryIconCreate()
     {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
+        return $GLOBALS['HTML']->getImagePath('ic/burnup--plus.png');
     }
 
     public static function getFactoryIconUseIt()
     {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown.png');
+        return $GLOBALS['HTML']->getImagePath('ic/burnup.png');
     }
 
     public static function getFactoryLabel()
