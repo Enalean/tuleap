@@ -115,7 +115,7 @@ foreach ($res as $package) {
                 $row3       = $frsrf->getFRSReleaseFromDb($release_id);
             }
         }
-        if (! $request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
+        if (! $request->existAndNonEmpty('release_id') || (isset($row3) && $row3->getPackageID() == $package->getPackageID())) {
             $is_collapsed = $pv !== false || $pv !== '0';
 
             if ($show_release_id !== false && $is_collapsed) {
