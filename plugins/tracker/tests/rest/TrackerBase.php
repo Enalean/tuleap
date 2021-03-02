@@ -93,6 +93,10 @@ class TrackerBase extends RestBase
      * @var int
      */
     protected $private_comment_artifact_id;
+    /**
+     * @var int
+     */
+    protected $private_comment_and_private_field_artifact_id;
 
     public function setUp(): void
     {
@@ -129,7 +133,8 @@ class TrackerBase extends RestBase
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
         $this->getPrivateCommentArtifactIds();
-        $this->private_comment_artifact_id = end($this->private_comment_artifact_ids);
+        $this->private_comment_artifact_id                   = $this->private_comment_artifact_ids[1];
+        $this->private_comment_and_private_field_artifact_id = $this->private_comment_artifact_ids[2];
 
         $this->initUserId(DataBuilder::USER_TESTER_NAME);
     }

@@ -64,17 +64,66 @@ class ChangesetRepresentationBuilder
     public function buildWithFields(
         \Tracker_Artifact_Changeset $changeset,
         string $filter_mode,
-        \PFUser $current_user
+        \PFUser $current_user,
+        ?\Tracker_Artifact_Changeset $previous_changeset
     ): ?ChangesetRepresentation {
         $last_comment = $this->getCommentOrDefaultWithNull($changeset, $current_user);
         if ($filter_mode === \Tracker_Artifact_Changeset::FIELDS_COMMENTS && $last_comment->hasEmptyBody()) {
             return null;
         }
+
+        if (! $this->isThereVisibleChanges($changeset, $current_user, $last_comment, $previous_changeset)) {
+            return null;
+        }
+
         $field_values = ($filter_mode === \Tracker_Artifact_Changeset::FIELDS_COMMENTS)
             ? []
             : $this->getRESTFieldValues($changeset, $current_user);
 
         return $this->buildFromFieldValues($changeset, $last_comment, $field_values, $current_user);
+    }
+
+    private function isThereVisibleChanges(
+        \Tracker_Artifact_Changeset $changeset,
+        PFUser $current_user,
+        \Tracker_Artifact_Changeset_Comment $last_comment,
+        ?\Tracker_Artifact_Changeset $previous_changeset
+    ): bool {
+        if ($previous_changeset === null) {
+            return true;
+        }
+
+        if ($last_comment->hasEmptyBody() && ! $this->isThereDiffToDisplayWithPreviousChangeset($changeset, $current_user, $previous_changeset)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function isThereDiffToDisplayWithPreviousChangeset(
+        \Tracker_Artifact_Changeset $changeset,
+        PFUser $user,
+        \Tracker_Artifact_Changeset $previous_item
+    ): bool {
+        foreach ($changeset->getValues() as $current_changeset_value) {
+            if ($current_changeset_value === null) {
+                continue;
+            }
+            $field = $current_changeset_value->getField();
+            if (! $current_changeset_value->hasChanged() || ! $field->userCanRead($user)) {
+                continue;
+            }
+
+            $is_diff = $current_changeset_value->isThereDiffWithPreviousChangeset(
+                $previous_item->getValue($field),
+                $user
+            );
+
+            if ($is_diff) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function getRESTFieldValues(\Tracker_Artifact_Changeset $changeset, \PFUser $user): array

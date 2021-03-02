@@ -303,7 +303,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
 
         $this->changeset_representation_builder->shouldReceive('buildWithFields')
             ->once()
-            ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user)
+            ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user, null)
             ->andReturn($this->buildChangesetRepresentation());
 
         $this->builder->getArtifactChangesetsRepresentation(
@@ -328,11 +328,11 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $changeset_representation1 = $this->buildChangesetRepresentation();
         $this->changeset_representation_builder->shouldReceive('buildWithFields')
             ->once()
-            ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user)
+            ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user, null)
             ->andReturn($changeset_representation1);
         $this->changeset_representation_builder->shouldReceive('buildWithFields')
             ->once()
-            ->with($changeset2, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user)
+            ->with($changeset2, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user, $changeset1)
             ->andReturnNull();
 
         $representation = $this->builder->getArtifactChangesetsRepresentation(
