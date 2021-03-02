@@ -46,38 +46,38 @@ $count_sfadmin = db_result($res_count, 0, null);
 $recipients = [
     [
         'key'      => 'comm',
-        'label'    => $Language->getText('admin_massmail', 'to_additional', $count_comm),
-        'warning'  => $Language->getText('admin_massmail', 'warning', $count_comm),
+        'label'    => sprintf(_('Send only to users subscribed to "Additional Community Mailings" (%1$s users)'), $count_comm),
+        'warning'  => sprintf(_('%1$s users will receive this email.'), $count_comm),
         'nb_users' => $count_comm
     ],
     [
         'key'      => 'sf',
-        'label'    => $Language->getText('admin_massmail', 'to_update', $count_sf),
-        'warning'  => $Language->getText('admin_massmail', 'warning', $count_sf),
+        'label'    => sprintf(_('Users that agreed to receive "Site Updates" (%1$s users)'), $count_sf),
+        'warning'  => sprintf(_('%1$s users will receive this email.'), $count_sf),
         'nb_users' => $count_sf
     ],
     [
         'key'      => 'devel',
-        'label'    => $Language->getText('admin_massmail', 'to_devel', $count_devel),
-        'warning'  => $Language->getText('admin_massmail', 'warning', $count_devel),
+        'label'    => sprintf(_('Project developers (%1$s users)'), $count_devel),
+        'warning'  => sprintf(_('%1$s users will receive this email.'), $count_devel),
         'nb_users' => $count_devel
     ],
     [
         'key'      => 'admin',
-        'label'    => $Language->getText('admin_massmail', 'to_proj_admin', $count_admin),
-        'warning'  => $Language->getText('admin_massmail', 'warning', $count_admin),
+        'label'    => sprintf(_('Project administrators (%1$s users)'), $count_admin),
+        'warning'  => sprintf(_('%1$s users will receive this email.'), $count_admin),
         'nb_users' => $count_admin
     ],
     [
         'key'      => 'sfadmin',
-        'label'    => $Language->getText('admin_massmail', 'to_site_admin', $count_sfadmin),
-        'warning'  => $Language->getText('admin_massmail', 'warning', $count_sfadmin),
+        'label'    => sprintf(_('Site administrators (%1$s users)'), $count_sfadmin),
+        'warning'  => sprintf(_('%1$s users will receive this email.'), $count_sfadmin),
         'nb_users' => $count_sfadmin
     ],
     [
         'key'      => 'all',
-        'label'    => $Language->getText('admin_massmail', 'to_all', $count_all),
-        'warning'  => $Language->getText('admin_massmail', 'warning', $count_all),
+        'label'    => sprintf(_('All users, regardless of their preferences (%1$s users)'), $count_all),
+        'warning'  => sprintf(_('%1$s users will receive this email.'), $count_all),
         'nb_users' => $count_all
     ]
 ];
@@ -89,7 +89,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-t
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('site-admin-mass-emailing.js'));
 
 $csrf  = new CSRFSynchronizerToken('/admin/massmail.php');
-$title = $Language->getText('admin_massmail', 'title');
+$title = _('Mass emailing');
 
 $presenter = new \Tuleap\Admin\MassmailPresenter(
     $title,

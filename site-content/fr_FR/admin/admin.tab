@@ -96,43 +96,6 @@ admin_lastlogins	ip_column_header	Addresse IP
 admin_lastlogins	date_column_header	Date
 admin_lastlogins	filter_placeholder	Nom d'utilisateur, IP, date
 admin_lastlogins	filter_no_matching_result	Il n'y a aucune connexion récente correspondante au filtre
-#
-#-----------------------------------------------
-# Script: SF/www/admin/massmail_execute.php
-#
-admin_massmail_execute	post_recvd	Requête Post reçue. Interrogation en cours
-admin_massmail_execute	mailing	Démarrage du mailing vers $1 adresses e-mail distinctes
-admin_massmail_execute	sending	La prévisualisation a été envoyée
-admin_massmail_execute	no_sending	La prévisualisation n'a pas pu être envoyée
-admin_massmail_execute	done	Terminé !
-admin_massmail_execute	no_user_mail	L'utilisateur ajouté $1 n'a pas d'adresse mail.
-admin_massmail_execute	no_user	Aucun utilisateur ne correspond à votre entrée $1.
-admin_massmail_execute	no_mails	Aucune adresse valide à laquelle envoyer le message de prévisualisation.
-#
-#-----------------------------------------------
-# Script: SF/www/admin/massmail.php
-#
-admin_massmail	title	Envoi de courrier électronique en masse
-admin_massmail	header	Courrier électronique
-admin_massmail	warning	$1 utilisateurs vont recevoir ce courrier électronique.
-admin_massmail	to_additional	Abonnés à l'option "Courrier électronique supplémentaire au sujet de la communauté" ($1 utilisateurs)
-admin_massmail	to_update	Abonnés à l'option "Courrier électronique à propos des mises à jour du site" ($1 utilisateurs)
-admin_massmail	to_devel	Développeurs des projets ($1 utilisateurs)
-admin_massmail	to_proj_admin	Administrateurs des projets ($1 utilisateurs)
-admin_massmail	to_site_admin	Administrateurs du site ($1 utilisateurs)
-admin_massmail	to_all	Tous les utilisateurs quelles que soient leurs préférences ($1 utilisateurs)
-admin_massmail	subject	Objet
-admin_massmail	send_email_label	Envoyer le courrier électronique
-admin_massmail	destination_label	Destinataires
-admin_massmail	subject_label	Sujet
-admin_massmail	subject_placeholder	Phrase d'accroche
-admin_massmail	content_label	Contenu
-admin_massmail	content_placeholder	Message…
-admin_massmail	preview_label	Prévisualisation
-admin_massmail	send_preview_label	Envoyer une prévisualisation
-admin_massmail	massmail_queued	L'envoi du message a été <a href="$1">placé en file d'attente</a>
-admin_massmail	confirmation_title	Envoi du courrier
-admin_massmail	confirmation_body	Veuillez confirmer votre action.
 
 #
 #-----------------------------------------------
