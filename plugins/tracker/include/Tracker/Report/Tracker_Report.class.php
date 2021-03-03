@@ -1309,7 +1309,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         $criteria = $this->getCriteria();
                         $field_id = $request->get('field');
                         $this->setCriteria($field_id);
-                        $this->report_session->storeCriterion($field_id, '', ['is_advanced' => 0]);
+                        $this->report_session->storeCriterion($field_id, '', ['is_advanced' => 0, 'is_removed' => 0]);
                         $this->report_session->setHasChanged();
                         echo $this->criteria[$field_id]->fetch();
                     }
