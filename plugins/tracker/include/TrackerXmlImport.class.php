@@ -852,12 +852,14 @@ class TrackerXmlImport
 
     private function checkPermissions(Tracker $tracker): void
     {
-        foreach ($this->xml_fields_mapping as $xml_id => $field) {
-            if (! $field instanceof Tracker_FormElement || $field instanceof Tracker_FormElement_Container) {
+        foreach ($tracker->getFormElementFields() as $field) {
+            if ($field instanceof Tracker_FormElement_Field_ReadOnly) {
                 continue;
             }
 
             if (! $field->hasCachedPermissions()) {
+                $xml_id = $this->getXMLReference($field);
+
                 $this->feedback_collector
                     ->addWarnings(
                         sprintf(
@@ -869,6 +871,16 @@ class TrackerXmlImport
                     );
             }
         }
+    }
+
+    private function getXMLReference(Tracker_FormElement_Field $field): string
+    {
+        $xml_id = array_search($field, $this->xml_fields_mapping, true);
+        if ($xml_id === false) {
+            return '';
+        }
+
+        return $xml_id;
     }
 
     private function getFormElementsFromXml(SimpleXMLElement $xml): array
