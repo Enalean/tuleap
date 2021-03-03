@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use HTTPRequest;
 use Project;
+use Psr\Log\LoggerInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -48,17 +49,23 @@ class JiraProjectListController implements DispatchableWithRequest, Dispatchable
      * @var ClientWrapperBuilder
      */
     private $wrapper_builder;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         \ProjectManager $project_manager,
         TrackerCreationPermissionChecker $permission_checker,
         JiraProjectBuilder $jira_project_builder,
-        ClientWrapperBuilder $wrapper_builder
+        ClientWrapperBuilder $wrapper_builder,
+        LoggerInterface $logger
     ) {
         $this->project_manager      = $project_manager;
         $this->permission_checker   = $permission_checker;
         $this->jira_project_builder = $jira_project_builder;
         $this->wrapper_builder      = $wrapper_builder;
+        $this->logger               = $logger;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -69,7 +76,7 @@ class JiraProjectListController implements DispatchableWithRequest, Dispatchable
 
         try {
             $wrapper  = $this->wrapper_builder->buildFromRequest($request);
-            $projects = $this->jira_project_builder->build($wrapper);
+            $projects = $this->jira_project_builder->build($wrapper, $this->logger);
             $layout->sendJSON($projects);
         } catch (JiraConnectionException $exception) {
             $layout->send400JSONErrors(['error' => $exception->getI18nMessage()]);

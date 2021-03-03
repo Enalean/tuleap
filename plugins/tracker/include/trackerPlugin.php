@@ -1970,7 +1970,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getProjectManager(),
             $this->getTrackerCreationPermissionChecker(),
             new JiraProjectBuilder(),
-            new ClientWrapperBuilder()
+            new ClientWrapperBuilder(),
+            $this->getBackendLogger(),
         );
     }
 

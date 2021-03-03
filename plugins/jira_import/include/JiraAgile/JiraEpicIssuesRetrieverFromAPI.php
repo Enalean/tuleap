@@ -25,6 +25,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 
 final class JiraEpicIssuesRetrieverFromAPI implements JiraEpicIssuesRetriever

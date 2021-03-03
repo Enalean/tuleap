@@ -21,11 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\JiraImport\JiraAgile;
+namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 
 final class JiraCollectionBuilder
 {

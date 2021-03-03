@@ -26,7 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 use Psr\Log\LoggerInterface;
 use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
-use Tuleap\JiraImport\JiraAgile\JiraCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 final class JiraBoardBacklogRetrieverFromAPI implements JiraBoardBacklogRetriever

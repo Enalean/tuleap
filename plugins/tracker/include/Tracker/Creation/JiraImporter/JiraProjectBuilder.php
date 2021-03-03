@@ -23,64 +23,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Psr\Log\LoggerInterface;
+
 class JiraProjectBuilder
 {
     /**
      * @throws JiraConnectionException
      * @return array<array{id: string, label: string}>
      */
-    public function build(ClientWrapper $wrapper): array
+    public function build(JiraClient $jira_client, LoggerInterface $logger): array
     {
-        $jira_projects = $wrapper->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search');
-
+        $iterator           = JiraCollectionBuilder::iterateUntilIsLast(
+            $jira_client,
+            $logger,
+            ClientWrapper::JIRA_CORE_BASE_URL . '/project/search',
+            'values',
+        );
         $project_collection = new JiraProjectCollection();
-
-        if (! $jira_projects) {
-            return $project_collection->getJiraProjects();
-        }
-
-        $this->buildProjectList($jira_projects, $project_collection);
-
-        $count   = 1;
-        $is_last = $jira_projects['isLast'];
-        while (! $is_last) {
-            $max_results = $jira_projects['maxResults'];
-            $offset      = $jira_projects['maxResults'] * $count;
-
-            $jira_projects = $wrapper->getUrl(
-                ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode((string) $offset) . "&maxResults=" .
-                urlencode((string) $max_results)
-            );
-
-            if (! $jira_projects) {
-                throw JiraConnectionException::canNotRetrieveFullCollectionException();
+        foreach ($iterator as $project) {
+            if (! isset($project['key'], $project['name'])) {
+                throw new UnexpectedFormatException('`key` or `name` has not been founded in jira_representation');
             }
-
-            $this->buildProjectList($jira_projects, $project_collection);
-
-            $is_last = $jira_projects['isLast'];
-            $count++;
-        }
-
-        return $project_collection->getJiraProjects();
-    }
-
-    private function buildProjectList(?array $jira_projects, JiraProjectCollection $collection): void
-    {
-        if (! $jira_projects || ! $jira_projects['values']) {
-            return;
-        }
-
-        foreach ($jira_projects['values'] as $project) {
-            if (! $project['key'] || ! $project['name']) {
-                throw new \LogicException('Key or name has not been founded in jira_representation');
-            }
-            $collection->addProject(
+            $project_collection->addProject(
                 [
                     'id'    => (string) $project['key'],
                     'label' => (string) $project['name'],
                 ]
             );
         }
+        return $project_collection->getJiraProjects();
     }
 }

@@ -25,6 +25,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 
 final class JiraSprintRetrieverFromAPI implements JiraSprintRetriever
 {
