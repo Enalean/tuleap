@@ -20,7 +20,9 @@
 
 class Git_Mirror_Mirror
 {
-
+    /**
+     * @var int
+     */
     public $id;
 
     public $name;
@@ -38,7 +40,7 @@ class Git_Mirror_Mirror
 
     public $ssh_key;
 
-    public function __construct(PFUser $owner, $id, $url, $hostname, $name)
+    public function __construct(PFUser $owner, int $id, $url, $hostname, $name)
     {
         $this->id       = $id;
         $this->url      = $url;

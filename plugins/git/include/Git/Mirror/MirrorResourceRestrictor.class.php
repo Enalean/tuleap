@@ -81,7 +81,7 @@ class Git_MirrorResourceRestrictor
         $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, $project_ids);
 
         foreach ($repositories as $repository) {
-            $this->mirror_data_mapper->unmirrorRepository($repository->getId());
+            $this->mirror_data_mapper->removeRepositoryFromMirror($repository, $mirror);
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
             $this->history_dao->groupAddHistory(
                 "git_repo_mirroring_update",
