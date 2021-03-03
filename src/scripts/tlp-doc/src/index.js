@@ -19,5 +19,4 @@
 
 import "./editors.js";
 import "./main.js";
-import "./polyfills.js";
 import "./illustration-helper.js";
