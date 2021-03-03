@@ -435,6 +435,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     private function displayBrowserDeprecationMessage(): void
     {
         $browser_deprecation_message = BrowserDeprecationMessage::fromDetectedBrowser(
+            $this->getUser(),
             $this->detected_browser
         );
         if ($browser_deprecation_message === null) {

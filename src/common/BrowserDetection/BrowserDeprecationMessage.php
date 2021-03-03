@@ -34,6 +34,14 @@ final class BrowserDeprecationMessage
      */
     public const TEMPORARILY_ALLOW_IE                      = 'temporarily_allow_dismiss_ie_deprecation_message';
     private const IE_DISMISS_EXPECTED_CONFIRMATION_MESSAGE = 'I_understand_this_is_a_temporary_configuration_switch_(please_warn_the_Tuleap_dev_team_when_enabling_this)';
+    /**
+     * Allow to disable old browser warning message
+     *
+     * @tlp-config-key
+     */
+    public const DISABLE_OLD_BROWSER_WARNING                       = 'disable_old_browsers_warning';
+    private const DISABLE_OLD_BROWSER_WARNING_CONFIRMATION_MESSAGE = 'I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present';
+
 
     /**
      * @var string
@@ -55,7 +63,7 @@ final class BrowserDeprecationMessage
         $this->can_be_dismiss = $can_be_dismiss;
     }
 
-    public static function fromDetectedBrowser(DetectedBrowser $detected_browser): ?self
+    public static function fromDetectedBrowser(\PFUser $current_user, DetectedBrowser $detected_browser): ?self
     {
         if ($detected_browser->isIE()) {
             return new self(
@@ -73,7 +81,13 @@ final class BrowserDeprecationMessage
             );
         }
 
-        if ($detected_browser->isAnOutdatedBrowser()) {
+        if (
+            $detected_browser->isAnOutdatedBrowser() &&
+            (
+                \ForgeConfig::get(self::DISABLE_OLD_BROWSER_WARNING) !== self::DISABLE_OLD_BROWSER_WARNING_CONFIRMATION_MESSAGE ||
+                $current_user->isSuperUser()
+            )
+        ) {
             $browser_name = $detected_browser->getName() ?? '';
             return new self(
                 _('Your web browser is not supported'),
