@@ -19,7 +19,7 @@ msgstr ""
 msgid "(auto-computed)"
 msgstr "(calculé automatiquement)"
 
-msgid "...to Get"
+msgid "...to get"
 msgstr "...pour voir"
 
 msgid "Add another file"
