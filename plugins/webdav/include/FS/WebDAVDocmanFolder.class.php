@@ -208,8 +208,11 @@ class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
     {
         if ($this->utils->isWriteEnabled()) {
             // Request
-            $params             = [];
-            $params['action']   = 'createItem';
+            $params           = [];
+            $params['action'] = 'createItem';
+            if ($this->childExists($name)) {
+                $params['action'] = 'new_version';
+            }
             $params['group_id'] = $this->project->getGroupId();
             $params['ordering'] = 'beginning';
             $params['confirm']  = true;
@@ -236,6 +239,24 @@ class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
         }
+    }
+
+    /**
+     * @param string $name
+     */
+    public function childExists($name): bool
+    {
+        try {
+            $child = $this->getChild($name);
+        } catch (\Sabre\DAV\Exception\NotFound $ex) {
+            return false;
+        } catch (\Sabre\DAV\Exception\Conflict $ex) {
+            return true;
+        } catch (\Sabre\DAV\Exception\BadRequest $ex) {
+            return true;
+        }
+
+        return true;
     }
 
     /**

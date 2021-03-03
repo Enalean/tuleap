@@ -39,7 +39,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class WebDAVDocmanFolderTest extends TestCase
+final class WebDAVDocmanFolderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -412,8 +412,12 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testCreateFileBigFile(): void
     {
+        $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class);
+        $docman_item_factory->shouldReceive('getChildrenFromParent')->andReturns([]);
+
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
+        $utils->shouldReceive('getDocmanItemFactory')->andReturn($docman_item_factory);
         $utils->shouldReceive('processDocmanRequest')->never();
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 23);
@@ -428,9 +432,12 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testCreateFileSucceed(): void
     {
+        $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class);
+        $docman_item_factory->shouldReceive('getChildrenFromParent')->andReturns([]);
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $utils->shouldReceive('processDocmanRequest')->once();
+        $utils->shouldReceive('getDocmanItemFactory')->andReturn($docman_item_factory);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 2000);
 
