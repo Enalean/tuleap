@@ -197,7 +197,7 @@ if (ForgeConfig::get('sys_user_approval') == 1) {
 
     $wUser = new Widget_Static(_('Pending users'));
     $wUser->setAdditionalClass('siteadmin-homepage-users');
-    $wUser->setIcon('fa-group');
+    $wUser->setIcon('fa-users');
     $wUser->setContent('
         <section class="tlp-pane-section">
             <div class="siteadmin-homepage-validation">
