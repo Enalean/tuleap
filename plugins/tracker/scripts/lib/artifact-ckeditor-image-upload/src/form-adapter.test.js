@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// CSS.escape is not implemented by jsdom
+import "css.escape";
 import { disableFormSubmit, enableFormSubmit, findAllHiddenInputByNames } from "./form-adapter.js";
 import * as forms_being_uploaded_state from "./forms-being-uploaded-state.js";
 
