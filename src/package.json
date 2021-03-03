@@ -16,7 +16,6 @@
     "@tuleap/mention": "file:scripts/lib/mention",
     "@tuleap/tlp-fetch": "file://./scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:scripts/lib/vue-breadcrumb-privacy",
-    "@webcomponents/custom-elements": "^1.4.1",
     "ckeditor4": "^4.14.1",
     "core-js": "^3.6.5",
     "css.escape": "^1.5.1",

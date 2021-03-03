@@ -8,7 +8,6 @@
   "dependencies": {
     "@formatjs/intl-getcanonicallocales": "^1.5.3",
     "@formatjs/intl-pluralrules": "^4.0.1",
-    "@formatjs/intl-relativetimeformat": "^8.0.1",
-    "@webcomponents/custom-elements": "^1.4.2"
+    "@formatjs/intl-relativetimeformat": "^8.0.1"
   }
 }
