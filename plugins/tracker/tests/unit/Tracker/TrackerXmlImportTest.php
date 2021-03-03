@@ -405,6 +405,8 @@ final class TrackerXmlImportTest extends TestCase
             [$xml, $this->project, $tracker, []]
         );
 
+        $tracker->shouldReceive('getFormElementFields')->andReturn([]);
+
         $this->tracker_xml_importer->getInstanceFromXML(
             $xml,
             $this->project,
@@ -752,6 +754,8 @@ final class TrackerXmlImportTest extends TestCase
             [$xml, $this->project, $tracker, []]
         );
 
+        $tracker->shouldReceive('getFormElementFields')->andReturn([]);
+
         $this->tracker_xml_importer->getInstanceFromXML(
             $xml,
             $this->project,
@@ -782,7 +786,7 @@ final class TrackerXmlImportTest extends TestCase
         );
         $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
         $tracker            = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getName')->andReturn("tracker_name");
+
         $this->tracker_xml_importer->shouldReceive('setTrackerGeneralInformation')->once();
         $this->tracker_factory->shouldReceive('getInstanceFromRow')->once()->andReturn($tracker);
         $this->tracker_xml_importer->shouldReceive('setCannedResponses')->once()->withArgs([$xml, $tracker]);
@@ -798,7 +802,7 @@ final class TrackerXmlImportTest extends TestCase
         $this->tracker_xml_importer->shouldReceive('setWebhooks')->once()->withArgs([$xml, $tracker]);
         $this->tracker_xml_importer->shouldReceive('setPermissions')->once();
 
-        $this->initXmlFieldMapping($xml);
+        $this->initXmlFieldMapping($xml, $tracker);
 
         $this->feedback_collector->shouldReceive("addWarnings")
             ->with("Tracker tracker_name : field field_2 (F692) has no permission")->once();
@@ -815,22 +819,26 @@ final class TrackerXmlImportTest extends TestCase
         );
     }
 
-    private function initXmlFieldMapping(SimpleXMLElement $xml_tracker)
+    private function initXmlFieldMapping(SimpleXMLElement $xml_tracker, Tracker $tracker): void
     {
-        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive("getName")->andReturn("tracker_name");
 
         $this->tracker_factory->shouldReceive('getTrackerByShortnameAndProjectId')->andReturn($tracker);
-        $field_1 = Mockery::mock(\Tracker_FormElement::class);
+        $field_1 = Mockery::mock(\Tracker_FormElement_Field::class);
         $field_1->shouldReceive("getName")->andReturn("field_1");
         $field_1->shouldReceive("hasCachedPermissions")->andReturn(true);
 
-        $field_2 = Mockery::mock(\Tracker_FormElement::class);
+        $field_2 = Mockery::mock(\Tracker_FormElement_Field::class);
         $field_2->shouldReceive("getName")->andReturn("field_2");
         $field_2->shouldReceive("hasCachedPermissions")->andReturn(false);
 
         $this->tracker_form_element_factory->shouldReceive("getFields")->andReturn([]);
         $this->mapping_from_existing_tracker->shouldReceive("getXmlFieldsMapping")->andReturn(["F691" => $field_1, "F692" => $field_2]);
+
+        $tracker->shouldReceive('getFormElementFields')->andReturn([
+            $field_1,
+            $field_2
+        ]);
 
         $this->tracker_xml_importer->updateFromXML($this->project, $xml_tracker);
     }
