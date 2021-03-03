@@ -104,9 +104,7 @@ const webpack_config_for_tlp = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
+            ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_scss_loader,
             webpack_configurator.rule_css_assets,
         ],
@@ -137,10 +135,8 @@ const webpack_config_for_tlp_doc = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_scss_loader,
             webpack_configurator.rule_po_files,
         ],
@@ -171,10 +167,8 @@ const webpack_config_for_flaming_parrot_code = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.configureBabelRule(),
         ],
     },
     plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
@@ -193,10 +187,8 @@ const webpack_config_for_rich_text_editor = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
         ],
     },
@@ -272,10 +264,8 @@ const webpack_config_for_burning_parrot_code = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_mustache_files,
         ],
@@ -313,10 +303,8 @@ const webpack_config_for_vue = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],

@@ -51,9 +51,7 @@ module.exports = [
         },
         module: {
             rules: [
-                ...webpack_configurator.configureTypescriptRules(
-                    webpack_configurator.babel_options_chrome_firefox
-                ),
+                ...webpack_configurator.configureTypescriptRules(),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,

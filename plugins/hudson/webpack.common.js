@@ -54,7 +54,7 @@ module.exports = [
         },
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                webpack_configurator.configureBabelRule(),
                 webpack_configurator.rule_po_files,
                 webpack_configurator.rule_scss_loader,
             ],
