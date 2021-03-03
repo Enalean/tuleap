@@ -17,33 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import hotkeys from "hotkeys-js";
+import { addGlobalShortcutsGroup } from "@tuleap/keyboard-shortcuts";
+import { initGettext, getPOFileFromLocale } from "../tuleap/gettext/gettext-init";
+import { createGlobalShortcutsGroup } from "./src/global-shortcuts";
 
-import { handleCreateShortcut } from "./handle-global-shortcuts/handle-create-shortcut";
-import { handleSearchShortcut } from "./handle-global-shortcuts/handle-search-shortcut";
-import { handleDashboardShortcut } from "./handle-global-shortcuts/handle-dashboard-shortcut";
-import { handleHelpShortcut } from "./handle-global-shortcuts/handle-help-shortcut";
-
-import { HOTKEYS_SCOPE_NO_MODAL } from "@tuleap/keyboard-shortcuts";
-
-hotkeys("c", HOTKEYS_SCOPE_NO_MODAL, () => {
-    handleCreateShortcut();
-});
-
-hotkeys("/,s", HOTKEYS_SCOPE_NO_MODAL, (event: KeyboardEvent) => {
-    handleSearchShortcut(event);
-});
-
-hotkeys("d", HOTKEYS_SCOPE_NO_MODAL, () => {
-    handleDashboardShortcut();
-});
-
-hotkeys("*", HOTKEYS_SCOPE_NO_MODAL, (event) => {
-    // Should be hotkeys("?", …),
-    // however for unknown reason it does not work (maybe due to shift key?),
-    // therefore we're using wildcard as a workaround
-    if (event.key !== "?") {
-        return;
+document.addEventListener("DOMContentLoaded", async () => {
+    const language = document.body.dataset.userLocale;
+    if (language === undefined) {
+        throw new Error("Not able to find the user language.");
     }
-    handleHelpShortcut();
+
+    const gettext_provider = await initGettext(
+        language,
+        "tuleap-global-shortcuts",
+        (locale) =>
+            import(
+                /* webpackChunkName: "global-shortcuts-po-" */ "./po/" + getPOFileFromLocale(locale)
+            )
+    );
+
+    const global_shortcuts_group = createGlobalShortcutsGroup(gettext_provider);
+    addGlobalShortcutsGroup(document, global_shortcuts_group);
 });

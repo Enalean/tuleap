@@ -18,18 +18,32 @@
  */
 
 import hotkeys from "hotkeys-js";
+
 import { HOTKEYS_SCOPE_NO_MODAL } from "./handle-modals-events/handle-modals-events";
 import { createShortcutsGroupInHelpModal } from "./shortcuts-help-modal/add-to-help-modal";
-import type { Shortcut, ShortcutsGroup } from "./type";
+import { isWildCardAndNotQuestionMark } from "./handle-wildcards/handle-wildcards";
 
+import { GLOBAL_SCOPE, PLUGIN_SCOPE } from "./type";
+import type { Shortcut, ShortcutsGroup } from "./type";
 export type { Shortcut, ShortcutsGroup };
 
 export function addShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
-    shortcuts_group.shortcuts.forEach((shortcut) => {
-        hotkeys(shortcut.keyboard_inputs, HOTKEYS_SCOPE_NO_MODAL, (event) => {
-            event.preventDefault();
-            shortcut.handle(event);
-        });
+    shortcuts_group.shortcuts.forEach(createShortcut);
+    createShortcutsGroupInHelpModal(doc, shortcuts_group, PLUGIN_SCOPE);
+}
+
+export function addGlobalShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
+    shortcuts_group.shortcuts.forEach(createShortcut);
+    createShortcutsGroupInHelpModal(doc, shortcuts_group, GLOBAL_SCOPE);
+}
+
+function createShortcut(shortcut: Shortcut): void {
+    hotkeys(shortcut.keyboard_inputs, HOTKEYS_SCOPE_NO_MODAL, (event) => {
+        if (isWildCardAndNotQuestionMark(shortcut, event)) {
+            return;
+        }
+
+        event.preventDefault();
+        shortcut.handle(event);
     });
-    createShortcutsGroupInHelpModal(doc, shortcuts_group);
 }

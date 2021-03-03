@@ -29,6 +29,7 @@ import { init as initProjectPrivacy } from "./project-privacy";
 import { initHelpDropdown } from "./help-dropdown";
 import { init as initInviteBuddies } from "./invite-buddies";
 import * as autocomplete from "../../tuleap/autocomplete-for-select2.js";
+import "../../global-shortcuts/index.ts";
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.querySelector(".sidebar");

@@ -165,6 +165,7 @@ const webpack_config_for_flaming_parrot_code = {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.configureBabelRule(),
+            webpack_configurator.rule_po_files,
         ],
     },
     plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
@@ -242,7 +243,6 @@ const webpack_config_for_burning_parrot_code = {
         "tlp-relative-date": "./scripts/tuleap/custom-elements/relative-date/index.ts",
         "trovecat-admin": "./scripts/tuleap/trovecat.js",
         "widget-project-heartbeat": "./scripts/dashboards/widgets/project-heartbeat/index.js",
-        "global-shortcuts": "./scripts/global-shortcuts/index.ts",
         "browser-deprecation-bp": "./scripts/browser-deprecation/browser-deprecation-modal-bp.ts",
         "browser-deprecation-fp": "./scripts/browser-deprecation/browser-deprecation-modal-fp.ts",
         "project/header-background-admin":

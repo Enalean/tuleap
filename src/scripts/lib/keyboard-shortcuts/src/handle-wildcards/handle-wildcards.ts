@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Shortcut {
-    readonly keyboard_inputs: string;
-    readonly displayed_inputs?: string;
-    readonly description: string;
-    readonly handle: (event: KeyboardEvent) => void;
-}
+import type { Shortcut } from "../type";
 
-export interface ShortcutsGroup {
-    readonly title: string;
-    readonly details?: string;
-    readonly shortcuts: Array<Shortcut>;
+export function isWildCardAndNotQuestionMark(shortcut: Shortcut, event: KeyboardEvent): boolean {
+    // Due to the Shift key "?" does not work, therefore we're using wildcard as a workaround.
+    return (
+        shortcut.keyboard_inputs === "*" && shortcut.displayed_inputs === "?" && event.key !== "?"
+    );
 }
-
-export type Scope = "GLOBAL" | "PLUGIN";
-export const GLOBAL_SCOPE: Scope = "GLOBAL";
-export const PLUGIN_SCOPE: Scope = "PLUGIN";

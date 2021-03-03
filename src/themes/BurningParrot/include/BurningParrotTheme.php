@@ -113,7 +113,6 @@ class BurningParrotTheme extends BaseLayout
             $this->include_asset->getFileURLWithFallback('tlp-' . $user->getLocale() . '.js', 'tlp-en_US.js')
         );
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
-        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('global-shortcuts.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('switch-to-bp.js'));
     }
 
