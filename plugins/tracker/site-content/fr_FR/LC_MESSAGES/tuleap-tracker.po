@@ -3989,13 +3989,6 @@ msgstr "Vous copiez actuellement l'artefact %1$s."
 msgid "You are not allowed to access this field."
 msgstr "Vous n'avez pas la permission d'accéder à ce champ."
 
-msgid ""
-"You are not allowed to rank on this planning. Your action was not taken into "
-"account. Please reload the page."
-msgstr ""
-"Vous n'êtes pas autorisé à prioriser sur ce planning. Vos changements n'ont "
-"pas été pris en compte. Veuillez recharger la page."
-
 #, php-format
 msgid "You are not allowed to update the field %1$s."
 msgstr "Vous n'êtes pas autorisé à modifier le champ %1$s."
