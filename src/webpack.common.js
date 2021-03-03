@@ -20,8 +20,6 @@
 const loadJsonFile = require("load-json-file");
 const WebpackAssetsManifest = require("../node_modules/webpack-assets-manifest");
 const path = require("path");
-const polyfills_for_fetch = require("../tools/utils/scripts/ie11-polyfill-names.js")
-    .polyfills_for_fetch;
 const webpack_configurator = require("../tools/utils/scripts/webpack-configurator.js");
 const {
     SuppressNullNamedEntryPlugin,
@@ -78,8 +76,8 @@ let entry_points = {
     // DO NOT add new entrypoints unless it's for a new TLP locale. TLP is exported as a "library". If you add another
     // entrypoint, all scripts that depend on TLP will try to access "select2" or "createModal" from your file
     // (and they will fail).
-    "tlp-en_US": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.en_US.ts"]),
-    "tlp-fr_FR": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.fr_FR.ts"]),
+    "tlp-en_US": "./themes/tlp/src/index.en_US.ts",
+    "tlp-fr_FR": "./themes/tlp/src/index.fr_FR.ts",
 };
 
 const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -152,9 +150,7 @@ const webpack_config_for_tlp_doc = {
 
 const webpack_config_for_flaming_parrot_code = {
     entry: {
-        "flamingparrot-with-polyfills": polyfills_for_fetch.concat([
-            "./scripts/FlamingParrot/index.js",
-        ]),
+        "flamingparrot-with-polyfills": "./scripts/FlamingParrot/index.js",
     },
     context,
     output,

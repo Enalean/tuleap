@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "core-js/stable";
-import "regenerator-runtime/runtime";
 import { initSidebarPosition } from "../tuleap/sidebar-position.ts";
 import { initMainPosition } from "../tuleap/main-position.ts";
 import { initHeaderPosition } from "../tuleap/header-position.ts";

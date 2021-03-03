@@ -16,11 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-// Those two deps are at tuleap root level
-// eslint-disable-next-line import/no-extraneous-dependencies
-import "core-js/stable";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import "regenerator-runtime/runtime";
+
 import type { Modal, ModalOptions } from "./modal";
 import { createModal as createModalImplementation } from "./modal";
 import type { Dropdown, DropdownOptions } from "./dropdowns";
