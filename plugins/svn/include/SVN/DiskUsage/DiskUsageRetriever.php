@@ -111,7 +111,7 @@ class DiskUsageRetriever
 
     /**
      *
-     * @return bool
+     * @return int|false
      */
     private function getSizeOnFileSystem(Repository $repository)
     {
@@ -125,10 +125,10 @@ class DiskUsageRetriever
         return $this->disk_usage_dao->hasRepositoriesUpdatedAfterGivenDate($project->getID(), $timestamp);
     }
 
-    public function getLastSizeForProject(Project $project)
+    public function getLastSizeForProject(Project $project): int
     {
         $row = $this->dao->getLastSizeForService($project->getID(), SvnPlugin::SERVICE_SHORTNAME);
 
-        return (int) $row['size'];
+        return (int) ($row['size'] ?? 0);
     }
 }
