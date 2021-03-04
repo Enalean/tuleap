@@ -20,15 +20,9 @@
 export function download(content: string, file_name: string, mime_type: string): void {
     const link = document.createElement("a");
     const blob = new Blob([content], { type: mime_type });
-    if (URL && "download" in link) {
-        // html5 "download" attribute supported
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute("download", file_name);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-    } else {
-        // IE11
-        navigator.msSaveBlob(blob, file_name);
-    }
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", file_name);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 }
