@@ -393,4 +393,71 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         self::assertStringNotContainsString("tracker_artifact_followup-with_changes", $follow_up_content);
         self::assertStringContainsString("tracker_artifact_followup-with_comment", $follow_up_content);
     }
+
+    public function testItGetEmptyFollowUpIfNoFollowUpContent(): void
+    {
+        $user = \Mockery::spy(\PFUser::class)->shouldReceive('isSuperUser')->andReturns(true)->getMock();
+
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
+
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $comment = $this->getEmptyComment();
+
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+
+        $changeset
+            ->shouldReceive('getFollowupContent')
+            ->once()
+            ->andReturn("");
+
+        $follow_up_content = $changeset->fetchFollowUp("", $user);
+
+        self::assertEquals("", $follow_up_content);
+    }
+
+    public function testItGetFollowUpIfThereIsFollowUpContent(): void
+    {
+        $user = \Mockery::spy(\PFUser::class)->shouldReceive('isSuperUser')->andReturns(true)->getMock();
+
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
+
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $comment = $this->getEmptyComment();
+
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+
+        $changeset
+            ->shouldReceive('getFollowupContent')
+            ->once()
+            ->andReturn("<div class='tracker-followup'></div>");
+
+        $changeset
+            ->shouldReceive("getAvatar")
+            ->once()
+            ->andReturn("<div class='tracker-avatar'></div>");
+        $changeset
+            ->shouldReceive("fetchChangesetActionButtons")
+            ->once()
+            ->andReturn("");
+        $changeset
+            ->shouldReceive("fetchImportedFromXmlData")
+            ->once()
+            ->andReturn("");
+        $changeset
+            ->shouldReceive("getUserLink")
+            ->once()
+            ->andReturn("");
+        $changeset
+            ->shouldReceive("getTimeAgo")
+            ->once()
+            ->andReturn("");
+
+        $follow_up_content = $changeset->fetchFollowUp("", $user);
+
+        self::assertStringContainsString("<div class='tracker-followup'></div>", $follow_up_content);
+    }
 }

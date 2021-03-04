@@ -47,13 +47,19 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
     {
         $presenters = [];
         foreach ($followups as $followup) {
-            $diff_to_previous = $followup->diffToPrevious();
-            $presenters[]     = [
+            $diff_to_previous  = $followup->diffToPrevious();
+            $follow_up_content = $followup->getFollowupContent($diff_to_previous, $current_user);
+
+            if ($follow_up_content === "") {
+                continue;
+            }
+
+            $presenters[] = [
                 'getId'              => $followup->getId(),
                 'getAvatar'          => $followup->getAvatar(),
                 'getUserLink'        => $followup->getUserLink(),
                 'getTimeAgo'         => $followup->getTimeAgo($current_user),
-                'getFollowupContent' => $followup->getFollowupContent($diff_to_previous, $current_user)
+                'getFollowupContent' => $follow_up_content
             ];
         }
 
