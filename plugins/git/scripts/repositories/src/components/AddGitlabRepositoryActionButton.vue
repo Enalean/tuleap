@@ -41,7 +41,7 @@ export default {
         ...mapGetters(["isGitlabUsed"]),
     },
     methods: {
-        ...mapActions(["showAddGitlabRepositoryModal"]),
+        ...mapActions("gitlab", ["showAddGitlabRepositoryModal"]),
     },
 };
 </script>

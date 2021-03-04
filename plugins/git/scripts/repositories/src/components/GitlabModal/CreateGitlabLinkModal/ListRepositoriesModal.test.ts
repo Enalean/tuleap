@@ -57,7 +57,7 @@ describe("ListRepositoriesModal", () => {
             silent: true,
         });
 
-        store = createStoreMock(store_options);
+        store = createStoreMock(store_options, { gitlab: {} });
         return shallowMount(ListRepositoriesModal, {
             propsData: {
                 gitlab_api_token: "AZERTY123",

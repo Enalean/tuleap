@@ -100,7 +100,9 @@ import { credentialsAreEmpty } from "../../../gitlab/gitlab-credentials-helper";
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { GitLabCredentials, GitLabRepository, Repository } from "../../../type";
-import { Action } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const gitlab = namespace("gitlab");
 
 @Component
 export default class AccessTokenFormModal extends Vue {
@@ -110,7 +112,7 @@ export default class AccessTokenFormModal extends Vue {
     @Prop({ required: true })
     readonly gitlab_token!: string;
 
-    @Action
+    @gitlab.Action
     readonly getGitlabRepositoryFromId!: ({
         credentials,
         id,

@@ -82,7 +82,7 @@ export default class GitlabRepositoryModal extends Vue {
     mounted(): void {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("setAddGitlabRepositoryModal", this.modal);
+        this.$store.commit("gitlab/setAddGitlabRepositoryModal", this.modal);
     }
 
     clickBackButton(): void {

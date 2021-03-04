@@ -24,6 +24,7 @@ import RegenerateGitlabWebhook from "./RegenerateGitlabWebhook.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import type { Store } from "vuex-mock-store";
+import type { GitLabData, Repository } from "../../../type";
 
 describe("RegenerateGitlabWebhook", () => {
     let store_options = {},
@@ -32,7 +33,7 @@ describe("RegenerateGitlabWebhook", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {},
+            state: { gitlab: {} },
             getters: {},
         };
     });
@@ -62,9 +63,9 @@ describe("RegenerateGitlabWebhook", () => {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
                     gitlab_repository_id: 12,
-                },
+                } as GitLabData,
                 normalized_path: "my/repo",
-            },
+            } as Repository,
         });
         await wrapper.vm.$nextTick();
 
@@ -76,7 +77,7 @@ describe("RegenerateGitlabWebhook", () => {
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
-        expect(store.dispatch).toHaveBeenCalledWith("regenerateGitlabWebhook", {
+        expect(store.dispatch).toHaveBeenCalledWith("gitlab/regenerateGitlabWebhook", {
             gitlab_repository_id: 12,
             gitlab_repository_url: "https://example.com/my/repo",
         });

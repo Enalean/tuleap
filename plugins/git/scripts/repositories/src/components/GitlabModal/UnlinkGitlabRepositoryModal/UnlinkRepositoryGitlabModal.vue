@@ -88,13 +88,19 @@
 import type { FetchWrapperError, Modal } from "tlp";
 import { createModal } from "tlp";
 import { getProjectId } from "../../../repository-list-presenter";
-import { deleteIntegrationGitlab } from "../../../api/rest-querier";
+import { deleteIntegrationGitlab } from "../../../gitlab/gitlab-api-querier";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import type { Repository } from "../../../type";
+import { namespace } from "vuex-class";
+
+const gitlab = namespace("gitlab");
 
 @Component
 export default class UnlinkRepositoryGitlabModal extends Vue {
+    @gitlab.State
+    readonly unlink_gitlab_repository!: Repository;
+
     private modal: Modal | null = null;
     private repository: Repository | null = null;
     private message_error_rest = "";
@@ -144,11 +150,11 @@ export default class UnlinkRepositoryGitlabModal extends Vue {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("setUnlinkGitlabRepositoryModal", this.modal);
+        this.$store.commit("gitlab/setUnlinkGitlabRepositoryModal", this.modal);
     }
 
     onShownModal(): void {
-        this.repository = this.$store.state.unlink_gitlab_repository;
+        this.repository = this.unlink_gitlab_repository;
     }
 
     reset(): void {

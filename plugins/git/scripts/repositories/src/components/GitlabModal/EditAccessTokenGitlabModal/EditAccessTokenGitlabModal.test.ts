@@ -31,7 +31,7 @@ describe("EditAccessTokenGitlabModal", () => {
     let store: Store, localVue;
 
     function instantiateComponent(): Wrapper<EditAccessTokenGitlabModal> {
-        store = createStoreMock({});
+        store = createStoreMock({}, { gitlab: {} });
         localVue = createLocalVue();
         localVue.use(VueDOMPurifyHTML);
         localVue.use(GetTextPlugin, {

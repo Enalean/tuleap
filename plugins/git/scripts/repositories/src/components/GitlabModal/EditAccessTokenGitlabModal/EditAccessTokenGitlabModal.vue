@@ -63,9 +63,15 @@ import { createModal } from "tlp";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
 import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
 import type { Repository } from "../../../type";
+import { namespace } from "vuex-class";
+
+const gitlab = namespace("gitlab");
 
 @Component({ components: { ConfirmReplaceTokenModal, AccessTokenFormModal } })
 export default class EditAccessTokenGitlabModal extends Vue {
+    @gitlab.State
+    readonly edit_access_token_gitlab_repository!: Repository;
+
     private modal: Modal | null = null;
     private repository: Repository | null = null;
     private gitlab_new_token = "";
@@ -79,11 +85,11 @@ export default class EditAccessTokenGitlabModal extends Vue {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("setEditAccessTokenGitlabRepositoryModal", this.modal);
+        this.$store.commit("gitlab/setEditAccessTokenGitlabRepositoryModal", this.modal);
     }
 
     onShownModal(): void {
-        this.repository = this.$store.state.edit_access_token_gitlab_repository;
+        this.repository = this.edit_access_token_gitlab_repository;
     }
 
     onCloseModal(): void {

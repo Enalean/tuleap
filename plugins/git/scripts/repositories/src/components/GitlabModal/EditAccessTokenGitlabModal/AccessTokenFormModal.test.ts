@@ -46,7 +46,7 @@ describe("AccessTokenFormModal", () => {
             silent: true,
         });
 
-        store = createStoreMock(store_options);
+        store = createStoreMock(store_options, { gitlab: {} });
 
         return shallowMount(AccessTokenFormModal, {
             propsData,
@@ -87,7 +87,7 @@ describe("AccessTokenFormModal", () => {
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
-        expect(store.dispatch).toHaveBeenCalledWith("getGitlabRepositoryFromId", {
+        expect(store.dispatch).toHaveBeenCalledWith("gitlab/getGitlabRepositoryFromId", {
             credentials: {
                 server_url: "https://example.com/",
                 token: "AFREZF546",

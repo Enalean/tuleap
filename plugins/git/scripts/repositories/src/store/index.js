@@ -23,6 +23,7 @@ import mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import * as actions from "./actions.js";
 import state from "./state.js";
+import gitlab from "./gitlab/module";
 
 Vue.use(Vuex);
 
@@ -31,4 +32,7 @@ export default new Vuex.Store({
     getters,
     mutations,
     actions,
+    modules: {
+        gitlab,
+    },
 });
