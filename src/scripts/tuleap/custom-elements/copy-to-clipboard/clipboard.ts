@@ -19,16 +19,6 @@
 
 // Based upon https://gist.github.com/lgarron/d1dee380f4ed9d825ca7
 
-interface WindowIE11 extends Window {
-    clipboardData: {
-        setData: (key: string, value: string) => boolean;
-    };
-}
-
-function looksLikeIE11(window: Window): window is WindowIE11 {
-    return typeof ClipboardEvent === "undefined" && "clipboardData" in window;
-}
-
 export function writeTextToClipboard(str: string): Promise<void> {
     return new Promise(function (resolve, reject) {
         let success = false;
@@ -43,13 +33,10 @@ export function writeTextToClipboard(str: string): Promise<void> {
             success = true;
         }
 
-        if (looksLikeIE11(window)) {
-            success = window.clipboardData.setData("Text", str);
-        } else {
-            document.addEventListener("copy", listener);
-            document.execCommand("copy");
-            document.removeEventListener("copy", listener);
-        }
+        document.addEventListener("copy", listener);
+        document.execCommand("copy");
+        document.removeEventListener("copy", listener);
+
         success ? resolve() : reject();
     });
 }
