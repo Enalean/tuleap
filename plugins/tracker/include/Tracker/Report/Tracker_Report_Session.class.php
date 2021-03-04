@@ -126,10 +126,6 @@ class Tracker_Report_Session extends Codendi_Session
         if (! $this->get("criteria.$field_id.is_removed")) {
             $this->set("criteria.$field_id.is_removed", 0);
         }
-
-        if (isset($opts['is_removed'])) {
-            $this->set("criteria.$field_id.is_removed", $opts['is_removed']);
-        }
     }
 
     public function storeAdditionalCriterion(Tracker_Report_AdditionalCriterion $additional_criterion)
