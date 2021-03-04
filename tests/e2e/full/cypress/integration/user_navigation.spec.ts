@@ -18,50 +18,83 @@
  */
 
 describe("Navigation", function () {
-    before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.projectMemberLogin();
+    context("As a project member", function () {
+        before(() => {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.projectMemberLogin();
+        });
+
+        beforeEach(function () {
+            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").as("body");
+        });
+
+        it("User can access to its dashboard with mouse", function () {
+            cy.visit("/");
+
+            cy.get("[data-test=my-dashboard]").click();
+            cy.get("[data-test=my-dashboard-option]").contains("My Dashboard");
+            cy.get("[data-test=my-dashboard-option]").click();
+
+            cy.get("[data-test=my-dashboard-title]").contains("My Dashboard");
+        });
+
+        it("User can access to its dashboard with keyboard", function () {
+            cy.visit("/");
+
+            cy.get("@body").type("d");
+
+            //user is directly redirected to its personal dashboard
+            cy.get("[data-test=my-dashboard-title]").contains("My Dashboard");
+        });
+
+        it("User can create a project with keyboard navigation", function () {
+            cy.visit("/");
+
+            cy.get("@body").type("c");
+            cy.get("[data-test=create-new-item]").contains("Start a new project");
+        });
+        context(`switch-to`, function () {
+            it(`can use the legacy filter`, function () {
+                cy.get("@body").type("{s}");
+                cy.get("[data-test=switch-to-modal]").should("be.visible");
+
+                cy.get("[data-test=switch-to-filter]").type("Backlog");
+                cy.get("[data-test=switch-to-projects-project]").should("have.length", 2);
+                cy.get("[data-test=legacy-search-button]").click();
+
+                cy.get("[data-test=words]").should("have.value", "Backlog");
+                cy.get("[data-test=switch-to-modal]").should("not.exist");
+                cy.get("[data-test=search-form]").within(() => {
+                    cy.get("[data-test=words]").clear().type("Explicit{enter}");
+                });
+                cy.get("[data-test=result-title]").contains("Explicit Backlog");
+            });
+        });
     });
+    context("As project admin", function () {
+        context("switch-to", function () {
+            before(function () {
+                cy.clearCookie("__Host-TULEAP_session_hash");
+                cy.ProjectAdministratorLogin();
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").as("body");
+            });
+            it(`can access to the admin menu`, function () {
+                cy.get("@body").type("{s}");
 
-    beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+                cy.get("[data-test=switch-to-filter]").type("Explicit Backlog");
+                cy.get("[data-test=project-link]").should("exist");
+                cy.get("[data-test=switch-to-projects-project-admin-icon]").click();
 
-        // eslint-disable-next-line cypress/require-data-selectors
-        cy.get("body").as("body");
-    });
+                cy.get("[data-test=project-administration-title]").contains(
+                    "Project administration"
+                );
 
-    it("User can access to its dashboard with mouse", function () {
-        cy.visit("/");
-
-        cy.get("[data-test=my-dashboard]").click();
-        cy.get("[data-test=my-dashboard-option]").contains("My Dashboard");
-        cy.get("[data-test=my-dashboard-option]").click();
-
-        cy.get("[data-test=my-dashboard-title]").contains("My Dashboard");
-    });
-
-    it("User can access to its dashboard with keyboard", function () {
-        cy.visit("/");
-
-        cy.get("@body").type("d");
-
-        //user is directly redirected to its personal dashboard
-        cy.get("[data-test=my-dashboard-title]").contains("My Dashboard");
-    });
-
-    it("User can create a project with keyboard navigation", function () {
-        cy.visit("/");
-
-        cy.get("@body").type("c");
-        cy.get("[data-test=create-new-item]").contains("Start a new project");
-    });
-
-    it("User can switch project with keyboard navigation", function () {
-        cy.visit("/");
-
-        cy.get("@body").type("s");
-
-        //we click randomly on a project to ensure that navigation can happen
-        cy.get("[data-test=project-link").first().click();
+                cy.get("[data-test=switch-to-modal]").should("not.be.visible");
+            });
+        });
     });
 });

@@ -3,6 +3,7 @@
 exports[`ProjectLink Displays the link to a project 1`] = `
 <div
   class="switch-to-projects-project"
+  data-test="switch-to-projects-project"
 >
   <a
     class="switch-to-projects-project-link"
