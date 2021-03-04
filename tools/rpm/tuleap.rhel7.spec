@@ -468,6 +468,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 %description plugin-velocity
 %{summary}.
 
+%package plugin-jira-import
+Summary: Import Jira Projects
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
+%description plugin-jira-import
+%{summary}.
+
 %endif
 
 %if %{with experimental}
@@ -477,13 +484,6 @@ Summary: Program Management
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
 %description plugin-program_management
-%{summary}.
-
-%package plugin-jira-import
-Summary: Import Jira Projects
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
-%description plugin-jira-import
 %{summary}.
 
 %endif
@@ -579,12 +579,12 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %endif
 %if %{with experimental}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/program_management
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -1453,6 +1453,10 @@ fi
 %{APP_DIR}/plugins/velocity
 %{APP_DIR}/src/www/assets/velocity
 
+%files plugin-jira-import
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/jira_import
+
 %endif
 
 %if %{with experimental}
@@ -1463,10 +1467,6 @@ fi
 %{APP_DIR}/src/www/assets/program_management
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_program_management
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_program_management
-
-%files plugin-jira-import
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/jira_import
 
 %endif
 
