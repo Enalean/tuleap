@@ -304,6 +304,7 @@ class BurningParrotTheme extends BaseLayout
         $this->includeFooterJavascriptSnippet($this->getFooterSiteJs());
 
         $browser_deprecation_message = BrowserDeprecationMessage::fromDetectedBrowser(
+            $this->user,
             $this->detected_browser
         );
         if ($browser_deprecation_message !== null) {
