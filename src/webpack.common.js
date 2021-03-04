@@ -151,6 +151,7 @@ const webpack_config_for_tlp_doc = {
 const webpack_config_for_flaming_parrot_code = {
     entry: {
         "flamingparrot-with-polyfills": "./scripts/FlamingParrot/index.js",
+        mermaid: "./scripts/mermaid/index.ts",
     },
     context,
     output,
