@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldIdentifier;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class SimilarFieldsFormatterTest extends TestCase
 {
@@ -144,6 +145,18 @@ class SimilarFieldsFormatterTest extends TestCase
             $formatted_float_field,
             $formatted_date_field
         ], $result);
+    }
+
+    public function testItReturnsEmptyArrayWhenTheArtifactHasNoLastChangeset(): void
+    {
+        $artifact = \Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getLastChangeset')->andReturnNull();
+        $field_identifier = new SimilarFieldIdentifier('whicker', 'static');
+        $this->similar_fields->shouldReceive('getFieldIdentifiers')->andReturn([$field_identifier]);
+
+        $result = $this->formatter->formatSimilarFields($artifact, $this->similar_fields, $this->parameters);
+
+        self::assertEquals([], $result);
     }
 
     public function testItReturnsEmptyValueWhenTheFieldIsNotPresent()

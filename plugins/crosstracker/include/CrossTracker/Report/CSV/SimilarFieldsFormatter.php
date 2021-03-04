@@ -53,6 +53,9 @@ class SimilarFieldsFormatter
     ) {
         $field_identifiers = $similar_fields->getFieldIdentifiers();
         $last_changeset    = $artifact->getLastChangeset();
+        if ($last_changeset === null) {
+            return [];
+        }
 
         $field_values = [];
         foreach ($field_identifiers as $identifier) {
