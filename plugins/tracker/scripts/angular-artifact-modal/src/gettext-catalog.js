@@ -31,7 +31,7 @@ export const getSyntaxHelperTitle = () => gettextCatalog.getString("Help");
 export const getSyntaxHelperLabel = () =>
     gettextCatalog.getString("Markdown mostly used formatting");
 export const getSyntaxHelperType = () => gettextCatalog.getString("Type...");
-export const getSyntaxHelperToGet = () => gettextCatalog.getString("...to Get");
+export const getSyntaxHelperToGet = () => gettextCatalog.getString("...to get");
 export const getRTEHelpMessage = () =>
     gettextCatalog.getString("You can drag 'n drop or paste image directly in the editor.");
 export const getUploadSizeExceeded = () =>

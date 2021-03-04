@@ -35,7 +35,7 @@
                 <thead>
                     <tr>
                         <th v-translate>Type...</th>
-                        <th v-translate>...to Get</th>
+                        <th v-translate>...to get</th>
                     </tr>
                 </thead>
                 <tbody>

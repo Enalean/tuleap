@@ -35,7 +35,7 @@ export function getCommonMarkSyntaxPopoverHelperContent(gettext_provider: Gettex
                                ${gettext_provider.gettext("Type...")}
                             </th>
                             <th>
-                                ${gettext_provider.gettext("...to Get")}
+                                ${gettext_provider.gettext("...to get")}
                             </th>
                         </tr>
                     </thead>

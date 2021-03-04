@@ -12,8 +12,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-msgid "...to Get"
-msgstr "...pour Voir"
+msgid "...to get"
+msgstr "...pour voir"
 
 msgid "For your information..."
 msgstr "Pour votre information..."
