@@ -76,6 +76,16 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $session['criteria']['4']['is_removed']);
     }
 
+    public function testStoreCriterionWithOptsForceIsRemoved(): void
+    {
+        $session = &$this->tracker_report_session->getSessionNamespace();
+        $this->tracker_report_session->storeCriterion('4', 'whatever', ['is_removed' => 1]);
+        $this->assertEquals(1, $session['criteria']['4']['is_removed']);
+
+        $this->tracker_report_session->storeCriterion('4', ['lorem' => 'ipsum'], ['is_removed' => 0]);
+        $this->assertEquals(0, $session['criteria']['4']['is_removed']);
+    }
+
     public function testItStoresAdditionalCriterion(): void
     {
         $session              = &$this->tracker_report_session->getSessionNamespace();
