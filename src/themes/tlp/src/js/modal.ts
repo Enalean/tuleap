@@ -196,8 +196,6 @@ export class Modal {
     }
 }
 
-const isEscapeKeyForInternetExplorer11 = (key: string): boolean => key === "Esc";
-
 class ModalEventHandler implements EventListenerObject {
     private readonly modal: Modal;
 
@@ -218,7 +216,7 @@ class ModalEventHandler implements EventListenerObject {
     }
 
     keyupCallback(event: KeyboardEvent): void {
-        if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
+        if (event.key !== "Escape") {
             return;
         }
 

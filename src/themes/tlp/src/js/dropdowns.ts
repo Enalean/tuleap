@@ -45,8 +45,6 @@ export const createDropdown = (
     options?: DropdownOptions
 ): Dropdown => new Dropdown(doc, trigger, options);
 
-const isEscapeKeyForInternetExplorer11 = (key: string): boolean => key === "Esc";
-
 export class Dropdown {
     private readonly doc: Document;
     private readonly trigger: Element;
@@ -146,7 +144,7 @@ export class Dropdown {
 
         if (this.keyboard) {
             this.doc.addEventListener("keyup", (event) => {
-                if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
+                if (event.key !== "Escape") {
                     return;
                 }
 
