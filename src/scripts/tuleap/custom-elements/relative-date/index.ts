@@ -17,13 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadPolyfillsWhenNeeded } from "./polyfills";
+import { RelativeDateElement } from "./relative-date-element";
 
-loadPolyfillsWhenNeeded().then(async () => {
-    const { RelativeDateElement } = await import(
-        /* webpackMode: "eager" */ "./relative-date-element"
-    );
-    if (!window.customElements.get("tlp-relative-date")) {
-        window.customElements.define("tlp-relative-date", RelativeDateElement);
-    }
-});
+if (!window.customElements.get("tlp-relative-date")) {
+    window.customElements.define("tlp-relative-date", RelativeDateElement);
+}
