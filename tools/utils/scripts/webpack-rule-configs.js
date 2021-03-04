@@ -22,18 +22,6 @@ const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
-const babel_preset_env_ie_config = [
-    BabelPresetEnv,
-    {
-        targets: {
-            ie: 11,
-        },
-        modules: false,
-        useBuiltIns: "entry",
-        corejs: "3",
-    },
-];
-
 const babel_preset_env_chrome_config = [
     BabelPresetEnv,
     {
@@ -50,10 +38,6 @@ const babel_preset_env_chrome_config = [
         corejs: "3",
     },
 ];
-
-const babel_options_ie11 = {
-    presets: [babel_preset_env_ie_config],
-};
 
 const babel_options_chrome_firefox = {
     presets: [babel_preset_env_chrome_config],
@@ -75,33 +59,20 @@ const babel_options_jest = {
     plugins: [BabelPluginDynamicImportNode],
 };
 
-function configureBabelRule(babel_options) {
+function configureBabelRule() {
     return {
         test: /\.js$/,
         exclude: [/node_modules/, /vendor/],
         use: [
             {
                 loader: "babel-loader",
-                options: babel_options,
+                options: babel_options_chrome_firefox,
             },
         ],
     };
 }
 
-function configureBabelToTranspileNodeModuleForIE11(node_module_regexp) {
-    return {
-        test: /\.js$/,
-        include: node_module_regexp,
-        use: [
-            {
-                loader: "babel-loader",
-                options: babel_options_ie11,
-            },
-        ],
-    };
-}
-
-function configureTypescriptRules(babel_options) {
+function configureTypescriptRules() {
     return [
         {
             test: /\.ts(x?)$/,
@@ -109,7 +80,7 @@ function configureTypescriptRules(babel_options) {
             use: [
                 {
                     loader: "babel-loader",
-                    options: babel_options,
+                    options: babel_options_chrome_firefox,
                 },
                 {
                     loader: "ts-loader",
@@ -227,9 +198,6 @@ const rule_vue_images = {
 module.exports = {
     configureBabelRule,
     configureTypescriptRules,
-    configureBabelToTranspileNodeModuleForIE11,
-    babel_options_ie11,
-    babel_options_chrome_firefox,
     babel_options_jest,
     rule_po_files,
     rule_mustache_files,

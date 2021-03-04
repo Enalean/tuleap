@@ -34,11 +34,7 @@ module.exports = [
         context,
         output,
         module: {
-            rules: [
-                ...webpack_configurator.configureTypescriptRules(
-                    webpack_configurator.babel_options_ie11
-                ),
-            ],
+            rules: [...webpack_configurator.configureTypescriptRules()],
         },
         resolve: {
             extensions: [".js", ".ts"],

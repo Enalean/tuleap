@@ -166,7 +166,10 @@ export default {
         },
         loadRTE(field) {
             const text_area = this.$refs[field];
-            const locale = document.body.dataset.userLocale ?? "en_US";
+            let locale = "en_US";
+            if (document.body.dataset.userLocale) {
+                locale = document.body.dataset.userLocale;
+            }
             const image_upload_factory = new UploadImageFormFactory(document, locale);
             const help_block = image_upload_factory.createHelpBlock(text_area);
             const editor = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(
@@ -178,7 +181,11 @@ export default {
                 format_selectbox_id: this.format_select_id,
                 format_selectbox_value: this.step.description_format,
                 getAdditionalOptions: (textarea) => getUploadImageOptions(textarea),
-                onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
+                onFormatChange: (new_format) => {
+                    if (help_block) {
+                        help_block.onFormatChange(new_format);
+                    }
+                },
                 onEditorInit: (ckeditor, textarea) =>
                     image_upload_factory.initiateImageUpload(ckeditor, textarea),
             };

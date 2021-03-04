@@ -49,9 +49,7 @@ module.exports = [
         },
         module: {
             rules: [
-                ...webpack_configurator.configureTypescriptRules(
-                    webpack_configurator.babel_options_ie11
-                ),
+                ...webpack_configurator.configureTypescriptRules(),
                 webpack_configurator.rule_mustache_files,
                 webpack_configurator.rule_po_files,
                 webpack_configurator.rule_scss_loader,

@@ -42,10 +42,7 @@ const webpack_config_for_burndown_chart = {
         },
     },
     module: {
-        rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files,
-        ],
+        rules: [webpack_configurator.configureBabelRule(), webpack_configurator.rule_po_files],
     },
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
@@ -77,10 +74,8 @@ const config_for_flaming_parrot = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
         ],
     },
@@ -103,7 +98,7 @@ const config_for_vue_flaming_parrot = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],
@@ -136,10 +131,8 @@ const config_for_burning_parrot = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11), // gettext-init.js needs Babel
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.configureBabelRule(), // gettext-init.js needs Babel
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],

@@ -51,9 +51,7 @@ module.exports = [
         },
         module: {
             rules: [
-                ...webpack_configurator.configureTypescriptRules(
-                    webpack_configurator.babel_options_chrome_firefox
-                ),
+                ...webpack_configurator.configureTypescriptRules(),
                 {
                     test: /\.po$/,
                     include: /scripts\/charts-builders\/po/,

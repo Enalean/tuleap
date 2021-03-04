@@ -41,11 +41,9 @@ const webpack_config_for_vue_and_themes = {
     },
     module: {
         rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
+            ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_scss_loader,
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],
@@ -74,7 +72,7 @@ const webpack_config_for_vanilla = {
         jquery: "jQuery",
     },
     module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)],
+        rules: [webpack_configurator.configureBabelRule()],
     },
     plugins: [manifest_plugin],
 };

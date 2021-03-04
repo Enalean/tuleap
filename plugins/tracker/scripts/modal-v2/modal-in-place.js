@@ -64,7 +64,10 @@ tuleap.textarea = tuleap.textarea || {};
         },
 
         enableRichTextArea: function () {
-            const locale = document.body.dataset.userLocale ?? "en_US";
+            let locale = "en_US";
+            if (document.body.dataset.userLocale) {
+                locale = document.body.dataset.userLocale;
+            }
             const editor_creator = new RichTextEditorsCreator(
                 document,
                 new UploadImageFormFactory(document, locale),

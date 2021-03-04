@@ -49,7 +49,7 @@ module.exports = [
         },
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                webpack_configurator.configureBabelRule(),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
