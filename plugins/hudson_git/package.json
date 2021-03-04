@@ -7,8 +7,8 @@
   "dependencies": {},
   "devDependencies": {
     "@types/bootstrap": "^3.4.0",
-    "@types/jquery": "^3.5.1",
-    "jquery": "^3.5.1"
+    "@types/jquery": "^3.5.5",
+    "jquery": "^3.6.0"
   },
   "config": {
     "bin": "../../node_modules/.bin"
