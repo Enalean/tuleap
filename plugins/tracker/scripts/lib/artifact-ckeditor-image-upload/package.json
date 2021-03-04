@@ -17,11 +17,12 @@
   "dependencies": {
     "@tuleap/ckeditor-image-upload": "file:../../../../../src/scripts/lib/ckeditor-image-upload",
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
-    "css.escape": "^1.5.1",
     "pretty-kibibytes": "^4.0.4",
     "sprintf-js": "^1.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "css.escape": "^1.5.1"
+  },
   "config": {
     "bin": "../../../../../node_modules/.bin"
   },

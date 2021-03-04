@@ -17,7 +17,6 @@
     "@tuleap/tlp-fetch": "file://./scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:scripts/lib/vue-breadcrumb-privacy",
     "ckeditor4": "^4.14.1",
-    "css.escape": "^1.5.1",
     "d3-array": "^2.9.1",
     "d3-axis": "^2.0.0",
     "d3-interpolate": "^2.0.1",
