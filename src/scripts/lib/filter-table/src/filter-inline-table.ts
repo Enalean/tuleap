@@ -19,8 +19,6 @@
 
 const reset_search_term = "";
 
-const isEscapeKeyForInternetExplorer11 = (key: string): boolean => key === "Esc";
-
 export const EMPTY_STATE_CLASS_NAME = "tlp-table-empty-filter";
 export const EMPTY_STATE_SHOWN_CLASS_NAME = "tlp-table-empty-filter-shown";
 export const FILTERABLE_CELL_CLASS_NAME = "tlp-table-cell-filterable";
@@ -40,7 +38,7 @@ export function filterInlineTable(filter: HTMLInputElement): { filterTable: () =
     };
 
     function handleEscape(event: KeyboardEvent): void {
-        if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
+        if (event.key !== "Escape") {
             return;
         }
         filter.value = reset_search_term;
