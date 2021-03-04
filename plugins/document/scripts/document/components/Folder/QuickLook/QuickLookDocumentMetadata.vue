@@ -96,7 +96,7 @@
     </section>
 </template>
 <script>
-import prettyBytes from "pretty-bytes-es5";
+import prettyBytes from "pretty-kibibytes";
 import { mapState } from "vuex";
 import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter";
 import UserBadge from "../../User/UserBadge.vue";
