@@ -82,11 +82,16 @@ class CampaignRepresentation
 
     /** @var bool */
     public $user_can_update;
+    /**
+     * @var bool
+     */
+    public $is_open;
 
     public function __construct(
         string $id,
         string $label,
         string $status,
+        bool $is_open,
         int $nb_of_notrun,
         int $nb_of_passed,
         int $nb_of_failed,
@@ -98,6 +103,7 @@ class CampaignRepresentation
         $this->id                = $id;
         $this->label             = $label;
         $this->status            = $status;
+        $this->is_open           = $is_open;
         $this->nb_of_notrun      = $nb_of_notrun;
         $this->nb_of_passed      = $nb_of_passed;
         $this->nb_of_failed      = $nb_of_failed;
@@ -143,6 +149,7 @@ class CampaignRepresentation
             (string) $id,
             $field_value instanceof \Tracker_Artifact_ChangesetValue_Text ? $field_value->getText() : '',
             $artifact->getStatus(),
+            $artifact->isOpen(),
             $executions_status[self::STATUS_NOT_RUN],
             $executions_status[self::STATUS_PASSED],
             $executions_status[self::STATUS_FAILED],

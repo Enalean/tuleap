@@ -61,6 +61,7 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
@@ -482,6 +483,11 @@ class CampaignsResource
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $project
         );
+
+        if (! $artifact->isOpen()) {
+            throw new I18NRestException(400, dgettext('plugin-testmanagement', 'The campaign is closed.'));
+        }
+
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject());
 
         $linked_definitions = [];
@@ -655,6 +661,10 @@ class CampaignsResource
             throw new RestException(403, "You don't have the permission to update this campaign");
         }
 
+        if ($automated_tests_results !== null && ! $campaign_artifact->isOpen()) {
+            throw new I18NRestException(400, dgettext('plugin-testmanagement', 'The campaign is closed.'));
+        }
+
         try {
             $this->campaign_updater->updateCampaign($user, $campaign);
         } catch (Tracker_ChangesetNotCreatedException $exception) {
@@ -714,8 +724,13 @@ class CampaignsResource
     {
         $this->options();
 
-        $user     = $this->getCurrentUser();
-        $campaign = $this->getCampaignUserCanRead($user, $id);
+        $user              = $this->getCurrentUser();
+        $campaign          = $this->getCampaignUserCanRead($user, $id);
+        $campaign_artifact = $campaign->getArtifact();
+
+        if (! $campaign_artifact->isOpen()) {
+            throw new I18NRestException(400, dgettext('plugin-testmanagement', 'The campaign is closed.'));
+        }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $campaign->getArtifact()->getTracker()->getProject()

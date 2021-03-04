@@ -247,6 +247,17 @@ execution-with-steps.current-test-content {
     border-top: 1px solid $tlp-ui-border-light;
 }
 
+.current-test-footer-section-closed-campaign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    background: $tlp-theme-color-dimmed-background;
+    color: $tlp-ui-dimmed;
+    font-size: .875rem;
+    line-height: 1.375rem;
+}
+
 .current-test-results-container {
     display: flex;
     flex: 0 0 auto;

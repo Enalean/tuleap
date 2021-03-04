@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "1 test will be added"
@@ -327,6 +327,9 @@ msgstr "Résumé du test"
 msgid "The URL to a Jenkins job that will execute automated tests"
 msgstr "L'URL vers un projet Jenkins qui exécutera les tests automatisés"
 
+msgid "The campaign is closed."
+msgstr "La campagne est fermée."
+
 msgid "The entered id is incorrect."
 msgstr "L’id saisi est incorrect."
 
@@ -385,6 +388,9 @@ msgstr "Vous n'êtes pas autorisé à coller des images ici"
 msgid "You are not allowed to upload images bigger than {{ max_size }}"
 msgstr ""
 "Vous n'êtes pas autorisé à insérer des images plus lourdes que {{ max_size }}"
+
+msgid "You cannot execute the tests anymore."
+msgstr "Vous ne pouvez plus exécuter les tests."
 
 msgid ""
 "You have just updated the test definition, so it has been reset. Please "

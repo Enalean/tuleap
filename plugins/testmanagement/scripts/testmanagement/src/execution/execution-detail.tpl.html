@@ -159,7 +159,7 @@
                               tabindex="-1"
         ></execution-with-steps>
 
-        <section ng-if="execution.is_automated === false" class="tlp-pane-section current-test-footer-section">
+        <section ng-if="execution.is_automated === false && campaign.is_open" class="tlp-pane-section current-test-footer-section">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
                 <div class="current-test-results-container">
@@ -216,6 +216,10 @@
                     <i class="fas fa-fw fa-sync tlp-button-icon"></i> <span translate>Reload the test</span>
                 </button>
             </div>
+        </section>
+        <section ng-if="execution.is_automated === false && ! campaign.is_open" class="tlp-pane-section current-test-footer-section current-test-footer-section-closed-campaign">
+            <span translate>The campaign is closed.</span>
+            <span translate>You cannot execute the tests anymore.</span>
         </section>
         <div ng-if="execution.is_automated === true" class="current-test-automated-message">
             <robot-svg-displayer test-status="execution.status"></robot-svg-displayer>

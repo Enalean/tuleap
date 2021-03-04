@@ -48,6 +48,16 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
 
+.test-campaign-header-status-badge {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    margin: 0 $tlp-medium-spacing 0 0;
+    border-radius: 34px / 2;
+    font-size: 1rem;
+    line-height: 1.1875rem;
+}
+
 .test-campaign-header-title {
     margin: 0;
 }
