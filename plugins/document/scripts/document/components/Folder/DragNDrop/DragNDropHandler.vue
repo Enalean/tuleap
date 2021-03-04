@@ -54,7 +54,6 @@ export default {
             EDITION_LOCKED: "edition_locked",
             DOCUMENT_NEEDS_APPROVAL: "document_needs_approval",
             DROPPED_ITEM_IS_NOT_A_FILE: "dropped_item_is_not_a_file",
-            IE11_NOT_SUPPORTED: "ie11_is_not_supported",
             highlighted_item_id: null,
         };
     },
@@ -109,12 +108,6 @@ export default {
                 return () =>
                     import(
                         /* webpackChunkName: "document-needs-approval-error-modal" */ "./DocumentNeedsApprovalErrorModal.vue"
-                    );
-            }
-            if (this.error_modal_shown === this.IE11_NOT_SUPPORTED) {
-                return () =>
-                    import(
-                        /* webpackChunkName: "document-needs-approval-error-modal" */ "./BrowserNotSupported.vue"
                     );
             }
 
@@ -295,11 +288,6 @@ export default {
                 ".document-quick-look-folder-dropzone",
                 ".document-quick-look-file-dropzone",
             ];
-
-            if (!event.dataTransfer.items) {
-                this.error_modal_shown = this.IE11_NOT_SUPPORTED;
-                return;
-            }
 
             if (event.dataTransfer.items.length === 1) {
                 target_drop_zones.push(".document-tree-item-file");
