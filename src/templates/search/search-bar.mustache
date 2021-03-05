@@ -1,7 +1,7 @@
 <div class="search-bar">
-    <form action="/search/" method="get">
+    <form action="/search/" method="get" data-test="search-form">
         <div class="input-append">
-            <input class="input-xlarge" type="text" id="words" name="words" value="{{ words }}">
+            <input class="input-xlarge" type="text" id="words" name="words" value="{{ words }}" data-test="words">
             <input type="hidden" name="type_of_search" id="type_of_search" value="{{ type_of_search }}">
             <input type="hidden" name="number_of_page_results" value="{{ number_of_page_results }}">
             <input type="hidden" name="exact" value="0">

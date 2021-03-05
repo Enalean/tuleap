@@ -19,7 +19,13 @@
   -->
 
 <template>
-    <div class="tlp-modal" role="dialog" v-bind:aria-label="aria_label" id="switch-to-modal">
+    <div
+        class="tlp-modal"
+        role="dialog"
+        v-bind:aria-label="aria_label"
+        id="switch-to-modal"
+        data-test="switch-to-modal"
+    >
         <switch-to-header class="tlp-modal-header" v-bind:modal="modal" />
         <switch-to-body class="tlp-modal-body" />
     </div>

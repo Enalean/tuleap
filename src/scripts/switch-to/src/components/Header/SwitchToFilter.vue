@@ -27,6 +27,7 @@
         v-bind:value="filter_value"
         v-on:keyup="update"
         autocomplete="off"
+        data-test="switch-to-filter"
     />
 </template>
 

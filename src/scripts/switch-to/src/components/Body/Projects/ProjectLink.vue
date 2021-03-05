@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <div class="switch-to-projects-project" v-on:keydown="changeFocus">
+    <div
+        class="switch-to-projects-project"
+        v-on:keydown="changeFocus"
+        data-test="switch-to-projects-project"
+    >
         <a
             v-bind:href="project.project_uri"
             class="switch-to-projects-project-link"
@@ -34,6 +38,7 @@
             v-bind:href="project.project_config_uri"
             class="switch-to-projects-project-admin-icon"
             v-bind:title="admin_title"
+            data-test="switch-to-projects-project-admin-icon"
         >
             <i class="fa fa-cog" aria-hidden="true"></i>
         </a>
