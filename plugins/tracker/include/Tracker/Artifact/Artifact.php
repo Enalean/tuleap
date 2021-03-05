@@ -27,7 +27,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use Codendi_HTMLPurifier;
 use Codendi_Request;
-use CrossReferenceFactory;
 use EventManager;
 use Feedback;
 use ForgeConfig;
@@ -864,55 +863,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 }
                 $GLOBALS['Response']->redirect('?aid=' . $this->id);
                 break;
-            case 'check-user-can-link-and-unlink':
-                $source_artifact      = (int) $request->get('from-artifact');
-                $destination_artifact = (int) $request->get('to-artifact');
-
-                if (
-                    ! ($this->userHasRankingPermissions($source_artifact) && $this->userHasRankingPermissions(
-                        $destination_artifact
-                    ))
-                ) {
-                    $this->sendUserDoesNotHavePermissionsErrorCode();
-                }
-                break;
-            case 'unassociate-artifact-to':
-                $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
-                $linked_artifact_id = $request->get('linked-artifact-id');
-
-                if (! $this->userHasRankingPermissions($this->getId())) {
-                    $this->sendUserDoesNotHavePermissionsErrorCode();
-                    break;
-                }
-
-                if (count($artlink_fields)) {
-                    $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
-                    $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
-                } else {
-                    $GLOBALS['Response']->addFeedback(
-                        'error',
-                        dgettext(
-                            'tuleap-tracker',
-                            'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'
-                        )
-                    );
-                    $GLOBALS['Response']->sendStatusCode(400);
-                }
-                break;
-            case 'associate-artifact-to':
-                $linked_artifact_id = $request->get('linked-artifact-id');
-
-                if (! $this->userHasRankingPermissions($this->getId())) {
-                    $this->sendUserDoesNotHavePermissionsErrorCode();
-                    break;
-                }
-
-                if (! $this->linkArtifact($linked_artifact_id, $current_user)) {
-                    $GLOBALS['Response']->sendStatusCode(400);
-                } else {
-                    $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
-                }
-                break;
             case 'show-in-overlay':
                 $renderer = new Tracker_Artifact_EditOverlayRenderer(
                     $this,
@@ -1026,35 +976,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return new VisitRecorder(new RecentlyVisitedDao());
     }
 
-    private function sendUserDoesNotHavePermissionsErrorCode()
-    {
-        $GLOBALS['Response']->addFeedback(
-            'error',
-            dgettext(
-                'tuleap-tracker',
-                'You are not allowed to rank on this planning. Your action was not taken into account. Please reload the page.'
-            )
-        );
-        $GLOBALS['Response']->sendStatusCode(403);
-    }
-
-    private function userHasRankingPermissions($milestone_id)
-    {
-        $user_is_authorized = true;
-
-        $this->getEventManager()->processEvent(
-            ITEM_PRIORITY_CHANGE,
-            [
-                'user_is_authorized' => &$user_is_authorized,
-                'group_id'           => $this->getProjectId(),
-                'milestone_id'       => $milestone_id,
-                'user'               => $this->getCurrentUser()
-            ]
-        );
-
-        return $user_is_authorized;
-    }
-
     private function getProjectId()
     {
         return $this->getTracker()->getGroupId();
@@ -1124,18 +1045,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function fetchDirectLinkToArtifactWithTitle()
     {
         return '<a class="direct-link-to-artifact" href="' . $this->getUri() . '">' . $this->getXRefAndTitle() . '</a>';
-    }
-
-    /**
-     * @return string html
-     */
-    public function fetchDirectLinkToArtifactWithoutXRef()
-    {
-        $hp = Codendi_HTMLPurifier::instance();
-
-        return '<a class="direct-link-to-artifact" href="' . $this->getUri() . '">' . $hp->purify(
-            $this->getTitle()
-        ) . '</a>';
     }
 
     public function getRestUri()
@@ -1848,23 +1757,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->linkArtifact($linked_artifact_ids, $current_user);
     }
 
-    private function unlinkArtifact($artlink_fields, $linked_artifact_id, PFUser $current_user)
-    {
-        $comment                                                = '';
-        $artlink_field                                          = $artlink_fields[0];
-        $fields_data                                            = [];
-        $fields_data[$artlink_field->getId()]['new_values']     = '';
-        $fields_data[$artlink_field->getId()]['removed_values'] = [$linked_artifact_id => 1];
-
-        try {
-            $this->createNewChangeset($fields_data, $comment, $current_user);
-        } catch (Tracker_NoChangeException $e) {
-            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-        } catch (Tracker_Exception $e) {
-            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-        }
-    }
-
     private function filterArtifactIdsIAmAlreadyLinkedTo(
         Tracker_FormElement_Field_ArtifactLink $field,
         $linked_artifact_id
@@ -2149,20 +2041,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         );
     }
 
-    private function summonArtifactAssociators(Codendi_Request $request, PFUser $current_user, $linked_artifact_id)
-    {
-        $this->getEventManager()->processEvent(
-            TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
-            [
-                'artifact'             => $this,
-                'linked-artifact-id'   => $linked_artifact_id,
-                'request'              => $request,
-                'user'                 => $current_user,
-                'form_element_factory' => $this->getFormElementFactory(),
-            ]
-        );
-    }
-
     /**
      * Return the authorised ugroups to see the artifact
      *
@@ -2223,11 +2101,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     private function getUnsubscribersNotificationDao()
     {
         return new UnsubscribersNotificationDAO();
-    }
-
-    protected function getCrossReferenceFactory()
-    {
-        return new CrossReferenceFactory($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
     }
 
     /**
