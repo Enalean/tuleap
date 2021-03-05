@@ -32,6 +32,7 @@ declare global {
             heisenbergLogin(): void;
             userLogout(): void;
             updatePlatformVisibilityAndAllowRestricted(): void;
+            updatePlatformVisibilityForAnonymous(): void;
             getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
             visitProjectService(project_unixname: string, service_label: string): void;
             uploadFixtureFile(
@@ -152,6 +153,19 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
     cy.get("[data-test=global-admin-search-user]").type("RestrictedRegularUser{enter}");
     cy.get("[data-test=user-status]").select("Restricted");
     cy.get("[data-test=save-user]").click();
+
+    cy.userLogout();
+});
+
+Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
+    cy.platformAdminLogin();
+
+    cy.get("[data-test=platform-administration-link]").click();
+    cy.get("[data-test=global_access_right]").click({ force: true });
+
+    cy.get("[data-test=access_mode-anonymous]").check();
+
+    cy.get("[data-test=update_forge_access_button]").click({ force: true });
 
     cy.userLogout();
 });
