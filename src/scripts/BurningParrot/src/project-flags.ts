@@ -19,7 +19,7 @@
 
 import { createPopover } from "tlp";
 
-export function init() {
+export function init(): void {
     const project_flags_element = document.getElementById("project-sidebar-project-flags");
     if (!project_flags_element) {
         return;
@@ -27,8 +27,18 @@ export function init() {
 
     const popover_content = document.getElementById("project-sidebar-project-flags-popover");
 
+    if (!popover_content) {
+        return;
+    }
+
+    const anchor = project_flags_element.querySelector(".project-sidebar-project-flags-labels");
+
+    if (!anchor || !(anchor instanceof HTMLElement)) {
+        return;
+    }
+
     createPopover(project_flags_element, popover_content, {
-        anchor: project_flags_element.querySelector(".project-sidebar-project-flags-labels"),
+        anchor,
         placement: "right-start",
     });
 }
