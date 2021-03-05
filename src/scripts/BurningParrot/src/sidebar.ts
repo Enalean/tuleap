@@ -21,26 +21,33 @@ import { post } from "tlp";
 
 export { init };
 
-function init() {
+function init(): void {
     const sidebar_collapsers = document.querySelectorAll(".sidebar-collapser"),
         sidebar = document.querySelector(".sidebar");
 
-    if (!sidebar) {
-        return;
-    }
-
     bindSidebarEvent();
 
-    function bindSidebarEvent() {
+    function bindSidebarEvent(): void {
+        if (!sidebar) {
+            return;
+        }
         sidebar.addEventListener("click", (event) => {
-            const clicked_element = event.target,
-                is_clicked_element_a_sidebar_collapser = isClickedElementASidebarCollapser(
-                    clicked_element
-                ),
-                sidebar_collapsed_class = clicked_element.dataset.collapsedClass,
-                user_preference_name = clicked_element.dataset.userPreferenceName;
+            const clicked_element = event.target;
+            if (!clicked_element || !(clicked_element instanceof HTMLElement)) {
+                return;
+            }
 
-            if (!is_clicked_element_a_sidebar_collapser) {
+            const is_clicked_element_a_sidebar_collapser = isClickedElementASidebarCollapser(
+                clicked_element
+            );
+            const sidebar_collapsed_class = clicked_element.dataset.collapsedClass;
+            const user_preference_name = clicked_element.dataset.userPreferenceName;
+
+            if (
+                !is_clicked_element_a_sidebar_collapser ||
+                !sidebar_collapsed_class ||
+                !user_preference_name
+            ) {
                 return;
             }
 
@@ -55,7 +62,7 @@ function init() {
         });
     }
 
-    function isClickedElementASidebarCollapser(clicked_element) {
+    function isClickedElementASidebarCollapser(clicked_element: HTMLElement): boolean {
         let is_clicked_element_a_sidebar_collapser = false;
 
         for (const sidebar_collapser of sidebar_collapsers) {
@@ -68,7 +75,7 @@ function init() {
     }
 }
 
-function updateUserPreferences(user_preference_name, state) {
+function updateUserPreferences(user_preference_name: string, state: string): void {
     const headers = { "Content-Type": "application/x-www-form-urlencoded; charset=utf-8" };
     const body = `user_preference_name=${user_preference_name}&sidebar_state=${state}`;
     post("/account/update-sidebar-preference.php", {
