@@ -1153,9 +1153,6 @@ function $w(string) {
   return string ? string.split(/\s+/) : [];
 }
 
-Array.from = $A;
-
-
 (function() {
   var arrayProto = Array.prototype,
       slice = arrayProto.slice,
