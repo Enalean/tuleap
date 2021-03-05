@@ -44,6 +44,27 @@ describe("Project admin", function () {
             cy.get("[data-test=project-registration-next-button]").click();
         });
 
+        it("should be able to create a new private project", function () {
+            cy.get("[data-test=new-button]").click();
+            cy.get("[data-test=create-new-item]").click();
+
+            cy.get(
+                "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
+            ).click();
+
+            cy.get("[data-test=project-registration-next-button").click();
+
+            cy.get("[data-test=new-project-name]").type("private project");
+            // force is due to select2 usage
+            // eslint-disable-next-line cypress/no-force
+            cy.get("[data-test=register-new-project-information-list]").select("Private", {
+                force: true,
+            });
+            cy.get("[data-test=approve_tos]").check();
+
+            cy.get("[data-test=project-registration-next-button]").click();
+        });
+
         it("should be able to add users to a public project", function () {
             cy.visitProjectService("project-admin-test", "Admin");
             cy.contains("Members").click();
@@ -64,11 +85,13 @@ describe("Project admin", function () {
         });
 
         it("should verify that icon for project visibility is correct", function () {
-            cy.visitProjectService("project-admin-test", "Admin");
+            cy.visit("/projects/project-admin-test");
 
-            cy.get("[data-test=project-icon]").then(($icon) => {
-                expect($icon[0].className).to.contains("fa-lock-open");
-            });
+            cy.get("[data-test=project-icon]").eq(0).should("have.class", "fa-lock-open");
+
+            cy.visit("/projects/private-project");
+
+            cy.get("[data-test=project-icon]").eq(0).should("have.class", "fa-lock");
         });
 
         it("should verify that a project administrator can enable a new service", () => {
@@ -104,5 +127,46 @@ context("Project member", function () {
         cy.visit("/project/admin/?group_id=101", { failOnStatusCode: false });
 
         cy.contains("You don't have permission to access administration of this project.");
+    });
+});
+
+context("Restricted users", function () {
+    it("should not be able to create new project", function () {
+        cy.clearCookie("__Host-TULEAP_session_hash");
+
+        // enable restricted users
+        cy.updatePlatformVisibilityAndAllowRestricted();
+
+        // check restricted user can NOT create a project
+        cy.RestrictedRegularUserLogin();
+        cy.get("[data-test=new-button]").should("not.exist");
+
+        cy.userLogout();
+
+        //enable project creation for restricted users
+        cy.platformAdminLogin();
+        cy.get("[data-test=platform-administration-link]").click();
+
+        cy.get("[data-test=project-settings-link]").click();
+
+        // need to force, tlp switch hides checkbox
+        // eslint-disable-next-line cypress/no-force
+        cy.get("[data-test=restricted-users-can-create-project]").check({ force: true });
+
+        cy.get("[data-test=save-settings]").click();
+        cy.userLogout();
+
+        // restricted users can now create projects
+        cy.RestrictedRegularUserLogin();
+        cy.get("[data-test=new-button]").click();
+        cy.get("[data-test=create-new-item]").click();
+
+        cy.get(
+            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
+        );
+        cy.userLogout();
+
+        // make platform accessible to anonymous again
+        cy.updatePlatformVisibilityForAnonymous();
     });
 });

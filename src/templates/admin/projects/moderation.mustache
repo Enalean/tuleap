@@ -56,6 +56,7 @@
                                             id="toggle-restricted-users-can-create-projects"
                                             class="tlp-switch-checkbox"
                                             value="1"
+                                            data-test="restricted-users-can-create-project"
                                             {{# restricted_users_can_create_projects }}checked{{/ restricted_users_can_create_projects }}
                                     >
                                     <label for="toggle-restricted-users-can-create-projects" class="tlp-switch-button" aria-hidden></label>
@@ -74,7 +75,7 @@
                         </div>
 
                         <div class="tlp-pane-section-submit">
-                            <button class="tlp-button-primary" type="submit">
+                            <button class="tlp-button-primary" type="submit" data-test="save-settings">
                                 <i class="fa fa-save tlp-button-icon"></i>
                                 {{# gettext }}Save settings{{/ gettext }}
                             </button>
