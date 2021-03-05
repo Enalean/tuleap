@@ -19,7 +19,6 @@
 
 import dragula from "dragula";
 import { ajax } from "jquery";
-import getDataSet from "get-dataset";
 import { applyAutomaticLayout } from "./dashboard-layout.js";
 import { addLayoutDropdown } from "./dashboard-dropdowns.js";
 
@@ -31,7 +30,7 @@ function init() {
             return el.classList.contains("dragula-container");
         },
         moves: function (el, source, handle) {
-            return getDataSet(handle).draggable === "true";
+            return handle.dataset.draggable === "true";
         },
     });
 
