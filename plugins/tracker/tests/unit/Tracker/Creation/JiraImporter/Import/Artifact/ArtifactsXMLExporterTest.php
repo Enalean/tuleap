@@ -27,6 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
@@ -87,7 +88,7 @@ class ArtifactsXMLExporterTest extends TestCase
     private $user_manager;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -103,7 +104,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->wrapper               = Mockery::mock(ClientWrapper::class);
         $this->attachment_downloader = Mockery::mock(AttachmentDownloader::class);
         $this->user_manager          = Mockery::mock(UserManager::class);
-        $this->logger                = Mockery::mock(LoggerInterface::class);
+        $this->logger                = new NullLogger();
 
         $forge_user = \Mockery::mock(\PFUser::class);
         $forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
@@ -190,8 +191,6 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->mockChangelogForKey01();
         $this->mockChangelogForKey02();
-
-        $this->logger->shouldReceive('debug');
     }
 
     public function testItExportsArtifacts(): void
@@ -226,12 +225,12 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0')
             ->andReturn(
                 [
                     'startAt'    => 0,
                     'maxResults' => 50,
-                    'total'      => 7,
+                    'total'      => 2,
                     'issues'     => [
                         [
                             'id'     => '10042',
@@ -277,7 +276,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -287,7 +286,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -343,7 +342,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0')
             ->andReturn(
                 [
                     'startAt'    => 0,
@@ -386,7 +385,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1&maxResults=1')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1')
             ->andReturn(
                 [
                     'startAt'    => 1,
@@ -418,7 +417,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -428,7 +427,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0')
             ->andReturn([
                 'startAt'    => 0,
                 'maxResults' => 50,
@@ -456,7 +455,7 @@ class ArtifactsXMLExporterTest extends TestCase
     {
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog?startAt=0')
             ->andReturn([
                 "maxResults" => 100,
                 "startAt"    => 0,
@@ -470,7 +469,7 @@ class ArtifactsXMLExporterTest extends TestCase
     {
         $this->wrapper
             ->shouldReceive('getUrl')
-            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog')
+            ->with(ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog?startAt=0')
             ->andReturn([
                 "maxResults" => 100,
                 "startAt"    => 0,

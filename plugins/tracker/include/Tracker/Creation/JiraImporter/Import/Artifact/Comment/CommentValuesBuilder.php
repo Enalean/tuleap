@@ -25,25 +25,27 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class CommentValuesBuilder
 {
     /**
-     * @var ClientWrapper
+     * @var JiraClient
      */
-    private $wrapper;
+    private $jira_client;
     /**
      * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
-        ClientWrapper $wrapper,
+        JiraClient $jira_client,
         LoggerInterface $logger
     ) {
-        $this->wrapper = $wrapper;
-        $this->logger  = $logger;
+        $this->jira_client = $jira_client;
+        $this->logger      = $logger;
     }
 
     /**
@@ -55,61 +57,18 @@ class CommentValuesBuilder
         $this->logger->debug("Start build comment collection ...");
         $comment_collection = [];
 
-        $comment_response                = $this->wrapper->getUrl(
-            $this->getCommentURL($jira_issue_key, null, null)
+        $iterator = JiraCollectionBuilder::iterateUntilTotal(
+            $this->jira_client,
+            $this->logger,
+            ClientWrapper::JIRA_CORE_BASE_URL . '/issue/' . urlencode($jira_issue_key) . '/comment?' . http_build_query(['expand' => 'renderedBody']),
+            'comments',
         );
-        $comment_response_representation = CommentResponseRepresentation::buildFromAPIResponse($comment_response);
-
-        foreach ($comment_response_representation->getComments() as $comment) {
+        foreach ($iterator as $comment) {
             $comment_collection[] = Comment::buildFromAPIResponse($comment);
-        }
-
-        $count_loop = 1;
-        $total      = $comment_response_representation->getTotal();
-        $is_last    = $total <= $comment_response_representation->getMaxResults();
-        while (! $is_last) {
-            $max_results = $comment_response_representation->getMaxResults();
-            $start_at    = $max_results * $count_loop;
-
-            $comment_response                = $this->wrapper->getUrl(
-                $this->getCommentURL($jira_issue_key, $start_at, $max_results)
-            );
-            $comment_response_representation = CommentResponseRepresentation::buildFromAPIResponse($comment_response);
-
-            foreach ($comment_response_representation->getComments() as $comment) {
-                $comment_collection[] = Comment::buildFromAPIResponse($comment);
-            }
-
-            $is_last = $comment_response_representation->getTotal() <=
-                ($comment_response_representation->getStartAt() + $comment_response_representation->getMaxResults());
-            $count_loop++;
         }
 
         $this->logger->debug("End build comment collection ...");
 
         return $comment_collection;
-    }
-
-    private function getCommentURL(
-        string $jira_issue_key,
-        ?int $start_at,
-        ?int $max_results
-    ): string {
-        $params = [
-            'expand' => 'renderedBody'
-        ];
-
-        if ($start_at !== null) {
-            $params['startAt'] = $start_at;
-        }
-
-        if ($max_results !== null) {
-            $params['maxResults'] = $max_results;
-        }
-
-        $url = ClientWrapper::JIRA_CORE_BASE_URL . '/issue/' . urlencode($jira_issue_key) . '/comment?' . http_build_query($params);
-        $this->logger->debug("  GET " .  $url);
-
-        return $url;
     }
 }

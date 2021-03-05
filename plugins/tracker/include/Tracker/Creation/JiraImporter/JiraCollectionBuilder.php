@@ -36,7 +36,7 @@ final class JiraCollectionBuilder
             $url_with_offset = self::addOffsetToUrl($base_url, $fetched_items_counter);
             $logger->info('GET: ' . $url_with_offset);
             $json = $client->getUrl($url_with_offset);
-            if (! isset($json['issues'], $json['total'])) {
+            if (! isset($json[$key], $json['total'])) {
                 throw new UnexpectedFormatException(sprintf('%s is supposed to return a payload with `total` and `%s`', $url_with_offset, $key));
             }
             foreach ($json[$key] as $value) {
