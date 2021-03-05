@@ -22,7 +22,7 @@ import { initSidebarPosition } from "../../tuleap/sidebar-position.ts";
 import { initMainPosition } from "../../tuleap/main-position.ts";
 import { initHeaderPosition } from "../../tuleap/header-position.ts";
 import { init as initNavbarPinned } from "../../tuleap/navbar-pinned.js";
-import { init as initSidebar } from "./sidebar.js";
+import { init as initSidebar } from "./sidebar";
 import { init as initScrollbar } from "./scrollbar.js";
 import { init as initProjectFlags } from "./project-flags.js";
 import { init as initProjectPrivacy } from "./project-privacy.js";
