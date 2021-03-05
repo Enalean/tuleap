@@ -19,12 +19,12 @@
 
 import { createPopover } from "tlp";
 
-export function init() {
+export function init(): void {
     handleBreadcrumbPrivacyPopover();
     handleSidebarPrivacyPopover();
 }
 
-function handleBreadcrumbPrivacyPopover() {
+function handleBreadcrumbPrivacyPopover(): void {
     const project_privacy_element = document.getElementById("breadcrumb-project-privacy-icon");
     if (!project_privacy_element) {
         return;
@@ -34,17 +34,21 @@ function handleBreadcrumbPrivacyPopover() {
 
     const popover_content = document.getElementById("current-project-nav-title-popover");
 
+    if (!popover_content) {
+        return;
+    }
+
     createPopover(project_privacy_element, popover_content, {
         anchor: project_privacy_element,
         placement: "bottom-start",
     });
 }
 
-function handleSidebarPrivacyPopover() {
+function handleSidebarPrivacyPopover(): void {
     const project_privacy_element = document.querySelector(
         ".project-sidebar-title > .project-sidebar-title-icon"
     );
-    if (!project_privacy_element) {
+    if (!project_privacy_element || !(project_privacy_element instanceof HTMLElement)) {
         return;
     }
 
@@ -52,8 +56,18 @@ function handleSidebarPrivacyPopover() {
 
     const popover_content = document.getElementById("project-sidebar-nav-title-popover");
 
+    if (!popover_content) {
+        return;
+    }
+
+    const project_sidebar_header = document.querySelector(".project-sidebar-header");
+
+    if (!project_sidebar_header || !(project_sidebar_header instanceof HTMLElement)) {
+        return;
+    }
+
     createPopover(project_privacy_element, popover_content, {
-        anchor: document.querySelector(".project-sidebar-header"),
+        anchor: project_sidebar_header,
         placement: "right-start",
     });
 }
