@@ -26,7 +26,7 @@ export class ItemsMapManager {
     constructor(private readonly list_item_builder: ListItemMapBuilder) {}
 
     public getListPickerItems(): Array<ListPickerItem> {
-        return Array.from(this.items_map.values());
+        return [...this.items_map.values()];
     }
 
     public findListPickerItemInItemMap(item_id: string): ListPickerItem {

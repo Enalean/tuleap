@@ -69,6 +69,10 @@ describe("ItemsMapManager", () => {
         });
     });
 
+    it("gets list picker items", () => {
+        expect(items_manager.getListPickerItems().length).toBeGreaterThan(0);
+    });
+
     function buildTemplateResult(value: string): TemplateResult {
         return html`
             ${value}
