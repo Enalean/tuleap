@@ -10,7 +10,7 @@
   "dependencies": {
     "@tuleap/tlp-fetch": "file://../../scripts/lib/tlp-fetch",
     "flatpickr": "^4.6.9",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "popper.js": "^1.16.1",
     "select2": "^4.0.13"
   },
