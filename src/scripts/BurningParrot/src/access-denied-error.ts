@@ -18,15 +18,19 @@
  */
 
 import { createModal } from "tlp";
-import Gettext from "node-gettext";
-import french_translations from "../po/fr.po";
+import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";
+import type GetText from "node-gettext";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const button = document.getElementById("button-ask-to-join");
     if (!button) {
         return;
     }
-    const modal_element = document.getElementById(button.dataset.modalId);
+    const modal_id = button.dataset.modalId;
+    if (!modal_id) {
+        return;
+    }
+    const modal_element = document.getElementById(modal_id);
     if (!modal_element) {
         return;
     }
@@ -39,7 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const message_to_admin = document.getElementById("message-private-project");
 
-    const gettext_provider = initGetTextProvider();
+    if (!message_to_admin || !(message_to_admin instanceof HTMLTextAreaElement)) {
+        return;
+    }
+
+    const gettext_provider = await initGetTextProvider();
     const error_message_empty = gettext_provider.gettext(
         "Message sent to administrators should not be the default one."
     );
@@ -49,20 +57,31 @@ document.addEventListener("DOMContentLoaded", () => {
         checkMessageValidity(message_to_admin, error_message_empty);
     });
 
-    function checkMessageValidity(message_to_admin, error_message_empty) {
+    function checkMessageValidity(
+        message_to_admin: HTMLTextAreaElement,
+        error_message_empty: string
+    ): void {
         const message =
             message_to_admin.value === message_to_admin.placeholder ? error_message_empty : "";
 
         message_to_admin.setCustomValidity(message);
     }
 
-    function initGetTextProvider() {
-        const gettext_provider = new Gettext();
-
+    function initGetTextProvider(): Promise<GetText> {
         const body = document.body;
-        gettext_provider.addTranslations("fr_FR", "access-denied-error", french_translations);
-        gettext_provider.setLocale(body.dataset.userLocale);
-        gettext_provider.setTextDomain("access-denied-error");
-        return gettext_provider;
+        const locale = body.dataset.userLocale;
+        if (!locale) {
+            throw new Error("Not able to find the user language.");
+        }
+
+        return initGettext(
+            locale,
+            "access-denied-error",
+            (locale) =>
+                import(
+                    /* webpackChunkName: "access-denied-error-po-" */ "../po/" +
+                        getPOFileFromLocale(locale)
+                )
+        );
     }
 });

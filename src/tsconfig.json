@@ -14,7 +14,8 @@
         "scripts/project/registration/**/*",
         "scripts/site-admin/project-widgets-configuration/**/*",
         "scripts/tuleap/**/*",
-        "themes/tlp/src/**/*"
+        "themes/tlp/src/**/*",
+        "scripts/BurningParrot/**/*"
     ],
     "exclude": ["node_modules", "scripts/lib"]
 }

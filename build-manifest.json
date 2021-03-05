@@ -18,6 +18,10 @@
         "list-picker": {
             "src": "src/scripts/lib/list-picker/src",
             "po": "src/scripts/lib/list-picker/po"
+        },
+        "access-denied-error": {
+            "src": "src/scripts/BurningParrot/src/",
+            "po": "src/scripts/BurningParrot/po"
         }
     },
     "gettext-vue": {

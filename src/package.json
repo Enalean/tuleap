@@ -10,6 +10,7 @@
     "@juggle/resize-observer": "^3.2.0",
     "@tuleap/date-helper": "file://./scripts/lib/date-helper",
     "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
+    "@tuleap/gettext": "file://./scripts/lib/gettext",
     "@tuleap/html-escaper": "file:scripts/lib/html-escaper",
     "@tuleap/keyboard-shortcuts": "file:./scripts/lib/keyboard-shortcuts",
     "@tuleap/list-picker": "file://./scripts/lib/list-picker",
