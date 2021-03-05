@@ -64,7 +64,7 @@ function MultiselectBoxController($element, $timeout) {
     }
 
     function bindUsersAvatars() {
-        select.options.forEach((option, option_index) => {
+        Array.from(select.options).forEach((option, option_index) => {
             const value = self.field.values[option_index];
             if (!value.user_reference) {
                 return;
@@ -76,7 +76,7 @@ function MultiselectBoxController($element, $timeout) {
     }
 
     function buildColorValueOptionDataset() {
-        select.options.forEach((option, option_index) => {
+        Array.from(select.options).forEach((option, option_index) => {
             const value = self.field.values[option_index];
             if (value.value_color) {
                 option.setAttribute("data-color-value", sanitize(value.value_color));
