@@ -40,6 +40,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
+use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -62,7 +63,7 @@ class StatisticsPlugin extends Plugin
         $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types', false);
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
-        $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->addHook(GetSystemEventQueuesEvent::NAME);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
         $this->addHook(Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS);
 
@@ -100,10 +101,12 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
-    public function system_event_get_custom_queues(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getSystemEventQueuesEvent(GetSystemEventQueuesEvent $event): void
     {
-        $params['queues'][SystemEventQueueStatistics::NAME] = new SystemEventQueueStatistics();
+        $event->addAvailableQueue(
+            SystemEventQueueStatistics::NAME,
+            new SystemEventQueueStatistics()
+        );
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
