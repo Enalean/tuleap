@@ -110,7 +110,7 @@ describe("Docman", function () {
                 cy.get("[data-test=title]").type("my document title");
 
                 cy.on("uncaught:exception", (err) => {
-                    // the message bellow is only thown by ckeditor, if any other js exception is thrown
+                    // the message bellow is only thrown by ckeditor, if any other js exception is thrown
                     // the test will fail
                     expect(err.message).to.include(
                         "Cannot read property 'compatMode' of undefined"
@@ -221,6 +221,54 @@ describe("Docman", function () {
                 cy.get("[data-test=feedback]").contains(
                     "You do not have sufficient access rights to administrate the document manager."
                 );
+            });
+        });
+        context("advanced search", function () {
+            it("create an empty document", function () {
+                cy.contains("New document").click();
+                cy.get("[data-test=create_document_next]").click();
+                cy.get("[data-test=title]").type("pattern");
+
+                cy.get("[data-test=item_type_6]").check();
+                cy.get("[data-test=docman_new_form]").submit();
+
+                cy.get("[data-test=feedback]").contains("Document successfully created.");
+                cy.contains("pattern");
+            });
+            it("adds the 'Title' criteria", function () {
+                //We should be into the new document UI.
+                cy.get("[data-test=document-advanced-link]").click();
+
+                cy.get("[data-test=title-filter]").should("not.exist", "Title");
+                cy.get("[data-test=plugin_docman_report_add_filter]").select("title");
+                cy.get("[data-test=docman_form_table]").contains("Global text search");
+                cy.get("[data-test=title-filter]").should("exist", "Title");
+            });
+            it("researches the file according to some patterns", function () {
+                cy.get("[data-test=title-filter]").clear().type("pattern{enter}");
+                cy.contains("pattern");
+
+                cy.get("[data-test=title-filter]").clear().type("*ttern{enter}");
+                cy.contains("pattern");
+
+                cy.get("[data-test=title-filter]").clear().type("*tte*{enter}");
+                cy.contains("pattern");
+
+                cy.get("[data-test=title-filter]").clear().type("pattern*{enter}");
+                cy.contains("pattern");
+
+                cy.get("[data-test=title-filter]").clear().type("*pattern*{enter}");
+                cy.contains("pattern");
+            });
+            it("removes the 'Title' search field", function () {
+                cy.get("[data-test=html_trash_link]").eq(0).click();
+                cy.on("window:confirm", (str) => {
+                    expect(str).to.equal(
+                        `Are you sure you want to remove this filter from the list?`
+                    );
+                });
+                cy.get("[data-test=docman_form_table]").contains("Global text search");
+                cy.get("[data-test=title-filter]").should("not.exist", "Title");
             });
         });
     });

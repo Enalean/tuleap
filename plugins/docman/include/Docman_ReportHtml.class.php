@@ -158,7 +158,7 @@ class Docman_ReportHtml
         // Add a new filter
         $html .= dgettext('tuleap-docman', 'Add');
         $html .= '&nbsp;';
-        $html .= '<select name="add_filter" id="plugin_docman_report_add_filter">';
+        $html .= '<select name="add_filter" id="plugin_docman_report_add_filter" data-test="plugin_docman_report_add_filter">';
         $html .= $this->getSelectOption('--', '--');
 
         // Std metadata

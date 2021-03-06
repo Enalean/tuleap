@@ -29,7 +29,12 @@
             v-on:keyup.enter="searchUrl"
             data-shortcut-search-document
         />
-        <a v-bind:title="advanced_title" class="document-advanced-link" v-bind:href="advanced_url">
+        <a
+            v-bind:title="advanced_title"
+            class="document-advanced-link"
+            v-bind:href="advanced_url"
+            data-test="document-advanced-link"
+        >
             {{ advanced_title }}
         </a>
     </div>

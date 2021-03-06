@@ -28,10 +28,11 @@ class Docman_HtmlFilterText extends \Docman_HtmlFilter
     {
         parent::__construct($filter);
     }
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _valueSelectorHtml($formName = 0)
     {
         $html  = '';
-        $html .= '<input type="text" name="' . $this->filter->md->getLabel() . '" value="' . $this->hp->purify($this->filter->getValue()) . '" class="text_field"/>';
+        $html .= '<input type="text" name="' . $this->hp->purify($this->filter->md->getLabel()) . '" value="' . $this->hp->purify($this->filter->getValue()) . '" class="text_field" data-test="' . $this->hp->purify($this->filter->md->getLabel()) . '-filter"/>';
         return $html;
     }
 }
