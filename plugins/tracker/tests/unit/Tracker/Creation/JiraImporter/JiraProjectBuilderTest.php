@@ -25,10 +25,11 @@ namespace Tracker\Creation\JiraImporter;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectCollection;
+use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 
 final class JiraProjectBuilderTest extends TestCase
 {
@@ -49,7 +50,7 @@ final class JiraProjectBuilderTest extends TestCase
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search')->andReturn($result);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0')->andReturn($result);
 
         $project_two = [
             'key'  => "TU",
@@ -64,7 +65,7 @@ final class JiraProjectBuilderTest extends TestCase
         ];
 
         $wrapper->shouldReceive('getUrl')->with(
-            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
+            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1"
         )->andReturn($other_result);
 
         $expected_collection = new JiraProjectCollection();
@@ -82,9 +83,9 @@ final class JiraProjectBuilderTest extends TestCase
         );
 
         $builder = new JiraProjectBuilder();
-        $result  = $builder->build($wrapper);
+        $result  = $builder->build($wrapper, new NullLogger());
 
-        $this->assertEquals($expected_collection->getJiraProjects(), $result);
+        self::assertEquals($expected_collection->getJiraProjects(), $result);
     }
 
     public function testItThrowsAndExceptionIfRecursiveCallGoesWrong(): void
@@ -102,17 +103,16 @@ final class JiraProjectBuilderTest extends TestCase
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search')->andReturn($result);
+        $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0')->andReturn($result);
 
         $wrapper->shouldReceive('getUrl')->with(
-            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
+            ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1"
         )->andReturn(null);
 
-        $this->expectException(JiraConnectionException::class);
-        $this->expectExceptionMessage("can not retrieve full collection");
+        $this->expectException(UnexpectedFormatException::class);
 
         $builder = new JiraProjectBuilder();
-        $builder->build($wrapper);
+        $builder->build($wrapper, new NullLogger());
     }
 
     public function itThrowsALogicExceptionIfJiraAPIHaveChanged(): void

@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use HTTPRequest;
 use Mockery;
 use ProjectManager;
+use Psr\Log\NullLogger;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
 
@@ -74,7 +75,8 @@ final class JiraProjectListControllerTest extends \PHPUnit\Framework\TestCase
             $project_manager,
             $permission_checker,
             $this->project_builder,
-            $this->wrapper_builder
+            $this->wrapper_builder,
+            new NullLogger(),
         );
 
         $this->request = Mockery::mock(HTTPRequest::class);

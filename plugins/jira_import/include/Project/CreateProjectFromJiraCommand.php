@@ -131,7 +131,7 @@ final class CreateProjectFromJiraCommand extends Command
         $jira_client = ClientWrapper::build($jira_credentials);
 
         if (! $input->getOption(self::OPT_JIRA_PROJECT)) {
-            $jira_projects = $this->jira_project_builder->build($jira_client);
+            $jira_projects = $this->jira_project_builder->build($jira_client, $logger);
             $autocomplete  = [];
             $output->writeln('');
             foreach ($jira_projects as $project) {
