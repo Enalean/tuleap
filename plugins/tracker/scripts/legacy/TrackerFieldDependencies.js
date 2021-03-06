@@ -84,14 +84,13 @@ tuleap.tracker.RuleNode = function (field) {
         process: function () {
             //retrieve selected source values
             var selected_sources = [];
-            tuleap.tracker.fields
-                .get(this.field)
-                .element()
-                .options.forEach(function (option) {
-                    if (option.selected) {
-                        selected_sources.push(option.value);
-                    }
-                });
+            Array.from(tuleap.tracker.fields.get(this.field).element().options).forEach(function (
+                option
+            ) {
+                if (option.selected) {
+                    selected_sources.push(option.value);
+                }
+            });
 
             //Store only if we are root (else already stored before we reach this field)
             if (tuleap.tracker.rule_forest.isTree(this.field)) {
