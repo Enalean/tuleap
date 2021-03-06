@@ -255,14 +255,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE = 'system_event_get_types_for_custom_queue';
 
     /**
-     * Get system event custom queues
-     *
-     * Expected results:
-     *   'queues' => SystemEventQueue[] indexed by queue name
-     */
-    public const SYSTEM_EVENT_GET_CUSTOM_QUEUES = 'system_event_get_custom_queues';
-
-    /**
      * Get an instance of service object corresponding to $row
      *
      * Parameters:

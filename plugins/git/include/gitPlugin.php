@@ -176,6 +176,7 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
+use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
@@ -249,7 +250,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::EDIT_SSH_KEYS);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
-        $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->addHook(GetSystemEventQueuesEvent::NAME);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
         $this->addHook('permission_get_name', 'permission_get_name', false);
@@ -464,11 +465,17 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypesForDefaultQueue());
     }
 
-    /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
-    public function system_event_get_custom_queues(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getSystemEventQueuesEvent(GetSystemEventQueuesEvent $event): void
     {
-        $params['queues'][Git_SystemEventQueue::NAME]              = new Git_SystemEventQueue($this->getLogger());
-        $params['queues'][Git_Mirror_MirrorSystemEventQueue::NAME] = new Git_Mirror_MirrorSystemEventQueue($this->getLogger());
+        $event->addAvailableQueue(
+            Git_SystemEventQueue::NAME,
+            new Git_SystemEventQueue($this->getLogger())
+        );
+
+        $event->addAvailableQueue(
+            Git_Mirror_MirrorSystemEventQueue::NAME,
+            new Git_Mirror_MirrorSystemEventQueue($this->getLogger())
+        );
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */

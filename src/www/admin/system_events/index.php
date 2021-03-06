@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/adminPresenter.class.php';
@@ -34,13 +35,16 @@ $request_queue = $request->get('queue');
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-$available_queues = [
-    SystemEventQueue::NAME => new SystemEventQueue()
-];
-EventManager::instance()->processEvent(
-    Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
-    ['queues' => &$available_queues]
+$event = new GetSystemEventQueuesEvent(
+    [
+        SystemEventQueue::NAME => new SystemEventQueue()
+    ]
 );
+EventManager::instance()->processEvent(
+    $event
+);
+
+$available_queues = $event->getAvailableQueues();
 
 $selected_queue_name = SystemEventQueue::NAME;
 if (isset($available_queues[$request_queue])) {

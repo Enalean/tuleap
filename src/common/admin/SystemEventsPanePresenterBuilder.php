@@ -20,12 +20,12 @@
 
 namespace Tuleap\Admin\SystemEvents;
 
-use Event;
 use EventManager;
 use SystemEvent;
 use SystemEventDao;
 use SystemEventManager;
 use SystemEventQueue;
+use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 
 class HomepagePanePresenterBuilder
 {
@@ -63,13 +63,16 @@ class HomepagePanePresenterBuilder
 
     private function getAllSectionPresenters()
     {
-        $available_queues = [
-            SystemEventQueue::NAME => new SystemEventQueue()
-        ];
-        $this->event_manager->processEvent(
-            Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
-            ['queues' => &$available_queues]
+        $event = new GetSystemEventQueuesEvent(
+            [
+                SystemEventQueue::NAME => new SystemEventQueue()
+            ]
         );
+        $this->event_manager->processEvent(
+            $event
+        );
+
+        $available_queues = $event->getAvailableQueues();
 
         $section_presenters = [];
         foreach ($available_queues as $queue) {

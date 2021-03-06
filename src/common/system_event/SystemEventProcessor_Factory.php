@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 
 class SystemEventProcessor_Factory
 {
@@ -46,14 +47,13 @@ class SystemEventProcessor_Factory
     public function getProcessForQueue($request_queue)
     {
         $owner = SystemEvent::OWNER_APP;
-        /** @var SystemEventQueue[] $custom_queues */
-        $custom_queues = [];
+        $event = new GetSystemEventQueuesEvent([]);
         $this->event_manager->processEvent(
-            Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
-            [
-                'queues' => &$custom_queues,
-            ]
+            $event
         );
+
+        $custom_queues = $event->getAvailableQueues();
+
         if (isset($custom_queues[$request_queue])) {
             $this->logger = $custom_queues[$request_queue]->getLogger();
             $this->logger->debug('Processing ' . $request_queue . ' queue.');
