@@ -163,8 +163,6 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
         $this->assertTrue($this->text_field->isValid($artifact, 'This is a text'));
         $this->assertTrue($this->text_field->isValid($artifact, '2009-08-45'));
         $this->assertFalse($this->text_field->isValid($artifact, 25));
-        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ''));
-        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, null));
     }
 
     public function testIsValidNotRequiredField(): void
@@ -230,6 +228,45 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
         );
         $this->assertEquals("field RLIKE 'regexp'", $this->text_field->buildMatchExpression('field', '/regexp/'));
         $this->assertEquals("field NOT RLIKE 'regexp'", $this->text_field->buildMatchExpression('field', '!/regexp/'));
+    }
+
+    public function testIsValidRegardingRequiredPropertyWhichIsTrue()
+    {
+        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $submited_value = ["format" => "html", "content" => "is content"];
+
+        $this->text_field->shouldReceive("isRequired")->andReturn(true);
+        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
+    }
+
+    public function testItIsNotValidRegardingRequiredPropertyWhichIsTrue()
+    {
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+
+        $this->text_field->shouldReceive("isRequired")->andReturn(true);
+        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html", "content" => ""]));
+        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html", "content" => null]));
+        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, null));
+    }
+
+    public function testItIsValidRegardingRequiredPropertyWhichIsFalse()
+    {
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+
+        $this->text_field->shouldReceive("isRequired")->andReturn(false);
+        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html", "content" => "the content"]));
+        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html", "content" => ""]));
+        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html", "content" => null]));
+        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, null));
+    }
+
+    public function testIsValidRegardingRequiredPropertyWhichIsFalseAndNoContent()
+    {
+        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $submited_value = ["format" => "html", "content" => ""];
+
+        $this->text_field->shouldReceive("isRequired")->andReturn(false);
+        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
     }
 
     /**

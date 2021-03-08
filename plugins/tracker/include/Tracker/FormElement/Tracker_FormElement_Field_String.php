@@ -288,6 +288,19 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         return true;
     }
 
+    /**
+     * Validate a required field
+     *
+     * @param Artifact $artifact        The artifact to check
+     * @param mixed    $submitted_value The submitted value
+     *
+     * @return bool true on success or false on failure
+     */
+    public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value): bool
+    {
+        return Tracker_FormElement_Field::isValidRegardingRequiredProperty($artifact, $submitted_value);
+    }
+
     protected function getRuleNoCr()
     {
         return new Rule_NoCr();

@@ -70,11 +70,11 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
     }
 
     /**
-     * @return \Mockery\Mock|Tracker_FormElement_Field_Text
+     * @return \Mockery\Mock|Tracker_FormElement_Field
      */
     private function getFieldWithId(int $id, bool $can_submit, bool $can_update, bool $is_valid)
     {
-        $field = \Mockery::spy(\Tracker_FormElement_Field_Text::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field = \Mockery::spy(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getId')->andReturn($id);
         $field->shouldReceive('userCanUpdate')->andReturn($can_update);
         $field->shouldReceive('userCanSubmit')->andReturn($can_submit);
