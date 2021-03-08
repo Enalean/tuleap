@@ -25,3 +25,15 @@
     margin: 0;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
+
+.planning-divider {
+    display: flex;
+    justify-content: center;
+    width: 60px;
+    padding: 65px 0 0;
+}
+
+.planning-arrows {
+    opacity: .4;
+    fill: darken($tlp-theme-background-color, 20%);
+}
