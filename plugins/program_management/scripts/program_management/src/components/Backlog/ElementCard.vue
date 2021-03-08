@@ -18,13 +18,14 @@
   -->
 
 <template>
-    <div class="element-card" v-bind:class="additional_classnames">
+    <div class="element-card" v-bind:class="additional_classnames" data-draggable="true">
         <div class="element-card-content">
             <div class="element-card-xref-label">
                 <a
                     v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
                     class="element-card-xref"
                     v-bind:class="`element-card-xref-${element.tracker.color_name}`"
+                    data-not-drag-handle="true"
                 >
                     {{ element.artifact_xref }}
                 </a>
@@ -39,7 +40,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
-import { userHasAccessibilityMode } from "../../configuration";
+import { userHasAccessibilityMode, canCreateProgramIncrement } from "../../configuration";
 
 @Component({})
 export default class ElementCard extends Vue {
@@ -53,6 +54,9 @@ export default class ElementCard extends Vue {
     get additional_classnames(): string {
         const classnames = [`element-card-${this.element.tracker.color_name}`];
 
+        if (canCreateProgramIncrement()) {
+            classnames.push("element-draggable-item");
+        }
         if (this.element.background_color) {
             classnames.push(`element-card-background-${this.element.background_color}`);
         }
