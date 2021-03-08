@@ -41,7 +41,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
     /**
      * @var AgileDashboard_PaneRedirectionExtractor
      */
-    private $params_extractor;
+    private $pane_redirection_extractor;
     /**
      * @var Planning_ArtifactLinker
      */
@@ -62,21 +62,27 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
      * @var Planning_MilestonePaneFactory
      */
     private $pane_factory;
+    /**
+     * @var HomeServiceRedirectionExtractor
+     */
+    private $home_service_redirection_extractor;
 
     public function __construct(
-        AgileDashboard_PaneRedirectionExtractor $params_extractor,
+        AgileDashboard_PaneRedirectionExtractor $pane_redirection_extractor,
+        HomeServiceRedirectionExtractor $home_service_redirection_extractor,
         Planning_ArtifactLinker $artifact_linker,
         PlanningFactory $planning_factory,
         RedirectParameterInjector $injector,
         Planning_MilestoneFactory $milestone_factory,
         Planning_MilestonePaneFactory $pane_factory
     ) {
-        $this->params_extractor  = $params_extractor;
-        $this->artifact_linker   = $artifact_linker;
-        $this->planning_factory  = $planning_factory;
-        $this->injector          = $injector;
-        $this->milestone_factory = $milestone_factory;
-        $this->pane_factory      = $pane_factory;
+        $this->pane_redirection_extractor         = $pane_redirection_extractor;
+        $this->home_service_redirection_extractor = $home_service_redirection_extractor;
+        $this->artifact_linker                    = $artifact_linker;
+        $this->planning_factory                   = $planning_factory;
+        $this->injector                           = $injector;
+        $this->milestone_factory                  = $milestone_factory;
+        $this->pane_factory                       = $pane_factory;
     }
 
     public function process(
@@ -84,7 +90,16 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         Tracker_Artifact_Redirect $redirect,
         Artifact $artifact
     ): void {
-        $requested_planning      = $this->params_extractor->extractParametersFromRequest($request);
+        if ($this->home_service_redirection_extractor->mustRedirectToAgiledashboardHomepage($request)) {
+            $redirect->base_url         = '/plugins/agiledashboard/';
+            $redirect->query_parameters = [
+                'group_id' => (string) $artifact->getTracker()->getGroupId()
+            ];
+
+            return;
+        }
+
+        $requested_planning      = $this->pane_redirection_extractor->extractParametersFromRequest($request);
         $last_milestone_artifact = $this->artifact_linker->linkBacklogWithPlanningItems(
             $request,
             $artifact,

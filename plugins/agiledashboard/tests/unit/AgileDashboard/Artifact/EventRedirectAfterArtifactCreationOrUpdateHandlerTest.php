@@ -96,14 +96,19 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
      */
     private $project;
+    /**
+     * @var HomeServiceRedirectionExtractor
+     */
+    private $home_service_redirection_extractor;
 
     protected function setUp(): void
     {
-        $this->params_extractor  = new AgileDashboard_PaneRedirectionExtractor();
-        $this->artifact_linker   = Mockery::mock(Planning_ArtifactLinker::class);
-        $this->planning_factory  = Mockery::mock(PlanningFactory::class);
-        $this->milestone_factory = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->pane_factory      = Mockery::mock(Planning_MilestonePaneFactory::class);
+        $this->params_extractor                   = new AgileDashboard_PaneRedirectionExtractor();
+        $this->home_service_redirection_extractor = new HomeServiceRedirectionExtractor();
+        $this->artifact_linker                    = Mockery::mock(Planning_ArtifactLinker::class);
+        $this->planning_factory                   = Mockery::mock(PlanningFactory::class);
+        $this->milestone_factory                  = Mockery::mock(Planning_MilestoneFactory::class);
+        $this->pane_factory                       = Mockery::mock(Planning_MilestonePaneFactory::class);
 
         $this->injector = new RedirectParameterInjector(
             $this->params_extractor,
@@ -114,6 +119,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 
         $this->processor = new EventRedirectAfterArtifactCreationOrUpdateHandler(
             $this->params_extractor,
+            $this->home_service_redirection_extractor,
             $this->artifact_linker,
             $this->planning_factory,
             $this->injector,
@@ -130,6 +136,8 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
         $tracker = Mockery::mock(Tracker::class)
             ->shouldReceive(['getProject' => $this->project])
             ->getMock();
+
+        $tracker->shouldReceive('getGroupId')->andReturn(self::PROJECT_ID);
 
         $this->artifact = Mockery::mock(Artifact::class)
             ->shouldReceive(
@@ -219,6 +227,27 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 
         self::assertEquals('/path/to/the/pane', $redirect->base_url);
         self::assertEquals([], $redirect->query_parameters);
+    }
+
+    public function testItRedirectsToTAgiledashboardHomePage(): void
+    {
+        $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
+            ->withParam('agiledashboard', ['home' => '1'])
+            ->build();
+
+        $redirect       = new Tracker_Artifact_Redirect();
+        $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
+
+        $this->processor->process($request, $redirect, $this->artifact);
+
+        self::assertEquals('/plugins/agiledashboard/', $redirect->base_url);
+        self::assertEquals(
+            [
+                'group_id' => self::PROJECT_ID,
+            ],
+            $redirect->query_parameters
+        );
     }
 
     public function testItRedirectsToPlanningWithFallbackToLegacyUrlIfPaneCannotBeFound(): void
