@@ -36,7 +36,7 @@
 
 .element-card {
     position: relative;
-    margin: 0 $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing;
+    margin: 0 0 $tlp-small-spacing $tlp-small-spacing;
     padding: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing ($tlp-small-spacing + 2);
     border: 1px solid var(--border-color, transparent);
     border-radius: 3px;
