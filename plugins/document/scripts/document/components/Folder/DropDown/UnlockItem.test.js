@@ -26,7 +26,7 @@ describe("UnlockItem", () => {
     let unlock_factory, state, store, store_options;
     beforeEach(() => {
         state = {
-            user_id: 101,
+            configuration: { user_id: 101 },
         };
         store_options = {
             state,

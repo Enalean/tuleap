@@ -103,9 +103,7 @@ export default {
     },
     computed: {
         ...mapState([
-            "project_id",
             "project_url",
-            "project_public_name",
             "is_user_administrator",
             "current_folder_ascendant_hierarchy",
             "is_loading_ascendant_hierarchy",
@@ -114,6 +112,7 @@ export default {
             "privacy",
             "project_flags",
         ]),
+        ...mapState("configuration", ["project_id", "project_public_name"]),
         document_tree_title() {
             return this.$gettext("Project documentation");
         },

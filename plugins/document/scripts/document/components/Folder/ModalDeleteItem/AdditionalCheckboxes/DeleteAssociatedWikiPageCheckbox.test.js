@@ -39,7 +39,7 @@ describe("ModalConfirmationDeletion", () => {
     }
 
     beforeEach(() => {
-        state = { project_id: 104 };
+        state = { configuration: { project_id: 104 } };
         store_options = {
             state,
         };

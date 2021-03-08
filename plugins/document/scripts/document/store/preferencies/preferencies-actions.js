@@ -28,22 +28,22 @@ import {
 } from "../../api/preferencies-rest-querier";
 
 export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
-    if (context.rootState.user_id === 0) {
+    if (context.rootState.configuration.user_id === 0) {
         return;
     }
 
     try {
         if (should_be_closed) {
             return deleteUserPreferenciesForFolderInProject(
-                context.rootState.user_id,
-                context.rootState.project_id,
+                context.rootState.configuration.user_id,
+                context.rootState.configuration.project_id,
                 folder_id
             );
         }
 
         return patchUserPreferenciesForFolderInProject(
-            context.rootState.user_id,
-            context.rootState.project_id,
+            context.rootState.configuration.user_id,
+            context.rootState.configuration.project_id,
             folder_id
         );
     } catch (exception) {
@@ -54,8 +54,8 @@ export const setUserPreferenciesForFolder = (context, [folder_id, should_be_clos
 export const setUserPreferenciesForUI = async (context) => {
     try {
         return await addUserLegacyUIPreferency(
-            context.rootState.user_id,
-            context.rootState.project_id
+            context.rootState.configuration.user_id,
+            context.rootState.configuration.project_id
         );
     } catch (exception) {
         return handleErrors(context, exception);
@@ -65,8 +65,8 @@ export const setUserPreferenciesForUI = async (context) => {
 export const displayEmbeddedInNarrowMode = async (context, item) => {
     try {
         await setNarrowModeForEmbeddedDisplay(
-            context.rootState.user_id,
-            context.rootState.project_id,
+            context.rootState.configuration.user_id,
+            context.rootState.configuration.project_id,
             item.id
         );
         context.commit("shouldDisplayEmbeddedInLargeMode", false);
@@ -78,8 +78,8 @@ export const displayEmbeddedInNarrowMode = async (context, item) => {
 export const displayEmbeddedInLargeMode = async (context, item) => {
     try {
         await removeUserPreferenceForEmbeddedDisplay(
-            context.rootState.user_id,
-            context.rootState.project_id,
+            context.rootState.configuration.user_id,
+            context.rootState.configuration.project_id,
             item.id
         );
         context.commit("shouldDisplayEmbeddedInLargeMode", true);
@@ -91,8 +91,8 @@ export const displayEmbeddedInLargeMode = async (context, item) => {
 export const getEmbeddedFileDisplayPreference = async (context, item) => {
     try {
         return await getPreferenceForEmbeddedDisplay(
-            context.rootState.user_id,
-            context.rootState.project_id,
+            context.rootState.configuration.user_id,
+            context.rootState.configuration.project_id,
             item.id
         );
     } catch (exception) {

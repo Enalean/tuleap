@@ -33,7 +33,10 @@ describe("PermissionsUpdateModal", () => {
     let factory, store;
 
     beforeEach(() => {
-        store = createStoreMock({}, { permissions: { project_ugroups: null }, error: {} });
+        store = createStoreMock(
+            {},
+            { permissions: { project_ugroups: null }, error: {}, configuration: {} }
+        );
 
         factory = (props = {}) => {
             return shallowMount(PermissionsUpdateModal, {

@@ -86,9 +86,10 @@ export default {
         };
     },
     computed: {
-        ...mapState(["current_folder", "project_id"]),
+        ...mapState(["current_folder"]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("permissions", ["project_ugroups"]),
+        ...mapState("configuration", ["project_id"]),
         submit_button_label() {
             return this.$gettext("Create folder");
         },

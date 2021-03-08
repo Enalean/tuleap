@@ -35,10 +35,13 @@ import metadata from "./metadata/module.js";
 import lock from "./lock/module.js";
 import preferencies from "./preferencies/module";
 import permissions from "./permissions/module";
+import { createConfigurationModule } from "./configuration";
 
 Vue.use(Vuex);
 
-export function createStore(user_id, project_id) {
+export function createStore(user_id, project_id, configuration_state) {
+    const configuration = createConfigurationModule(configuration_state);
+
     return new Vuex.Store({
         state,
         getters,
@@ -51,6 +54,7 @@ export function createStore(user_id, project_id) {
             lock,
             preferencies,
             permissions,
+            configuration,
         },
         plugins: [
             createPersistedState({

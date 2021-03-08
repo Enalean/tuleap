@@ -26,9 +26,7 @@ import EventBus from "../../../helpers/event-bus.js";
 describe("NewItemButton", () => {
     let factory;
     beforeEach(() => {
-        const state = {
-            project_id: 101,
-        };
+        const state = {};
 
         const store_options = {
             state,

@@ -44,7 +44,7 @@ module.exports = [
             tlp: "tlp",
         },
         resolve: {
-            extensions: [".ts", ".js"],
+            extensions: [".ts", ".js", ".vue"],
         },
         module: {
             rules: [
@@ -58,7 +58,7 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(true),
+            webpack_configurator.getTypescriptCheckerPlugin(false),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
             new MomentTimezoneDataPlugin({

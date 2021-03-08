@@ -38,7 +38,7 @@ export default {
         buttonClass: String,
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
     },
     methods: {
         goToDetails() {

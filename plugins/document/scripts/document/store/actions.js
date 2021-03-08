@@ -76,7 +76,9 @@ import { addNewFolder } from "../api/rest-querier";
 export const loadRootFolder = async (context) => {
     try {
         context.commit("beginLoading");
-        const service = await getDocumentManagerServiceInformation(context.state.project_id);
+        const service = await getDocumentManagerServiceInformation(
+            context.state.configuration.project_id
+        );
         const root = service.root_item;
 
         context.commit("setCurrentFolder", root);

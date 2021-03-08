@@ -30,9 +30,9 @@ describe("DownloadFolderAsZip", () => {
 
     function getWrapper(max_archive_size = 1) {
         const state = {
-            project_name: "tuleap-documentation",
             max_archive_size,
             warning_threshold: 0.5,
+            configuration: { project_name: "tuleap-documentation" },
         };
         const store_options = { state };
         store = createStoreMock(store_options);

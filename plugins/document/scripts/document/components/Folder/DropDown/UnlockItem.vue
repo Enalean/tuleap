@@ -40,7 +40,7 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapState(["user_id"]),
+        ...mapState("configuration", ["user_id"]),
         can_unlock_document() {
             if (this.item.lock_info === null) {
                 return false;

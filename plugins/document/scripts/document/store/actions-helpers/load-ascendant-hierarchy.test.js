@@ -25,13 +25,8 @@ describe("loadAscendantHierarchy", () => {
     let context, getParents;
 
     beforeEach(() => {
-        const project_id = 101;
         context = {
             commit: jest.fn(),
-            state: {
-                project_id,
-                current_folder_ascendant_hierarchy: [],
-            },
         };
 
         getParents = jest.spyOn(rest_querier, "getParents");

@@ -28,7 +28,7 @@ describe("CreateNewItemVersionButton", () => {
     let factory;
     beforeEach(() => {
         const state = {
-            project_id: 101,
+            configuration: { project_id: 101 },
         };
 
         const store_options = {

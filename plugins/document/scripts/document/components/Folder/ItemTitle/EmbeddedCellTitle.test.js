@@ -43,6 +43,7 @@ describe("EmbeddedCellTitle", () => {
             id: 1,
             title: "My current folder",
         };
+        store.state.configuration = {};
 
         store.getters.current_folder_title = "My folder";
 

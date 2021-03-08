@@ -42,7 +42,9 @@ import { formatCustomMetadataForFolderUpdate } from "../../helpers/metadata-help
 
 export const loadProjectMetadata = async (context, [global_context]) => {
     try {
-        const project_metadata = await getProjectMetadata(global_context.state.project_id);
+        const project_metadata = await getProjectMetadata(
+            global_context.state.configuration.project_id
+        );
 
         context.commit("saveProjectMetadata", project_metadata);
     } catch (exception) {

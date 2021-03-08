@@ -42,7 +42,8 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapState(["project_id", "current_folder"]),
+        ...mapState(["current_folder"]),
+        ...mapState("configuration", ["project_id"]),
         icon_class() {
             return ICON_EMBEDDED;
         },

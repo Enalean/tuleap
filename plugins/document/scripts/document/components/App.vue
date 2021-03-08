@@ -60,10 +60,6 @@ export default {
         GlobalErrorModal,
     },
     props: {
-        user_id: Number,
-        project_id: Number,
-        project_name: String,
-        project_public_name: String,
         project_url: String,
         user_is_admin: Boolean,
         user_can_create_wiki: Boolean,
@@ -93,6 +89,7 @@ export default {
             "has_document_lock_error",
             "has_global_modal_error",
         ]),
+        ...mapState("configuration", ["user_id"]),
         ...mapGetters(["is_uploading"]),
     },
     created() {
@@ -109,10 +106,6 @@ export default {
         );
 
         this.$store.commit("initApp", [
-            this.user_id,
-            this.project_id,
-            this.project_name,
-            this.project_public_name,
             this.project_url,
             this.user_is_admin,
             this.date_time_format,

@@ -31,13 +31,11 @@ import LoadingError from "./Folder/Error/LoadingError.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 
 describe("App", () => {
-    let factory, state, store, store_options, router, default_prop;
+    let factory, state, store, store_options, router;
     beforeEach(() => {
         router = new VueRouter({});
 
-        default_prop = {
-            user_id: 1,
-            project_id: 101,
+        const default_prop = {
             user_is_admin: true,
             user_can_create_wiki: false,
             date_time_format: "Ymd",
@@ -52,7 +50,7 @@ describe("App", () => {
             csrf_token_name: "challenge_name",
         };
 
-        factory = (state = {}, props = {}) => {
+        factory = (state = {}) => {
             store_options = {
                 state,
             };
@@ -66,7 +64,7 @@ describe("App", () => {
 
             return shallowMount(App, {
                 localVue,
-                propsData: props,
+                propsData: default_prop,
                 mocks: { $store: store },
                 router,
             });
@@ -82,9 +80,13 @@ describe("App", () => {
                 has_document_loading_error: false,
                 has_document_lock_error: false,
             },
+            configuration: {
+                user_id: 1,
+                project_id: 101,
+            },
         };
 
-        const wrapper = factory(state, default_prop);
+        const wrapper = factory(state);
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeFalsy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeTruthy();
@@ -101,9 +103,13 @@ describe("App", () => {
                 has_document_loading_error: false,
                 has_document_lock_error: false,
             },
+            configuration: {
+                user_id: 1,
+                project_id: 101,
+            },
         };
 
-        const wrapper = factory(state, default_prop);
+        const wrapper = factory(state);
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -120,9 +126,13 @@ describe("App", () => {
                 has_document_loading_error: false,
                 has_document_lock_error: false,
             },
+            configuration: {
+                user_id: 1,
+                project_id: 101,
+            },
         };
 
-        const wrapper = factory(state, default_prop);
+        const wrapper = factory(state);
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -139,9 +149,13 @@ describe("App", () => {
                 has_document_loading_error: true,
                 has_document_lock_error: false,
             },
+            configuration: {
+                user_id: 1,
+                project_id: 101,
+            },
         };
 
-        const wrapper = factory(state, default_prop);
+        const wrapper = factory(state);
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -158,9 +172,13 @@ describe("App", () => {
                 has_document_loading_error: false,
                 has_document_lock_error: true,
             },
+            configuration: {
+                user_id: 1,
+                project_id: 101,
+            },
         };
 
-        const wrapper = factory(state, default_prop);
+        const wrapper = factory(state);
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -169,23 +187,6 @@ describe("App", () => {
     });
 
     it(`Does not display link back to old UI for anonymous`, () => {
-        const props = {
-            user_id: 0,
-            project_id: 101,
-            user_is_admin: true,
-            user_can_create_wiki: false,
-            date_time_format: "Ymd",
-            max_files_dragndrop: 5,
-            max_size_upload: 10000,
-            embedded_are_allowed: true,
-            is_deletion_allowed: true,
-            is_item_status_metadata_used: false,
-            is_obsolescence_date_metadata_used: false,
-            is_changelog_proposed_after_dnd: true,
-            csrf_token: "challenge_value",
-            csrf_token_name: "challenge_name",
-        };
-
         state = {
             error: {
                 has_folder_permission_error: false,
@@ -194,9 +195,13 @@ describe("App", () => {
                 has_document_loading_error: false,
                 has_document_lock_error: false,
             },
+            configuration: {
+                user_id: 0,
+                project_id: 101,
+            },
         };
 
-        const wrapper = factory(state, props);
+        const wrapper = factory(state);
 
         expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeFalsy();
     });
@@ -210,9 +215,13 @@ describe("App", () => {
                 has_document_loading_error: false,
                 has_document_lock_error: false,
             },
+            configuration: {
+                user_id: 1,
+                project_id: 101,
+            },
         };
 
-        const wrapper = factory(state, default_prop);
+        const wrapper = factory(state);
 
         expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeTruthy();
     });

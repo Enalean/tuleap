@@ -33,7 +33,7 @@ describe("SwitchToOldUI", () => {
     beforeEach(() => {
         state = {
             current_folder: null,
-            project_id: 100,
+            configuration: { project_id: 100 },
         };
 
         const store_options = {

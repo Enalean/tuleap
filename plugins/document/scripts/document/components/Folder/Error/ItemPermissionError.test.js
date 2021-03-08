@@ -26,7 +26,7 @@ import localVue from "../../../helpers/local-vue.js";
 describe("ItemPermissionError", () => {
     it("displays the error with a for to send custom email", () => {
         const state = {
-            project_id: 101,
+            configuration: { project_id: 101 },
         };
 
         const store_options = { state };

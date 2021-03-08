@@ -28,9 +28,7 @@ describe("FolderContent", () => {
     let factory, state, store, item;
 
     beforeEach(() => {
-        state = {
-            project_id: 101,
-        };
+        state = {};
 
         const store_options = {
             state,
@@ -71,12 +69,7 @@ describe("FolderContent", () => {
     });
 
     it(`Should not display preview when component is rendered`, () => {
-        const wrapper = factory({
-            project_id: 101,
-            currently_previewed_item: {},
-            current_folder: {},
-            folder_content: [item],
-        });
+        const wrapper = factory();
 
         expect(wrapper.find("[data-test=document-quick-look]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-folder-owner-information]").exists()).toBeTruthy();

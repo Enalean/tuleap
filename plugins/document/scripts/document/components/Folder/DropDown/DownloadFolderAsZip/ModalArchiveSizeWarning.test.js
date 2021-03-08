@@ -24,7 +24,9 @@ import ModalArchiveSizeWarningModal from "./ModalArchiveSizeWarning.vue";
 
 describe("ModalArchiveSizeWarningModal", () => {
     function getWrapper() {
-        const state = { project_name: "tuleap-documentation", warning_threshold: 1 };
+        const state = {
+            warning_threshold: 1,
+        };
         const store_options = { state };
         const store = createStoreMock(store_options);
 

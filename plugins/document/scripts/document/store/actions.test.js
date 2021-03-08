@@ -61,7 +61,7 @@ describe("Store actions", () => {
         context = {
             commit: jest.fn(),
             state: {
-                project_id,
+                configuration: { project_id },
                 current_folder_ascendant_hierarchy: [],
             },
         };

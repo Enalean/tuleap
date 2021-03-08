@@ -57,7 +57,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_name", "max_archive_size", "warning_threshold"]),
+        ...mapState(["max_archive_size", "warning_threshold"]),
+        ...mapState("configuration", ["project_name"]),
         folder_href() {
             return `/plugins/document/${this.project_name}/folders/${encodeURIComponent(
                 this.item.id

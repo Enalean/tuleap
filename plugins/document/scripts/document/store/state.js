@@ -18,10 +18,6 @@
  */
 
 const state = {
-    user_id: null,
-    project_id: null,
-    project_name: null,
-    project_public_name: null,
     project_url: null,
     project_ugroups: null,
     is_loading_folder: true,

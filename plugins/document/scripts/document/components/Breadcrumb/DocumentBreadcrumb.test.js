@@ -29,6 +29,7 @@ describe("DocumentBreadcrumb", () => {
             privacy: {
                 are_restricted_users_allowed: false,
             },
+            configuration: {},
         };
         store_options = {
             state,

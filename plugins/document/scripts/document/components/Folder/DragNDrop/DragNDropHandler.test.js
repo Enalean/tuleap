@@ -56,7 +56,9 @@ describe("DragNDropHandler", () => {
                     type: TYPE_FOLDER,
                     user_can_write: true,
                 },
-                user_id: 666,
+                configuration: {
+                    user_id: 666,
+                },
             },
             getters: {
                 user_can_dragndrop: true,
@@ -381,7 +383,7 @@ describe("DragNDropHandler", () => {
                 user_can_write: true,
                 lock_info: {
                     locked_by: {
-                        id: store.state.user_id,
+                        id: store.state.configuration.user_id,
                         name: "current_user",
                     },
                 },
@@ -415,7 +417,7 @@ describe("DragNDropHandler", () => {
                 user_can_write: true,
                 lock_info: {
                     locked_by: {
-                        id: store.state.user_id,
+                        id: store.state.configuration.user_id,
                         name: "current_user",
                     },
                 },

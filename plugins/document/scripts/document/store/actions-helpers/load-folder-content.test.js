@@ -25,13 +25,8 @@ describe("loadFolderContent", () => {
     let context, getFolderContent;
 
     beforeEach(() => {
-        const project_id = 101;
         context = {
             commit: jest.fn(),
-            state: {
-                project_id,
-                current_folder_ascendant_hierarchy: [],
-            },
         };
 
         getFolderContent = jest.spyOn(rest_querier, "getFolderContent");

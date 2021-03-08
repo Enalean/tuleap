@@ -89,7 +89,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState("configuration", ["project_id"]),
         placeholder() {
             return this.$gettext("Please write something meaningful for the admin.");
         },

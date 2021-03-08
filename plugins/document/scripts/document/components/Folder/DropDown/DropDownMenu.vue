@@ -120,7 +120,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id", "is_deletion_allowed"]),
+        ...mapState(["is_deletion_allowed"]),
+        ...mapState("configuration", ["project_id"]),
         ...mapGetters(["is_item_an_empty_document", "is_item_a_folder"]),
     },
     methods: {
