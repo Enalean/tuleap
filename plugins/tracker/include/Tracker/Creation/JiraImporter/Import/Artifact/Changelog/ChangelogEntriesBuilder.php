@@ -25,25 +25,27 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class ChangelogEntriesBuilder
 {
     /**
-     * @var ClientWrapper
+     * @var JiraClient
      */
-    private $wrapper;
+    private $jira_client;
     /**
      * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
-        ClientWrapper $wrapper,
+        JiraClient $jira_client,
         LoggerInterface $logger
     ) {
-        $this->wrapper = $wrapper;
-        $this->logger  = $logger;
+        $this->jira_client = $jira_client;
+        $this->logger      = $logger;
     }
 
     /**
@@ -56,60 +58,18 @@ class ChangelogEntriesBuilder
 
         $changelog_entries = [];
 
-        $changelog_response       = $this->wrapper->getUrl(
-            $this->getChangelogUrl($jira_issue_key, null, null)
+        $iterator = JiraCollectionBuilder::iterateUntilTotal(
+            $this->jira_client,
+            $this->logger,
+            ClientWrapper::JIRA_CORE_BASE_URL . "/issue/" . urlencode($jira_issue_key) . "/changelog",
+            'values',
         );
-        $changelog_representation = ChangelogResponseRepresentation::buildFromAPIResponse($changelog_response);
-
-        foreach ($changelog_representation->getValues() as $changelog) {
-            $changelog_entries[] = ChangelogEntryValueRepresentation::buildFromAPIResponse($changelog);
-        }
-
-        $count_loop = 1;
-        $total      = $changelog_representation->getTotal();
-        $is_last    = $total <= $changelog_representation->getMaxResults();
-        while (! $is_last) {
-            $max_results = $changelog_representation->getMaxResults();
-            $start_at    = $max_results * $count_loop;
-
-            $changelog_response       = $this->wrapper->getUrl(
-                $this->getChangelogUrl($jira_issue_key, $start_at, $max_results)
-            );
-            $changelog_representation = ChangelogResponseRepresentation::buildFromAPIResponse($changelog_response);
-
-            foreach ($changelog_representation->getValues() as $changelog) {
-                $changelog_entries[] = $changelog;
-            }
-
-            $is_last = $changelog_representation->getTotal() <=
-                ($changelog_representation->getStartAt() + $changelog_representation->getMaxResults());
-            $count_loop++;
+        foreach ($iterator as $value) {
+            $changelog_entries[] = ChangelogEntryValueRepresentation::buildFromAPIResponse($value);
         }
 
         $this->logger->debug("  Changelog entries built with success");
 
         return $changelog_entries;
-    }
-
-    private function getChangelogUrl(
-        string $jira_issue_key,
-        ?int $start_at,
-        ?int $max_results
-    ): string {
-        $params = [];
-
-        if ($start_at !== null) {
-            $params['startAt'] = $start_at;
-        }
-
-        if ($max_results !== null) {
-            $params['maxResults'] = $max_results;
-        }
-
-        $this->logger->debug(
-            "  GET " . ClientWrapper::JIRA_CORE_BASE_URL . "/issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params)
-        );
-
-        return ClientWrapper::JIRA_CORE_BASE_URL . "/issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params);
     }
 }

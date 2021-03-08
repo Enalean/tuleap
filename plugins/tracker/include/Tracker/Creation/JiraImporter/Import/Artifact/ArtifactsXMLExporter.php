@@ -29,6 +29,8 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
@@ -36,9 +38,9 @@ use UserManager;
 class ArtifactsXMLExporter
 {
     /**
-     * @var ClientWrapper
+     * @var JiraClient
      */
-    private $wrapper;
+    private $jira_client;
 
     /**
      * @var UserManager
@@ -65,14 +67,14 @@ class ArtifactsXMLExporter
     private $attachment_xml_exporter;
 
     public function __construct(
-        ClientWrapper $wrapper,
+        JiraClient $jira_client,
         UserManager $user_manager,
         DataChangesetXMLExporter $data_changeset_xml_exporter,
         AttachmentCollectionBuilder $attachment_collection_builder,
         AttachmentXMLExporter $attachment_xml_exporter,
         LoggerInterface $logger
     ) {
-        $this->wrapper                       = $wrapper;
+        $this->jira_client                   = $jira_client;
         $this->user_manager                  = $user_manager;
         $this->data_changeset_xml_exporter   = $data_changeset_xml_exporter;
         $this->attachment_collection_builder = $attachment_collection_builder;
@@ -97,65 +99,29 @@ class ArtifactsXMLExporter
             return;
         }
 
-        $jira_issues_response = $this->getIssues($jira_project_id, $jira_issue_type_name, null, null);
-
         $artifacts_node = $tracker_node->addChild('artifacts');
 
-        $this->exportBatchOfIssuesInArtifactXMLFormat(
-            $artifacts_node,
-            $jira_issues_response,
-            $jira_base_url,
-            $jira_field_mapping_collection,
-            $issue_representation_collection,
-            $linked_issues_collection
+        $iterator = JiraCollectionBuilder::iterateUntilTotal(
+            $this->jira_client,
+            $this->logger,
+            $this->getUrl($jira_project_id, $jira_issue_type_name),
+            'issues',
         );
-
-        $count_loop = 1;
-        $total      = (int) $jira_issues_response['total'];
-        $is_last    = $total <= (int) $jira_issues_response['maxResults'];
-        while (! $is_last) {
-            $max_results = $jira_issues_response['maxResults'];
-            $start_at    = $jira_issues_response['maxResults'] * $count_loop;
-
-            $jira_issues_response = $this->getIssues($jira_project_id, $jira_issue_type_name, $start_at, $max_results);
-
+        foreach ($iterator as $issue) {
             $this->exportBatchOfIssuesInArtifactXMLFormat(
                 $artifacts_node,
-                $jira_issues_response,
+                $issue,
                 $jira_base_url,
                 $jira_field_mapping_collection,
                 $issue_representation_collection,
                 $linked_issues_collection
             );
-
-            $is_last = (int) $jira_issues_response['total'] <=
-                ((int) $jira_issues_response['startAt'] + (int) $jira_issues_response['maxResults']);
-            $count_loop++;
         }
-    }
-
-    private function getIssues(
-        string $jira_project_id,
-        string $jira_issue_type_name,
-        ?int $start_at,
-        ?int $max_results
-    ): array {
-        $jira_artifacts_response = $this->wrapper->getUrl(
-            $this->getUrl($jira_project_id, $jira_issue_type_name, $start_at, $max_results)
-        );
-
-        if (! $jira_artifacts_response) {
-            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssuesException();
-        }
-
-        return $jira_artifacts_response;
     }
 
     private function getUrl(
         string $jira_project_id,
-        string $jira_issue_type_id,
-        ?int $start_at,
-        ?int $max_results
+        string $jira_issue_type_id
     ): string {
         $params = [
             'jql'    => 'project=' . $jira_project_id . ' AND issuetype=' . $jira_issue_type_id,
@@ -163,18 +129,7 @@ class ArtifactsXMLExporter
             'expand' => 'renderedFields'
         ];
 
-        if ($start_at !== null) {
-            $params['startAt'] = $start_at;
-        }
-
-        if ($max_results !== null) {
-            $params['maxResults'] = $max_results;
-        }
-
-        $url = ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
-        $this->logger->debug($url);
-
-        return $url;
+        return ClientWrapper::JIRA_CORE_BASE_URL . '/search?' . http_build_query($params);
     }
 
     /**
@@ -182,55 +137,42 @@ class ArtifactsXMLExporter
      */
     private function exportBatchOfIssuesInArtifactXMLFormat(
         SimpleXMLElement $artifacts_node,
-        array $jira_issues_response,
+        array $issue,
         string $jira_base_url,
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentationCollection $issue_representation_collection,
         LinkedIssuesCollection $linked_issues_collection
     ): void {
-        if (! isset($jira_issues_response['issues'])) {
-            return;
-        }
+        $issue_api_representation = IssueAPIRepresentation::buildFromAPIResponse($issue);
+        $issue_representation_collection->addIssueRepresentationInCollection($issue_api_representation);
 
-        $jira_issues = $jira_issues_response['issues'];
-        if (count($jira_issues) === 0) {
-            return;
-        }
+        $issue_id  = $issue_api_representation->getId();
+        $issue_key = $issue_api_representation->getKey();
 
-        $this->logger->debug("Exporting batch of issues.");
+        $this->logger->debug("Exporting issue $issue_key (id: $issue_id)");
 
-        foreach ($jira_issues as $issue) {
-            $issue_api_representation = IssueAPIRepresentation::buildFromAPIResponse($issue);
-            $issue_representation_collection->addIssueRepresentationInCollection($issue_api_representation);
+        $artifact_node = $artifacts_node->addChild('artifact');
+        $artifact_node->addAttribute('id', (string) $issue_id);
 
-            $issue_id  = $issue_api_representation->getId();
-            $issue_key = $issue_api_representation->getKey();
+        $attachment_collection = $this->attachment_collection_builder->buildCollectionOfAttachment(
+            $issue_api_representation
+        );
 
-            $this->logger->debug("Exporting issue $issue_key (id: $issue_id)");
+        $this->logger->debug("  |_ Exporting data for issue");
+        $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
+            $artifact_node,
+            $jira_field_mapping_collection,
+            $issue_api_representation,
+            $attachment_collection,
+            $linked_issues_collection,
+            $jira_base_url
+        );
 
-            $artifact_node = $artifacts_node->addChild('artifact');
-            $artifact_node->addAttribute('id', (string) $issue_id);
-
-            $attachment_collection = $this->attachment_collection_builder->buildCollectionOfAttachment(
-                $issue_api_representation
-            );
-
-            $this->logger->debug("  |_ Exporting data for issue");
-            $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
-                $artifact_node,
-                $jira_field_mapping_collection,
-                $issue_api_representation,
-                $attachment_collection,
-                $linked_issues_collection,
-                $jira_base_url
-            );
-
-            //Export file info in XML
-            $this->logger->debug("  |_ Exporting attachements for issue");
-            $this->attachment_xml_exporter->exportCollectionOfAttachmentInXML(
-                $attachment_collection,
-                $artifact_node
-            );
-        }
+        //Export file info in XML
+        $this->logger->debug("  |_ Exporting attachements for issue");
+        $this->attachment_xml_exporter->exportCollectionOfAttachmentInXML(
+            $attachment_collection,
+            $artifact_node
+        );
     }
 }
