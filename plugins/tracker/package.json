@@ -13,7 +13,7 @@
     "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
     "codemirror": "5.22.0",
-    "d3-array": "^2.9.1",
+    "d3-array": "^2.11.0",
     "d3-axis": "^2.0.0",
     "d3-scale": "^3.2.3",
     "d3-selection": "^2.0.0",
