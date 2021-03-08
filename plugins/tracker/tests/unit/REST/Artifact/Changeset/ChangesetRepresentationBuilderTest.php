@@ -105,7 +105,12 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->once()
             ->andReturn([$string_field, $int_field]);
 
-        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
+        $representation = $this->builder->buildWithFields(
+            $changeset,
+            \Tracker_Artifact_Changeset::FIELDS_ALL,
+            $user,
+            null
+        );
 
         self::assertSame(24, $representation->id);
         self::assertSame(101, $representation->submitted_by);
@@ -136,7 +141,12 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->once()
             ->andReturn([$permission_on_artifact_field, $string_field]);
 
-        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
+        $representation = $this->builder->buildWithFields(
+            $changeset,
+            \Tracker_Artifact_Changeset::FIELDS_ALL,
+            $user,
+            null
+        );
 
         self::assertSame([0 => $string_value], $representation->values);
     }
@@ -157,9 +167,70 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->once()
             ->andReturn([$int_field_user_can_not_read, $string_field]);
 
-        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
+        $representation = $this->builder->buildWithFields(
+            $changeset,
+            \Tracker_Artifact_Changeset::FIELDS_ALL,
+            $user,
+            null
+        );
 
         self::assertSame([0 => $string_value], $representation->values);
+    }
+
+    public function testBuildWithFieldReturnsNullIfCommentIsPrivateAndNoVisibleChangesAndFilterModeIsOnAll(): void
+    {
+        $user               = $this->buildUser();
+        $changeset          = $this->mockChangeset();
+        $previous_changeset = $this->mockChangeset();
+
+        $this->comment_permission_checker
+            ->shouldReceive('isPrivateCommentForUser')
+            ->once()
+            ->andReturnTrue();
+
+        $representation = $this->builder->buildWithFields(
+            $changeset,
+            \Tracker_Artifact_Changeset::FIELDS_ALL,
+            $user,
+            $previous_changeset
+        );
+
+        self::assertNull($representation);
+    }
+
+    /**
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact_Changeset
+     */
+    private function mockChangeset()
+    {
+        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
+
+        $comment = new \Tracker_Artifact_Changeset_Comment(
+            201,
+            $changeset,
+            null,
+            null,
+            101,
+            1234567890,
+            'A text comment',
+            'text',
+            0,
+            []
+        );
+
+        $changeset->shouldReceive('getComment')->andReturn($comment);
+        $changeset->shouldReceive('getSubmittedBy')->andReturn(101);
+        $changeset->shouldReceive('getSubmittedOn')->andReturn(1234567890);
+
+        $string_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
+        $string_field->shouldReceive('userCanRead')->andReturnFalse();
+
+        $value = \Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
+        $value->shouldReceive('getField')->andReturn($string_field);
+        $value->shouldReceive('hasChanged')->andReturnTrue();
+        $changeset->shouldReceive('getValues')->andReturn([$value]);
+
+        return $changeset;
     }
 
     public function testBuildWithOnlyComments(): void
@@ -170,7 +241,8 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         $representation = $this->builder->buildWithFields(
             $changeset,
             \Tracker_Artifact_Changeset::FIELDS_COMMENTS,
-            $user
+            $user,
+            null
         );
 
         $this->form_element_factory->shouldNotHaveReceived('getUsedFieldsForREST');
@@ -187,7 +259,8 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         $representation = $this->builder->buildWithFields(
             $changeset,
             \Tracker_Artifact_Changeset::FIELDS_COMMENTS,
-            $user
+            $user,
+            null
         );
         self::assertNull($representation->submitted_by_details);
     }
@@ -201,7 +274,8 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         $representation = $this->builder->buildWithFields(
             $changeset,
             \Tracker_Artifact_Changeset::FIELDS_COMMENTS,
-            $user
+            $user,
+            null
         );
         self::assertNull($representation->last_modified_by);
     }
@@ -214,7 +288,8 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         $representation = $this->builder->buildWithFields(
             $changeset,
             \Tracker_Artifact_Changeset::FIELDS_COMMENTS,
-            $user
+            $user,
+            null
         );
 
         self::assertNull($representation);
@@ -232,7 +307,12 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->once()
             ->andReturnTrue();
 
-        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_COMMENTS, $user);
+        $representation = $this->builder->buildWithFields(
+            $changeset,
+            \Tracker_Artifact_Changeset::FIELDS_COMMENTS,
+            $user,
+            null
+        );
 
         self::assertNull($representation);
     }
@@ -251,7 +331,12 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->once()
             ->andReturnTrue();
 
-        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
+        $representation = $this->builder->buildWithFields(
+            $changeset,
+            \Tracker_Artifact_Changeset::FIELDS_ALL,
+            $user,
+            null
+        );
 
         self::assertNotNull($representation->last_comment);
         self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);
@@ -277,7 +362,12 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
             ->once()
             ->andReturn([$project_ugroup]);
 
-        $representation = $this->builder->buildWithFields($changeset, \Tracker_Artifact_Changeset::FIELDS_ALL, $user);
+        $representation = $this->builder->buildWithFields(
+            $changeset,
+            \Tracker_Artifact_Changeset::FIELDS_ALL,
+            $user,
+            null
+        );
 
         self::assertNotNull($representation->last_comment);
         self::assertInstanceOf(HTMLOrTextCommentRepresentation::class, $representation->last_comment);

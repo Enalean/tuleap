@@ -140,7 +140,8 @@ class ArtifactRepresentationBuilder
         $changeset = $artifact->getLastChangeset();
         return $this->mapAndFilter(
             $this->formelement_factory->getUsedFieldsForREST($artifact->getTracker()),
-            $this->getFieldsValuesFilter($user, $changeset)
+            $this->getFieldsValuesFilter($user, $changeset),
+            false
         );
     }
 
@@ -167,11 +168,17 @@ class ArtifactRepresentationBuilder
      * @param array   $collection
      * @return array
      */
-    private function mapAndFilter(array $collection, Closure $function)
+    private function mapAndFilter(array $collection, Closure $function, bool $reverse_order)
     {
-        $array = [];
+        $array              = [];
+        $previous_changeset = null;
         foreach ($collection as $item) {
-            $array[] = $function($item);
+            $array[]            = $function($item, $previous_changeset);
+            $previous_changeset = $item;
+        }
+
+        if ($reverse_order) {
+            $array = array_reverse($array);
         }
 
         return array_values(
@@ -181,11 +188,12 @@ class ArtifactRepresentationBuilder
         );
     }
 
-    private function mapFilterSlice(array $collection, $offset, $limit, Closure $function)
+    private function mapFilterSlice(array $collection, $offset, $limit, Closure $function, bool $reverse_order)
     {
         return $this->mapAndFilter(
             array_slice($collection, $offset, $limit),
-            $function
+            $function,
+            $reverse_order
         );
     }
 
@@ -213,18 +221,15 @@ class ArtifactRepresentationBuilder
     ): ChangesetRepresentationCollection {
         $all_changesets = $artifact->getChangesets();
 
-        if ($reverse_order) {
-            $all_changesets = array_reverse($all_changesets);
-        }
-
         return new ChangesetRepresentationCollection(
             $this->mapFilterSlice(
                 $all_changesets,
                 $offset,
                 $limit,
-                function (Tracker_Artifact_Changeset $changeset) use ($user, $fields): ?ChangesetRepresentation {
-                    return $this->changeset_representation_builder->buildWithFields($changeset, $fields, $user);
-                }
+                function (Tracker_Artifact_Changeset $changeset, ?Tracker_Artifact_Changeset $previous_changeset) use ($user, $fields): ?ChangesetRepresentation {
+                    return $this->changeset_representation_builder->buildWithFields($changeset, $fields, $user, $previous_changeset);
+                },
+                $reverse_order
             ),
             count($all_changesets)
         );

@@ -69,6 +69,11 @@
                     <label>Summary</label>
                     <properties size="50"/>
                 </formElement>
+                <formElement type="string" ID="F10" rank="1">
+                  <name>hidden_field</name>
+                  <label>Hidden field</label>
+                  <properties size="30"/>
+                </formElement>
                 <formElement type="sb" ID="F26" rank="371">
                     <name>assigned_to</name>
                     <label>Assigned to</label>
@@ -103,6 +108,8 @@
                 <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F8" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F8" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F10" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F10" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
             <artifacts>
                 <artifact id="3">
@@ -130,6 +137,103 @@
                         </field_change>
                     </changeset>
                 </artifact>
+              <artifact id="4">
+                <changeset>
+                  <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                  <submitted_on format="ISO8601">2018-03-02T12:00:00+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                      <submitted_on format="ISO8601"><![CDATA[2018-03-02T12:00:00+01:00]]></submitted_on>
+                      <body format="text"><![CDATA[There is only a private comment]]></body>
+                      <private_ugroups>
+                        <ugroup>project_admins</ugroup>
+                      </private_ugroups>
+                    </comment>
+                  </comments>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                  <submitted_on format="ISO8601">2018-03-01T19:00:00+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                      <submitted_on format="ISO8601"><![CDATA[2018-03-01T19:00:00+01:00]]></submitted_on>
+                      <body format="text"><![CDATA[This is a public comment alone]]></body>
+                    </comment>
+                  </comments>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                  <submitted_on format="ISO8601">2018-03-01T18:00:00+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                      <submitted_on format="ISO8601"><![CDATA[2018-03-01T18:00:00+01:00]]></submitted_on>
+                      <body format="text"><![CDATA[This comment is shown to everybody but not changes for member]]></body>
+                    </comment>
+                  </comments>
+                  <field_change field_name="hidden_field" type="string">
+                    <value><![CDATA[This is updated but not seen by member]]></value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                  <submitted_on format="ISO8601">2018-03-01T17:00:00+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                      <submitted_on format="ISO8601"><![CDATA[2018-03-01T17:00:00+01:00]]></submitted_on>
+                      <body format="text"><![CDATA[This comment is alone and is not shown]]></body>
+                      <private_ugroups>
+                        <ugroup>project_admins</ugroup>
+                      </private_ugroups>
+                    </comment>
+                  </comments>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                  <submitted_on format="ISO8601">2018-03-01T16:00:00+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                      <submitted_on format="ISO8601"><![CDATA[2018-03-01T16:00:00+01:00]]></submitted_on>
+                      <body format="text"><![CDATA[This comment is not shown to member and its change too]]></body>
+                      <private_ugroups>
+                        <ugroup>project_admins</ugroup>
+                      </private_ugroups>
+                    </comment>
+                  </comments>
+                  <field_change field_name="hidden_field" type="string">
+                    <value><![CDATA[This is not seen by member]]></value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                  <submitted_on format="ISO8601">2018-03-01T15:00:00+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                      <submitted_on format="ISO8601"><![CDATA[2018-03-01T15:00:00+01:00]]></submitted_on>
+                      <body format="text"><![CDATA[This comment is shown with change]]></body>
+                    </comment>
+                  </comments>
+                  <field_change field_name="summary" type="string">
+                    <value><![CDATA[I updated this one]]></value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">rest_private_comment_admin</submitted_by>
+                  <submitted_on format="ISO8601">2018-03-01T12:00:00+01:00</submitted_on>
+                  <comments/>
+                  <field_change field_name="summary" type="string">
+                    <value><![CDATA[I submitted this one]]></value>
+                  </field_change>
+                  <field_change field_name="hidden_field" type="string">
+                    <value><![CDATA[I submitted this one too but it's hidden]]></value>
+                  </field_change>
+                </changeset>
+              </artifact>
             </artifacts>
         </tracker>
     </trackers>

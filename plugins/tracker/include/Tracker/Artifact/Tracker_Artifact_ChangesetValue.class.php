@@ -106,6 +106,19 @@ abstract class Tracker_Artifact_ChangesetValue
 
     abstract public function nodiff($format = 'html');
 
+    public function isThereDiffWithPreviousChangeset(
+        ?Tracker_Artifact_ChangesetValue $previous_changeset_value,
+        PFUser $user
+    ): bool {
+        if ($previous_changeset_value === null) {
+            return true;
+        }
+
+        $diff = $this->diff($previous_changeset_value, 'html', $user);
+
+        return $diff !== false;
+    }
+
     /**
      * Returns a mail format diff between current changeset value and changeset value in param
      *
