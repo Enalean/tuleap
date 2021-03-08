@@ -19,6 +19,9 @@
 
 .program-increment-display {
     margin: 0 $tlp-small-spacing $tlp-large-spacing 0;
+    border: 1px hidden;
+    border-radius: 4px;
+    box-shadow: 0 3px 4px rgba($tlp-ui-border-normal, .25);
 }
 
 .program-increment-title {
@@ -40,14 +43,19 @@
     top: 44px;
     align-items: center;
     transition: background .1s linear;
-    border-radius: 0 0 3px 3px;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 4px;
     background: $tlp-ui-white;
-    box-shadow: inset 1px 1px 1px $tlp-ui-border-normal;
     cursor: pointer;
 
     &:hover {
         transition: background .1s linear;
         background: darken($tlp-ui-white, 2%);
+    }
+
+    &:not(:last-child) {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
     }
 }
 
@@ -71,21 +79,21 @@
     display: flex;
     align-items: center;
     padding: $tlp-small-spacing $tlp-medium-spacing;
-    border-radius: 0 0 3px 3px;
+    border: 1px solid $tlp-ui-border-normal;
+    border-top: 0;
     background: $tlp-ui-white;
-    box-shadow: inset 1px 1px 1px $tlp-ui-border-normal;
-}
-
-.program-increment-info-hidden,
-.program-increment-content-hidden {
-    display: none;
 }
 
 .program-increment-content {
     position: relative;
-    border-radius: 0 0 3px 3px;
+    border: 1px solid $tlp-ui-border-normal;
+    border-top: 0;
+    border-radius: 0 0 4px 4px;
     background: darken($tlp-ui-white, 2%);
-    box-shadow: inset 1px 1px 1px $tlp-ui-border-normal;
+
+    &:last-child {
+        border-bottom: 1px solid $tlp-ui-border-normal;
+    }
 }
 
 .program-increment-content-items {
