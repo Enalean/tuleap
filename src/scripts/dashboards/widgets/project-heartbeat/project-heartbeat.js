@@ -21,7 +21,7 @@ import { get } from "tlp";
 import { render } from "mustache";
 import { sanitize } from "dompurify";
 import moment from "moment";
-import { loadTooltips } from "../../../codendi/Tooltip.js";
+import { loadTooltips } from "@tuleap/tooltip";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
 export default init;

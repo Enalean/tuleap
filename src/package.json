@@ -16,6 +16,7 @@
     "@tuleap/list-picker": "file://./scripts/lib/list-picker",
     "@tuleap/mention": "file:scripts/lib/mention",
     "@tuleap/tlp-fetch": "file://./scripts/lib/tlp-fetch",
+    "@tuleap/tooltip": "file:scripts/lib/tooltip",
     "@tuleap/vue-breadcrumb-privacy": "file:scripts/lib/vue-breadcrumb-privacy",
     "ckeditor4": "^4.14.1",
     "d3-array": "^2.9.1",

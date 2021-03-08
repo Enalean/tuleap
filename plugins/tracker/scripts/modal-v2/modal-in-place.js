@@ -21,6 +21,7 @@ import jQuery from "jquery";
 import CKEDITOR from "ckeditor4";
 import codendi from "codendi";
 import { initMentions } from "@tuleap/mention";
+import { loadTooltips } from "@tuleap/tooltip";
 
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
@@ -240,7 +241,7 @@ tuleap.textarea = tuleap.textarea || {};
 
         initModalInteraction: function (modal) {
             const tuleap_modal = modal.getDOMElement();
-            codendi.Tooltip.load(tuleap_modal, true);
+            loadTooltips(tuleap_modal, true);
             codendi.Toggler.init(tuleap_modal);
             tuleap.dateTimePicker.init();
             codendi.tracker.textboxlist.init();

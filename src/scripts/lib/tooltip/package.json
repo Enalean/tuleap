@@ -1,0 +1,29 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/tooltip",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/tooltip.es.js",
+  "main": "dist/tooltip.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/tooltip.es.js",
+      "require": "./dist/tooltip.umd.js"
+    }
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "jquery": ">=1.7.0 <4.0.0"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/vite build",
+    "watch": "$npm_package_config_bin/nodemon --watch src/ --exec '$npm_package_config_bin/vite build --mode development --minify false'",
+    "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+  }
+}
