@@ -351,7 +351,7 @@ const fat_combined_files = [
         "./www/scripts/codendi/feedback.js",
         "./www/scripts/codendi/CreateProject.js",
         "./www/scripts/codendi/cross_references.js",
-        "./scripts/codendi/Tooltip.js",
+        "./node_modules/@tuleap/tooltip/dist/tooltip.umd.js",
         "./www/scripts/codendi/Tooltip-loader.js",
         "./www/scripts/codendi/Toggler.js",
         "./www/scripts/codendi/DropDownPanel.js",
@@ -382,7 +382,7 @@ const fat_combined_files = [
         "./www/scripts/bootstrap/bootstrap-dropdown.js",
         "./www/scripts/bootstrap/bootstrap-modal.js",
         "./scripts/tuleap/listFilter.js",
-        "./scripts/codendi/Tooltip.js",
+        "./node_modules/@tuleap/tooltip/dist/tooltip.umd.js",
     ];
 
 const webpack_config_legacy_combined = {

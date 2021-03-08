@@ -12,6 +12,7 @@
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "file:scripts/lib/artifact-ckeditor-image-upload",
     "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tooltip": "file:../../src/scripts/lib/tooltip",
     "codemirror": "5.22.0",
     "d3-array": "^2.11.0",
     "d3-axis": "^2.0.0",

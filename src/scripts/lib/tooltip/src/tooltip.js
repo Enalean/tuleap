@@ -1,6 +1,6 @@
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global module:readonly require:readonly */
+import jQuery from "jquery";
 
-var codendi;
+// Redefine a local codendi in order to stop adding more stuff in global variables
+const local_codendi = {};
 
-if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
-    var jQuery = require("jquery");
-    codendi = {};
-    tooltipModule(jQuery, codendi);
-
-    module.exports = {
-        loadTooltips: codendi.Tooltip.load,
-    };
-} else {
-    codendi = window.codendi || {};
-    tooltipModule(window.jQuery, codendi);
-}
-
-function tooltipModule($, codendi) {
+(function tooltipModule($, codendi) {
     codendi.Tooltips = [];
 
     codendi.Tooltip = function (element, url, options) {
@@ -197,4 +185,8 @@ function tooltipModule($, codendi) {
             });
         }
     }
-}
+})(jQuery, local_codendi);
+
+export const loadTooltips = local_codendi.Tooltip.load;
+// So that window.codendi.Tooltip.load is defined;
+export const load = local_codendi.Tooltip.load;

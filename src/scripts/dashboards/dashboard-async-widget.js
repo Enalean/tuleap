@@ -20,7 +20,7 @@
 import { get } from "tlp";
 import { sanitize } from "dompurify";
 import { init as togglerInit } from "../tuleap/toggler.js";
-import { loadTooltips } from "../codendi/Tooltip.js";
+import { loadTooltips } from "@tuleap/tooltip";
 
 export default async function init() {
     const widgets = document.querySelectorAll(".dashboard-widget-asynchronous");
