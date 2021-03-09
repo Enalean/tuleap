@@ -42,16 +42,8 @@ describe("ProgramIncrementCard", () => {
         expect(
             wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-down")
         ).toBe(false);
-        expect(
-            wrapper
-                .get("[data-test=program-increment-info]")
-                .classes("program-increment-info-hidden")
-        ).toBe(true);
-        expect(
-            wrapper
-                .get("[data-test=program-increment-content]")
-                .classes("program-increment-content-hidden")
-        ).toBe(true);
+        expect(wrapper.find("[data-test=program-increment-info]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increment-content]").exists()).toBe(false);
     });
 
     it("Display a card and its content", async () => {

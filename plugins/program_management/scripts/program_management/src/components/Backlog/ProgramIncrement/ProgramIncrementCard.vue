@@ -41,11 +41,7 @@
             </span>
             <span class="tlp-badge-outline tlp-badge-primary">{{ increment.status }}</span>
         </div>
-        <div
-            class="program-increment-info"
-            v-bind:class="{ 'program-increment-info-hidden': !is_open }"
-            data-test="program-increment-info"
-        >
+        <div class="program-increment-info" v-if="is_open" data-test="program-increment-info">
             <a
                 v-bind:href="`/plugins/tracker/?aid=${increment.id}`"
                 class="tlp-button-primary tlp-button-outline tlp-button-mini"
@@ -57,7 +53,7 @@
         </div>
         <section
             class="tlp-pane-section program-increment-content"
-            v-bind:class="{ 'program-increment-content-hidden': !is_open }"
+            v-if="is_open"
             data-test="program-increment-content"
         >
             <program-increment-feature-list v-if="is_open" v-bind:increment="increment" />
