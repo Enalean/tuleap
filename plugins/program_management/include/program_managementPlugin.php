@@ -61,8 +61,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionJSONParser;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionRepresentation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\TrackerShouldPlanFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
@@ -87,6 +88,7 @@ use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\ProgramManagement\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Program\Backlog\Plan\ConfigurationChecker;
 use Tuleap\ProgramManagement\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
@@ -344,7 +346,18 @@ final class program_managementPlugin extends Plugin
 
     private function planArtifactIfNeeded(ArtifactUpdated $event): void
     {
-        $this->getFeaturePlanner()->plan($event);
+        $checker = new TrackerShouldPlanFeatureChecker($this->getPlanConfigurationBuilder());
+        if (! $checker->checkTrackerCanPlanFeature($event)) {
+            return;
+        }
+
+        $program_increment_changed = new ProgramIncrementChanged(
+            $event->getArtifact()->getId(),
+            $event->getArtifact()->getTrackerId(),
+            $event->getUser()
+        );
+
+        $this->getFeaturePlanner()->plan($program_increment_changed);
     }
 
     private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(\Tuleap\Tracker\Artifact\Artifact $artifact): void
@@ -778,17 +791,18 @@ final class program_managementPlugin extends Plugin
         );
     }
 
-    private function getFeaturePlanner(): FeaturePlanner
+    private function getFeaturePlanner(): FeatureInProgramIncrementPlanner
     {
         $artifact_factory = Tracker_ArtifactFactory::instance();
 
-        return new FeaturePlanner(
+        return new FeatureInProgramIncrementPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeatureToLinkBuilder(new ArtifactsLinkedToParentDao()),
             $artifact_factory,
             new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
             new ContentDao(),
-            new UserStoriesLinkedToMilestoneBuilder(new ArtifactsLinkedToParentDao())
+            new UserStoriesLinkedToMilestoneBuilder(new ArtifactsLinkedToParentDao()),
+            $this->getLogger()
         );
     }
 }

@@ -29,7 +29,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
@@ -58,7 +58,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FeaturePlanner
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FeatureInProgramIncrementPlanner
      */
     private $feature_planner;
 
@@ -121,7 +121,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);
         $this->logger                          = \Mockery::mock(LoggerInterface::class);
         $this->pending_artifact_creation_store = \Mockery::mock(PendingArtifactCreationStore::class);
-        $this->feature_planner                 = Mockery::mock(FeaturePlanner::class);
+        $this->feature_planner                 = Mockery::mock(FeatureInProgramIncrementPlanner::class);
 
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,

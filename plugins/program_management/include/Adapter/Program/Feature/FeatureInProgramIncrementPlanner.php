@@ -22,19 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
+use Psr\Log\LoggerInterface;
 use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\PlannedProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\PlanFeatureInProgramIncrement;
-use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
-use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
 
-class FeaturePlanner implements PlanFeatureInProgramIncrement
+class FeatureInProgramIncrementPlanner implements PlanFeatureInProgramIncrement
 {
     /**
      * @var DBTransactionExecutor
@@ -60,6 +60,10 @@ class FeaturePlanner implements PlanFeatureInProgramIncrement
      * @var UserStoriesLinkedToMilestoneBuilder
      */
     private $features_linked_to_milestone_builder;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         DBTransactionExecutor $db_transaction_executor,
@@ -67,7 +71,8 @@ class FeaturePlanner implements PlanFeatureInProgramIncrement
         \Tracker_ArtifactFactory $tracker_artifact_factory,
         MirroredMilestoneRetriever $mirrored_milestone_retriever,
         ContentDao $content_dao,
-        UserStoriesLinkedToMilestoneBuilder $features_linked_to_milestone_builder
+        UserStoriesLinkedToMilestoneBuilder $features_linked_to_milestone_builder,
+        LoggerInterface $logger
     ) {
         $this->db_transaction_executor              = $db_transaction_executor;
         $this->tracker_artifact_factory             = $tracker_artifact_factory;
@@ -75,74 +80,68 @@ class FeaturePlanner implements PlanFeatureInProgramIncrement
         $this->content_dao                          = $content_dao;
         $this->features_linked_to_milestone_builder = $features_linked_to_milestone_builder;
         $this->feature_to_plan_builder              = $feature_to_plan_builder;
+        $this->logger                               = $logger;
     }
 
     /**
      * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException
      * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
      */
-    public function plan(ArtifactUpdated $event): void
+    public function plan(ProgramIncrementChanged $feature_to_plan): void
     {
-        $artifact                     = $event->getArtifact();
-        $program_increment_id         = $artifact->getId();
-        $user                         = $event->getUser();
-        $program_increment_tracker_id = $event->getArtifact()->getTrackerId();
+        $this->logger->debug("Check if we need to plan/unplan items in mirrored releases.");
+        $program_increment_id         = $feature_to_plan->program_increment_id;
+        $user                         = $feature_to_plan->user;
+        $program_increment_tracker_id = $feature_to_plan->tracker_id;
 
         $potential_feature_to_link = $this->content_dao->searchContent(
-            new PlannedProgramIncrement($artifact->getId())
+            new PlannedProgramIncrement($program_increment_id)
         );
-        $feature_list_to_plan      = $this->feature_to_plan_builder->buildFeatureChange($potential_feature_to_link, $program_increment_tracker_id);
+        $feature_plan_change       = $this->feature_to_plan_builder->buildFeatureChange(
+            $potential_feature_to_link,
+            $program_increment_tracker_id
+        );
 
         $this->db_transaction_executor->execute(
-            function () use ($feature_list_to_plan, $user, $program_increment_id) {
+            function () use ($feature_plan_change, $user, $program_increment_id) {
                 $milestones = $this->mirrored_milestone_retriever->retrieveMilestonesLinkedTo($program_increment_id);
                 foreach ($milestones as $mirrored_milestone) {
                     $milestone = $this->tracker_artifact_factory->getArtifactById($mirrored_milestone->getId());
                     if (! $milestone) {
+                        $this->logger->debug(sprintf("Mirrored milestone %d not found", $mirrored_milestone->getId()));
                         continue;
                     }
 
                     $field_artifact_link = $milestone->getAnArtifactLinkField($user);
                     if (! $field_artifact_link) {
+                        $this->logger->debug(sprintf("Mirrored milestone %d doesn ot have an artifact link field", $mirrored_milestone->getId()));
                         continue;
                     }
 
-                    $fields_data                                                  = [];
-                    $fields_data[$field_artifact_link->getId()]['new_values']     =
-                        implode(",", $feature_list_to_plan->features_id);
-                    $fields_data[$field_artifact_link->getId()]['removed_values'] =
-                        $this->getUserStoriesThatAreLinkedToMilestoneAndNoLongerInArtifactLinkList(
-                            $mirrored_milestone,
-                            $feature_list_to_plan
-                        );
+                    $fields_data = new FieldData(
+                        $feature_plan_change->user_stories,
+                        $this->features_linked_to_milestone_builder->build($mirrored_milestone),
+                        $field_artifact_link->getId()
+                    );
+
                     try {
-                        $milestone->createNewChangeset($fields_data, "", $user);
+                        $this->logger->debug(
+                            sprintf(
+                                "Change in PI #%d trying to add a changeset to the mirrored milestone #%d",
+                                $program_increment_id,
+                                $milestone->getId()
+                            )
+                        );
+                        $milestone->createNewChangeset(
+                            $fields_data->getFieldDataForChangesetCreationFormat(),
+                            "",
+                            $user
+                        );
                     } catch (Tracker_NoChangeException $e) {
                         //Don't stop transaction if linked artifact is not concerned by the change
                     }
                 }
             }
         );
-    }
-
-    /**
-     * @return array
-     */
-    private function getUserStoriesThatAreLinkedToMilestoneAndNoLongerInArtifactLinkList(
-        MirroredMilestone $mirrored_milestone,
-        FeaturePlanChange $feature_list_to_plan
-    ): array {
-        $potential_user_stories_to_remove = $this->features_linked_to_milestone_builder->build(
-            $mirrored_milestone
-        );
-
-        $user_stories_to_remove = [];
-        foreach ($potential_user_stories_to_remove as $key => $value) {
-            if (! in_array($key, $feature_list_to_plan->features_id, true)) {
-                $user_stories_to_remove[$key] = $key;
-            }
-        }
-
-        return $user_stories_to_remove;
     }
 }

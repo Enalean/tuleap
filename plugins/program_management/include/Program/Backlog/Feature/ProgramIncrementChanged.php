@@ -22,11 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-interface PlanFeatureInProgramIncrement
+/**
+ * @psalm-immutable
+ */
+final class ProgramIncrementChanged
 {
     /**
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
+     * @var int
      */
-    public function plan(ProgramIncrementChanged $feature_to_plan): void;
+    public $program_increment_id;
+    /**
+     * @var int
+     */
+    public $tracker_id;
+    /**
+     * @var \PFUser
+     */
+    public $user;
+
+    public function __construct(int $program_increment_id, int $tracker_id, \PFUser $user)
+    {
+        $this->program_increment_id = $program_increment_id;
+        $this->tracker_id           = $tracker_id;
+        $this->user                 = $user;
+    }
 }

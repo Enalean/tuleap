@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturePlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
@@ -35,7 +36,6 @@ use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Replication
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -64,7 +64,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      */
     private $pending_artifact_creation_store;
     /**
-     * @var FeaturePlanner
+     * @var FeatureInProgramIncrementPlanner
      */
     private $feature_planner;
 
@@ -75,7 +75,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        FeaturePlanner $feature_planner
+        FeatureInProgramIncrementPlanner $feature_planner
     ) {
         $this->changeset_collection_adapter    = $changeset_collection_adapter;
         $this->projects_collection_builder     = $projects_collection_builder;
@@ -119,14 +119,16 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         );
 
         $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(
-            (int) $replication_data->getArtifact()->getId(),
+            $replication_data->getArtifact()->getId(),
             (int) $replication_data->getUser()->getId()
         );
 
-        $artifact_updated = new ArtifactUpdated(
-            $replication_data->getFullChangeset()->getArtifact(),
+        $program_increment_changed = new ProgramIncrementChanged(
+            $replication_data->getArtifact()->getId(),
+            $replication_data->getTracker()->getTrackerId(),
             $replication_data->getUser()
         );
-        $this->feature_planner->plan($artifact_updated);
+
+        $this->feature_planner->plan($program_increment_changed);
     }
 }

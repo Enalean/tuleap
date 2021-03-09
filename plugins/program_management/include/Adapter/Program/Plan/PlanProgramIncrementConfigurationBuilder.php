@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\ProgramTracker;
 
-final class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrementConfiguration
+class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrementConfiguration
 {
     /**
      * @var PlanStore
