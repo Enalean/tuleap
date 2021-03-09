@@ -30,7 +30,6 @@
 
         <content-layout v-else-if="is_loading">
             <baseline-label-skeleton slot="header" />
-            <statistics slot="statistics" />
             <baseline-content-filters-skeleton slot="filters" />
 
             <content-body-skeleton />
@@ -38,7 +37,6 @@
 
         <content-layout v-else>
             <baseline-label slot="header" v-bind:baseline="baseline" />
-            <statistics slot="statistics" />
             <baseline-content-filters slot="filters" />
 
             <content-body />
@@ -53,7 +51,6 @@ import ContentBodySkeleton from "./ContentBodySkeleton.vue";
 import ContentBody from "./ContentBody.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
 import { mapGetters } from "vuex";
-import Statistics from "./Statistics.vue";
 import BaselineContentFilters from "./BaselineContentFilters.vue";
 import BaselineContentFiltersSkeleton from "./BaselineContentFiltersSkeleton.vue";
 import ContentLayout from "../common/ContentLayout.vue";
@@ -63,7 +60,6 @@ export default {
     components: {
         ContentBodySkeleton,
         BaselineLabelSkeleton,
-        Statistics,
         ContentLayout,
         BaselineContentFilters,
         BaselineContentFiltersSkeleton,

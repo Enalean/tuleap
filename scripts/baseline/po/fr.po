@@ -51,9 +51,6 @@ msgstr "Comparaison de baselines #%u"
 msgid "Baselines comparison #%u/#%u"
 msgstr "Comparaison des baselines #%u/#%u"
 
-msgid "Bugs"
-msgstr "Bugs"
-
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -128,9 +125,6 @@ msgstr "Supprimer la baseline"
 
 msgid "Delete comparison"
 msgstr "Supprimer la comparaison"
-
-msgid "Epics"
-msgstr "Epics"
 
 msgid "Filters"
 msgstr "Filtres"
@@ -209,9 +203,6 @@ msgstr "Date de la capture"
 msgid "Snapshot date"
 msgstr "Date de la capture"
 
-msgid "Tasks"
-msgstr "Tâches"
-
 msgid "The baseline was created"
 msgstr "La baseline a été créée"
 
@@ -223,9 +214,6 @@ msgstr "La comparaison a été supprimée"
 
 msgid "The comparison was saved"
 msgstr "La comparaison a été sauvegardée"
-
-msgid "User stories"
-msgstr "User stories"
 
 msgid "Without date, the baseline will be created with the current date"
 msgstr "Sans date, la baseline sera créée avec la date du jour"
@@ -242,7 +230,8 @@ msgid ""
 "                and <strong>%{ compared_to_baseline_name }</strong>."
 msgstr ""
 "Vous êtes sur le point de supprimer la comparaison portant sur les baselines "
-"<strong>%{ base_baseline_name }</strong> et <strong>%{ compared_to_baseline_name }</strong>."
+"<strong>%{ base_baseline_name }</strong> et <strong>"
+"%{ compared_to_baseline_name }</strong>."
 
 msgid "on"
 msgstr "au"
