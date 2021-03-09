@@ -382,7 +382,7 @@ describe("NewTuleapArtifactModalService", () => {
 
             it(`Given that the user didn't have a preference set for text fields format,
                 when I create the modal's edition model,
-                then the default text_field format will be 'text' by default`, async () => {
+                then the default text_field format will be "commonmark" by default`, async () => {
                 const comment_order_preference = {
                     key: "tracker_comment_invertorder_93",
                     value: "1",
@@ -413,7 +413,7 @@ describe("NewTuleapArtifactModalService", () => {
                 expect(await wrapPromise(promise)).toBeDefined();
                 const model = promise.$$state.value;
 
-                expect(model.text_fields_format).toEqual("text");
+                expect(model.text_fields_format).toEqual("commonmark");
             });
         });
 

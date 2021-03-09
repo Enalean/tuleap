@@ -18,10 +18,10 @@
  *
  */
 
-import type { DisplayInterface, FormatSelectorPresenter } from "./DisplayInterface";
-import { isValidTextFormat } from "../../../constants/fields-constants";
+import type { FormatSelectorInterface, FormatSelectorPresenter } from "./FormatSelectorInterface";
+import { isValidTextFormat } from "../../../../constants/fields-constants";
 
-export class ExistingFormatSelector implements DisplayInterface {
+export class ExistingFormatSelector implements FormatSelectorInterface {
     constructor(private readonly doc: Document) {}
 
     insertFormatSelectbox(textarea: HTMLTextAreaElement, presenter: FormatSelectorPresenter): void {

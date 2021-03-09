@@ -31,7 +31,7 @@
             v-bind:label="field.label"
             v-bind:disabled="disabled"
             v-bind:required="field.required"
-            v-model="format"
+            v-bind:value="format"
         />
         <rich-text-editor
             v-bind:id="id"
@@ -39,8 +39,9 @@
             v-bind:disabled="disabled"
             v-bind:required="field.required"
             rows="5"
-            v-on:upload-image="reemit"
             v-model="content"
+            v-on:upload-image="reemit"
+            v-on:format-change="onFormatChange"
         />
     </div>
 </template>
@@ -72,9 +73,6 @@ export default {
             get() {
                 return this.value.format;
             },
-            set(new_format) {
-                this.$emit("input", { format: new_format, content: this.content });
-            },
         },
         id() {
             return "tracker_field_" + this.field.field_id;
@@ -84,6 +82,9 @@ export default {
         },
     },
     methods: {
+        onFormatChange(new_format, new_content) {
+            this.$emit("input", { format: new_format, content: new_content });
+        },
         reemit(...args) {
             this.$emit("upload-image", ...args);
         },

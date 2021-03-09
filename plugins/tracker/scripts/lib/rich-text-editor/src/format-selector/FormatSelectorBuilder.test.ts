@@ -19,12 +19,12 @@
 
 import { FormatSelectorBuilder } from "./FormatSelectorBuilder";
 import { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
-import type { FormatSelectorPresenter } from "./DisplayInterface";
+import type { FormatSelectorPresenter } from "./FormatSelectorInterface";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "../../../constants/fields-constants";
+} from "../../../../constants/fields-constants";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 

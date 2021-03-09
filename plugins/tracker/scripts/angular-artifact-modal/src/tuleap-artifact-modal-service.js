@@ -31,8 +31,9 @@ import { updateFileUploadRulesWhenNeeded } from "./tuleap-artifact-modal-fields/
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
-import { TEXT_FORMAT_TEXT } from "../../constants/fields-constants.js";
+import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "../../constants/fields-constants.js";
 import { store } from "./vuex-store.js";
+import { setTextFieldDefaultFormat } from "./model/UserPreferencesStore";
 
 export default ArtifactModalService;
 
@@ -262,8 +263,9 @@ function ArtifactModalService(
         return $q
             .when(getUserPreference(user_id, "user_edition_default_format"))
             .then(function (data) {
-                modal_model.text_fields_format =
-                    data.value !== false ? data.value : TEXT_FORMAT_TEXT;
+                const format = isValidTextFormat(data.value) ? data.value : TEXT_FORMAT_COMMONMARK;
+                modal_model.text_fields_format = format;
+                setTextFieldDefaultFormat(format);
             });
     }
 

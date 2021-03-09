@@ -18,22 +18,22 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TextFieldFormat } from "../../../constants/fields-constants";
+import type { TextFieldFormat } from "../../../../constants/fields-constants";
 import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_TEXT,
     isValidTextFormat,
-} from "../../../constants/fields-constants";
-import type { DisplayInterface, FormatSelectorPresenter } from "./DisplayInterface";
+} from "../../../../constants/fields-constants";
+import type { FormatSelectorInterface, FormatSelectorPresenter } from "./FormatSelectorInterface";
 import type { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
-import { getCommonMarkSyntaxPopoverHelperContent } from "./helper/commonmark-syntax-helper";
+import { getCommonMarkSyntaxPopoverHelperContent } from "../helper/commonmark-syntax-helper";
 import { SyntaxHelperButtonToggler } from "./SyntaxHelperButtonToggler";
 
 const SELECTBOX_ID_PREFIX = "rte_format_selectbox";
 const SELECTBOX_NAME_PREFIX = "comment_format";
 
-export class FormatSelectorBuilder implements DisplayInterface {
+export class FormatSelectorBuilder implements FormatSelectorInterface {
     constructor(
         private readonly doc: FlamingParrotDocumentAdapter,
         private readonly gettext_provider: GettextProvider

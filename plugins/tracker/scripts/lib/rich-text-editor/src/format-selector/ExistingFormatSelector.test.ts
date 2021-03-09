@@ -19,7 +19,7 @@
  */
 
 import { ExistingFormatSelector } from "./ExistingFormatSelector";
-import { TEXT_FORMAT_TEXT } from "../../../constants/fields-constants";
+import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`ExistingFormatSelector`, () => {

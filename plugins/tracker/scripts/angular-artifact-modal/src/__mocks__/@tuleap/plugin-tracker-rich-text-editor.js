@@ -17,17 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "../../../constants/fields-constants";
+const emptyFunction = () => {
+    //Do nothing
+};
 
-type FormatChangedCallback = (new_format: TextFieldFormat) => void;
-
-export interface FormatSelectorPresenter {
-    id: string;
-    name?: string;
-    selected_value: TextFieldFormat;
-    formatChangedCallback: FormatChangedCallback;
-}
-
-export interface DisplayInterface {
-    insertFormatSelectbox(textarea: HTMLTextAreaElement, presenter: FormatSelectorPresenter): void;
-}
+// Mock because of dependency on @tuleap/mention and jquery...
+export const RichTextEditorFactory = {
+    forBurningParrotWithExistingFormatSelector: emptyFunction,
+};

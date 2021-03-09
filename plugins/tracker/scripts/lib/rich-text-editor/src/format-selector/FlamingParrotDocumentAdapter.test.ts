@@ -26,7 +26,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "../../../constants/fields-constants";
+} from "../../../../constants/fields-constants";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 

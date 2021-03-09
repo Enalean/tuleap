@@ -24,7 +24,7 @@
             v-bind:label="label"
             v-bind:disabled="false"
             v-bind:required="false"
-            v-model="format"
+            v-bind:value="format"
         />
         <rich-text-editor
             id="followup_comment"
@@ -32,8 +32,9 @@
             v-bind:disabled="false"
             v-bind:required="false"
             rows="3"
-            v-on:upload-image="reemit"
             v-model="content"
+            v-on:upload-image="reemit"
+            v-on:format-change="onFormatChange"
         />
     </div>
 </template>
@@ -63,12 +64,12 @@ export default {
             get() {
                 return this.value.format;
             },
-            set(new_format) {
-                this.$emit("input", { format: new_format, body: this.content });
-            },
         },
     },
     methods: {
+        onFormatChange(new_format, new_content) {
+            this.$emit("input", { format: new_format, body: new_content });
+        },
         reemit(...args) {
             this.$emit("upload-image", ...args);
         },
