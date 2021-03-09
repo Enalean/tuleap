@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Shortcut, ShortcutsGroup, Scope } from "../type";
+import type { ShortcutsGroup, Scope } from "../type";
 import { GLOBAL_SCOPE, PLUGIN_SCOPE } from "../type";
+
+import { createShortcutsGroupHead } from "./create-shortcuts-group-head";
+import { createShortcutsGroupTable } from "./create-shortcuts-group-table";
+import { getGlobalShortcutsSection, getSpecificShortcutsSection } from "./get-shortcuts-section";
 
 export function createShortcutsGroupInHelpModal(
     doc: Document,
@@ -28,157 +32,8 @@ export function createShortcutsGroupInHelpModal(
     const shortcuts_group_head = createShortcutsGroupHead(doc, shortcuts_group);
     const shortcuts_group_table = createShortcutsGroupTable(doc, shortcuts_group);
 
-    const shortcuts_section = getShortcutsSection(doc, scope);
+    const shortcuts_section =
+        scope === GLOBAL_SCOPE ? getGlobalShortcutsSection(doc) : getSpecificShortcutsSection(doc);
+
     shortcuts_section.append(shortcuts_group_head, shortcuts_group_table);
-}
-
-function getShortcutsSection(doc: Document, scope: Scope): HTMLElement {
-    return scope === GLOBAL_SCOPE
-        ? getGlobalShortcutsSection(doc)
-        : getSpecificShortcutsSection(doc);
-}
-
-function getGlobalShortcutsSection(doc: Document): HTMLElement {
-    const shortcuts_section = doc.querySelector("[data-shortcuts-global-section]");
-    if (!(shortcuts_section instanceof HTMLElement)) {
-        throw new Error("Could not find shortcuts help modal global section");
-    }
-    return shortcuts_section;
-}
-
-function getSpecificShortcutsSection(doc: Document): HTMLElement {
-    const shortcuts_section = doc.querySelector("[data-shortcuts-specific-section]");
-    if (shortcuts_section instanceof HTMLElement) {
-        return shortcuts_section;
-    }
-    return createSpecificShortcutsSectionInHelpModal(doc);
-}
-
-function createSpecificShortcutsSectionInHelpModal(doc: Document): HTMLElement {
-    widenModalSize(doc);
-
-    const specific_shortcuts_section = doc.createElement("section");
-    specific_shortcuts_section.setAttribute("data-shortcuts-specific-section", "");
-    specific_shortcuts_section.classList.add("help-modal-shortcuts-section");
-
-    const shortcuts_modal_body = doc.querySelector("[data-shortcuts-modal-body]");
-    if (!(shortcuts_modal_body instanceof HTMLElement)) {
-        throw new Error("Could not find shortcuts modal body");
-    }
-    shortcuts_modal_body.append(specific_shortcuts_section);
-
-    return specific_shortcuts_section;
-}
-
-function widenModalSize(doc: Document): void {
-    const shortcuts_modal = doc.getElementById("help-modal-shortcuts");
-    if (!(shortcuts_modal instanceof HTMLElement)) {
-        throw new Error("Could not find shortcuts modal");
-    }
-    shortcuts_modal.classList.add("tlp-modal-medium-sized");
-}
-
-function createShortcutsGroupHead(doc: Document, shortcuts_group: ShortcutsGroup): HTMLElement {
-    const shortcuts_group_head = doc.createElement("div");
-    shortcuts_group_head.classList.add("help-modal-shortcuts-group-head");
-
-    const group_title = doc.createElement("h2");
-    group_title.classList.add("tlp-modal-subtitle");
-    group_title.append(shortcuts_group.title);
-    shortcuts_group_head.append(group_title);
-
-    if (shortcuts_group.details) {
-        const group_details = doc.createElement("p");
-        group_details.classList.add("help-modal-shortcuts-group-details");
-        group_details.append(shortcuts_group.details);
-        shortcuts_group_head.append(group_details);
-    }
-
-    return shortcuts_group_head;
-}
-
-function createShortcutsGroupTable(
-    doc: Document,
-    shortcuts_group: ShortcutsGroup
-): HTMLTableElement {
-    const shortcuts_group_table = doc.createElement("table");
-    shortcuts_group_table.classList.add("tlp-table", "help-modal-shortcuts-table");
-
-    const table_head = getTableHead(doc);
-    const table_body = doc.createElement("tbody");
-    table_body.append(
-        ...shortcuts_group.shortcuts.map((shortcut) => createShortcutRow(doc, shortcut))
-    );
-
-    shortcuts_group_table.append(table_head, table_body);
-    return shortcuts_group_table;
-}
-
-function getTableHead(doc: Document): Node {
-    const table_head_template = doc.querySelector("[data-shortcuts-help-header-template]");
-    if (!(table_head_template instanceof HTMLTemplateElement)) {
-        throw new Error("table_head_template was not found or is not a HTMLTemplateElement");
-    }
-
-    const table_head = table_head_template.content.firstElementChild;
-    if (!table_head) {
-        throw new Error("table_head_template should have one element child");
-    }
-    return table_head.cloneNode(true);
-}
-
-function createShortcutRow(doc: Document, shortcut: Shortcut): HTMLTableRowElement {
-    const shortcut_row = doc.createElement("tr");
-
-    const shortcut_cell = createShortcutCell(doc, shortcut);
-
-    const description_cell = shortcut_row.insertCell();
-    description_cell.append(shortcut.description);
-
-    shortcut_row.append(description_cell, shortcut_cell);
-    return shortcut_row;
-}
-
-export function createShortcutCell(doc: Document, shortcut: Shortcut): HTMLTableDataCellElement {
-    const shortcut_cell = doc.createElement("td");
-    shortcut_cell.classList.add("help-modal-shortcuts-kbds", "tlp-table-cell-actions");
-
-    const keyboard_inputs = shortcut.displayed_inputs
-        ? shortcut.displayed_inputs
-        : shortcut.keyboard_inputs;
-
-    const keyboard_inputs_parts = keyboard_inputs.split(",");
-    keyboard_inputs_parts.forEach((keyboard_input, i = 0) => {
-        const keyboard_input_element = createKeyboardInputElement(doc, keyboard_input);
-        shortcut_cell.append(keyboard_input_element);
-
-        if (i < keyboard_inputs_parts.length - 1) {
-            shortcut_cell.append(" / ");
-        }
-        i++;
-    });
-
-    return shortcut_cell;
-}
-
-export function createKeyboardInputElement(doc: Document, keyboard_input: string): HTMLElement {
-    const keyboard_input_element = doc.createElement("kbd");
-
-    const keystrokes = keyboard_input.split("+");
-    if (keystrokes.length === 1) {
-        keyboard_input_element.append(keyboard_input);
-        return keyboard_input_element;
-    }
-
-    keystrokes.forEach((keystroke, i = 0) => {
-        const inner_keyboard_input_element = doc.createElement("kbd");
-        inner_keyboard_input_element.append(keystroke);
-        keyboard_input_element.appendChild(inner_keyboard_input_element);
-        if (i < keystrokes.length - 1) {
-            keyboard_input_element.append(" + ");
-        }
-        i++;
-    });
-
-    return keyboard_input_element;
 }
