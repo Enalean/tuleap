@@ -27,7 +27,7 @@
         />
         <h1 class="program-management-title-header" v-translate>Backlog</h1>
         <div class="program-backlog" data-test="backlog-section">
-            <to-be-planned class="to-be-planned" />
+            <to-be-planned class="to-be-planned" data-is-container="true" />
             <div class="planning-divider">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="46">
                     <path
@@ -57,8 +57,14 @@ import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementLis
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
 import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 import { init } from "@tuleap/drag-and-drop";
-import type { Drekkenov } from "@tuleap/drag-and-drop";
-import { canMove, invalid, isConsideredInDropzone, isContainer } from "../helpers/drag-drop";
+import type { Drekkenov, PossibleDropCallbackParameter } from "@tuleap/drag-and-drop";
+import {
+    canMove,
+    invalid,
+    isConsideredInDropzone,
+    isContainer,
+    checkAcceptsDrop,
+} from "../helpers/drag-drop";
 
 @Component({
     components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb },
@@ -83,8 +89,12 @@ export default class App extends Vue {
             isDraggable: canMove,
             isInvalidDragHandle: invalid,
             isConsideredInDropzone,
-            doesDropzoneAcceptDraggable: (): boolean => {
-                return false;
+            doesDropzoneAcceptDraggable: (context: PossibleDropCallbackParameter): boolean => {
+                return checkAcceptsDrop({
+                    dropped_card: context.dragged_element,
+                    source_cell: context.source_dropzone,
+                    target_cell: context.target_dropzone,
+                });
             },
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             onDragStart: (): void => {},

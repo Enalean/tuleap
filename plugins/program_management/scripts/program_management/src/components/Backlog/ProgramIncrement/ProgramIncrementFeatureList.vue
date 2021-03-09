@@ -18,10 +18,7 @@
   -->
 
 <template>
-    <div
-        class="program-increment-content-items"
-        v-bind:class="{ 'program-increment-no-content': features.length === 0 }"
-    >
+    <div class="program-increment-content-items" data-is-container="true">
         <to-be-planned-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
 
         <program-increment-no-content

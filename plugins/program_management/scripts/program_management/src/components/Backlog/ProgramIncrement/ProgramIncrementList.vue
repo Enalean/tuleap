@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div data-is-container="true">
+    <div>
         <form v-bind:action="create_new_program_increment" method="post">
             <div class="program-increment-title-with-button">
                 <h2 v-translate class="program-increment-title">Program Increment</h2>

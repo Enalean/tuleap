@@ -3,7 +3,7 @@
 exports[`ElementCard Displays a draggable card with accessibility pattern 1`] = `
 <div
   class="element-card element-card-lake_placid_blue element-draggable-item element-card-background-peggy_pink_text element-card-with-accessibility"
-  data-draggable="true"
+  draggable="true"
 >
   <div
     class="element-card-content"
@@ -38,7 +38,7 @@ exports[`ElementCard Displays a draggable card with accessibility pattern 1`] = 
 exports[`ElementCard Displays a not draggable card without accessibility pattern 1`] = `
 <div
   class="element-card element-card-lake_placid_blue"
-  data-draggable="true"
+  draggable="true"
 >
   <div
     class="element-card-content"

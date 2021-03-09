@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface TrackerMinimalRepresentation {
-    id: number;
-    uri: string;
-    label: string;
-    color_name: string;
-}
-
-export interface HandleDragPayload {
-    readonly dropped_card: HTMLElement;
-    readonly target_cell: HTMLElement;
-    readonly source_cell: HTMLElement;
+export function createElement(...css_classes: string[]): HTMLElement {
+    const local_document = document.implementation.createHTMLDocument();
+    const div = local_document.createElement("div");
+    div.classList.add(...css_classes);
+    return div;
 }
