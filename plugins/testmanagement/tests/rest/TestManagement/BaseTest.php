@@ -32,7 +32,8 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 abstract class BaseTest extends RestBase
 {
     protected $project_id;
-    protected $valid_73_campaign = null;
+    protected $closed_71_campaign = null;
+    protected $valid_73_campaign  = null;
 
     /**
      * @var Cache
@@ -59,6 +60,12 @@ abstract class BaseTest extends RestBase
             $this->valid_73_campaign = $this->getValid73Campaign();
             $this->ttm_cache->setValidCampaign($this->valid_73_campaign);
         }
+
+        $this->closed_71_campaign = $this->ttm_cache->getClosedCampaign();
+        if ($this->closed_71_campaign === null) {
+            $this->closed_71_campaign = $this->getClosed71Campaign();
+            $this->ttm_cache->setClosedCampaign($this->closed_71_campaign);
+        }
     }
 
     private function getValid73Campaign()
@@ -70,6 +77,22 @@ abstract class BaseTest extends RestBase
         $index_of_valid73_when_sorted_by_id = 0;
         $campaign                           = $campaigns[$index_of_valid73_when_sorted_by_id];
         $this->assertEquals($campaign['label'], 'Tuleap 7.3');
+
+        return $campaign;
+    }
+
+    private function getClosed71Campaign()
+    {
+        $all_campaigns_request  = $this->client->get(
+            "projects/$this->project_id/testmanagement_campaigns?" .
+            http_build_query(['query' => '{"status":"closed"}'])
+        );
+        $all_campaigns_response = $this->getResponse($all_campaigns_request);
+        $campaigns              = $all_campaigns_response->json();
+
+        $index_of_valid71_when_sorted_by_id = 1;
+        $campaign                           = $campaigns[$index_of_valid71_when_sorted_by_id];
+        $this->assertEquals($campaign['label'], 'Tuleap 7.1');
 
         return $campaign;
     }

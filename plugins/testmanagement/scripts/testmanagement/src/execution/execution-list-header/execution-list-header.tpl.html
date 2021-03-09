@@ -1,4 +1,7 @@
 <div class="test-campaign-header">
+    <span class="tlp-badge-secondary test-campaign-header-status-badge" ng-if="! $ctrl.campaign_state.campaign.is_open">
+        {{ $ctrl.campaign_state.campaign.status }}
+    </span>
     <h1 class="test-campaign-header-title">{{ $ctrl.campaign_state.campaign.label }}</h1>
     <button type="button"
             class="tlp-button-primary tlp-button-outline execution-header-button"
@@ -7,6 +10,7 @@
             onclick="this.blur();"
             ng-click="$ctrl.openEditCampaignModal()"
             ng-if="$ctrl.campaign_state.campaign.user_can_update"
+            ng-disabled="! $ctrl.campaign_state.campaign.is_open"
             title="{{ ::'Select tests' | translate }}"
             data-test="edit-campaign-button"
             data-shortcut-select-tests
@@ -17,6 +21,7 @@
         class="tlp-button-primary tlp-button-outline execution-header-button"
         ng-click="$ctrl.launchAutomatedTests()"
         ng-if="$ctrl.isAutomatedTestButtonShown()"
+        ng-disabled="! $ctrl.campaign_state.campaign.is_open"
     ><i class="fas fa-cogs tlp-button-icon"
         ng-class="{ 'fa-spinner fa-spin': $ctrl.triggered }"
     ></i> {{ ::'Launch automated tests' | translate }}</button>
@@ -50,6 +55,7 @@
                 ng-click="$ctrl.openEditCampaignAutomatedModal()"
                 class="tlp-dropdown-menu-item"
                 role="menuitem"
+                ng-if="$ctrl.campaign_state.campaign.is_open"
             >
                 <i class="fas fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                 {{ ::'Configure automated tests' | translate }}

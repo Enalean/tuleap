@@ -194,6 +194,32 @@ final class CampaignsTest extends BaseTest
         $this->revertCampaign($campaign);
     }
 
+    public function testPatchCampaignWithAutomatedTestsThrows400IfCampaignIsClosed()
+    {
+        $campaign = $this->closed_71_campaign;
+        $this->assertFalse($campaign['is_open']);
+
+        $automated_tests_results = [
+            'build_url'      => 'https://exemple/of/url',
+            'junit_contents' => [],
+        ];
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(
+                    [
+                        'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
+                        'automated_tests_results' => $automated_tests_results
+                    ]
+                )
+            )
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
     public function testPatchCampaignThrow400IfJobUrlIsInvalid()
     {
         $campaign = $this->valid_73_campaign;
@@ -232,6 +258,22 @@ final class CampaignsTest extends BaseTest
         $this->assertExecutionsContains($executions, 'Import default template');
         $this->assertExecutionsContains($executions, 'Create a repository');
         $this->assertExecutionsContains($executions, 'Delete a repository');
+    }
+
+    public function testPatchCampaignExecutionsThrows400IfCampaignIsClosed(): void
+    {
+        $campaign = $this->closed_71_campaign;
+        $this->assertFalse($campaign['is_open']);
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions',
+                null,
+                json_encode(["definition_ids_to_add" => [], "execution_ids_to_remove" => []])
+            )
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     private function revertCampaign(array $campaign)

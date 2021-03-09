@@ -25,7 +25,14 @@ class Cache
 {
     private static $instance;
 
+    /**
+     * @var null|array
+     */
     private $valid_campaign = null;
+    /**
+     * @var null|array
+     */
+    private $closed_campaign = null;
 
     public static function instance()
     {
@@ -40,11 +47,21 @@ class Cache
         return $this->valid_campaign;
     }
 
+    public function getClosedCampaign(): ?array
+    {
+        return $this->closed_campaign;
+    }
+
     /**
      * @param null $valid_campaign
      */
     public function setValidCampaign(array $valid_campaign): void
     {
         $this->valid_campaign = $valid_campaign;
+    }
+
+    public function setClosedCampaign(array $closed_campaign): void
+    {
+        $this->closed_campaign = $closed_campaign;
     }
 }
