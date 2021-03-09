@@ -22,6 +22,10 @@
         "access-denied-error": {
             "src": "src/scripts/BurningParrot/src/",
             "po": "src/scripts/BurningParrot/po"
+        },
+        "global-shortcuts": {
+            "src": "src/scripts/global-shortcuts/src",
+            "po": "src/scripts/global-shortcuts/po"
         }
     },
     "gettext-vue": {

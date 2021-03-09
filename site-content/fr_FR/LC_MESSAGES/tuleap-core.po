@@ -1462,17 +1462,11 @@ msgstr "Configuration globale"
 msgid "Global permissions"
 msgstr "Permissions globales"
 
-msgid "Global shortcuts"
-msgstr "Raccourcis globaux"
-
 msgid "Global utils"
 msgstr "Utilitaires globaux"
 
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
-
-msgid "Go to personal dashboard"
-msgstr "Aller au dashboard personnel"
 
 msgid "Go up"
 msgstr "Niveau supérieur"
@@ -2185,12 +2179,6 @@ msgstr "Seuls les membres du projet peuvent accéder à son contenu."
 
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
-
-msgid "Open \"+ New\" dropdown"
-msgstr "Ouvre le menu déroulant \"+ Nouveau\""
-
-msgid "Open this window"
-msgstr "Ouvre cette fenêtre"
 
 msgid "Optional message…"
 msgstr "Message optionnel…"
@@ -3102,9 +3090,6 @@ msgstr "Suspendu"
 
 msgid "Switch to new project creation flow"
 msgstr "Basculer sur la nouvelle interface de création de projet"
-
-msgid "Switch to..."
-msgstr "Basculer vers..."
 
 msgid "Switching the project status back to \"pending\" is not possible."
 msgstr "Remettre le projet au statut \"en attente\" n'est pas possible."

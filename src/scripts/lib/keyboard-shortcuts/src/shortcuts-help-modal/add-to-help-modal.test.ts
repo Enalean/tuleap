@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { GLOBAL_SCOPE } from "../type";
 import type { Shortcut, ShortcutsGroup } from "../type";
+
 import {
     createShortcutsGroupInHelpModal,
     createKeyboardInputElement,
@@ -28,6 +30,7 @@ describe("add-to-help-modal.ts", () => {
     let doc: Document;
     let shortcuts_modal: HTMLElement;
     let shortcuts_modal_body: HTMLElement;
+    let global_shortcuts_section: HTMLElement;
     let specific_shortcuts_section: HTMLElement;
 
     const shortcut_simple = {
@@ -53,7 +56,6 @@ describe("add-to-help-modal.ts", () => {
     };
 
     const snapshot = `
-        <section data-shortcuts-specific-section="" class="help-modal-shortcuts-section">
           <div class="help-modal-shortcuts-group-head">
             <h2 class="tlp-modal-subtitle">shortcuts_group title</h2>
             <p class="help-modal-shortcuts-group-details">shortcuts_group details</p>
@@ -80,7 +82,6 @@ describe("add-to-help-modal.ts", () => {
               </tr>
             </tbody>
           </table>
-        </section>
     `;
 
     beforeEach(() => {
@@ -93,42 +94,70 @@ describe("add-to-help-modal.ts", () => {
             setupTableHeadTemplate(doc);
         });
 
-        it("creates a shortcuts group and adds it to the specific shortcuts section in the help modal", () => {
-            specific_shortcuts_section = doc.createElement("section");
-            specific_shortcuts_section.setAttribute("data-shortcuts-specific-section", "");
-            specific_shortcuts_section.classList.add("help-modal-shortcuts-section");
-            shortcuts_modal_body.append(specific_shortcuts_section);
+        describe("create a global shortcuts group", () => {
+            it("creates a shortcuts group and adds it to the global shortcuts section in the help modal if the `Scope.global` argument is provided", () => {
+                createShortcutsGroupInHelpModal(doc, shortcuts_group, GLOBAL_SCOPE);
 
-            createShortcutsGroupInHelpModal(doc, shortcuts_group);
+                expect(global_shortcuts_section.innerHTML).toMatchInlineSnapshot(snapshot);
+            });
 
-            expect(shortcuts_modal_body.innerHTML).toMatchInlineSnapshot(snapshot);
+            it("throws an error if global shortcuts section was not found", () => {
+                shortcuts_modal_body.removeChild(global_shortcuts_section);
+
+                expect(() => {
+                    createShortcutsGroupInHelpModal(doc, shortcuts_group, GLOBAL_SCOPE);
+                }).toThrow();
+            });
         });
 
-        it("creates the specific shortcuts section in the help modal if this section was not found", () => {
-            createShortcutsGroupInHelpModal(doc, shortcuts_group);
+        describe("create a specific shortcuts group", () => {
+            it("creates a shortcuts group and adds it to the specific shortcuts section in the help modal", () => {
+                specific_shortcuts_section = doc.createElement("section");
+                specific_shortcuts_section.setAttribute("data-shortcuts-specific-section", "");
+                specific_shortcuts_section.classList.add("help-modal-shortcuts-section");
+                shortcuts_modal_body.append(specific_shortcuts_section);
 
-            expect(shortcuts_modal_body.innerHTML).toMatchInlineSnapshot(snapshot);
-            expect(shortcuts_modal.classList.contains("tlp-modal-medium-sized")).toBe(true);
-        });
-
-        it(`throws an error if the help modal was not found
-            while trying to widen it and stops`, () => {
-            shortcuts_modal.id = "";
-
-            expect(() => {
                 createShortcutsGroupInHelpModal(doc, shortcuts_group);
-            }).toThrow();
-            expect(shortcuts_modal_body.innerHTML).toBe("");
-        });
 
-        it(`throws an error if the help modal body was not found
-            while trying to create the specific shortcuts section in it and stops`, () => {
-            shortcuts_modal_body.removeAttribute("data-shortcuts-modal-body");
+                expect(specific_shortcuts_section.innerHTML).toMatchInlineSnapshot(snapshot);
+            });
 
-            expect(() => {
+            it("creates the specific shortcuts section in the help modal if this section was not found", () => {
                 createShortcutsGroupInHelpModal(doc, shortcuts_group);
-            }).toThrow();
-            expect(shortcuts_modal_body.innerHTML).toBe("");
+
+                const shortcuts_modal_body_last_child = shortcuts_modal_body.lastChild;
+                if (!(shortcuts_modal_body_last_child instanceof HTMLElement)) {
+                    throw new Error("shortcuts_modal_body.lastChild should be an HTMLElement");
+                }
+
+                expect(
+                    shortcuts_modal_body_last_child.hasAttribute("data-shortcuts-specific-section")
+                ).toBe(true);
+            });
+
+            it("widen the help modal when specific shortcuts section is not found and should be created", () => {
+                createShortcutsGroupInHelpModal(doc, shortcuts_group);
+
+                expect(shortcuts_modal.classList.contains("tlp-modal-medium-sized")).toBe(true);
+            });
+
+            it(`throws an error if the help modal was not found
+            while trying to widen it`, () => {
+                shortcuts_modal.id = "";
+
+                expect(() => {
+                    createShortcutsGroupInHelpModal(doc, shortcuts_group);
+                }).toThrow();
+            });
+
+            it(`throws an error if the help modal body was not found
+            while trying to create the specific shortcuts section in it`, () => {
+                shortcuts_modal_body.removeAttribute("data-shortcuts-modal-body");
+
+                expect(() => {
+                    createShortcutsGroupInHelpModal(doc, shortcuts_group);
+                }).toThrow();
+            });
         });
 
         it(`throws an error if table_head_template was not found
@@ -177,6 +206,10 @@ describe("add-to-help-modal.ts", () => {
         shortcuts_modal_body = doc.createElement("div");
         shortcuts_modal_body.setAttribute("data-shortcuts-modal-body", "");
 
+        global_shortcuts_section = doc.createElement("section");
+        global_shortcuts_section.setAttribute("data-shortcuts-global-section", "");
+
+        shortcuts_modal_body.append(global_shortcuts_section);
         shortcuts_modal.append(shortcuts_modal_body);
         doc.body.appendChild(shortcuts_modal);
     }

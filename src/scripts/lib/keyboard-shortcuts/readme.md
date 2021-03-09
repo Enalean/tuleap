@@ -1,6 +1,6 @@
 #@tuleap/keyboard-shortcuts
 
-This lib provides the `addShortcutsGroup()` function which takes in a `ShortcutsGroup` to:
+This lib provides the `addShortcutsGroup()` and `addGlobalShortcutsGroup()` functions which take in a `ShortcutsGroup` to:
 - create shortcuts using `hotkeys-js` library,
 - add it to the shortcut help modal,
 
@@ -22,7 +22,10 @@ const shortcuts_group_example: ShortcutsGroup = {
     shortcuts: [ shortcut_example ],
 };
 
-addShortcutsGroup(shortcuts_group_example);
+addShortcutsGroup(
+    document,
+    shortcuts_group_example,
+);
 ```
 
 ## Dependencies to Tuleap

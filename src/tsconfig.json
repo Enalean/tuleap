@@ -15,7 +15,8 @@
         "scripts/site-admin/project-widgets-configuration/**/*",
         "scripts/tuleap/**/*",
         "themes/tlp/src/**/*",
-        "scripts/BurningParrot/**/*"
+        "scripts/BurningParrot/**/*",
+        "scripts/global-shortcuts/**/*"
     ],
     "exclude": ["node_modules", "scripts/lib"]
 }
