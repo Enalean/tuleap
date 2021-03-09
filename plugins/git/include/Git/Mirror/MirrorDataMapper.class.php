@@ -410,7 +410,7 @@ class Git_Mirror_MirrorDataMapper
     {
         return new Git_Mirror_Mirror(
             $owner,
-            $row['id'],
+            (int) $row['id'],
             $row['url'],
             $row['hostname'],
             $row['name']
@@ -433,5 +433,10 @@ class Git_Mirror_MirrorDataMapper
     public function duplicate($template_project_id, $new_project_id)
     {
         return $this->default_dao->duplicate($template_project_id, $new_project_id);
+    }
+
+    public function removeRepositoryFromMirror(GitRepository $repository, Git_Mirror_Mirror $mirror): void
+    {
+        $this->dao->removeRepositoryFromMirror($repository->getId(), $mirror->id);
     }
 }

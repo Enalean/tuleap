@@ -246,4 +246,15 @@ class Git_Mirror_MirrorDao extends \Tuleap\DB\DataAccessObject
 
         return true;
     }
+
+    public function removeRepositoryFromMirror(int $repository_id, int $mirror_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_git_repository_mirrors',
+            [
+                'repository_id' => $repository_id,
+                'mirror_id'     => $mirror_id,
+            ]
+        );
+    }
 }
