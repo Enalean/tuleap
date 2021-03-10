@@ -24,7 +24,7 @@ namespace Adapter\Program\Feature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Monolog\Test\TestCase;
-use Psr\Log\LoggerInterface;
+use Psr\Log\Test\TestLogger;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
@@ -95,8 +95,6 @@ final class FeatureInProgramIncrementPlannerTest extends TestCase
         $this->mirrored_milestone_retriever         = \Mockery::mock(MirroredMilestoneRetriever::class);
         $this->content_dao                          = \Mockery::mock(ContentDao::class);
         $this->features_linked_to_milestone_builder = \Mockery::mock(UserStoriesLinkedToMilestoneBuilder::class);
-        $logger                                     = \Mockery::mock(LoggerInterface::class);
-        $logger->shouldReceive('debug');
 
         $this->planner = new FeatureInProgramIncrementPlanner(
             $db_transaction_executor,
@@ -105,7 +103,7 @@ final class FeatureInProgramIncrementPlannerTest extends TestCase
             $this->mirrored_milestone_retriever,
             $this->content_dao,
             $this->features_linked_to_milestone_builder,
-            $logger
+            new TestLogger()
         );
     }
 

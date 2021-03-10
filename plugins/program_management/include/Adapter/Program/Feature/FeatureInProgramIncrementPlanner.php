@@ -108,13 +108,13 @@ class FeatureInProgramIncrementPlanner implements PlanFeatureInProgramIncrement
                 foreach ($milestones as $mirrored_milestone) {
                     $milestone = $this->tracker_artifact_factory->getArtifactById($mirrored_milestone->getId());
                     if (! $milestone) {
-                        $this->logger->debug(sprintf("Mirrored milestone %d not found", $mirrored_milestone->getId()));
+                        $this->logger->error(sprintf("Mirrored milestone %d not found", $mirrored_milestone->getId()));
                         continue;
                     }
 
                     $field_artifact_link = $milestone->getAnArtifactLinkField($user);
                     if (! $field_artifact_link) {
-                        $this->logger->debug(sprintf("Mirrored milestone %d doesn ot have an artifact link field", $mirrored_milestone->getId()));
+                        $this->logger->info(sprintf("Mirrored milestone %d does not have an artifact link field", $mirrored_milestone->getId()));
                         continue;
                     }
 
