@@ -65,7 +65,7 @@
                                     <table class="table">
                                         {{# milestones }}
                                         <tr>
-                                            <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}" class="backlog-item-link" data-artifact-id="{{ getArtifactId }}"><i class="far fa-edit"></i></a></td>
+                                            <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}&agiledashboard[home]=1" data-artifact-id="{{ getArtifactId }}"><i class="far fa-edit"></i></a></td>
                                             <td class="actions">
                                                 <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning-v2" data-test="go-to-planning"><i class="fas fa-sign-in-alt"></i> {{ planning }}</a>
                                             </td>
@@ -93,7 +93,6 @@
                                                 <div class="header">
                                                     <p class="title">{{ milestone_title }}
                                                         <a href="{{ edit_base_link }}{{ artifact_id }}"
-                                                           class="backlog-item-link"
                                                            data-test="release-id"
                                                            data-artifact-id="{{ artifact_id }}"><i class="far fa-edit"></i>
                                                         </a></p>

@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
+use Tuleap\AgileDashboard\Artifact\HomeServiceRedirectionExtractor;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\Artifact\RedirectParameterInjector;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
@@ -580,6 +581,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         $processor = new EventRedirectAfterArtifactCreationOrUpdateHandler(
             $params_extractor,
+            new HomeServiceRedirectionExtractor(),
             new Planning_ArtifactLinker($this->getArtifactFactory(), $planning_factory),
             $planning_factory,
             new RedirectParameterInjector(
@@ -699,13 +701,23 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
+        $request  = $event->getRequest();
+        $redirect = $event->getRedirect();
+
+        $home_service_redirection_extractor = new HomeServiceRedirectionExtractor();
+        if ($home_service_redirection_extractor->mustRedirectToAgiledashboardHomepage($request)) {
+            $redirect->query_parameters['agiledashboard'] = $request->get('agiledashboard');
+            return;
+        }
+
         $injector = new RedirectParameterInjector(
             new AgileDashboard_PaneRedirectionExtractor(),
             Tracker_ArtifactFactory::instance(),
             $GLOBALS['Response'],
             $this->getTemplateRenderer()
         );
-        $injector->injectAndInformUserAboutBacklogItemWillBeLinked($event->getRequest(), $event->getRedirect());
+
+        $injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);
     }
 
     /**
