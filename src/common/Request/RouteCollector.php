@@ -96,6 +96,8 @@ use Tuleap\MailingList\MailingListHomepageController;
 use Tuleap\MailingList\MailingListPresenterBuilder;
 use Tuleap\MailingList\MailingListPresenterCollectionBuilder;
 use Tuleap\MailingList\MailingListUpdateController;
+use Tuleap\Markdown\CommonMarkInterpreterController;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
@@ -128,6 +130,7 @@ use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Routing\ProjectRetrieverMiddleware;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
@@ -845,6 +848,17 @@ class RouteCollector
         );
     }
 
+    public function getInterpretedCommonmark(): CommonMarkInterpreterController
+    {
+        return new CommonMarkInterpreterController(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
+            new SapiEmitter(),
+            new ProjectRetrieverMiddleware(ProjectRetriever::buildSelf())
+        );
+    }
+
     private function getLegacyControllerHandler(string $path): array
     {
         return [
@@ -996,11 +1010,14 @@ class RouteCollector
 
         $r->get('/news/permissions-per-group', [self::class, 'getNewsPermissionsPerGroup']);
 
-        $r->get('/project/new', [self::class, 'getProjectRegistrationController']);
-        $r->get('/project/new-information', [self::class, 'getProjectRegistrationController']);
-        $r->get('/project/approval', [self::class, 'getProjectRegistrationController']);
-
         $r->post('/csp-violation', [self::class, 'getCSPViolationReportToController']);
+
+        $r->addGroup('/project', function (FastRoute\RouteCollector $r) {
+            $r->get('/new', [self::class, 'getProjectRegistrationController']);
+            $r->get('/new-information', [self::class, 'getProjectRegistrationController']);
+            $r->get('/approval', [self::class, 'getProjectRegistrationController']);
+            $r->post('/{project_id:\d+}/interpret-commonmark', [self::class, 'getInterpretedCommonmark']);
+        });
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);
