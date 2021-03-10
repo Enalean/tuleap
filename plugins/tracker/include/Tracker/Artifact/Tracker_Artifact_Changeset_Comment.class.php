@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Markdown\CodeBlockFeaturesExtension;
+use Tuleap\Markdown\CodeBlockFeaturesOnPage;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentPresenterBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
@@ -158,7 +160,11 @@ class Tracker_Artifact_Changeset_Comment
             return $this->purifyHTMLBody();
         }
         if ($this->bodyFormat === self::COMMONMARK_COMMENT) {
-            $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+            $content_interpretor = CommonMarkInterpreter::build(
+                Codendi_HTMLPurifier::instance(),
+                new CodeBlockFeaturesExtension(CodeBlockFeaturesOnPage::getInstance())
+            );
+
             return $content_interpretor->getInterpretedContentWithReferences(
                 $this->body,
                 (int) $this->changeset->getTracker()->getGroupId()

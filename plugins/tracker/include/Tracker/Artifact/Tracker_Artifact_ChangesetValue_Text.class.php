@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Markdown\CodeBlockFeaturesExtension;
+use Tuleap\Markdown\CodeBlockFeaturesOnPage;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\FollowUpPresenter;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
@@ -279,11 +281,16 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     private function interpretMarkdownContent(string $text): string
     {
-        $content_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+        $content_interpreter = CommonMarkInterpreter::build(
+            Codendi_HTMLPurifier::instance(),
+            new CodeBlockFeaturesExtension(CodeBlockFeaturesOnPage::getInstance())
+        );
 
-        return $content_interpreter->getInterpretedContentWithReferences(
+        $interpreted_content_with_references = $content_interpreter->getInterpretedContentWithReferences(
             $text,
             (int) $this->changeset->getTracker()->getGroupId()
         );
+
+        return $interpreted_content_with_references;
     }
 }

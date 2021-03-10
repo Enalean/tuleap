@@ -23,6 +23,7 @@
  */
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -329,6 +330,15 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayFooter()
     {
+        if (\Tuleap\Markdown\CodeBlockFeaturesOnPage::getInstance()->isMermaidNeeded()) {
+            $assets = new IncludeAssets(
+                __DIR__ . '/../../../../../../src/www/assets/core',
+                '/assets/core'
+            );
+
+            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
+        }
+
         $this->tracker->displayFooter($this->layout);
     }
 }

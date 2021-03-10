@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`replaceAllCodeBlocksByMermaidDiagramsInElement Renders the diagram (and stops observing) whenever the mermaid block enters in the viewport 1`] = `
+<body>
+  <div>
+    
+            
+    <div
+      class="diagram-mermaid"
+    >
+      <svg>
+        
+                graph TD
+                    Start --&gt; Stop
+                
+      </svg>
+    </div>
+    
+        
+  </div>
+</body>
+`;
