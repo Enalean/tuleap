@@ -34,6 +34,7 @@ describe("Tracker reports retriever", () => {
                 start_date: null,
                 end_date: null,
                 id: 1,
+                user_can_update: true,
             },
             {
                 title: "PI 2",
@@ -41,6 +42,7 @@ describe("Tracker reports retriever", () => {
                 start_date: "2021-01-20T00:00:00+01:00",
                 end_date: "2021-01-20T00:00:00+01:00",
                 id: 2,
+                user_can_update: true,
             },
         ];
 

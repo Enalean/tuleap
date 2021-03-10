@@ -49,14 +49,25 @@ final class ProgramIncrement
      * @var int|null
      */
     public $end_date;
+    /**
+     * @var bool
+     */
+    public $user_can_update;
 
 
-    public function __construct(int $id, string $title, ?string $status, ?int $start_date, ?int $end_date)
-    {
-        $this->title      = $title;
-        $this->status     = $status;
-        $this->start_date = $start_date;
-        $this->end_date   = $end_date;
-        $this->id         = $id;
+    public function __construct(
+        int $id,
+        string $title,
+        bool $user_can_update,
+        ?string $status,
+        ?int $start_date,
+        ?int $end_date
+    ) {
+        $this->title           = $title;
+        $this->status          = $status;
+        $this->start_date      = $start_date;
+        $this->end_date        = $end_date;
+        $this->id              = $id;
+        $this->user_can_update = $user_can_update;
     }
 }

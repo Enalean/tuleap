@@ -41,11 +41,16 @@
             </span>
             <span class="tlp-badge-outline tlp-badge-primary">{{ increment.status }}</span>
         </div>
-        <div class="program-increment-info" v-if="is_open" data-test="program-increment-info">
+        <div
+            class="program-increment-info"
+            v-if="is_open && increment.user_can_update"
+            data-test="program-increment-info"
+        >
             <a
                 v-bind:href="`/plugins/tracker/?aid=${increment.id}`"
                 class="tlp-button-primary tlp-button-outline tlp-button-mini"
                 v-bind:title="$gettext('Edit')"
+                data-not-drag-handle="true"
             >
                 <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i>
                 <span v-translate>Edit</span>
