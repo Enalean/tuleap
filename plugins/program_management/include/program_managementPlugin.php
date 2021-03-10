@@ -61,12 +61,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionJSONParser;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionRepresentation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\TrackerShouldPlanFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\TrackerShouldPlanFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramAdapter;
@@ -467,12 +467,19 @@ final class program_managementPlugin extends Plugin
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $redirect_in_service = $event->getRequest()->get('program_increment') && $event->getRequest()->get('program_increment') === "create";
+        $redirect_program_increment_value = $event->getRequest()->get('program_increment');
+        $redirect_in_service              = $redirect_program_increment_value && ($redirect_program_increment_value === "create" || $redirect_program_increment_value === "update");
         if (! $redirect_in_service) {
             return;
         }
 
         $redirect = new RedirectParameterInjector();
+
+        if ($redirect_program_increment_value === "update") {
+            $redirect->injectAndInformUserAboutUpdatingProgramItem($event->getRedirect(), $GLOBALS['Response']);
+            return;
+        }
+
         $redirect->injectAndInformUserAboutProgramItem($event->getRedirect(), $GLOBALS['Response']);
     }
 

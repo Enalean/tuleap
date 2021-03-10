@@ -47,10 +47,11 @@
             data-test="program-increment-info"
         >
             <a
-                v-bind:href="`/plugins/tracker/?aid=${increment.id}`"
+                v-bind:href="`/plugins/tracker/?aid=${increment.id}&program_increment=update`"
                 class="tlp-button-primary tlp-button-outline tlp-button-mini"
                 v-bind:title="$gettext('Edit')"
                 data-not-drag-handle="true"
+                data-test="program-increment-info-edit-link"
             >
                 <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i>
                 <span v-translate>Edit</span>
