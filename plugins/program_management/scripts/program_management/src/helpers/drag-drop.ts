@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { HandleDragPayload } from "../type";
 
 export function isContainer(element: HTMLElement): boolean {
     return Boolean(element.dataset.isContainer);
@@ -31,4 +32,12 @@ export function invalid(handle: HTMLElement): boolean {
 
 export function isConsideredInDropzone(child: Element): boolean {
     return child.hasAttribute("draggable");
+}
+
+export function checkAcceptsDrop(payload: HandleDragPayload): boolean {
+    return (
+        payload.dropped_card instanceof HTMLElement &&
+        payload.target_cell instanceof HTMLElement &&
+        payload.source_cell instanceof HTMLElement
+    );
 }
