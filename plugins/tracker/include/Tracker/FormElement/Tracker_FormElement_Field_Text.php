@@ -354,13 +354,27 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $output = '';
         switch ($format) {
             case 'html':
-                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output = $this->getContentAsHTMLForMail($artifact, $value);
                 break;
             default:
                 $output = $value->getContentAsText();
                 break;
         }
         return $output;
+    }
+
+    private function getContentAsHTMLForMail(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value): string
+    {
+        if (! ($value instanceof Tracker_Artifact_ChangesetValue_Text)) {
+            return $this->fetchArtifactValueReadOnly($artifact, $value);
+        }
+
+        $text = $value->getValueForMail();
+        if ($text === '') {
+            return $this->getNoValueLabel();
+        }
+
+        return '<div class="textarea-value">' . $text . '</div>';
     }
 
     /**
