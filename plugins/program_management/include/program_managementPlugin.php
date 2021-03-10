@@ -679,7 +679,8 @@ final class program_managementPlugin extends Plugin
         return new ProgramIncrementArtifactCreatorChecker(
             $this->getTeamProjectCollectionBuilder(),
             new TrackerCollectionFactory(
-                $this->getPlanningAdapter()
+                $this->getPlanningAdapter(),
+                $this->getPlanConfigurationBuilder()
             ),
             new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
                 new SynchronizedFieldsAdapter(

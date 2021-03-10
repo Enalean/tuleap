@@ -22,13 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog;
 
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Project;
 use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Project;
 
 class TrackerCollectionFactory
 {
@@ -36,27 +39,41 @@ class TrackerCollectionFactory
      * @var BuildPlanning
      */
     private $planning_adapter;
+    /**
+     * @var BuildPlanProgramIncrementConfiguration
+     */
+    private $configuration_builder;
 
-    public function __construct(BuildPlanning $planning_adapter)
-    {
-        $this->planning_adapter = $planning_adapter;
+    public function __construct(
+        BuildPlanning $planning_adapter,
+        BuildPlanProgramIncrementConfiguration $configuration_builder
+    ) {
+        $this->planning_adapter      = $planning_adapter;
+        $this->configuration_builder = $configuration_builder;
     }
 
     /**
+     * @throws Plan\PlanCheckException
      * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanTrackerException
+     * @throws ProgramTrackerNotFoundException
      */
     public function buildFromProgramProjectAndItsTeam(
         Project $program_project,
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
     ): SourceTrackerCollection {
-        $projects = array_values(
-            array_merge([$program_project], $team_projects_collection->getTeamProjects())
-        );
         $trackers = [];
-        foreach ($projects as $project) {
+
+        $trackers[] = $this->configuration_builder->buildTrackerProgramIncrementFromProjectId(
+            $program_project->getId(),
+            $user
+        );
+
+        foreach ($team_projects_collection->getTeamProjects() as $project) {
             $trackers[] = $this->getPlannableTracker($user, $project);
         }
+
         return new SourceTrackerCollection($trackers);
     }
 
@@ -71,6 +88,7 @@ class TrackerCollectionFactory
         foreach ($team_projects_collection->getTeamProjects() as $team_projects) {
             $trackers[] = $this->getPlannableTracker($user, $team_projects);
         }
+
         return new ProgramIncrementsTrackerCollection($trackers);
     }
 
@@ -80,6 +98,7 @@ class TrackerCollectionFactory
     private function getPlannableTracker(\PFUser $user, Project $project): ProgramTracker
     {
         $root_planning = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
+
         return $root_planning->getPlanningTracker();
     }
 }

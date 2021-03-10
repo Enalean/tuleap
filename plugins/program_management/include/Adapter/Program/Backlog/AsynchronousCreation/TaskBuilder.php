@@ -50,8 +50,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleValue
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramIncrementConfigurationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
@@ -130,7 +132,10 @@ class TaskBuilder
                 $program_dao,
                 new ProjectAdapter(ProjectManager::instance())
             ),
-            new TrackerCollectionFactory(new PlanningAdapter(\PlanningFactory::build())),
+            new TrackerCollectionFactory(
+                new PlanningAdapter(\PlanningFactory::build()),
+                new PlanProgramIncrementConfigurationBuilder(new PlanDao(), \TrackerFactory::instance())
+            ),
             $mirror_creator,
             $logger,
             new PendingArtifactCreationDao(),

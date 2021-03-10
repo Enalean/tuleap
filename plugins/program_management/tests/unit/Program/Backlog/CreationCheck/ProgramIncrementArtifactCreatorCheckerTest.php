@@ -33,14 +33,15 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
-use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Program\ProgramStore;
@@ -51,6 +52,11 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|MockInterface|TrackerCollectionFactory
+     */
+    private $trackers_builder;
 
     /**
      * @var Mockery\LegacyMockInterface|MockInterface|BuildSynchronizedFields
@@ -66,11 +72,6 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|MockInterface|ProjectManager
      */
     private $project_manager;
-
-    /**
-     * @var Mockery\LegacyMockInterface|MockInterface|ProgramDao
-     */
-    private $program_store;
 
     /**
      * @var \Tuleap\ProgramManagement\Project
@@ -116,8 +117,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         );
 
         $this->planning_factory = Mockery::mock(\PlanningFactory::class);
-        $planning_adapter       = new PlanningAdapter($this->planning_factory);
-        $trackers_builder       = new TrackerCollectionFactory($planning_adapter);
+        $this->trackers_builder = Mockery::mock(TrackerCollectionFactory::class);
 
         $this->fields_adapter           = Mockery::mock(BuildSynchronizedFields::class);
         $this->field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
@@ -129,7 +129,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
         $this->checker = new ProgramIncrementArtifactCreatorChecker(
             $projects_collection_builder,
-            $trackers_builder,
+            $this->trackers_builder,
             $this->field_collection_builder,
             $this->semantic_checker,
             $this->required_field_checker,
@@ -152,7 +152,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
         $program = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $this->mockTeamMilestoneTrackers($this->project);
+        $this->mockTeamMilestoneTrackers($tracker);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->once()
             ->andReturnTrue();
@@ -186,15 +186,14 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $program_increment_tracker = new ProgramTracker($tracker);
         $program                   = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $planning = new \Planning(1, 'Incorrect', $this->project->getID(), '', '');
-        $planning->setPlanningTracker(new \NullTracker());
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')->once()
+            ->andReturn([['team_project_id' => "104"]]);
 
         $first_team_project = new \Project(
             ['group_id' => '104', 'unix_group_name' => 'proj02', 'group_name' => 'Project 02']
         );
-        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
-            ->andReturn([['team_project_id' => $first_team_project->getID()]]);
+        $this->trackers_builder->shouldReceive('buildFromProgramProjectAndItsTeam')
+            ->andThrow(new PlanningHasNoProgramIncrementException(1));
         $this->project_manager->shouldReceive('getProject')
             ->with($first_team_project->getID())
             ->once()
@@ -210,7 +209,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $program_increment_tracker = new ProgramTracker($tracker);
         $program                   = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $this->mockTeamMilestoneTrackers($this->project);
+        $this->mockTeamMilestoneTrackers($tracker);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnFalse();
 
@@ -224,7 +223,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $program_increment_tracker = new ProgramTracker($tracker);
         $program                   = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $this->mockTeamMilestoneTrackers($this->project, false);
+        $this->mockTeamMilestoneTrackers($tracker, false);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
 
@@ -238,7 +237,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $program_increment_tracker = new ProgramTracker($tracker);
         $program                   = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $this->mockTeamMilestoneTrackers($this->project);
+        $this->mockTeamMilestoneTrackers($tracker);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
 
@@ -255,7 +254,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $program_increment_tracker = new ProgramTracker($tracker);
         $program                   = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $this->mockTeamMilestoneTrackers($this->project);
+        $this->mockTeamMilestoneTrackers($tracker);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
 
@@ -271,7 +270,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $program_increment_tracker = new ProgramTracker($tracker);
         $program                   = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $this->mockTeamMilestoneTrackers($this->project);
+        $this->mockTeamMilestoneTrackers($tracker);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->once()
             ->andReturnTrue();
@@ -291,7 +290,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $program_increment_tracker = new ProgramTracker($tracker);
         $program                   = new \Tuleap\ProgramManagement\Project(101, 'my_project', "My project");
 
-        $this->mockTeamMilestoneTrackers($this->project);
+        $this->mockTeamMilestoneTrackers($tracker);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->once()
             ->andReturnTrue();
@@ -306,37 +305,29 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
     }
 
-    private function mockTeamMilestoneTrackers(Project $project, bool $user_can_submit_artifact = true): void
+    private function mockTeamMilestoneTrackers(\Tracker $tracker, bool $user_can_submit_artifact = true): void
     {
-        $first_team_project  = new \Project(
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')->once()
+            ->andReturn([['team_project_id' => "104"]]);
+
+        $first_team_project = new \Project(
             ['group_id' => '104', 'unix_group_name' => 'proj02', 'group_name' => 'Project 02']
         );
-        $second_team_project = new \Project(
-            ['group_id' => '198', 'unix_group_name' => 'proj03', 'group_name' => 'Project 03']
-        );
-
-        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
-            ->andReturn([['team_project_id' => $project->getID()]]);
-        $this->project_manager->shouldReceive('getProject')
-            ->with($project->getID())
-            ->once()
-            ->andReturn($project);
 
         $first_milestone_tracker = Mockery::mock(\Tracker::class);
         $first_milestone_tracker->shouldReceive('userCanSubmitArtifact')->andReturn($user_can_submit_artifact);
         $first_milestone_tracker->shouldReceive('getGroupId')->andReturn($first_team_project->getID());
         $first_milestone_tracker->shouldReceive('getId')->andReturn(1);
         $first_milestone_tracker->shouldReceive('getProject')->andReturn($first_team_project);
-        $second_milestone_tracker = Mockery::mock(\Tracker::class);
-        $second_milestone_tracker->shouldReceive('userCanSubmitArtifact')->andReturn($user_can_submit_artifact);
-        $second_milestone_tracker->shouldReceive('getGroupId')->andReturn($second_team_project->getID());
-        $second_milestone_tracker->shouldReceive('getId')->andReturn(2);
-        $second_milestone_tracker->shouldReceive('getProject')->andReturn($second_team_project);
-        $planning = new \Planning(1, 'Release', $this->project->getID(), '', '');
-        $planning->setBacklogTrackers([$first_milestone_tracker, $second_milestone_tracker]);
-        $planning->setPlanningTracker($first_milestone_tracker);
 
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
+        $this->trackers_builder->shouldReceive('buildFromProgramProjectAndItsTeam')
+            ->andReturn(new SourceTrackerCollection([new ProgramTracker($tracker)]));
+        $this->trackers_builder->shouldReceive('buildFromTeamProjects')
+            ->andReturn(new ProgramIncrementsTrackerCollection([new ProgramTracker($first_milestone_tracker)]));
+        $this->project_manager->shouldReceive('getProject')
+            ->with($first_team_project->getID())
+            ->once()
+            ->andReturn($first_team_project);
     }
 
     private function buildSynchronizedFields(bool $submitable): void
