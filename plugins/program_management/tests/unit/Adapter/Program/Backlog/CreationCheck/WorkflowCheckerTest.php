@@ -74,13 +74,13 @@ final class WorkflowCheckerTest extends TestCase
         $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
         $this->assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProgramIncrementsTrackerCollection([]),
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection()
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
     }
@@ -93,13 +93,13 @@ final class WorkflowCheckerTest extends TestCase
 
         $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProgramIncrementsTrackerCollection([new ProgramTracker($tracker)]),
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection()
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
     }
@@ -111,13 +111,13 @@ final class WorkflowCheckerTest extends TestCase
 
         $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProgramIncrementsTrackerCollection([new ProgramTracker($tracker)]),
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection()
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
     }
@@ -130,13 +130,13 @@ final class WorkflowCheckerTest extends TestCase
 
         $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 new ProgramIncrementsTrackerCollection([new ProgramTracker($tracker)]),
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection()
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
     }

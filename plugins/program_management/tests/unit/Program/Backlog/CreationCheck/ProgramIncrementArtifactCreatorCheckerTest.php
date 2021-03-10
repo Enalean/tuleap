@@ -121,7 +121,8 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
         $this->fields_adapter           = Mockery::mock(BuildSynchronizedFields::class);
         $this->field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-            $this->fields_adapter
+            $this->fields_adapter,
+            new NullLogger()
         );
         $this->semantic_checker         = Mockery::mock(CheckSemantic::class);
         $this->required_field_checker   = Mockery::mock(CheckRequiredField::class);
@@ -346,6 +347,8 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $title_field_data = new Field($title_field);
 
         $artifact_link = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link->shouldReceive("getLabel")->andReturn('Link');
+        $artifact_link->shouldReceive("getTrackerId")->andReturn(49);
         $this->mockField($artifact_link, 1, $submitable, true);
         $artifact_link_field_data = new Field($artifact_link);
 

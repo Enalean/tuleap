@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 
 class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
@@ -30,10 +31,17 @@ class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
      * @var BuildSynchronizedFields
      */
     private $fields_adapter;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(BuildSynchronizedFields $fields_adapter)
-    {
+    public function __construct(
+        BuildSynchronizedFields $fields_adapter,
+        LoggerInterface $logger
+    ) {
         $this->fields_adapter = $fields_adapter;
+        $this->logger         = $logger;
     }
 
     /**
@@ -42,7 +50,7 @@ class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
     public function buildFromSourceTrackers(
         SourceTrackerCollection $source_tracker_collection
     ): SynchronizedFieldFromProgramAndTeamTrackersCollection {
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($this->logger);
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $collection->add(
                 new SynchronizedFieldFromProgramAndTeamTrackers($this->fields_adapter->build($source_tracker))

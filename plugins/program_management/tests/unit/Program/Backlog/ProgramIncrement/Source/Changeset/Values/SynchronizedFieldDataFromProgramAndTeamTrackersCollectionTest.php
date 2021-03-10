@@ -27,6 +27,8 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
@@ -43,7 +45,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field_data);
         $this->assertTrue($collection->canUserSubmitAndUpdateAllFields($user));
     }
@@ -53,8 +55,10 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
         $user = UserTestBuilder::aUser()->build();
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
+        $logger                  = M::mock(LoggerInterface::class);
+        $logger->shouldReceive('debug')->with('User can not submit the field #1 (Link) of tracker #49')->once();
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($logger);
         $collection->add($synchronized_field_data);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user));
     }
@@ -65,7 +69,10 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $logger = M::mock(LoggerInterface::class);
+        $logger->shouldReceive('debug')->with('User can not update the field #1 (Link) of tracker #49')->once();
+
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($logger);
         $collection->add($synchronized_field_data);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user));
     }
@@ -77,7 +84,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field_data);
         $this->assertTrue($collection->isFieldSynchronized($field));
 
@@ -90,7 +97,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field_data);
         $this->assertEquals([1, 2, 3, 4, 5, 6], $collection->getSynchronizedFieldIDs());
     }
@@ -98,6 +105,8 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(bool $submitable, bool $updatable): SynchronizedFieldFromProgramAndTeamTrackers
     {
         $artifact_link = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link->shouldReceive('getLabel')->andReturn('Link');
+        $artifact_link->shouldReceive('getTrackerId')->andReturn('49');
         $this->mockField($artifact_link, 1, $submitable, $updatable);
         $artifact_link_field_data = new Field($artifact_link);
 

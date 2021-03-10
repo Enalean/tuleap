@@ -71,7 +71,7 @@ final class RequiredFieldCheckerTest extends TestCase
             $required_title,
             $non_required_artifact_link
         );
-        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             new ProgramIncrementsTrackerCollection(
@@ -105,7 +105,7 @@ final class RequiredFieldCheckerTest extends TestCase
             $required_title,
             $required_artifact_link
         );
-        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field);
 
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(

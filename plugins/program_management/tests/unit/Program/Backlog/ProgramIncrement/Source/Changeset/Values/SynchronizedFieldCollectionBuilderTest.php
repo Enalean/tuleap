@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Data\Synchro
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
@@ -51,7 +52,8 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     {
         $this->fields_adapter = \Mockery::mock(BuildSynchronizedFields::class);
         $this->collection     = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-            $this->fields_adapter
+            $this->fields_adapter,
+            new NullLogger()
         );
     }
 
