@@ -178,6 +178,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             return Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
         }
 
+        if ($user_preference === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
+            return Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT;
+        }
+
         return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
     }
 

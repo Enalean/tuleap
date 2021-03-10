@@ -59,8 +59,8 @@ describe(`FlamingParrotDocumentAdapter`, () => {
             expect(adapter.getDefaultFormat()).toEqual(TEXT_FORMAT_HTML);
         });
 
-        it(`when the body does not have the class, it returns "text`, () => {
-            expect(adapter.getDefaultFormat()).toEqual(TEXT_FORMAT_TEXT);
+        it(`when the body does not have the class, it returns "commonmark"`, () => {
+            expect(adapter.getDefaultFormat()).toEqual(TEXT_FORMAT_COMMONMARK);
         });
     });
 

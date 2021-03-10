@@ -18,11 +18,7 @@
  */
 
 import type { TextFieldFormat } from "../../../constants/fields-constants";
-import {
-    TEXT_FORMAT_COMMONMARK,
-    TEXT_FORMAT_HTML,
-    TEXT_FORMAT_TEXT,
-} from "../../../constants/fields-constants";
+import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "../../../constants/fields-constants";
 
 import $ from "jquery";
 
@@ -62,7 +58,7 @@ export class FlamingParrotDocumentAdapter {
     public getDefaultFormat(): TextFieldFormat {
         return this.doc.body.classList.contains(HTML_FORMAT_CLASSNAME)
             ? TEXT_FORMAT_HTML
-            : TEXT_FORMAT_TEXT;
+            : TEXT_FORMAT_COMMONMARK;
     }
 
     public createOption(presenter: OptionPresenter): HTMLOptionElement {
