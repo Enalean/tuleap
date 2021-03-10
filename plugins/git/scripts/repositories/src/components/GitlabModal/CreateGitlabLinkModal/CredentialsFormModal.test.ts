@@ -45,7 +45,7 @@ describe("CredentialsFormModal", () => {
             silent: true,
         });
 
-        store = createStoreMock(store_options);
+        store = createStoreMock(store_options, { gitlab: {} });
 
         return shallowMount(CredentialsFormModal, {
             propsData: {
@@ -79,7 +79,7 @@ describe("CredentialsFormModal", () => {
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
 
-        expect(store.dispatch).toHaveBeenCalledWith("getGitlabProjectList", {
+        expect(store.dispatch).toHaveBeenCalledWith("gitlab/getGitlabProjectList", {
             server_url: "https://example.com",
             token: "AFREZF546",
         });

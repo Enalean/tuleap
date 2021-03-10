@@ -267,7 +267,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions([
+        ...mapActions("gitlab", [
             "showDeleteGitlabRepositoryModal",
             "showEditAccessTokenGitlabRepositoryModal",
             "showRegenerateGitlabWebhookModal",

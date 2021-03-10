@@ -22,23 +22,10 @@ import {
     getRepositoryList,
     setRepositoriesSortedByPathUserPreference,
     deleteRepositoriesSortedByPathUserPreference,
-    getGitlabRepositoryList as getGitlabRepository,
-    postGitlabRepository,
-    patchGitlabRepository,
 } from "../api/rest-querier";
 import { getProjectId, getUserId } from "../repository-list-presenter";
-import {
-    ERROR_TYPE_UNKNOWN_ERROR,
-    ERROR_TYPE_NO_GIT,
-    PROJECT_KEY,
-    REPOSITORIES_SORTED_BY_PATH,
-    ANONYMOUS_USER_ID,
-} from "../constants";
-import {
-    formatUrlToGetAllProject,
-    formatUrlToGetProjectFromId,
-} from "../gitlab/gitlab-credentials-helper";
-import { getAsyncGitlabRepositoryList as getAsyncGitlabRepository } from "../gitlab/gitlab-api-querier";
+import { PROJECT_KEY, REPOSITORIES_SORTED_BY_PATH, ANONYMOUS_USER_ID } from "../constants";
+import { getErrorCode } from "../support/error-handler";
 
 export const setDisplayMode = async (context, new_mode) => {
     context.commit("setDisplayMode", new_mode);
@@ -60,25 +47,6 @@ export const showAddRepositoryModal = ({ state }) => {
     state.add_repository_modal.toggle();
 };
 
-export const showAddGitlabRepositoryModal = ({ state }) => {
-    state.add_gitlab_repository_modal.toggle();
-};
-
-export const showDeleteGitlabRepositoryModal = (context, repository) => {
-    context.commit("setUnlinkGitlabRepository", repository);
-    context.state.unlink_gitlab_repository_modal.toggle();
-};
-
-export const showEditAccessTokenGitlabRepositoryModal = (context, repository) => {
-    context.commit("setEditAccessTokenGitlabRepository", repository);
-    context.state.edit_access_token_gitlab_repository_modal.toggle();
-};
-
-export const showRegenerateGitlabWebhookModal = (context, repository) => {
-    context.commit("setRegenerateGitlabWebhookRepository", repository);
-    context.state.regenerate_gitlab_webhook_modal.toggle();
-};
-
 export const changeRepositories = async (context, new_owner_id) => {
     context.commit("setSelectedOwnerId", new_owner_id);
     context.commit("setFilter", "");
@@ -94,7 +62,7 @@ export const changeRepositories = async (context, new_owner_id) => {
         await getAsyncRepositoryList(context.commit, getProjectRepositories);
 
         if (context.getters.isGitlabUsed) {
-            await getGitlabRepositories(context, order_by);
+            await context.dispatch("gitlab/getGitlabRepositories", order_by, { root: true });
         }
     } else {
         const getForkedRepositories = (callback) =>
@@ -117,142 +85,10 @@ export async function getAsyncRepositoryList(commit, getRepositories) {
             commit("setIsLoadingInitial", false);
         });
     } catch (e) {
-        return handleGetRepositoryListError(e, commit);
+        commit("setErrorMessageType", getErrorCode(e));
+        throw e;
     } finally {
         commit("setIsLoadingNext", false);
         commit("setIsFirstLoadDone", true);
     }
-}
-
-async function getGitlabRepositories(context, order_by) {
-    const getGitlabRepositories = (callback) =>
-        getGitlabRepository(getProjectId(), order_by, callback);
-
-    await getAsyncGitlabRepositoryList(context.commit, getGitlabRepositories);
-}
-
-export async function getAsyncGitlabRepositoryList(commit, getGitlabRepositories) {
-    commit("setIsLoadingInitial", true);
-    commit("setIsLoadingNext", true);
-    try {
-        return await getGitlabRepositories((repositories) => {
-            commit("pushGitlabRepositoriesForCurrentOwner", repositories);
-            commit("setIsLoadingInitial", false);
-        });
-    } catch (e) {
-        return handleGetRepositoryListError(e, commit);
-    } finally {
-        commit("setIsLoadingNext", false);
-        commit("setIsFirstLoadDone", true);
-    }
-}
-
-async function handleGetRepositoryListError(e, commit) {
-    let error_code;
-
-    if (!e.response) {
-        throw e;
-    }
-
-    try {
-        const { error } = await e.response.json();
-        error_code = Number.parseInt(error.code, 10);
-    } catch (e) {
-        commit("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
-        throw e;
-    }
-
-    if (error_code === 404) {
-        commit("setErrorMessageType", ERROR_TYPE_NO_GIT);
-    } else {
-        commit("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
-        throw e;
-    }
-}
-
-export async function getGitlabProjectList(context, credentials) {
-    let pagination = 1;
-    let repositories_gitlab = [];
-    credentials.server_url = formatUrlToGetAllProject(credentials.server_url);
-    const server_url_without_pagination = credentials.server_url;
-
-    const response = await getAsyncGitlabRepository(credentials);
-
-    if (response.status !== 200) {
-        throw Error();
-    }
-    const total_page = response.headers.get("X-Total-Pages");
-    repositories_gitlab.push(...(await response.json()));
-
-    pagination++;
-
-    while (pagination <= total_page) {
-        const repositories = await queryAPIGitlab(
-            credentials,
-            server_url_without_pagination,
-            pagination
-        );
-        repositories_gitlab.push(...repositories);
-        pagination++;
-    }
-
-    return repositories_gitlab;
-}
-
-export async function getGitlabRepositoryFromId(context, { credentials, id }) {
-    credentials.server_url = formatUrlToGetProjectFromId(credentials.server_url, id);
-
-    const response = await getAsyncGitlabRepository(credentials);
-
-    if (response.status !== 200) {
-        throw Error();
-    }
-
-    return response.json();
-}
-
-async function queryAPIGitlab(credentials, server_url_without_pagination, pagination) {
-    credentials.server_url = server_url_without_pagination + "&page=" + pagination;
-
-    const response = await getAsyncGitlabRepository(credentials);
-    if (response.status !== 200) {
-        throw Error();
-    }
-
-    return response.json();
-}
-
-export async function postIntegrationGitlab(context, data) {
-    const response = await postGitlabRepository(data);
-
-    return response.json();
-}
-
-export async function updateBotApiTokenGitlab(
-    context,
-    { gitlab_bot_api_token, gitlab_repository_id, gitlab_repository_url }
-) {
-    const body = {
-        update_bot_api_token: {
-            gitlab_bot_api_token,
-            gitlab_repository_id,
-            gitlab_repository_url,
-        },
-    };
-
-    await patchGitlabRepository(body);
-}
-
-export async function regenerateGitlabWebhook(
-    context,
-    { gitlab_repository_id, gitlab_repository_url }
-) {
-    const body = {
-        generate_new_secret: {
-            gitlab_repository_id,
-            gitlab_repository_url,
-        },
-    };
-
-    await patchGitlabRepository(body);
 }

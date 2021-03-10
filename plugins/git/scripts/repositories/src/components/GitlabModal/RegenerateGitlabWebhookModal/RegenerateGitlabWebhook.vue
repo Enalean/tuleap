@@ -94,12 +94,17 @@ import Vue from "vue";
 import type { FetchWrapperError, Modal } from "tlp";
 import { createModal } from "tlp";
 import type { GitLabData, Repository } from "../../../type";
-import { Action } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const gitlab = namespace("gitlab");
 
 @Component
 export default class RegenerateGitlabWebhook extends Vue {
-    @Action
+    @gitlab.Action
     readonly regenerateGitlabWebhook!: (gitlab_data: GitLabData) => Promise<void>;
+
+    @gitlab.State
+    readonly regenerate_gitlab_webhook_repository!: Repository;
 
     private modal: Modal | null = null;
     private repository: Repository | null = null;
@@ -114,11 +119,11 @@ export default class RegenerateGitlabWebhook extends Vue {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("setRegenerateGitlabWebhookModal", this.modal);
+        this.$store.commit("gitlab/setRegenerateGitlabWebhookModal", this.modal);
     }
 
     onShownModal(): void {
-        this.repository = this.$store.state.regenerate_gitlab_webhook_repository;
+        this.repository = this.regenerate_gitlab_webhook_repository;
     }
 
     reset(): void {

@@ -33,7 +33,7 @@ describe("ConfirmReplaceTokenModal", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {},
+            state: { gitlab: {} },
             getters: {},
         };
     });
@@ -78,7 +78,7 @@ describe("ConfirmReplaceTokenModal", () => {
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
-        expect(store.dispatch).toHaveBeenCalledWith("updateBotApiTokenGitlab", {
+        expect(store.dispatch).toHaveBeenCalledWith("gitlab/updateBotApiTokenGitlab", {
             gitlab_bot_api_token: "AZRERT123",
             gitlab_repository_id: 12,
             gitlab_repository_url: "https://example.com/my/repo",

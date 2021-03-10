@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,19 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { REPOSITORIES_SORTED_BY_LAST_UPDATE, ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "../constants";
 
-const state = {
-    repositories_for_owner: {},
-    filter: "",
-    selected_owner_id: PROJECT_KEY,
-    error_message_type: ERROR_TYPE_NO_ERROR,
-    success_message: "",
-    is_loading_initial: true,
-    is_loading_next: true,
-    add_repository_modal: null,
-    display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    is_first_load_done: false,
-    services_name_used: [],
+export default () => {
+    return {
+        add_gitlab_repository_modal: null,
+        unlink_gitlab_repository_modal: null,
+        unlink_gitlab_repository: null,
+        edit_access_token_gitlab_repository_modal: null,
+        edit_access_token_gitlab_repository: null,
+        regenerate_gitlab_webhook_modal: null,
+        regenerate_gitlab_webhook_repository: null,
+    };
 };
-export default state;

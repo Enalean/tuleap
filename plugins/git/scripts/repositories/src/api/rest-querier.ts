@@ -19,7 +19,7 @@
 
 import { patch, post, del, recursiveGet } from "tlp";
 import { REPOSITORIES_SORTED_BY_PATH } from "../constants";
-import type { GitLabData, GitLabDataWithToken, Repository } from "../type";
+import type { Repository } from "../type";
 
 export type RepositoryCallback = (repositories: Repository[]) => void;
 
@@ -29,30 +29,9 @@ export {
     postRepository,
     setRepositoriesSortedByPathUserPreference,
     deleteRepositoriesSortedByPathUserPreference,
-    getGitlabRepositoryList,
-    deleteIntegrationGitlab,
-    postGitlabRepository,
-    patchGitlabRepository,
 };
 
 const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
-
-export interface GitLabRepositoryDeletion {
-    repository_id: number;
-    project_id: number;
-}
-
-export interface GitLabRepositoryCreation {
-    project_id: number;
-    gitlab_repository_id: number;
-    gitlab_server_url: string;
-    gitlab_bot_api_token: string;
-}
-
-export interface GitLabRepositoryUpdate {
-    update_bot_api_token?: GitLabDataWithToken;
-    generate_new_secret?: GitLabData;
-}
 
 export interface GitRepositoryRecursiveGet {
     repositories: Array<Repository>;
@@ -74,24 +53,8 @@ function deleteRepositoriesSortedByPathUserPreference(user_id: number): Promise<
     return del(`/api/users/${user_id}/preferences?key=${USER_PREFERENCE_KEY}`);
 }
 
-function deleteIntegrationGitlab(repository_deletion: GitLabRepositoryDeletion): Promise<Response> {
-    return del(
-        "/api/v1/gitlab_repositories/" +
-            encodeURIComponent(repository_deletion.repository_id) +
-            "?project_id=" +
-            encodeURIComponent(repository_deletion.project_id)
-    );
-}
-
 function buildCollectionCallback(displayCallback: RepositoryCallback) {
     return ({ repositories }: GitRepositoryRecursiveGet): Array<Repository> => {
-        displayCallback(repositories);
-        return repositories;
-    };
-}
-
-function buildGitlabCollectionCallback(displayCallback: RepositoryCallback) {
-    return (repositories: Array<Repository>): Array<Repository> => {
         displayCallback(repositories);
         return repositories;
     };
@@ -135,24 +98,6 @@ function getRepositoryList(
     });
 }
 
-function getGitlabRepositoryList(
-    project_id: number,
-    order_by: string,
-    displayCallback: RepositoryCallback
-): Promise<Array<Repository>> {
-    return recursiveGet("/api/projects/" + project_id + "/gitlab_repositories", {
-        params: {
-            query: JSON.stringify({
-                scope: "project",
-            }),
-            order_by,
-            limit: 50,
-            offset: 0,
-        },
-        getCollectionCallback: buildGitlabCollectionCallback(displayCallback),
-    });
-}
-
 async function postRepository(project_id: number, repository_name: string): Promise<string> {
     const headers = {
         "content-type": "application/json",
@@ -169,28 +114,4 @@ async function postRepository(project_id: number, repository_name: string): Prom
     });
 
     return response.json();
-}
-
-function postGitlabRepository(repository: GitLabRepositoryCreation): Promise<Response> {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const body = JSON.stringify(repository);
-
-    return post("/api/gitlab_repositories", {
-        headers,
-        body,
-    });
-}
-
-function patchGitlabRepository(body: GitLabRepositoryUpdate): Promise<Response> {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    return patch("/api/gitlab_repositories", {
-        headers,
-        body: JSON.stringify(body),
-    });
 }

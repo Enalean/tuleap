@@ -112,7 +112,9 @@ import { credentialsAreEmpty, serverUrlIsValid } from "../../../gitlab/gitlab-cr
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { GitLabCredentials, GitlabProject } from "../../../type";
-import { Action } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const gitlab = namespace("gitlab");
 
 @Component
 export default class CredentialsFormModal extends Vue {
@@ -121,7 +123,7 @@ export default class CredentialsFormModal extends Vue {
     @Prop({ required: true })
     readonly server_url!: string;
 
-    @Action
+    @gitlab.Action
     readonly getGitlabProjectList!: (credentials: GitLabCredentials) => Promise<GitlabProject[]>;
 
     private gitlab_server = this.server_url;

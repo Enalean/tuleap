@@ -17,27 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchSuccess, mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import {
     PROJECT_KEY,
-    ERROR_TYPE_NO_GIT,
-    ERROR_TYPE_UNKNOWN_ERROR,
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH,
     ANONYMOUS_USER_ID,
 } from "../constants";
-import {
-    setDisplayMode,
-    getAsyncRepositoryList,
-    changeRepositories,
-    getGitlabProjectList,
-    getGitlabRepositoryFromId,
-    showEditAccessTokenGitlabRepositoryModal,
-    updateBotApiTokenGitlab,
-} from "./actions.js";
+import { setDisplayMode, getAsyncRepositoryList, changeRepositories } from "./actions.js";
 import * as repository_list_presenter from "../repository-list-presenter";
 import * as rest_querier from "../api/rest-querier";
-import * as gitlab_querier from "../gitlab/gitlab-api-querier";
 
 describe("Store actions", () => {
     describe("setDisplayMode", () => {
@@ -201,7 +190,6 @@ describe("Store actions", () => {
         });
 
         it("When plugin GitLab is used, Then gitlab repositories must be retrieved", async () => {
-            const getGitlabRepositoryList = jest.spyOn(rest_querier, "getGitlabRepositoryList");
             const context = {
                 commit: jest.fn(),
                 getters: {
@@ -209,19 +197,19 @@ describe("Store actions", () => {
                     isFolderDisplayMode: false,
                     isGitlabUsed: true,
                 },
+                dispatch: jest.fn(),
             };
             mockFetchSuccess(getRepositoryList);
-            mockFetchSuccess(getGitlabRepositoryList);
 
             await changeRepositories(context, PROJECT_KEY);
 
             expect(context.commit).toHaveBeenCalledWith("setSelectedOwnerId", PROJECT_KEY);
             expect(context.commit).toHaveBeenCalledWith("setFilter", "");
 
-            expect(getGitlabRepositoryList).toHaveBeenCalledWith(
-                current_project_id,
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "gitlab/getGitlabRepositories",
                 "push_date",
-                expect.any(Function)
+                { root: true }
             );
 
             expect(getRepositoryList).toHaveBeenCalledWith(
@@ -253,276 +241,6 @@ describe("Store actions", () => {
             expect(commit).toHaveBeenCalledWith("setIsLoadingInitial", false);
             expect(commit).toHaveBeenCalledWith("setIsLoadingNext", false);
             expect(commit).toHaveBeenCalledWith("setIsFirstLoadDone", true);
-        });
-
-        it("When the server responds with a 404, then the error for 'No git service' will be committed", async () => {
-            const error_json = {
-                error: {
-                    code: "404",
-                },
-            };
-            mockFetchError(getRepositories, { error_json });
-
-            await getAsyncRepositoryList(commit, getRepositories);
-
-            expect(commit).toHaveBeenCalledWith("setErrorMessageType", ERROR_TYPE_NO_GIT);
-        });
-
-        it("When the server responds with another error code, then the unknown error will be committed", async () => {
-            const error_json = {
-                error: {
-                    code: "403",
-                },
-            };
-            mockFetchError(getRepositories, { error_json });
-
-            await expect(getAsyncRepositoryList(commit, getRepositories)).rejects.toBeDefined();
-            expect(commit).toHaveBeenCalledWith("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
-        });
-
-        it("When something else happens (no response), then the unknown error will be committed", async () => {
-            mockFetchError(getRepositories, { status: 500 });
-
-            await expect(getAsyncRepositoryList(commit, getRepositories)).rejects.toBeDefined();
-            expect(commit).toHaveBeenCalledWith("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
-        });
-    });
-
-    describe("showEditAccessTokenGitlabRepositoryModal", () => {
-        let context;
-        beforeEach(() => {
-            context = {
-                commit: jest.fn(),
-                state: {
-                    edit_access_token_gitlab_repository_modal: { toggle: jest.fn() },
-                },
-            };
-        });
-
-        const repository = { id: 5 };
-
-        it("When modal should be open, Then repository is set and modal is opened", () => {
-            showEditAccessTokenGitlabRepositoryModal(context, repository);
-            expect(context.commit).toHaveBeenCalledWith(
-                "setEditAccessTokenGitlabRepository",
-                repository
-            );
-            expect(
-                context.state.edit_access_token_gitlab_repository_modal.toggle
-            ).toHaveBeenCalled();
-        });
-    });
-
-    describe("getGitlabProjectList", () => {
-        let context;
-        beforeEach(() => {
-            context = {
-                commit: jest.fn(),
-            };
-        });
-
-        it("When api is called, Then url is formatted", async () => {
-            const getAsyncGitlabRepositoryList = jest.spyOn(
-                gitlab_querier,
-                "getAsyncGitlabRepositoryList"
-            );
-            getAsyncGitlabRepositoryList.mockReturnValue(
-                new Promise((resolve) => {
-                    resolve({
-                        headers: {
-                            get: () => 1,
-                        },
-                        status: 200,
-                        json: () => Promise.resolve([{ id: 10 }]),
-                    });
-                })
-            );
-            const credentials = {
-                server_url: "https://example/",
-                token: "azerty1234",
-            };
-
-            expect(await getGitlabProjectList(context, credentials)).toEqual([{ id: 10 }]);
-            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
-                server_url:
-                    "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
-                token: "azerty1234",
-            });
-        });
-
-        it("When there is 2 pages, Then api is called twice", async () => {
-            const getAsyncGitlabRepositoryList = jest.spyOn(
-                gitlab_querier,
-                "getAsyncGitlabRepositoryList"
-            );
-            getAsyncGitlabRepositoryList.mockReturnValue(
-                new Promise((resolve) => {
-                    resolve({
-                        headers: {
-                            get: () => 2,
-                        },
-                        status: 200,
-                        json: () => Promise.resolve([{ id: 10 }]),
-                    });
-                })
-            );
-            const credentials = {
-                server_url: "https://example/",
-                token: "azerty1234",
-            };
-
-            expect(await getGitlabProjectList(context, credentials)).toEqual([
-                { id: 10 },
-                { id: 10 },
-            ]);
-            expect(getAsyncGitlabRepositoryList).toBeCalledTimes(2);
-        });
-
-        it("When en error retrieved from api, Then an error is thrown", async () => {
-            const getAsyncGitlabRepositoryList = jest.spyOn(
-                gitlab_querier,
-                "getAsyncGitlabRepositoryList"
-            );
-            getAsyncGitlabRepositoryList.mockReturnValue(
-                new Promise((resolve) => {
-                    resolve({
-                        status: 401,
-                    });
-                })
-            );
-            const credentials = {
-                server_url: "https://example/",
-                token: "azerty1234",
-            };
-
-            await expect(getGitlabProjectList(context, credentials)).rejects.toEqual(new Error());
-            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
-                server_url:
-                    "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
-                token: "azerty1234",
-            });
-        });
-    });
-
-    describe("getGitlabRepositoryFromId", () => {
-        let context;
-        beforeEach(() => {
-            context = {
-                commit: jest.fn(),
-            };
-        });
-
-        it("When api is called, Then url is formatted", async () => {
-            const getAsyncGitlabRepositoryList = jest.spyOn(
-                gitlab_querier,
-                "getAsyncGitlabRepositoryList"
-            );
-            getAsyncGitlabRepositoryList.mockReturnValue(
-                new Promise((resolve) => {
-                    resolve({
-                        headers: {
-                            get: () => 1,
-                        },
-                        status: 200,
-                        json: () => Promise.resolve([{ id: 10 }]),
-                    });
-                })
-            );
-            const credentials = {
-                server_url: "https://example/",
-                token: "azerty1234",
-            };
-
-            expect(await getGitlabRepositoryFromId(context, { credentials, id: 12 })).toEqual([
-                { id: 10 },
-            ]);
-            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
-                server_url: "https://example/api/v4/projects/12",
-                token: "azerty1234",
-            });
-        });
-
-        it("When an error is retrieved from api, Then an error is thrown", async () => {
-            const getAsyncGitlabRepositoryList = jest.spyOn(
-                gitlab_querier,
-                "getAsyncGitlabRepositoryList"
-            );
-            getAsyncGitlabRepositoryList.mockReturnValue(
-                new Promise((resolve) => {
-                    resolve({
-                        status: 401,
-                    });
-                })
-            );
-            const credentials = {
-                server_url: "https://example/",
-                token: "azerty1234",
-            };
-
-            await expect(
-                getGitlabRepositoryFromId(context, { credentials, id: 12 })
-            ).rejects.toEqual(new Error());
-            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
-                server_url: "https://example/api/v4/projects/12",
-                token: "azerty1234",
-            });
-        });
-    });
-
-    describe("updateBotApiTokenGitlab", () => {
-        const context = {};
-
-        it("When api is called, Then url is formatted", async () => {
-            const patchGitlabRepository = jest.spyOn(rest_querier, "patchGitlabRepository");
-
-            patchGitlabRepository.mockReturnValue(
-                new Promise((resolve) => {
-                    resolve({
-                        headers: {
-                            get: () => 1,
-                        },
-                        status: 200,
-                    });
-                })
-            );
-
-            const credentials = {
-                gitlab_bot_api_token: "AZERTY1234",
-                gitlab_repository_id: 10,
-                gitlab_repository_url: "https://example.com",
-            };
-
-            await updateBotApiTokenGitlab(context, credentials);
-
-            expect(patchGitlabRepository).toHaveBeenCalledWith({
-                update_bot_api_token: credentials,
-            });
-        });
-
-        it("When an error is retrieved from api, Then an error is thrown", async () => {
-            const patchGitlabRepository = jest.spyOn(rest_querier, "patchGitlabRepository");
-
-            patchGitlabRepository.mockReturnValue(
-                new Promise((resolve, reject) => {
-                    reject({
-                        status: 401,
-                    });
-                })
-            );
-
-            const credentials = {
-                gitlab_bot_api_token: "AZERTY1234",
-                gitlab_repository_id: 10,
-                gitlab_repository_url: "https://example.com",
-            };
-
-            await expect(updateBotApiTokenGitlab(context, credentials)).rejects.toEqual({
-                status: 401,
-            });
-
-            expect(patchGitlabRepository).toHaveBeenCalledWith({
-                update_bot_api_token: credentials,
-            });
         });
     });
 });

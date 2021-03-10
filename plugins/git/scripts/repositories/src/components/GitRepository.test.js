@@ -42,7 +42,7 @@ describe("GitRepository", () => {
     });
 
     function instantiateComponent() {
-        store = createStoreMock(store_options);
+        store = createStoreMock(store_options, { gitlab: {} });
         return shallowMount(GitRepository, {
             propsData,
             mocks: { $store: store },
@@ -280,7 +280,10 @@ describe("GitRepository", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("showDeleteGitlabRepositoryModal", repository);
+        expect(store.dispatch).toHaveBeenCalledWith(
+            "gitlab/showDeleteGitlabRepositoryModal",
+            repository
+        );
     });
 
     it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
@@ -306,7 +309,7 @@ describe("GitRepository", () => {
         await wrapper.vm.$nextTick();
 
         expect(store.dispatch).toHaveBeenCalledWith(
-            "showEditAccessTokenGitlabRepositoryModal",
+            "gitlab/showEditAccessTokenGitlabRepositoryModal",
             repository
         );
     });
@@ -333,6 +336,9 @@ describe("GitRepository", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("showRegenerateGitlabWebhookModal", repository);
+        expect(store.dispatch).toHaveBeenCalledWith(
+            "gitlab/showRegenerateGitlabWebhookModal",
+            repository
+        );
     });
 });
