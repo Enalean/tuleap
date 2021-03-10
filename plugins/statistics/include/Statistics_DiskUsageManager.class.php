@@ -466,6 +466,9 @@ class Statistics_DiskUsageManager
         return false;
     }
 
+    /**
+     * @return int|false
+     */
     public function getDirSize($dir)
     {
         if (is_dir($dir)) {
@@ -473,7 +476,7 @@ class Statistics_DiskUsageManager
             exec("nice -n 19 du -s --block-size=1 " . escapeshellarg($dir), $output, $returnValue);
             if ($returnValue === 0) {
                 $size = explode("\t", $output[0]);
-                return $size[0];
+                return (int) $size[0];
             }
         }
         return false;
@@ -644,8 +647,8 @@ class Statistics_DiskUsageManager
                 }
                 $sMailman = 0;
             }
-            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '/');
-            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '.mbox/');
+            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '/') ?: 0;
+            $sMailman += $this->getDirSize($mmArchivesPath . '/' . $row['list_name'] . '.mbox/') ?: 0;
 
             $previous = $row['group_id'];
         }

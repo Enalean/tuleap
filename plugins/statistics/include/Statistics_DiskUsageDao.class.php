@@ -518,6 +518,9 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         return $this->update($sql);
     }
 
+    /**
+     * @return array{size:string}|false
+     */
     public function getLastSizeForService($project_id, $service_name)
     {
         $project_id   = $this->da->escapeInt($project_id);

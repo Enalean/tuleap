@@ -30,7 +30,7 @@ use Statistics_DiskUsageManager;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-class DiskUsageRetrieverTest extends TestCase
+final class DiskUsageRetrieverTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -90,7 +90,7 @@ class DiskUsageRetrieverTest extends TestCase
         $this->project->shouldReceive('getUnixName')->andReturn('projet');
     }
 
-    public function testGetDiskUsageForProject()
+    public function testGetDiskUsageForProject(): void
     {
         $this->logger->shouldReceive('info')->with('Collecting statistics for project projet')->once();
 
@@ -108,10 +108,10 @@ class DiskUsageRetrieverTest extends TestCase
             ->withArgs([$this->project])
             ->andReturn([$repository]);
 
-        $this->assertEquals(11, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
+        self::assertEquals(11, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
     }
 
-    public function testGetDiskUsageForProjectWhenNoNewCommit()
+    public function testGetDiskUsageForProjectWhenNoNewCommit(): void
     {
         $this->logger->shouldReceive('info')->with('Collecting statistics for project projet')->once();
 
@@ -123,10 +123,10 @@ class DiskUsageRetrieverTest extends TestCase
 
         $this->dao->shouldReceive('getLastSizeForService')->andReturn(['size' => 11]);
 
-        $this->assertEquals(11, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
+        self::assertEquals(11, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
     }
 
-    public function testGetDiskUsageForProjectWhenNoRepositories()
+    public function testGetDiskUsageForProjectWhenNoRepositories(): void
     {
         $this->logger->shouldReceive('info')->with('Collecting statistics for project projet')->once();
 
@@ -137,6 +137,12 @@ class DiskUsageRetrieverTest extends TestCase
             ->withArgs([$this->project])
             ->andReturn([]);
 
-        $this->assertEquals(0, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
+        self::assertEquals(0, $this->disk_usage_retriever->getDiskUsageForProject($this->project));
+    }
+
+    public function testLastSizeForProjectIs0WhenNoDataIsAvailable(): void
+    {
+        $this->dao->shouldReceive('getLastSizeForService')->andReturn(false);
+        self::assertEquals(0, $this->disk_usage_retriever->getLastSizeForProject($this->project));
     }
 }

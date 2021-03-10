@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Statistics\DiskUsage\Subversion;
 
 use Statistics_DiskUsageDao;
@@ -36,10 +38,10 @@ class Retriever
         $this->dao = $dao;
     }
 
-    public function getLastSizeForProject(Project $project)
+    public function getLastSizeForProject(Project $project): int
     {
         $row = $this->dao->getLastSizeForService($project->getID(), Statistics_DiskUsageManager::SVN);
 
-        return (int) $row['size'];
+        return (int) ($row['size'] ?? 0);
     }
 }
