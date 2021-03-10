@@ -94,6 +94,13 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 
         $time_period = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($program_increment_artifact, $user);
 
-        return new ProgramIncrement($program_increment_artifact->getId(), $title, $status, $time_period->getStartDate(), $time_period->getEndDate());
+        return new ProgramIncrement(
+            $program_increment_artifact->getId(),
+            $title,
+            $program_increment_artifact->userCanUpdate($user),
+            $status,
+            $time_period->getStartDate(),
+            $time_period->getEndDate()
+        );
     }
 }

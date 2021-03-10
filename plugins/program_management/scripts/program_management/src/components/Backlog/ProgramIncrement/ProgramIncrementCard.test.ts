@@ -32,6 +32,7 @@ describe("ProgramIncrementCard", () => {
                     status: '"To be Planned',
                     start_date: null,
                     end_date: null,
+                    user_can_update: true,
                 },
             },
         });
@@ -46,6 +47,29 @@ describe("ProgramIncrementCard", () => {
         expect(wrapper.find("[data-test=program-increment-content]").exists()).toBe(false);
     });
 
+    it("Don't display update button if user doesn't have the permission", async () => {
+        const wrapper = shallowMount(ProgramIncrementCard, {
+            localVue: await createProgramManagementLocalVue(),
+            propsData: {
+                increment: {
+                    id: 1,
+                    title: "PI 1",
+                    status: '"To be Planned',
+                    start_date: null,
+                    end_date: null,
+                    user_can_update: false,
+                },
+            },
+        });
+
+        wrapper.get("[data-test=program-increment-toggle]").trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=program-increment-info]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increment-content]").exists()).toBe(true);
+    });
+
     it("Display a card and its content", async () => {
         const wrapper = shallowMount(ProgramIncrementCard, {
             localVue: await createProgramManagementLocalVue(),
@@ -56,6 +80,7 @@ describe("ProgramIncrementCard", () => {
                     status: '"To be Planned',
                     start_date: null,
                     end_date: null,
+                    user_can_update: true,
                 },
             },
         });

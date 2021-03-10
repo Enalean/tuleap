@@ -25,6 +25,7 @@ export interface ProgramIncrement {
     status: string;
     start_date: string | null;
     end_date: string | null;
+    user_can_update: boolean;
 }
 
 export function getProgramIncrements(program_id: number): Promise<ProgramIncrement[]> {

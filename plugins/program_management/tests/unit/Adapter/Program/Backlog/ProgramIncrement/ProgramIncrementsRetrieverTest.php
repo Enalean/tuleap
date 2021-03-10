@@ -68,8 +68,10 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         $this->dao->shouldReceive('searchOpenProgramIncrements')->andReturn([['id' => 14], ['id' => 15]]);
         $artifact_14 = Mockery::mock(Artifact::class);
         $artifact_14->shouldReceive('getId')->andReturn(14);
+        $artifact_14->shouldReceive('userCanUpdate')->andReturnTrue();
         $artifact_15 = Mockery::mock(Artifact::class);
         $artifact_15->shouldReceive('getId')->andReturn(15);
+        $artifact_15->shouldReceive('userCanUpdate')->andReturnFalse();
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 14)->andReturn($artifact_14);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 15)->andReturn($artifact_15);
 
@@ -92,8 +94,8 @@ final class ProgramIncrementsRetrieverTest extends TestCase
 
         self::assertEquals(
             [
-                new ProgramIncrement($artifact_14->getId(), 'Artifact 14', 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
-                new ProgramIncrement($artifact_15->getId(), 'Artifact 15', 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
+                new ProgramIncrement($artifact_14->getId(), 'Artifact 14', true, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
+                new ProgramIncrement($artifact_15->getId(), 'Artifact 15', false, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
             ],
             $program_increments
         );
