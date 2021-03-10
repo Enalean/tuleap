@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Psr\Log\LoggerInterface;
+
 final class SynchronizedFieldFromProgramAndTeamTrackersCollection
 {
     /**
@@ -32,6 +34,15 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
      * @var Field[]
      */
     private $synchronized_fields = [];
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * @psalm-readonly
@@ -40,9 +51,25 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
     {
         foreach ($this->synchronized_fields as $synchronized_field) {
             if (! $synchronized_field->userCanSubmit($user)) {
+                $this->logger->debug(
+                    sprintf(
+                        "User can not submit the field #%d (%s) of tracker #%d",
+                        $synchronized_field->getId(),
+                        $synchronized_field->getFullField()->getLabel(),
+                        $synchronized_field->getFullField()->getTrackerId()
+                    )
+                );
                 return false;
             }
             if (! $synchronized_field->userCanUpdate($user)) {
+                $this->logger->debug(
+                    sprintf(
+                        "User can not update the field #%d (%s) of tracker #%d",
+                        $synchronized_field->getId(),
+                        $synchronized_field->getFullField()->getLabel(),
+                        $synchronized_field->getFullField()->getTrackerId()
+                    )
+                );
                 return false;
             }
         }
