@@ -558,7 +558,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function create(): void
     {
         $this->checkUserIsAdmin();
-        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
 
         if ($this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation($this->getCurrentUser(), $this->group_id) === false) {
             $this->addFeedback(
@@ -595,7 +594,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function edit(): string
     {
         $this->checkUserIsAdmin();
-        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
 
         $planning_id = $this->request->get('planning_id');
         $planning    = $this->planning_factory->getPlanning($planning_id);
@@ -684,7 +682,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function update(): void
     {
         $this->checkUserIsAdmin();
-        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
 
         $updated_planning_id = (int) $this->request->get('planning_id');
         $original_planning   = $this->planning_factory->getPlanning($updated_planning_id);

@@ -46,6 +46,10 @@ function canNotCreatePlanningPopover(): void {
 const REMOVE_PLANNING_BUTTON_ID = "agiledashboard-administration-remove-planning-button";
 
 function removePlanningButton(): void {
+    const remove_planning_button = document.getElementById(REMOVE_PLANNING_BUTTON_ID);
+    if (remove_planning_button !== null && remove_planning_button.classList.contains("disabled")) {
+        return;
+    }
     openTargetModalIdOnClick(document, REMOVE_PLANNING_BUTTON_ID);
 }
 

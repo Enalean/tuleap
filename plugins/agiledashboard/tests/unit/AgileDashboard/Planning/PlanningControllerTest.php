@@ -228,7 +228,7 @@ final class PlanningControllerTest extends TestCase
         $GLOBALS['Response']->shouldReceive('addFeedback')->once();
 
         $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->twice();
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
@@ -251,7 +251,6 @@ final class PlanningControllerTest extends TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
-        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
         $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
@@ -297,7 +296,7 @@ final class PlanningControllerTest extends TestCase
         $GLOBALS['Response']->shouldReceive('addFeedback')->once();
 
         $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->twice();
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
@@ -320,8 +319,6 @@ final class PlanningControllerTest extends TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
-
-        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->request->shouldReceive('getCurrentUser')->andReturn($user);
         $project = Mockery::mock(Project::class);
@@ -347,8 +344,6 @@ final class PlanningControllerTest extends TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
-
-        $this->event_manager->shouldReceive('dispatch')->once();
 
         $planning_parameters = [
             PlanningParameters::NAME                         => 'Release Planning',

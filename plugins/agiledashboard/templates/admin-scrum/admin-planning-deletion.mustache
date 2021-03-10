@@ -1,12 +1,16 @@
 {{^ is_planning_removal_dangerous }}
-    <a href="{{ delete_url }}" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline">
+    <a {{^ is_planning_administration_delegated }}href="{{ delete_url }}"{{/ is_planning_administration_delegated }}
+        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline {{# is_planning_administration_delegated }} disabled tlp-tooltip tlp-tooltip-left {{/ is_planning_administration_delegated }}"
+        data-tlp-tooltip="{{# dgettext }} tuleap-agiledashboard | Deletion of this planning is prohibited because this project is part of a program backlog. {{/ dgettext }}"
+    >
         <i class="far fa-trash-alt tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Delete {{/ dgettext }}
     </a>
 {{/ is_planning_removal_dangerous }}
 {{# is_planning_removal_dangerous }}
-    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline {{# is_planning_administration_delegated }} disabled tlp-tooltip tlp-tooltip-left {{/ is_planning_administration_delegated }}"
        id="agiledashboard-administration-remove-planning-button"
        data-target-modal-id="agiledashboard-drop-root-planning"
+       data-tlp-tooltip="{{# dgettext }} tuleap-agiledashboard | Deletion of this planning is prohibited because this project is part of a program backlog. {{/ dgettext }}"
     >
         <i class="far fa-trash-alt tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Delete {{/ dgettext }}
     </a>
