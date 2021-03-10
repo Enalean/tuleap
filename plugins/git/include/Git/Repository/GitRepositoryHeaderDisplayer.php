@@ -49,15 +49,21 @@ class GitRepositoryHeaderDisplayer
      * @var \EventManager
      */
     private $event_manager;
+    /**
+     * @var IncludeAssets
+     */
+    private $core_assets;
 
     public function __construct(
         HeaderRenderer $header_renderer,
         RepositoryHeaderPresenterBuilder $header_presenter_builder,
+        IncludeAssets $core_assets,
         IncludeAssets $include_assets,
         \EventManager $event_manager
     ) {
         $this->header_renderer          = $header_renderer;
         $this->header_presenter_builder = $header_presenter_builder;
+        $this->core_assets              = $core_assets;
         $this->include_assets           = $include_assets;
         $this->event_manager            = $event_manager;
     }
@@ -75,7 +81,7 @@ class GitRepositoryHeaderDisplayer
     private function includeAssetsForBurningParrot(HTTPRequest $request, BaseLayout $layout): void
     {
         if (! $request->exist('a') || in_array($request->get('a'), ['blob', 'blame', 'tree'], true)) {
-            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'syntax-highlight'));
+            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->core_assets, 'syntax-highlight'));
         }
         $layout->addCssAsset(new CssAsset($this->include_assets, 'bp-style'));
         $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repository.js'));

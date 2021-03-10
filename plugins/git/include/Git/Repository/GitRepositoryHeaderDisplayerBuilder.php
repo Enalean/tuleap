@@ -62,6 +62,7 @@ class GitRepositoryHeaderDisplayerBuilder
         return new GitRepositoryHeaderDisplayer(
             $this->getHeaderRenderer($git_plugin),
             $this->getRepositoryHeaderPresenterBuilder($git_plugin, $selected_tab),
+            $this->getCoreAssets(),
             $this->getIncludeAssets(),
             EventManager::instance()
         );
@@ -178,6 +179,14 @@ class GitRepositoryHeaderDisplayerBuilder
         return new IncludeAssets(
             __DIR__ . '/../../../../../src/www/assets/git',
             '/assets/git'
+        );
+    }
+
+    private function getCoreAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/core',
+            '/assets/core'
         );
     }
 

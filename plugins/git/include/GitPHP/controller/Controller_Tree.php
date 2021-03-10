@@ -150,7 +150,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('readme_content', $readme_tree_item);
         if ($readme_tree_item !== null) {
             $code_block_features = new \Tuleap\Markdown\CodeBlockFeatures();
-            $content_interpretor = CommonMarkInterpreter::buildWithMermaid(
+            $content_interpretor = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
                 \Codendi_HTMLPurifier::instance(),
                 $code_block_features,
                 new LinkToGitFileExtension(new LinkToGitFileBlobFinder($readme_tree_item->GetFullPath(), $commit))

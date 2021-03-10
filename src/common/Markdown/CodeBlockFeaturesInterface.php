@@ -26,4 +26,6 @@ interface CodeBlockFeaturesInterface
 {
     public function needsMermaid(): void;
     public function isMermaidNeeded(): bool;
+    public function needsSyntaxHighlight(): void;
+    public function isSyntaxHighlightNeeded(): bool;
 }

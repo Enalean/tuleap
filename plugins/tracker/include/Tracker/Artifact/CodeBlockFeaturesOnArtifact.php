@@ -65,4 +65,14 @@ final class CodeBlockFeaturesOnArtifact implements CodeBlockFeaturesInterface
     {
         return $this->code_block_features->isMermaidNeeded();
     }
+
+    public function needsSyntaxHighlight(): void
+    {
+        $this->code_block_features->needsSyntaxHighlight();
+    }
+
+    public function isSyntaxHighlightNeeded(): bool
+    {
+        return $this->code_block_features->isSyntaxHighlightNeeded();
+    }
 }

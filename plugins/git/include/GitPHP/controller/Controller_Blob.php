@@ -238,7 +238,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('can_be_rendered', $can_file_be_rendered);
         if ($can_file_be_rendered && ! $this->params['show_source']) {
             $code_block_features = new \Tuleap\Markdown\CodeBlockFeatures();
-            $content_interpretor = CommonMarkInterpreter::buildWithMermaid(
+            $content_interpretor = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
                 \Codendi_HTMLPurifier::instance(),
                 $code_block_features,
                 new LinkToGitFileExtension(new LinkToGitFileBlobFinder($blob->GetPath(), $commit))

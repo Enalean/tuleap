@@ -31,7 +31,7 @@ use League\CommonMark\HtmlElement;
 use League\CommonMark\Util\Xml;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
-final class MermaidBlockRenderer implements BlockRendererInterface
+final class EnhancedCodeBlockRenderer implements BlockRendererInterface
 {
     /**
      * @var FencedCodeRenderer
@@ -60,9 +60,14 @@ final class MermaidBlockRenderer implements BlockRendererInterface
         $attrs = $block->getData('attributes', []);
 
         $infoWords = $block->getInfoWords();
-        if (\count($infoWords) !== 0 && \strlen($infoWords[0]) !== 0 && $infoWords[0] === 'mermaid') {
-            $this->code_block_features->needsMermaid();
-            return new HtmlElement('tlp-mermaid-diagram', $attrs, Xml::escape($block->getStringContent()));
+        if (\count($infoWords) !== 0 && \strlen($infoWords[0]) !== 0) {
+            if ($infoWords[0] === 'mermaid') {
+                $this->code_block_features->needsMermaid();
+
+                return new HtmlElement('tlp-mermaid-diagram', $attrs, Xml::escape($block->getStringContent()));
+            }
+
+            $this->code_block_features->needsSyntaxHighlight();
         }
 
 

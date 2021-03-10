@@ -30,7 +30,7 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
-class MermaidBlockRendererTest extends TestCase
+class EnhancedCodeBlockRendererTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -50,7 +50,7 @@ class MermaidBlockRendererTest extends TestCase
         $environment = Environment::createCommonMarkEnvironment();
         $environment->addBlockRenderer(
             FencedCode::class,
-            new MermaidBlockRenderer($this->code_block_features, new FencedCodeRenderer())
+            new EnhancedCodeBlockRenderer($this->code_block_features, new FencedCodeRenderer())
         );
         $this->converter = new CommonMarkConverter([], $environment);
     }
@@ -60,12 +60,15 @@ class MermaidBlockRendererTest extends TestCase
         $this->code_block_features
             ->shouldReceive('needsMermaid')
             ->never();
+        $this->code_block_features
+            ->shouldReceive('needsSyntaxHighlight')
+            ->never();
 
         $result = $this->converter->convertToHtml(
             <<<MARKDOWN
             See code below:
 
-            ```php
+            ```
             class Foo {}
             ```
 
@@ -82,7 +85,7 @@ class MermaidBlockRendererTest extends TestCase
         self::assertEquals(
             <<<EXPECTED_HTML
             <p>See code below:</p>
-            <pre><code class="language-php">class Foo {}
+            <pre><code>class Foo {}
             </code></pre>
             <pre><code>graph TD;
                 A--&gt;B;
@@ -99,6 +102,52 @@ class MermaidBlockRendererTest extends TestCase
     {
         $this->code_block_features
             ->shouldReceive('needsMermaid')
+            ->once();
+        $this->code_block_features
+            ->shouldReceive('needsSyntaxHighlight')
+            ->never();
+
+        $result = $this->converter->convertToHtml(
+            <<<MARKDOWN
+            See code below:
+
+            ```
+            class Foo {}
+            ```
+
+            ```mermaid
+            graph TD;
+                A-->B;
+                A-->C;
+                B-->D;
+                C-->D;
+            ```
+            MARKDOWN
+        );
+
+        self::assertEquals(
+            <<<EXPECTED_HTML
+            <p>See code below:</p>
+            <pre><code>class Foo {}
+            </code></pre>
+            <tlp-mermaid-diagram>graph TD;
+                A--&gt;B;
+                A--&gt;C;
+                B--&gt;D;
+                C--&gt;D;
+            </tlp-mermaid-diagram>\n
+            EXPECTED_HTML,
+            $result
+        );
+    }
+
+    public function testItNeedsSyntaxHighlightingOnlyForNamedBlocksThatAreNotMermaid(): void
+    {
+        $this->code_block_features
+            ->shouldReceive('needsMermaid')
+            ->once();
+        $this->code_block_features
+            ->shouldReceive('needsSyntaxHighlight')
             ->once();
 
         $result = $this->converter->convertToHtml(

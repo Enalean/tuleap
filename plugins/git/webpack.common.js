@@ -33,7 +33,7 @@ const webpack_config_for_vue = {
         "repositories-list": "./scripts/repositories/src/index.js",
         repository: "./scripts/repository/src/index.ts",
         "repository-blob": [
-            "./scripts/repository/file/syntax-highlight.ts",
+            "../../src/scripts/syntax-highlight/index.ts",
             "./scripts/repository/file/line-highlight.ts",
         ],
     },
@@ -117,7 +117,6 @@ const webpack_config_for_legacy_scripts = {
 
 const entry_points = {
     default: "./themes/default/css/style.scss",
-    "syntax-highlight": "./themes/BurningParrot/syntax-highlight.scss",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];

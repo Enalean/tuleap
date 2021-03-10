@@ -159,7 +159,7 @@ class Tracker_Artifact_Changeset_Comment
             return $this->purifyHTMLBody();
         }
         if ($this->bodyFormat === self::COMMONMARK_COMMENT) {
-            $content_interpretor = CommonMarkInterpreter::buildWithMermaid(
+            $content_interpretor = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
                 Codendi_HTMLPurifier::instance(),
                 CodeBlockFeaturesOnArtifact::getInstance()
             );
