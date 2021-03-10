@@ -241,6 +241,13 @@ msgid "Delete"
 msgstr "Supprimer"
 
 msgid ""
+"Deletion of this planning is prohibited because this project is part of a "
+"program backlog."
+msgstr ""
+"La suppression de ce planning est interdite parce que ce projet fait partie "
+"du backlog d'un programme."
+
+msgid ""
 "Displays a board to see the tasks to do, in progress, done etc. Please go on "
 "a kanban to add it."
 msgstr ""
