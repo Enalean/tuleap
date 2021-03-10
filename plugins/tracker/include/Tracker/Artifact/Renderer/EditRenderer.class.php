@@ -25,6 +25,7 @@
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -330,7 +331,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayFooter()
     {
-        if (\Tuleap\Markdown\CodeBlockFeaturesOnPage::getInstance()->isMermaidNeeded()) {
+        if (CodeBlockFeaturesOnArtifact::getInstance()->isMermaidNeeded()) {
             $assets = new IncludeAssets(
                 __DIR__ . '/../../../../../../src/www/assets/core',
                 '/assets/core'

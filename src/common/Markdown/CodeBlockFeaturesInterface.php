@@ -22,39 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-final class CodeBlockFeaturesOnPage implements CodeBlockFeatures
+interface CodeBlockFeaturesInterface
 {
-    /**
-     * @var bool
-     */
-    private $is_mermaid_needed = false;
-
-    /**
-     * @var self|null
-     */
-    private static $instance;
-
-    public static function getInstance(): self
-    {
-        if (! self::$instance) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
-    public static function clearInstance(): void
-    {
-        self::$instance = null;
-    }
-
-    public function needsMermaid(): void
-    {
-        $this->is_mermaid_needed = true;
-    }
-
-    public function isMermaidNeeded(): bool
-    {
-        return $this->is_mermaid_needed;
-    }
+    public function needsMermaid(): void;
+    public function isMermaidNeeded(): bool;
 }

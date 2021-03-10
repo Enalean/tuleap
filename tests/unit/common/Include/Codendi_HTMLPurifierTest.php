@@ -185,4 +185,25 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
 
         $this->assertEquals($expected, $p->purifyHTMLWithReferences($html, 123));
     }
+
+    public function testItAllowsMermaidCustomElementOnlyForFullConfig(): void
+    {
+        $p = $this->getHTMLPurifier();
+        self::assertEquals(
+            '<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram>',
+            $p->purify('<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            '<tlp-mermaid-diagram class="whatever">Foo</tlp-mermaid-diagram>',
+            $p->purify('<tlp-mermaid-diagram class="whatever">Foo</tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            '<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram><b>html</b>',
+            $p->purify('<tlp-mermaid-diagram>Foo<b>html</b></tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            'Foo',
+            $p->purify('<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_LIGHT)
+        );
+    }
 }

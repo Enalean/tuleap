@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import mermaid from "mermaid";
 
-namespace Tuleap\Markdown;
+let is_initialized = false;
 
-final class CodeBlockFeatures implements CodeBlockFeaturesInterface
-{
-    /**
-     * @var bool
-     */
-    private $is_mermaid_needed = false;
-
-    public function needsMermaid(): void
-    {
-        $this->is_mermaid_needed = true;
+export function initializeMermaid(): void {
+    if (is_initialized) {
+        return;
     }
 
-    public function isMermaidNeeded(): bool
-    {
-        return $this->is_mermaid_needed;
-    }
+    mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: "strict",
+        theme: "default",
+        flowchart: {
+            htmlLabels: false,
+        },
+        // Prevent users to screw up to much the page with nasty %%init%% directive
+        secure: ["secure", "securityLevel", "startOnLoad", "maxTextSize", "theme", "fontFamily"],
+    });
+    is_initialized = true;
 }

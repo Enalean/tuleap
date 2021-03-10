@@ -237,8 +237,10 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         $can_file_be_rendered = $detected_language === 'md' || $detected_language === 'markdown';
         $this->tpl->assign('can_be_rendered', $can_file_be_rendered);
         if ($can_file_be_rendered && ! $this->params['show_source']) {
-            $content_interpretor = CommonMarkInterpreter::build(
+            $code_block_features = new \Tuleap\Markdown\CodeBlockFeatures();
+            $content_interpretor = CommonMarkInterpreter::buildWithMermaid(
                 \Codendi_HTMLPurifier::instance(),
+                $code_block_features,
                 new LinkToGitFileExtension(new LinkToGitFileBlobFinder($blob->GetPath(), $commit))
             );
             $this->tpl->assign(
@@ -247,6 +249,14 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                     $blob->GetData()
                 )
             );
+            if ($code_block_features->isMermaidNeeded()) {
+                $assets = new IncludeAssets(
+                    __DIR__ . '/../../../../../src/www/assets/core',
+                    '/assets/core'
+                );
+
+                $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
+            }
         } else {
             $this->tpl->assign('bloblines', $blob->GetData(true));
         }

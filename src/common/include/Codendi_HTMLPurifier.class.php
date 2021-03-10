@@ -112,6 +112,20 @@ class Codendi_HTMLPurifier
         return $config;
     }
 
+    private function getFullConfig(): HTMLPurifier_Config
+    {
+        $config = $this->getCodendiConfig();
+
+        $config->set('HTML.DefinitionID', 'Tuleap custom definition');
+        $config->set('HTML.DefinitionRev', 1);
+        $definition = $config->maybeGetRawHTMLDefinition();
+        if ($definition) {
+            $definition->addElement('tlp-mermaid-diagram', 'Block', 'Optional: #PCDATA', 'Common', []);
+        }
+
+        return $config;
+    }
+
     /**
      * Allow basic formatting markups and enable some Autoformat attributes
      * @see http://htmlpurifier.org/live/configdoc/plain.html#AutoFormat
@@ -178,7 +192,7 @@ class Codendi_HTMLPurifier
                 break;
 
             case self::CONFIG_FULL:
-                $this->config[self::CONFIG_FULL] = $this->getCodendiConfig();
+                $this->config[self::CONFIG_FULL] = $this->getFullConfig();
                 break;
 
             case self::CONFIG_STRIP_HTML:
