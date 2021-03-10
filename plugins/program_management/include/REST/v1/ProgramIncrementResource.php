@@ -29,7 +29,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
 use Tuleap\REST\AuthenticatedResource;
@@ -55,7 +54,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $this->user_manager                        = \UserManager::instance();
         $artifact_factory                          = \Tracker_ArtifactFactory::instance();
         $this->program_increment_content_retriever = new FeatureContentRetriever(
-            new ProgramIncrementRetriever($artifact_factory, new ProgramTrackerAdapter(\TrackerFactory::instance(), new PlanDao())),
+            new ProgramIncrementRetriever($artifact_factory, new ProgramTrackerAdapter(\TrackerFactory::instance())),
             new ContentDao(),
             new FeatureRepresentationBuilder(
                 $artifact_factory,

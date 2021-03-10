@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
@@ -116,7 +117,8 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         );
         $this->planning_factory                = Mockery::mock(\PlanningFactory::class);
         $milestone_trackers_factory            = new TrackerCollectionFactory(
-            new PlanningAdapter($this->planning_factory)
+            new PlanningAdapter($this->planning_factory),
+            Mockery::mock(BuildPlanProgramIncrementConfiguration::class)
         );
         $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);
         $this->logger                          = \Mockery::mock(LoggerInterface::class);

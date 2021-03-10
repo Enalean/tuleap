@@ -100,7 +100,7 @@ final class ProjectResource extends AuthenticatedResource
     {
         $this->user_manager   = \UserManager::instance();
         $plan_dao             = new PlanDao();
-        $tracker_adapter      = new ProgramTrackerAdapter(\TrackerFactory::instance(), new PlanDao());
+        $tracker_adapter      = new ProgramTrackerAdapter(\TrackerFactory::instance());
         $project_manager      = \ProjectManager::instance();
         $program_dao          = new ProgramDao();
         $explicit_backlog_dao = new ExplicitBacklogDao();

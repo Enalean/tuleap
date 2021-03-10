@@ -29,14 +29,31 @@ use Planning;
 use Project;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerCollectionFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var int
+     */
+    private $program_project_id = 101;
+
+    /**
+     * @var int
+     */
+    private $team_project_id = 104;
+
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|BuildPlanProgramIncrementConfiguration
+     */
+    private $configuration_builder;
 
     /**
      * @var M\LegacyMockInterface|M\MockInterface|\PlanningFactory
@@ -70,20 +87,22 @@ final class TrackerCollectionFactoryTest extends TestCase
     {
         $this->planning_factory = \Mockery::mock(\PlanningFactory::class);
         $planning_adapter       = new PlanningAdapter($this->planning_factory);
-        $this->builder          = new TrackerCollectionFactory($planning_adapter);
+
+        $this->configuration_builder = \Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
+        $this->builder               = new TrackerCollectionFactory($planning_adapter, $this->configuration_builder);
 
         $this->program_project_data     = ProjectAdapter::build(
-            new \Project(['group_id' => '101', 'unix_group_name' => "program", 'group_name' => 'Program'])
+            new \Project(['group_id' => $this->program_project_id, 'unix_group_name' => "program", 'group_name' => 'Program'])
         );
         $this->first_team_project_data  = ProjectAdapter::build(
-            new \Project(['group_id' => '103', 'unix_group_name' => "teamA", 'group_name' => 'First Team'])
+            new \Project(['group_id' => $this->team_project_id, 'unix_group_name' => "teamA", 'group_name' => 'First Team'])
         );
         $this->second_team_project_data = ProjectAdapter::build(
             new \Project(['group_id' => '123', 'unix_group_name' => "teamB", 'group_name' => 'Second Team'])
         );
 
         $project            = new \Project(
-            ['group_id' => 101, 'unix_group_name' => "project_name", 'group_name' => 'Public Name']
+            ['group_id' =>  $this->program_project_id, 'unix_group_name' => "project_name", 'group_name' => 'Public Name']
         );
         $this->project_data = ProjectAdapter::build($project);
     }
@@ -96,9 +115,10 @@ final class TrackerCollectionFactoryTest extends TestCase
         $user  = UserTestBuilder::aUser()->build();
 
         $program_tracker_id = 512;
-        $this->mockRootPlanning($program_tracker_id, 101, $user);
+        $this->configuration_builder->shouldReceive('buildTrackerProgramIncrementFromProjectId')
+            ->once()->andReturn(new ProgramTracker(TrackerTestBuilder::aTracker()->withId($program_tracker_id)->build()));
         $first_tracker_id = 1024;
-        $this->mockRootPlanning($first_tracker_id, 103, $user);
+        $this->mockRootPlanning($first_tracker_id, $this->team_project_id, $user);
         $second_tracker_id = 2048;
         $this->mockRootPlanning($second_tracker_id, 123, $user);
 
@@ -108,9 +128,9 @@ final class TrackerCollectionFactoryTest extends TestCase
             $user
         );
         $ids      = $trackers->getTrackerIds();
-        $this->assertContains($program_tracker_id, $ids);
-        $this->assertContains($first_tracker_id, $ids);
-        $this->assertContains($second_tracker_id, $ids);
+        self::assertContains($program_tracker_id, $ids);
+        self::assertContains($first_tracker_id, $ids);
+        self::assertContains($second_tracker_id, $ids);
     }
 
     public function testItThrowsWhenProgramPlanningIsMalformedAndHasNoMilestoneTracker(): void
@@ -120,11 +140,15 @@ final class TrackerCollectionFactoryTest extends TestCase
         );
         $user  = UserTestBuilder::aUser()->build();
 
-        $malformed_planning = new Planning(1, 'Malformed planning', $this->project_data->getId(), '', []);
+        $program_tracker_id = 512;
+        $this->configuration_builder->shouldReceive('buildTrackerProgramIncrementFromProjectId')
+            ->once()->andReturn(new ProgramTracker(TrackerTestBuilder::aTracker()->withId($program_tracker_id)->build()));
+
+        $malformed_planning = new Planning(1, 'Malformed planning', $this->team_project_id, '', []);
         $malformed_planning->setPlanningTracker(new \NullTracker());
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
-            ->with($user, $this->project_data->getId())
+            ->with($user, $this->team_project_id)
             ->andReturn($malformed_planning);
 
         $this->expectException(PlanningHasNoProgramIncrementException::class);
@@ -138,7 +162,9 @@ final class TrackerCollectionFactoryTest extends TestCase
         );
         $user  = UserTestBuilder::aUser()->build();
 
-        $this->mockRootPlanning(512, 101, $user);
+        $program_tracker_id = 512;
+        $this->configuration_builder->shouldReceive('buildTrackerProgramIncrementFromProjectId')
+            ->once()->andReturn(new ProgramTracker(TrackerTestBuilder::aTracker()->withId($program_tracker_id)->build()));
 
         $malformed_planning = new Planning(1, 'Malformed planning', $this->project_data->getId(), '', []);
         $malformed_planning->setPlanningTracker(new \NullTracker());
@@ -159,14 +185,14 @@ final class TrackerCollectionFactoryTest extends TestCase
         $user  = UserTestBuilder::aUser()->build();
 
         $first_tracker_id = 1024;
-        $this->mockRootPlanning($first_tracker_id, 103, $user);
+        $this->mockRootPlanning($first_tracker_id, $this->team_project_id, $user);
         $second_tracker_id = 2048;
         $this->mockRootPlanning($second_tracker_id, 123, $user);
 
         $trackers = $this->builder->buildFromTeamProjects($teams, $user);
         $ids      = $trackers->getTrackerIds();
-        $this->assertContains($first_tracker_id, $ids);
-        $this->assertContains($second_tracker_id, $ids);
+        self::assertContains($first_tracker_id, $ids);
+        self::assertContains($second_tracker_id, $ids);
     }
 
     private function mockRootPlanning(int $tracker_id, int $project_id, \PFUser $user): void

@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Tracker;
 use TrackerFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
 use Tuleap\ProgramManagement\Program\Plan\BuildTracker;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Program\Plan\ProgramIncrementTracker;
 use Tuleap\ProgramManagement\Program\Plan\ProgramPlannableTracker;
 
@@ -35,15 +34,10 @@ final class ProgramTrackerAdapter implements BuildTracker
      * @var TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var PlanStore
-     */
-    private $plan_store;
 
-    public function __construct(TrackerFactory $tracker_factory, PlanStore $plan_store)
+    public function __construct(TrackerFactory $tracker_factory)
     {
         $this->tracker_factory = $tracker_factory;
-        $this->plan_store      = $plan_store;
     }
 
     /**
@@ -55,21 +49,6 @@ final class ProgramTrackerAdapter implements BuildTracker
 
         return new ProgramIncrementTracker($tracker->getId());
     }
-
-    /**
-     * @throws ProgramTrackerException
-     */
-    public function buildPlannableProgramTracker(int $tracker_id, int $project_id): ProgramPlannableTracker
-    {
-        $tracker = $this->getValidTracker($tracker_id, $project_id);
-
-        if (! $this->plan_store->isPlannable($tracker_id)) {
-            throw new ProgramTrackerMustBeDefinedAsPlannableTrackerException($tracker_id);
-        }
-
-        return new ProgramPlannableTracker($tracker->getId());
-    }
-
 
     /**
      * @return array<ProgramPlannableTracker>

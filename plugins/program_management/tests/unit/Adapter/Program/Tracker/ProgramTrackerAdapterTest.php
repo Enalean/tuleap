@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Tracker;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Program\Plan\ProgramIncrementTracker;
 use Tuleap\ProgramManagement\Program\Plan\ProgramPlannableTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -33,11 +32,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class ProgramTrackerAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanStore
-     */
-    private $plan_store;
 
     /**
      * @var ProgramTrackerAdapter
@@ -51,8 +45,7 @@ final class ProgramTrackerAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->tracker_factory = \Mockery::mock(\TrackerFactory::class);
-        $this->plan_store      = \Mockery::mock(PlanStore::class);
-        $this->adapter         = new ProgramTrackerAdapter($this->tracker_factory, $this->plan_store);
+        $this->adapter         = new ProgramTrackerAdapter($this->tracker_factory);
     }
 
     public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
@@ -109,33 +102,5 @@ final class ProgramTrackerAdapterTest extends TestCase
 
         $expected = [new ProgramPlannableTracker($tracker_id)];
         $this->assertEquals($expected, $this->adapter->buildPlannableTrackerList([$tracker_id], $project_id));
-    }
-
-    public function testItBuildAPlannableProgramTracker(): void
-    {
-        $tracker_id = 1;
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id]);
-        $tracker    = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($project)->build();
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($tracker_id)->once()->andReturn($tracker);
-
-        $this->plan_store->shouldReceive('isPlannable')->once()->with($tracker_id)->andReturnTrue();
-
-        $expected = new ProgramPlannableTracker($tracker_id);
-        $this->assertEquals($expected, $this->adapter->buildPlannableProgramTracker($tracker_id, $project_id));
-    }
-
-    public function testItThrowsAExceptionWhenProgramTrackerIsNotPlannable(): void
-    {
-        $tracker_id = 1;
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id]);
-        $tracker    = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($project)->build();
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($tracker_id)->once()->andReturn($tracker);
-
-        $this->plan_store->shouldReceive('isPlannable')->once()->with($tracker_id)->andReturnFalse();
-
-        $this->expectException(ProgramTrackerMustBeDefinedAsPlannableTrackerException::class);
-        $this->adapter->buildPlannableProgramTracker($tracker_id, $project_id);
     }
 }
