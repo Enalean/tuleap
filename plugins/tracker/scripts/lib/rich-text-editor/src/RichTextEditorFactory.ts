@@ -21,25 +21,25 @@ import french_translations from "../po/fr_FR.po";
 import { initGettextSync } from "@tuleap/gettext";
 import TurndownService from "turndown";
 import marked from "marked";
-import { FlamingParrotDocumentAdapter } from "./FlamingParrotDocumentAdapter";
+import { FlamingParrotDocumentAdapter } from "./format-selector/FlamingParrotDocumentAdapter";
 import type {
     HTMLToMarkdownConverterInterface,
     MarkdownToHTMLRendererInterface,
     RichTextEditorOptions,
 } from "./types";
 import { TextEditor } from "./TextEditor";
-import type { DisplayInterface } from "./DisplayInterface";
-import { FormatSelectorBuilder } from "./FormatSelectorBuilder";
+import type { FormatSelectorInterface } from "./format-selector/FormatSelectorInterface";
+import { FormatSelectorBuilder } from "./format-selector/FormatSelectorBuilder";
 import type { TextFieldFormat } from "../../../constants/fields-constants";
 import { defaultOptionsIfNotProvided } from "./options-defaulter";
-import { ExistingFormatSelector } from "./ExistingFormatSelector";
+import { ExistingFormatSelector } from "./format-selector/ExistingFormatSelector";
 
 export class RichTextEditorFactory {
     private readonly markdown_converter: HTMLToMarkdownConverterInterface;
     private readonly markdown_renderer: MarkdownToHTMLRendererInterface;
 
     private constructor(
-        private readonly display_interface: DisplayInterface,
+        private readonly format_selector: FormatSelectorInterface,
         private readonly default_format: TextFieldFormat,
         private readonly locale: string
     ) {
@@ -67,7 +67,7 @@ export class RichTextEditorFactory {
             options.format_selectbox_value !== undefined
                 ? options.format_selectbox_value
                 : this.default_format;
-        this.display_interface.insertFormatSelectbox(textarea, {
+        this.format_selector.insertFormatSelectbox(textarea, {
             id: options.format_selectbox_id,
             name: options.format_selectbox_name,
             selected_value,
@@ -85,9 +85,9 @@ export class RichTextEditorFactory {
     ): RichTextEditorFactory {
         const gettext_provider = initGettextSync("rich-text-editor", french_translations, locale);
         const document_adapter = new FlamingParrotDocumentAdapter(doc);
-        const display_interface = new FormatSelectorBuilder(document_adapter, gettext_provider);
+        const format_selector = new FormatSelectorBuilder(document_adapter, gettext_provider);
         const default_format = document_adapter.getDefaultFormat();
-        return new RichTextEditorFactory(display_interface, default_format, locale);
+        return new RichTextEditorFactory(format_selector, default_format, locale);
     }
 
     public static forFlamingParrotWithExistingFormatSelector(
@@ -96,7 +96,16 @@ export class RichTextEditorFactory {
     ): RichTextEditorFactory {
         const document_adapter = new FlamingParrotDocumentAdapter(doc);
         const default_format = document_adapter.getDefaultFormat();
-        const display_interface = new ExistingFormatSelector(doc);
-        return new RichTextEditorFactory(display_interface, default_format, locale);
+        const format_selector = new ExistingFormatSelector(doc);
+        return new RichTextEditorFactory(format_selector, default_format, locale);
+    }
+
+    public static forBurningParrotWithExistingFormatSelector(
+        doc: Document,
+        locale: string,
+        default_format: TextFieldFormat
+    ): RichTextEditorFactory {
+        const format_selector = new ExistingFormatSelector(doc);
+        return new RichTextEditorFactory(format_selector, default_format, locale);
     }
 }

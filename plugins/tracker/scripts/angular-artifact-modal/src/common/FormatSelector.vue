@@ -25,6 +25,7 @@
         </label>
         <div class="artifact-modal-text-label-with-format-and-helper-container">
             <select
+                v-bind:id="selectbox_id"
                 v-model="format"
                 v-bind:disabled="disabled"
                 class="tlp-select tlp-select-small tlp-select-adjusted"
@@ -70,6 +71,9 @@ export default {
             set(new_format) {
                 this.$emit("input", new_format);
             },
+        },
+        selectbox_id() {
+            return "format_" + this.id;
         },
         is_commonmark_format() {
             return this.value === TEXT_FORMAT_COMMONMARK;

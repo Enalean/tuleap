@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import CKEDITOR from "ckeditor4";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { MaxSizeUploadExceededError, UploadError } from "@tuleap/ckeditor-image-upload";
 import * as image_upload from "@tuleap/ckeditor-image-upload";
+import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import * as is_uploading_in_ckeditor_state from "../tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import store_options from "../store/index.js";
 import localVue from "../helpers/local-vue.js";
@@ -43,12 +43,13 @@ let store,
     value,
     disabled,
     required,
+    editor_factory,
     editor,
+    ckeditor,
     buildFileUploadHandler,
     setIsUploadingInCKEditor,
     setIsNotUploadingInCKEditor,
-    isThereAnImageWithDataURI,
-    ckeditorReplaceSpy;
+    isThereAnImageWithDataURI;
 
 function getInstance() {
     return shallowMount(RichTextEditor, {
@@ -85,13 +86,25 @@ describe(`RichTextEditor`, () => {
 
         isThereAnImageWithDataURI = jest.spyOn(image_upload, "isThereAnImageWithDataURI");
 
-        editor = {
+        ckeditor = {
             on: jest.fn(),
-            destroy: jest.fn(),
             showNotification: jest.fn(),
         };
-        ckeditorReplaceSpy = jest.fn(() => editor);
-        CKEDITOR.replace = ckeditorReplaceSpy;
+        editor = {
+            destroy: jest.fn(),
+        };
+        editor_factory = {
+            createRichTextEditor: (textarea, options) => {
+                options.onFormatChange(format);
+                options.onEditorInit(ckeditor);
+                return editor;
+            },
+        };
+        jest.spyOn(
+            RichTextEditorFactory,
+            "forBurningParrotWithExistingFormatSelector"
+        ).mockReturnValue(editor_factory);
+
         disabled = false;
         format = "text";
         value = "";
@@ -102,19 +115,11 @@ describe(`RichTextEditor`, () => {
             format = "html";
         });
         describe(`mounted()`, () => {
-            it(`will instantiate CKEditor`, () => {
-                getInstance();
-                expect(ckeditorReplaceSpy).toHaveBeenCalled();
-            });
-
             it(`and when the editor dispatched the "change" event,
                 and the editor's data was different from its prop
                 then it will dispatch an "input" event with the new content`, () => {
                 let triggerChange;
-                editor.on.mockImplementation((event_name, handler) => {
-                    if (event_name === "instanceReady") {
-                        return handler();
-                    }
+                ckeditor.on.mockImplementation((event_name, handler) => {
                     if (event_name === "change") {
                         triggerChange = handler;
                         return undefined;
@@ -124,7 +129,7 @@ describe(`RichTextEditor`, () => {
                     }
                     throw new Error("Unexpected event name: " + event_name);
                 });
-                editor.getData = () => "caramba";
+                ckeditor.getData = () => "caramba";
 
                 const wrapper = getInstance();
                 triggerChange();
@@ -137,10 +142,7 @@ describe(`RichTextEditor`, () => {
                 and the editor's editable textarea dispatched the "input" event,
                 then it will dispatch an "input" event with the new content`, () => {
                 let triggerMode, triggerEditableInput;
-                editor.on.mockImplementation((event_name, handler) => {
-                    if (event_name === "instanceReady") {
-                        return handler();
-                    }
+                ckeditor.on.mockImplementation((event_name, handler) => {
                     if (event_name === "mode") {
                         triggerMode = handler;
                         return undefined;
@@ -150,15 +152,15 @@ describe(`RichTextEditor`, () => {
                     }
                     throw new Error("Unexpected event name: " + event_name);
                 });
-                editor.mode = "source";
+                ckeditor.mode = "source";
                 const editable = {
                     attachListener: jest.fn(),
                 };
                 editable.attachListener.mockImplementation((element, event_name, handler) => {
                     triggerEditableInput = handler;
                 });
-                editor.editable = () => editable;
-                editor.getData = () => "noniodized";
+                ckeditor.editable = () => editable;
+                ckeditor.getData = () => "noniodized";
 
                 const wrapper = getInstance();
                 triggerMode();
@@ -182,34 +184,26 @@ describe(`RichTextEditor`, () => {
             });
         });
 
-        describe(`and I switched the format to "text"`, () => {
-            it(`will destroy the editor`, async () => {
-                const wrapper = getInstance();
-                wrapper.setProps({ format: "text" });
-                await wrapper.vm.$nextTick();
-
-                expect(editor.destroy).toHaveBeenCalled();
-            });
-        });
-
         describe(`when uploading is not possible`, () => {
             beforeEach(() => {
                 store.getters.first_file_field = null;
             });
 
             it(`removes the uploadimage plugin from ckeditor's configuration`, () => {
-                const wrapper = getInstance();
+                const createEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 
-                expect(wrapper.vm.ckeditor_config.extraPlugins).not.toBeDefined();
-                expect(wrapper.vm.ckeditor_config.uploadUrl).not.toBeDefined();
+                getInstance();
+
+                const editor_options = createEditor.mock.calls[0][1];
+                const ckeditor_options = editor_options.getAdditionalOptions();
+                expect(ckeditor_options.extraPlugins).not.toBeDefined();
+                expect(ckeditor_options.uploadUrl).not.toBeDefined();
             });
 
             it(`disables the paste event for images and shows an error message`, () => {
                 let triggerPaste;
-                editor.on.mockImplementation((event_name, handler) => {
-                    if (event_name === "instanceReady") {
-                        return handler();
-                    } else if (event_name === "paste") {
+                ckeditor.on.mockImplementation((event_name, handler) => {
+                    if (event_name === "paste") {
                         triggerPaste = handler;
                         return undefined;
                     } else if (event_name === "change" || event_name === "mode") {
@@ -227,12 +221,12 @@ describe(`RichTextEditor`, () => {
                 triggerPaste(event);
 
                 expect(event.cancel).toHaveBeenCalled();
-                expect(editor.showNotification).toHaveBeenCalled();
+                expect(ckeditor.showNotification).toHaveBeenCalled();
             });
 
             it(`does not set up image upload`, () => {
                 const wrapper = getInstance();
-                wrapper.vm.setupImageUpload();
+                wrapper.vm.setupImageUpload(ckeditor);
 
                 expect(buildFileUploadHandler).not.toHaveBeenCalled();
             });
@@ -248,29 +242,23 @@ describe(`RichTextEditor`, () => {
                 store.getters.first_file_field = file_field;
             });
 
-            it(`informs users that they can paste images`, () => {
+            it(`informs users that they can paste images`, async () => {
                 const wrapper = getInstance();
+                await wrapper.vm.$nextTick();
                 const help = wrapper.get("[data-test=help]");
 
                 expect(help.exists()).toBe(true);
             });
 
             describe(`when CKEditor instance is ready`, () => {
-                let triggerReady, wrapper;
+                let wrapper;
                 beforeEach(() => {
-                    editor.on.mockImplementation((event_name, handler) => {
-                        if (event_name === "instanceReady") {
-                            triggerReady = handler;
-                        }
-                    });
                     wrapper = getInstance();
                 });
 
                 it(`builds the file upload handler and registers it on the CKEditor instance`, () => {
-                    triggerReady();
-
                     expect(buildFileUploadHandler).toHaveBeenCalledWith({
-                        ckeditor_instance: wrapper.vm.editor,
+                        ckeditor_instance: ckeditor,
                         max_size_upload: 3000,
                         onStartCallback: expect.any(Function),
                         onErrorCallback: expect.any(Function),
@@ -281,10 +269,8 @@ describe(`RichTextEditor`, () => {
                 describe(`when the upload starts`, () => {
                     let triggerStart;
                     beforeEach(() => {
-                        buildFileUploadHandler.mockImplementation(({ onStartCallback }) => {
-                            triggerStart = onStartCallback;
-                        });
-                        triggerReady();
+                        const options = buildFileUploadHandler.mock.calls[0][0];
+                        triggerStart = options.onStartCallback;
                         triggerStart();
                     });
 
@@ -295,10 +281,8 @@ describe(`RichTextEditor`, () => {
                 describe(`when the upload succeeds`, () => {
                     let triggerSuccess;
                     beforeEach(() => {
-                        buildFileUploadHandler.mockImplementation(({ onSuccessCallback }) => {
-                            triggerSuccess = onSuccessCallback;
-                        });
-                        triggerReady();
+                        const options = buildFileUploadHandler.mock.calls[0][0];
+                        triggerSuccess = options.onSuccessCallback;
                         triggerSuccess(64, "http://example.com/sacrilegiously");
                     });
 
@@ -318,10 +302,8 @@ describe(`RichTextEditor`, () => {
                 describe(`when the upload fails`, () => {
                     let triggerError;
                     beforeEach(() => {
-                        buildFileUploadHandler.mockImplementation(({ onErrorCallback }) => {
-                            triggerError = onErrorCallback;
-                        });
-                        triggerReady();
+                        const options = buildFileUploadHandler.mock.calls[0][0];
+                        triggerError = options.onErrorCallback;
                     });
 
                     it(`enables back form submits`, () => {
@@ -354,23 +336,6 @@ describe(`RichTextEditor`, () => {
             format = "text";
         });
 
-        describe(`mounted()`, () => {
-            it(`will NOT instantiate CKEditor`, () => {
-                getInstance();
-                expect(ckeditorReplaceSpy).not.toHaveBeenCalled();
-            });
-        });
-
-        describe(`and I switched the format to "html"`, () => {
-            it(`will instantiate CKEditor`, async () => {
-                const wrapper = getInstance();
-                wrapper.setProps({ format: "html" });
-                await wrapper.vm.$nextTick();
-
-                expect(ckeditorReplaceSpy).toHaveBeenCalled();
-            });
-        });
-
         describe(`and I wrote text in the textarea`, () => {
             it(`will dispatch an "input" event with the new content`, () => {
                 const wrapper = getInstance();
@@ -387,17 +352,22 @@ describe(`RichTextEditor`, () => {
     });
 
     describe(`disabled`, () => {
-        let wrapper;
         beforeEach(() => {
             disabled = true;
-            wrapper = getInstance();
         });
 
         it(`will compute CKEditor's readOnly configuration from the "disabled" prop`, () => {
-            expect(wrapper.vm.ckeditor_config.readOnly).toBe(true);
+            const createEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+
+            getInstance();
+
+            const editor_options = createEditor.mock.calls[0][1];
+            const ckeditor_options = editor_options.getAdditionalOptions();
+            expect(ckeditor_options.readOnly).toBe(true);
         });
 
         it(`will set the textarea to disabled`, () => {
+            const wrapper = getInstance();
             const textarea = wrapper.get("[data-test=textarea]");
             expect(textarea.attributes("disabled")).toBe("disabled");
         });

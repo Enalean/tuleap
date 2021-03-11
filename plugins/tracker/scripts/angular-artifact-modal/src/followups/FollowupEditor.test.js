@@ -54,14 +54,15 @@ describe(`FollowupEditor`, () => {
         ]);
     });
 
-    it(`when the format changes, it will emit the "input" event with the new format`, () => {
+    it(`when the RichTextEditor emits a "format-change" event,
+        it will emit the "input" event with the new format and the new content`, () => {
         const wrapper = getInstance();
-        wrapper.vm.format = "html";
+        wrapper.vm.onFormatChange("commonmark", "chrysopid");
 
         expect(wrapper.emitted("input")[0]).toEqual([
             {
-                format: "html",
-                body: "",
+                format: "commonmark",
+                body: "chrysopid",
             },
         ]);
     });

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,4 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {};
+import type { TextFieldFormat } from "../../../../constants/fields-constants";
+
+type FormatChangedCallback = (new_format: TextFieldFormat) => void;
+
+export interface FormatSelectorPresenter {
+    id: string;
+    name?: string;
+    selected_value: TextFieldFormat;
+    formatChangedCallback: FormatChangedCallback;
+}
+
+export interface FormatSelectorInterface {
+    insertFormatSelectbox(textarea: HTMLTextAreaElement, presenter: FormatSelectorPresenter): void;
+}

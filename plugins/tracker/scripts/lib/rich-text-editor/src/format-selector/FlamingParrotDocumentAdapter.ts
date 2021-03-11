@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "../../../constants/fields-constants";
-import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "../../../constants/fields-constants";
+import type { TextFieldFormat } from "../../../../constants/fields-constants";
+import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "../../../../constants/fields-constants";
 
 import $ from "jquery";
 

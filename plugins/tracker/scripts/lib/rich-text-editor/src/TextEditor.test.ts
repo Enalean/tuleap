@@ -221,6 +221,39 @@ describe(`TextEditor`, () => {
             }
         );
     });
+
+    describe(`destroy()`, () => {
+        let ckeditor_instance: CKEDITOR.editor,
+            destroyCKEditor: jest.SpyInstance,
+            editor: TextEditor;
+        beforeEach(() => {
+            ckeditor_instance = getMockedCKEditorInstance();
+            jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
+
+            destroyCKEditor = jest.spyOn(ckeditor_instance, "destroy");
+
+            editor = new TextEditor(
+                textarea,
+                getEmptyOptions(),
+                markdown_converter,
+                markdown_renderer
+            );
+        });
+
+        it(`when the format is html, it will destroy the CKEditor`, () => {
+            editor.onFormatChange(TEXT_FORMAT_HTML);
+
+            editor.destroy();
+            expect(destroyCKEditor).toHaveBeenCalled();
+        });
+
+        it(`when the format is not html, it does nothing`, () => {
+            editor.onFormatChange(TEXT_FORMAT_COMMONMARK);
+
+            editor.destroy();
+            expect(destroyCKEditor).not.toHaveBeenCalled();
+        });
+    });
 });
 
 function getEmptyOptions(): InternalTextEditorOptions {

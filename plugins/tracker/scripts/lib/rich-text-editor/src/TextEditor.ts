@@ -81,6 +81,10 @@ export class TextEditor {
         return this.textarea.value;
     }
 
+    public destroy(): void {
+        this.ckeditor?.destroy();
+    }
+
     private initCKEditor(): CKEDITOR.editor {
         if (CKEDITOR.instances && CKEDITOR.instances[this.textarea.id]) {
             CKEDITOR.instances[this.textarea.id].destroy(true);
