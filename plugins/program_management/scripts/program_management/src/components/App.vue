@@ -64,6 +64,7 @@ import {
     isConsideredInDropzone,
     isContainer,
     checkAcceptsDrop,
+    checkAfterDrag,
 } from "../helpers/drag-drop";
 
 @Component({
@@ -104,8 +105,9 @@ export default class App extends Vue {
             onDragLeave: (): void => {},
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             onDrop: (): void => {},
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            cleanupAfterDragCallback: (): void => {},
+            cleanupAfterDragCallback: (): void => {
+                return checkAfterDrag();
+            },
         });
     }
 

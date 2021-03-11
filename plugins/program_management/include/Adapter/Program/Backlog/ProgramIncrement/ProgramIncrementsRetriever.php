@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
+use PFUser;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
 use Tuleap\ProgramManagement\Program\Program;
@@ -98,9 +99,24 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
             $program_increment_artifact->getId(),
             $title,
             $program_increment_artifact->userCanUpdate($user),
+            $this->userCanPlan($program_increment_artifact, $user),
             $status,
             $time_period->getStartDate(),
             $time_period->getEndDate()
         );
+    }
+
+    private function userCanPlan(Artifact $program_increment_artifact, PFUser $user): bool
+    {
+        if (! $program_increment_artifact->userCanUpdate($user)) {
+            return false;
+        }
+
+        $artifact_link = $program_increment_artifact->getAnArtifactLinkField($user);
+        if (! $artifact_link) {
+            return false;
+        }
+
+        return $artifact_link->userCanUpdate($user);
     }
 }

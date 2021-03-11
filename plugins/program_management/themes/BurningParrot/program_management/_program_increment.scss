@@ -109,3 +109,22 @@
 #program-increment-error {
     margin: 0 $tlp-large-spacing 0 0;
 }
+
+.drop-not-accepted {
+    display: flex;
+}
+
+.drop-accepted {
+    display: none;
+}
+
+.drop-not-accepted-overlay {
+    align-items: baseline;
+    justify-content: center;
+    margin: 0 0 $tlp-large-spacing 0;
+    color: $tlp-ui-danger;
+
+    > .drop-not-accepted-icon {
+        margin: 0 $tlp-small-spacing 0 0;
+    }
+}

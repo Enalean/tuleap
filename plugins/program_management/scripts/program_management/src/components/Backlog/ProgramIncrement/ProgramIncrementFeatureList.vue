@@ -18,8 +18,15 @@
   -->
 
 <template>
-    <div class="program-increment-content-items" data-is-container="true">
+    <div
+        class="program-increment-content-items"
+        data-is-container="true"
+        v-bind:data-can-plan="doesIncrementAcceptPlannableItems()"
+        data-test="program-increment-feature-list"
+    >
         <to-be-planned-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
+
+        <program-increment-not-plannable />
 
         <program-increment-no-content
             v-if="features.length === 0 && !is_loading && !has_error"
@@ -54,9 +61,15 @@ import { Component, Prop } from "vue-property-decorator";
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import { getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
 
 @Component({
-    components: { ToBePlannedSkeleton, ElementCard, ProgramIncrementNoContent },
+    components: {
+        ProgramIncrementNotPlannable,
+        ToBePlannedSkeleton,
+        ElementCard,
+        ProgramIncrementNoContent,
+    },
 })
 export default class ProgramIncrementFeatureList extends Vue {
     @Prop({ required: true })
@@ -84,6 +97,10 @@ export default class ProgramIncrementFeatureList extends Vue {
                 this.has_loaded_feature = true;
             }
         }
+    }
+
+    public doesIncrementAcceptPlannableItems(): boolean {
+        return this.increment.user_can_plan;
     }
 }
 </script>
