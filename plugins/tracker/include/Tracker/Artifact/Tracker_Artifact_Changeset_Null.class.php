@@ -64,10 +64,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
 
     /**
      * fetch followup
-     *
-     * @return string
      */
-    public function fetchFollowUp($diff_to_previous, PFUser $current_user)
+    public function fetchFollowUp($diff_to_previous, PFUser $current_user): string
     {
         return '';
     }
@@ -110,9 +108,9 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
     /**
      * Get the comment (latest version)
      *
-     * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
+     * @return Tracker_Artifact_Changeset_Comment|null The comment of this changeset, or null if no comments
      */
-    public function getComment()
+    public function getComment(): ?Tracker_Artifact_Changeset_Comment
     {
         return null;
     }
