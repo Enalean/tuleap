@@ -21,6 +21,15 @@
 class MediawikiMLEBExtensionManager
 {
 
+    /**
+     * Activate MLEB mediawiki extension. Please contact Tuleap Dev Team if you ever need to do that
+     *
+     * @tlp-config-feature-flag-key
+     */
+    public const FEATURE_FLAG_KEY = 'mediawiki_mleb';
+
+    private const FEATURE_FLAG_MAGIC_VALUE = 'I_understand_it_will_not_work_with_future_versions';
+
     /** @var Mediawiki_Migration_MediawikiMigrator */
     private $migrator;
 
@@ -53,6 +62,9 @@ class MediawikiMLEBExtensionManager
 
     public function isMLEBExtensionInstalled()
     {
+        if (ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY) !== self::FEATURE_FLAG_MAGIC_VALUE) {
+            return false;
+        }
         return is_dir(forge_get_config('extension_mleb_path', 'mediawiki'));
     }
 
