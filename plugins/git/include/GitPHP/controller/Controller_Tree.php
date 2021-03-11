@@ -149,8 +149,10 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         $readme_tree_item = $this->getReadmeTreeItem($tree);
         $this->tpl->assign('readme_content', $readme_tree_item);
         if ($readme_tree_item !== null) {
-            $content_interpretor = CommonMarkInterpreter::build(
+            $code_block_features = new \Tuleap\Markdown\CodeBlockFeatures();
+            $content_interpretor = CommonMarkInterpreter::buildWithMermaid(
                 \Codendi_HTMLPurifier::instance(),
+                $code_block_features,
                 new LinkToGitFileExtension(new LinkToGitFileBlobFinder($readme_tree_item->GetFullPath(), $commit))
             );
             $this->tpl->assign(
@@ -163,6 +165,14 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             $GLOBALS['Response']->includeFooterJavascriptFile(
                 $include_assets->getFileURL('repository-blob.js')
             );
+            if ($code_block_features->isMermaidNeeded()) {
+                $assets = new IncludeAssets(
+                    __DIR__ . '/../../../../../src/www/assets/core',
+                    '/assets/core'
+                );
+
+                $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
+            }
         }
 
         if (! $tree->GetCommit()) {

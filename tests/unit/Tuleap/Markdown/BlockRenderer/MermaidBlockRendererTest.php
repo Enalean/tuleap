@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Markdown;
+namespace Tuleap\Markdown\BlockRenderer;
 
+use League\CommonMark\Block\Element\FencedCode;
+use League\CommonMark\Block\Renderer\FencedCodeRenderer;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
-final class CodeBlockFeaturesExtensionTest extends TestCase
+class MermaidBlockRendererTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -36,32 +39,29 @@ final class CodeBlockFeaturesExtensionTest extends TestCase
      */
     private $converter;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CodeBlockFeatures
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CodeBlockFeaturesInterface
      */
     private $code_block_features;
 
     protected function setUp(): void
     {
-        $this->code_block_features = Mockery::mock(CodeBlockFeatures::class);
-
-        $extension = new CodeBlockFeaturesExtension($this->code_block_features);
+        $this->code_block_features = Mockery::mock(CodeBlockFeaturesInterface::class);
 
         $environment = Environment::createCommonMarkEnvironment();
-        $environment->addExtension($extension);
+        $environment->addBlockRenderer(
+            FencedCode::class,
+            new MermaidBlockRenderer($this->code_block_features, new FencedCodeRenderer())
+        );
         $this->converter = new CommonMarkConverter([], $environment);
     }
 
-    public function testItDoesNotNeedMermaid(): void
+    public function testItDoesNotConvertFencedCodesThatAreNotMermaid(): void
     {
-        $this->code_block_features
-            ->shouldReceive('isMermaidNeeded')
-            ->andReturn(false);
-
         $this->code_block_features
             ->shouldReceive('needsMermaid')
             ->never();
 
-        $this->converter->convertToHtml(
+        $result = $this->converter->convertToHtml(
             <<<MARKDOWN
             See code below:
 
@@ -78,19 +78,30 @@ final class CodeBlockFeaturesExtensionTest extends TestCase
             ```
             MARKDOWN
         );
+
+        self::assertEquals(
+            <<<EXPECTED_HTML
+            <p>See code below:</p>
+            <pre><code class="language-php">class Foo {}
+            </code></pre>
+            <pre><code>graph TD;
+                A--&gt;B;
+                A--&gt;C;
+                B--&gt;D;
+                C--&gt;D;
+            </code></pre>\n
+            EXPECTED_HTML,
+            $result
+        );
     }
 
-    public function testItNeedsMermaid(): void
+    public function testItConvertFencedCodeThatIsFlaggedAsMermaid(): void
     {
-        $this->code_block_features
-            ->shouldReceive('isMermaidNeeded')
-            ->andReturn(false);
-
         $this->code_block_features
             ->shouldReceive('needsMermaid')
             ->once();
 
-        $this->converter->convertToHtml(
+        $result = $this->converter->convertToHtml(
             <<<MARKDOWN
             See code below:
 
@@ -107,34 +118,20 @@ final class CodeBlockFeaturesExtensionTest extends TestCase
             ```
             MARKDOWN
         );
-    }
 
-    public function testItDoesNotOverwritePreviousResultOnConsecutiveExecution(): void
-    {
-        $this->code_block_features
-            ->shouldReceive('isMermaidNeeded')
-            ->andReturn(true);
-
-        $this->code_block_features
-            ->shouldReceive('needsMermaid')
-            ->never();
-
-        $this->converter->convertToHtml(
-            <<<MARKDOWN
-            See code below:
-
-            ```php
-            class Foo {}
-            ```
-
-            ```mermaid
-            graph TD;
-                A-->B;
-                A-->C;
-                B-->D;
-                C-->D;
-            ```
-            MARKDOWN
+        self::assertEquals(
+            <<<EXPECTED_HTML
+            <p>See code below:</p>
+            <pre><code class="language-php">class Foo {}
+            </code></pre>
+            <tlp-mermaid-diagram>graph TD;
+                A--&gt;B;
+                A--&gt;C;
+                B--&gt;D;
+                C--&gt;D;
+            </tlp-mermaid-diagram>\n
+            EXPECTED_HTML,
+            $result
         );
     }
 }

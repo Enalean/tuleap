@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { replaceAllCodeBlocksByMermaidDiagramsInElement } from "./replace-code-blocks-by-mermaid-diagrams";
+import { MermaidDiagramElement } from "./mermaid-diagram-element";
 
-document.addEventListener("DOMContentLoaded", () => {
-    replaceAllCodeBlocksByMermaidDiagramsInElement(document, document.body);
-});
+if (!window.customElements.get("tlp-mermaid-diagram")) {
+    window.customElements.define("tlp-mermaid-diagram", MermaidDiagramElement);
+}

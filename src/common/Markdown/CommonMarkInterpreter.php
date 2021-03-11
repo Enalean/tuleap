@@ -23,9 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Markdown;
 
 use Codendi_HTMLPurifier;
+use League\CommonMark\Block\Element\FencedCode;
+use League\CommonMark\Block\Renderer\FencedCodeRenderer;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\ExtensionInterface;
+use Tuleap\Markdown\BlockRenderer\MermaidBlockRenderer;
 
 final class CommonMarkInterpreter implements ContentInterpretor
 {
@@ -46,11 +49,39 @@ final class CommonMarkInterpreter implements ContentInterpretor
 
     public static function build(Codendi_HTMLPurifier $html_purifier, ExtensionInterface ...$extensions): self
     {
+        return self::buildWithCustomBlockRenderers($html_purifier, [], ...$extensions);
+    }
+
+    public static function buildWithMermaid(
+        Codendi_HTMLPurifier $html_purifier,
+        CodeBlockFeaturesInterface $code_block_features,
+        ExtensionInterface ...$extensions
+    ): self {
+        return self::buildWithCustomBlockRenderers(
+            $html_purifier,
+            [new CustomBlockRenderer(FencedCode::class, new MermaidBlockRenderer($code_block_features, new FencedCodeRenderer()))],
+            ...$extensions
+        );
+    }
+
+    /**
+     * @param CustomBlockRenderer[] $block_renderers
+     */
+    private static function buildWithCustomBlockRenderers(
+        Codendi_HTMLPurifier $html_purifier,
+        array $block_renderers,
+        ExtensionInterface ...$extensions
+    ): self {
         $environment = Environment::createCommonMarkEnvironment();
         $environment->addExtension(new TableTLPExtension());
         foreach ($extensions as $extension) {
             $environment->addExtension($extension);
         }
+
+        foreach ($block_renderers as $renderer) {
+            $environment->addBlockRenderer($renderer->getBlockClass(), $renderer->getBlockRenderer());
+        }
+
         return new self($html_purifier, new CommonMarkConverter(['max_nesting_level' => 10], $environment));
     }
 

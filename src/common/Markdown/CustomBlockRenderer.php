@@ -22,20 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-final class CodeBlockFeatures implements CodeBlockFeaturesInterface
+use League\CommonMark\Block\Renderer\BlockRendererInterface;
+
+final class CustomBlockRenderer
 {
     /**
-     * @var bool
+     * @var string
      */
-    private $is_mermaid_needed = false;
+    private $block_class;
+    /**
+     * @var BlockRendererInterface
+     */
+    private $block_renderer;
 
-    public function needsMermaid(): void
+    public function __construct(string $block_class, BlockRendererInterface $block_renderer)
     {
-        $this->is_mermaid_needed = true;
+        $this->block_class    = $block_class;
+        $this->block_renderer = $block_renderer;
     }
 
-    public function isMermaidNeeded(): bool
+    public function getBlockRenderer(): BlockRendererInterface
     {
-        return $this->is_mermaid_needed;
+        return $this->block_renderer;
+    }
+
+    public function getBlockClass(): string
+    {
+        return $this->block_class;
     }
 }

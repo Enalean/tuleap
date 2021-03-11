@@ -20,46 +20,46 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Markdown;
+namespace Tuleap\Tracker\Artifact;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class CodeBlockFeaturesOnPageTest extends TestCase
+class CodeBlockFeaturesOnArtifactTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var CodeBlockFeaturesOnPage
+     * @var CodeBlockFeaturesOnArtifact
      */
-    private $code_block_features_on_page;
+    private $code_block_features;
 
     protected function setUp(): void
     {
-        $this->code_block_features_on_page = CodeBlockFeaturesOnPage::getInstance();
+        $this->code_block_features = CodeBlockFeaturesOnArtifact::getInstance();
     }
 
     protected function tearDown(): void
     {
-        CodeBlockFeaturesOnPage::clearInstance();
+        CodeBlockFeaturesOnArtifact::clearInstance();
     }
 
     public function testItDoesNotNeedMermaidByDefault(): void
     {
-        self::assertFalse($this->code_block_features_on_page->isMermaidNeeded());
+        self::assertFalse($this->code_block_features->isMermaidNeeded());
     }
 
     public function testItNeedsMermaid(): void
     {
-        self::assertFalse($this->code_block_features_on_page->isMermaidNeeded());
-        $this->code_block_features_on_page->needsMermaid();
-        self::assertTrue($this->code_block_features_on_page->isMermaidNeeded());
+        self::assertFalse($this->code_block_features->isMermaidNeeded());
+        $this->code_block_features->needsMermaid();
+        self::assertTrue($this->code_block_features->isMermaidNeeded());
     }
 
     public function testItBehavesAsASingleton(): void
     {
-        self::assertFalse($this->code_block_features_on_page->isMermaidNeeded());
-        CodeBlockFeaturesOnPage::getInstance()->needsMermaid();
-        self::assertTrue($this->code_block_features_on_page->isMermaidNeeded());
+        self::assertFalse($this->code_block_features->isMermaidNeeded());
+        CodeBlockFeaturesOnArtifact::getInstance()->needsMermaid();
+        self::assertTrue($this->code_block_features->isMermaidNeeded());
     }
 }
