@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 {
     public $default_properties = [
@@ -194,6 +195,10 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
         if (! $user_preference || $user_preference === Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT) {
             return Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+        }
+
+        if ($user_preference === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
+            return Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT;
         }
 
         return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;

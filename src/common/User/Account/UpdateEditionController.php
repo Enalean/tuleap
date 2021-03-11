@@ -100,7 +100,7 @@ class UpdateEditionController implements DispatchableWithRequest
 
     private function updateDefaultFormat(string $wants_text_default_format, BaseLayout $layout, PFUser $user): bool
     {
-        $allowed = [PFUser::PREFERENCE_EDITION_TEXT, PFUser::PREFERENCE_EDITION_HTML];
+        $allowed = [PFUser::PREFERENCE_EDITION_TEXT, PFUser::PREFERENCE_EDITION_HTML, PFUser::PREFERENCE_EDITION_COMMONMARK];
         if (! in_array($wants_text_default_format, $allowed, true)) {
             $layout->addFeedback(Feedback::ERROR, _('Submitted text format is not valid'));
 

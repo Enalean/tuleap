@@ -106,8 +106,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public const PREFERENCE_CSV_MONTH_DAY_YEAR = 'month_day_year';
     public const PREFERENCE_CSV_DAY_MONTH_YEAR = 'day_month_year';
 
-    public const PREFERENCE_EDITION_TEXT = 'text';
-    public const PREFERENCE_EDITION_HTML = 'html';
+    public const PREFERENCE_EDITION_TEXT       = 'text';
+    public const PREFERENCE_EDITION_HTML       = 'html';
+    public const PREFERENCE_EDITION_COMMONMARK = 'commonmark';
 
     /**
      * the id of the user
