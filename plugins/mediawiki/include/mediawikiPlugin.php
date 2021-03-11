@@ -24,6 +24,7 @@
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
@@ -132,6 +133,8 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->addHook(ExportXmlProject::NAME);
 
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
+
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         /**
          * HACK
@@ -911,5 +914,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             $rank_in_project = $service->getRank();
             $event->addPane($content, $rank_in_project);
         }
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    {
+        $event->addConfigClass(MediawikiMLEBExtensionManager::class);
     }
 }
