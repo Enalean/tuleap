@@ -18,213 +18,75 @@
  */
 
 import { GLOBAL_SCOPE } from "../type";
-import type { Shortcut, ShortcutsGroup } from "../type";
+import type { ShortcutsGroup } from "../type";
 
-import {
-    createShortcutsGroupInHelpModal,
-    createKeyboardInputElement,
-    createShortcutCell,
-} from "./add-to-help-modal";
+import { createShortcutsGroupInHelpModal } from "./add-to-help-modal";
+import * as getter_shortcuts_group_head from "./create-shortcuts-group-head";
+import * as getter_shortcuts_group_table from "./create-shortcuts-group-table";
+import * as getter_shortcut_section from "./get-shortcuts-section";
+
+jest.mock("./create-shortcuts-group-head");
+jest.mock("./create-shortcuts-group-table");
+jest.mock("./get-shortcuts-section");
 
 describe("add-to-help-modal.ts", () => {
     let doc: Document;
-    let shortcuts_modal: HTMLElement;
-    let shortcuts_modal_body: HTMLElement;
+
     let global_shortcuts_section: HTMLElement;
     let specific_shortcuts_section: HTMLElement;
 
-    const shortcut_simple = {
-        keyboard_inputs: "a",
-        displayed_inputs: "c",
-        description: "shortcut_simple description",
-    } as Shortcut;
+    let shortcuts_group_head: HTMLElement;
+    let shortcuts_group_table: HTMLTableElement;
 
-    const shortcut_two_options = {
-        keyboard_inputs: "a,b",
-        description: "shortcut_two_options description",
-    } as Shortcut;
-
-    const shortcut_two_keystrokes = {
-        keyboard_inputs: "a+b",
-        description: "shortcut_two_keystrokes description",
-    } as Shortcut;
-
-    const shortcuts_group: ShortcutsGroup = {
-        title: "shortcuts_group title",
-        details: "shortcuts_group details",
-        shortcuts: [shortcut_simple, shortcut_two_options, shortcut_two_keystrokes],
-    };
-
-    const snapshot = `
-          <div class="help-modal-shortcuts-group-head">
-            <h2 class="tlp-modal-subtitle">shortcuts_group title</h2>
-            <p class="help-modal-shortcuts-group-details">shortcuts_group details</p>
-          </div>
-          <table class="tlp-table help-modal-shortcuts-table">
-            <thead>
-              <tr>
-                <th class="help-modal-shortcuts-description">Description</th>
-                <th class="tlp-table-cell-actions">Shortcut</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>shortcut_simple description</td>
-                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>c</kbd></td>
-              </tr>
-              <tr>
-                <td>shortcut_two_options description</td>
-                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>a</kbd> / <kbd>b</kbd></td>
-              </tr>
-              <tr>
-                <td>shortcut_two_keystrokes description</td>
-                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd><kbd>a</kbd> + <kbd>b</kbd></kbd></td>
-              </tr>
-            </tbody>
-          </table>
-    `;
+    const shortcuts_group: ShortcutsGroup = {} as ShortcutsGroup;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
-    });
 
-    describe("createShortcutsGroupInHelpModal", () => {
-        beforeEach(() => {
-            setupDocument(doc);
-            setupTableHeadTemplate(doc);
-        });
-
-        describe("create a global shortcuts group", () => {
-            it("creates a shortcuts group and adds it to the global shortcuts section in the help modal if the `Scope.global` argument is provided", () => {
-                createShortcutsGroupInHelpModal(doc, shortcuts_group, GLOBAL_SCOPE);
-
-                expect(global_shortcuts_section.innerHTML).toMatchInlineSnapshot(snapshot);
-            });
-
-            it("throws an error if global shortcuts section was not found", () => {
-                shortcuts_modal_body.removeChild(global_shortcuts_section);
-
-                expect(() => {
-                    createShortcutsGroupInHelpModal(doc, shortcuts_group, GLOBAL_SCOPE);
-                }).toThrow();
-            });
-        });
-
-        describe("create a specific shortcuts group", () => {
-            it("creates a shortcuts group and adds it to the specific shortcuts section in the help modal", () => {
-                specific_shortcuts_section = doc.createElement("section");
-                specific_shortcuts_section.setAttribute("data-shortcuts-specific-section", "");
-                specific_shortcuts_section.classList.add("help-modal-shortcuts-section");
-                shortcuts_modal_body.append(specific_shortcuts_section);
-
-                createShortcutsGroupInHelpModal(doc, shortcuts_group);
-
-                expect(specific_shortcuts_section.innerHTML).toMatchInlineSnapshot(snapshot);
-            });
-
-            it("creates the specific shortcuts section in the help modal if this section was not found", () => {
-                createShortcutsGroupInHelpModal(doc, shortcuts_group);
-
-                const shortcuts_modal_body_last_child = shortcuts_modal_body.lastChild;
-                if (!(shortcuts_modal_body_last_child instanceof HTMLElement)) {
-                    throw new Error("shortcuts_modal_body.lastChild should be an HTMLElement");
-                }
-
-                expect(
-                    shortcuts_modal_body_last_child.hasAttribute("data-shortcuts-specific-section")
-                ).toBe(true);
-            });
-
-            it("widen the help modal when specific shortcuts section is not found and should be created", () => {
-                createShortcutsGroupInHelpModal(doc, shortcuts_group);
-
-                expect(shortcuts_modal.classList.contains("tlp-modal-medium-sized")).toBe(true);
-            });
-
-            it(`throws an error if the help modal was not found
-            while trying to widen it`, () => {
-                shortcuts_modal.id = "";
-
-                expect(() => {
-                    createShortcutsGroupInHelpModal(doc, shortcuts_group);
-                }).toThrow();
-            });
-
-            it(`throws an error if the help modal body was not found
-            while trying to create the specific shortcuts section in it`, () => {
-                shortcuts_modal_body.removeAttribute("data-shortcuts-modal-body");
-
-                expect(() => {
-                    createShortcutsGroupInHelpModal(doc, shortcuts_group);
-                }).toThrow();
-            });
-        });
-
-        it(`throws an error if table_head_template was not found
-            while trying to get table head`, () => {
-            const table_head_template = doc.querySelector("[data-shortcuts-help-header-template]");
-            table_head_template?.removeAttribute("data-shortcuts-help-header-template");
-
-            expect(() => {
-                createShortcutsGroupInHelpModal(doc, shortcuts_group);
-            }).toThrow();
-        });
-    });
-
-    describe("createShortcutCell", () => {
-        it("returns a cell containing a different keyboard input if there is one provided", () => {
-            const shortcut_cell = createShortcutCell(doc, shortcut_simple);
-            const keyboard_input_element = shortcut_cell.firstElementChild;
-
-            expect(keyboard_input_element?.innerHTML).toBe("c");
-        });
-
-        it("return a cell containing two kbd elements separated by ' / ' if there are two shortcuts options", () => {
-            const shortcut_cell = createShortcutCell(doc, shortcut_two_options);
-
-            expect(shortcut_cell?.childNodes.length).toBe(3);
-            expect(shortcut_cell?.childNodes[1].textContent).toEqual(" / ");
-        });
-    });
-
-    describe("createKeyboardInputElement", () => {
-        it("returns a kbd element containing two kbd elements separated by ' + ' if passed a double input", () => {
-            const keyboard_input_element = createKeyboardInputElement(
-                doc,
-                shortcut_two_keystrokes.keyboard_inputs
-            );
-
-            expect(keyboard_input_element?.childNodes.length).toBe(3);
-            expect(keyboard_input_element?.childNodes[1].textContent).toEqual(" + ");
-        });
-    });
-
-    function setupDocument(doc: Document): void {
-        shortcuts_modal = doc.createElement("div");
-        shortcuts_modal.id = "help-modal-shortcuts";
-
-        shortcuts_modal_body = doc.createElement("div");
-        shortcuts_modal_body.setAttribute("data-shortcuts-modal-body", "");
+        shortcuts_group_head = doc.createElement("div");
+        shortcuts_group_table = doc.createElement("table");
 
         global_shortcuts_section = doc.createElement("section");
-        global_shortcuts_section.setAttribute("data-shortcuts-global-section", "");
+        specific_shortcuts_section = doc.createElement("section");
 
-        shortcuts_modal_body.append(global_shortcuts_section);
-        shortcuts_modal.append(shortcuts_modal_body);
-        doc.body.appendChild(shortcuts_modal);
-    }
-
-    function setupTableHeadTemplate(doc: Document): void {
-        doc.body.insertAdjacentHTML(
-            "beforeend",
-            `<template data-shortcuts-help-header-template="">
-                    <thead>
-                       <tr>
-                         <th class="help-modal-shortcuts-description">Description</th>
-                         <th class="tlp-table-cell-actions">Shortcut</th>
-                       </tr>
-                    </thead>
-                </template>`
+        jest.spyOn(getter_shortcuts_group_head, "createShortcutsGroupHead").mockReturnValue(
+            shortcuts_group_head
         );
-    }
+        jest.spyOn(getter_shortcuts_group_table, "createShortcutsGroupTable").mockReturnValue(
+            shortcuts_group_table
+        );
+        jest.spyOn(getter_shortcut_section, "getGlobalShortcutsSection").mockReturnValue(
+            global_shortcuts_section
+        );
+        jest.spyOn(getter_shortcut_section, "getSpecificShortcutsSection").mockReturnValue(
+            specific_shortcuts_section
+        );
+    });
+
+    it("adds to the global shortcuts section in the shortcuts modal if GLOBAL_SCOPE is provided", () => {
+        const get_global_shortcuts_section = jest.spyOn(
+            getter_shortcut_section,
+            "getGlobalShortcutsSection"
+        );
+        createShortcutsGroupInHelpModal(doc, shortcuts_group, GLOBAL_SCOPE);
+
+        expect(get_global_shortcuts_section).toHaveBeenCalled();
+    });
+
+    it("adds to the specific shortcuts section in the shortcuts modal if no scope is provided", () => {
+        const get_specific_shortcuts_section = jest.spyOn(
+            getter_shortcut_section,
+            "getSpecificShortcutsSection"
+        );
+        createShortcutsGroupInHelpModal(doc, shortcuts_group);
+
+        expect(get_specific_shortcuts_section).toHaveBeenCalled();
+    });
+
+    it("appends a group head and table to the shortcuts section", () => {
+        createShortcutsGroupInHelpModal(doc, shortcuts_group);
+
+        expect(specific_shortcuts_section.firstChild).toBe(shortcuts_group_head);
+        expect(specific_shortcuts_section.lastChild).toBe(shortcuts_group_table);
+    });
 });
