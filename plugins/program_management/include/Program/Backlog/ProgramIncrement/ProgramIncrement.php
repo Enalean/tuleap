@@ -53,12 +53,16 @@ final class ProgramIncrement
      * @var bool
      */
     public $user_can_update;
-
+    /**
+     * @var bool
+     */
+    public $user_can_plan;
 
     public function __construct(
         int $id,
         string $title,
         bool $user_can_update,
+        bool $user_can_plan,
         ?string $status,
         ?int $start_date,
         ?int $end_date
@@ -69,5 +73,6 @@ final class ProgramIncrement
         $this->end_date        = $end_date;
         $this->id              = $id;
         $this->user_can_update = $user_can_update;
+        $this->user_can_plan   = $user_can_plan;
     }
 }

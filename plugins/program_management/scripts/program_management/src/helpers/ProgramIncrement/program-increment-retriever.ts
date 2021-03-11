@@ -26,6 +26,7 @@ export interface ProgramIncrement {
     start_date: string | null;
     end_date: string | null;
     user_can_update: boolean;
+    user_can_plan: boolean;
 }
 
 export function getProgramIncrements(program_id: number): Promise<ProgramIncrement[]> {

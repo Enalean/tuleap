@@ -23,13 +23,13 @@ import { createElement } from "./jest/create-dom-element";
 describe(`drag-drop helper`, () => {
     describe(`isContainer()`, () => {
         it(`Given an element without a data-is-container flag, it will return false`, () => {
-            const element = createElement("taskboard-card");
+            const element = createElement();
 
             expect(drag_drop.isContainer(element)).toBe(false);
         });
 
         it(`Given a taskboard cell with a data-is-container flag, it will return true`, () => {
-            const element = createElement("taskboard-cell");
+            const element = createElement();
             element.setAttribute("data-is-container", "true");
 
             expect(drag_drop.isContainer(element)).toBe(true);
@@ -38,13 +38,13 @@ describe(`drag-drop helper`, () => {
 
     describe(`canMove()`, () => {
         it(`Given an element with no draggable attribute, it will return false`, () => {
-            const element = createElement("taskboard-cell");
+            const element = createElement();
 
             expect(drag_drop.canMove(element)).toBe(false);
         });
 
         it(`Given a element with a draggable flag, it will return true`, () => {
-            const element = createElement("taskboard-card", "taskboard-card-collapsed");
+            const element = createElement();
             element.setAttribute("draggable", "true");
 
             expect(drag_drop.canMove(element)).toBe(true);
@@ -75,13 +75,45 @@ describe(`drag-drop helper`, () => {
     });
 
     describe(`checkAcceptsDrop()`, () => {
-        it(`When all elements are DOM valid, then the drop i accepted`, () => {
+        it(`Given can plan attribute is not provided, Then the drop is rejected`, () => {
             const dropped_card = createElement();
             const source_cell = createElement();
             const target_cell = source_cell;
 
-            dropped_card.setAttribute("data-tracker-id", "9");
-            target_cell.setAttribute("data-accepted-trackers-ids", "10,11,12");
+            expect(drag_drop.checkAcceptsDrop({ dropped_card, target_cell, source_cell })).toBe(
+                false
+            );
+        });
+
+        it(`Given user can not plan and given zone does not have a message, Then the drop is rejected`, () => {
+            const dropped_card = createElement();
+            const source_cell = createElement();
+            const target_cell = source_cell;
+
+            expect(drag_drop.checkAcceptsDrop({ dropped_card, target_cell, source_cell })).toBe(
+                false
+            );
+        });
+
+        it(`Given user can not plan and given zone have an error message, Then the drop is rejected and message is displayed`, () => {
+            const dropped_card = createElement();
+            const source_cell = createElement();
+            const target_cell = source_cell;
+
+            const error_message = createElement("drop-not-accepted-overlay");
+            target_cell.appendChild(error_message);
+
+            expect(drag_drop.checkAcceptsDrop({ dropped_card, target_cell, source_cell })).toBe(
+                false
+            );
+            expect(error_message.classList).toContain("drop-not-accepted");
+        });
+
+        it(`Given user can plan and given zone have an error message, Then the drop is accepted`, () => {
+            const dropped_card = createElement();
+            const source_cell = createElement();
+            const target_cell = source_cell;
+            target_cell.setAttribute("data-can-plan", "true");
 
             expect(drag_drop.checkAcceptsDrop({ dropped_card, target_cell, source_cell })).toBe(
                 true

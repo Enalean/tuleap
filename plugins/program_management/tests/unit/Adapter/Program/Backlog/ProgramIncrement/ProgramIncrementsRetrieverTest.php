@@ -69,6 +69,9 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         $artifact_14 = Mockery::mock(Artifact::class);
         $artifact_14->shouldReceive('getId')->andReturn(14);
         $artifact_14->shouldReceive('userCanUpdate')->andReturnTrue();
+        $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field->shouldReceive('userCanUpdate')->andReturnFalse();
+        $artifact_14->shouldReceive('getAnArtifactLinkField')->andReturn($field);
         $artifact_15 = Mockery::mock(Artifact::class);
         $artifact_15->shouldReceive('getId')->andReturn(15);
         $artifact_15->shouldReceive('userCanUpdate')->andReturnFalse();
@@ -94,8 +97,8 @@ final class ProgramIncrementsRetrieverTest extends TestCase
 
         self::assertEquals(
             [
-                new ProgramIncrement($artifact_14->getId(), 'Artifact 14', true, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
-                new ProgramIncrement($artifact_15->getId(), 'Artifact 15', false, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
+                new ProgramIncrement($artifact_14->getId(), 'Artifact 14', true, false, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
+                new ProgramIncrement($artifact_15->getId(), 'Artifact 15', false, false, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
             ],
             $program_increments
         );

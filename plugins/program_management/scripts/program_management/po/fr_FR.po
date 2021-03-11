@@ -44,3 +44,6 @@ msgstr "Il n'y a rien à planifier"
 
 msgid "To Be Planned"
 msgstr "À planifier"
+
+msgid "You are not allowed to plan in this program increment."
+msgstr "Vous n'êtes pas authorisé à plannifier dans cet incrément de programme."

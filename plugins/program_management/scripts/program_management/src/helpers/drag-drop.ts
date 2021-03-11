@@ -35,9 +35,36 @@ export function isConsideredInDropzone(child: Element): boolean {
 }
 
 export function checkAcceptsDrop(payload: HandleDragPayload): boolean {
-    return (
-        payload.dropped_card instanceof HTMLElement &&
-        payload.target_cell instanceof HTMLElement &&
-        payload.source_cell instanceof HTMLElement
-    );
+    if (
+        !(payload.dropped_card instanceof HTMLElement) ||
+        !(payload.target_cell instanceof HTMLElement) ||
+        !(payload.source_cell instanceof HTMLElement)
+    ) {
+        return false;
+    }
+
+    const user_can_plan = Boolean(payload.target_cell.dataset.canPlan);
+    if (!user_can_plan) {
+        const can_not_drop_message = payload.target_cell.getElementsByClassName(
+            "drop-not-accepted-overlay"
+        );
+
+        if (!can_not_drop_message || !can_not_drop_message[0]) {
+            return user_can_plan;
+        }
+
+        can_not_drop_message[0].classList.remove("drop-accepted");
+        can_not_drop_message[0].classList.add("drop-not-accepted");
+    }
+
+    return user_can_plan;
+}
+
+export function checkAfterDrag(): void {
+    const error_messages = document.getElementsByClassName("drop-not-accepted-overlay");
+
+    [].forEach.call(error_messages, function (dom_message: HTMLElement) {
+        dom_message.classList.remove("drop-not-accepted");
+        dom_message.classList.add("drop-accepted");
+    });
 }

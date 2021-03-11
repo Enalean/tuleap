@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div data-is-container="true">
+    <div data-is-container="true" data-can-plan="true">
         <h2 v-translate class="program-to-be-planned-title">To Be Planned</h2>
         <empty-state
             v-if="to_be_planned_elements.length === 0 && !is_loading && !has_error"

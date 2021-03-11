@@ -54,11 +54,16 @@ final class ProgramIncrementRepresentation
      * @var bool {@type bool}
      */
     public $user_can_update;
+    /**
+     * @var bool {@type bool}
+     */
+    public $user_can_plan;
 
     private function __construct(
         int $id,
         string $title,
         bool $user_can_update,
+        bool $user_can_plan,
         ?string $status,
         ?int $start_date,
         ?int $end_date
@@ -69,6 +74,7 @@ final class ProgramIncrementRepresentation
         $this->start_date      = JsonCast::toDate($start_date);
         $this->end_date        = JsonCast::toDate($end_date);
         $this->user_can_update = JsonCast::toBoolean($user_can_update);
+        $this->user_can_plan   = JsonCast::toBoolean($user_can_plan);
     }
 
     public static function fromProgramIncrement(ProgramIncrement $program_increment): self
@@ -77,6 +83,7 @@ final class ProgramIncrementRepresentation
             $program_increment->id,
             $program_increment->title,
             $program_increment->user_can_update,
+            $program_increment->user_can_plan,
             $program_increment->status,
             $program_increment->start_date,
             $program_increment->end_date
