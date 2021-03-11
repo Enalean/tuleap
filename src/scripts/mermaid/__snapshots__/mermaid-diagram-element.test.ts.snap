@@ -2,16 +2,18 @@
 
 exports[`MermaidDiagramElement Renders the diagram (and stops observing) whenever the mermaid block enters in the viewport 1`] = `
 <tlp-mermaid-diagram>
-  <div
-    class="diagram-mermaid"
-  >
-    <svg>
-      
+  <div>
+    <div
+      class="diagram-mermaid"
+    >
+      <svg>
+        
             classDiagram
                 class Animal
                 Vehicle &lt;|-- Car
         
-    </svg>
+      </svg>
+    </div>
   </div>
 </tlp-mermaid-diagram>
 `;
@@ -33,8 +35,10 @@ exports[`MermaidDiagramElement displays a spinner while observing if mermaid blo
       class="fas fa-circle-notch fa-spin"
     />
   </div>
-  <div
-    class="diagram-mermaid diagram-mermaid-computing"
-  />
+  <div>
+    <div
+      class="diagram-mermaid diagram-mermaid-computing"
+    />
+  </div>
 </tlp-mermaid-diagram>
 `;

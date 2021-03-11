@@ -17,46 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-tlp-mermaid-diagram {
-    display: block;
-    position: relative;
-    margin: 0 0 $tlp-medium-spacing;
+@import '../../../common/css/utils/mermaid';
 
-    &:last-child {
-        margin: 0;
-    }
-
-    &:not(:defined) {
-        padding: 5px 3px 5px $tlp-medium-spacing / 2;
-        border-left: 5px solid transparentize($tlp-theme-color, .5);
-        background: transparentize($tlp-theme-color, .95);
-        color: $tlp-theme-color;
-        font-family: $tlp-font-family-mono;
-        font-size: .875rem;
-        font-weight: 400;
-        line-height: 1.375rem;
-        white-space: pre-wrap;
-    }
-}
-
-.diagram-mermaid-computing {
-    visibility: hidden;
-}
-
-.diagram-mermaid-source-computing {
-    position: relative;
-
-    > pre {
-        opacity: .5;
-    }
-
-    > i {
-        $size: 1.5rem;
-
-        position: absolute;
-        top: calc(50% - #{$size} / 2);
-        left: calc(50% - #{$size} / 2);
-        color: $tlp-ui-dimmed;
-        font-size: $size;
-    }
+tlp-mermaid-diagram:not(:defined) {
+    padding: 5px 3px 5px $tlp-medium-spacing / 2;
+    border-left: 5px solid transparentize($tlp-theme-color, .5);
+    background: transparentize($tlp-theme-color, .95);
+    color: $tlp-theme-color;
+    font-family: $tlp-font-family-mono;
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+    white-space: pre-wrap;
 }

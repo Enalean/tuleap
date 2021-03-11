@@ -18,13 +18,22 @@
  */
 
 import mermaid from "mermaid";
+import type { PanZoom } from "panzoom";
+import panzoom from "panzoom";
 import { generateMermaidElementId } from "./id-generator";
 import { initializeMermaid } from "./initialize-mermaid";
 
 export class MermaidDiagramElement extends HTMLElement {
     private source_code = "";
     private source_wrapper: HTMLElement | null = null;
+    private backdrop: HTMLElement | null = null;
     private container: HTMLElement | null = null;
+    private svg: SVGElement | null = null;
+    private panzoom_instance: PanZoom | null = null;
+    private magnified_classname = "diagram-mermaid-backdrop-magnified";
+
+    private toggle_magnified_listener: ((event: MouseEvent) => void) | null = null;
+    private handle_keyup_listener: ((event: KeyboardEvent) => void) | null = null;
 
     public connectedCallback(): void {
         if (!this.textContent) {
@@ -49,9 +58,12 @@ export class MermaidDiagramElement extends HTMLElement {
         this.textContent = "";
         this.appendChild(this.source_wrapper);
 
+        this.backdrop = document.createElement("div");
+        this.appendChild(this.backdrop);
+
         this.container = document.createElement("div");
         this.container.classList.add("diagram-mermaid", "diagram-mermaid-computing");
-        this.appendChild(this.container);
+        this.backdrop.appendChild(this.container);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -63,10 +75,13 @@ export class MermaidDiagramElement extends HTMLElement {
         });
 
         observer.observe(this);
+
+        this.handle_keyup_listener = this.handleKeyUp.bind(this);
+        document.addEventListener("keyup", this.handle_keyup_listener);
     }
 
     private replaceCodeBlockByMermaidDiagram(): void {
-        if (!this.container || !this.source_wrapper) {
+        if (!this.container || !this.source_wrapper || !this.backdrop) {
             return;
         }
 
@@ -84,11 +99,107 @@ export class MermaidDiagramElement extends HTMLElement {
         // can be used by mermaid / d3 to produce the graph.
         // eslint-disable-next-line no-unsanitized/property
         this.container.innerHTML = svg_code;
+        this.svg = this.container.querySelector("svg");
 
         // Replace the pre by the generated svg_element because we do not have
         // anymore need for code block, the diagram should live on its own.
         this.removeChild(this.source_wrapper);
 
         this.container.classList.remove("diagram-mermaid-computing");
+
+        this.toggle_magnified_listener = this.toggleMagnified.bind(this);
+        this.backdrop.addEventListener("click", this.toggle_magnified_listener);
+    }
+
+    public disconnectedCallback(): void {
+        if (this.backdrop && this.toggle_magnified_listener) {
+            this.backdrop.removeEventListener("click", this.toggle_magnified_listener);
+        }
+
+        if (this.handle_keyup_listener) {
+            document.removeEventListener("keyup", this.handle_keyup_listener);
+        }
+    }
+
+    private handleKeyUp(event: KeyboardEvent): void {
+        if (event.altKey) {
+            return;
+        }
+
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        this.removeMagnified();
+    }
+
+    private toggleMagnified(event: MouseEvent): void {
+        if (!this.backdrop || !this.container) {
+            return;
+        }
+
+        if (this.backdrop.classList.contains(this.magnified_classname)) {
+            this.removeMagnifiedOnMouseEvent(event);
+        } else {
+            this.addMagnified();
+        }
+    }
+
+    private addMagnified(): void {
+        if (!this.backdrop || !this.svg) {
+            return;
+        }
+
+        if (!this.backdrop.querySelector(".diagram-mermaid-close-button")) {
+            const close = document.createElement("button");
+            close.classList.add("diagram-mermaid-close-button");
+            close.type = "button";
+
+            const close_icon = document.createElement("i");
+            close_icon.classList.add("fas", "fa-times");
+            close_icon.setAttribute("aria-hidden", "true");
+            close.appendChild(close_icon);
+
+            this.backdrop.appendChild(close);
+        }
+
+        this.backdrop.classList.add(this.magnified_classname);
+        this.panzoom_instance = panzoom(this.svg, {
+            transformOrigin: { x: 0, y: 0 },
+        });
+    }
+
+    private removeMagnifiedOnMouseEvent(event: MouseEvent): void {
+        if (!event.target) {
+            return;
+        }
+
+        if (!(event.target instanceof HTMLElement)) {
+            return;
+        }
+
+        if (event.target instanceof HTMLElement && event.target.closest(".diagram-mermaid")) {
+            return;
+        }
+
+        this.removeMagnified();
+    }
+
+    private removeMagnified(): void {
+        if (this.panzoom_instance) {
+            this.resetPanAndZoom();
+            this.panzoom_instance.dispose();
+        }
+
+        if (this.backdrop) {
+            this.backdrop.classList.remove(this.magnified_classname);
+        }
+    }
+
+    private resetPanAndZoom(): void {
+        if (this.panzoom_instance) {
+            this.panzoom_instance.moveTo(0, 0);
+            this.panzoom_instance.zoomAbs(0, 0, 1);
+        }
     }
 }

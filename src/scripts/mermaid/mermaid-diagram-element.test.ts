@@ -112,4 +112,89 @@ describe("MermaidDiagramElement", () => {
         expect(render).toHaveBeenCalled();
         expect(unobserve).toHaveBeenCalled();
     });
+
+    it("On click, the diagram is magnified", () => {
+        const observe = (): void => {
+            // mocking observe
+        };
+        const unobserve = jest.fn();
+        const mockIntersectionObserver = jest.fn();
+        mockIntersectionObserver.mockReturnValue({
+            observe,
+            unobserve,
+        });
+        window.IntersectionObserver = mockIntersectionObserver;
+
+        const mermaid_diagram = createMermaidDiagramElement();
+
+        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
+        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+
+        const backdrop = mermaid_diagram.querySelector("div");
+        if (!backdrop) {
+            throw Error("Unable to find the backdrop element");
+        }
+        backdrop.click();
+
+        expect(backdrop.classList.contains("diagram-mermaid-backdrop-magnified")).toBe(true);
+    });
+
+    it("Once magnified, on click on backdrop, the diagram is back to normal", () => {
+        const observe = (): void => {
+            // mocking observe
+        };
+        const unobserve = jest.fn();
+        const mockIntersectionObserver = jest.fn();
+        mockIntersectionObserver.mockReturnValue({
+            observe,
+            unobserve,
+        });
+        window.IntersectionObserver = mockIntersectionObserver;
+
+        const mermaid_diagram = createMermaidDiagramElement();
+
+        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
+        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+
+        const backdrop = mermaid_diagram.querySelector("div");
+        if (!backdrop) {
+            throw Error("Unable to find the backdrop element");
+        }
+        backdrop.click();
+        backdrop.click();
+
+        expect(backdrop.classList.contains("diagram-mermaid-backdrop-magnified")).toBe(false);
+    });
+
+    it("Once magnified, on click on close button, the diagram is back to normal", () => {
+        const observe = (): void => {
+            // mocking observe
+        };
+        const unobserve = jest.fn();
+        const mockIntersectionObserver = jest.fn();
+        mockIntersectionObserver.mockReturnValue({
+            observe,
+            unobserve,
+        });
+        window.IntersectionObserver = mockIntersectionObserver;
+
+        const mermaid_diagram = createMermaidDiagramElement();
+
+        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
+        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+
+        const backdrop = mermaid_diagram.querySelector("div");
+        if (!backdrop) {
+            throw Error("Unable to find the backdrop element");
+        }
+        backdrop.click();
+
+        const button = backdrop.querySelector(".diagram-mermaid-close-button");
+        if (!(button instanceof HTMLButtonElement)) {
+            throw Error("Unable to find the close button element");
+        }
+        button.click();
+
+        expect(backdrop.classList.contains("diagram-mermaid-backdrop-magnified")).toBe(false);
+    });
 });
