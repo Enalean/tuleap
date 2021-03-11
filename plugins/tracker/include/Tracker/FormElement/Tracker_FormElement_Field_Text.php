@@ -603,6 +603,24 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return is_array($value) ? $value['format'] : $old_format;
     }
 
+    /**
+     * Validate a required field
+     *
+     * @param Artifact $artifact        The artifact to check
+     * @param mixed    $submitted_value The submitted value
+     *
+     * @return bool true on success or false on failure
+     */
+    public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value)
+    {
+        if (($submitted_value === null || $submitted_value["content"] === null || $submitted_value["content"] === '') && $this->isRequired()) {
+            $this->addRequiredError();
+            return false;
+        }
+
+        return true;
+    }
+
     protected function extractCrossRefs($artifact, $content)
     {
         return ReferenceManager::instance()->extractCrossRef(

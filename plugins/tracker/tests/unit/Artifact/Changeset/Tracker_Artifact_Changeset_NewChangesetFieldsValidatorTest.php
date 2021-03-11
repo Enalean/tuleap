@@ -104,11 +104,11 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \
     }
 
     /**
-     * @return \Mockery\Mock|Tracker_FormElement_Field_Text
+     * @return \Mockery\Mock|Tracker_FormElement_Field
      */
     private function getFieldWithId(int $id)
     {
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class)->makePartial(
+        $field = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getId')->andReturn($id);
 

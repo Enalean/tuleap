@@ -114,6 +114,11 @@
                             <label>Description</label>
                             <properties rows="10" cols="100"/>
                         </formElement>
+                        <formElement type="text" ID="F141" rank="2" required="1">
+                            <name>Required Text</name>
+                            <label>Required Text</label>
+                            <properties rows="10" cols="100"/>
+                        </formElement>
                         <formElement type="art_link" ID="F10" rank="3">
                             <name>content</name>
                             <label>Content</label>
@@ -404,6 +409,9 @@
                 <permission scope="field" REF="F26" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F26" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F26" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F141" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F141" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F141" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
             <artifacts>
                 <artifact id="3">

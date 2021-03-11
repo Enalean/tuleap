@@ -41,11 +41,21 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
                     'uri' => 'whatever'
                 ],
                 'values'  => [
-                    $this->getSubmitTextValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
+                    $this->getSubmitStringValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
+                    $this->getSubmitTextValue($this->epic_tracker_id, "Required Text", "this is a description"),
                     $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103)
                 ],
             ]
         );
+    }
+
+    private function getSubmitStringValue($tracker_id, $field_label, $field_value): array
+    {
+        $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
+        return [
+            'field_id' => $field_def['field_id'],
+            'value'    => $field_value,
+        ];
     }
 
     private function getSubmitTextValue($tracker_id, $field_label, $field_value): array
@@ -53,7 +63,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
         return [
             'field_id' => $field_def['field_id'],
-            'value'    => $field_value,
+            'value'    => ['format' => 'html', "content" => $field_value],
         ];
     }
 

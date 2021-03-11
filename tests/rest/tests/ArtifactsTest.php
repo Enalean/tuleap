@@ -407,6 +407,32 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals("wunderbar", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
+    /**
+     * @depends testPostArtifact
+     */
+    public function testPutArtifactIdTextField($artifact_id)
+    {
+        $field_label =  'Required Text';
+        $put_body    = $this->buildPUTTextBodyContent($artifact_id, $field_label);
+        $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_body));
+
+        $this->assertEquals(500, $response->getStatusCode());
+        return $artifact_id;
+    }
+
+    private function buildPUTTextBodyContent($artifact_id, $field_label)
+    {
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+
+        return json_encode([
+            'values' => [
+                [
+                    'field_id' => $field_id,
+                    'value'    => ["format" => "html", "content" => ""],
+                ],
+            ],
+        ]);
+    }
 
     private function buildPUTBodyContent($artifact_id, $field_label)
     {
