@@ -189,15 +189,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return ($field === $this);
     }
 
-    private function getDefaultFormatForUser(PFUser $user)
+    private function getDefaultFormatForUser(PFUser $user): string
     {
         $user_preference = $user->getPreference(PFUser::EDITION_DEFAULT_FORMAT);
 
-        if (! $user_preference || $user_preference === Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT) {
-            return Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
-        }
-
-        if ($user_preference === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
+        if (! $user_preference || $user_preference === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
             return Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT;
         }
 
