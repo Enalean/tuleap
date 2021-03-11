@@ -69,10 +69,11 @@ pipeline {
                 }
                 stage ('Jest') {
                     agent {
-                        docker {
-                            image 'node:14.5-alpine'
+                        dockerfile {
+                            dir 'sources/tools/utils/nix/'
+                            filename 'build-tools.dockerfile'
                             reuseNode true
-                            args '--network none'
+                            args '--network none --tmpfs /tmp/jest_rt:rw,noexec,nosuid'
                         }
                     }
                     steps { script { actions.runJestTests('Tuleap', '.') } }
@@ -121,8 +122,9 @@ pipeline {
                     stages {
                         stage('ESLint static analysis') {
                             agent {
-                                docker {
-                                    image 'node:14.5-alpine'
+                                dockerfile {
+                                    dir 'sources/tools/utils/nix/'
+                                    filename 'build-tools.dockerfile'
                                     reuseNode true
                                     args '--network none'
                                 }
@@ -187,8 +189,9 @@ pipeline {
                         }
                         stage('SCSS coding standards') {
                             agent {
-                                docker {
-                                    image 'node:14.5-alpine'
+                                dockerfile {
+                                    dir 'sources/tools/utils/nix/'
+                                    filename 'build-tools.dockerfile'
                                     reuseNode true
                                     args '--network none'
                                 }

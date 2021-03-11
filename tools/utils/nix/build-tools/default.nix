@@ -5,5 +5,5 @@ pkgs.buildEnv {
     paths = (import ./build-tools-general.nix { inherit pkgs; }) ++
             (import ./build-tools-packages.nix { inherit pkgs; }) ++
             (import ./build-tools-php.nix { inherit pkgs phpBase; }) ++
-            (import ./build-tools-js.nix { inherit pkgs; });
+            [(import ./build-tools-js.nix { inherit pkgs; })];
 }
