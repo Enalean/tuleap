@@ -116,7 +116,8 @@ class RecipientsManager
 
     private function removeRecipientsThatCannotReadAnything(Tracker_Artifact_Changeset $changeset, array &$recipients): void
     {
-        if ($changeset->getComment() && ! $changeset->getComment()->hasEmptyBody()) {
+        $comment = $changeset->getComment();
+        if ($comment !== null && ! $comment->hasEmptyBody()) {
             return;
         }
 

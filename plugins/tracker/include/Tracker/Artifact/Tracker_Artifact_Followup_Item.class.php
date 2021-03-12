@@ -25,7 +25,7 @@ abstract class Tracker_Artifact_Followup_Item
 
     abstract public function getFollowUpClassnames($diff_to_previous, PFUser $user);
 
-    abstract public function fetchFollowUp($diff_to_previous, PFUser $current_user);
+    abstract public function fetchFollowUp($diff_to_previous, PFUser $current_user): string;
 
     abstract public function getHTMLAvatar();
 

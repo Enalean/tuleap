@@ -811,7 +811,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         );
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
-                            echo $changeset->getComment()->fetchFollowUp($current_user);
+                            $comment = $changeset->getComment();
+                            if ($comment !== null) {
+                                echo $comment->fetchFollowUp($current_user);
+                            }
                         }
                     }
                 }

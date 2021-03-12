@@ -166,7 +166,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $this->prioritized_by->fetchHtmlAvatar();
     }
 
-    public function fetchFollowUp($diff_to_previous, PFUser $current_user)
+    public function fetchFollowUp($diff_to_previous, PFUser $current_user): string
     {
         $html  = '';
         $html .= $this->getAvatar();

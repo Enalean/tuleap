@@ -81,8 +81,9 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
         $submitted_on->addAttribute('format', 'ISO8601');
 
         $comments_node = $changeset_xml->addChild('comments');
-        if ($changeset->getComment()) {
-            $changeset->getComment()->exportToXML($comments_node, $this->user_xml_exporter);
+        $comment       = $changeset->getComment();
+        if ($comment !== null) {
+            $comment->exportToXML($comments_node, $this->user_xml_exporter);
         }
 
         $changeset->forceFetchAllValues();

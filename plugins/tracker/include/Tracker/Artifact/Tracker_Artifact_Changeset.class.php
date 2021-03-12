@@ -217,14 +217,17 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     {
         $html = '';
 
-        $follow_up = $this->getComment()->fetchFollowUp($current_user);
-        if ($follow_up) {
-            $html .= '<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_' . $this->getId() . '">';
-            $html .= $follow_up;
-            $html .= '</div>';
+        $comment = $this->getComment();
+        if ($comment) {
+            $follow_up = $comment->fetchFollowUp($current_user);
+            if ($follow_up) {
+                $html .= '<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_' . $this->getId() . '">';
+                $html .= $follow_up;
+                $html .= '</div>';
 
-            if ($diff_to_previous) {
-                $html .= '<hr size="1" />';
+                if ($diff_to_previous) {
+                    $html .= '<hr size="1" />';
+                }
             }
         }
 
@@ -240,10 +243,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
     /**
      * Fetch followup
-     *
-     * @return string html
      */
-    public function fetchFollowUp($diff_to_previous, PFUser $current_user)
+    public function fetchFollowUp($diff_to_previous, PFUser $current_user): string
     {
         $follow_up_content = $this->getFollowupContent($diff_to_previous, $current_user);
         if ($follow_up_content === "") {
@@ -488,15 +489,21 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * @param ProjectUGroup[] $ugroups_for_private_comment
      */
-    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp, array $ugroups_for_private_comment)
-    {
-        if ($this->userCanEdit($user)) {
+    public function updateCommentWithoutNotification(
+        $body,
+        $user,
+        $comment_format,
+        $timestamp,
+        array $ugroups_for_private_comment
+    ): bool {
+        $comment = $this->getComment();
+        if ($this->userCanEdit($user) && $comment !== null) {
             $commentUpdated = $this->getCommentDao()->createNewVersion(
                 $this->id,
                 $body,
                 $user->getId(),
                 $timestamp,
-                $this->getComment()->id,
+                $comment->id,
                 $comment_format
             );
 
@@ -544,9 +551,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Get the comment (latest version)
      *
-     * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
+     * @return Tracker_Artifact_Changeset_Comment|null The comment of this changeset, or null if no comments
      */
-    public function getComment()
+    public function getComment(): ?Tracker_Artifact_Changeset_Comment
     {
         if (isset($this->latest_comment)) {
             return $this->latest_comment;
