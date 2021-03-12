@@ -280,7 +280,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     private function interpretMarkdownContent(string $text): string
     {
-        $content_interpreter = CommonMarkInterpreter::buildWithMermaid(
+        $content_interpreter = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
             Codendi_HTMLPurifier::instance(),
             CodeBlockFeaturesOnArtifact::getInstance()
         );

@@ -29,6 +29,11 @@ final class CodeBlockFeatures implements CodeBlockFeaturesInterface
      */
     private $is_mermaid_needed = false;
 
+    /**
+     * @var bool
+     */
+    private $is_syntax_highlight_needed = false;
+
     public function needsMermaid(): void
     {
         $this->is_mermaid_needed = true;
@@ -37,5 +42,15 @@ final class CodeBlockFeatures implements CodeBlockFeaturesInterface
     public function isMermaidNeeded(): bool
     {
         return $this->is_mermaid_needed;
+    }
+
+    public function needsSyntaxHighlight(): void
+    {
+        $this->is_syntax_highlight_needed = true;
+    }
+
+    public function isSyntaxHighlightNeeded(): bool
+    {
+        return $this->is_syntax_highlight_needed;
     }
 }

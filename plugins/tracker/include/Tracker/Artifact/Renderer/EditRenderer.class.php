@@ -154,6 +154,13 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         foreach ($event->getFileURLs() as $file_url) {
             $GLOBALS['HTML']->includeFooterJavascriptFile($file_url);
         }
+
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../../../src/www/assets/core',
+            '/assets/core'
+        );
+        $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'syntax-highlight'));
+
         $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, [], $params);
 
 
@@ -331,13 +338,16 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayFooter()
     {
-        if (CodeBlockFeaturesOnArtifact::getInstance()->isMermaidNeeded()) {
-            $assets = new IncludeAssets(
-                __DIR__ . '/../../../../../../src/www/assets/core',
-                '/assets/core'
-            );
-
+        $code_block_features = CodeBlockFeaturesOnArtifact::getInstance();
+        $assets              = new IncludeAssets(
+            __DIR__ . '/../../../../../../src/www/assets/core',
+            '/assets/core'
+        );
+        if ($code_block_features->isMermaidNeeded()) {
             $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
+        }
+        if ($code_block_features->isSyntaxHighlightNeeded()) {
+            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'syntax-highlight.js'));
         }
 
         $this->tracker->displayFooter($this->layout);

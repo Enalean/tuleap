@@ -28,7 +28,7 @@ use League\CommonMark\Block\Renderer\FencedCodeRenderer;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\ExtensionInterface;
-use Tuleap\Markdown\BlockRenderer\MermaidBlockRenderer;
+use Tuleap\Markdown\BlockRenderer\EnhancedCodeBlockRenderer;
 
 final class CommonMarkInterpreter implements ContentInterpretor
 {
@@ -52,14 +52,14 @@ final class CommonMarkInterpreter implements ContentInterpretor
         return self::buildWithCustomBlockRenderers($html_purifier, [], ...$extensions);
     }
 
-    public static function buildWithMermaid(
+    public static function buildWithEnhancedCodeBlocks(
         Codendi_HTMLPurifier $html_purifier,
         CodeBlockFeaturesInterface $code_block_features,
         ExtensionInterface ...$extensions
     ): self {
         return self::buildWithCustomBlockRenderers(
             $html_purifier,
-            [new CustomBlockRenderer(FencedCode::class, new MermaidBlockRenderer($code_block_features, new FencedCodeRenderer()))],
+            [new CustomBlockRenderer(FencedCode::class, new EnhancedCodeBlockRenderer($code_block_features, new FencedCodeRenderer()))],
             ...$extensions
         );
     }

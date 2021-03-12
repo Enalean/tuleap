@@ -152,6 +152,7 @@ const webpack_config_for_flaming_parrot_code = {
     entry: {
         "flamingparrot-with-polyfills": "./scripts/FlamingParrot/index.js",
         mermaid: "./scripts/mermaid/index.ts",
+        "syntax-highlight": "./scripts/syntax-highlight/index.ts",
     },
     context,
     output,
@@ -486,6 +487,7 @@ const webpack_config_for_burning_parrot_css = {
 
 const flamingparrot_entry_points = {
     "FlamingParrot/print": "./themes/FlamingParrot/css/print.scss",
+    "syntax-highlight": "./themes/common/css/syntax-highlight.scss",
 };
 
 const fp_colors = ["Blue", "BlueGrey", "Green", "Orange", "Purple", "Red"];
