@@ -24,6 +24,8 @@
 
 namespace Tuleap\SVN\Commit;
 
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use System_Command;
 use Tuleap\SVN\Admin\ImmutableTagPresenter;
 use Tuleap\SVN\Repository\Repository;
@@ -100,5 +102,14 @@ class Svnlook
     public function closeContentResource($resource): void
     {
         pclose($resource);
+    }
+
+    /**
+     * @throws ProcessFailedException
+     */
+    public function getFileSize(Repository $repository, string $transaction, string $path_into_repository): int
+    {
+        $process = new Process([$this->svnlook, 'filesize', '-t', $transaction, $repository->getSystemPath(), $path_into_repository]);
+        return (int) $process->mustRun()->getOutput();
     }
 }
