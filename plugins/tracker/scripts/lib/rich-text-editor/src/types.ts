@@ -24,12 +24,14 @@ type EmptyObject = Record<string, never>;
 type additionalOptionsProvider = (textarea: HTMLTextAreaElement) => CKEDITOR.config | EmptyObject;
 type editorInitCallback = (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => void;
 type formatChangedCallback = (new_format: TextFieldFormat) => void;
+type dataReadyCallback = (ckeditor: CKEDITOR.editor) => void;
 
 export interface InternalTextEditorOptions {
     locale: string;
     getAdditionalOptions: additionalOptionsProvider;
     onEditorInit: editorInitCallback;
     onFormatChange: formatChangedCallback;
+    onEditorDataReady: dataReadyCallback;
 }
 
 export interface RichTextEditorOptions {
@@ -39,6 +41,7 @@ export interface RichTextEditorOptions {
     getAdditionalOptions?: additionalOptionsProvider;
     onEditorInit?: editorInitCallback;
     onFormatChange?: formatChangedCallback;
+    onEditorDataReady?: dataReadyCallback;
 }
 
 export interface HTMLToMarkdownConverterInterface {

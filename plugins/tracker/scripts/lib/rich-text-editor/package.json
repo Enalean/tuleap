@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
-    "@tuleap/mention": "file:../../../../../src/scripts/lib/mention",
     "marked": "^2.0.1",
     "turndown": "^7.0.0"
   },

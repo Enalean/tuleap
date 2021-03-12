@@ -22,6 +22,11 @@ import type { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-cke
 import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "./RichTextEditorsCreator";
 
+// Mock @tuleap/mention because it needs jquery in tests
+jest.mock("@tuleap/mention", () => {
+    return { initMentions: jest.fn() };
+});
+
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`RichTextEditorsCreator`, () => {

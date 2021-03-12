@@ -25,6 +25,7 @@ import type {
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { TextFieldFormat } from "../../constants/fields-constants";
 import { isValidTextFormat, TEXT_FORMAT_TEXT } from "../../constants/fields-constants";
+import { initMentionsOnEditorDataReady } from "./init-mentions";
 
 const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
 const NEW_FOLLOWUP_ID_SUFFIX = "new";
@@ -56,6 +57,7 @@ export class RichTextEditorsCreator {
             onFormatChange: (new_format) => help_block?.onFormatChange(new_format),
             onEditorInit: (ckeditor, textarea) =>
                 this.image_upload_factory.initiateImageUpload(ckeditor, textarea),
+            onEditorDataReady: initMentionsOnEditorDataReady,
         };
         this.editor_factory.createRichTextEditor(new_followup_textarea, options);
     }
@@ -91,6 +93,7 @@ export class RichTextEditorsCreator {
                     this.image_upload_factory.initiateImageUpload(ckeditor, textarea);
                     text_fields_options?.onEditorInit(ckeditor, textarea);
                 },
+                onEditorDataReady: initMentionsOnEditorDataReady,
             };
             this.editor_factory.createRichTextEditor(text_field_textarea, options);
         }

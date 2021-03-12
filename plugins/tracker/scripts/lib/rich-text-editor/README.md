@@ -48,6 +48,10 @@ options: RichTextEditorOptions = {
     },
     onEditorInit: (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => {
         // React on creation of the CKEditor (only in "html" format)
+    },
+    onEditorDataReady: (ckeditor: CKEDITOR.editor) => {
+        // This is only useful in Tracker Artifact view to setup @tuleap/mention.
+        // There is no other use for this callback.
     }
 }
 
