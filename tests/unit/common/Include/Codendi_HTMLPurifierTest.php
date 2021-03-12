@@ -206,4 +206,29 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
             $p->purify('<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_LIGHT)
         );
     }
+
+    public function testItAllowsSyntaxHighlightingCustomElementOnlyForFullConfig(): void
+    {
+        $p = $this->getHTMLPurifier();
+        self::assertEquals(
+            '<tlp-syntax-highlighting><pre>Foo</pre></tlp-syntax-highlighting>',
+            $p->purify('<tlp-syntax-highlighting><pre>Foo</pre></tlp-syntax-highlighting>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            '<tlp-syntax-highlighting><pre><code>Foo</code></pre></tlp-syntax-highlighting>',
+            $p->purify('<tlp-syntax-highlighting><pre><code>Foo</code></pre></tlp-syntax-highlighting>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            '<tlp-syntax-highlighting class="whatever"><pre>Foo</pre></tlp-syntax-highlighting>',
+            $p->purify('<tlp-syntax-highlighting class="whatever"><pre>Foo</pre></tlp-syntax-highlighting>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            '<tlp-syntax-highlighting><pre><code>Foo</code></pre></tlp-syntax-highlighting><b>Bar</b>',
+            $p->purify('<tlp-syntax-highlighting><pre><code>Foo</code></pre><b>Bar</b></tlp-syntax-highlighting>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            '<pre>Foo</pre>',
+            $p->purify('<tlp-syntax-highlighting><pre>Foo</pre></tlp-syntax-highlighting>', Codendi_HTMLPurifier::CONFIG_LIGHT)
+        );
+    }
 }
