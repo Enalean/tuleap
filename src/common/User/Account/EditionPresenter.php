@@ -41,10 +41,6 @@ final class EditionPresenter
     /**
      * @var bool
      */
-    public $user_text_default_format_text;
-    /**
-     * @var bool
-     */
     public $user_text_default_format_commonmark;
     /**
      * @var bool
@@ -77,7 +73,7 @@ final class EditionPresenter
 
         $text_default_format = $user->getPreference(PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT);
         if ($text_default_format === false) {
-            $text_default_format = PFUser::PREFERENCE_EDITION_TEXT;
+            $text_default_format = PFUser::PREFERENCE_EDITION_COMMONMARK;
         }
         $csv_separator = $user->getPreference(PFUser::PREFERENCE_NAME_CSV_SEPARATOR);
         if ($csv_separator === false) {
@@ -89,7 +85,6 @@ final class EditionPresenter
         }
 
         $this->user_text_default_format_html       = $text_default_format === PFUser::PREFERENCE_EDITION_HTML;
-        $this->user_text_default_format_text       = $text_default_format === PFUser::PREFERENCE_EDITION_TEXT;
         $this->user_text_default_format_commonmark = $text_default_format === PFUser::PREFERENCE_EDITION_COMMONMARK;
 
         $this->user_csv_separator_comma     = $csv_separator === PFUser::PREFERENCE_CSV_COMMA;
