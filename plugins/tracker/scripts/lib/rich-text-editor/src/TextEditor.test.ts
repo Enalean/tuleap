@@ -29,14 +29,6 @@ import type {
     MarkdownToHTMLRendererInterface,
 } from "./types";
 import CKEDITOR from "ckeditor4";
-import * as mentions from "@tuleap/mention";
-
-jest.mock("@tuleap/mention", () => {
-    // Mock the dependency because jquery...
-    return {
-        initMentions: jest.fn(),
-    };
-});
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 const emptyFunction = (): void => {
@@ -68,10 +60,8 @@ describe(`TextEditor`, () => {
                     uploadUrl: "/example/url",
                 };
                 const options = {
-                    locale: "fr_FR",
+                    ...getEmptyOptions(),
                     getAdditionalOptions: (): CKEDITOR.config => additional_options,
-                    onEditorInit: emptyFunction,
-                    onFormatChange: emptyFunction,
                 };
                 const editor = new TextEditor(
                     textarea,
@@ -88,14 +78,17 @@ describe(`TextEditor`, () => {
                 );
             });
 
-            it(`initializes tuleap mentions on the CKEditor when it's ready`, () => {
-                const initMentions = jest.spyOn(mentions, "initMentions");
+            it(`calls the onEditorDataReady callback when CKEditor data is ready`, () => {
                 const ckeditor_instance = getMockedCKEditorInstance();
                 const eventHandler = jest.spyOn(ckeditor_instance, "on");
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
+                const options = {
+                    ...getEmptyOptions(),
+                    onEditorDataReady: jest.fn(),
+                };
                 const editor = new TextEditor(
                     textarea,
-                    getEmptyOptions(),
+                    options,
                     markdown_converter,
                     markdown_renderer
                 );
@@ -103,15 +96,14 @@ describe(`TextEditor`, () => {
                 const onDataReadyCallback = eventHandler.mock.calls[0][1];
                 onDataReadyCallback({} as CKEDITOR.eventInfo);
 
-                expect(initMentions).toHaveBeenCalled();
+                expect(options.onEditorDataReady).toHaveBeenCalled();
             });
 
             it(`calls the given onEditorInit and onFormatChange callbacks`, () => {
                 const ckeditor_instance = getMockedCKEditorInstance();
                 jest.spyOn(CKEDITOR, "replace").mockReturnValue(ckeditor_instance);
                 const options = {
-                    locale: "fr_FR",
-                    getAdditionalOptions: emptyOptionsProvider,
+                    ...getEmptyOptions(),
                     onEditorInit: jest.fn(),
                     onFormatChange: jest.fn(),
                 };
@@ -175,9 +167,7 @@ describe(`TextEditor`, () => {
             `when the format changes to %s, it calls the given onFormatChange callback`,
             (format) => {
                 const options = {
-                    locale: "fr_FR",
-                    getAdditionalOptions: emptyOptionsProvider,
-                    onEditorInit: emptyFunction,
+                    ...getEmptyOptions(),
                     onFormatChange: jest.fn(),
                 };
                 const editor = new TextEditor(
@@ -262,6 +252,7 @@ function getEmptyOptions(): InternalTextEditorOptions {
         getAdditionalOptions: emptyOptionsProvider,
         onEditorInit: emptyFunction,
         onFormatChange: emptyFunction,
+        onEditorDataReady: emptyFunction,
     };
 }
 

@@ -17,23 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InternalTextEditorOptions, RichTextEditorOptions } from "./types";
+import { initMentions } from "@tuleap/mention";
 
-const defaultEmptyFunction = (): void => {
-    /* Do nothing */
-};
-const emptyOptionsProvider = (): Record<string, never> => ({});
-
-export function defaultOptionsIfNotProvided(
-    locale: string,
-    options: RichTextEditorOptions
-): InternalTextEditorOptions {
-    return {
-        locale,
-        getAdditionalOptions: emptyOptionsProvider,
-        onEditorInit: defaultEmptyFunction,
-        onFormatChange: defaultEmptyFunction,
-        onEditorDataReady: defaultEmptyFunction,
-        ...options,
-    };
+export function initMentionsOnEditorDataReady(ckeditor: CKEDITOR.editor): void {
+    // This MUST be called after "dataReady" event because calling setData() on CKEditor will kill the event listeners of @tuleap/mention
+    const ckeditor_document = ckeditor.document.getBody().$;
+    // Set the ckeditor's iframe document <body> to contentEditable=true otherwise @tuleap/mention will filter it out
+    ckeditor_document.contentEditable = "true";
+    initMentions(ckeditor_document);
 }

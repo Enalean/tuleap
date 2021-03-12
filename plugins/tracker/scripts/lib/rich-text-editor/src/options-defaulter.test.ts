@@ -35,6 +35,7 @@ describe(`options-defaulter`, () => {
         const textarea = doc.createElement("textarea");
         expect(defaulted_options.getAdditionalOptions(textarea)).toEqual({});
         expect(defaulted_options.onEditorInit).toBeDefined();
+        expect(defaulted_options.onEditorDataReady).toBeDefined();
     });
 
     it(`given RichTextEditorOptions with callbacks, it does not change them`, () => {
@@ -51,11 +52,15 @@ describe(`options-defaulter`, () => {
             onEditorInit: () => {
                 // Do something with ckeditor and textarea
             },
+            onEditorDataReady: () => {
+                // Init @tuleap/mention
+            },
         };
 
         const defaulted_options = defaultOptionsIfNotProvided("fr_FR", options);
         expect(defaulted_options.onEditorInit).toBe(options.onEditorInit);
         expect(defaulted_options.onFormatChange).toBe(options.onFormatChange);
         expect(defaulted_options.getAdditionalOptions).toBe(options.getAdditionalOptions);
+        expect(defaulted_options.onEditorDataReady).toBe(options.onEditorDataReady);
     });
 });
