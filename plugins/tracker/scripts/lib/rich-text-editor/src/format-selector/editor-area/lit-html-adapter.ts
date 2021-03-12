@@ -26,16 +26,35 @@ export const wrapTextArea = (textarea: HTMLTextAreaElement): TemplateResult =>
         ${textarea}
     `;
 
-export interface RichTextEditorAreaPresenter {
+export interface HTMLOrTextEditorArea {
     readonly mount_point: HTMLDivElement;
     readonly selectbox: TemplateResult;
-    readonly preview_button?: TemplateResult;
-    readonly helper_button?: TemplateResult;
     readonly textarea: TemplateResult;
 }
 
-export const renderRichTextEditorArea = (
-    presenter: RichTextEditorAreaPresenter,
+export interface MarkdownTextEditorArea extends HTMLOrTextEditorArea {
+    readonly preview_button: TemplateResult;
+    readonly help_button: TemplateResult;
+    readonly preview_area: TemplateResult;
+    readonly hidden_format_input?: TemplateResult;
+}
+
+export const renderHTMLOrTextEditor = (
+    presenter: HTMLOrTextEditorArea,
+    gettext_provider: GettextProvider
+): void =>
+    render(
+        html`
+            <div class="rte_format">
+                ${gettext_provider.gettext("Format:")}${presenter.selectbox}
+            </div>
+            ${presenter.textarea}
+        `,
+        presenter.mount_point
+    );
+
+export const renderMarkdownEditor = (
+    presenter: MarkdownTextEditorArea,
     gettext_provider: GettextProvider
 ): void =>
     render(
@@ -43,9 +62,9 @@ export const renderRichTextEditorArea = (
             <div class="rte_format">
                 ${gettext_provider.gettext(
                     "Format:"
-                )}${presenter.selectbox}${presenter.preview_button}${presenter.helper_button}
+                )}${presenter.selectbox}${presenter.hidden_format_input}${presenter.preview_button}${presenter.help_button}
             </div>
-            ${presenter.textarea}
+            ${presenter.textarea}${presenter.preview_area}
         `,
         presenter.mount_point
     );

@@ -39,5 +39,8 @@ msgstr "Aperçu"
 msgid "Text"
 msgstr "Texte"
 
+msgid "There was an error in the Markdown preview:"
+msgstr "Il y a eu une erreur dans l'aperçu Markdown :"
+
 msgid "Type..."
 msgstr "Ecrivez..."

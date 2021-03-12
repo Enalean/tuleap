@@ -29,12 +29,12 @@ import type {
 } from "./types";
 import { TextEditor } from "./TextEditor";
 import type { FormatSelectorInterface } from "./format-selector/FormatSelectorInterface";
+import type { TextEditorInterface } from "./TextEditorInterface";
 import type { TextFieldFormat } from "../../../constants/fields-constants";
 import { defaultOptionsIfNotProvided } from "./options-defaulter";
 import { ExistingFormatSelector } from "./format-selector/ExistingFormatSelector";
 import { FlamingParrotEditorAreaBuilder } from "./format-selector/editor-area/FlamingParrotEditorAreaBuilder";
 import { EditorAreaRenderer } from "./format-selector/editor-area/EditorAreaRenderer";
-import type { TextEditorInterface } from "./TextEditorInterface";
 
 export class RichTextEditorFactory {
     private readonly markdown_converter: HTMLToMarkdownConverterInterface;
@@ -73,9 +73,7 @@ export class RichTextEditorFactory {
             id: options.format_selectbox_id,
             name: options.format_selectbox_name,
             selected_value,
-            formatChangedCallback: (new_format) => {
-                editor.onFormatChange(new_format);
-            },
+            editor,
         });
         editor.onFormatChange(selected_value);
         return editor;

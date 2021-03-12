@@ -27,6 +27,10 @@
     margin: 0 0 0 5px;
 }
 
+.rte-hide-textarea {
+    display: none;
+}
+
 .popover {
     max-width: none;
     padding: 0;

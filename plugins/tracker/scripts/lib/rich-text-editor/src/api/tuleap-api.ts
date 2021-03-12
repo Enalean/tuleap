@@ -17,16 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "../../../../constants/fields-constants";
-import type { TextEditorInterface } from "../TextEditorInterface";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { post } from "@tuleap/tlp-fetch";
 
-export interface FormatSelectorPresenter {
-    readonly id: string;
-    readonly name?: string;
-    readonly selected_value: TextFieldFormat;
-    readonly editor: TextEditorInterface;
-}
-
-export interface FormatSelectorInterface {
-    insertFormatSelectbox(textarea: HTMLTextAreaElement, presenter: FormatSelectorPresenter): void;
+export function postMarkdown(markdown: string, project_id: string): Promise<string> {
+    const form_data = new FormData();
+    form_data.set("content", markdown);
+    return post(encodeURI(`/project/${project_id}/interpret-commonmark`), {
+        body: form_data,
+    }).then(
+        (response) => response.text(),
+        (error: FetchWrapperError) =>
+            error.response.text().then((error_text) => {
+                //Re-throw the error to trigger the next .catch()
+                throw new Error(error_text);
+            })
+    );
 }

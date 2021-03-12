@@ -20,30 +20,45 @@
 
 import { ExistingFormatSelector } from "./ExistingFormatSelector";
 import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
-const createDocument = (): Document => document.implementation.createHTMLDocument();
+import type { TextEditorInterface } from "../TextEditorInterface";
+
+const emptyFunction = (): void => {
+    //Do nothing
+};
 
 describe(`ExistingFormatSelector`, () => {
     describe(`insertFormatSelectbox`, () => {
-        let doc: Document, textarea: HTMLTextAreaElement;
+        let doc: Document, textarea: HTMLTextAreaElement, editor: TextEditorInterface;
         beforeEach(() => {
-            doc = createDocument();
+            doc = document.implementation.createHTMLDocument();
             textarea = doc.createElement("textarea");
             doc.body.append(textarea);
+
+            editor = new (class implements TextEditorInterface {
+                destroy = emptyFunction;
+                onFormatChange = emptyFunction;
+                getContent(): string {
+                    return "Irrelevant";
+                }
+            })();
         });
+
         it(`throws an error if the presenter id is not a select element`, () => {
             const bad_format_presenter = doc.createElement("input");
             bad_format_presenter.id = "wololo";
             doc.body.append(bad_format_presenter);
+
             const presenter = {
                 id: "wololo",
                 name: "prophet",
                 selected_value: TEXT_FORMAT_TEXT,
-                formatChangedCallback: jest.fn(),
+                editor,
             };
             const text_editor = new ExistingFormatSelector(doc);
 
             expect(() => text_editor.insertFormatSelectbox(textarea, presenter)).toThrow();
         });
+
         it(`throws an error if the selected option value is not valid`, () => {
             const format_element = doc.createElement("select");
             format_element.id = "oulala";
@@ -51,19 +66,20 @@ describe(`ExistingFormatSelector`, () => {
 
             doc.body.append(format_element);
 
-            const formatChangedCallback = jest.fn();
+            const editorOnFormatChanged = jest.spyOn(editor, "onFormatChange");
             const presenter = {
                 id: "oulala",
                 name: "aie",
                 selected_value: TEXT_FORMAT_TEXT,
-                formatChangedCallback,
+                editor,
             };
 
             const text_editor = new ExistingFormatSelector(doc);
             text_editor.insertFormatSelectbox(textarea, presenter);
+
             format_element.value = "fail";
             format_element.dispatchEvent(new InputEvent("input"));
-            expect(formatChangedCallback).not.toHaveBeenCalled();
+            expect(editorOnFormatChanged).not.toHaveBeenCalled();
         });
 
         it.each([["text"], ["html"], ["commonmark"]])(
@@ -78,19 +94,20 @@ describe(`ExistingFormatSelector`, () => {
                 );
 
                 doc.body.append(format_element);
-                const formatChangedCallback = jest.fn();
+                const editorOnFormatChanged = jest.spyOn(editor, "onFormatChange");
                 const presenter = {
                     id: "ok_id",
                     name: "yay",
                     selected_value: TEXT_FORMAT_TEXT,
-                    formatChangedCallback,
+                    editor,
                 };
 
-                const text_editor = new ExistingFormatSelector(doc);
-                text_editor.insertFormatSelectbox(textarea, presenter);
+                const format_selector = new ExistingFormatSelector(doc);
+                format_selector.insertFormatSelectbox(textarea, presenter);
+
                 format_element.value = format;
                 format_element.dispatchEvent(new InputEvent("input"));
-                expect(formatChangedCallback).toHaveBeenCalledWith(format);
+                expect(editorOnFormatChanged).toHaveBeenCalledWith(format);
             }
         );
     });

@@ -19,7 +19,9 @@
 
 import * as adapter from "./lit-html-adapter";
 import * as FormatSelect from "./components/FormatSelect";
+import * as PreviewArea from "./components/PreviewArea";
 import * as PreviewEditButton from "./components/PreviewEditButton";
+import * as FormatHiddenInput from "./components/FormatHiddenInput";
 import { EditorAreaRenderer } from "./EditorAreaRenderer";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { TextFieldFormat } from "../../../../../constants/fields-constants";
@@ -45,6 +47,7 @@ function createState(selectbox_id: string, selectbox_name?: string): EditorAreaS
             public selectbox_id: string,
             public selectbox_name?: string,
             public current_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK,
+            public rendered_html = null,
             private is_in_preview_mode = false
         ) {}
         changeFormat(new_format: TextFieldFormat): void {
@@ -80,37 +83,55 @@ describe(`EditorAreaRenderer`, () => {
     describe(`render()`, () => {
         beforeEach(() => {
             //Do not actually render
-            jest.spyOn(adapter, "renderRichTextEditorArea").mockImplementation(emptyFunction);
+            jest.spyOn(adapter, "renderHTMLOrTextEditor").mockImplementation(emptyFunction);
         });
 
         it(`when the state is not in Markdown,
             it will render the area without the Help and Preview/Edit buttons`, () => {
             state.changeFormat(TEXT_FORMAT_HTML);
-            const render = jest.spyOn(adapter, "renderRichTextEditorArea");
+            const render = jest.spyOn(adapter, "renderHTMLOrTextEditor");
             renderer.render(state);
 
-            const { helper_button, preview_button } = render.mock.calls[0][0];
-            expect(helper_button).not.toBeDefined();
-            expect(preview_button).not.toBeDefined();
+            expect(render).toHaveBeenCalled();
         });
 
         describe(`when the state is in Markdown format`, () => {
             beforeEach(() => {
                 state.changeFormat(TEXT_FORMAT_COMMONMARK);
+                //Do not actually render
+                jest.spyOn(adapter, "renderMarkdownEditor").mockImplementation(emptyFunction);
             });
 
             it(`will create a Help button and a Preview/Edit button`, () => {
-                const render = jest.spyOn(adapter, "renderRichTextEditorArea");
+                const render = jest.spyOn(adapter, "renderMarkdownEditor");
                 renderer.render(state);
 
-                const { helper_button, preview_button } = render.mock.calls[0][0];
-                expect(helper_button).toBeDefined();
+                const { help_button, preview_button } = render.mock.calls[0][0];
+                expect(help_button).toBeDefined();
                 expect(preview_button).toBeDefined();
             });
 
             describe(`and the state is in Preview mode`, () => {
                 beforeEach(() => {
                     state.switchToPreviewMode();
+                });
+
+                it(`will hide the textarea and show a preview area`, () => {
+                    const createPreview = jest.spyOn(PreviewArea, "createPreviewArea");
+
+                    renderer.render(state);
+
+                    expect(createPreview).toHaveBeenCalled();
+                    expect(state.textarea.classList.contains("rte-hide-textarea")).toBe(true);
+                });
+
+                it(`will create a hidden input with the same name and value as the format selectbox
+                    so that users can submit the Artifact view form while previewing Markdown`, () => {
+                    const createHidden = jest.spyOn(FormatHiddenInput, "createFormatHiddenInput");
+
+                    renderer.render(state);
+
+                    expect(createHidden).toHaveBeenCalled();
                 });
 
                 it(`when I click on the Edit button, it will switch to Edit and re-render`, () => {
@@ -131,6 +152,14 @@ describe(`EditorAreaRenderer`, () => {
             describe(`and the state is in Edit mode`, () => {
                 beforeEach(() => {
                     state.switchToEditMode();
+                });
+
+                it(`will show the textarea`, () => {
+                    state.textarea.classList.add("rte-hide-textarea");
+
+                    renderer.render(state);
+
+                    expect(state.textarea.classList.contains("rte-hide-textarea")).toBe(false);
                 });
 
                 it(`when I click on the Preview button, it will switch to Preview and re-render`, () => {

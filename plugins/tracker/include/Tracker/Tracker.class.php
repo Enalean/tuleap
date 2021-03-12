@@ -1521,6 +1521,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->renderer->renderToPage(
             'masschange',
             new Tracker_Masschange_Presenter(
+                $this->getProject(),
                 $masschange_aids,
                 $this->fetchFormElementsMasschange(),
                 $this->displayRulesAsJavascript(),

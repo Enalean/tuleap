@@ -25,6 +25,7 @@ export interface EditorAreaStateInterface {
     readonly current_format: TextFieldFormat;
     readonly textarea: HTMLTextAreaElement;
     readonly mount_point: HTMLDivElement;
+    readonly rendered_html: Promise<string> | null;
 
     isInEditMode(): boolean;
     isCurrentFormatCommonMark(): boolean;

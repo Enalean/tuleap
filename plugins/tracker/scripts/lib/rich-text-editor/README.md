@@ -17,6 +17,15 @@ Also, make sure to include jQuery and CKEDITOR sources in PHP **before** loading
 
 ## Usage:
 
+### Prerequisites:
+
+A `<textarea>` element is needed. It is not created by this lib. The lib wraps it
+with a rich text editor with buttons and interactivity.
+
+The `<textarea>` MUST have a `[data-project-id]` attribute that contains the current
+project's id. It is necessary to be able to transform references like `art #123` into
+HTML links when pressing the "Preview" button in Markdown format.
+
 ### Without image upload:
 
 ```typescript
@@ -26,13 +35,25 @@ import type { TextFieldFormat } from "./fields-constants";
 
 const locale = "en_US"; // Retrieve the locale somehow
 
-// If you want to have the format selector with the editor, use:
-const factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale);
-// Or if the format selector is created by other means, use:
-const factory = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(document, locale);
-// Or for burning parrot, when the format selector is created by other means, use:
+// If you want to create the format selector, use:
+const factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(
+    document,
+    locale
+);
+// Or if the format selector (and the Preview and Help buttons)
+// are created by other means, use:
+const factory = RichTextEditorFactory.forFlamingParrotWithExistingFormatSelector(
+    document,
+    locale
+);
+// Or for burning parrot, when the format selector (and the Preview and Help buttons)
+// are created by other means, use:
 const default_format = "commonmark"; // Retrieve the default format somehow
-const factory = RichTextEditorFactory.forBurningParrotWithExistingFormatSelector(document, locale, default_format);
+const factory = RichTextEditorFactory.forBurningParrotWithExistingFormatSelector(
+    document,
+    locale,
+    default_format
+);
 
 options: RichTextEditorOptions = {
     format_selectbox_id: "format_id", // html "id" attribute for the Format selectbox
@@ -66,7 +87,13 @@ editor.destroy();
 
 ### With image upload:
 
-⚠️ Only use this in Tracker Artifact view (FlamingParrot). It is very specific to the form in Tracker Artifact view.
+#### Prerequisites
+
+In addition to `[data-project-id]`, the `<textarea>` element must also have other
+data-attributes. See `@tuleap/plugin-tracker-artifact-ckeditor-image-upload` for details.
+
+⚠️ Only use this in Tracker Artifact view (FlamingParrot). It is very specific
+to the `<form>` in Tracker Artifact view.
 
 Pass the exports from `@tuleap/plugin-tracker-artifact-ckeditor-image-upload` into the options for `rich-text-editor`.
 
@@ -74,10 +101,16 @@ Pass the exports from `@tuleap/plugin-tracker-artifact-ckeditor-image-upload` in
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { RichTextEditorOptions } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { TextFieldFormat } from "./fields-constants";
-import { UploadImageFormFactory, getUploadImageOptions } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
+import {
+    UploadImageFormFactory,
+    getUploadImageOptions
+} from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 
 const locale = "en_US"; // Retrieve the locale somehow
-const editor_factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, locale);
+const editor_factory = RichTextEditorFactory.forFlamingParrotWithFormatSelector(
+    document,
+    locale
+);
 const upload_factory = new UploadImageFormFactory(document, locale);
 
 const help_block = upload_factory.createHelpBlock(textarea);

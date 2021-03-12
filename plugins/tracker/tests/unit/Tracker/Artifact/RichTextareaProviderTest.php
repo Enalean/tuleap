@@ -26,14 +26,16 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use TemplateRendererFactory;
 use Tracker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Templating\TemplateCache;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class RichTextareaProviderTest extends TestCase
+final class RichTextareaProviderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
@@ -47,23 +49,12 @@ class RichTextareaProviderTest extends TestCase
      */
     private $provider;
     /**
-     * @var MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var MockInterface|PFUser
-     */
-    private $user;
-    /**
      * @var Mockery\LegacyMockInterface|MockInterface|FileUploadDataProvider
      */
     private $first_usable_field_data_getter;
 
     public function setUp(): void
     {
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->user    = Mockery::mock(PFUser::class);
-
         $this->first_usable_field_data_getter = Mockery::mock(FileUploadDataProvider::class);
 
         $template_cache = Mockery::mock(TemplateCache::class);
@@ -81,12 +72,13 @@ class RichTextareaProviderTest extends TestCase
 
     public function testItPassesArgumentsAsPresenterToTheTemplate(): void
     {
+        $tracker = $this->buildTracker(7);
         $this->first_usable_field_data_getter->shouldReceive('getFileUploadData')->andReturn([]);
 
         $textarea = $this->provider->getTextarea(
-            $this->tracker,
+            $tracker,
             null,
-            $this->user,
+            UserTestBuilder::aUser()->build(),
             'input-id',
             'input-name',
             8,
@@ -100,7 +92,7 @@ class RichTextareaProviderTest extends TestCase
                 ]
             ]
         );
-        $this->assertEquals(
+        self::assertEquals(
             <<<EOL
 <textarea
         id="input-id"
@@ -111,6 +103,7 @@ class RichTextareaProviderTest extends TestCase
         name="input-name"
         required
             data-artifact-id="123"
+            data-project-id="7"
         data-test="input-name"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
@@ -123,7 +116,8 @@ EOL
 
     public function testItIncludesUploadOptionsIfAFileFieldIsUpdatable(): void
     {
-        $field1 = Mockery::mock(FileUploadData::class);
+        $tracker = $this->buildTracker(7);
+        $field1  = Mockery::mock(FileUploadData::class);
         $field1->shouldReceive('getUploadUrl')->andReturn("/api/v1/tracker_fields/1002/files");
         $field1->shouldReceive('getUploadFileName')->andReturn("artifact[1002][][tus-uploaded-id]");
         $field1->shouldReceive('getUploadMaxSize')->andReturn(1024);
@@ -131,9 +125,9 @@ EOL
         $this->first_usable_field_data_getter->shouldReceive('getFileUploadData')->andReturn($field1);
 
         $textarea = $this->provider->getTextarea(
-            $this->tracker,
+            $tracker,
             null,
-            $this->user,
+            UserTestBuilder::aUser()->build(),
             'input-id',
             'input-name',
             8,
@@ -147,7 +141,7 @@ EOL
                 ]
             ]
         );
-        $this->assertEquals(
+        self::assertEquals(
             <<<EOL
 <textarea
         id="input-id"
@@ -161,6 +155,7 @@ EOL
             data-upload-max-size="1024"
             data-artifact-id="123"
             data-help-id="input-id-help"
+            data-project-id="7"
         data-test="input-name"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
@@ -169,5 +164,11 @@ EOL
             ,
             $textarea
         );
+    }
+
+    private function buildTracker(int $project_id): Tracker
+    {
+        $project = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        return TrackerTestBuilder::aTracker()->withProject($project)->build();
     }
 }

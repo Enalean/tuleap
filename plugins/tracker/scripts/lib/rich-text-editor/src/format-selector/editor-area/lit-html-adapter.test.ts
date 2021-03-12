@@ -19,7 +19,7 @@
 
 import type { GettextProvider } from "@tuleap/gettext";
 import { render, html } from "lit-html";
-import { renderRichTextEditorArea, wrapTextArea } from "./lit-html-adapter";
+import { renderHTMLOrTextEditor, renderMarkdownEditor, wrapTextArea } from "./lit-html-adapter";
 
 describe(`lit-html-adapter`, () => {
     let gettext_provider: GettextProvider, doc: Document, mount_point: HTMLDivElement;
@@ -40,8 +40,9 @@ describe(`lit-html-adapter`, () => {
         });
     });
 
-    describe(`renderRichTextEditorArea()`, () => {
-        it(`will wrap the controls in a div with .rte_format classname, before the textarea`, () => {
+    describe(`renderMarkdownEditor()`, () => {
+        it(`will wrap the controls in a div with .rte_format classname before the textarea
+            and will show the additional buttons / elements for Markdown`, () => {
             const selectbox = html`
                 <select></select>
             `;
@@ -54,13 +55,21 @@ describe(`lit-html-adapter`, () => {
             const textarea = html`
                 <textarea></textarea>
             `;
-            renderRichTextEditorArea(
+            const preview_area = html`
+                <div>Preview Area</div>
+            `;
+            const hidden_format_input = html`
+                <input type="hidden" />
+            `;
+            renderMarkdownEditor(
                 {
                     mount_point,
                     selectbox,
                     preview_button,
-                    helper_button: help_button,
+                    help_button,
                     textarea,
+                    preview_area,
+                    hidden_format_input,
                 },
                 gettext_provider
             );
@@ -71,9 +80,46 @@ describe(`lit-html-adapter`, () => {
                   <!---->
                   <select></select>
                   <!---->
+                  <input type="hidden">
+                  <!---->
                   <button>Preview</button>
                   <!---->
                   <button>Help</button>
+
+                </div>
+
+                <textarea></textarea>
+                <!---->
+                <div>Preview Area</div>
+
+                <!---->
+            `);
+        });
+    });
+
+    describe(`renderHTMLOrTextEditor()`, () => {
+        it(`will wrap the controls in a div with .rte_format classname, before the textarea`, () => {
+            const selectbox = html`
+                <select></select>
+            `;
+            const textarea = html`
+                <textarea></textarea>
+            `;
+
+            renderHTMLOrTextEditor(
+                {
+                    mount_point,
+                    selectbox,
+                    textarea,
+                },
+                gettext_provider
+            );
+            expect(mount_point.innerHTML).toMatchInlineSnapshot(`
+                <!---->
+                <div class="rte_format">
+                  Format:
+                  <!---->
+                  <select></select>
 
                 </div>
 

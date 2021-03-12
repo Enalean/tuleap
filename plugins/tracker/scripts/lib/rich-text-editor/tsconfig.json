@@ -1,7 +1,7 @@
 {
     "extends": "../../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["ES2015", "DOM", "DOM.Iterable"],
+        "lib": ["ES2015", "ES2017", "DOM", "DOM.Iterable"],
         "outDir": "types/",
         "types": ["ckeditor", "jest", "bootstrap"]
     },
