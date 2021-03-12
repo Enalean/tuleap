@@ -33,18 +33,18 @@ class CorrectFrsRepositoryPermissionsCommand extends Command
     public const NAME = 'frs:correct-repository-permissions';
 
     /**
-     * @var DirectoryIterator
+     * @var string
      */
-    private $directory;
+    private $directory_path;
 
     /**
      * @var ProjectManager
      */
     private $project_manager;
 
-    public function __construct(DirectoryIterator $directory, ProjectManager $project_manager)
+    public function __construct(string $directory_path, ProjectManager $project_manager)
     {
-        $this->directory       = $directory;
+        $this->directory_path  = $directory_path;
         $this->project_manager = $project_manager;
         parent::__construct(self::NAME);
     }
@@ -57,13 +57,14 @@ class CorrectFrsRepositoryPermissionsCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $count_changes = 0;
-        foreach ($this->directory as $file) {
+        $directory     = new DirectoryIterator($this->directory_path);
+        foreach ($directory as $file) {
             if ($file->isDot()) {
                 continue;
             }
 
             if ($file->getFilename() === 'DELETED' && $file->getGroup() !== 496) {
-                if (! chgrp($this->directory->getPath() . '/' . $file, 496)) {
+                if (! chgrp($directory->getPath() . '/' . $file, 496)) {
                     $output->writeln("<error>Wrong permissions of $file has not been changed.</error>");
                     continue;
                 }
@@ -74,7 +75,7 @@ class CorrectFrsRepositoryPermissionsCommand extends Command
             $project = $this->project_manager->getProjectByUnixName($file->getFilename());
 
             if ($project && $project->getUnixGID() !== $file->getGroup()) {
-                if (! chgrp($this->directory->getPath() . '/' . $file, $project->getUnixGID())) {
+                if (! chgrp($directory->getPath() . '/' . $file, $project->getUnixGID())) {
                     $output->writeln("<error>Wrong permissions of $file has not been changed.</error>");
                     continue;
                 }

@@ -233,7 +233,7 @@ $CLI_command_collector->addCommand(
     CorrectFrsRepositoryPermissionsCommand::NAME,
     function (): CorrectFrsRepositoryPermissionsCommand {
         return new CorrectFrsRepositoryPermissionsCommand(
-            new DirectoryIterator(ForgeConfig::get('ftp_frs_dir_prefix')),
+            ForgeConfig::get('ftp_frs_dir_prefix'),
             ProjectManager::instance()
         );
     }
