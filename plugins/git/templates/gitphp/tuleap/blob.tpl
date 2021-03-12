@@ -64,12 +64,14 @@
 >{$smarty.foreach.bloblines.iteration}</a>
 {/foreach}
 </div>
-                    <pre class="git-repository-blob-file-code"><!--
-                        --><div class="git-repository-highlight-line" id="git-repository-highlight-line"></div><!--
-                        --><code class="language-{$language}">{foreach from=$bloblines item=line name=bloblines}
+                    <tlp-syntax-highlight>
+                        <pre class="git-repository-blob-file-code"><!--
+                            --><div class="git-repository-highlight-line" id="git-repository-highlight-line"></div><!--
+                            --><code class="language-{$language}">{foreach from=$bloblines item=line name=bloblines}
 {$line|escape}
 {/foreach}</code><!--
-                    --></pre>
+                        --></pre>
+                    </tlp-syntax-highlight>
                 </div>
                 {/if}
             {/if}

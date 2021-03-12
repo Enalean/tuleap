@@ -117,10 +117,11 @@ class Codendi_HTMLPurifier
         $config = $this->getCodendiConfig();
 
         $config->set('HTML.DefinitionID', 'Tuleap custom definition');
-        $config->set('HTML.DefinitionRev', 1);
+        $config->set('HTML.DefinitionRev', 2);
         $definition = $config->maybeGetRawHTMLDefinition();
         if ($definition) {
             $definition->addElement('tlp-mermaid-diagram', 'Block', 'Optional: #PCDATA', 'Common', []);
+            $definition->addElement('tlp-syntax-highlighting', 'Block', 'Optional: pre', 'Common', []);
         }
 
         return $config;

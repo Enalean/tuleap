@@ -171,8 +171,8 @@ class EnhancedCodeBlockRendererTest extends TestCase
         self::assertEquals(
             <<<EXPECTED_HTML
             <p>See code below:</p>
-            <pre><code class="language-php">class Foo {}
-            </code></pre>
+            <tlp-syntax-highlighting><pre><code class="language-php">class Foo {}
+            </code></pre></tlp-syntax-highlighting>
             <tlp-mermaid-diagram>graph TD;
                 A--&gt;B;
                 A--&gt;C;

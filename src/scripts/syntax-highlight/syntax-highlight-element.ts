@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -154,6 +154,22 @@ import "prismjs/components/prism-hcl";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-cmake";
 
-document.addEventListener("DOMContentLoaded", () => {
-    Prism.highlightAll();
-});
+export class SyntaxHighlightElement extends HTMLElement {
+    public connectedCallback(): void {
+        const code_block = this.querySelector("code");
+        if (!code_block) {
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    Prism.highlightElement(code_block);
+                    observer.unobserve(this);
+                }
+            });
+        });
+
+        observer.observe(this);
+    }
+}

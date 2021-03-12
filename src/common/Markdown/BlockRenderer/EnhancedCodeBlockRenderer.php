@@ -68,6 +68,12 @@ final class EnhancedCodeBlockRenderer implements BlockRendererInterface
             }
 
             $this->code_block_features->needsSyntaxHighlight();
+
+            return new HtmlElement(
+                'tlp-syntax-highlighting',
+                [],
+                $this->fenced_code_renderer->render($block, $htmlRenderer, $inTightList)
+            );
         }
 
 
