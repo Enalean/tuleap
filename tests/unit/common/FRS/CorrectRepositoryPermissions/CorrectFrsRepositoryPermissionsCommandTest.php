@@ -74,7 +74,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
 
         $this->initFiles();
 
-        $this->directory       = new DirectoryIterator($this->base . '/tuleap/ftp/tuleap/');
+        $this->directory       = $this->base . '/tuleap/ftp/tuleap/';
         $this->correct_command = new CorrectFrsRepositoryPermissionsCommand(
             $this->directory,
             $this->project_manager
@@ -126,7 +126,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
         $command_tester->execute([]);
 
         $i = 1;
-        foreach ($this->directory as $file) {
+        foreach (new DirectoryIterator($this->directory) as $file) {
             if ($file->isDot() || $file->getFilename() === "DELETED") {
                 continue;
             }
@@ -157,7 +157,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
         $command_tester->execute([]);
 
         $i = 1;
-        foreach ($this->directory as $file) {
+        foreach (new DirectoryIterator($this->directory) as $file) {
             if ($file->isDot() || $file->getFilename() === "DELETED") {
                 continue;
             }
