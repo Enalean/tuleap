@@ -475,16 +475,16 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %description plugin-jira-import
 %{summary}.
 
-%endif
-
-%if %{with experimental}
-
 %package plugin-program_management
 Summary: Program Management
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
 %description plugin-program_management
 %{summary}.
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
@@ -580,11 +580,11 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/program_management
 %endif
 %if %{with experimental}
 %else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/program_management
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -840,13 +840,15 @@ done
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
 
-%endif
-
-%if %{with experimental}
 # Plugin program_management
 %{__install} plugins/program_management/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
+
+%endif
+
+%if %{with experimental}
+
 %endif
 
 # Symlink for compatibility with older version
@@ -1457,16 +1459,16 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/jira_import
 
-%endif
-
-%if %{with experimental}
-
 %files plugin-program_management
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/program_management
 %{APP_DIR}/src/www/assets/program_management
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_program_management
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_program_management
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
