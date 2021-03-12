@@ -18,11 +18,15 @@
  */
 
 import { SyntaxHighlightElement } from "./syntax-highlight-element";
-import Prism from "prismjs";
+const syntaxHighlightElement = jest.fn();
+jest.mock("./prism", () => {
+    return {
+        syntaxHighlightElement,
+    };
+});
 
 describe("SyntaxHighlightElement", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
-    let highlightElement: jest.SpyInstance;
 
     function createSyntaxHighlightElement(): SyntaxHighlightElement {
         const doc = document.implementation.createHTMLDocument();
@@ -32,14 +36,14 @@ describe("SyntaxHighlightElement", () => {
             <pre><code class="language-php">class Foo {}</code></pre>
         </tlp-syntax-highlighting>`;
 
-        const mermaid_diagram = container.querySelector("tlp-syntax-highlighting");
-        if (!(mermaid_diagram instanceof SyntaxHighlightElement)) {
+        const code_block = container.querySelector("tlp-syntax-highlighting");
+        if (!(code_block instanceof SyntaxHighlightElement)) {
             throw Error("Unable to find just created element");
         }
 
         doc.body.appendChild(container);
 
-        return mermaid_diagram;
+        return code_block;
     }
 
     beforeAll(() => {
@@ -47,7 +51,7 @@ describe("SyntaxHighlightElement", () => {
     });
 
     beforeEach(() => {
-        highlightElement = jest.spyOn(Prism, "highlightElement");
+        syntaxHighlightElement.mockReset();
     });
 
     afterEach(() => {
@@ -65,10 +69,10 @@ describe("SyntaxHighlightElement", () => {
         createSyntaxHighlightElement();
 
         expect(observe).toHaveBeenCalled();
-        expect(highlightElement).not.toHaveBeenCalled();
+        expect(syntaxHighlightElement).not.toHaveBeenCalled();
     });
 
-    it("Syntax highlight the code block (and stops observing) whenever the block enters the viewport", () => {
+    it("Syntax highlight the code block (and stops observing) whenever the block enters the viewport", async (): Promise<void> => {
         const observe = (): void => {
             // mocking observe
         };
@@ -83,9 +87,9 @@ describe("SyntaxHighlightElement", () => {
         const mermaid_diagram = createSyntaxHighlightElement();
 
         const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
-        expect(highlightElement).toHaveBeenCalled();
+        expect(syntaxHighlightElement).toHaveBeenCalled();
         expect(unobserve).toHaveBeenCalled();
     });
 });
