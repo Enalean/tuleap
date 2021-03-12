@@ -93,4 +93,12 @@ class Svnlook
 
         return popen("$this->svnlook cat -t $transaction $repository_path $filename", 'rb');
     }
+
+    /**
+     * @param resource $resource
+     */
+    public function closeContentResource($resource): void
+    {
+        pclose($resource);
+    }
 }

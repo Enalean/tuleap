@@ -26,7 +26,6 @@ use Project;
 use ProjectManager;
 use System_Command;
 use SystemEvent;
-use SystemEventManager;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Repository\Destructor;
@@ -99,7 +98,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
         return new RepositoryManager(
             new Dao(),
             ProjectManager::instance(),
-            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
+            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instanceSVN()),
             \SvnPlugin::getLogger(),
             new System_Command(),
             new Destructor(
@@ -107,9 +106,8 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
                 \SvnPlugin::getLogger()
             ),
             EventManager::instance(),
-            Backend::instance(Backend::SVN),
+            Backend::instanceSVN(),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance()
         );
     }
 }

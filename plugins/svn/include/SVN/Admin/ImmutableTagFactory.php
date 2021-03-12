@@ -39,10 +39,7 @@ class ImmutableTagFactory
         $this->dao = $dao;
     }
 
-    /**
-     * @return ImmutableTag
-     */
-    public function getByRepositoryId(Repository $repository)
+    public function getByRepositoryId(Repository $repository): ImmutableTag
     {
         $row = $this->dao->searchByRepositoryId($repository->getId());
         if (! $row) {
@@ -52,30 +49,17 @@ class ImmutableTagFactory
         return $this->instantiateFromRow($repository, $row);
     }
 
-    /**
-     * @return ImmutableTag
-     */
-    public function getEmpty(Repository $repository)
+    public function getEmpty(Repository $repository): ImmutableTag
     {
         return $this->instantiateEmptyImmutableTag($repository);
     }
 
-    /**
-     * @return ImmutableTag
-     */
-    private function instantiateEmptyImmutableTag($repository)
+    private function instantiateEmptyImmutableTag(Repository $repository): ImmutableTag
     {
-        return new ImmutableTag(
-            $repository,
-            "",
-            ""
-        );
+        return ImmutableTag::buildEmptyImmutableTag($repository);
     }
 
-    /**
-     * @return ImmutableTag
-     */
-    private function instantiateFromRow(Repository $repository, array $row)
+    private function instantiateFromRow(Repository $repository, array $row): ImmutableTag
     {
         return new ImmutableTag(
             $repository,
@@ -84,13 +68,10 @@ class ImmutableTagFactory
         );
     }
 
-    /**
-     * @return ImmutableTag
-     */
     public function getFromRESTRepresentation(
         Repository $repository,
         ImmutableTagRepresentation $immutable_tag_representation
-    ) {
+    ): ImmutableTag {
         $row = [];
 
         $row['paths']     = implode(PHP_EOL, $immutable_tag_representation->paths);

@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Backend;
+use BackendSVN;
 use EventManager;
 use Exception;
 use ForgeConfig;
@@ -58,7 +58,7 @@ class RepositoryManager
     private $destructor;
     /** @var EventManager */
     private $event_manager;
-    /** @var Backend */
+    /** @var BackendSVN */
     private $backend;
     /** @var AccessFileHistoryFactory */
     private $access_file_history_factory;
@@ -71,7 +71,7 @@ class RepositoryManager
         System_Command $system_command,
         Destructor $destructor,
         EventManager $event_manager,
-        Backend $backend,
+        BackendSVN $backend,
         AccessFileHistoryFactory $access_file_history_factory
     ) {
         $this->dao                         = $dao;

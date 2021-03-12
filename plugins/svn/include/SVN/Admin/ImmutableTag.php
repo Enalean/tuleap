@@ -35,6 +35,11 @@ class ImmutableTag
         $this->whitelist  = $whitelist;
     }
 
+    public static function buildEmptyImmutableTag(Repository $repository): self
+    {
+        return new self($repository, '', '');
+    }
+
     public function getRepository()
     {
         return $this->repository;

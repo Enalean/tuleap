@@ -24,7 +24,6 @@
 
 namespace Tuleap\SVN\Commit;
 
-use Exception;
 use ForgeConfig;
 use ReferenceManager;
 use Tuleap\SVN\Repository\HookConfig;
@@ -59,25 +58,32 @@ class CommitMessageValidator
     }
 
     /**
-     * @throws Exception
+     * @throws EmptyCommitMessageException
+     * @throws CommitMessageWithoutReferenceException
      */
-    public function assertCommitMessageIsValid()
+    public function assertCommitMessageIsValid(): void
     {
         $this->assertCommitMessageIsNotEmpty();
         $this->assertCommitMessageContainsArtifactReference();
     }
 
-    private function assertCommitMessageIsNotEmpty()
+    /**
+     * @throws EmptyCommitMessageException
+     */
+    private function assertCommitMessageIsNotEmpty(): void
     {
         if (ForgeConfig::get('sys_allow_empty_svn_commit_message')) {
             return;
         }
         if ($this->commit_message === "") {
-            throw new Exception('Commit message must not be empty');
+            throw new EmptyCommitMessageException();
         }
     }
 
-    private function assertCommitMessageContainsArtifactReference()
+    /**
+     * @throws CommitMessageWithoutReferenceException
+     */
+    private function assertCommitMessageContainsArtifactReference(): void
     {
         $hook_config = $this->hook_config_retriever->getHookConfig($this->repository);
         if (! $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)) {
@@ -86,7 +92,7 @@ class CommitMessageValidator
 
         $project = $this->repository->getProject();
         if (! $this->reference_manager->stringContainsReferences($this->commit_message, $project)) {
-            throw new Exception('Commit message must contains a reference');
+            throw new CommitMessageWithoutReferenceException();
         }
     }
 }
