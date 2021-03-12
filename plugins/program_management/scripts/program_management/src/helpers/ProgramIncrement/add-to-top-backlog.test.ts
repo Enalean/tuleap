@@ -17,24 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp";
+import * as tlp from "tlp";
+import { addElementToTopBackLog } from "./add-to-top-backlog";
 
-export interface ProgramIncrement {
-    id: number;
-    title: string;
-    status: string;
-    start_date: string | null;
-    end_date: string | null;
-    user_can_update: boolean;
-    user_can_plan: boolean;
-    artifact_link_field_id: number | null;
-}
+jest.mock("tlp");
 
-export function getProgramIncrements(program_id: number): Promise<ProgramIncrement[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/program_increments`, {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
+describe("Add to top backlog", () => {
+    it("Add element to top backlog", async () => {
+        const tlpPatch = jest.spyOn(tlp, "patch");
+        await addElementToTopBackLog(101, 1);
+
+        expect(tlpPatch).toHaveBeenCalledWith(`/api/projects/101/program_backlog`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                add: [{ id: 1 }],
+                remove: [],
+            }),
+        });
     });
-}
+});

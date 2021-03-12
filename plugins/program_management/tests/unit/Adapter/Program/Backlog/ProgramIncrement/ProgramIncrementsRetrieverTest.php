@@ -75,6 +75,7 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         $artifact_15 = Mockery::mock(Artifact::class);
         $artifact_15->shouldReceive('getId')->andReturn(15);
         $artifact_15->shouldReceive('userCanUpdate')->andReturnFalse();
+        $artifact_15->shouldReceive('getAnArtifactLinkField')->andReturnNull();
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 14)->andReturn($artifact_14);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 15)->andReturn($artifact_15);
 

@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <div class="element-card" v-bind:class="additional_classnames" draggable="true">
+    <div
+        class="element-card"
+        v-bind:class="additional_classnames"
+        draggable="true"
+        v-bind:data-element-id="element.artifact_id"
+    >
         <div class="element-card-content">
             <div class="element-card-xref-label">
                 <a

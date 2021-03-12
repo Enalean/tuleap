@@ -27,7 +27,7 @@
         />
         <h1 class="program-management-title-header" v-translate>Backlog</h1>
         <div class="program-backlog" data-test="backlog-section">
-            <to-be-planned class="to-be-planned" data-is-container="true" />
+            <to-be-planned class="to-be-planned" />
             <div class="planning-divider">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="46">
                     <path
@@ -52,12 +52,17 @@ import {
     projectPrivacy,
     projectFlags,
     canCreateProgramIncrement,
+    programId,
 } from "../configuration";
 import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
 import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 import { init } from "@tuleap/drag-and-drop";
-import type { Drekkenov, PossibleDropCallbackParameter } from "@tuleap/drag-and-drop";
+import type {
+    Drekkenov,
+    PossibleDropCallbackParameter,
+    SuccessfulDropCallbackParameter,
+} from "@tuleap/drag-and-drop";
 import {
     canMove,
     invalid,
@@ -65,6 +70,7 @@ import {
     isContainer,
     checkAcceptsDrop,
     checkAfterDrag,
+    handleDrop,
 } from "../helpers/drag-drop";
 
 @Component({
@@ -72,6 +78,8 @@ import {
 })
 export default class App extends Vue {
     private drek!: Drekkenov | undefined;
+    private error_message = "";
+    private has_error = false;
 
     beforeDestroy(): void {
         if (this.drek) {
@@ -97,8 +105,9 @@ export default class App extends Vue {
                     target_cell: context.target_dropzone,
                 });
             },
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onDrop: (): void => {},
+            onDrop: (context: SuccessfulDropCallbackParameter): void => {
+                handleDrop(context, programId(), location);
+            },
             cleanupAfterDragCallback: (): void => {
                 return checkAfterDrag();
             },

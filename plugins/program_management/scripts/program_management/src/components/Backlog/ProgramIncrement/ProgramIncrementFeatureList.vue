@@ -23,6 +23,9 @@
         data-is-container="true"
         v-bind:data-can-plan="doesIncrementAcceptPlannableItems()"
         data-test="program-increment-feature-list"
+        v-bind:data-program-increment-id="increment.id"
+        v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"
+        v-bind:data-artifact-link-field-id="getProgramIncrementArtifactLinkField()"
     >
         <to-be-planned-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
 
@@ -39,6 +42,9 @@
             v-bind:key="element.artifact_id"
             v-bind:element="element"
             data-test="to-be-planned-elements"
+            v-bind:data-program-increment-id="increment.id"
+            v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"
+            v-bind:data-artifact-link-field-id="getProgramIncrementArtifactLinkField()"
         />
 
         <div
@@ -62,6 +68,7 @@ import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-
 import { getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
+import { artifactLinkId } from "../../../configuration";
 
 @Component({
     components: {
@@ -101,6 +108,18 @@ export default class ProgramIncrementFeatureList extends Vue {
 
     public doesIncrementAcceptPlannableItems(): boolean {
         return this.increment.user_can_plan;
+    }
+
+    public getProgramIncrementArtifactLinkField(): number | null {
+        return artifactLinkId();
+    }
+
+    public getFeaturesAlreadyLinked(): string {
+        return this.features
+            .map((feature) => {
+                return feature.artifact_id;
+            })
+            .toString();
     }
 }
 </script>

@@ -19,6 +19,12 @@
 
 import * as drag_drop from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
+import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
+import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
+import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
+import * as tlp from "tlp";
+
+jest.mock("tlp");
 
 describe(`drag-drop helper`, () => {
     describe(`isContainer()`, () => {
@@ -118,6 +124,65 @@ describe(`drag-drop helper`, () => {
             expect(drag_drop.checkAcceptsDrop({ dropped_card, target_cell, source_cell })).toBe(
                 true
             );
+        });
+    });
+
+    describe(`handleDrop()`, () => {
+        it(`Plan elements`, () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "14");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+            target_dropzone.setAttribute("data-program-increment-id", "1");
+            target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
+            target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
+
+            const feature_planner = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
+            jest.spyOn(tlp, "put");
+
+            const location = { ...window.location, reload: jest.fn() };
+
+            drag_drop.handleDrop(
+                {
+                    dropped_element,
+                    source_dropzone,
+                    target_dropzone,
+                } as SuccessfulDropCallbackParameter,
+                101,
+                location
+            );
+            expect(feature_planner).toHaveBeenCalledWith(1, 1234, [
+                { id: 14 },
+                { id: 12 },
+                { id: 13 },
+            ]);
+        });
+
+        it(`Removes elements from program increment`, () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "12");
+            dropped_element.setAttribute("data-program-increment-id", "1");
+            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
+            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+
+            const feature_planner = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
+            jest.spyOn(backlogAdder, "addElementToTopBackLog");
+            jest.spyOn(tlp, "put");
+
+            const location = { ...window.location, reload: jest.fn() };
+
+            drag_drop.handleDrop(
+                {
+                    dropped_element,
+                    source_dropzone,
+                    target_dropzone,
+                } as SuccessfulDropCallbackParameter,
+                101,
+                location
+            );
+            expect(feature_planner).toHaveBeenCalledWith(1, 1234, [{ id: 13 }]);
         });
     });
 });

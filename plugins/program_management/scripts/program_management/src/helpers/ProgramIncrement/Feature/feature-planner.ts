@@ -17,24 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp";
+import { put } from "tlp";
+import type { FeatureToPlan } from "../../drag-drop";
 
-export interface ProgramIncrement {
-    id: number;
-    title: string;
-    status: string;
-    start_date: string | null;
-    end_date: string | null;
-    user_can_update: boolean;
-    user_can_plan: boolean;
-    artifact_link_field_id: number | null;
-}
-
-export function getProgramIncrements(program_id: number): Promise<ProgramIncrement[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/program_increments`, {
-        params: {
-            limit: 50,
-            offset: 0,
+export async function planElementInProgramIncrement(
+    feature_id: number,
+    feature_artifact_link_id: number,
+    element_to_plan: Array<FeatureToPlan>
+): Promise<void> {
+    await put(`/api/v1/artifacts/${encodeURIComponent(feature_id)}`, {
+        headers: {
+            "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+            values: [{ field_id: feature_artifact_link_id, links: element_to_plan }],
+            comment: { body: "", format: "text" },
+        }),
     });
 }

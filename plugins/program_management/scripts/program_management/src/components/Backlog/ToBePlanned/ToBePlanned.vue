@@ -18,18 +18,21 @@
   -->
 
 <template>
-    <div data-is-container="true" data-can-plan="true">
+    <div>
         <h2 v-translate class="program-to-be-planned-title">To Be Planned</h2>
-        <empty-state
-            v-if="to_be_planned_elements.length === 0 && !is_loading && !has_error"
-            data-test="empty-state"
-        />
-        <element-card
-            v-for="element in to_be_planned_elements"
-            v-bind:key="element.artifact_id"
-            v-bind:element="element"
-            data-test="to-be-planned-elements"
-        />
+        <div data-is-container="true" data-can-plan="true">
+            <empty-state
+                v-if="to_be_planned_elements.length === 0 && !is_loading && !has_error"
+                data-test="empty-state"
+            />
+
+            <element-card
+                v-for="element in to_be_planned_elements"
+                v-bind:key="element.artifact_id"
+                v-bind:element="element"
+                data-test="to-be-planned-elements"
+            />
+        </div>
 
         <div
             id="to-be-planned-backlog-error"

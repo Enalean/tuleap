@@ -36,6 +36,7 @@ describe("Tracker reports retriever", () => {
                 id: 1,
                 user_can_update: true,
                 user_can_plan: true,
+                artifact_link_field_id: 1,
             },
             {
                 title: "PI 2",
@@ -45,6 +46,7 @@ describe("Tracker reports retriever", () => {
                 id: 2,
                 user_can_update: true,
                 user_can_plan: true,
+                artifact_link_field_id: 1,
             },
         ];
 

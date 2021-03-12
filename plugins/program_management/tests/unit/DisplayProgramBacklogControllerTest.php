@@ -163,7 +163,8 @@ final class DisplayProgramBacklogControllerTest extends TestCase
         $this->configuration_builder->shouldReceive('build')->andReturn(
             new ProgramIncrementTrackerConfiguration(
                 $project->getId(),
-                true
+                true,
+                10
             )
         );
 

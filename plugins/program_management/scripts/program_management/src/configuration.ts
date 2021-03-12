@@ -28,6 +28,7 @@ let user_with_accessibility_mode: boolean;
 let locale: string;
 let does_user_can_create_increments: boolean;
 let tracker_program_incrment_id: number;
+let artifact_link_id: number | null;
 
 export function build(
     public_name: string,
@@ -38,7 +39,8 @@ export function build(
     accessibility: boolean,
     user_locale: string,
     can_create_program_increment: boolean,
-    program_increment_id: number
+    program_increment_id: number,
+    program_increment_artifact_link_id: number | null
 ): void {
     project_public_name = public_name;
     project_short_name = short_name;
@@ -49,6 +51,7 @@ export function build(
     locale = user_locale;
     does_user_can_create_increments = can_create_program_increment;
     tracker_program_incrment_id = program_increment_id;
+    artifact_link_id = program_increment_artifact_link_id;
 }
 
 export function getProjectPublicName(): string {
@@ -85,4 +88,8 @@ export function canCreateProgramIncrement(): boolean {
 
 export function programIncrementId(): number {
     return tracker_program_incrment_id;
+}
+
+export function artifactLinkId(): number | null {
+    return artifact_link_id;
 }
