@@ -54,9 +54,9 @@ export interface DrekkenovInitOptions {
     isInvalidDragHandle: HTMLElementPredicate;
     isConsideredInDropzone: HTMLElementPredicate;
     doesDropzoneAcceptDraggable: PossibleDropPredicate;
-    onDragStart: DragHandlerCallback;
-    onDragEnter: PossibleDropHandlerCallback;
-    onDragLeave: DragDropHandlerCallback;
+    onDragStart?: DragHandlerCallback;
+    onDragEnter?: PossibleDropHandlerCallback;
+    onDragLeave?: DragDropHandlerCallback;
     onDrop: SuccessfulDropHandlerCallback;
     cleanupAfterDragCallback(): void;
 }

@@ -98,12 +98,6 @@ export default class App extends Vue {
                 });
             },
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onDragStart: (): void => {},
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onDragEnter: (): void => {},
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onDragLeave: (): void => {},
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
             onDrop: (): void => {},
             cleanupAfterDragCallback: (): void => {
                 return checkAfterDrag();

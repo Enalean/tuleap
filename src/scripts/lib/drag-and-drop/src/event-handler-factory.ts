@@ -68,7 +68,9 @@ export function dragStartFactory(
         event.dataTransfer.effectAllowed = "move";
 
         const context = { dragged_element: closest_draggable };
-        options.onDragStart(context);
+        if (options.onDragStart) {
+            options.onDragStart(context);
+        }
     };
 }
 
@@ -105,7 +107,9 @@ function dragEnterFactory(
         event.preventDefault();
 
         drop_ghost.update(closest_dropzone, options, event.clientY);
-        options.onDragEnter(context);
+        if (options.onDragEnter) {
+            options.onDragEnter(context);
+        }
     };
 }
 
@@ -126,7 +130,10 @@ function dragLeaveFactory(
             dragged_element: ongoing_drag.dragged_element,
             target_dropzone: closest_dropzone,
         };
-        options.onDragLeave(context);
+
+        if (options.onDragLeave) {
+            options.onDragLeave(context);
+        }
     };
 }
 
