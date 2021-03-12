@@ -135,6 +135,15 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
     }
 
+    public function getValueForMail(): string
+    {
+        if ($this->format === self::COMMONMARK_CONTENT) {
+            return $this->interpretMarkdownContentForMail($this->getText());
+        }
+
+        return $this->getValue();
+    }
+
     /**
      * Get the diff between this changeset value and the one passed in param
      *
@@ -285,11 +294,19 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             CodeBlockFeaturesOnArtifact::getInstance()
         );
 
-        $interpreted_content_with_references = $content_interpreter->getInterpretedContentWithReferences(
+        return $content_interpreter->getInterpretedContentWithReferences(
             $text,
             (int) $this->changeset->getTracker()->getGroupId()
         );
+    }
 
-        return $interpreted_content_with_references;
+    private function interpretMarkdownContentForMail(string $text): string
+    {
+        $content_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+
+        return $content_interpreter->getInterpretedContentWithReferences(
+            $text,
+            (int) $this->changeset->getTracker()->getGroupId()
+        );
     }
 }
