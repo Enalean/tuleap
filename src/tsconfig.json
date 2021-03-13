@@ -8,6 +8,7 @@
         "scripts/account/**/*",
         "scripts/browser-deprecation/**/*",
         "scripts/mermaid/**/*",
+        "scripts/syntax-highlight/**/*",
         "scripts/platform/banner/admin/**/*",
         "scripts/project/admin/banner/**/*",
         "scripts/project/admin/header-background/**/*",
