@@ -130,12 +130,12 @@ class EnhancedCodeBlockRendererTest extends TestCase
             <p>See code below:</p>
             <pre><code>class Foo {}
             </code></pre>
-            <tlp-mermaid-diagram>graph TD;
+            <tlp-mermaid-diagram><pre><code class="language-mermaid">graph TD;
                 A--&gt;B;
                 A--&gt;C;
                 B--&gt;D;
                 C--&gt;D;
-            </tlp-mermaid-diagram>\n
+            </code></pre></tlp-mermaid-diagram>\n
             EXPECTED_HTML,
             $result
         );
@@ -173,12 +173,12 @@ class EnhancedCodeBlockRendererTest extends TestCase
             <p>See code below:</p>
             <tlp-syntax-highlighting><pre><code class="language-php">class Foo {}
             </code></pre></tlp-syntax-highlighting>
-            <tlp-mermaid-diagram>graph TD;
+            <tlp-mermaid-diagram><pre><code class="language-mermaid">graph TD;
                 A--&gt;B;
                 A--&gt;C;
                 B--&gt;D;
                 C--&gt;D;
-            </tlp-mermaid-diagram>\n
+            </code></pre></tlp-mermaid-diagram>\n
             EXPECTED_HTML,
             $result
         );

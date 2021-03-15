@@ -37,11 +37,11 @@ describe("MermaidDiagramElement", () => {
         const doc = document.implementation.createHTMLDocument();
         const container = document.createElement("div");
 
-        container.innerHTML = `<tlp-mermaid-diagram>
+        container.innerHTML = `<tlp-mermaid-diagram><pre><code class="language-mermaid">
             classDiagram
                 class Animal
                 Vehicle <|-- Car
-        </tlp-mermaid-diagram>`;
+        </code></pre></tlp-mermaid-diagram>`;
 
         const mermaid_diagram = container.querySelector("tlp-mermaid-diagram");
         if (!(mermaid_diagram instanceof MermaidDiagramElement)) {

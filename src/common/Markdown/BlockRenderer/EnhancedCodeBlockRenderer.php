@@ -28,7 +28,6 @@ use League\CommonMark\Block\Renderer\BlockRendererInterface;
 use League\CommonMark\Block\Renderer\FencedCodeRenderer;
 use League\CommonMark\ElementRendererInterface;
 use League\CommonMark\HtmlElement;
-use League\CommonMark\Util\Xml;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
 final class EnhancedCodeBlockRenderer implements BlockRendererInterface
@@ -57,26 +56,22 @@ final class EnhancedCodeBlockRenderer implements BlockRendererInterface
             throw new \InvalidArgumentException('Incompatible block type: ' . \get_class($block));
         }
 
-        $attrs = $block->getData('attributes', []);
+        $code_block = $this->fenced_code_renderer->render($block, $htmlRenderer, $inTightList);
 
         $infoWords = $block->getInfoWords();
         if (\count($infoWords) !== 0 && \strlen($infoWords[0]) !== 0) {
             if ($infoWords[0] === 'mermaid') {
                 $this->code_block_features->needsMermaid();
 
-                return new HtmlElement('tlp-mermaid-diagram', $attrs, Xml::escape($block->getStringContent()));
+                return new HtmlElement('tlp-mermaid-diagram', [], $code_block);
             }
 
             $this->code_block_features->needsSyntaxHighlight();
 
-            return new HtmlElement(
-                'tlp-syntax-highlighting',
-                [],
-                $this->fenced_code_renderer->render($block, $htmlRenderer, $inTightList)
-            );
+            return new HtmlElement('tlp-syntax-highlighting', [], $code_block);
         }
 
 
-        return $this->fenced_code_renderer->render($block, $htmlRenderer, $inTightList);
+        return $code_block;
     }
 }

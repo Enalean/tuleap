@@ -174,24 +174,6 @@ class Tracker_Artifact_Changeset_Comment
         return $this->purifyBody($level);
     }
 
-    public function getPurifiedBodyForHTMLInMailContext(): string
-    {
-        if ($this->bodyFormat === self::HTML_COMMENT) {
-            return $this->purifyHTMLBody();
-        }
-        if ($this->bodyFormat === self::COMMONMARK_COMMENT) {
-            $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
-
-            return $content_interpretor->getInterpretedContentWithReferences(
-                $this->body,
-                (int) $this->changeset->getTracker()->getGroupId()
-            );
-        }
-
-        $level = self::$PURIFIER_LEVEL_IN_HTML[$this->bodyFormat];
-        return $this->purifyBody($level);
-    }
-
     private function purifyBody($level): string
     {
         return $this->getPurifier()->purify(
@@ -344,7 +326,7 @@ class Tracker_Artifact_Changeset_Comment
                 if ($this->parent_id) {
                     $comment .= "<em>" . dgettext('tuleap-tracker', "Updated comment:") . "</em><br><br>";
                 }
-                $comment .= $this->getPurifiedBodyForHTMLInMailContext();
+                $comment .= $this->getPurifiedBodyForHTML();
             }
 
             $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">' . $comment . '</div>';
