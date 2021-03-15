@@ -97,6 +97,7 @@ function initProjectMembersSelect2() {
 
     autocomplete_users_for_select2(select_element, {
         internal_users_only: false,
+        use_tuleap_id: true,
         project_id: select_element.dataset.projectId,
     });
 }

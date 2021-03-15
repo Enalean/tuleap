@@ -43,10 +43,16 @@ export function autocomplete_projects_for_select2(element, options = {}) {
     select2(element, options);
 }
 
-const convertUsersToSelect2Entry = ({ tuleap_user_id, text }) => ({
-    id: tuleap_user_id,
-    text: text,
-});
+function convertUsersToSelect2Entry({ tuleap_user_id, text, id }) {
+    let user = tuleap_user_id;
+    if (!user) {
+        user = id;
+    }
+    return {
+        id: user,
+        text: text,
+    };
+}
 
 export function autocomplete_users_for_select2(element, options = {}) {
     options.use_tuleap_id = options.use_tuleap_id || false;

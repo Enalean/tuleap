@@ -414,7 +414,11 @@ class LdapPlugin extends Plugin
     public function user_manager_find_user($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLDAPUserManagementEnabled()) {
-            $ldap = $this->getLdap();
+            $ldap           = $this->getLdap();
+            $params["user"] = $this->getUserManager()->getUserById((int) $params["ident"]);
+            if ($params["user"] !== null) {
+                return;
+            }
             // First, test if its provided by autocompleter: "Common Name (login name)"
             $matches = [];
             if (preg_match('/^(.*) \((.*)\)$/', $params['ident'], $matches)) {
@@ -1406,5 +1410,10 @@ class LdapPlugin extends Plugin
             return 'LDAP';
         }
         return (string) $params['server_common_name'];
+    }
+
+    private function getUserManager(): UserManager
+    {
+        return UserManager::instance();
     }
 }
