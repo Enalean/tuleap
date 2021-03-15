@@ -36,6 +36,11 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_FormElementFactory
+     */
+    private $tracker_form_element_factory;
+
+    /**
      * @var ProgramIncrementTrackerConfigurationBuilder
      */
     private $configuration_builder;
@@ -47,10 +52,12 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->plan_builder = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
+        $this->plan_builder                 = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
+        $this->tracker_form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
 
         $this->configuration_builder = new ProgramIncrementTrackerConfigurationBuilder(
-            $this->plan_builder
+            $this->plan_builder,
+            $this->tracker_form_element_factory
         );
     }
 
@@ -62,9 +69,24 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
         $this->plan_builder->shouldReceive('buildTrackerProgramIncrementFromProjectId')
             ->andReturn($program_tracker);
 
+        $field = new \Tracker_FormElement_Field_ArtifactLink(
+            1,
+            101,
+            null,
+            "artlink",
+            "artlink",
+            "",
+            true,
+            "P",
+            false,
+            false,
+            10
+        );
+        $this->tracker_form_element_factory->shouldReceive('getAnArtifactLinkField')->andReturn($field);
+
         $user                   = UserTestBuilder::aUser()->build();
         $project                = new Program(101);
-        $expected_configuration = new ProgramIncrementTrackerConfiguration($project->getId(), false);
+        $expected_configuration = new ProgramIncrementTrackerConfiguration($project->getId(), false, $field->getId());
 
         self::assertEquals($expected_configuration, $this->configuration_builder->build($user, $project));
     }

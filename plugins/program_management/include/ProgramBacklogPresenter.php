@@ -62,6 +62,10 @@ final class ProgramBacklogPresenter
      * @var int
      */
     public $program_increment_tracker_id;
+    /**
+     * @var int | null
+     */
+    public $program_increment_artifact_link_id;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -71,18 +75,20 @@ final class ProgramBacklogPresenter
         array $project_flags,
         bool $user_has_accessibility_mode,
         bool $can_create_program_increment,
-        int $program_increment_tracker_id
+        int $program_increment_tracker_id,
+        ?int $program_increment_artifact_link_id
     ) {
-        $this->project_name                 = $project->getPublicName();
-        $this->project_short_name           = $project->getUnixNameLowerCase();
-        $this->project_privacy              = json_encode(
+        $this->project_name                       = $project->getPublicName();
+        $this->project_short_name                 = $project->getUnixNameLowerCase();
+        $this->project_privacy                    = json_encode(
             ProjectPrivacyPresenter::fromProject($project),
             JSON_THROW_ON_ERROR
         );
-        $this->project_flags                = json_encode($project_flags, JSON_THROW_ON_ERROR);
-        $this->program_id                   = (int) $project->getID();
-        $this->user_has_accessibility_mode  = $user_has_accessibility_mode;
-        $this->can_create_program_increment = $can_create_program_increment;
-        $this->program_increment_tracker_id = $program_increment_tracker_id;
+        $this->project_flags                      = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->program_id                         = (int) $project->getID();
+        $this->user_has_accessibility_mode        = $user_has_accessibility_mode;
+        $this->can_create_program_increment       = $can_create_program_increment;
+        $this->program_increment_tracker_id       = $program_increment_tracker_id;
+        $this->program_increment_artifact_link_id = $program_increment_artifact_link_id;
     }
 }

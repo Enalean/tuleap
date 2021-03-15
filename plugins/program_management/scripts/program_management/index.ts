@@ -71,6 +71,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         10
     );
 
+    let program_increment_artifact_link_id = null;
+    if (vue_mount_point.dataset.programIncrementArtifactLinkId) {
+        program_increment_artifact_link_id = parseInt(
+            vue_mount_point.dataset.programIncrementArtifactLinkId,
+            10
+        );
+    }
+
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
 
@@ -83,7 +91,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         accessibility,
         locale.replace("_", "-"),
         can_create_program_increment,
-        program_increment_tracker_id
+        program_increment_tracker_id,
+        program_increment_artifact_link_id
     );
 
     await initVueGettext(

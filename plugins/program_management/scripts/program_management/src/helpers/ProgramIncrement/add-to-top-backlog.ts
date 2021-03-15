@@ -17,24 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp";
+import { patch } from "tlp";
 
-export interface ProgramIncrement {
-    id: number;
-    title: string;
-    status: string;
-    start_date: string | null;
-    end_date: string | null;
-    user_can_update: boolean;
-    user_can_plan: boolean;
-    artifact_link_field_id: number | null;
-}
-
-export function getProgramIncrements(program_id: number): Promise<ProgramIncrement[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/program_increments`, {
-        params: {
-            limit: 50,
-            offset: 0,
+export async function addElementToTopBackLog(
+    project_id: number,
+    element_id: number
+): Promise<void> {
+    await patch(`/api/projects/${project_id}/program_backlog`, {
+        headers: {
+            "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+            add: [{ id: element_id }],
+            remove: [],
+        }),
     });
 }

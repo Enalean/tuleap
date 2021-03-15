@@ -248,7 +248,8 @@ final class program_managementPlugin extends Plugin
             $this->getProgramAdapter(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             new ProgramIncrementTrackerConfigurationBuilder(
-                $this->getPlanConfigurationBuilder()
+                $this->getPlanConfigurationBuilder(),
+                Tracker_FormElementFactory::instance()
             ),
         );
     }
