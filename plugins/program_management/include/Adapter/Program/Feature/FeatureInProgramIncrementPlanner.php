@@ -106,6 +106,7 @@ class FeatureInProgramIncrementPlanner implements PlanFeatureInProgramIncrement
             function () use ($feature_plan_change, $user, $program_increment_id) {
                 $milestones = $this->mirrored_milestone_retriever->retrieveMilestonesLinkedTo($program_increment_id);
                 foreach ($milestones as $mirrored_milestone) {
+                    $this->logger->error(sprintf("Found mirrored milestone %d", $mirrored_milestone->getId()));
                     $milestone = $this->tracker_artifact_factory->getArtifactById($mirrored_milestone->getId());
                     if (! $milestone) {
                         $this->logger->error(sprintf("Mirrored milestone %d not found", $mirrored_milestone->getId()));

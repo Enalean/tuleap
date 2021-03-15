@@ -60,8 +60,8 @@ class ProjectResourceTest extends \RestBase
 
         $plan_definition = json_encode(
             [
-                  "program_increment_tracker_id" => $this->tracker_ids[$project_id]['rel'],
-                  "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['story']],
+                  "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
+                  "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
                   "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
             ]
         );
@@ -88,10 +88,8 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
         $program_increments = $response->json();
         self::assertCount(1, $program_increments);
-        self::assertEquals('1.0.0', $program_increments[0]['title']);
+        self::assertEquals('PI', $program_increments[0]['title']);
         self::assertEquals('In development', $program_increments[0]['status']);
-        self::assertNull($program_increments[0]['start_date']);
-        self::assertNull($program_increments[0]['end_date']);
 
         return $program_increments[0]['id'];
     }
@@ -107,6 +105,7 @@ class ProjectResourceTest extends \RestBase
 
         self::assertEquals(200, $response->getStatusCode());
         $content = $response->json();
+
         self::assertGreaterThan(1, $content);
         self::assertEquals('My artifact', $content[0]['artifact_title']);
     }
@@ -130,6 +129,45 @@ class ProjectResourceTest extends \RestBase
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
+    /**
+     * @depends testPUTTeam
+     */
+    public function testManipulateFeature(): void
+    {
+        $program_id = $this->getProgramProjectId();
+        $team_id    = $this->getTeamProjectId();
+
+        $program_increment = $this->getArtifactWithArtifactLink('release_number', 'PI', $program_id, 'pi');
+        $release_mirror    = $this->getArtifactWithArtifactLink('release_number', 'PI', $team_id, 'rel');
+        $featureA          = $this->getArtifactWithArtifactLink('description', 'FeatureA', $program_id, 'features');
+        $featureB          = $this->getArtifactWithArtifactLink('description', 'FeatureB', $program_id, 'features');
+        $user_story1       = $this->getArtifactWithArtifactLink('i_want_to', 'US1', $team_id, 'story');
+        $user_story2       = $this->getArtifactWithArtifactLink('i_want_to', 'US2', $team_id, 'story');
+        $sprint            = $this->getArtifactWithArtifactLink('sprint_name', 'S1', $team_id, 'sprint');
+
+        // plan the feature in program increment
+        $this->updateArtifactLinks(
+            $program_increment['id'],
+            [['id' => $featureA['id']], ['id' => $featureB['id']]],
+            $program_increment['artifact_link_id']
+        );
+
+        // check in team project that the two US stories are present in top backlog
+        $this->checkLinksArePresentInReleaseTopBacklog($release_mirror['id'], [$user_story1['id'], $user_story2['id']]);
+
+        // link sprint as a child of mirrored release
+        $this->linkSprintToRelease($release_mirror['id'], $sprint['id']);
+
+        // link user story 1 to a Sprint in Team Project
+        $this->updateArtifactLinks($sprint['id'], [['id' => $user_story1['id']]], $sprint['artifact_link_id']);
+
+        // remove feature in program
+        $this->updateArtifactLinks($program_increment['id'], [], $program_increment['artifact_link_id']);
+
+        // US1 is linked in top backlog (linked into sprint), US2 is no longer present
+        $this->checkLinksArePresentInReleaseTopBacklog($team_id, [$user_story1['id']]);
+    }
+
     private function getBugIDWithSpecificSummary(string $summary, int $program_id): int
     {
         $response = $this->getResponse(
@@ -144,6 +182,32 @@ class ProjectResourceTest extends \RestBase
         self::assertTrue(isset($artifacts[0]['id']));
 
         return $artifacts[0]['id'];
+    }
+
+    private function getArtifactWithArtifactLink(
+        string $field_name,
+        string $field_value,
+        int $project_id,
+        string $tracker_name
+    ): array {
+        $response = $this->getResponse(
+            $this->client->get(
+                'trackers/' . urlencode((string) $this->tracker_ids[$project_id][$tracker_name]) .
+                '/artifacts/?&values=all&expert_query=' . urlencode($field_name . '="' . $field_value . '"')
+            )
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+
+        $artifacts = $response->json();
+
+        self::assertCount(1, $artifacts);
+        self::assertTrue(isset($artifacts[0]['id']));
+
+        return [
+            'id'               => $artifacts[0]['id'],
+            'artifact_link_id' => $this->getArtifactLinkFieldId($artifacts[0]['values'])
+        ];
     }
 
     /**
@@ -178,9 +242,48 @@ class ProjectResourceTest extends \RestBase
             $this->client->patch(
                 'projects/' . urlencode((string) $program_id) . '/program_backlog',
                 null,
-                json_encode(['add' => self::formatTopBacklogElementChange($to_add), 'remove' => self::formatTopBacklogElementChange($to_remove)], JSON_THROW_ON_ERROR)
+                json_encode(
+                    [
+                        'add'    => self::formatTopBacklogElementChange($to_add),
+                        'remove' => self::formatTopBacklogElementChange($to_remove)
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
             )
         );
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
+    private function updateArtifactLinks(int $artifact_id, array $links, int $artifact_field_id): void
+    {
+        $values = [
+            "values"  => [["field_id" => $artifact_field_id, 'links' => $links]],
+            "comment" => ["body" => "", "format" => "text"]
+        ];
+
+        $response = $this->getResponse(
+            $this->client->put(
+                'artifacts/' . urlencode((string) $artifact_id),
+                null,
+                json_encode($values, JSON_THROW_ON_ERROR)
+            )
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
+    private function linkSprintToRelease(int $release_id, int $sprint_id): void
+    {
+        $values = ["add"  => [["id" => $sprint_id]]];
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'milestones/' . urlencode((string) $release_id) . '/milestones',
+                null,
+                json_encode($values, JSON_THROW_ON_ERROR)
+            )
+        );
+
         self::assertEquals(200, $response->getStatusCode());
     }
 
@@ -201,7 +304,6 @@ class ProjectResourceTest extends \RestBase
         return $formatted_elements;
     }
 
-
     private function getProgramProjectId(): int
     {
         return $this->getProjectId('program');
@@ -210,5 +312,34 @@ class ProjectResourceTest extends \RestBase
     private function getTeamProjectId(): int
     {
         return $this->getProjectId('team');
+    }
+
+    private function getArtifactLinkFieldId(array $field_list): ?int
+    {
+        foreach ($field_list as $field) {
+            if ($field['type'] === "art_link") {
+                return (int) $field['field_id'];
+            }
+        }
+
+        return null;
+    }
+
+    private function checkLinksArePresentInReleaseTopBacklog(int $mirror_id, array $user_story_linked): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('milestones/' . urlencode((string) $mirror_id) . '/backlog?limit=50&offset=0')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+
+        $planned_elmenents = $response->json();
+
+        $planned_elements_id = [];
+        foreach ($planned_elmenents as $element) {
+            $planned_elements_id[] = $element['id'];
+        }
+
+        self::assertEquals([], array_diff($planned_elements_id, $user_story_linked));
     }
 }

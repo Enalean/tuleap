@@ -319,21 +319,14 @@ final class program_managementPlugin extends Plugin
 
         $artifact = $event->getArtifact();
 
-        $logger->debug(
-            sprintf(
-                "Store program create with #%d by user #%d",
-                $artifact->getId(),
-                (int) $event->getUser()->getId()
-            )
-        );
-
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($artifact);
 
         $handler = new ArtifactCreatedHandler(
             $program_dao,
             $this->getProgramIncrementRunner(),
             new PendingArtifactCreationDao(),
-            $this->getPlanConfigurationBuilder()
+            $this->getPlanConfigurationBuilder(),
+            $logger
         );
         $handler->handle($event);
     }
