@@ -17,27 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-tlp-mermaid-diagram {
-    display: block;
-    position: relative;
+@import '../../../common/css/utils/mermaid';
 
-    &:not(:defined) {
-        /* Copy <pre> rules from Bootstrap */
-        margin: 0 0 10px;
-        padding: 9.5px;
-        border: 1px solid rgba(0, 0, 0, .15);
-        border-radius: 4px;
-        background-color: #f5f5f5;
-        color: #333333;
-        font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
-        font-size: 13px;
-        line-height: 20px;
-        word-wrap: break-word;
-        word-break: break-all;
-        white-space: pre-wrap;
-        page-break-inside: avoid;
-    }
+tlp-mermaid-diagram:not(:defined) {
+    /* Copy <pre> rules from Bootstrap */
+    margin: 0 0 10px;
+    padding: 9.5px;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    color: #333333;
+    font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 20px;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;
+    page-break-inside: avoid;
 }
+
 // we have to disable the Bootstrap rules for .label elements which conflict with mermaid ones.
 .diagram-mermaid .label {
     padding: 0;
@@ -46,26 +44,4 @@ tlp-mermaid-diagram {
     font-weight: inherit;
     line-height: inherit;
     text-shadow: inherit;
-}
-
-.diagram-mermaid-computing {
-    visibility: hidden;
-}
-
-.diagram-mermaid-source-computing {
-    position: relative;
-
-    > pre {
-        opacity: .5;
-    }
-
-    > i {
-        $size: 1.5rem;
-
-        position: absolute;
-        top: calc(50% - #{$size} / 2);
-        left: calc(50% - #{$size} / 2);
-        color: $tlp-ui-dimmed;
-        font-size: $size;
-    }
 }
