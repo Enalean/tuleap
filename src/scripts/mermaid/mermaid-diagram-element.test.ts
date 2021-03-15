@@ -18,7 +18,6 @@
  */
 
 import { MermaidDiagramElement } from "./mermaid-diagram-element";
-import mermaid from "mermaid";
 
 jest.mock("./id-generator", () => {
     return {
@@ -26,21 +25,13 @@ jest.mock("./id-generator", () => {
     };
 });
 
-jest.mock("./initialize-mermaid", () => {
-    return {
-        initializeMermaid: jest.fn(),
-    };
-});
-
-jest.mock("mermaid", () => {
-    return {
-        render: jest.fn(),
-    };
+const render = jest.fn();
+jest.mock("./mermaid-render", () => {
+    return { render };
 });
 
 describe("MermaidDiagramElement", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
-    let render: jest.SpyInstance;
 
     function createMermaidDiagramElement(): MermaidDiagramElement {
         const doc = document.implementation.createHTMLDocument();
@@ -67,9 +58,8 @@ describe("MermaidDiagramElement", () => {
     });
 
     beforeEach(() => {
-        render = jest
-            .spyOn(mermaid, "render")
-            .mockImplementation((id: string, txt: string) => `<svg>${txt}</svg>`);
+        render.mockReset();
+        render.mockImplementation((id: string, txt: string) => `<svg>${txt}</svg>`);
     });
 
     afterEach(() => {
@@ -91,7 +81,7 @@ describe("MermaidDiagramElement", () => {
         expect(render).not.toHaveBeenCalled();
     });
 
-    it("Renders the diagram (and stops observing) whenever the mermaid block enters in the viewport", () => {
+    it("Renders the diagram (and stops observing) whenever the mermaid block enters in the viewport", async () => {
         const observe = (): void => {
             // mocking observe
         };
@@ -106,14 +96,14 @@ describe("MermaidDiagramElement", () => {
         const mermaid_diagram = createMermaidDiagramElement();
 
         const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         expect(mermaid_diagram).toMatchSnapshot();
         expect(render).toHaveBeenCalled();
         expect(unobserve).toHaveBeenCalled();
     });
 
-    it("On click, the diagram is magnified", () => {
+    it("On click, the diagram is magnified", async () => {
         const observe = (): void => {
             // mocking observe
         };
@@ -128,7 +118,7 @@ describe("MermaidDiagramElement", () => {
         const mermaid_diagram = createMermaidDiagramElement();
 
         const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         const backdrop = mermaid_diagram.querySelector("div");
         if (!backdrop) {
@@ -139,7 +129,7 @@ describe("MermaidDiagramElement", () => {
         expect(backdrop.classList.contains("diagram-mermaid-backdrop-magnified")).toBe(true);
     });
 
-    it("Once magnified, on click on backdrop, the diagram is back to normal", () => {
+    it("Once magnified, on click on backdrop, the diagram is back to normal", async () => {
         const observe = (): void => {
             // mocking observe
         };
@@ -154,7 +144,7 @@ describe("MermaidDiagramElement", () => {
         const mermaid_diagram = createMermaidDiagramElement();
 
         const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         const backdrop = mermaid_diagram.querySelector("div");
         if (!backdrop) {
@@ -166,7 +156,7 @@ describe("MermaidDiagramElement", () => {
         expect(backdrop.classList.contains("diagram-mermaid-backdrop-magnified")).toBe(false);
     });
 
-    it("Once magnified, on click on close button, the diagram is back to normal", () => {
+    it("Once magnified, on click on close button, the diagram is back to normal", async () => {
         const observe = (): void => {
             // mocking observe
         };
@@ -181,7 +171,7 @@ describe("MermaidDiagramElement", () => {
         const mermaid_diagram = createMermaidDiagramElement();
 
         const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-        observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
 
         const backdrop = mermaid_diagram.querySelector("div");
         if (!backdrop) {

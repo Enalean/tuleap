@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import mermaid from "mermaid";
 import type { PanZoom } from "panzoom";
-import panzoom from "panzoom";
 import { generateMermaidElementId } from "./id-generator";
-import { initializeMermaid } from "./initialize-mermaid";
 
 export class MermaidDiagramElement extends HTMLElement {
     private source_code = "";
@@ -65,13 +62,13 @@ export class MermaidDiagramElement extends HTMLElement {
         this.container.classList.add("diagram-mermaid", "diagram-mermaid-computing");
         this.backdrop.appendChild(this.container);
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
+        const observer = new IntersectionObserver(async (entries) => {
+            for (const entry of entries) {
                 if (entry.isIntersecting) {
-                    this.replaceCodeBlockByMermaidDiagram();
                     observer.unobserve(this);
+                    await this.replaceCodeBlockByMermaidDiagram();
                 }
-            });
+            }
         });
 
         observer.observe(this);
@@ -80,14 +77,16 @@ export class MermaidDiagramElement extends HTMLElement {
         document.addEventListener("keyup", this.handle_keyup_listener);
     }
 
-    private replaceCodeBlockByMermaidDiagram(): void {
+    private async replaceCodeBlockByMermaidDiagram(): Promise<void> {
         if (!this.container || !this.source_wrapper || !this.backdrop) {
             return;
         }
 
-        initializeMermaid();
+        const { render } = await import(
+            /* webpackChunkName: "mermaid-render" */ "./mermaid-render"
+        );
 
-        const svg_code = mermaid.render(
+        const svg_code = render(
             generateMermaidElementId(),
             this.source_code,
             undefined,
@@ -145,7 +144,7 @@ export class MermaidDiagramElement extends HTMLElement {
         }
     }
 
-    private addMagnified(): void {
+    private async addMagnified(): Promise<void> {
         if (!this.backdrop || !this.svg) {
             return;
         }
@@ -163,10 +162,15 @@ export class MermaidDiagramElement extends HTMLElement {
             this.backdrop.appendChild(close);
         }
 
-        this.backdrop.classList.add(this.magnified_classname);
+        this.backdrop.classList.add(this.magnified_classname, "diagram-mermaid-panzoom-loading");
+
+        const { panzoom } = await import(/* webpackChunkName: "panzoom" */ "./panzoom");
+
         this.panzoom_instance = panzoom(this.svg, {
             transformOrigin: { x: 0, y: 0 },
         });
+
+        this.backdrop.classList.remove("diagram-mermaid-panzoom-loading");
     }
 
     private removeMagnifiedOnMouseEvent(event: MouseEvent): void {

@@ -82,6 +82,10 @@ tlp-mermaid-diagram {
         cursor: all-scroll;
     }
 
+    &.diagram-mermaid-panzoom-loading > .diagram-mermaid {
+        cursor: wait;
+    }
+
     > .diagram-mermaid-close-button {
         display: inherit;
     }
