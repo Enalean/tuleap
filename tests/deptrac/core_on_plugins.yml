@@ -1,9 +1,11 @@
+use_relative_path_from_depfile: false
 paths:
   - ./src/common
   - ./plugins
 exclude_files:
   - tests
   - node_modules
+  - vendor
 layers:
   - name: Core
     collectors:
