@@ -9,12 +9,6 @@
   "main": "dist/drag-and-drop.umd.js",
   "types": "types/index.d.ts",
   "style": "dist/style.css",
-  "exports": {
-    ".": {
-      "import": "./dist/drag-and-drop.es.js",
-      "require": "./dist/drag-and-drop.umd.js"
-    }
-  },
   "dependencies": {},
   "devDependencies": {},
   "config": {

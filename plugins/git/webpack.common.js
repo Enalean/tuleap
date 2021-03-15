@@ -91,9 +91,7 @@ const webpack_config_for_vanilla = {
 };
 
 const webpack_config_for_legacy_scripts = {
-    entry: {
-        null: "null_entry",
-    },
+    entry: {},
     context,
     output,
     externals: {

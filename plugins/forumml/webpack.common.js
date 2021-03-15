@@ -23,7 +23,6 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const entry = {
     "new-thread": "./scripts/new-thread.ts",
     style: "./themes/css/style.scss",
-    null: "null_entry",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];

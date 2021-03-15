@@ -25,7 +25,6 @@ const output = webpack_configurator.configureOutput(
 );
 
 let entry_points = {
-    null: "null_entry",
     notifications: "./scripts/notifications.js",
     "default-style": "./themes/default/css/style.scss",
 };

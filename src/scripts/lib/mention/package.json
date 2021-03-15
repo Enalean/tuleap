@@ -9,12 +9,6 @@
   "main": "dist/mention.umd.js",
   "types": "src/mention.d.ts",
   "style": "dist/style.css",
-  "exports": {
-    ".": {
-      "import": "./dist/mention.es.js",
-      "require": "./dist/mention.umd.js"
-    }
-  },
   "dependencies": {
     "@tuleap/html-escaper": "file:../html-escaper"
   },

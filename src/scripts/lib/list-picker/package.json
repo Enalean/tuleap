@@ -9,12 +9,6 @@
   "main": "dist/list-picker.umd.js",
   "types": "types/index.d.ts",
   "style": "dist/style.css",
-  "exports": {
-    ".": {
-      "import": "./dist/list-picker.es.js",
-      "require": "./dist/list-picker.umd.js"
-    }
-  },
   "dependencies": {
     "@tuleap/gettext": "file://../gettext",
     "lit-html": "^1.3.0"
