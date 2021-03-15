@@ -399,13 +399,15 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-tracker-default-format-html]").should("be.checked");
             });
 
-            it("the user can choose the Text format", () => {
-                cy.get("[data-test=user-prefs-tracker-default-format-text]").click();
+            it("the user can choose the CommonMark format", () => {
+                cy.get("[data-test=user-prefs-tracker-default-format-commonmark]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
                 assertFeedbackContainsMessage("User preferences successfully updated");
 
-                cy.get("[data-test=user-prefs-tracker-default-format-text]").should("be.checked");
+                cy.get("[data-test=user-prefs-tracker-default-format-commonmark]").should(
+                    "be.checked"
+                );
             });
         });
 
