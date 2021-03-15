@@ -28,6 +28,7 @@ use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Markdown\CommonMarkInterpreter;
 
 /**
@@ -229,6 +230,11 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             return;
         }
 
+        $core_assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/core',
+            '/assets/core'
+        );
+
         $this->tpl->assign('extrascripts', ['blame']);
 
         $detector          = new LanguageDetectorForPrismJS();
@@ -250,19 +256,13 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                 )
             );
             if ($code_block_features->isMermaidNeeded()) {
-                $assets = new IncludeAssets(
-                    __DIR__ . '/../../../../../src/www/assets/core',
-                    '/assets/core'
-                );
-
-                $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
+                $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'mermaid.js'));
             }
         } else {
             $this->tpl->assign('bloblines', $blob->GetData(true));
         }
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
-        $GLOBALS['Response']->includeFooterJavascriptFile(
-            $include_assets->getFileURL('repository-blob.js')
-        );
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
+        $git_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($git_assets, 'line-highlight.js'));
     }
 }

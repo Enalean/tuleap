@@ -32,10 +32,7 @@ const webpack_config_for_vue = {
         "permission-per-group": "./scripts/permissions-per-group/index.ts",
         "repositories-list": "./scripts/repositories/src/index.js",
         repository: "./scripts/repository/src/index.ts",
-        "repository-blob": [
-            "../../src/scripts/syntax-highlight/index.ts",
-            "./scripts/repository/file/line-highlight.ts",
-        ],
+        "line-highlight": "./scripts/repository/file/line-highlight.ts",
     },
     context,
     output,
