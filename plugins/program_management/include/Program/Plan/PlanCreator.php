@@ -74,7 +74,9 @@ final class PlanCreator implements CreatePlan
         int $project_id,
         int $program_increment_id,
         array $trackers_id,
-        array $can_possibly_prioritize_ugroups
+        array $can_possibly_prioritize_ugroups,
+        ?string $custom_label,
+        ?string $custom_sub_label
     ): void {
         if (in_array($program_increment_id, $trackers_id, true)) {
             throw new CannotPlanIntoItselfException();
@@ -93,7 +95,7 @@ final class PlanCreator implements CreatePlan
             $can_possibly_prioritize_ugroups
         );
 
-        $plan = new Plan($program_tracker, $plannable_tracker_ids, $can_prioritize_user_groups);
+        $plan = new Plan($program_tracker, $plannable_tracker_ids, $can_prioritize_user_groups, $custom_label, $custom_sub_label);
         $this->plan_store->save($plan);
     }
 }

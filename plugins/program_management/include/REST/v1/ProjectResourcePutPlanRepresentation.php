@@ -39,4 +39,12 @@ final class ProjectResourcePutPlanRepresentation
      * @var PlanPutPermissions {@type \Tuleap\ProgramManagement\REST\v1\PlanPutPermissions} {@required true}
      */
     public $permissions;
+    /**
+     * @var string | null {@required false} {@max 255}
+     */
+    public $custom_label = null;
+    /**
+     * @var string | null {@required false} {@max 255}
+     */
+    public $custom_sub_label = null;
 }

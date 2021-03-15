@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
+use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Program\Program;
 
 class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncrementTrackerConfiguration
@@ -38,13 +39,19 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
      * @var \Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var PlanStore
+     */
+    private $plan_store;
 
     public function __construct(
         BuildPlanProgramIncrementConfiguration $plan_configuration_builder,
-        \Tracker_FormElementFactory $form_element_factory
+        \Tracker_FormElementFactory $form_element_factory,
+        PlanStore $plan_store
     ) {
         $this->plan_configuration_builder = $plan_configuration_builder;
         $this->form_element_factory       = $form_element_factory;
+        $this->plan_store                 = $plan_store;
     }
 
     /**
@@ -66,6 +73,21 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
             $artifact_link_field_id = $artifact_link_field->getId();
         }
 
-        return new ProgramIncrementTrackerConfiguration($tracker->getTrackerId(), $can_create_program_increment, $artifact_link_field_id);
+        $program_increments_labels   = $this->plan_store->getProgramIncrementLabels($tracker->getTrackerId());
+        $program_increment_label     = null;
+        $program_increment_sub_label = null;
+
+        if ($program_increments_labels !== null) {
+            $program_increment_label     = $program_increments_labels['label'];
+            $program_increment_sub_label = $program_increments_labels['sub_label'];
+        }
+
+        return new ProgramIncrementTrackerConfiguration(
+            $tracker->getTrackerId(),
+            $can_create_program_increment,
+            $artifact_link_field_id,
+            $program_increment_label,
+            $program_increment_sub_label
+        );
     }
 }

@@ -35,7 +35,8 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
                     plugin_program_management_team_projects.*,
                     plugin_program_management_pending_mirrors.*,
                     plugin_program_management_explicit_top_backlog.*,
-                    plugin_program_management_workflow_action_add_top_backlog.*
+                    plugin_program_management_workflow_action_add_top_backlog.*,
+                    plugin_program_management_label_program_increment.*
                 FROM `groups`
                 LEFT JOIN tracker ON (tracker.group_id = `groups`.group_id)
                 LEFT JOIN plugin_program_management_plan ON (plugin_program_management_plan.program_increment_tracker_id = tracker.group_id OR plugin_program_management_plan.plannable_tracker_id = tracker.group_id)
@@ -47,6 +48,7 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
                 LEFT JOIN tracker_workflow ON (tracker_workflow.tracker_id = tracker.id)
                 LEFT JOIN tracker_workflow_transition ON (tracker_workflow_transition.workflow_id = tracker_workflow.workflow_id)
                 LEFT JOIN plugin_program_management_workflow_action_add_top_backlog ON (plugin_program_management_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
+                LEFT JOIN plugin_program_management_label_program_increment ON (plugin_program_management_label_program_increment.program_increment_tracker_id = tracker.group_id)
                 WHERE `groups`.status = "D"';
 
         $this->getDB()->run($sql);

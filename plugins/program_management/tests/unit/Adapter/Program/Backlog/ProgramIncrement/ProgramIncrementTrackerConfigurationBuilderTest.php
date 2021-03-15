@@ -26,6 +26,7 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
+use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -49,27 +50,80 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BuildPlanProgramIncrementConfiguration
      */
     private $plan_builder;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanStore
+     */
+    private $plan_store;
 
     protected function setUp(): void
     {
         $this->plan_builder                 = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
         $this->tracker_form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->plan_store                   = Mockery::mock(PlanStore::class);
+
+        $this->tracker_form_element_factory
+            ->shouldReceive('getAnArtifactLinkField')
+            ->andReturn($this->getFieldLink())
+            ->byDefault();
+
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
+
+        $program_tracker = new ProgramTracker($tracker);
+        $this->plan_builder
+            ->shouldReceive('buildTrackerProgramIncrementFromProjectId')
+            ->andReturn($program_tracker)
+            ->byDefault();
 
         $this->configuration_builder = new ProgramIncrementTrackerConfigurationBuilder(
             $this->plan_builder,
-            $this->tracker_form_element_factory
+            $this->tracker_form_element_factory,
+            $this->plan_store
         );
     }
 
     public function testItBuildsAProgramIncrementTrackerConfiguration(): void
     {
-        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $this->plan_store
+            ->shouldReceive("getProgramIncrementLabels")
+            ->andReturn(['label' => "Program Increments", 'sub_label' => "program increment"])
+            ->once();
 
-        $program_tracker = new ProgramTracker($tracker);
-        $this->plan_builder->shouldReceive('buildTrackerProgramIncrementFromProjectId')
-            ->andReturn($program_tracker);
+        $user                   = UserTestBuilder::aUser()->build();
+        $project                = new Program(101);
+        $expected_configuration = new ProgramIncrementTrackerConfiguration(
+            $project->getId(),
+            false,
+            $this->getFieldLink()->getId(),
+            "Program Increments",
+            "program increment"
+        );
 
-        $field = new \Tracker_FormElement_Field_ArtifactLink(
+        self::assertEquals($expected_configuration, $this->configuration_builder->build($user, $project));
+    }
+
+    public function testItBuildsAProgramIncrementTrackerConfigurationWithNullLabel(): void
+    {
+        $this->plan_store
+            ->shouldReceive("getProgramIncrementLabels")
+            ->andReturnNull()
+            ->once();
+
+        $user                   = UserTestBuilder::aUser()->build();
+        $project                = new Program(101);
+        $expected_configuration = new ProgramIncrementTrackerConfiguration(
+            $project->getId(),
+            false,
+            $this->getFieldLink()->getId(),
+            null,
+            null
+        );
+
+        self::assertEquals($expected_configuration, $this->configuration_builder->build($user, $project));
+    }
+
+    private function getFieldLink(): \Tracker_FormElement_Field_ArtifactLink
+    {
+        return new \Tracker_FormElement_Field_ArtifactLink(
             1,
             101,
             null,
@@ -82,12 +136,5 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
             false,
             10
         );
-        $this->tracker_form_element_factory->shouldReceive('getAnArtifactLinkField')->andReturn($field);
-
-        $user                   = UserTestBuilder::aUser()->build();
-        $project                = new Program(101);
-        $expected_configuration = new ProgramIncrementTrackerConfiguration($project->getId(), false, $field->getId());
-
-        self::assertEquals($expected_configuration, $this->configuration_builder->build($user, $project));
     }
 }

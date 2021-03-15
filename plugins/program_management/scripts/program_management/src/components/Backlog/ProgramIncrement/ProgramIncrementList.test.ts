@@ -105,10 +105,16 @@ describe("ProgramIncrementList", () => {
         expect(wrapper.find("[data-test=program-increment-error]").exists()).toBe(false);
     });
 
-    it("User can see the button when he can create program incrmenent", async () => {
+    it("User can see the button when he can create program increment", async () => {
         jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
         jest.spyOn(configuration, "programId").mockImplementation(() => 202);
         jest.spyOn(configuration, "canCreateProgramIncrement").mockImplementation(() => true);
+        jest.spyOn(configuration, "getProgramIncrementLabel").mockImplementation(
+            () => "Program Increments"
+        );
+        jest.spyOn(configuration, "getProgramIncrementSubLabel").mockImplementation(
+            () => "program increment"
+        );
 
         const wrapper = shallowMount(ProgramIncrementList, {
             localVue: await createProgramManagementLocalVue(),
@@ -130,6 +136,12 @@ describe("ProgramIncrementList", () => {
         });
 
         expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=program-increment-title]").text()).toEqual(
+            "Program Increments"
+        );
+        expect(wrapper.find("[data-test=button-add-program-increment-label]").text()).toEqual(
+            "Add program increment"
+        );
     });
 
     it("No button is displayed when user can not add program increments", async () => {

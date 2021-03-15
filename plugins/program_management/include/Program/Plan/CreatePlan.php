@@ -45,6 +45,8 @@ interface CreatePlan
         int $project_id,
         int $program_increment_id,
         array $trackers_id,
-        array $can_possibly_prioritize_ugroups
+        array $can_possibly_prioritize_ugroups,
+        ?string $custom_label,
+        ?string $custom_sub_label
     ): void;
 }

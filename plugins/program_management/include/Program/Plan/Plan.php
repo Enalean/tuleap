@@ -39,6 +39,14 @@ final class Plan
      * @var non-empty-list<ProgramUserGroup>
      */
     private $can_prioritize;
+    /**
+     * @var string|null
+     */
+    private $custom_label;
+    /**
+     * @var string|null
+     */
+    private $custom_sub_label;
 
     /**
      * @param ProgramPlannableTracker[] $plannable_trackers
@@ -47,11 +55,15 @@ final class Plan
     public function __construct(
         ProgramIncrementTracker $program_increment_tracker,
         array $plannable_trackers,
-        array $can_prioritize
+        array $can_prioritize,
+        ?string $custom_label,
+        ?string $custom_sub_label
     ) {
         $this->program_increment_tracker = $program_increment_tracker;
         $this->plannable_trackers        = $plannable_trackers;
         $this->can_prioritize            = $can_prioritize;
+        $this->custom_label              = $custom_label;
+        $this->custom_sub_label          = $custom_sub_label;
     }
 
     public function getProgramIncrementTracker(): ProgramIncrementTracker
@@ -78,5 +90,15 @@ final class Plan
     public function getCanPrioritize(): array
     {
         return $this->can_prioritize;
+    }
+
+    public function getCustomLabel(): ?string
+    {
+        return $this->custom_label;
+    }
+
+    public function getCustomSubLabel(): ?string
+    {
+        return $this->custom_sub_label;
     }
 }

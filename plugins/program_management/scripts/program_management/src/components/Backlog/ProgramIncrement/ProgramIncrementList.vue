@@ -21,14 +21,21 @@
     <div>
         <form v-bind:action="create_new_program_increment" method="post">
             <div class="program-increment-title-with-button">
-                <h2 v-translate class="program-increment-title">Program Increment</h2>
+                <h2 data-test="program-increment-title" class="program-increment-title">
+                    {{ program_increment_label }}
+                </h2>
                 <button
                     class="tlp-button-primary tlp-button-outline tlp-button-small program-increment-title-button"
                     v-if="can_create_program_increment"
                     data-test="create-program-increment-button"
                 >
                     <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
-                    <span v-translate>Add a program increment</span>
+                    <span
+                        data-test="button-add-program-increment-label"
+                        v-translate="{ program_increment_sub_label }"
+                    >
+                        Add %{ program_increment_sub_label }
+                    </span>
                 </button>
             </div>
         </form>
@@ -65,7 +72,13 @@ import EmptyState from "./EmptyState.vue";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { getProgramIncrements } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import { programId, canCreateProgramIncrement, programIncrementId } from "../../../configuration";
+import {
+    programId,
+    canCreateProgramIncrement,
+    programIncrementId,
+    getProgramIncrementLabel,
+    getProgramIncrementSubLabel,
+} from "../../../configuration";
 import ProgramIncrementSkeleton from "./ProgramIncrementSkeleton.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
 
@@ -99,6 +112,14 @@ export default class ProgramIncrementList extends Vue {
 
     get create_new_program_increment(): string {
         return buildCreateNewProgramIncrement(programIncrementId());
+    }
+
+    get program_increment_label(): string {
+        return getProgramIncrementLabel();
+    }
+
+    get program_increment_sub_label(): string {
+        return getProgramIncrementSubLabel();
     }
 }
 </script>

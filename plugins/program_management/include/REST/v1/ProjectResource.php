@@ -162,6 +162,17 @@ final class ProjectResource extends AuthenticatedResource
      * Define a program plan
      *
      * Define the program increment and the tracker plannable inside
+     * <br/>
+     * <strong>"custom_label"</strong> and <strong>"custom_sub_label"</strong> are optional.
+     * They will be used to have a custom label for Program Increment in UI.
+     * <br/>
+     * If there are not used, by default:
+     * <pre>
+     * {<br/>
+     * &nbsp;"custom_label": "Program Increments",<br/>
+     * &nbsp;"custom_sub_label": "program increment"<br/>
+     * }
+     * </pre>
      *
      * @url    PUT {id}/program_plan
      *
@@ -181,7 +192,9 @@ final class ProjectResource extends AuthenticatedResource
                 $id,
                 $representation->program_increment_tracker_id,
                 $representation->plannable_tracker_ids,
-                $representation->permissions->can_prioritize_features
+                $representation->permissions->can_prioritize_features,
+                $representation->custom_label,
+                $representation->custom_sub_label
             );
         } catch (ProjectIsNotAProgramException | CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {
             throw new RestException(400, $e->getMessage());

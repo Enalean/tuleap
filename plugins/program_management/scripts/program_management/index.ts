@@ -79,6 +79,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
     }
 
+    if (!vue_mount_point.dataset.programIncrementLabel) {
+        throw new Error("Missing program_increment_label dataset");
+    }
+
+    const program_increment_label = vue_mount_point.dataset.programIncrementLabel;
+
+    if (!vue_mount_point.dataset.programIncrementSubLabel) {
+        throw new Error("Missing program_increment_sub_label dataset");
+    }
+
+    const program_increment_sub_label = vue_mount_point.dataset.programIncrementSubLabel;
+
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
 
@@ -92,7 +104,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         locale.replace("_", "-"),
         can_create_program_increment,
         program_increment_tracker_id,
-        program_increment_artifact_link_id
+        program_increment_artifact_link_id,
+        program_increment_label,
+        program_increment_sub_label
     );
 
     await initVueGettext(

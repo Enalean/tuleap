@@ -66,6 +66,14 @@ final class ProgramBacklogPresenter
      * @var int | null
      */
     public $program_increment_artifact_link_id;
+    /**
+     * @var string
+     */
+    public $program_increment_label;
+    /**
+     * @var string
+     */
+    public $program_increment_sub_label;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -76,7 +84,9 @@ final class ProgramBacklogPresenter
         bool $user_has_accessibility_mode,
         bool $can_create_program_increment,
         int $program_increment_tracker_id,
-        ?int $program_increment_artifact_link_id
+        ?int $program_increment_artifact_link_id,
+        ?string $program_increment_label,
+        ?string $program_increment_sub_label
     ) {
         $this->project_name                       = $project->getPublicName();
         $this->project_short_name                 = $project->getUnixNameLowerCase();
@@ -90,5 +100,15 @@ final class ProgramBacklogPresenter
         $this->can_create_program_increment       = $can_create_program_increment;
         $this->program_increment_tracker_id       = $program_increment_tracker_id;
         $this->program_increment_artifact_link_id = $program_increment_artifact_link_id;
+        $this->program_increment_label            = dgettext('tuleap-program_management', "Program Increments");
+        $this->program_increment_sub_label        = dgettext('tuleap-program_management', "program increment");
+
+        if ($program_increment_label) {
+            $this->program_increment_label = $program_increment_label;
+        }
+
+        if ($program_increment_sub_label) {
+            $this->program_increment_sub_label = $program_increment_sub_label;
+        }
     }
 }
