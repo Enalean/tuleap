@@ -161,17 +161,13 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
                     $readme_tree_item->GetData()
                 )
             );
-            $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
-            $GLOBALS['Response']->includeFooterJavascriptFile(
-                $include_assets->getFileURL('repository-blob.js')
+            $core_assets = new IncludeAssets(
+                __DIR__ . '/../../../../../src/www/assets/core',
+                '/assets/core'
             );
+            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($core_assets, 'syntax-highlight.js'));
             if ($code_block_features->isMermaidNeeded()) {
-                $assets = new IncludeAssets(
-                    __DIR__ . '/../../../../../src/www/assets/core',
-                    '/assets/core'
-                );
-
-                $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
+                $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($core_assets, 'mermaid.js'));
             }
         }
 

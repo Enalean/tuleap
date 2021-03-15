@@ -23,6 +23,7 @@ namespace Tuleap\Git\GitPHP;
 
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 
 /**
  * Blame controller class
@@ -146,9 +147,9 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         $detector = new LanguageDetectorForPrismJS();
         $this->tpl->assign('language', $detector->getLanguage($blob->GetName()));
         $this->tpl->assign('bloblines', $blob->GetData(true));
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
-        $GLOBALS['Response']->includeFooterJavascriptFile(
-            $include_assets->getFileURL('repository-blob.js')
-        );
+        $core_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/core', '/assets/core');
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
+        $git_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
+        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($git_assets, 'line-highlight.js'));
     }
 }

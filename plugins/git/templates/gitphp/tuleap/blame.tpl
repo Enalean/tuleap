@@ -51,12 +51,14 @@
                             </div>
                         </td>
                         <td>
-                            <pre class="git-repository-blob-file-code"><!--
-                                --><div class="git-repository-highlight-line" id="git-repository-highlight-line"></div><!--
-                                --><code class="language-{$language}">{foreach from=$bloblines item=line name=bloblines}
+                            <tlp-syntax-highlighting>
+                                <pre class="git-repository-blob-file-code"><!--
+                                    --><div class="git-repository-highlight-line" id="git-repository-highlight-line"></div><!--
+                                    --><code class="language-{$language}">{foreach from=$bloblines item=line name=bloblines}
 {$line|escape}
 {/foreach}</code><!--
-                            --></pre>
+                                --></pre>
+                            </tlp-syntax-highlighting>
                         </td>
                     </tr>
                 </tbody>
