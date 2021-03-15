@@ -190,20 +190,24 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
     {
         $p = $this->getHTMLPurifier();
         self::assertEquals(
-            '<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram>',
-            $p->purify('<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
+            '<tlp-mermaid-diagram><pre>Foo</pre></tlp-mermaid-diagram>',
+            $p->purify('<tlp-mermaid-diagram><pre>Foo</pre></tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
         );
         self::assertEquals(
-            '<tlp-mermaid-diagram class="whatever">Foo</tlp-mermaid-diagram>',
-            $p->purify('<tlp-mermaid-diagram class="whatever">Foo</tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
+            '<tlp-mermaid-diagram><pre><code>Foo</code></pre></tlp-mermaid-diagram>',
+            $p->purify('<tlp-mermaid-diagram><pre><code>Foo</code></pre></tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
         );
         self::assertEquals(
-            '<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram><b>html</b>',
-            $p->purify('<tlp-mermaid-diagram>Foo<b>html</b></tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
+            '<tlp-mermaid-diagram class="whatever"><pre>Foo</pre></tlp-mermaid-diagram>',
+            $p->purify('<tlp-mermaid-diagram class="whatever"><pre>Foo</pre></tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
         );
         self::assertEquals(
-            'Foo',
-            $p->purify('<tlp-mermaid-diagram>Foo</tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_LIGHT)
+            '<tlp-mermaid-diagram><pre><code>Foo</code></pre></tlp-mermaid-diagram><b>Bar</b>',
+            $p->purify('<tlp-mermaid-diagram><pre><code>Foo</code></pre><b>Bar</b></tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_FULL)
+        );
+        self::assertEquals(
+            '<pre>Foo</pre>',
+            $p->purify('<tlp-mermaid-diagram><pre>Foo</pre></tlp-mermaid-diagram>', Codendi_HTMLPurifier::CONFIG_LIGHT)
         );
     }
 

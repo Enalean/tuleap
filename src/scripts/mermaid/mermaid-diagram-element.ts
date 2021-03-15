@@ -33,18 +33,19 @@ export class MermaidDiagramElement extends HTMLElement {
     private handle_keyup_listener: ((event: KeyboardEvent) => void) | null = null;
 
     public connectedCallback(): void {
-        if (!this.textContent) {
+        const pre = this.querySelector("pre");
+        if (!pre) {
             return;
         }
 
-        this.source_code = this.textContent;
-        this.textContent = "";
+        if (!pre.textContent) {
+            return;
+        }
+
+        this.source_code = pre.textContent;
 
         this.source_wrapper = document.createElement("div");
         this.source_wrapper.classList.add("diagram-mermaid-source-computing");
-
-        const pre = document.createElement("pre");
-        pre.textContent = this.source_code;
         this.source_wrapper.appendChild(pre);
 
         const spinner = document.createElement("i");
@@ -52,7 +53,6 @@ export class MermaidDiagramElement extends HTMLElement {
         spinner.setAttribute("aria-hidden", "true");
         this.source_wrapper.appendChild(spinner);
 
-        this.textContent = "";
         this.appendChild(this.source_wrapper);
 
         this.backdrop = document.createElement("div");

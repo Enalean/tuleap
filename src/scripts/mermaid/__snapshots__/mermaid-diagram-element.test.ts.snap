@@ -24,11 +24,15 @@ exports[`MermaidDiagramElement displays a spinner while observing if mermaid blo
     class="diagram-mermaid-source-computing"
   >
     <pre>
-      
+      <code
+        class="language-mermaid"
+      >
+        
             classDiagram
                 class Animal
                 Vehicle &lt;|-- Car
         
+      </code>
     </pre>
     <i
       aria-hidden="true"
