@@ -6,6 +6,7 @@ RUN nix-env --profile /output/profile -i -f build-tools/
 RUN cp -va $(nix-store -qR /output/profile) /output/store
 
 FROM scratch
+COPY --from=0 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=0 /output/store /nix/store
 COPY --from=0 /output/profile/ /usr/
 COPY --from=0 /output/profile/bin/sh /bin/sh
