@@ -150,7 +150,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
             $this->getSystemCommand(),
             $this->getDestructor(),
             EventManager::instance(),
-            Backend::instance(Backend::SVN),
+            Backend::instanceSVN(),
             $this->getAccessFileHistoryFactory()
         );
     }

@@ -151,7 +151,7 @@ $repository_manager = new RepositoryManager(
     $system_command,
     new Destructor(new Dao(), $logger),
     EventManager::instance(),
-    BackendSVN::instance(),
+    Backend::instanceSVN(),
     $access_file_factory
 );
 
