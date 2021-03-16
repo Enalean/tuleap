@@ -111,7 +111,7 @@ class referencealias_svnPlugin extends Plugin //phpcs:ignore
                 $this->getSystemCommand(),
                 $this->getDestructor(),
                 EventManager::instance(),
-                Backend::instance(Backend::SVN),
+                Backend::instanceSVN(),
                 $this->getAccessFileHistoryFactory()
             )
         );

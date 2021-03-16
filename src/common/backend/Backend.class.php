@@ -135,7 +135,7 @@ class Backend
     /**
      * Helper for static analysis
      */
-    public static function instanceSVN(): BackendSVN
+    final public static function instanceSVN(): BackendSVN
     {
         $instance = self::instance(self::SVN);
         assert($instance instanceof BackendSVN);
@@ -145,7 +145,7 @@ class Backend
     /**
      * Helper for static analysis
      */
-    public static function instanceCVS(): BackendCVS
+    final public static function instanceCVS(): BackendCVS
     {
         $instance = self::instance(self::CVS);
         assert($instance instanceof BackendCVS);

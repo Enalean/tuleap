@@ -51,7 +51,7 @@ try {
         new RepositoryManager(
             new Dao(),
             ProjectManager::instance(),
-            new SvnAdmin(new System_Command(), SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
+            new SvnAdmin(new System_Command(), SvnPlugin::getLogger(), Backend::instanceSVN()),
             SvnPlugin::getLogger(),
             new System_Command(),
             new Destructor(
@@ -59,7 +59,7 @@ try {
                 SvnPlugin::getLogger()
             ),
             EventManager::instance(),
-            Backend::instance(Backend::SVN),
+            Backend::instanceSVN(),
             new AccessFileHistoryFactory(new AccessFileHistoryDao())
         ),
         new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())

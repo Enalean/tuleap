@@ -93,7 +93,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
         return $project_manager->getProject($project_id);
     }
 
-    private function getRepositoryManager()
+    private function getRepositoryManager(): RepositoryManager
     {
         return new RepositoryManager(
             new Dao(),
