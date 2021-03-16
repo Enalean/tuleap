@@ -33,13 +33,14 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         Tracker_Artifact_Redirect $redirect,
         Artifact $artifact
     ): void {
-        $redirect_in_service = $request->get('program_increment') && $request->get('program_increment') === "create";
+        $program_increment_redirect_value = $request->get('program_increment');
+        $redirect_in_service              = $program_increment_redirect_value && ($program_increment_redirect_value === "create" || $program_increment_redirect_value === "update");
         if (! $redirect_in_service) {
             return;
         }
 
         if ($redirect->mode === Tracker_Artifact_Redirect::STATE_CONTINUE) {
-            $redirect->query_parameters['program_increment'] = "create";
+            $redirect->query_parameters['program_increment'] = $program_increment_redirect_value;
 
             return;
         }

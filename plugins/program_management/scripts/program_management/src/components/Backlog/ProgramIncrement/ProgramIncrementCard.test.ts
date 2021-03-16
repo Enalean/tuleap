@@ -105,5 +105,8 @@ describe("ProgramIncrementCard", () => {
                 .get("[data-test=program-increment-content]")
                 .classes("program-increment-content-hidden")
         ).toBe(false);
+        expect(
+            wrapper.get("[data-test=program-increment-info-edit-link]").attributes().href
+        ).toEqual("/plugins/tracker/?aid=1&program_increment=update");
     });
 });

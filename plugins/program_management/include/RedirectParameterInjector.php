@@ -26,6 +26,15 @@ use Tracker_Artifact_Redirect;
 
 class RedirectParameterInjector
 {
+    public function injectAndInformUserAboutUpdatingProgramItem(
+        Tracker_Artifact_Redirect $redirect,
+        \Response $response
+    ): void {
+        $this->injectAndInformUserAboutProgramItemWillBeUpdating($response);
+
+        $redirect->query_parameters['program_increment'] = "update";
+    }
+
     public function injectAndInformUserAboutProgramItem(
         Tracker_Artifact_Redirect $redirect,
         \Response $response
@@ -33,6 +42,16 @@ class RedirectParameterInjector
         $this->injectAndInformUserAboutProgramItemWillBeCreatedIntoTeams($response);
 
         $redirect->query_parameters['program_increment'] = "create";
+    }
+
+    private function injectAndInformUserAboutProgramItemWillBeUpdating(\Response $response): void
+    {
+        $feedback_message = dgettext('tuleap-program_management', 'You are updating a program increment. Please note the associated release increment in team projects will not be updated.');
+
+        $response->addFeedback(
+            \Feedback::INFO,
+            $feedback_message
+        );
     }
 
     private function injectAndInformUserAboutProgramItemWillBeCreatedIntoTeams(\Response $response): void
