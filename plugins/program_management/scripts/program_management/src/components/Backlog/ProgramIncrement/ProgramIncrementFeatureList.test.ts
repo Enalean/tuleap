@@ -6,6 +6,7 @@ import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("ProgramIncrementFeatureList", () => {
     it("Displays the empty state when no features are found", async () => {
@@ -30,6 +31,14 @@ describe("ProgramIncrementFeatureList", () => {
                     end_date: "2020 Feb 28",
                     user_can_plan: true,
                 } as ProgramIncrement,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    getters: {
+                        getFeaturesInProgramIncrement: jest.fn().mockReturnValue([]),
+                        isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
+                    },
+                }),
             },
         });
 
@@ -65,6 +74,14 @@ describe("ProgramIncrementFeatureList", () => {
                     user_can_plan: true,
                 } as ProgramIncrement,
             },
+            mocks: {
+                $store: createStoreMock({
+                    getters: {
+                        getFeaturesInProgramIncrement: jest.fn().mockReturnValue([]),
+                        isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
+                    },
+                }),
+            },
         });
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
@@ -99,7 +116,7 @@ describe("ProgramIncrementFeatureList", () => {
             localVue: await createProgramManagementLocalVue(),
             data(): DefaultData<ProgramIncrementFeatureList> {
                 return {
-                    features: [element_one, element_two],
+                    features: [],
                     is_loading: false,
                     has_error: false,
                     error_message: "",
@@ -115,7 +132,19 @@ describe("ProgramIncrementFeatureList", () => {
                     user_can_plan: true,
                 } as ProgramIncrement,
             },
+            mocks: {
+                $store: createStoreMock({
+                    getters: {
+                        getFeaturesInProgramIncrement: jest
+                            .fn()
+                            .mockReturnValue([element_one, element_two]),
+                        isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
+                    },
+                }),
+            },
         });
+
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
@@ -124,6 +153,64 @@ describe("ProgramIncrementFeatureList", () => {
         expect(
             wrapper.get("[data-test=program-increment-feature-list]").element.dataset.canPlan
         ).toBe("true");
+    });
+
+    it("Retrieve elements to display and store them in store", async () => {
+        const element_one = {
+            artifact_id: 1,
+            artifact_title: "My artifact",
+            tracker: {
+                label: "bug",
+            },
+        } as Feature;
+        const element_two = {
+            artifact_id: 2,
+            artifact_title: "My user story",
+            tracker: {
+                label: "user_stories",
+            },
+        } as Feature;
+
+        jest.spyOn(retriever, "getFeatures").mockImplementation(() =>
+            Promise.resolve([element_one, element_two])
+        );
+        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
+
+        const wrapper = shallowMount(ProgramIncrementFeatureList, {
+            localVue: await createProgramManagementLocalVue(),
+            propsData: {
+                increment: {
+                    id: 1,
+                    title: "PI 1",
+                    status: "On going",
+                    start_date: "2020 Feb 6",
+                    end_date: "2020 Feb 28",
+                    user_can_plan: true,
+                } as ProgramIncrement,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    getters: {
+                        getFeaturesInProgramIncrement: jest
+                            .fn()
+                            .mockReturnValue([element_one, element_two]),
+                        isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(false),
+                    },
+                }),
+            },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("addProgramIncrement", {
+            id: 1,
+            title: "PI 1",
+            status: "On going",
+            start_date: "2020 Feb 6",
+            end_date: "2020 Feb 28",
+            user_can_plan: true,
+            features: [element_one, element_two],
+        });
     });
 
     it("Does not have the can-plan attribute when user can not plan elements", async () => {
@@ -149,6 +236,14 @@ describe("ProgramIncrementFeatureList", () => {
                     end_date: "2020 Feb 28",
                     user_can_plan: false,
                 } as ProgramIncrement,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    getters: {
+                        getFeaturesInProgramIncrement: jest.fn().mockReturnValue([]),
+                        isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
+                    },
+                }),
             },
         });
 

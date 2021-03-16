@@ -24,6 +24,7 @@ import {
     getPOFileFromLocale,
 } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 import { build } from "./src/configuration";
+import { createStore } from "./src/store";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("program-management-app");
@@ -120,5 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const AppComponent = Vue.extend(App);
 
-    new AppComponent({}).$mount(vue_mount_point);
+    new AppComponent({
+        store: createStore(),
+    }).$mount(vue_mount_point);
 });

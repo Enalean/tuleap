@@ -56,6 +56,7 @@ import { getToBePlannedElements } from "../../../helpers/ToBePlanned/element-to-
 import EmptyState from "./EmptyState.vue";
 import ElementCard from "../ElementCard.vue";
 import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
+import { Mutation, State } from "vuex-class";
 
 @Component({
     components: { ToBePlannedSkeleton, ElementCard, EmptyState },
@@ -63,13 +64,18 @@ import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
 export default class ToBePlanned extends Vue {
     private error_message = "";
     private has_error = false;
-    private to_be_planned_elements: Array<ToBePlannedElement> = [];
     private is_loading = false;
+
+    @Mutation
+    readonly setToBePlannedElements!: (to_be_planned_elements: ToBePlannedElement[]) => void;
+    @State
+    readonly to_be_planned_elements!: Array<ToBePlannedElement>;
 
     async mounted(): Promise<void> {
         try {
             this.is_loading = true;
-            this.to_be_planned_elements = await getToBePlannedElements(programId());
+            const to_be_planned_elements = await getToBePlannedElements(programId());
+            this.setToBePlannedElements(to_be_planned_elements);
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext(

@@ -24,17 +24,21 @@ import * as configuration from "../../../configuration";
 import type { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("ToBePlanned", () => {
     it("Displays the empty state when no artifact are found", async () => {
         jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([]);
         jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
+        const store = createStoreMock({
+            state: { to_be_planned_elements: [] },
+        });
         const wrapper = shallowMount(ToBePlanned, {
+            mocks: { $store: store },
             localVue: await createProgramManagementLocalVue(),
             data(): DefaultData<ToBePlanned> {
                 return {
-                    to_be_planned_elements: [],
                     is_loading: false,
                     has_error: false,
                 };
@@ -50,11 +54,14 @@ describe("ToBePlanned", () => {
     it("Displays an error when rest route fail", async () => {
         jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([]);
         jest.spyOn(configuration, "programId").mockImplementation(() => 202);
+        const store = createStoreMock({
+            state: { to_be_planned_elements: [] },
+        });
         const wrapper = shallowMount(ToBePlanned, {
+            mocks: { $store: store },
             localVue: await createProgramManagementLocalVue(),
             data(): DefaultData<ToBePlanned> {
                 return {
-                    to_be_planned_elements: [],
                     is_loading: false,
                     has_error: true,
                     error_message: "Oups, something happened",
@@ -90,11 +97,14 @@ describe("ToBePlanned", () => {
         ]);
         jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
+        const store = createStoreMock({
+            state: { to_be_planned_elements: [element_one, element_two] },
+        });
         const wrapper = shallowMount(ToBePlanned, {
+            mocks: { $store: store },
             localVue: await createProgramManagementLocalVue(),
             data(): DefaultData<ToBePlanned> {
                 return {
-                    to_be_planned_elements: [element_one, element_two],
                     is_loading: false,
                     has_error: false,
                     error_message: "",
@@ -106,5 +116,43 @@ describe("ToBePlanned", () => {
         expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(true);
         expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(false);
+    });
+
+    it("During loading, Then elements are retrieved and stored in store", async () => {
+        const element_one = {
+            artifact_id: 1,
+            artifact_title: "My artifact",
+            tracker: {
+                label: "bug",
+            },
+        } as ToBePlannedElement;
+        const element_two = {
+            artifact_id: 2,
+            artifact_title: "My user story",
+            tracker: {
+                label: "user_stories",
+            },
+        } as ToBePlannedElement;
+
+        jest.spyOn(retriever, "getToBePlannedElements").mockImplementation(() =>
+            Promise.resolve([element_one, element_two])
+        );
+        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
+
+        const store = createStoreMock({
+            state: { to_be_planned_elements: [] },
+        });
+
+        const wrapper = shallowMount(ToBePlanned, {
+            mocks: { $store: store },
+            localVue: await createProgramManagementLocalVue(),
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setToBePlannedElements", [
+            element_one,
+            element_two,
+        ]);
     });
 });

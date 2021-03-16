@@ -18,6 +18,7 @@
  */
 
 import { recursiveGet } from "tlp";
+import type { Feature } from "./Feature/feature-retriever";
 
 export interface ProgramIncrement {
     id: number;
@@ -28,6 +29,7 @@ export interface ProgramIncrement {
     user_can_update: boolean;
     user_can_plan: boolean;
     artifact_link_field_id: number | null;
+    features: Feature[];
 }
 
 export function getProgramIncrements(program_id: number): Promise<ProgramIncrement[]> {
