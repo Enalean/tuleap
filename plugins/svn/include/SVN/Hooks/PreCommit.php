@@ -26,8 +26,8 @@ namespace Tuleap\SVN\Hooks;
 
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
-use SVN_CommitToTagDeniedException;
-use Tuleap\SVN\Admin\ImmutableTag;
+use Tuleap\SVN\Commit\CollidingSHA1Validator;
+use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Commit\CommitInfoEnhancer;
 use Tuleap\SVN\Commit\CommitMessageValidator;
@@ -35,7 +35,6 @@ use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\Svn\SHA1CollisionDetector;
-use Tuleap\Svn\SHA1CollisionException;
 
 class PreCommit
 {
@@ -92,12 +91,13 @@ class PreCommit
     {
         $this->assertCommitMessageIsValid();
 
-        $immutable_tag = $this->getImmutableTagFromRepository();
+        $immutable_tag_validator = new ImmutableTagCommitValidator($this->logger, $this->immutable_tag_factory);
+        $sha1_validator          = new CollidingSHA1Validator($this->svnlook, $this->sha1_collision_detector);
 
         $changed_paths = $this->svnlook->getTransactionPath($this->repository, $this->transaction);
         foreach ($changed_paths as $path) {
-            $this->assertPathDoesNotContainSHA1Collision($path);
-            $this->assertCommitIsNotDoneInImmutableTag($immutable_tag, $path);
+            $sha1_validator->assertPathDoesNotContainSHA1Collision($this->repository, $this->transaction, $path);
+            $immutable_tag_validator->assertCommitIsNotDoneInImmutableTag($this->repository, $path);
         }
         $this->logger->debug("Commit is allowed \o/");
     }
@@ -106,111 +106,10 @@ class PreCommit
     {
         $validator = new CommitMessageValidator(
             $this->repository,
-            $this->getCommitMessage(),
+            $this->commit_info_enhancer->getCommitInfo()->getCommitMessage(),
             $this->hook_config_retriever,
             $this->reference_manager
         );
         $validator->assertCommitMessageIsValid();
-    }
-
-    private function getCommitMessage()
-    {
-        return $this->commit_info_enhancer->getCommitInfo()->getCommitMessage();
-    }
-
-    /**
-     * @throws SHA1CollisionException
-     * @throws \RuntimeException
-     */
-    private function assertPathDoesNotContainSHA1Collision(string $path): void
-    {
-        $matches = [];
-        if ($this->extractFilenameFromNonDeletedPath($path, $matches)) {
-            return;
-        }
-        $filename    = $matches[1];
-        $handle_file = $this->svnlook->getContent($this->repository, $this->transaction, $filename);
-        if ($handle_file === false) {
-            throw new \RuntimeException("Can't get the content of the file $filename");
-        }
-        $is_colliding = $this->sha1_collision_detector->isColliding($handle_file);
-        $this->svnlook->closeContentResource($handle_file);
-        if ($is_colliding) {
-            throw new SHA1CollisionException("Known SHA-1 collision rejected on file $filename");
-        }
-    }
-
-    private function extractFilenameFromNonDeletedPath(string $path, array &$matches): bool
-    {
-        return preg_match('/^[^D]\s+(.*)$/', $path, $matches) !== 1;
-    }
-
-    private function getImmutableTagFromRepository(): ImmutableTag
-    {
-        return $this->immutable_tag_factory->getByRepositoryId($this->repository);
-    }
-
-    /**
-     * @throws SVN_CommitToTagDeniedException
-     */
-    private function assertCommitIsNotDoneInImmutableTag(ImmutableTag $immutable_tag, string $path): void
-    {
-        $this->logger->debug("Checking if commit is done in tag: $path");
-        foreach ($immutable_tag->getPaths() as $immutable_path) {
-            if ($this->isCommitForbidden($immutable_tag, $immutable_path, $path)) {
-                throw new SVN_CommitToTagDeniedException("Commit to tag `$immutable_path` is not allowed");
-            }
-        }
-    }
-
-    private function isCommitForbidden(ImmutableTag $immutable_tag, string $immutable_path, string $path): bool
-    {
-        $immutable_path_regexp = $this->getWellFormedRegexImmutablePath($immutable_path);
-
-        $pattern = "%^(?:
-            (?:U|D)\s+$immutable_path_regexp            # U  moduleA/tags/v1
-                                                        # U  moduleA/tags/v1/toto
-            |
-            A\s+" . $immutable_path_regexp . "/[^/]+/[^/]+  # A  moduleA/tags/v1/toto
-            )%x";
-
-        if (preg_match($pattern, $path)) {
-            return ! $this->isCommitDoneOnWhitelistElement($immutable_tag, $path);
-        }
-
-        return false;
-    }
-
-    private function isCommitDoneOnWhitelistElement(ImmutableTag $immutable_tag, string $path): bool
-    {
-        $whitelist = $immutable_tag->getWhitelist();
-        if (! $whitelist) {
-            return false;
-        }
-
-        $whitelist_regexp = [];
-        foreach ($whitelist as $whitelist_path) {
-            $whitelist_regexp[] = $this->getWellFormedRegexImmutablePath($whitelist_path);
-        }
-
-        $allowed_tags = implode('|', $whitelist_regexp);
-
-        $pattern = "%^
-            A\s+(?:$allowed_tags)/[^/]+/?$  # A  tags/moduleA/v1/   (allowed)
-                                            # A  tags/moduleA/toto  (allowed)
-                                            # A  tags/moduleA/v1/toto (forbidden)
-            %x";
-
-        return preg_match($pattern, $path) === 1;
-    }
-
-    private function getWellFormedRegexImmutablePath($immutable_path)
-    {
-        $immutable_path = trim($immutable_path, '/');
-        $immutable_path = preg_quote($immutable_path);
-        $immutable_path = str_replace('\*', '[^/]+', $immutable_path);
-        $immutable_path = str_replace(" ", "\s", $immutable_path);
-
-        return $immutable_path;
     }
 }
