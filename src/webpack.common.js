@@ -21,9 +21,6 @@ const loadJsonFile = require("load-json-file");
 const WebpackAssetsManifest = require("../node_modules/webpack-assets-manifest");
 const path = require("path");
 const webpack_configurator = require("../tools/utils/scripts/webpack-configurator.js");
-const {
-    SuppressNullNamedEntryPlugin,
-} = require("../tools/utils/scripts/webpack-custom-plugins.js");
 
 const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./www/assets/core");
@@ -42,13 +39,10 @@ const manifest_plugin = new WebpackAssetsManifest({
 });
 
 const webpack_config_for_ckeditor = {
-    entry: {
-        null: "null_entry",
-    },
+    entry: {},
     context,
     output,
     plugins: [
-        new SuppressNullNamedEntryPlugin(),
         manifest_plugin,
         webpack_configurator.getCopyPlugin([
             {
@@ -388,9 +382,7 @@ const fat_combined_files = [
     ];
 
 const webpack_config_legacy_combined = {
-    entry: {
-        null: "null_entry",
-    },
+    entry: {},
     context,
     output,
     plugins: [

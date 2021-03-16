@@ -22,17 +22,13 @@ const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
+const browserlist_config =
+    "last 2 Chrome versions,last 2 Firefox versions,Firefox ESR,last 2 Edge versions";
+
 const babel_preset_env_chrome_config = [
     BabelPresetEnv,
     {
-        targets: {
-            browsers: [
-                "last 2 Chrome versions",
-                "last 2 Firefox versions",
-                "Firefox ESR",
-                "last 2 Edge versions",
-            ],
-        },
+        targets: browserlist_config,
         modules: false,
         useBuiltIns: "usage",
         corejs: "3",
@@ -109,7 +105,7 @@ const rule_po_files = {
 const rule_mustache_files = {
     test: /\.mustache$/,
     exclude: /node_modules/,
-    use: { loader: "raw-loader" },
+    type: "asset/resource",
 };
 
 const rule_ng_cache_loader = {
@@ -117,8 +113,7 @@ const rule_ng_cache_loader = {
     exclude: [/node_modules/, /vendor/],
     use: [
         {
-            loader: "ng-cache-loader",
-            query: "-url",
+            loader: "ng-cache-loader?-url",
         },
     ],
 };
@@ -137,8 +132,7 @@ const rule_angular_gettext_loader = {
     use: [
         { loader: "json-loader" },
         {
-            loader: "angular-gettext-loader",
-            query: "browserify=true&format=json",
+            loader: "angular-gettext-loader?browserify=true&format=json",
         },
     ],
 };
@@ -171,31 +165,23 @@ const rule_scss_loader = {
 
 const rule_css_assets = {
     test: /(\.(webp|png|gif|eot|ttf|woff|woff2|svg))$/,
-    use: [
-        {
-            loader: "file-loader",
-            options: {
-                name: "css-assets/[name]-[sha256:hash:hex:16].[ext]",
-            },
-        },
-    ],
+    type: "asset/resource",
+    generator: {
+        filename: "css-assets/[name]-[hash][ext][query]",
+    },
 };
 
 //Workaround to fix the image display in vue, see: https://github.com/vuejs/vue-loader/issues/1612
 const rule_vue_images = {
     test: /(\.(webp|png|gif|svg))$/,
-    use: [
-        {
-            loader: "file-loader",
-            options: {
-                esModule: false,
-                name: "css-assets/[name]-[sha256:hash:hex:16].[ext]",
-            },
-        },
-    ],
+    type: "asset/resource",
+    generator: {
+        filename: "static/[name]-[hash][ext][query]",
+    },
 };
 
 module.exports = {
+    browserlist_config,
     configureBabelRule,
     configureTypescriptRules,
     babel_options_jest,

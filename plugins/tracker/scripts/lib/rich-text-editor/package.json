@@ -9,12 +9,6 @@
   "main": "dist/plugin-tracker-rich-text-editor.umd.js",
   "types": "types/index.d.ts",
   "style": "dist/style.css",
-  "exports": {
-    ".": {
-      "import": "./dist/plugin-tracker-rich-text-editor.es.js",
-      "require": "./dist/plugin-tracker-rich-text-editor.umd.js"
-    }
-  },
   "dependencies": {
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
     "marked": "^2.0.1",

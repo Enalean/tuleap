@@ -24,7 +24,6 @@ module.exports = [
     {
         entry: {
             "flamingparrot-theme": "./themes/FlamingParrot/css/style.scss",
-            null: "null_entry",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(

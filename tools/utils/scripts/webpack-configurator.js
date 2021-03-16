@@ -23,13 +23,13 @@ const { merge } = require("webpack-merge");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
+const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
-const { SuppressNullNamedEntryPlugin } = require("./webpack-custom-plugins.js");
 
 const rule_configurations = require("./webpack-rule-configs.js");
 
@@ -88,14 +88,24 @@ function getCopyPlugin(patterns = [], options = {}) {
 
 function getCSSExtractionPlugins() {
     return [
-        new FixStyleOnlyEntriesPlugin({
+        new RemoveEmptyScriptsPlugin({
             extensions: ["scss", "css"],
-            silent: true,
         }),
         new MiniCssExtractPlugin({
             filename: "[name]-[chunkhash].css",
         }),
     ];
+}
+
+function getJSOptimizerPlugin() {
+    return new TerserPlugin({
+        terserOptions: {
+            format: {
+                comments: false,
+            },
+        },
+        extractComments: false,
+    });
 }
 
 function getCSSOptimizerPlugin() {
@@ -112,20 +122,18 @@ function getCSSOptimizerPlugin() {
 }
 
 function getLegacyConcatenatedScriptsPlugins(concatenated_files_configuration) {
-    return [
-        new SuppressNullNamedEntryPlugin(),
-        new MergeIntoSingleFilePlugin({ files: concatenated_files_configuration, hash: true }),
-    ];
+    return [new MergeIntoSingleFilePlugin({ files: concatenated_files_configuration, hash: true })];
 }
 
 function getIgnorePlugin() {
-    return new webpack.IgnorePlugin(/\.(?:pot|mo|po~)$/);
+    return new webpack.IgnorePlugin({ resourceRegExp: /\.(?:pot|mo|po~)$/ });
 }
 
 function extendDevConfiguration(webpack_configs) {
     return webpack_configs.map((webpack_config) =>
         merge(webpack_config, {
             mode: "development",
+            target: "browserslist:" + rule_configurations.browserlist_config,
             devtool: "inline-source-map",
             plugins: [getIgnorePlugin()],
         })
@@ -136,15 +144,20 @@ function extendProdConfiguration(webpack_configs) {
     return webpack_configs.map((webpack_config) =>
         merge(webpack_config, {
             mode: "production",
-            plugins: [getCSSOptimizerPlugin(), getIgnorePlugin()],
+            target: "browserslist:" + rule_configurations.browserlist_config,
+            plugins: [getJSOptimizerPlugin(), getCSSOptimizerPlugin(), getIgnorePlugin()],
             stats: {
                 all: false,
                 assets: true,
+                relatedAssets: true,
                 errors: true,
                 errorDetails: true,
                 performance: true,
                 timings: true,
-                excludeAssets: [/polyfill-/, /\.d\.ts(\.map)?$/],
+                excludeAssets: [/\.d\.ts(\.map)?$/],
+                assetsSpace: Infinity,
+                groupAssetsByPath: true,
+                groupAssetsByExtension: true,
             },
         })
     );

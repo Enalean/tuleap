@@ -23,7 +23,6 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 module.exports = [
     {
         entry: {
-            null: "null_entry",
             style: "./themes/default/css/style.scss",
         },
         context: path.resolve(__dirname),

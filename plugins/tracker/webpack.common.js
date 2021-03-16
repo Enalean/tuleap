@@ -148,9 +148,7 @@ const config_for_burning_parrot = {
 };
 
 const config_for_legacy_scripts = {
-    entry: {
-        null: "null_entry",
-    },
+    entry: {},
     context,
     output,
     externals: {
