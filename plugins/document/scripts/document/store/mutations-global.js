@@ -40,7 +40,6 @@ function initApp(
     state,
     [
         project_url,
-        user_is_admin,
         date_time_format,
         root_title,
         user_can_create_wiki,
@@ -60,7 +59,6 @@ function initApp(
     ]
 ) {
     state.project_url = project_url;
-    state.is_user_administrator = user_is_admin;
     state.date_time_format = date_time_format;
     state.root_title = root_title;
     state.user_can_create_wiki = user_can_create_wiki;

@@ -36,7 +36,6 @@ describe("App", () => {
         router = new VueRouter({});
 
         const default_prop = {
-            user_is_admin: true,
             user_can_create_wiki: false,
             date_time_format: "Ymd",
             max_files_dragndrop: 5,
