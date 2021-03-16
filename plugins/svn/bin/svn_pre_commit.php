@@ -27,11 +27,12 @@ require_once __DIR__ . '/../include/svnPlugin.php';
 
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Commit\CollidingSHA1Validator;
+use Tuleap\SVN\Commit\CommitMessageValidator;
+use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
 use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Admin\ImmutableTagDao;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
-use Tuleap\SVN\Commit\CommitInfo;
-use Tuleap\SVN\Commit\CommitInfoEnhancer;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Hooks\PreCommit;
@@ -63,18 +64,31 @@ try {
         new AccessFileHistoryFactory(new AccessFileHistoryDao()),
     );
     $hook               = new PreCommit(
-        $transaction,
-        $repository_manager->getRepositoryFromSystemPath($repository_path),
-        new CommitInfoEnhancer($svnlook, new CommitInfo()),
-        new ImmutableTagFactory(new ImmutableTagDao()),
         $svnlook,
-        new SHA1CollisionDetector(),
         $logger,
-        new HookConfigRetriever(new HookDao(), new HookConfigSanitizer()),
-        ReferenceManager::instance(),
+        new CommitMessageValidator(
+            new HookConfigRetriever(
+                new HookDao(),
+                new HookConfigSanitizer()
+            ),
+            ReferenceManager::instance(),
+        ),
+        new ImmutableTagCommitValidator(
+            $logger,
+            new ImmutableTagFactory(
+                new ImmutableTagDao()
+            )
+        ),
+        new CollidingSHA1Validator(
+            $svnlook,
+            new SHA1CollisionDetector()
+        )
     );
 
-    $hook->assertCommitIsValid();
+    $hook->assertCommitIsValid(
+        $repository_manager->getRepositoryFromSystemPath($repository_path),
+        $transaction,
+    );
 
     exit(0);
 } catch (Exception $exception) {

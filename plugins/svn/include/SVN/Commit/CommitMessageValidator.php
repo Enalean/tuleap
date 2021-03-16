@@ -32,10 +32,6 @@ use Tuleap\SVN\Repository\Repository;
 
 class CommitMessageValidator
 {
-    /** @var Repository */
-    private $repository;
-
-    private $commit_message;
     /**
      * @var HookConfigRetriever
      */
@@ -46,13 +42,9 @@ class CommitMessageValidator
     private $reference_manager;
 
     public function __construct(
-        Repository $repository,
-        $commit_message,
         HookConfigRetriever $hook_config_retriever,
         ReferenceManager $reference_manager
     ) {
-        $this->repository            = $repository;
-        $this->commit_message        = $commit_message;
         $this->hook_config_retriever = $hook_config_retriever;
         $this->reference_manager     = $reference_manager;
     }
@@ -61,21 +53,21 @@ class CommitMessageValidator
      * @throws EmptyCommitMessageException
      * @throws CommitMessageWithoutReferenceException
      */
-    public function assertCommitMessageIsValid(): void
+    public function assertCommitMessageIsValid(Repository $repository, CommitInfo $commit_info): void
     {
-        $this->assertCommitMessageIsNotEmpty();
-        $this->assertCommitMessageContainsArtifactReference();
+        $this->assertCommitMessageIsNotEmpty($commit_info);
+        $this->assertCommitMessageContainsArtifactReference($repository, $commit_info);
     }
 
     /**
      * @throws EmptyCommitMessageException
      */
-    private function assertCommitMessageIsNotEmpty(): void
+    private function assertCommitMessageIsNotEmpty(CommitInfo $commit_info): void
     {
         if (ForgeConfig::get('sys_allow_empty_svn_commit_message')) {
             return;
         }
-        if ($this->commit_message === "") {
+        if ($commit_info->getCommitMessage() === "") {
             throw new EmptyCommitMessageException();
         }
     }
@@ -83,15 +75,15 @@ class CommitMessageValidator
     /**
      * @throws CommitMessageWithoutReferenceException
      */
-    private function assertCommitMessageContainsArtifactReference(): void
+    private function assertCommitMessageContainsArtifactReference(Repository $repository, CommitInfo $commit_info): void
     {
-        $hook_config = $this->hook_config_retriever->getHookConfig($this->repository);
+        $hook_config = $this->hook_config_retriever->getHookConfig($repository);
         if (! $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)) {
             return;
         }
 
-        $project = $this->repository->getProject();
-        if (! $this->reference_manager->stringContainsReferences($this->commit_message, $project)) {
+        $project = $repository->getProject();
+        if (! $this->reference_manager->stringContainsReferences($commit_info->getCommitMessage(), $project)) {
             throw new CommitMessageWithoutReferenceException();
         }
     }

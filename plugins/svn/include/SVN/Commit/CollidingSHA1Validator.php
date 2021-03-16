@@ -27,7 +27,7 @@ use Tuleap\SVN\Repository\Repository;
 use Tuleap\Svn\SHA1CollisionDetector;
 use Tuleap\Svn\SHA1CollisionException;
 
-final class CollidingSHA1Validator
+final class CollidingSHA1Validator implements PathValidator
 {
     /**
      * @var Svnlook
@@ -48,7 +48,16 @@ final class CollidingSHA1Validator
      * @throws SHA1CollisionException
      * @throws \RuntimeException
      */
-    public function assertPathDoesNotContainSHA1Collision(Repository $repository, string $transaction, string $path): void
+    public function assertPathIsValid(Repository $repository, string $transaction, string $path): void
+    {
+        $this->assertPathDoesNotContainSHA1Collision($repository, $transaction, $path);
+    }
+
+    /**
+     * @throws SHA1CollisionException
+     * @throws \RuntimeException
+     */
+    private function assertPathDoesNotContainSHA1Collision(Repository $repository, string $transaction, string $path): void
     {
         $matches = [];
         if ($this->extractFilenameFromNonDeletedPath($path, $matches)) {
