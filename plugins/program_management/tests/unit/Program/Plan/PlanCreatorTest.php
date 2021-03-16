@@ -59,7 +59,15 @@ final class PlanCreatorTest extends TestCase
         $plan_dao->shouldReceive('save')->with(\Mockery::type(Plan::class))->once();
 
         $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);
-        $plan_adapter->create($user, $project_id, $program_increment_tracker_id, [$plannable_tracker_id], ['102_4']);
+        $plan_adapter->create(
+            $user,
+            $project_id,
+            $program_increment_tracker_id,
+            [$plannable_tracker_id],
+            ['102_4'],
+            "Program Increments",
+            "program increment"
+        );
     }
 
     public function testItThrowsAnExceptionWhenProgramIncrementTrackerIsInPlannableTracker(): void
@@ -78,6 +86,14 @@ final class PlanCreatorTest extends TestCase
         $this->expectException(CannotPlanIntoItselfException::class);
 
         $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);
-        $plan_adapter->create($user, $project_id, $program_increment_tracker_id, [$plannable_tracker_id], ['101_4']);
+        $plan_adapter->create(
+            $user,
+            $project_id,
+            $program_increment_tracker_id,
+            [$plannable_tracker_id],
+            ['101_4'],
+            "Program Increments",
+            "program increment"
+        );
     }
 }

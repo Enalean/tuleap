@@ -12,8 +12,8 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Add a program increment"
-msgstr "Ajouter un programme incrément"
+msgid "Add %{ program_increment_sub_label }"
+msgstr "Ajouter %{ program_increment_sub_label }"
 
 msgid "Backlog"
 msgstr "Planification"
@@ -26,9 +26,6 @@ msgstr "Modifier"
 
 msgid "Program"
 msgstr "Programme"
-
-msgid "Program Increment"
-msgstr "Programme Incrément"
 
 msgid "The retrieval of the elements to be planned in program has failed"
 msgstr "La récupération des éléments à planifier dans le programme a échoué"

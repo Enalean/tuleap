@@ -57,6 +57,7 @@ final class PlanDao extends DataAccessObject implements PlanStore
         }
         $this->getDB()->insertMany('plugin_program_management_plan', $insert);
         $this->setUpPlanPermissions($plan);
+        $this->setUpPlanLabels($plan);
     }
 
     private function setUpPlanPermissions(Plan $plan): void
@@ -74,6 +75,30 @@ final class PlanDao extends DataAccessObject implements PlanStore
             ];
         }
         $this->getDB()->insertMany('plugin_program_management_can_prioritize_features', $insert);
+    }
+
+    private function setUpPlanLabels(Plan $plan): void
+    {
+        $sql = 'DELETE FROM plugin_program_management_label_program_increment WHERE program_increment_tracker_id = ?';
+
+        $program_increment_tracker_id = $plan->getProgramIncrementTracker()->getId();
+        $this->getDB()->run($sql, $program_increment_tracker_id);
+
+        if ($plan->getCustomLabel() === null && $plan->getCustomSubLabel() === null) {
+            return;
+        }
+
+        $insert = ['program_increment_tracker_id' => $program_increment_tracker_id];
+
+        if ($plan->getCustomLabel() !== null) {
+            $insert['label'] = $plan->getCustomLabel();
+        }
+
+        if ($plan->getCustomSubLabel() !== null) {
+            $insert['sub_label'] = $plan->getCustomSubLabel();
+        }
+
+        $this->getDB()->insert('plugin_program_management_label_program_increment', $insert);
     }
 
     private function cleanUpTopBacklogs(): void
@@ -122,5 +147,14 @@ final class PlanDao extends DataAccessObject implements PlanStore
         }
 
         return $tracker_id;
+    }
+
+    /**
+     * @psalm-return null|array{label: ?string, sub_label: ?string}
+     */
+    public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array
+    {
+        $sql = "SELECT label, sub_label FROM plugin_program_management_label_program_increment WHERE program_increment_tracker_id = ?";
+        return $this->getDB()->row($sql, $program_increment_tracker_id);
     }
 }

@@ -77,6 +77,31 @@ class ProjectResourceTest extends \RestBase
     /**
      * @depends testPUTTeam
      */
+    public function testPUTPlanWithCustomLabel(): void
+    {
+        $project_id = $this->getProgramProjectId();
+
+        $plan_definition = json_encode(
+            [
+                "program_increment_tracker_id" => $this->tracker_ids[$project_id]['rel'],
+                "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['story']],
+                "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
+                "custom_label" => "Custom Program Increments",
+                "custom_sub_label" => "program increment"
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->put('projects/' . $project_id . '/program_plan', null, $plan_definition),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testPUTTeam
+     */
     public function testGetProgramIncrements(): int
     {
         $project_id = $this->getProgramProjectId();

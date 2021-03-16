@@ -39,15 +39,27 @@ final class ProgramIncrementTrackerConfiguration
      * @var int | null
      */
     private $artifact_link_field_id;
+    /**
+     * @var ?string
+     */
+    private $program_increment_label;
+    /**
+     * @var ?string
+     */
+    private $program_increment_sub_label;
 
     public function __construct(
         int $program_increment_tracker_id,
         bool $can_create_program_increment,
-        ?int $artifact_link_field_id
+        ?int $artifact_link_field_id,
+        ?string $program_increment_label,
+        ?string $program_increment_sub_label
     ) {
         $this->can_create_program_increment = $can_create_program_increment;
         $this->program_increment_tracker_id = $program_increment_tracker_id;
         $this->artifact_link_field_id       = $artifact_link_field_id;
+        $this->program_increment_label      = $program_increment_label;
+        $this->program_increment_sub_label  = $program_increment_sub_label;
     }
 
     public function canCreateProgramIncrement(): bool
@@ -63,5 +75,15 @@ final class ProgramIncrementTrackerConfiguration
     public function getArtifactLinkFieldId(): ?int
     {
         return $this->artifact_link_field_id;
+    }
+
+    public function getProgramIncrementLabel(): ?string
+    {
+        return $this->program_increment_label;
+    }
+
+    public function getProgramIncrementSubLabel(): ?string
+    {
+        return $this->program_increment_sub_label;
     }
 }

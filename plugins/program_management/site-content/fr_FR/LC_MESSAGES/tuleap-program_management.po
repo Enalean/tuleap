@@ -53,6 +53,9 @@ msgstr ""
 msgid "Program"
 msgstr "Programme"
 
+msgid "Program Increments"
+msgstr "Incréments de Programme"
+
 msgid "Program Management"
 msgstr "Gestion de Programme"
 
@@ -88,6 +91,9 @@ msgid ""
 msgstr ""
 "Vous êtes en train de créer un incrément de programme, les releases "
 "correspondantes seront crées dans les équipes correspondantes."
+
+msgid "program increment"
+msgstr "incrément de programme"
 
 msgid "{{ user_group_name }} has no permission"
 msgstr "{{ user_group_name }} n'a aucune permission"

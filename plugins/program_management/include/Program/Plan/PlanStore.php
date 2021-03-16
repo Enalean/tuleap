@@ -33,4 +33,9 @@ interface PlanStore
     public function isPartOfAPlan(ProgramTracker $tracker_data): bool;
 
     public function getProgramIncrementTrackerId(int $project_id): ?int;
+
+    /**
+     * @psalm-return null|array{label: ?string, sub_label: ?string}
+     */
+    public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array;
 }
