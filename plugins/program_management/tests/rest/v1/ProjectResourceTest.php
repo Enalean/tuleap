@@ -83,8 +83,8 @@ class ProjectResourceTest extends \RestBase
 
         $plan_definition = json_encode(
             [
-                "program_increment_tracker_id" => $this->tracker_ids[$project_id]['rel'],
-                "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['story']],
+                "program_increment_tracker_id" => $this->tracker_ids[$project_id]['pi'],
+                "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['features']],
                 "permissions" => ['can_prioritize_features' => ["${project_id}_4"]],
                 "custom_label" => "Custom Program Increments",
                 "custom_sub_label" => "program increment"
