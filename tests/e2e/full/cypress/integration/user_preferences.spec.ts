@@ -155,14 +155,6 @@ describe("User preferences", () => {
 
             assertFeedbackContainsMessage("Email format preference successfully updated");
         });
-
-        it("allows user to change the format of the tracker emails to HTML", () => {
-            cy.get("[data-test=user-prefs-html-format]").click();
-            cy.get("[data-test=user-prefs-update-notification]").click();
-            cy.get("[data-test=user-prefs-html-format]").should("have.checked", "checked");
-
-            assertFeedbackContainsMessage("Email format preference successfully updated");
-        });
     });
 
     describe("in the [Keys & Tokens] tab", () => {
@@ -171,20 +163,24 @@ describe("User preferences", () => {
         });
 
         describe("in the SSH keys section", () => {
-            it("the user can add his public SSH key", () => {
+            it("the user can manipulate his public SSH key", () => {
                 cy.get("[data-test=add-ssh-key-button]").click();
-                cy.fixture("heisenberg.pub", "utf-8").then((heisenberg_public_ssh_key) => {
-                    cy.get("[data-test=ssh-key]").type(heisenberg_public_ssh_key);
-                    cy.get("[data-test=submit-new-ssh-key-button]").click();
-                    assertFeedbackContainsMessage(
-                        "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
-                    );
+                cy.get("[data-test=ssh-key]")
+                    .type(".")
+                    .then(($input) => {
+                        $input.val(
+                            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCu3WYbOeBkXkDaKiV3AX6noIw16pjjrftXyiRjvP9O heisenberg@example"
+                        );
+                    });
 
-                    cy.get("[data-ssh_key_value]").should("have.length", 1);
-                });
-            });
+                cy.get("[data-test=submit-new-ssh-key-button]").click();
+                assertFeedbackContainsMessage(
+                    "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
+                );
 
-            it("the user can remove his public SSH key", () => {
+                cy.get("[data-ssh_key_value]").should("have.length", 1);
+
+                // revoke it
                 cy.get("[data-test=user-prefs-remove-ssh-key-checkbox]").click();
                 cy.get("[data-test=remove-ssh-keys-button]").click();
 
@@ -197,7 +193,7 @@ describe("User preferences", () => {
         });
 
         describe("in the personal access key section", () => {
-            it("the user can generate a personal access key", () => {
+            it("the user can manipulate his personal access key", () => {
                 cy.get("[data-test=generate-access-key-button]").click();
                 cy.get("[data-test=access-key-description]").type("An access key for GIT and REST");
                 cy.get("[data-test=user-prefs-personal-access-key-scope-option]").click({
@@ -213,9 +209,8 @@ describe("User preferences", () => {
                 );
                 cy.get("[data-test=user-prefs-new-api-key]").should("exist");
                 cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 1);
-            });
 
-            it("the user can revoke his personal access key", () => {
+                // revoke it
                 cy.get("[data-test=user-prefs-personal-access-key-checkbox]").click();
                 cy.get("[data-test=button-revoke-access-tokens]").click();
 
@@ -226,7 +221,7 @@ describe("User preferences", () => {
         });
 
         describe("in the SVN Tokens section", () => {
-            it("the user is able to create a SVN token", () => {
+            it("the user is able to manipulate a SVN token", () => {
                 cy.get("[data-test=generate-svn-token-button]").click();
                 cy.get("[data-test=svn-token-description]").type("My handsome SVN token");
                 cy.get("[data-test=generate-new-svn-token-button]").click();
@@ -237,9 +232,8 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-new-svn-token]").should("exist");
 
                 cy.get("[data-test=user-prefs-svn-token]").should("have.length", 1);
-            });
 
-            it("the user is able to revoke his SVN tokens", () => {
+                //revoke it
                 cy.get("[data-test=user-prefs-revoke-svn-token-checkbox]").click();
                 cy.get("[data-test=button-revoke-svn-tokens]").click();
                 cy.get("[data-test=user-prefs-svn-token]").should("have.length", 0);
@@ -255,7 +249,7 @@ describe("User preferences", () => {
         });
 
         describe("in the language section", () => {
-            it("the user can set French as his language", () => {
+            it("the user can choose his his language", () => {
                 cy.get("[data-test=user-prefs-language-selector-fr_FR]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
 
@@ -263,9 +257,8 @@ describe("User preferences", () => {
 
                 cy.get("[data-test=user-prefs-language-selector-fr_FR]").should("be.checked");
                 cy.get("[data-test=user-preferences-title]").contains("Préférences");
-            });
 
-            it("the user can set English as his language", () => {
+                // rollback to English
                 cy.get("[data-test=user-prefs-language-selector-en_US]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
 
@@ -285,37 +278,29 @@ describe("User preferences", () => {
             }
 
             it("the user can change the theme color of Tuleap", () => {
-                const available_colors = ["blue", "green", "grey", "orange", "purple", "red"];
-
-                available_colors.forEach((color) => {
-                    cy.get("[data-test=user-preferences-color-selector]").select(color, {
-                        force: true,
-                    });
-                    assertColorPreviewIs(color);
-                    cy.get("[data-test=user-prefs-appearance-section-submit]").click();
-                    assertFeedbackContainsMessage("User preferences successfully updated");
-
-                    // eslint-disable-next-line cypress/require-data-selectors
-                    cy.get("body").should("have.class", `theme-${color}`);
-                    cy.get("[data-test=user-preferences-color-selector]").should(
-                        "have.value",
-                        color
-                    );
+                cy.get("[data-test=user-preferences-color-selector]").select("blue", {
+                    force: true,
                 });
+                assertColorPreviewIs("blue");
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").should("have.class", `theme-blue`);
+                cy.get("[data-test=user-preferences-color-selector]").should("have.value", "blue");
             });
         });
 
         describe("the user can set the display density", () => {
-            it("to the condensed mode", () => {
+            it("to the condensed/comfortable mode", () => {
                 cy.get("[data-test=user-prefs-display-density-condensed]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
                 assertFeedbackContainsMessage("User preferences successfully updated");
 
                 // eslint-disable-next-line cypress/require-data-selectors
                 cy.get("body").should("have.class", "theme-condensed");
-            });
 
-            it("to the comfortable mode", () => {
+                //rollback to comfortable mode
                 cy.get("[data-test=user-prefs-display-density-comfortable]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
                 assertFeedbackContainsMessage("User preferences successfully updated");
@@ -337,21 +322,6 @@ describe("User preferences", () => {
 
                 cy.get("[data-test=user-preferences-accessibility-selector]").should("be.checked");
                 cy.get("[data-user-has-accessibility-mode]").contains(1);
-            });
-
-            it("the user can disable the option", () => {
-                cy.get("[data-test=user-preferences-accessibility-selector]").click();
-                cy.get("[data-test=user-preferences-section-appearance-preview]").should(
-                    "have.class",
-                    `user-preferences-section-appearance-preview-without-accessibility`
-                );
-                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
-                assertFeedbackContainsMessage("User preferences successfully updated");
-
-                cy.get("[data-test=user-preferences-accessibility-selector]").should(
-                    "not.be.checked"
-                );
-                cy.get("[data-user-has-accessibility-mode]").contains(0);
             });
         });
 
@@ -398,65 +368,25 @@ describe("User preferences", () => {
 
                 cy.get("[data-test=user-prefs-tracker-default-format-html]").should("be.checked");
             });
-
-            it("the user can choose the CommonMark format", () => {
-                cy.get("[data-test=user-prefs-tracker-default-format-commonmark]").click();
-                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
-
-                assertFeedbackContainsMessage("User preferences successfully updated");
-
-                cy.get("[data-test=user-prefs-tracker-default-format-commonmark]").should(
-                    "be.checked"
-                );
-            });
         });
 
         describe("in the CSV separator section", () => {
-            it("the user can choose Semicolon separators", () => {
+            it("the user can choose separators to semicolon", () => {
                 cy.get("[data-test=user-prefs-csv-separator-semicolon]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
                 assertFeedbackContainsMessage("User preferences successfully updated");
-
-                cy.get("[data-test=user-prefs-csv-separator-semicolon]").should("be.checked");
-            });
-
-            it("the user can choose Tab separators", () => {
-                cy.get("[data-test=user-prefs-csv-separator-tab]").click();
-                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
-
-                assertFeedbackContainsMessage("User preferences successfully updated");
-
-                cy.get("[data-test=user-prefs-csv-separator-tab]").should("be.checked");
-            });
-
-            it("the user can choose Comma separators", () => {
-                cy.get("[data-test=user-prefs-csv-separator-comma]").click();
-                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
-
-                assertFeedbackContainsMessage("User preferences successfully updated");
-
-                cy.get("[data-test=user-prefs-csv-separator-comma]").should("be.checked");
             });
         });
 
         describe("in the CSV date format section", () => {
-            it("the user can choose the day/month/year date format", () => {
+            it("the user can choose the  date format to day/month/year", () => {
                 cy.get("[data-test=user-prefs-csv-dateformat-day-month-year]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
                 assertFeedbackContainsMessage("User preferences successfully updated");
 
                 cy.get("[data-test=user-prefs-csv-dateformat-day-month-year]").should("be.checked");
-            });
-
-            it("the user can choose the month/day/year format", () => {
-                cy.get("[data-test=user-prefs-csv-dateformat-month-day-year]").click();
-                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
-
-                assertFeedbackContainsMessage("User preferences successfully updated");
-
-                cy.get("[data-test=user-prefs-csv-dateformat-month-day-year]").should("be.checked");
             });
         });
     });
