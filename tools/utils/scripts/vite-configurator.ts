@@ -20,8 +20,10 @@
 import type { BuildOptions, UserConfig, UserConfigExport } from "vite";
 import { defineConfig as viteDefineConfig } from "vite";
 import { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
+import { browserlist_config } from "./browserslist_config";
+import browserslist from "browserslist";
 
-type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize">;
+type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "target">;
 type UserConfigWithoutBuild = Omit<UserConfig, "build">;
 type OverloadedUserConfig = UserConfigWithoutBuild & { build: OverloadedBuildOptions };
 
@@ -31,6 +33,9 @@ export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
         build: {
             ...config.build,
             brotliSize: false,
+            target: browserslist(browserlist_config).map((target: string) =>
+                target.replace(" ", "")
+            ),
         },
     });
 }

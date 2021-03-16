@@ -21,9 +21,7 @@ const BabelPresetEnv = require("@babel/preset-env").default;
 const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-
-const browserlist_config =
-    "last 2 Chrome versions,last 2 Firefox versions,Firefox ESR,last 2 Edge versions";
+const { browserlist_config } = require("./browserslist_config");
 
 const babel_preset_env_chrome_config = [
     BabelPresetEnv,
