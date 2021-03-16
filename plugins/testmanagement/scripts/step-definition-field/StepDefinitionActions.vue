@@ -26,13 +26,40 @@
                 ref="format"
                 class="input-small ttm-definition-step-description-format"
                 v-on:change="input($event)"
-                v-bind:disabled="disabled"
+                v-bind:disabled="disabled_format_selectbox"
+                data-test="ttm-definition-step-description-format"
             >
-                <option value="text" v-bind:selected="is_text">Text</option>
-                <option value="html" v-bind:selected="is_html">HTML</option>
-                <option value="commonmark" v-bind:selected="is_commonmark">Markdown</option>
+                <option
+                    value="text"
+                    v-bind:selected="is_text"
+                    data-test="ttm-definition-step-description-format-text"
+                >
+                    Text
+                </option>
+                <option
+                    value="html"
+                    v-bind:selected="is_html"
+                    data-test="ttm-definition-step-description-format-html"
+                >
+                    HTML
+                </option>
+                <option
+                    value="commonmark"
+                    v-bind:selected="is_commonmark"
+                    data-test="ttm-definition-step-description-format-commonmark"
+                >
+                    Markdown
+                </option>
             </select>
-            <commonmark-syntax-helper v-if="is_commonmark" />
+            <commonmark-preview-button
+                v-on:commonmark-preview-event="toggleButtonAndSelector"
+                v-bind:is_in_preview_mode="is_in_preview_mode"
+                v-if="is_commonmark_button_displayed"
+            />
+            <commonmark-syntax-helper
+                v-bind:is_in_preview_mode="is_in_preview_mode"
+                v-if="is_commonmark_button_displayed"
+            />
         </div>
         <slot />
     </div>
@@ -45,11 +72,12 @@ import {
     TEXT_FORMAT_TEXT,
 } from "../../../tracker/scripts/constants/fields-constants.js";
 import { mapState } from "vuex";
-import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
+import CommonmarkSyntaxHelper from "./CommonMark/CommonmarkSyntaxHelper.vue";
+import CommonmarkPreviewButton from "./CommonMark/CommonmarkPreviewButton.vue";
 
 export default {
     name: "StepDefinitionActions",
-    components: { CommonmarkSyntaxHelper },
+    components: { CommonmarkPreviewButton, CommonmarkSyntaxHelper },
     props: {
         value: String,
         disabled: {
@@ -60,6 +88,11 @@ export default {
             type: String,
             default: "",
         },
+    },
+    data() {
+        return {
+            is_in_preview_mode: false,
+        };
     },
     computed: {
         ...mapState(["field_id"]),
@@ -72,10 +105,19 @@ export default {
         is_commonmark() {
             return this.value === TEXT_FORMAT_COMMONMARK;
         },
+        disabled_format_selectbox() {
+            return this.disabled || this.is_in_preview_mode;
+        },
+        is_commonmark_button_displayed() {
+            return !this.disabled && this.is_commonmark;
+        },
     },
     methods: {
         input(event) {
             this.$emit("input", event, this.$refs.format.value);
+        },
+        toggleButtonAndSelector() {
+            this.is_in_preview_mode = !this.is_in_preview_mode;
         },
     },
 };

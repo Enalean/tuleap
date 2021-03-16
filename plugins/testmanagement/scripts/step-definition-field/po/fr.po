@@ -21,6 +21,9 @@ msgstr "Ajouter une étape"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Edit"
+msgstr "Editer"
+
 msgid "Expected results"
 msgstr "Résultats attendus"
 
@@ -32,6 +35,9 @@ msgstr "Format :"
 
 msgid "Help"
 msgstr "Aide"
+
+msgid "Preview"
+msgstr "Aperçu"
 
 msgid "Reorder steps"
 msgstr "Réordonner les étapes"
