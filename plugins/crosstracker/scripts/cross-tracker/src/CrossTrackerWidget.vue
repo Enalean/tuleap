@@ -101,13 +101,13 @@ export default {
             this.$store.commit("switchToWritingMode");
         },
 
-        switchToReadingMode({ saved_state }) {
-            if (saved_state === true) {
+        switchToReadingMode(state) {
+            if (state.saved_state === true) {
                 this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
             } else {
                 this.readingCrossTrackerReport.duplicateFromReport(this.writingCrossTrackerReport);
             }
-            this.$store.commit("switchToReadingMode", { saved_state });
+            this.$store.commit("switchToReadingMode", state.saved_state);
         },
 
         async loadBackendReport() {

@@ -21,7 +21,7 @@ import { localVue } from "./helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import { createStoreMock } from "../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { createStore } from "./store/index.js";
+import { createStore } from "./store/index";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
@@ -97,7 +97,7 @@ describe("CrossTrackerWidget", () => {
             wrapper.vm.switchToReadingMode(payload);
 
             expect(duplicate).toHaveBeenCalledWith(readingCrossTrackerReport);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", payload);
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", true);
         });
 
         it(`When I switch to the reading mode with unsaved state,
@@ -110,7 +110,7 @@ describe("CrossTrackerWidget", () => {
             wrapper.vm.switchToReadingMode(payload);
 
             expect(duplicate).toHaveBeenCalledWith(writingCrossTrackerReport);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", payload);
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", false);
         });
     });
 

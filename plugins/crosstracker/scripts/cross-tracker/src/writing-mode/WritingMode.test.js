@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { localVue } from "../helpers/local-vue";
-import { createStore } from "../store/index.js";
+import { createStore } from "../store/index";
 import WritingMode from "./WritingMode.vue";
 import {
     default as WritingCrossTrackerReport,

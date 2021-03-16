@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { localVue } from "../helpers/local-vue";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { createStore } from "../store/index.js";
+import { createStore } from "../store/index";
 import ExportCSVButton from "./ExportCSVButton.vue";
 import * as rest_querier from "../api/rest-querier";
 import * as download_helper from "../helpers/download-helper";

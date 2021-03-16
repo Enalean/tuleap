@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./mutations.js";
+import * as mutations from "./mutations";
+import type { State } from "../type";
 
 describe("mutations", () => {
     describe("discardUnsavedReport()", () => {
@@ -26,7 +27,7 @@ describe("mutations", () => {
                 is_report_saved: false,
                 error_message: "Bad request",
                 success_message: "Hurrah",
-            };
+            } as State;
 
             mutations.discardUnsavedReport(state);
 
@@ -43,9 +44,9 @@ describe("mutations", () => {
                 is_report_saved: false,
                 error_message: "Bad request",
                 success_message: "Yay",
-            };
+            } as State;
 
-            mutations.switchToReadingMode(state, { saved_state: true });
+            mutations.switchToReadingMode(state, true);
 
             expect(state.reading_mode).toBe(true);
             expect(state.is_report_saved).toBe(true);
@@ -60,7 +61,7 @@ describe("mutations", () => {
                 reading_mode: true,
                 error_message: "Forbidden",
                 success_message: "Huzzah",
-            };
+            } as State;
 
             mutations.switchToWritingMode(state);
 
@@ -76,7 +77,7 @@ describe("mutations", () => {
                 is_report_saved: false,
                 error_message: "impeccant",
                 success_message: null,
-            };
+            } as State;
 
             mutations.switchReportToSaved(state, "Great success");
 
