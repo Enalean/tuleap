@@ -35,10 +35,6 @@ const babel_preset_env_chrome_config = [
     },
 ];
 
-const babel_options_chrome_firefox = {
-    presets: [babel_preset_env_chrome_config],
-};
-
 const babel_options_jest = {
     presets: [
         [
@@ -62,7 +58,11 @@ function configureBabelRule() {
         use: [
             {
                 loader: "babel-loader",
-                options: babel_options_chrome_firefox,
+                options: {
+                    presets: [babel_preset_env_chrome_config],
+                    cacheDirectory: true,
+                    cacheCompression: false,
+                },
             },
         ],
     };
@@ -76,7 +76,11 @@ function configureTypescriptRules() {
             use: [
                 {
                     loader: "babel-loader",
-                    options: babel_options_chrome_firefox,
+                    options: {
+                        presets: [babel_preset_env_chrome_config],
+                        cacheDirectory: true,
+                        cacheCompression: false,
+                    },
                 },
                 {
                     loader: "ts-loader",

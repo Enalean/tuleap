@@ -145,6 +145,9 @@ function extendProdConfiguration(webpack_configs) {
         merge(webpack_config, {
             mode: "production",
             target: "browserslist:" + rule_configurations.browserlist_config,
+            cache: {
+                type: "filesystem",
+            },
             plugins: [getJSOptimizerPlugin(), getCSSOptimizerPlugin(), getIgnorePlugin()],
             stats: {
                 all: false,
