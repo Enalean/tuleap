@@ -25,91 +25,57 @@
 namespace Tuleap\SVN\Hooks;
 
 use Psr\Log\LoggerInterface;
-use ReferenceManager;
-use Tuleap\SVN\Commit\CollidingSHA1Validator;
-use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
-use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Commit\CommitInfoEnhancer;
 use Tuleap\SVN\Commit\CommitMessageValidator;
+use Tuleap\SVN\Commit\PathValidator;
 use Tuleap\SVN\Commit\Svnlook;
-use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\Repository;
-use Tuleap\Svn\SHA1CollisionDetector;
 
 class PreCommit
 {
-    private $immutable_tag_factory;
-    private $commit_info_enhancer;
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
-
-    /** @var Repository */
-    private $repository;
-
-    private $transaction;
     /**
      * @var Svnlook
      */
     private $svnlook;
     /**
-     * @var SHA1CollisionDetector
+     * @var PathValidator[]
      */
-    private $sha1_collision_detector;
+    private $path_validators;
     /**
-     * @var HookConfigRetriever
+     * @var CommitMessageValidator
      */
-    private $hook_config_retriever;
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
+    private $commit_message_validator;
 
     public function __construct(
-        string $transaction,
-        Repository $repository,
-        CommitInfoEnhancer $commit_info_enhancer,
-        ImmutableTagFactory $immutable_tag_factory,
         Svnlook $svnlook,
-        SHA1CollisionDetector $sha1_collision_detector,
         LoggerInterface $logger,
-        HookConfigRetriever $hook_config_retriever,
-        ReferenceManager $reference_manager
+        CommitMessageValidator $commit_message_validator,
+        PathValidator ...$path_validators
     ) {
-        $this->repository              = $repository;
-        $this->immutable_tag_factory   = $immutable_tag_factory;
-        $this->logger                  = $logger;
-        $this->transaction             = $transaction;
-        $this->commit_info_enhancer    = $commit_info_enhancer;
-        $this->svnlook                 = $svnlook;
-        $this->sha1_collision_detector = $sha1_collision_detector;
-        $this->hook_config_retriever   = $hook_config_retriever;
-        $this->reference_manager       = $reference_manager;
-
-        $this->commit_info_enhancer->enhanceWithTransaction($this->repository, $transaction);
+        $this->logger                   = $logger;
+        $this->svnlook                  = $svnlook;
+        $this->path_validators          = $path_validators;
+        $this->commit_message_validator = $commit_message_validator;
     }
 
-    public function assertCommitIsValid(): void
+    public function assertCommitIsValid(Repository $repository, string $transaction): void
     {
-        $this->assertCommitMessageIsValid();
+        $commit_info_enhancer = new CommitInfoEnhancer($this->svnlook, new CommitInfo());
+        $commit_info_enhancer->enhanceWithTransaction($repository, $transaction);
 
-        $immutable_tag_validator = new ImmutableTagCommitValidator($this->logger, $this->immutable_tag_factory);
-        $sha1_validator          = new CollidingSHA1Validator($this->svnlook, $this->sha1_collision_detector);
+        $this->commit_message_validator->assertCommitMessageIsValid($repository, $commit_info_enhancer->getCommitInfo());
 
-        $changed_paths = $this->svnlook->getTransactionPath($this->repository, $this->transaction);
+        $changed_paths = $this->svnlook->getTransactionPath($repository, $transaction);
         foreach ($changed_paths as $path) {
-            $sha1_validator->assertPathDoesNotContainSHA1Collision($this->repository, $this->transaction, $path);
-            $immutable_tag_validator->assertCommitIsNotDoneInImmutableTag($this->repository, $path);
+            foreach ($this->path_validators as $validator) {
+                $validator->assertPathIsValid($repository, $transaction, $path);
+            }
         }
         $this->logger->debug("Commit is allowed \o/");
-    }
-
-    private function assertCommitMessageIsValid(): void
-    {
-        $validator = new CommitMessageValidator(
-            $this->repository,
-            $this->commit_info_enhancer->getCommitInfo()->getCommitMessage(),
-            $this->hook_config_retriever,
-            $this->reference_manager
-        );
-        $validator->assertCommitMessageIsValid();
     }
 }

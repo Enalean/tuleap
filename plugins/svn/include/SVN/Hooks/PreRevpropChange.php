@@ -26,6 +26,7 @@ namespace Tuleap\SVN\Hooks;
 
 use Exception;
 use ReferenceManager;
+use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigRetriever;
@@ -78,12 +79,13 @@ class PreRevpropChange
         }
 
         $validator = new CommitMessageValidator(
-            $this->repository,
-            $this->new_commit_message,
             $this->hook_config_retriever,
             $reference_manager
         );
 
-        $validator->assertCommitMessageIsValid();
+        $commit_info = new CommitInfo();
+        $commit_info->setCommitMessage($this->new_commit_message);
+
+        $validator->assertCommitMessageIsValid($this->repository, $commit_info);
     }
 }

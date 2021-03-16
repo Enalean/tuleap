@@ -33,16 +33,13 @@ use ReferenceManager;
 use SVN_CommitToTagDeniedException;
 use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagDao;
-use Tuleap\SVN\Admin\ImmutableTagFactory;
-use Tuleap\SVN\Commit\CommitInfo;
-use Tuleap\SVN\Commit\CommitInfoEnhancer;
+use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Commit\CommitMessageWithoutReferenceException;
 use Tuleap\SVN\Commit\EmptyCommitMessageException;
+use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Repository\HookConfig;
-use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\Repository;
-use Tuleap\Svn\SHA1CollisionDetector;
 
 class PreCommitTest extends TestCase
 {
@@ -123,17 +120,15 @@ class PreCommitTest extends TestCase
         $svn_look->shouldReceive('closeContentResource');
 
         $pre_commit = new PreCommit(
-            1,
-            $this->repository,
-            new CommitInfoEnhancer($svn_look, new CommitInfo()),
-            $this->immutable_tag_factory,
             $svn_look,
-            Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class),
-            Mockery::spy(\Psr\Log\LoggerInterface::class),
-            Mockery::mock(HookConfigRetriever::class, ['getHookConfig' => new HookConfig($this->repository, [])]),
-            Mockery::mock(ReferenceManager::class),
+            new NullLogger(),
+            Mockery::spy(CommitMessageValidator::class),
+            new ImmutableTagCommitValidator(
+                new NullLogger(),
+                $this->immutable_tag_factory,
+            )
         );
-        $pre_commit->assertCommitIsValid();
+        $pre_commit->assertCommitIsValid($this->repository, '1');
     }
 
     public function testCommitToWhiteListedTagIsAllowed()
@@ -338,19 +333,16 @@ class PreCommitTest extends TestCase
         $hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturn(false);
 
         $hook = new PreCommit(
-            1,
-            $this->repository,
-            new CommitInfoEnhancer($svn_look, new CommitInfo()),
-            Mockery::mock(ImmutableTagFactory::class),
             $svn_look,
-            Mockery::mock(SHA1CollisionDetector::class),
             Mockery::mock(LoggerInterface::class),
-            $hook_config,
-            Mockery::mock(ReferenceManager::class),
+            new CommitMessageValidator(
+                $hook_config,
+                Mockery::mock(ReferenceManager::class),
+            ),
         );
 
         $this->expectException(EmptyCommitMessageException::class);
-        $hook->assertCommitIsValid();
+        $hook->assertCommitIsValid($this->repository, '1');
     }
 
     public function testIDoesNotRejectCommitIfCommitMessageIsEmptyAndForgeDoesNotRequireACommitMessage(): void
@@ -371,18 +363,15 @@ class PreCommitTest extends TestCase
         $hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturnFalse();
 
         $hook = new PreCommit(
-            1,
-            $this->repository,
-            new CommitInfoEnhancer($svn_look, new CommitInfo()),
-            Mockery::mock(ImmutableTagFactory::class, ['getByRepositoryId' => ImmutableTag::buildEmptyImmutableTag($this->repository)]),
             $svn_look,
-            Mockery::mock(SHA1CollisionDetector::class),
             new NullLogger(),
-            $hook_config_retriever,
-            Mockery::mock(ReferenceManager::class),
+            new CommitMessageValidator(
+                $hook_config_retriever,
+                Mockery::mock(ReferenceManager::class),
+            ),
         );
 
-        $hook->assertCommitIsValid();
+        $hook->assertCommitIsValid($this->repository, '1');
     }
 
     public function testIRejectsCommitMessagesWithoutArtifactReference(): void
@@ -411,18 +400,15 @@ class PreCommitTest extends TestCase
             ->andReturn(false);
 
         $hook = new PreCommit(
-            1,
-            $this->repository,
-            new CommitInfoEnhancer($svn_look, new CommitInfo()),
-            Mockery::mock(ImmutableTagFactory::class, ['getByRepositoryId' => ImmutableTag::buildEmptyImmutableTag($this->repository)]),
             $svn_look,
-            Mockery::mock(SHA1CollisionDetector::class),
             new NullLogger(),
-            $hook_config_retriever,
-            $reference_manager,
+            new CommitMessageValidator(
+                $hook_config_retriever,
+                $reference_manager,
+            ),
         );
 
         $this->expectException(CommitMessageWithoutReferenceException::class);
-        $hook->assertCommitIsValid();
+        $hook->assertCommitIsValid($this->repository, '1');
     }
 }

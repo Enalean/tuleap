@@ -29,7 +29,7 @@ use Tuleap\SVN\Admin\ImmutableTag;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Repository\Repository;
 
-final class ImmutableTagCommitValidator
+final class ImmutableTagCommitValidator implements PathValidator
 {
     /**
      * @var LoggerInterface
@@ -48,6 +48,14 @@ final class ImmutableTagCommitValidator
     {
         $this->logger                = $logger;
         $this->immutable_tag_factory = $immutable_tag_factory;
+    }
+
+    /**
+     * @throws SVN_CommitToTagDeniedException
+     */
+    public function assertPathIsValid(Repository $repository, string $transaction, string $path): void
+    {
+        $this->assertCommitIsNotDoneInImmutableTag($repository, $path);
     }
 
     /**
