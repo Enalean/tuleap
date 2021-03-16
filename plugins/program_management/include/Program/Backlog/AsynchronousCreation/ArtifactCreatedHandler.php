@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
@@ -48,17 +49,23 @@ class ArtifactCreatedHandler
      * @var BuildPlanProgramIncrementConfiguration
      */
     private $build_plan_configuration;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         ProgramStore $program_store,
         RunProgramIncrementCreation $run_program_increment_creation,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        BuildPlanProgramIncrementConfiguration $build_plan_configuration
+        BuildPlanProgramIncrementConfiguration $build_plan_configuration,
+        LoggerInterface $logger
     ) {
         $this->program_store                   = $program_store;
         $this->run_program_increment_creation  = $run_program_increment_creation;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
         $this->build_plan_configuration        = $build_plan_configuration;
+        $this->logger                          = $logger;
     }
 
 
@@ -75,8 +82,17 @@ class ArtifactCreatedHandler
         $current_user    = $event->getUser();
 
         if (! $this->program_store->isProjectAProgramProject((int) $source_project->getID())) {
+            $this->logger->debug($source_project->getID() . " is not a program");
             return;
         }
+
+        $this->logger->debug(
+            sprintf(
+                "Store program create with #%d by user #%d",
+                $source_artifact->getId(),
+                (int) $event->getUser()->getId()
+            )
+        );
 
         $program_increment = $this->build_plan_configuration->buildTrackerProgramIncrementFromProjectId((int) $source_project->getID(), $current_user);
         if ($source_tracker->getId() !== $program_increment->getTrackerId()) {

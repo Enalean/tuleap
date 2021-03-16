@@ -85,7 +85,7 @@ final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
         }
     }
 
-    private function processProgramIncrementCreation(ReplicationData $replication_data): void
+    public function processProgramIncrementCreation(ReplicationData $replication_data): void
     {
         $task = $this->task_builder->build();
         $task->createProgramIncrements($replication_data);

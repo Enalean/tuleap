@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Program\ProgramStore;
 use Tuleap\ProgramManagement\ProgramTracker;
@@ -71,7 +72,8 @@ final class ArtifactCreatedHandlerTest extends TestCase
             $this->program_store,
             $this->asyncronous_runner,
             $this->pending_artifact_creation_store,
-            $this->build_plan_configuration
+            $this->build_plan_configuration,
+            new TestLogger()
         );
     }
 
