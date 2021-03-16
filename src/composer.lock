@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b5df3c2c13f0a1905d8459514022283",
+    "content-hash": "05b9623d2ebbe9ecd00363fce3e74a35",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -6700,16 +6700,16 @@
         },
         {
             "name": "qossmic/deptrac-shim",
-            "version": "0.11.0.1",
+            "version": "0.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/qossmic/deptrac-shim.git",
-                "reference": "5f25cf64203eecf159ffa9b31be361407d89c4a8"
+                "reference": "227a4359dbac8f844a0bab6d9f54a21ec0b0eb94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/qossmic/deptrac-shim/zipball/5f25cf64203eecf159ffa9b31be361407d89c4a8",
-                "reference": "5f25cf64203eecf159ffa9b31be361407d89c4a8",
+                "url": "https://api.github.com/repos/qossmic/deptrac-shim/zipball/227a4359dbac8f844a0bab6d9f54a21ec0b0eb94",
+                "reference": "227a4359dbac8f844a0bab6d9f54a21ec0b0eb94",
                 "shasum": ""
             },
             "require": {
@@ -6742,9 +6742,9 @@
             "description": "deptrac phar distribution",
             "support": {
                 "issues": "https://github.com/qossmic/deptrac-shim/issues",
-                "source": "https://github.com/qossmic/deptrac-shim/tree/0.11.0.1"
+                "source": "https://github.com/qossmic/deptrac-shim/tree/0.12.0"
             },
-            "time": "2021-02-01T11:56:08+00:00"
+            "time": "2021-03-12T08:42:24+00:00"
         },
         {
             "name": "sebastian/cli-parser",
