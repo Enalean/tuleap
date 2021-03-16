@@ -21,7 +21,7 @@
 
 namespace Tuleap\SVN\Repository;
 
-use Backend;
+use BackendSVN;
 use EventManager;
 use HTTPRequest;
 use Mockery;
@@ -77,7 +77,7 @@ class RepositoryManagerTest extends TestCase
         $system_command              = Mockery::mock(System_Command::class);
         $destructor                  = Mockery::mock(Destructor::class);
         $event_manager               = Mockery::mock(EventManager::class);
-        $backend                     = Mockery::mock(Backend::class);
+        $backend                     = Mockery::mock(BackendSVN::class);
         $access_file_history_factory = Mockery::mock(AccessFileHistoryFactory::class);
         $this->manager               = new RepositoryManager(
             $this->dao,

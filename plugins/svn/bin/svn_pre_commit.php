@@ -46,35 +46,35 @@ try {
     $repository_path = $argv[1];
     $transaction     = $argv[2];
 
-    $svnlook = new Svnlook(new System_Command());
-    $hook    = new PreCommit(
-        $repository_path,
-        $transaction,
-        new RepositoryManager(
+    $svnlook            = new Svnlook(new System_Command());
+    $logger             = SvnPlugin::getLogger();
+    $repository_manager = new RepositoryManager(
+        new Dao(),
+        ProjectManager::instance(),
+        new SvnAdmin(new System_Command(), $logger, Backend::instanceSVN()),
+        $logger,
+        new System_Command(),
+        new Destructor(
             new Dao(),
-            ProjectManager::instance(),
-            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
-            \SvnPlugin::getLogger(),
-            new System_Command(),
-            new Destructor(
-                new Dao(),
-                \SvnPlugin::getLogger()
-            ),
-            EventManager::instance(),
-            Backend::instance(Backend::SVN),
-            new AccessFileHistoryFactory(new AccessFileHistoryDao())
+            $logger,
         ),
+        EventManager::instance(),
+        Backend::instanceSVN(),
+        new AccessFileHistoryFactory(new AccessFileHistoryDao()),
+    );
+    $hook               = new PreCommit(
+        $transaction,
+        $repository_manager->getRepositoryFromSystemPath($repository_path),
         new CommitInfoEnhancer($svnlook, new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),
         $svnlook,
         new SHA1CollisionDetector(),
-        \SvnPlugin::getLogger(),
-        new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())
+        $logger,
+        new HookConfigRetriever(new HookDao(), new HookConfigSanitizer()),
+        ReferenceManager::instance(),
     );
 
-    $hook->assertCommitMessageIsValid(ReferenceManager::instance());
-    $hook->assertCommitToTagIsAllowed();
-    $hook->assertCommitDoesNotContainSHA1Collision();
+    $hook->assertCommitIsValid();
 
     exit(0);
 } catch (Exception $exception) {

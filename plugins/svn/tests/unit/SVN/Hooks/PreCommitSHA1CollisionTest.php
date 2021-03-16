@@ -22,6 +22,10 @@ namespace Tuleap\SVN\Hooks;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\SVN\Admin\ImmutableTag;
+use Tuleap\SVN\Commit\CommitInfo;
+use Tuleap\SVN\Commit\CommitInfoEnhancer;
+use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\Svn\SHA1CollisionException;
 
@@ -38,10 +42,6 @@ class PreCommitSHA1CollisionTest extends TestCase
      */
     public $sha1_collision_detector;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\SVN\Repository\RepositoryManager
-     */
-    public $repository_manager;
-    /**
      * @var PreCommit
      */
     public $pre_commit_hook;
@@ -50,25 +50,22 @@ class PreCommitSHA1CollisionTest extends TestCase
     {
         parent::setUp();
 
-        $this->svnlook                 = Mockery::spy(\Tuleap\SVN\Commit\Svnlook::class);
+        $this->svnlook = Mockery::spy(\Tuleap\SVN\Commit\Svnlook::class);
+        $this->svnlook->shouldReceive('getMessageFromTransaction')->andReturn(["COMMIT MSG"]);
         $this->sha1_collision_detector = Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
-        $this->repository_manager      = Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
 
-        $this->repository_manager->shouldReceive('getRepositoryFromSystemPath')
-            ->withArgs(['path/to/repo'])
-            ->once()
-            ->andReturn(Mockery::mock(Repository::class));
+        $repository = Mockery::mock(Repository::class);
 
         $this->pre_commit_hook = new PreCommit(
             'path/to/repo',
-            '',
-            $this->repository_manager,
-            Mockery::spy(\Tuleap\SVN\Commit\CommitInfoEnhancer::class),
-            Mockery::spy(\Tuleap\SVN\Admin\ImmutableTagFactory::class),
+            $repository,
+            new CommitInfoEnhancer($this->svnlook, new CommitInfo()),
+            Mockery::spy(\Tuleap\SVN\Admin\ImmutableTagFactory::class, ['getByRepositoryId' => ImmutableTag::buildEmptyImmutableTag($repository)]),
             $this->svnlook,
             $this->sha1_collision_detector,
             Mockery::spy(\Psr\Log\LoggerInterface::class),
-            Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class)
+            Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class, ['getHookConfig' => new HookConfig($repository, [])]),
+            \ReferenceManager::instance(),
         );
     }
 
@@ -78,7 +75,7 @@ class PreCommitSHA1CollisionTest extends TestCase
         $this->svnlook->shouldReceive('getContent')->andReturn(popen('', 'rb'));
 
         $this->sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(false);
-        $this->pre_commit_hook->assertCommitDoesNotContainSHA1Collision();
+        $this->pre_commit_hook->assertCommitIsValid();
     }
 
     public function testItRejectsCommitContainingSHA1Collision(): void
@@ -89,6 +86,6 @@ class PreCommitSHA1CollisionTest extends TestCase
         $this->sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(true);
 
         $this->expectException(SHA1CollisionException::class);
-        $this->pre_commit_hook->assertCommitDoesNotContainSHA1Collision();
+        $this->pre_commit_hook->assertCommitIsValid();
     }
 }
