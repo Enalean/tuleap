@@ -20,10 +20,13 @@
 
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
+use Codendi_HTMLPurifier;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValueVisitor;
+use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentationBuilder;
 use Tuleap\TestManagement\Step\Step;
 
 class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
@@ -110,7 +113,21 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
 
     public function getFullRESTValue(PFUser $user)
     {
-        return null;
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $steps_representations = [];
+        foreach ($this->steps as $step) {
+            $representation = StepDefinitionRepresentationBuilder::build(
+                $step,
+                $this->changeset->getArtifact(),
+                $purifier,
+                CommonMarkInterpreter::build($purifier)
+            );
+
+            $steps_representations[] = $representation;
+        }
+
+        return $this->getFullRESTRepresentation($steps_representations);
     }
 
     /**

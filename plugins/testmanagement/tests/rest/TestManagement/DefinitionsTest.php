@@ -41,6 +41,22 @@ final class DefinitionsTest extends BaseTest
         $this->assertEquals($definition, $first_definition);
     }
 
+    public function testGetArtifactDoesNotReturnsTheStepDefFieldBecauseWeHaveNoMeansToSetItProgrammaticallyYet(): void
+    {
+        $first_definition = $this->getFirstDefinition(TestManagementDataBuilder::USER_TESTER_NAME);
+
+        $artifact_request = $this->client->get('artifacts/' . $first_definition['id']);
+        $artifact         = $this->getResponse($artifact_request)->json();
+
+        $ttmstepdef = array_filter(
+            $artifact['values'],
+            static function (array $value): bool {
+                return $value['type'] === 'ttmstepdef';
+            }
+        );
+        self::assertEmpty($ttmstepdef);
+    }
+
     public function testGetDefinitionWithRESTReadOnlyUser(): void
     {
         $first_definition = $this->getFirstDefinition(REST_TestDataBuilder::TEST_BOT_USER_NAME);
