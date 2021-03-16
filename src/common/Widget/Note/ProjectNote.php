@@ -24,6 +24,10 @@ namespace Tuleap\Widget\Note;
 use Codendi_Request;
 use Project;
 use TemplateRenderer;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Markdown\CodeBlockFeatures;
+use Tuleap\Markdown\CodeBlockFeaturesInterface;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Project\MappingRegistry;
 
@@ -41,12 +45,22 @@ class ProjectNote extends \Widget
      */
     private $renderer;
     private $title;
+    /**
+     * @var CodeBlockFeaturesInterface
+     */
+    private $code_block_features;
+    /**
+     * @var string | null
+     */
+    private $interpreted_content = null;
 
     public function __construct(NoteDao $dao, TemplateRenderer $renderer)
     {
         parent::__construct(self::NAME);
-        $this->dao      = $dao;
-        $this->renderer = $renderer;
+
+        $this->dao                 = $dao;
+        $this->renderer            = $renderer;
+        $this->code_block_features = new CodeBlockFeatures();
     }
 
     public function getTitle()
@@ -54,6 +68,7 @@ class ProjectNote extends \Widget
         if ($this->title !== null) {
             return $this->title;
         }
+
         return _('Note');
     }
 
@@ -139,8 +154,69 @@ class ProjectNote extends \Widget
         return $this->dao->duplicate($new_project->getID(), $id);
     }
 
-    public function getContent()
+    /** @return array */
+    public function getJavascriptDependencies()
     {
-        return CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())->getInterpretedContent($this->content);
+        $javascript_dependencies = [];
+
+        $this->interpretContent();
+        if ($this->code_block_features->isSyntaxHighlightNeeded()) {
+            $javascript_dependencies[] = [
+                'file' => $this->getAssets()->getFileURL('syntax-highlight.js')
+            ];
+        }
+
+        if ($this->code_block_features->isMermaidNeeded()) {
+            $javascript_dependencies[] = [
+                'file' => $this->getAssets()->getFileURL('mermaid.js')
+            ];
+        }
+
+        return $javascript_dependencies;
+    }
+
+    /**
+     * @return CssAssetCollection
+     */
+    public function getStylesheetDependencies()
+    {
+        $this->interpretContent();
+
+        if ($this->code_block_features->isSyntaxHighlightNeeded()) {
+            return new CssAssetCollection(
+                [
+                    new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'syntax-highlight'),
+                ]
+            );
+        }
+
+        return new CssAssetCollection([]);
+    }
+
+    public function getContent(): string
+    {
+        return $this->interpretContent();
+    }
+
+    public function interpretContent(): string
+    {
+        if ($this->interpreted_content === null) {
+            $interpreter = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
+                \Codendi_HTMLPurifier::instance(),
+                $this->code_block_features,
+            );
+
+            $this->interpreted_content = $interpreter->getInterpretedContent($this->content);
+        }
+
+        return $this->interpreted_content;
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../www/assets/core',
+            '/assets/core'
+        );
     }
 }
