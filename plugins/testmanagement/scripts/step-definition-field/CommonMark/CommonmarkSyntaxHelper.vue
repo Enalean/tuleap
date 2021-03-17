@@ -23,8 +23,10 @@
             type="button"
             class="btn btn-small button-commonmark-syntax-helper"
             ref="button_helper"
+            v-bind:disabled="is_in_preview_mode"
+            data-test="button-helper"
         >
-            <i class="fas fa-question-circle tlp-button-icon"></i>
+            <i class="fas fa-question-circle" aria-hidden="true"></i>
             <translate>Help</translate>
         </button>
         <section class="tlp-popover" id="popover-content" ref="popover_content">
@@ -64,7 +66,7 @@
                         <td>
                             <img
                                 class="popover-image-indentation"
-                                src="./assets/image_example_commonmark.png"
+                                src="../assets/image_example_commonmark.png"
                             />
                         </td>
                     </tr>
@@ -141,6 +143,9 @@ import $ from "jquery";
 
 export default {
     name: "CommonmarkSyntaxHelper",
+    props: {
+        is_in_preview_mode: Boolean,
+    },
     mounted() {
         $(this.$refs.button_helper).popover({
             content: $(this.$refs.popover_content).html(),
