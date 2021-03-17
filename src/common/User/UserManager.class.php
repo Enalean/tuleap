@@ -251,6 +251,11 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $eParams = ['ident' => $ident,
                          'user'  => &$user];
         $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
+
+        if (! $user && preg_match("/^\d+$/", $ident)) {
+            $user = $this->getUserById((int) $ident);
+        }
+
         if (! $user) {
             // No valid user found, try an internal lookup for username
             if (preg_match('/^(.*) \((.*)\)$/', $ident, $matches)) {
