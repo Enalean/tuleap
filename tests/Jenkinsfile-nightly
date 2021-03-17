@@ -50,10 +50,11 @@ pipeline {
 
         stage ('Unit tests JS/TS with coverage') {
             agent {
-                docker {
-                    image 'node:14.5-alpine'
+                dockerfile {
+                    dir 'sources/tools/utils/nix/'
+                    filename 'build-tools.dockerfile'
                     reuseNode true
-                    args '--network none'
+                    args '--network none --tmpfs /tmp/jest_rt:rw,noexec,nosuid'
                 }
             }
             steps { script { actions.runJestTests('Tuleap', '.', true) } }
