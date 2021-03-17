@@ -41,47 +41,22 @@ export class RelativeDateElement extends HTMLElement {
 
     public updateDates(): void {
         if (!this.locale) {
-            if (process.env.NODE_ENV !== "production") {
-                throw new Error(
-                    "Missing required attribute locale for tlp-relative-date component"
-                );
-            }
             return;
         }
 
         if (!this.date) {
-            if (process.env.NODE_ENV !== "production") {
-                throw new Error(
-                    "Missing required attribute `date` for tlp-relative-date component"
-                );
-            }
             return;
         }
 
         if (!this.absolute_date) {
-            if (process.env.NODE_ENV !== "production") {
-                throw new Error(
-                    "Missing required attribute `absolute-date` for tlp-relative-date component"
-                );
-            }
             return;
         }
 
         if (!allowed_preferences.includes(this.preference)) {
-            if (process.env.NODE_ENV !== "production") {
-                throw new Error(
-                    "Missing required attribute `preference` (absolute|relative) for tlp-relative-date component"
-                );
-            }
             return;
         }
 
         if (!allowed_placements.includes(this.placement)) {
-            if (process.env.NODE_ENV !== "production") {
-                throw new Error(
-                    "Missing required attribute `placement` (top|right|tooltip) for tlp-relative-date component"
-                );
-            }
             return;
         }
 
