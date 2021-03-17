@@ -21,6 +21,9 @@ const loadJsonFile = require("load-json-file");
 const WebpackAssetsManifest = require("../node_modules/webpack-assets-manifest");
 const path = require("path");
 const webpack_configurator = require("../tools/utils/scripts/webpack-configurator.js");
+// Dependency is defined at the root of the repo
+// eslint-disable-next-line import/no-extraneous-dependencies
+const TerserPlugin = require("terser-webpack-plugin");
 
 const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./www/assets/core");
@@ -36,6 +39,20 @@ const manifest_plugin = new WebpackAssetsManifest({
     apply(manifest) {
         manifest.set("ckeditor.js", `ckeditor-${ckeditor_version}/ckeditor.js`);
     },
+});
+
+// Prototype doesn't like to have its "$super" argument mangled due to the fact
+// that it checks for its presence during class initialization
+const terser_plugin_with_prototypejs_support = new TerserPlugin({
+    terserOptions: {
+        format: {
+            comments: false,
+        },
+        mangle: {
+            reserved: ["$super"],
+        },
+    },
+    extractComments: false,
 });
 
 const webpack_config_for_ckeditor = {
@@ -185,13 +202,7 @@ const webpack_config_for_rich_text_editor = {
             webpack_configurator.rule_po_files,
         ],
     },
-    plugins: [manifest_plugin],
-    optimization: {
-        // Prototype doesn't like minimization due to the fact
-        // that it checks for the presence of "$super" argument
-        // during class initialization.
-        minimize: false,
-    },
+    plugins: [manifest_plugin, terser_plugin_with_prototypejs_support],
 };
 
 const webpack_config_for_burning_parrot_code = {
@@ -394,6 +405,7 @@ const webpack_config_legacy_combined = {
             ),
         }),
         manifest_plugin,
+        terser_plugin_with_prototypejs_support,
     ],
 };
 
