@@ -353,7 +353,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
         $last_changeset = $artifact->getLastChangeset();
 
-        if (! $comment && ! $last_changeset->hasChanges($fields_data)) {
+        if ($last_changeset && ! $comment && ! $last_changeset->hasChanges($fields_data)) {
             if ($this->parent_link_action->linkParent($artifact, $submitter, $fields_data)) {
                 throw new LinkToParentWithoutCurrentArtifactChangeException();
             }

@@ -38,7 +38,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
         $tracker_data = [];
 
         //only when a previous changeset exists
-        if (! $artifact->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {
+        if ($artifact->getLastChangeset() && ! $artifact->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {
             foreach ($artifact->getLastChangeset()->getValues() as $key => $field) {
                 if ($field instanceof Tracker_Artifact_ChangesetValue_Date || $field instanceof Tracker_Artifact_ChangesetValue_List) {
                     $tracker_data[$key] = $field->getValue();

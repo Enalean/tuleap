@@ -155,6 +155,23 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \P
         );
     }
 
+    public function testItNoReturnLastFieldChangesIfNoChangesets(): void
+    {
+        $field = Mockery::mock(Tracker_FormElement_Field_SubmittedOn::class);
+        $field->shouldReceive('getId')->andReturn(12);
+        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+            ->with($this->tracker)
+            ->andReturns([$field]);
+
+        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
+        $this->artifact->shouldReceive('getSubmittedOn')->andReturn('2055-4-99');
+
+        $this->assertEquals(
+            [12 => '2055-4-99'],
+            $this->initializator->process($this->artifact, [])
+        );
+    }
+
     public function testItAppendsLastUpdateDateAtCurrentTime(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_LastUpdateDate::class);
