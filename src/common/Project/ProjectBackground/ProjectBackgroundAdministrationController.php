@@ -70,7 +70,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
         return new self(
             AdministrationLayoutHelper::buildSelf(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/project/admin/background/'),
-            new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
+            new \Tuleap\Layout\IncludeCoreAssets(),
             new ProjectBackgroundRetriever(new ProjectBackgroundConfiguration(new ProjectBackgroundDao()))
         );
     }

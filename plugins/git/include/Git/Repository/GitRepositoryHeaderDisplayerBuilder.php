@@ -184,10 +184,7 @@ class GitRepositoryHeaderDisplayerBuilder
 
     private function getCoreAssets(): IncludeAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/core',
-            '/assets/core'
-        );
+        return new \Tuleap\Layout\IncludeCoreAssets();
     }
 
     private function getMirrorDataMapper()

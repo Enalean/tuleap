@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 
 final class UserPreferencesHeader
@@ -34,7 +33,7 @@ final class UserPreferencesHeader
         $layout->addCssAsset(new AccountCssAsset());
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
+                new \Tuleap\Layout\IncludeCoreAssets(),
                 'account/preferences-nav.js'
             )
         );

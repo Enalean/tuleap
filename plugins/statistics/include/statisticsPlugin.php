@@ -372,7 +372,7 @@ class StatisticsPlugin extends Plugin
     public function burning_parrot_get_javascript_files(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $ckeditor_assets              = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+            $ckeditor_assets              = new \Tuleap\Layout\IncludeCoreAssets();
             $params['javascript_files'][] = $ckeditor_assets->getFileURL('ckeditor.js');
             $params['javascript_files'][] = $this->getAssets()->getFileURL('admin.js');
         }

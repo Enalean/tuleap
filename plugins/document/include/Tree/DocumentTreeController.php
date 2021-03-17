@@ -139,7 +139,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 
     private function includeJavascriptFiles(BaseLayout $layout, HTTPRequest $request): void
     {
-        $core_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
+        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $layout->includeFooterJavascriptFile($core_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('document.js'));
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());

@@ -21,7 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
@@ -31,7 +30,7 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('site-admin-pending-users.js'));
 

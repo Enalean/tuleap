@@ -431,10 +431,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return new LegacyRoutingController(
             $router,
             $this->getAssets(),
-            new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/core',
-                '/assets/core'
-            )
+            new \Tuleap\Layout\IncludeCoreAssets()
         );
     }
 

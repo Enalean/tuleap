@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\BindingController;
@@ -73,7 +72,7 @@ $index_controller = new IndexController(
         new MembersPresenterBuilder($event_manager, new UserHelper(), $synchronized_project_membership_detector),
         new PermissionsDelegationPresenterBuilder($membership_delegation_dao)
     ),
-    new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core'),
+    new \Tuleap\Layout\IncludeCoreAssets(),
     new HeaderNavigationDisplayer()
 );
 

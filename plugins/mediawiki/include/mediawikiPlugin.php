@@ -152,7 +152,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function burning_parrot_get_javascript_files($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
-            $core_assets                  = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+            $core_assets                  = new \Tuleap\Layout\IncludeCoreAssets();
             $params['javascript_files'][] = $core_assets->getFileURL('manage-allowed-projects-on-resource.js');
         }
     }

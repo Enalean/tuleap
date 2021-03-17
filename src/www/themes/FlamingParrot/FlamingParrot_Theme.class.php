@@ -162,7 +162,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     protected function displayCommonStylesheetElements($params)
     {
-        $core_assets = new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core');
+        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
@@ -441,7 +441,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         if ($browser_deprecation_message === null) {
             return;
         }
-        $this->addJavascriptAsset(new JavascriptAsset(new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'), 'browser-deprecation-fp.js'));
+        $this->addJavascriptAsset(new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'browser-deprecation-fp.js'));
         $this->render('browser-deprecation', $browser_deprecation_message);
     }
 

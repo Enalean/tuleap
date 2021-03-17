@@ -84,7 +84,6 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\MailingList\MailingListCreationController;
@@ -694,7 +693,7 @@ class RouteCollector
     {
         return new PlatformBannerAdministrationController(
             new AdminPageRenderer(),
-            new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
+            new \Tuleap\Layout\IncludeCoreAssets(),
             new BannerRetriever(new BannerDao())
         );
     }
@@ -706,7 +705,7 @@ class RouteCollector
 
     public static function getProjectRegistrationController(): ProjectRegistrationController
     {
-        $core_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         return new ProjectRegistrationController(
             TemplateRendererFactory::build(),
             $core_assets,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Error;
+declare(strict_types=1);
 
-use Tuleap\Layout\BaseLayout;
+namespace Tuleap\Layout;
 
-class ErrorDependenciesInjector
+final class IncludeCoreAssets extends IncludeAssets
 {
-    public function includeJavascriptDependencies(BaseLayout $layout)
+    public function __construct()
     {
-        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
-
-        $layout->includeFooterJavascriptFile($include_assets->getFileURL('access-denied-error.js'));
+        parent::__construct(
+            __DIR__ . '/../../www/assets/core',
+            '/assets/core'
+        );
     }
 }

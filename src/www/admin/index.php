@@ -22,7 +22,6 @@
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
-use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';
@@ -30,7 +29,7 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-system-events-admin-homepage.js')

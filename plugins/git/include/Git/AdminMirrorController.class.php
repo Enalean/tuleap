@@ -91,7 +91,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
             case 'manage-allowed-projects':
                 $GLOBALS['HTML']->addJavascriptAsset(
                     new \Tuleap\Layout\JavascriptAsset(
-                        new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core'),
+                        new \Tuleap\Layout\IncludeCoreAssets(),
                         'manage-allowed-projects-on-resource.js'
                     )
                 );

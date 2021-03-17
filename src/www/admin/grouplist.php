@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\ProjectListPresenter;
 use Tuleap\Project\Admin\ProjectListResultsPresenterBuilder;
 use Tuleap\Project\Admin\ProjectListSearchFieldsPresenterBuilder;
@@ -31,7 +30,7 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-project-list.js')

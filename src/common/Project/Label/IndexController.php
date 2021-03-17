@@ -27,7 +27,6 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Color\ColorPresenterFactory;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 
@@ -115,7 +114,7 @@ class IndexController
 
     private function displayHeader($title, Project $project)
     {
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
 

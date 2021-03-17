@@ -30,7 +30,6 @@ use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
@@ -161,10 +160,7 @@ class HeaderPresenterBuilder
 
     private function getStylesheets(ThemeVariation $theme_variation): array
     {
-        $core_assets      = new IncludeAssets(
-            __DIR__ . '/../../../www/assets/core',
-            '/assets/core'
-        );
+        $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
         $css_assets       = new CssAssetCollection([
             new CssAsset($core_assets, 'tlp'),
             new CssAsset($core_assets, 'BurningParrot/burning-parrot')

@@ -24,7 +24,6 @@ use ForgeConfig;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
-use Tuleap\Layout\IncludeAssets;
 use Widget;
 
 class ProjectHeartbeat extends Widget
@@ -70,7 +69,7 @@ class ProjectHeartbeat extends Widget
 
     public function getJavascriptDependencies(): array
     {
-        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         return [
             ['file' => $include_assets->getFileURL('widget-project-heartbeat.js')],
