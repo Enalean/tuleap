@@ -69,6 +69,7 @@ import { getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-r
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
 import { artifactLinkId } from "../../../configuration";
+import { Getter, Mutation } from "vuex-class";
 
 @Component({
     components: {
@@ -86,23 +87,32 @@ export default class ProgramIncrementFeatureList extends Vue {
     private error_message = "";
     private has_error = false;
     private is_loading = false;
-    private has_loaded_feature = false;
+
+    @Mutation
+    readonly addProgramIncrement!: (program_increment: ProgramIncrement) => void;
+    @Getter
+    readonly getFeaturesInProgramIncrement!: (increment_id: number) => Feature[];
+    @Getter
+    readonly isProgramIncrementAlreadyAdded!: (increment_id: number) => boolean;
 
     async mounted(): Promise<void> {
-        if (!this.has_loaded_feature) {
-            try {
-                this.is_loading = true;
-                this.features = await getFeatures(this.increment.id);
-            } catch (e) {
-                this.has_error = true;
-                this.error_message = this.$gettext(
-                    "The retrieval of the elements to be planned in program has failed"
-                );
-                throw e;
-            } finally {
-                this.is_loading = false;
-                this.has_loaded_feature = true;
-            }
+        if (this.isProgramIncrementAlreadyAdded(this.increment.id)) {
+            this.features = this.getFeaturesInProgramIncrement(this.increment.id);
+            return;
+        }
+
+        try {
+            this.is_loading = true;
+            this.features = await getFeatures(this.increment.id);
+            this.addProgramIncrement({ ...this.increment, features: this.features });
+        } catch (e) {
+            this.has_error = true;
+            this.error_message = this.$gettext(
+                "The retrieval of the elements to be planned in program has failed"
+            );
+            throw e;
+        } finally {
+            this.is_loading = false;
         }
     }
 
