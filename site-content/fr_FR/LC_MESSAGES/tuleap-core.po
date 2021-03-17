@@ -4230,6 +4230,9 @@ msgstr ""
 "d'uploader une image au format png avec un fond transparent et une hauteur "
 "de 100px."
 
+msgid "You can use Markdown to format your text"
+msgstr "Vous pouvez utiliser du Markdown pour formater votre texte"
+
 msgid ""
 "You can use SVN tokens as a replacement for your password on projects "
 "selected by the administrator."
@@ -4244,9 +4247,6 @@ msgstr ""
 "Vous pouvez utiliser les clés d'accès pour accéder aux ressources à partir "
 "de scripts ou de la ligne de commande. Cependant ces clés sont similaires à "
 "des mots de passe et doivent être conservés précautionneusement."
-
-msgid "You can use markdown to format your text"
-msgstr "Vous pouvez utiliser du markdwon pour formater votre texte"
 
 msgid ""
 "You can't remove the last group containing site administrator permissions"
