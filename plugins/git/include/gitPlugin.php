@@ -39,6 +39,8 @@ use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
+use Tuleap\Git\CIToken\BuildStatusChangePermissionDAO;
+use Tuleap\Git\CIToken\BuildStatusChangePermissionManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
@@ -827,7 +829,13 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getCITokenRouter($repository_retriever)
     {
         return new CITokenRouter(
-            new CITokenController($repository_retriever, $this->getCITokenManager())
+            new CITokenController(
+                $repository_retriever,
+                $this->getCITokenManager(),
+                new BuildStatusChangePermissionManager(
+                    new BuildStatusChangePermissionDAO()
+                )
+            )
         );
     }
 
