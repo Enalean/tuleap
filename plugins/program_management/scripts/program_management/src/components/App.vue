@@ -106,7 +106,7 @@ export default class App extends Vue {
                 });
             },
             onDrop: (context: SuccessfulDropCallbackParameter): void => {
-                handleDrop(context, programId(), location);
+                handleDrop(this.$store, context, programId());
             },
             cleanupAfterDragCallback: (): void => {
                 return checkAfterDrag();

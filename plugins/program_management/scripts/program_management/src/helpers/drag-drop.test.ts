@@ -23,6 +23,9 @@ import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
 import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
 import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
 import * as tlp from "tlp";
+import type { State } from "../type";
+import type { Store } from "vuex";
+import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 
 jest.mock("tlp");
 
@@ -128,7 +131,7 @@ describe(`drag-drop helper`, () => {
     });
 
     describe(`handleDrop()`, () => {
-        it(`Plan elements`, () => {
+        it(`Plan elements`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "14");
             const source_dropzone = createElement();
@@ -140,17 +143,32 @@ describe(`drag-drop helper`, () => {
             const feature_planner = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
             jest.spyOn(tlp, "put");
 
-            const location = { ...window.location, reload: jest.fn() };
+            const getProgramIncrementFromId = jest
+                .fn()
+                .mockReturnValue({ id: 56 } as ProgramIncrement);
 
-            drag_drop.handleDrop(
+            const store = ({
+                getters: { getProgramIncrementFromId },
+                dispatch: jest.fn(),
+            } as unknown) as Store<State>;
+
+            await drag_drop.handleDrop(
+                store,
                 {
                     dropped_element,
                     source_dropzone,
                     target_dropzone,
                 } as SuccessfulDropCallbackParameter,
-                101,
-                location
+                101
             );
+
+            expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
+
+            expect(store.dispatch).toHaveBeenCalledWith("planFeatureInProgramIncrement", {
+                feature_id: 14,
+                program_increment: { id: 56 },
+            });
+
             expect(feature_planner).toHaveBeenCalledWith(1, 1234, [
                 { id: 14 },
                 { id: 12 },
@@ -158,7 +176,7 @@ describe(`drag-drop helper`, () => {
             ]);
         });
 
-        it(`Removes elements from program increment`, () => {
+        it(`Removes elements from program increment`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
             dropped_element.setAttribute("data-program-increment-id", "1");
@@ -171,18 +189,88 @@ describe(`drag-drop helper`, () => {
             jest.spyOn(backlogAdder, "addElementToTopBackLog");
             jest.spyOn(tlp, "put");
 
-            const location = { ...window.location, reload: jest.fn() };
+            const getProgramIncrementFromId = jest
+                .fn()
+                .mockReturnValue({ id: 56 } as ProgramIncrement);
 
-            drag_drop.handleDrop(
+            const store = ({
+                getters: { getProgramIncrementFromId },
+                dispatch: jest.fn(),
+            } as unknown) as Store<State>;
+
+            await drag_drop.handleDrop(
+                store,
                 {
                     dropped_element,
                     source_dropzone,
                     target_dropzone,
                 } as SuccessfulDropCallbackParameter,
-                101,
-                location
+                101
             );
+
+            expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
+
+            expect(store.dispatch).toHaveBeenCalledWith("unplanFeatureFromProgramIncrement", {
+                feature_id: 12,
+                program_increment: { id: 56 },
+            });
+
             expect(feature_planner).toHaveBeenCalledWith(1, 1234, [{ id: 13 }]);
+        });
+
+        it(`Moves elements from program increment to another`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "12");
+            dropped_element.setAttribute("data-program-increment-id", "1");
+            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
+            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+            target_dropzone.setAttribute("data-program-increment-id", "2");
+            target_dropzone.setAttribute("data-artifact-link-field-id", "3691");
+            target_dropzone.setAttribute("data-planned-feature-ids", "125,126");
+
+            const feature_planner = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
+            jest.spyOn(tlp, "put");
+
+            const getProgramIncrementFromId = jest
+                .fn()
+                .mockReturnValueOnce({ id: 1 } as ProgramIncrement)
+                .mockReturnValueOnce({ id: 2 } as ProgramIncrement);
+
+            const store = ({
+                getters: { getProgramIncrementFromId },
+                dispatch: jest.fn(),
+            } as unknown) as Store<State>;
+
+            await drag_drop.handleDrop(
+                store,
+                {
+                    dropped_element,
+                    source_dropzone,
+                    target_dropzone,
+                } as SuccessfulDropCallbackParameter,
+                101
+            );
+
+            expect(getProgramIncrementFromId).toHaveBeenNthCalledWith(1, 1);
+            expect(getProgramIncrementFromId).toHaveBeenNthCalledWith(2, 2);
+
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "moveFeatureFromProgramIncrementToAnother",
+                {
+                    feature_id: 12,
+                    from_program_increment: { id: 1 },
+                    to_program_increment: { id: 2 },
+                }
+            );
+
+            expect(feature_planner).toHaveBeenNthCalledWith(1, 1, 1234, [{ id: 13 }]);
+            expect(feature_planner).toHaveBeenNthCalledWith(2, 2, 3691, [
+                { id: 12 },
+                { id: 125 },
+                { id: 126 },
+            ]);
         });
     });
 });
