@@ -52,7 +52,16 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_easygettext_loader,
+                {
+                    test: /\.po$/,
+                    include: /artifact-additional-action\/po\//,
+                    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }],
+                },
+                {
+                    test: /\.po$/,
+                    include: /program_management\/po\//,
+                    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
+                },
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
             ],
