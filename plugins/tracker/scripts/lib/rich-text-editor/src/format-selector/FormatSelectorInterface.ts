@@ -19,7 +19,7 @@
 
 import type { TextFieldFormat } from "../../../../constants/fields-constants";
 
-type FormatChangedCallback = (new_format: TextFieldFormat) => void;
+export type FormatChangedCallback = (new_format: TextFieldFormat) => void;
 
 export interface FormatSelectorPresenter {
     id: string;

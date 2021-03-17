@@ -19,4 +19,4 @@
 
 export { RichTextEditorFactory } from "./RichTextEditorFactory";
 export type { RichTextEditorOptions } from "./types";
-import "../themes/popovers.css";
+import "../themes/style.css";
