@@ -24,6 +24,11 @@ tlp-mermaid-diagram {
     &:last-child {
         margin: 0;
     }
+
+    pre > code {
+        word-break: break-all;
+        white-space: pre-wrap;
+    }
 }
 
 .diagram-mermaid-computing {
