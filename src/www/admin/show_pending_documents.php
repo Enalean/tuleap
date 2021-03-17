@@ -23,7 +23,6 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\date\RelativeDatesAssetsRetriever;
-use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';
@@ -96,10 +95,7 @@ switch ($func) {
         break;
 }
 
-$core_assets      = new IncludeAssets(
-    __DIR__ . '/../../../src/www/assets/core',
-    '/assets/core'
-);
+$core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
 $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
 RelativeDatesAssetsRetriever::includeAssetsInSnippet();
 

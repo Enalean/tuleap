@@ -43,7 +43,6 @@ use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../include/pre.php';
@@ -62,7 +61,7 @@ $csrf_token                 = new CSRFSynchronizerToken('/my/');
 $dashboard_widget_dao       = new DashboardWidgetDao($widget_factory);
 $user_dashboard_dao         = new UserDashboardDao($dashboard_widget_dao);
 $dashboard_widget_retriever = new DashboardWidgetRetriever($dashboard_widget_dao);
-$core_assets                = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$core_assets                = new \Tuleap\Layout\IncludeCoreAssets();
 $router                     = new UserDashboardRouter(
     new UserDashboardController(
         $csrf_token,

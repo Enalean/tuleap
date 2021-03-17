@@ -18,11 +18,10 @@
  */
 
 use Tuleap\InstanceBaseURLBuilder;
-use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
-$include_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');

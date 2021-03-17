@@ -108,7 +108,7 @@ abstract class BaseLayout extends Response
         $this->breadcrumbs = new BreadCrumbCollection();
         $this->toolbar     = [];
 
-        $this->include_asset    = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $this->include_asset    = new \Tuleap\Layout\IncludeCoreAssets();
         $this->uri_sanitizer    = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
         $this->url_verification = new \URLVerification();
 
@@ -416,7 +416,7 @@ abstract class BaseLayout extends Response
         $params['main_classes'][] = 'project-with-background';
         $this->addCSSAsset(
             new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
+                new \Tuleap\Layout\IncludeCoreAssets(),
                 "project-background/" . $background->getIdentifier()
             )
         );

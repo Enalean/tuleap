@@ -49,6 +49,6 @@ final class RelativeDatesAssetsRetriever
 
     private static function getCoreAssets(): IncludeAssets
     {
-        return new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        return new \Tuleap\Layout\IncludeCoreAssets();
     }
 }

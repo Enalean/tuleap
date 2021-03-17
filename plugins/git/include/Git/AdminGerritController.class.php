@@ -124,7 +124,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                     $template_path = __DIR__ . '/../../../../src/templates/resource_restrictor';
                     $GLOBALS['HTML']->addJavascriptAsset(
                         new \Tuleap\Layout\JavascriptAsset(
-                            new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core'),
+                            new \Tuleap\Layout\IncludeCoreAssets(),
                             'manage-allowed-projects-on-resource.js'
                         )
                     );

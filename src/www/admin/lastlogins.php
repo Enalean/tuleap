@@ -25,12 +25,11 @@ require_once __DIR__ . '/../include/pre.php';
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\MostRecentLoginsPresenter;
 use Tuleap\Admin\MostRecentLoginPresenter;
-use Tuleap\Layout\IncludeAssets;
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-most-recent-logins.js')

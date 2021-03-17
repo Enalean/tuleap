@@ -48,7 +48,6 @@ use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Widget\WidgetFactory;
@@ -87,10 +86,7 @@ class Home implements DispatchableWithRequest
                     EventManager::instance()
                 );
 
-                $core_assets                              = new IncludeAssets(
-                    __DIR__ . '/../../www/assets/core',
-                    '/assets/core'
-                );
+                $core_assets                              = new \Tuleap\Layout\IncludeCoreAssets();
                 $project_registration_creation_css_assets = new CssAsset(
                     $core_assets,
                     'project/project-registration-creation'

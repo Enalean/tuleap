@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../include/pre.php';
 
@@ -82,7 +81,7 @@ $recipients = [
     ]
 ];
 
-$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL("ckeditor.js"));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');

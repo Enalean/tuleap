@@ -26,7 +26,6 @@ namespace Tuleap\News\Admin\PermissionsPerGroup;
 
 use Project;
 use TemplateRendererFactory;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupLoadAllButtonPresenter;
 use UGroupManager;
 
@@ -49,10 +48,7 @@ class NewsPermissionPerGroupPaneBuilder
             return;
         }
 
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../www/assets/core',
-            '/assets/core'
-        );
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('news-permissions.js'));
 

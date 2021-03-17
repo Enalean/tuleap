@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\User\GroupCannotRemoveLastAdministrationPermission;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
@@ -244,7 +243,7 @@ class Admin_PermissionDelegationController
             $add_perm_presenter = new Admin_PermissionDelegationPermissionsModalPresenter($current_group, $unused_permissions);
         }
 
-        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $presenter = new Admin_PermissionDelegationIndexPresenter(
             $this->csrf_token,

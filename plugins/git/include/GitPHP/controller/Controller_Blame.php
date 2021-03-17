@@ -147,7 +147,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         $detector = new LanguageDetectorForPrismJS();
         $this->tpl->assign('language', $detector->getLanguage($blob->GetName()));
         $this->tpl->assign('bloblines', $blob->GetData(true));
-        $core_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/core', '/assets/core');
+        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
         $git_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
         $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($git_assets, 'line-highlight.js'));

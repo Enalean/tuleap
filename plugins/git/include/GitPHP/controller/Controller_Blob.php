@@ -230,10 +230,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             return;
         }
 
-        $core_assets = new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/core',
-            '/assets/core'
-        );
+        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $this->tpl->assign('extrascripts', ['blame']);
 

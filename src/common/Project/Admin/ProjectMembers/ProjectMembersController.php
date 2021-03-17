@@ -37,7 +37,6 @@ use ProjectManager;
 use ProjectUGroup;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
@@ -316,7 +315,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
     private function displayHeader($title, Project $project, BaseLayout $layout, ProjectMembersAdditionalModalCollectionPresenter $additional_modal)
     {
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../../www/assets/core', '/assets/core');
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $layout->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
         if ($additional_modal->hasJavascriptFile()) {

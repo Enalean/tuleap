@@ -37,7 +37,7 @@ final class PlanningJavascriptDependenciesProvider implements JavascriptDependen
 
     public function getDependencies(): array
     {
-        $core_include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/core', '/assets/core');
+        $core_include_assets = new \Tuleap\Layout\IncludeCoreAssets();
         return [
             ['file' => $core_include_assets->getFileURL('ckeditor.js')],
             ['file' => $this->agiledashboard_include_assets->getFileURL('planning-v2.js')],

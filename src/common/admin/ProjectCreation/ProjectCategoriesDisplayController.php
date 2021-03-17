@@ -27,7 +27,6 @@ use TroveCatDao;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -51,7 +50,7 @@ class ProjectCategoriesDisplayController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $layout->includeFooterJavascriptFile($include_assets->getFileURL('trovecat-admin.js'));
 

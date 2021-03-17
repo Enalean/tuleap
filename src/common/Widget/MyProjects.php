@@ -27,7 +27,6 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 use RSS;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\User\Account\RemoveFromProjectController;
 use UserManager;
 
@@ -283,7 +282,7 @@ class MyProjects extends \Widget
 
     public function getJavascriptDependencies(): array
     {
-        $assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $assets = new \Tuleap\Layout\IncludeCoreAssets();
         return [
             ['file' => $assets->getFileURL('ckeditor.js')],
             ['file' => '/scripts/tuleap/tuleap-ckeditor-toolbar.js'],

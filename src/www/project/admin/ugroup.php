@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
@@ -75,7 +74,7 @@ $project = $pm->getProject($group_id);
 
 $title = $Language->getText('project_admin_ugroup', 'manage_ug');
 
-$include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin-ugroups.js'));
 
 $navigation_displayer = new HeaderNavigationDisplayer();

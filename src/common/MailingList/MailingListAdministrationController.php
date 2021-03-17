@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 use HTTPRequest;
 use MailingListDao;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -87,7 +86,7 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
+                new \Tuleap\Layout\IncludeCoreAssets(),
                 'mailing-lists-administration.js'
             )
         );

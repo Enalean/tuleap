@@ -23,7 +23,6 @@
  */
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -155,10 +154,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             $GLOBALS['HTML']->includeFooterJavascriptFile($file_url);
         }
 
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../../../../src/www/assets/core',
-            '/assets/core'
-        );
+        $assets = new \Tuleap\Layout\IncludeCoreAssets();
         $GLOBALS['HTML']->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'syntax-highlight'));
 
         $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, [], $params);
@@ -339,10 +335,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     protected function displayFooter()
     {
         $code_block_features = CodeBlockFeaturesOnArtifact::getInstance();
-        $assets              = new IncludeAssets(
-            __DIR__ . '/../../../../../../src/www/assets/core',
-            '/assets/core'
-        );
+        $assets              = new \Tuleap\Layout\IncludeCoreAssets();
         if ($code_block_features->isMermaidNeeded()) {
             $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
         }

@@ -24,7 +24,6 @@ namespace Tuleap\Git\GitPHP;
 use GitPHP\Commit\TreePresenter;
 use Tuleap\Git\CommonMarkExtension\LinkToGitFileBlobFinder;
 use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Markdown\CommonMarkInterpreter;
 
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
@@ -161,10 +160,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
                     $readme_tree_item->GetData()
                 )
             );
-            $core_assets = new IncludeAssets(
-                __DIR__ . '/../../../../../src/www/assets/core',
-                '/assets/core'
-            );
+            $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
             $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($core_assets, 'syntax-highlight.js'));
             if ($code_block_features->isMermaidNeeded()) {
                 $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($core_assets, 'mermaid.js'));

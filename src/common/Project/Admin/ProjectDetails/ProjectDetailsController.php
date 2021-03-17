@@ -36,7 +36,6 @@ use Project_HierarchyManagerAncestorIsSelfException;
 use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectFullName;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
@@ -219,7 +218,7 @@ class ProjectDetailsController
 
     private function displayHeader($title, Project $project)
     {
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../../www/assets/core', '/assets/core');
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
 

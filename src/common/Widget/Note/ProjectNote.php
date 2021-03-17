@@ -214,9 +214,6 @@ class ProjectNote extends \Widget
 
     private function getAssets(): IncludeAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../../../www/assets/core',
-            '/assets/core'
-        );
+        return new \Tuleap\Layout\IncludeCoreAssets();
     }
 }

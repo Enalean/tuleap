@@ -39,7 +39,6 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
@@ -307,7 +306,7 @@ class BurningParrotTheme extends BaseLayout
             $this->detected_browser
         );
         if ($browser_deprecation_message !== null) {
-            $this->addJavascriptAsset(new JavascriptAsset(new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'), 'browser-deprecation-bp.js'));
+            $this->addJavascriptAsset(new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'browser-deprecation-bp.js'));
         }
 
         $footer = new FooterPresenter(

@@ -28,7 +28,6 @@ use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Widget\WidgetFactory;
@@ -63,7 +62,7 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
             $this->buildWidgetPresenters($project_widgets)
         );
 
-        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $layout->includeFooterJavascriptFile(
             $include_assets->getFileURL('site-admin-project-widgets.js')
         );

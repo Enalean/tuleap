@@ -22,7 +22,6 @@ namespace Tuleap\FRS\PermissionsPerGroup;
 
 use Project;
 use TemplateRendererFactory;
-use Tuleap\Layout\IncludeAssets;
 
 class PaneCollector
 {
@@ -52,10 +51,7 @@ class PaneCollector
         $service_presenter = $this->service_presenter_builder->getPanePresenter($project, $selected_ugroup);
         $package_presenter = $this->packages_pane_builder->getPanePresenter($project, $selected_ugroup);
 
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/assets/core',
-            '/assets/core'
-        );
+        $include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('frs-permissions.js'));
 

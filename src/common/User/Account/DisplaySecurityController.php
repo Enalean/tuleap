@@ -30,7 +30,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -97,7 +96,7 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
+                new \Tuleap\Layout\IncludeCoreAssets(),
                 'account/security.js'
             )
         );

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Widget;
 
-use Tuleap\Layout\IncludeAssets;
 
 /**
 * Widget_Contacts
@@ -76,7 +75,7 @@ class ProjectContacts extends \Widget
 
     public function getJavascriptDependencies(): array
     {
-        $assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $assets = new \Tuleap\Layout\IncludeCoreAssets();
         return [
             ['file' => $assets->getFileURL('ckeditor.js')],
             ['file' => '/scripts/tuleap/tuleap-ckeditor-toolbar.js'],
