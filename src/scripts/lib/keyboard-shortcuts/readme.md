@@ -2,12 +2,16 @@
 
 This lib provides the `addShortcutsGroup()` and `addGlobalShortcutsGroup()` functions which take in a `ShortcutsGroup` to:
 - create shortcuts using `hotkeys-js` library,
-- add it to the shortcut help modal,
+- add it to the shortcuts help modal.
+
+The lib also provide the `removeShortcutsGroup()` function which takes in a `ShortcutsGroup` to:
+- unbind shortcuts,
+- remove it from the shortcuts help modal.
 
 ## Usage
 ```typescript
 import type { Shortcut, ShortcutsGroup } from "@tuleap/keyboard-shortcuts";
-import { addShortcutsGroup } from "@tuleap/keyboard-shortcuts";
+import { addShortcutsGroup, addGlobalShortcutsGroup, removeShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 
 const shortcut_example: Shortcut = {
     keyboard_inputs: "up",
@@ -23,6 +27,16 @@ const shortcuts_group_example: ShortcutsGroup = {
 };
 
 addShortcutsGroup(
+    document,
+    shortcuts_group_example,
+);
+
+addGlobalShortcutsGroup(
+    document,
+    shortcuts_group_example,
+);
+
+removeShortcutsGroup(
     document,
     shortcuts_group_example,
 );
