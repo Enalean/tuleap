@@ -20,6 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
+import Vuex from 'vuex';
 import { createList } from "../../support/factories";
 import Artifact from "./Artifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
@@ -28,11 +29,24 @@ describe("ArtifactsList", () => {
     let wrapper;
 
     beforeEach(() => {
+        const store = new Vuex.Store({
+            modules: {
+                current_baseline: {
+                    namespaced: true,
+                    getters: {
+                        isLimitReachedOnArtifact: () => () => false,
+                        filterArtifacts: () => (artifacts) => artifacts,
+                        findArtifactsByIds: () => () => [],
+                    }
+                }
+            }
+        });
         wrapper = shallowMount(ArtifactsList, {
             propsData: {
                 artifacts: createList("baseline_artifact", 3),
             },
             localVue,
+            store
         });
     });
 

@@ -54,7 +54,6 @@
 
 <script>
 import CollapsableContent from "../../common/CollapsableContent.vue";
-import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import FieldComparison from "./FieldComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
 import DepthLimitReachedMessage from "../../common/DepthLimitReachedMessage.vue";
@@ -68,7 +67,7 @@ export default {
         DepthLimitReachedMessage,
         ArtifactLabel,
         FieldComparison,
-        ArtifactsListComparison,
+        "artifacts-list-comparison": () => import("./ArtifactsListComparison.vue"),
     },
 
     props: {
@@ -108,10 +107,6 @@ export default {
                 this.isLimitReachedOnComparedToArtifact(this.compared_to)
             );
         },
-    },
-
-    beforeCreate() {
-        this.$options.components.ArtifactsListComparison = ArtifactsListComparison;
     },
 };
 </script>

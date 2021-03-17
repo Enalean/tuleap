@@ -29,19 +29,15 @@
     </ol>
 </template>
 <script>
-import Artifact from "./Artifact.vue";
-
 export default {
     name: "ArtifactList",
 
-    components: { Artifact },
+    components: {
+        "artifact": () => import("./Artifact.vue")
+    },
 
     props: {
         artifacts: { required: true, type: Array },
-    },
-
-    beforeCreate() {
-        this.$options.components.Artifact = Artifact;
     },
 };
 </script>
