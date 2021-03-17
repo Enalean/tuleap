@@ -81,9 +81,7 @@ export function createTestExecutionShortcutsGroup(gettextCatalog: GettextProvide
 
     return {
         title: gettextCatalog.getString("Test execution"),
-        details: gettextCatalog.getString(
-            "Shortcuts available on the test currently open in a campaign."
-        ),
+        details: gettextCatalog.getString("Shortcuts available on the test currently open."),
         shortcuts: [
             mark_as_success,
             mark_as_blocked,

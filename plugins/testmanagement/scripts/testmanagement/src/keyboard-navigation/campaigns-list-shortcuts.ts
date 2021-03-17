@@ -40,8 +40,7 @@ export function createCampaignsListShortcutsGroup(gettextCatalog: GettextProvide
     };
 
     return {
-        title: gettextCatalog.getString("Test campaigns list"),
-        details: gettextCatalog.getString("Shortcuts available in test campaigns list page."),
+        title: gettextCatalog.getString("Campaigns list"),
         shortcuts: [focus_search_field, toggle_closed_campaigns],
     };
 }

@@ -61,7 +61,7 @@ export function createTestsListNavigation(gettextCatalog: GettextProvider): Shor
     };
 
     return {
-        title: gettextCatalog.getString("Navigation in campaign tests list"),
+        title: gettextCatalog.getString("Navigation in tests list"),
         details: gettextCatalog.getString("Navigation in tests list when a test is selected."),
         shortcuts: [
             move_to_next_test,

@@ -2,6 +2,7 @@ import "./campaign-new.tpl.html";
 
 import { getCampaigns } from "../api/rest-querier.js";
 import { setError } from "../feedback-state.js";
+import { KeyboardShortcuts } from "../keyboard-navigation/setup-shortcuts";
 
 export default CampaignListCtrl;
 
@@ -38,6 +39,9 @@ function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesS
     });
 
     function init() {
+        const keyboard_shortcuts = new KeyboardShortcuts(gettextCatalog);
+        keyboard_shortcuts.setCampaignsListPageShortcuts();
+
         return loadCampaigns(project_id);
     }
 

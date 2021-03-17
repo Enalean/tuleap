@@ -23,6 +23,7 @@ import angular from "angular";
 import { sortAlphabetically } from "../ksort.js";
 import { setError } from "../feedback-state.js";
 import { createDropdown } from "tlp";
+import { KeyboardShortcuts } from "../keyboard-navigation/setup-shortcuts";
 
 export default ExecutionListCtrl;
 
@@ -174,6 +175,9 @@ function ExecutionListCtrl(
         });
 
         watchAndSortCategories();
+
+        const keyboard_shortcuts = new KeyboardShortcuts(gettextCatalog);
+        keyboard_shortcuts.setCampaignPageShortcuts();
     }
 
     function watchAndSortCategories() {
