@@ -18,7 +18,7 @@
  */
 
 import type { ShortcutsGroup } from "../type";
-import { removeShortcutsGroupFromShortcutsModal } from "./remove-from-shortcuts-modal";
+import { removeShortcutsGroupFromShortcutsModal } from "./remove-from-modal";
 
 describe("removeShortcutsGroupFromShortcutsModal", () => {
     let doc: Document;

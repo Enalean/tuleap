@@ -17,41 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import hotkeys from "hotkeys-js";
+export type { Shortcut, ShortcutsGroup } from "./type";
 
-import { HOTKEYS_SCOPE_NO_MODAL } from "./handle-modals-events/handle-modals-events";
-import { addShortcutsGroupToShortcutsModal } from "./shortcuts-help-modal/add-to-help-modal";
-import { removeShortcutsGroupFromShortcutsModal } from "./shortcuts-help-modal/remove-from-shortcuts-modal";
-import { isWildCardAndNotQuestionMark } from "./handle-wildcards/handle-wildcards";
-
-import { GLOBAL_SCOPE, PLUGIN_SCOPE } from "./type";
-import type { Shortcut, ShortcutsGroup } from "./type";
-export type { Shortcut, ShortcutsGroup };
-
-export function addShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
-    shortcuts_group.shortcuts.forEach(createShortcut);
-    addShortcutsGroupToShortcutsModal(doc, shortcuts_group, PLUGIN_SCOPE);
-}
-
-export function addGlobalShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
-    shortcuts_group.shortcuts.forEach(createShortcut);
-    addShortcutsGroupToShortcutsModal(doc, shortcuts_group, GLOBAL_SCOPE);
-}
-
-export function removeShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
-    shortcuts_group.shortcuts.forEach((shortcut) => {
-        hotkeys.unbind(shortcut.keyboard_inputs);
-    });
-    removeShortcutsGroupFromShortcutsModal(doc, shortcuts_group);
-}
-
-function createShortcut(shortcut: Shortcut): void {
-    hotkeys(shortcut.keyboard_inputs, HOTKEYS_SCOPE_NO_MODAL, (event) => {
-        if (isWildCardAndNotQuestionMark(shortcut, event)) {
-            return;
-        }
-
-        event.preventDefault();
-        shortcut.handle(event);
-    });
-}
+export { addShortcutsGroup } from "./handle-shortcuts-group";
+export { addGlobalShortcutsGroup, removeShortcutsGroup } from "./handle-shortcuts-group";

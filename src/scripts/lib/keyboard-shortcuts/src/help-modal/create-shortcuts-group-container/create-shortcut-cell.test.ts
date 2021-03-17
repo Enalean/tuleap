@@ -18,7 +18,7 @@
  */
 
 import { createKeyboardInputElement, createShortcutCell } from "./create-shortcut-cell";
-import type { Shortcut } from "../type";
+import type { Shortcut } from "../../type";
 
 describe("create-shortcut-cell.ts", () => {
     let doc: Document;
