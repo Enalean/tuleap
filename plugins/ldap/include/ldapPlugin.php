@@ -414,8 +414,12 @@ class LdapPlugin extends Plugin
     public function user_manager_find_user($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLDAPUserManagementEnabled()) {
-            $ldap           = $this->getLdap();
-            $params["user"] = $this->getUserManager()->getUserById((int) $params["ident"]);
+            $ldap = $this->getLdap();
+
+            if (preg_match("/^\d+$/", $params["ident"])) {
+                $params["user"] = $this->getUserManager()->getUserById((int) $params["ident"]);
+            }
+
             if ($params["user"] !== null) {
                 return;
             }
