@@ -63,6 +63,7 @@ import type {
     PossibleDropCallbackParameter,
     SuccessfulDropCallbackParameter,
 } from "@tuleap/drag-and-drop";
+import type { HandleDropContextWithProgramId } from "../helpers/drag-drop";
 import {
     canMove,
     invalid,
@@ -70,16 +71,17 @@ import {
     isContainer,
     checkAcceptsDrop,
     checkAfterDrag,
-    handleDrop,
 } from "../helpers/drag-drop";
+import { Action } from "vuex-class";
 
 @Component({
     components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb },
 })
 export default class App extends Vue {
     private drek!: Drekkenov | undefined;
-    private error_message = "";
-    private has_error = false;
+
+    @Action
+    private readonly handleDrop!: (handle_drop: HandleDropContextWithProgramId) => Promise<void>;
 
     beforeDestroy(): void {
         if (this.drek) {
@@ -105,8 +107,8 @@ export default class App extends Vue {
                     target_cell: context.target_dropzone,
                 });
             },
-            onDrop: (context: SuccessfulDropCallbackParameter): void => {
-                handleDrop(this.$store, context, programId());
+            onDrop: async (context: SuccessfulDropCallbackParameter): Promise<void> => {
+                await this.handleDrop({ program_id: programId(), ...context });
             },
             cleanupAfterDragCallback: (): void => {
                 return checkAfterDrag();

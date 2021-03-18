@@ -16,11 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { HandleDragPayload, State } from "../type";
+import type { HandleDragPayload } from "../type";
 import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
 import { planElementInProgramIncrement } from "./ProgramIncrement/Feature/feature-planner";
-import { addElementToTopBackLog } from "./ProgramIncrement/add-to-top-backlog";
-import type { Store } from "vuex";
 import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 
 export interface FeatureToPlan {
@@ -36,6 +34,10 @@ export interface FeatureIdToMoveFromProgramIncrementToAnother {
 export interface FeatureIdWithProgramIncrement {
     feature_id: number;
     program_increment: ProgramIncrement;
+}
+
+export interface HandleDropContextWithProgramId extends SuccessfulDropCallbackParameter {
+    program_id: number;
 }
 
 export function isContainer(element: HTMLElement): boolean {
@@ -89,88 +91,7 @@ export function checkAfterDrag(): void {
     });
 }
 
-export async function handleDrop(
-    store: Store<State>,
-    context: SuccessfulDropCallbackParameter,
-    program_id: number
-): Promise<void> {
-    const element_id = context.dropped_element.dataset.elementId;
-    if (!element_id) {
-        return;
-    }
-
-    const plan_in_program_increment_id = context.target_dropzone.dataset.programIncrementId;
-    const remove_from_program_increment_id = context.dropped_element.dataset.programIncrementId;
-
-    if (plan_in_program_increment_id && !remove_from_program_increment_id) {
-        await planFeatureInProgramIncrement(
-            store,
-            context,
-            parseInt(plan_in_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
-        const payload: FeatureIdWithProgramIncrement = {
-            feature_id: parseInt(element_id, 10),
-            program_increment: store.getters.getProgramIncrementFromId(
-                parseInt(plan_in_program_increment_id, 10)
-            ),
-        };
-
-        await store.dispatch("planFeatureInProgramIncrement", payload);
-    }
-
-    if (!plan_in_program_increment_id && remove_from_program_increment_id) {
-        await unplanFeature(
-            store,
-            context,
-            parseInt(remove_from_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
-        await addElementToTopBackLog(program_id, parseInt(element_id, 10));
-
-        const payload: FeatureIdWithProgramIncrement = {
-            feature_id: parseInt(element_id, 10),
-            program_increment: store.getters.getProgramIncrementFromId(
-                parseInt(remove_from_program_increment_id, 10)
-            ),
-        };
-
-        await store.dispatch("unplanFeatureFromProgramIncrement", payload);
-    }
-
-    if (plan_in_program_increment_id && remove_from_program_increment_id) {
-        await unplanFeature(
-            store,
-            context,
-            parseInt(remove_from_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
-        await planFeatureInProgramIncrement(
-            store,
-            context,
-            parseInt(plan_in_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
-        const payload: FeatureIdToMoveFromProgramIncrementToAnother = {
-            feature_id: parseInt(element_id, 10),
-            from_program_increment: store.getters.getProgramIncrementFromId(
-                parseInt(remove_from_program_increment_id, 10)
-            ),
-            to_program_increment: store.getters.getProgramIncrementFromId(
-                parseInt(plan_in_program_increment_id, 10)
-            ),
-        };
-
-        await store.dispatch("moveFeatureFromProgramIncrementToAnother", payload);
-    }
-}
-
-async function planFeatureInProgramIncrement(
-    store: Store<State>,
+export async function planFeatureInProgramIncrement(
     context: SuccessfulDropCallbackParameter,
     plan_in_program_increment_id: number,
     element_id: number
@@ -193,8 +114,7 @@ async function planFeatureInProgramIncrement(
     );
 }
 
-async function unplanFeature(
-    store: Store<State>,
+export async function unplanFeature(
     context: SuccessfulDropCallbackParameter,
     remove_from_program_increment_id: number,
     element_id: number

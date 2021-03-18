@@ -20,11 +20,20 @@
 import * as actions from "./actions";
 import type { State } from "../type";
 import type { ActionContext } from "vuex";
-import type { FeatureIdWithProgramIncrement } from "../helpers/drag-drop";
+import type {
+    FeatureIdWithProgramIncrement,
+    HandleDropContextWithProgramId,
+} from "../helpers/drag-drop";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import type { ToBePlannedElement } from "../helpers/ToBePlanned/element-to-plan-retriever";
 import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { FeatureIdToMoveFromProgramIncrementToAnother } from "../helpers/drag-drop";
+import { createElement } from "../helpers/jest/create-dom-element";
+import * as dragDrop from "../helpers/drag-drop";
+import * as tlp from "tlp";
+import * as backlogAdder from "../helpers/ProgramIncrement/add-to-top-backlog";
+
+jest.mock("tlp");
 
 describe("Actions", () => {
     let context: ActionContext<State, State>;
@@ -135,6 +144,150 @@ describe("Actions", () => {
             expect(feature_id_with_increment.to_program_increment.features[0]).toEqual({
                 artifact_id: 125,
             });
+        });
+    });
+
+    describe(`handleDrop()`, () => {
+        it(`Plan elements`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "14");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+            target_dropzone.setAttribute("data-program-increment-id", "1");
+            target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
+            target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
+
+            jest.spyOn(tlp, "put");
+            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
+
+            const getProgramIncrementFromId = jest.fn().mockReturnValue({ id: 56, features: [] });
+            const getToBePlannedElementFromId = jest.fn().mockReturnValue({ artifact_id: 125 });
+
+            context.getters = { getProgramIncrementFromId, getToBePlannedElementFromId };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+            } as HandleDropContextWithProgramId);
+
+            expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
+            expect(getToBePlannedElementFromId).toHaveBeenCalledWith(14);
+
+            expect(context.commit).toHaveBeenCalledWith("removeToBePlannedElement", {
+                artifact_id: 125,
+            });
+
+            expect(plan_feature).toHaveBeenCalledWith(
+                {
+                    dropped_element,
+                    program_id: 101,
+                    source_dropzone,
+                    target_dropzone,
+                },
+                1,
+                14
+            );
+        });
+
+        it(`Removes elements from program increment`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "12");
+            dropped_element.setAttribute("data-program-increment-id", "1");
+            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
+            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+
+            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
+            jest.spyOn(backlogAdder, "addElementToTopBackLog");
+            jest.spyOn(tlp, "put");
+
+            const getProgramIncrementFromId = jest
+                .fn()
+                .mockReturnValue({ id: 56, features: [{ artifact_id: 12 }] });
+
+            context.getters = { getProgramIncrementFromId };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+            } as HandleDropContextWithProgramId);
+
+            expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
+
+            expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
+                artifact_id: 12,
+            });
+
+            expect(unplan_feature).toHaveBeenCalledWith(
+                {
+                    dropped_element,
+                    program_id: 101,
+                    source_dropzone,
+                    target_dropzone,
+                },
+                1,
+                12
+            );
+        });
+
+        it(`Moves elements from program increment to another`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "12");
+            dropped_element.setAttribute("data-program-increment-id", "1");
+            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
+            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+            target_dropzone.setAttribute("data-program-increment-id", "2");
+            target_dropzone.setAttribute("data-artifact-link-field-id", "3691");
+            target_dropzone.setAttribute("data-planned-feature-ids", "125,126");
+
+            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
+            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
+            jest.spyOn(tlp, "put");
+
+            const getProgramIncrementFromId = jest
+                .fn()
+                .mockReturnValueOnce({ id: 1, features: [{ artifact_id: 12 }] } as ProgramIncrement)
+                .mockReturnValueOnce({ id: 2, features: [] as Feature[] } as ProgramIncrement);
+
+            context.getters = { getProgramIncrementFromId };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+            } as HandleDropContextWithProgramId);
+
+            expect(getProgramIncrementFromId).toHaveBeenNthCalledWith(1, 1);
+            expect(getProgramIncrementFromId).toHaveBeenNthCalledWith(2, 2);
+
+            expect(unplan_feature).toHaveBeenCalledWith(
+                {
+                    dropped_element,
+                    program_id: 101,
+                    source_dropzone,
+                    target_dropzone,
+                },
+                1,
+                12
+            );
+            expect(plan_feature).toHaveBeenCalledWith(
+                {
+                    dropped_element,
+                    program_id: 101,
+                    source_dropzone,
+                    target_dropzone,
+                },
+                2,
+                12
+            );
         });
     });
 });
