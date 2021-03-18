@@ -20,11 +20,13 @@
 namespace Tuleap\Token\REST\v1;
 
 use Luracast\Restler\RestException;
+use Rest_Exception_InvalidTokenException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\REST\Header;
 use Exception;
 use Tuleap\User\PasswordVerifier;
+use User_LoginException;
 use UserManager;
 use EventManager;
 use User_LoginManager;
