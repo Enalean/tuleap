@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/svnPlugin.php';
 
@@ -29,6 +31,7 @@ use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Commit\CollidingSHA1Validator;
 use Tuleap\SVN\Commit\CommitMessageValidator;
+use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
 use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Admin\ImmutableTagDao;
@@ -43,12 +46,11 @@ use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\Svn\SHA1CollisionDetector;
 use Tuleap\SVN\SvnAdmin;
 
+$logger          = SvnPlugin::getLogger();
+$repository_path = $argv[1];
+$transaction     = $argv[2];
 try {
-    $repository_path = $argv[1];
-    $transaction     = $argv[2];
-
     $svnlook            = new Svnlook(new System_Command());
-    $logger             = SvnPlugin::getLogger();
     $repository_manager = new RepositoryManager(
         new Dao(),
         ProjectManager::instance(),
@@ -82,7 +84,11 @@ try {
         new CollidingSHA1Validator(
             $svnlook,
             new SHA1CollisionDetector()
-        )
+        ),
+        new FileSizeValidator(
+            $svnlook,
+            $logger,
+        ),
     );
 
     $hook->assertCommitIsValid(
@@ -92,6 +98,7 @@ try {
 
     exit(0);
 } catch (Exception $exception) {
+    $logger->error($repository_path . ': ' . $exception->getMessage());
     fwrite(STDERR, $exception->getMessage());
     exit(1);
 }

@@ -26,6 +26,7 @@ use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Httpd\PostRotateEvent;
@@ -70,6 +71,7 @@ use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Admin\DisplayMigrateFromCoreController;
 use Tuleap\SVN\Admin\RestoreController;
 use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\DiskUsage\DiskUsageCollector;
@@ -215,6 +217,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(GetAllRepositories::NAME);
         $this->addHook(SvnCoreUsage::NAME);
         $this->addHook(SvnCoreAccess::NAME);
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1226,5 +1229,10 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function svnCoreAccess(SvnCoreAccess $svn_core_access): void
     {
         (new \Tuleap\SVN\Repository\SvnCoreAccess(new Dao()))->process($svn_core_access);
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $get_whitelisted_keys): void
+    {
+        $get_whitelisted_keys->addConfigClass(FileSizeValidator::class);
     }
 }
