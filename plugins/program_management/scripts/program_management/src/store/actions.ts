@@ -27,6 +27,7 @@ import type {
 import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extractor";
 import { addElementToTopBackLog } from "../helpers/ProgramIncrement/add-to-top-backlog";
 import { unplanFeature, planFeatureInProgramIncrement as planFeature } from "../helpers/drag-drop";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export function planFeatureInProgramIncrement(
     context: ActionContext<State, State>,
@@ -86,12 +87,6 @@ export async function handleDrop(
     const remove_from_program_increment_id = handle_drop.dropped_element.dataset.programIncrementId;
 
     if (plan_in_program_increment_id && !remove_from_program_increment_id) {
-        await planFeature(
-            handle_drop,
-            parseInt(plan_in_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
         const payload: FeatureIdWithProgramIncrement = {
             feature_id: parseInt(element_id, 10),
             program_increment: context.getters.getProgramIncrementFromId(
@@ -100,17 +95,19 @@ export async function handleDrop(
         };
 
         planFeatureInProgramIncrement(context, payload);
+
+        try {
+            await planFeature(
+                handle_drop,
+                parseInt(plan_in_program_increment_id, 10),
+                parseInt(element_id, 10)
+            );
+        } catch (error) {
+            await handleModalError(context, error);
+        }
     }
 
     if (!plan_in_program_increment_id && remove_from_program_increment_id) {
-        await unplanFeature(
-            handle_drop,
-            parseInt(remove_from_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
-        await addElementToTopBackLog(handle_drop.program_id, parseInt(element_id, 10));
-
         const payload: FeatureIdWithProgramIncrement = {
             feature_id: parseInt(element_id, 10),
             program_increment: context.getters.getProgramIncrementFromId(
@@ -119,21 +116,21 @@ export async function handleDrop(
         };
 
         unplanFeatureFromProgramIncrement(context, payload);
+
+        try {
+            await unplanFeature(
+                handle_drop,
+                parseInt(remove_from_program_increment_id, 10),
+                parseInt(element_id, 10)
+            );
+
+            await addElementToTopBackLog(handle_drop.program_id, parseInt(element_id, 10));
+        } catch (error) {
+            await handleModalError(context, error);
+        }
     }
 
     if (plan_in_program_increment_id && remove_from_program_increment_id) {
-        await unplanFeature(
-            handle_drop,
-            parseInt(remove_from_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
-        await planFeature(
-            handle_drop,
-            parseInt(plan_in_program_increment_id, 10),
-            parseInt(element_id, 10)
-        );
-
         const payload: FeatureIdToMoveFromProgramIncrementToAnother = {
             feature_id: parseInt(element_id, 10),
             from_program_increment: context.getters.getProgramIncrementFromId(
@@ -145,5 +142,33 @@ export async function handleDrop(
         };
 
         moveFeatureFromProgramIncrementToAnother(context, payload);
+
+        try {
+            await unplanFeature(
+                handle_drop,
+                parseInt(remove_from_program_increment_id, 10),
+                parseInt(element_id, 10)
+            );
+
+            await planFeature(
+                handle_drop,
+                parseInt(plan_in_program_increment_id, 10),
+                parseInt(element_id, 10)
+            );
+        } catch (error) {
+            await handleModalError(context, error);
+        }
+    }
+}
+
+export async function handleModalError(
+    context: ActionContext<State, State>,
+    rest_error: FetchWrapperError
+): Promise<void> {
+    try {
+        const { error } = await rest_error.response.json();
+        context.commit("setModalErrorMessage", error.code + " " + error.message);
+    } catch (e) {
+        context.commit("setModalErrorMessage", "");
     }
 }

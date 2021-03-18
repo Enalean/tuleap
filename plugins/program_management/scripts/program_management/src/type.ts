@@ -42,4 +42,6 @@ export interface HandleDragPayload {
 export interface State {
     to_be_planned_elements: ProgramElement[];
     program_increments: ProgramIncrement[];
+    modal_error_message: string;
+    has_modal_error: boolean;
 }

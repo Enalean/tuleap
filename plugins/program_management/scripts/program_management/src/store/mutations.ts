@@ -59,4 +59,9 @@ export default {
                 to_be_planned_element.artifact_id !== element_to_remove.artifact_id
         );
     },
+
+    setModalErrorMessage(state: State, message: string): void {
+        state.modal_error_message = message;
+        state.has_modal_error = true;
+    },
 };
