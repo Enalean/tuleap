@@ -166,7 +166,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function javascript_file()
+    public function javascript_file(array $params): void
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
@@ -174,7 +174,9 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
                 __DIR__ . '/../../../src/www/assets/botmattermost_git/',
                 '/assets/botmattermost_git'
             );
-            echo $asset->getHTMLSnippet('autocompleter.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Tuleap\Layout\BaseLayout);
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($asset, 'autocompleter.js'));
         }
     }
 
