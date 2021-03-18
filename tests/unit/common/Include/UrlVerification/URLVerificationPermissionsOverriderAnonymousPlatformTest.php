@@ -26,24 +26,17 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PHPUnit\Framework\TestCase;
 
-final class URLVerificationPermissionsOverriderRestrictedPlatformAndOverriderForceAnonymousButOverriderForceGrantTest extends TestCase
+final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
     private $url_verification;
-    private $event_manager;
-    private $overrider_manager;
     private $server;
     private $user;
-    /**
-     * @var string
-     */
-    private $fixtures;
 
     protected function setUp(): void
     {
@@ -51,26 +44,17 @@ final class URLVerificationPermissionsOverriderRestrictedPlatformAndOverriderFor
 
         $this->user = \Mockery::mock(\PFUser::class);
 
-        $this->event_manager     = \Mockery::spy(\EventManager::class);
-        $this->overrider_manager = \Mockery::spy(\PermissionsOverrider_PermissionsOverriderManager::class);
+        $event_manager = \Mockery::spy(\EventManager::class);
 
         $this->url_verification = \Mockery::mock(\URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->url_verification->shouldReceive('getEventManager')->andReturns($this->event_manager);
+        $this->url_verification->shouldReceive('getEventManager')->andReturns($event_manager);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($this->user);
-        PermissionsOverrider_PermissionsOverriderManager::setInstance($this->overrider_manager);
-        $this->fixtures = dirname(__FILE__) . '/_fixtures';
-        $GLOBALS['Language']->shouldReceive('getContent')->andReturns($this->fixtures . '/empty.txt');
+        $fixtures = dirname(__FILE__) . '/_fixtures';
+        $GLOBALS['Language']->shouldReceive('getContent')->andReturns($fixtures . '/empty.txt');
 
         $this->server = ['SERVER_NAME' => 'example.com'];
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->overrider_manager->shouldReceive('doesOverriderAllowUserToAccessPlatform')->andReturns(true);
-        $this->overrider_manager->shouldReceive('doesOverriderForceUsageOfAnonymous')->andReturns(true);
-    }
 
-    protected function tearDown(): void
-    {
-        PermissionsOverrider_PermissionsOverriderManager::clearInstance();
-        parent::tearDown();
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
     }
 
     private function getScriptChunk(): ?string
@@ -92,36 +76,6 @@ final class URLVerificationPermissionsOverriderRestrictedPlatformAndOverriderFor
     {
         $this->server['SCRIPT_NAME'] = '';
         $this->user->shouldReceive('isAnonymous')->andReturns(false);
-
-        $this->assertEquals(null, $this->getScriptChunk());
-    }
-
-    public function testItLetAnonymousAccessRoot(): void
-    {
-        $this->server['SCRIPT_NAME'] = '';
-        $this->server['REQUEST_URI'] = '/';
-
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
-
-        $this->assertEquals(null, $this->getScriptChunk());
-    }
-
-    public function testItLetAnonymousAccessScript(): void
-    {
-        $this->server['SCRIPT_NAME'] = '';
-        $this->server['REQUEST_URI'] = '/script/';
-
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
-
-        $this->assertEquals(null, $this->getScriptChunk());
-    }
-
-    public function testItLetAnonymousAccessScriptInLightView(): void
-    {
-        $this->server['SCRIPT_NAME'] = '';
-        $this->server['REQUEST_URI'] = '/script?pv=2';
-
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         $this->assertEquals(null, $this->getScriptChunk());
     }

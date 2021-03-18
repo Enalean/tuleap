@@ -36,8 +36,6 @@ class URLVerificationWithAnonymousTest extends TestCase
     use ForgeConfigSandbox;
 
     private $urlVerification;
-    private $em;
-    private $overrider_manager;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
      */
@@ -47,18 +45,14 @@ class URLVerificationWithAnonymousTest extends TestCase
     {
         parent::setUp();
 
-        $this->em = \Mockery::spy(\EventManager::class);
+        $em = \Mockery::spy(\EventManager::class);
 
         $this->user = \Mockery::mock(\PFUser::class);
 
-        $this->overrider_manager = \Mockery::spy(\PermissionsOverrider_PermissionsOverriderManager::class);
-        $this->overrider_manager->shouldReceive('doesOverriderAllowUserToAccessPlatform')->andReturns(false);
-
         $this->urlVerification = \Mockery::mock(\URLVerification::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
-        $this->urlVerification->shouldReceive('getEventManager')->andReturns($this->em);
+        $this->urlVerification->shouldReceive('getEventManager')->andReturns($em);
         $this->urlVerification->shouldReceive('getCurrentUser')->andReturns($this->user);
-        $this->urlVerification->shouldReceive('getPermissionsOverriderManager')->andReturns($this->overrider_manager);
     }
 
     public function testVerifyRequestAnonymousWhenScriptException(): void

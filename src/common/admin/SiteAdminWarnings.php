@@ -27,7 +27,6 @@ use Event;
 use EventManager;
 use ForgeConfig;
 use ForgeUpgradeConfig;
-use PermissionsOverrider_PermissionsOverriderManager;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
 
 final class SiteAdminWarnings
@@ -63,10 +62,6 @@ final class SiteAdminWarnings
             if (! $this->forge_upgrade_config->isSystemUpToDate()) {
                 $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<h4>ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="/doc/en/installation-guide/update.html">upgrade documentation</a>.</p>') . '</div>';
             }
-        }
-
-        if (PermissionsOverrider_PermissionsOverriderManager::instance()->hasOverrider()) {
-            $warnings[] = '<div class="tlp-alert-danger alert-block">' . _('There is a PermissionOverrider in `/etc/tuleap/local_glue/PermissionsOverrider.php` it\'s deprecated without replacement. You should remove this file now. The feature will be removed end of March 2021.') . '</div>';
         }
 
         return implode('', $warnings);

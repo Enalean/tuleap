@@ -548,7 +548,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                         new MailFilter(
                             UserManager::instance(),
                             new ProjectAccessChecker(
-                                PermissionsOverrider_PermissionsOverriderManager::instance(),
                                 new RestrictedUserCanAccessProjectVerifier(),
                                 EventManager::instance()
                             ),
@@ -2519,7 +2518,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         return new HTTPAccessControl(
             $logger,
-            new ForgeAccess(PermissionsOverrider_PermissionsOverriderManager::instance()),
+            new ForgeAccess(),
             new \User_LoginManager(
                 \EventManager::instance(),
                 \UserManager::instance(),

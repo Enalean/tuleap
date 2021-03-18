@@ -22,7 +22,6 @@ namespace Tuleap\REST;
 
 use EventManager;
 use Luracast\Restler\RestException;
-use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
@@ -44,7 +43,6 @@ class ProjectStatusVerificator
     {
         return new self(
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             )

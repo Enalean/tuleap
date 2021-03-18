@@ -146,7 +146,6 @@ This is an automatic message sent by a robot. Please do not reply to this email.
                     new MailFilter(
                         UserManager::instance(),
                         new ProjectAccessChecker(
-                            PermissionsOverrider_PermissionsOverriderManager::instance(),
                             new RestrictedUserCanAccessProjectVerifier(),
                             EventManager::instance()
                         ),

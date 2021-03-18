@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use BackendLogger;
 use Luracast\Restler\RestException;
-use PermissionsOverrider_PermissionsOverriderManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
@@ -109,7 +108,6 @@ final class ProjectResource extends AuthenticatedResource
         $build_program        = new ProgramAdapter(
             $project_manager,
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
@@ -293,7 +291,6 @@ final class ProjectResource extends AuthenticatedResource
         }
 
         $project_access_checker = new ProjectAccessChecker(
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );

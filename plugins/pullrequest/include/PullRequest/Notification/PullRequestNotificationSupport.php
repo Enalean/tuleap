@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\Notification;
 
 use GitDao;
 use GitRepositoryFactory;
-use PermissionsOverrider_PermissionsOverriderManager;
 use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
@@ -129,7 +128,6 @@ final class PullRequestNotificationSupport
                                         new PullRequestPermissionChecker(
                                             $git_repository_factory,
                                             new \Tuleap\Project\ProjectAccessChecker(
-                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
                                                 new RestrictedUserCanAccessProjectVerifier(),
                                                 \EventManager::instance()
                                             ),
@@ -169,7 +167,6 @@ final class PullRequestNotificationSupport
                                         new PullRequestPermissionChecker(
                                             $git_repository_factory,
                                             new \Tuleap\Project\ProjectAccessChecker(
-                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
                                                 new RestrictedUserCanAccessProjectVerifier(),
                                                 \EventManager::instance()
                                             ),
@@ -214,7 +211,6 @@ final class PullRequestNotificationSupport
                                         new PullRequestPermissionChecker(
                                             $git_repository_factory,
                                             new \Tuleap\Project\ProjectAccessChecker(
-                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
                                                 new RestrictedUserCanAccessProjectVerifier(),
                                                 \EventManager::instance()
                                             ),
@@ -265,7 +261,6 @@ final class PullRequestNotificationSupport
                                         new PullRequestPermissionChecker(
                                             $git_repository_factory,
                                             new \Tuleap\Project\ProjectAccessChecker(
-                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
                                                 new RestrictedUserCanAccessProjectVerifier(),
                                                 \EventManager::instance()
                                             ),
@@ -307,7 +302,6 @@ final class PullRequestNotificationSupport
                                         new PullRequestPermissionChecker(
                                             $git_repository_factory,
                                             new \Tuleap\Project\ProjectAccessChecker(
-                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
                                                 new RestrictedUserCanAccessProjectVerifier(),
                                                 \EventManager::instance()
                                             ),
@@ -345,7 +339,6 @@ final class PullRequestNotificationSupport
                 new MailFilter(
                     \UserManager::instance(),
                     new ProjectAccessChecker(
-                        PermissionsOverrider_PermissionsOverriderManager::instance(),
                         new RestrictedUserCanAccessProjectVerifier(),
                         $event_manager
                     ),
@@ -356,7 +349,6 @@ final class PullRequestNotificationSupport
             new PullRequestPermissionChecker(
                 $git_repository_factory,
                 new \Tuleap\Project\ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     $event_manager
                 ),

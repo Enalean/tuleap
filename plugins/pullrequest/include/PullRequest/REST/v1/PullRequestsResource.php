@@ -30,7 +30,6 @@ use GitRepoNotFoundException;
 use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use PluginFactory;
 use Project_AccessException;
@@ -279,7 +278,6 @@ class PullRequestsResource extends AuthenticatedResource
         $this->permission_checker = new PullRequestPermissionChecker(
             $this->git_repository_factory,
             new \Tuleap\Project\ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 $this->event_manager
             ),

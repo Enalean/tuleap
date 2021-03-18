@@ -22,7 +22,6 @@ namespace Tuleap\Layout;
 
 use Codendi_HTMLPurifier;
 use EventManager;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use Project;
 use ProjectManager;
@@ -335,7 +334,6 @@ abstract class BaseLayout extends Response
         $builder = new ProjectSidebarBuilder(
             EventManager::instance(),
             ProjectManager::instance(),
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
             Codendi_HTMLPurifier::instance(),
             $this->uri_sanitizer,
             new MembershipDelegationDao()

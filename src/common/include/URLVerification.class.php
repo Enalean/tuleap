@@ -86,17 +86,9 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return new URL();
     }
 
-    /**
-     * @return PermissionsOverrider_PermissionsOverriderManager
-     */
-    protected function getPermissionsOverriderManager()
-    {
-        return PermissionsOverrider_PermissionsOverriderManager::instance();
-    }
-
     private function getForgeAccess(): ForgeAccess
     {
-        return new ForgeAccess($this->getPermissionsOverriderManager());
+        return new ForgeAccess();
     }
 
     /**
@@ -463,8 +455,11 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function userCanAccessProject(PFUser $user, Project $project)
     {
         $checker = new ProjectAccessChecker(
-            $this->getPermissionsOverriderManager(),
-            new RestrictedUserCanAccessUrlOrProjectVerifier($this->getEventManager(), $this->getUrl(), $_SERVER['REQUEST_URI']),
+            new RestrictedUserCanAccessUrlOrProjectVerifier(
+                $this->getEventManager(),
+                $this->getUrl(),
+                $_SERVER['REQUEST_URI']
+            ),
             EventManager::instance()
         );
 

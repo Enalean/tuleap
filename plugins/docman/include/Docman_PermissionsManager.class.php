@@ -82,7 +82,6 @@ class Docman_PermissionsManager
             self::$instance[$groupId] = new Docman_PermissionsManager(
                 $project,
                 new ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
                 )

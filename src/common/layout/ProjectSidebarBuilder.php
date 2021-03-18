@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 use Event;
 use EventManager;
 use ForgeConfig;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use Project;
 use ProjectManager;
@@ -43,10 +42,6 @@ class ProjectSidebarBuilder
      */
     private $project_manager;
     /**
-     * @var PermissionsOverrider_PermissionsOverriderManager
-     */
-    private $permission_overrider;
-    /**
      * @var Codendi_HTMLPurifier
      */
     private $purifier;
@@ -62,14 +57,12 @@ class ProjectSidebarBuilder
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
-        PermissionsOverrider_PermissionsOverriderManager $permission_overrider,
         Codendi_HTMLPurifier $purifier,
         URISanitizer $uri_sanitizer,
         MembershipDelegationDao $membership_delegation_dao
     ) {
         $this->event_manager             = $event_manager;
         $this->project_manager           = $project_manager;
-        $this->permission_overrider      = $permission_overrider;
         $this->purifier                  = $purifier;
         $this->uri_sanitizer             = $uri_sanitizer;
         $this->membership_delegation_dao = $membership_delegation_dao;
@@ -156,7 +149,6 @@ class ProjectSidebarBuilder
         if (
             ! $this->isProjectSuperPublic($project)
             && $this->restrictedMemberIsNotProjectMember($user, $project)
-            && ! $this->permission_overrider->doesOverriderAllowUserToAccessProject($user, $project)
             && ! in_array($short_name, $allowed_services)
         ) {
             return false;

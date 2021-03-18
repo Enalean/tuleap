@@ -360,7 +360,6 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 ),
                 ProjectManager::instance(),
                 new ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
                 ),

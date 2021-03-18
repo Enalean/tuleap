@@ -58,7 +58,6 @@ use Project;
 use Tuleap\Project\ProjectAccessChecker;
 use Planning_VirtualTopMilestone;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
-use PermissionsOverrider_PermissionsOverriderManager;
 use Project_AccessPrivateException;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Project_AccessRestrictedException;
@@ -212,7 +211,6 @@ class ProjectMilestonesPresenterBuilder
             $semantic_timeframe_builder,
             new CountElementsModeChecker(new ProjectsCountModeDao()),
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             )

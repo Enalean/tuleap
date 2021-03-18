@@ -290,7 +290,6 @@ class StatisticsPlugin extends Plugin
             $project_manager,
             $user_manager,
             new ProjectAccessChecker(
-                new PermissionsOverrider_PermissionsOverriderManager(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             )
