@@ -51,7 +51,7 @@ class Manager
         $this->path_updater       = $path_updater;
     }
 
-    public function delete($job_id)
+    public function delete(int $job_id): bool
     {
         return $this->dao->deleteTrigger($job_id);
     }
@@ -83,7 +83,7 @@ class Manager
         $submitted_content = $params['request']->get('hudson_svn_trigger_path');
         $path              = $this->path_updater->transformContent($submitted_content);
 
-        if (! $this->dao->saveTrigger($params['job_id'], $repository_id, $path)) {
+        if (! $this->dao->saveTrigger((int) $params['job_id'], (int) $repository_id, $path)) {
             $GLOBALS['Response']->addFeedback(
                 'error',
                 dgettext('tuleap-hudson_svn', 'An error occurred while adding job.')
