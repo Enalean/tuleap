@@ -29,7 +29,9 @@ describe("DocumentBreadcrumb", () => {
             privacy: {
                 are_restricted_users_allowed: false,
             },
-            configuration: {},
+            configuration: {
+                user_is_admin: false,
+            },
         };
         store_options = {
             state,
@@ -45,7 +47,7 @@ describe("DocumentBreadcrumb", () => {
     it(`Given user is docman administrator
         When we display the breadcrumb
         Then user should have an administration link`, () => {
-        store.state.is_user_administrator = true;
+        store.state.configuration.user_is_admin = true;
         store.state.current_folder_ascendant_hierarchy = [];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
@@ -55,7 +57,7 @@ describe("DocumentBreadcrumb", () => {
     it(`Given user is regular user
         When we display the breadcrumb
         Then he should not have administrator link`, () => {
-        store.state.is_user_administrator = false;
+        store.state.configuration.user_is_admin = false;
         store.state.current_folder_ascendant_hierarchy = [];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
@@ -65,7 +67,7 @@ describe("DocumentBreadcrumb", () => {
     it(`Given ascendant hierarchy has more than 5 ascendants
         When we display the breadcrumb
         Then an ellipsis is displayed so breadcrumb won't break page display`, () => {
-        store.state.is_user_administrator = false;
+        store.state.configuration.user_is_admin = false;
         store.state.is_loading_ascendant_hierarchy = false;
         store.state.current_folder_ascendant_hierarchy = [
             { id: 1, title: "My first folder" },
@@ -85,7 +87,7 @@ describe("DocumentBreadcrumb", () => {
     it(`Given ascendant hierarchy has more than 5 ascendants and given we're still loading the ascendent hierarchy
         When we display the breadcrumb
         Then ellipsis is not displayed`, () => {
-        store.state.is_user_administrator = false;
+        store.state.configuration.user_is_admin = false;
         store.state.is_loading_ascendant_hierarchy = true;
         store.state.current_folder_ascendant_hierarchy = [
             { id: 1, title: "My first folder" },
@@ -106,7 +108,7 @@ describe("DocumentBreadcrumb", () => {
     it(`Given a list of folders which are in different hierarchy level
         When we display the breadcrumb
         Then folders which are in the root folder (parent_id === 0) are removed`, () => {
-        store.state.is_user_administrator = false;
+        store.state.configuration.user_is_admin = false;
         store.state.is_loading_ascendant_hierarchy = false;
         store.state.current_folder_ascendant_hierarchy = [
             { id: 1, title: "My first folder", parent_id: 0 },
@@ -127,7 +129,7 @@ describe("DocumentBreadcrumb", () => {
     Then the breadcrumb display the current folder`, () => {
         store.state.current_folder = { id: 1, title: "My first folder", parent_id: 0 };
         store.state.currently_previewed_item = null;
-        store.state.is_user_administrator = false;
+        store.state.configuration.user_is_admin = false;
         store.state.is_loading_ascendant_hierarchy = false;
         store.state.current_folder_ascendant_hierarchy = [
             { id: 1, title: "My first folder", parent_id: 0 },
@@ -151,7 +153,7 @@ describe("DocumentBreadcrumb", () => {
             title: "My embedded content",
             parent_id: 0,
         };
-        store.state.is_user_administrator = false;
+        store.state.configuration.user_is_admin = false;
         store.state.is_loading_ascendant_hierarchy = false;
         store.state.current_folder_ascendant_hierarchy = [
             { id: 1, title: "My first folder", parent_id: 0 },

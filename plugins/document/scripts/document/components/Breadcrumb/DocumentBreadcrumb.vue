@@ -104,7 +104,6 @@ export default {
     computed: {
         ...mapState([
             "project_url",
-            "is_user_administrator",
             "current_folder_ascendant_hierarchy",
             "is_loading_ascendant_hierarchy",
             "currently_previewed_item",
@@ -112,7 +111,7 @@ export default {
             "privacy",
             "project_flags",
         ]),
-        ...mapState("configuration", ["project_id", "project_public_name"]),
+        ...mapState("configuration", ["project_id", "project_public_name", "user_is_admin"]),
         document_tree_title() {
             return this.$gettext("Project documentation");
         },
@@ -123,10 +122,10 @@ export default {
             return this.$gettext("Administration");
         },
         is_admin() {
-            return this.is_user_administrator;
+            return this.user_is_admin;
         },
         get_breadcrumb_class() {
-            if (this.is_user_administrator === true) {
+            if (this.user_is_admin === true) {
                 return "breadcrumb-switchable breadcrumb-item";
             }
 

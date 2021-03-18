@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_id,
         project_name,
         project_public_name,
+        user_is_admin,
     };
 
     const AppComponent = Vue.extend(App);
@@ -97,7 +98,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         router,
         propsData: {
             project_url,
-            user_is_admin,
             user_can_create_wiki,
             date_time_format,
             max_files_dragndrop,

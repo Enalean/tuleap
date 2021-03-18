@@ -25,6 +25,7 @@ export interface ConfigurationState {
     readonly project_id: string;
     readonly project_name: string;
     readonly project_public_name: string;
+    readonly user_is_admin: boolean;
 }
 
 export function createConfigurationModule(

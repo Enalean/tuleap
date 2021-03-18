@@ -21,7 +21,6 @@ const state = {
     project_url: null,
     project_ugroups: null,
     is_loading_folder: true,
-    is_user_administrator: false,
     folder_content: [],
     date_time_format: null,
     current_folder: null,

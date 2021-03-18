@@ -61,7 +61,6 @@ export default {
     },
     props: {
         project_url: String,
-        user_is_admin: Boolean,
         user_can_create_wiki: Boolean,
         date_time_format: String,
         max_files_dragndrop: Number,
@@ -107,7 +106,6 @@ export default {
 
         this.$store.commit("initApp", [
             this.project_url,
-            this.user_is_admin,
             this.date_time_format,
             this.$gettext("Documents"),
             this.user_can_create_wiki,
