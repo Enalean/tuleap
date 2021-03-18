@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
@@ -47,18 +49,12 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         $this->xml_fields_mapping = $xml_fields_mapping;
     }
 
-    /**
-     * Extract Field data from XML input
-     *
-     *
-     * @return array
-     */
     public function getFieldData(
         Tracker_FormElement_Field $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact
-    ) {
+    ): array {
         $bind = (string) $field_change['bind'];
         $data = [];
 
@@ -72,16 +68,19 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
             }
         } else {
             foreach ($field_change as $value) {
-                $user   = $this->user_finder->getUser($value);
-                $data[] = $user->getId();
+                $data[] = $this->getUserListDataValue($value);
             }
         }
 
         return $data;
     }
 
-    private function getStaticListDataValue(Tracker_FormElement_Field $field, $value): ?int
+    private function getStaticListDataValue(Tracker_FormElement_Field $field, ?SimpleXMLElement $value): ?int
     {
+        if (! $value) {
+            return null;
+        }
+
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             return $this->xml_fields_mapping->getNewValueId((int) $value);
         }
@@ -96,10 +95,23 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         return (int) $row['id'];
     }
 
-    private function getUgroupListDataValue($value)
+    private function getUgroupListDataValue(?SimpleXMLElement $value): ?int
     {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             return $this->xml_fields_mapping->getNewValueId((int) $value);
         }
+
+        return null;
+    }
+
+    private function getUserListDataValue(?SimpleXMLElement $value): ?int
+    {
+        if (! $value) {
+            return null;
+        }
+
+        $user = $this->user_finder->getUser($value);
+
+        return (int) $user->getId();
     }
 }
