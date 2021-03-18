@@ -38,19 +38,23 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import EmptySvg from "./EmptySvg.vue";
-import { canCreateProgramIncrement, programIncrementId } from "../../../configuration";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
+import { namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: { EmptySvg },
 })
 export default class EmptyState extends Vue {
-    get can_create_program_increment(): boolean {
-        return canCreateProgramIncrement();
-    }
+    @configuration.State
+    readonly can_create_program_increment!: boolean;
+
+    @configuration.State
+    readonly tracker_program_increment_id!: number;
 
     get create_new_program_increment(): string {
-        return buildCreateNewProgramIncrement(programIncrementId());
+        return buildCreateNewProgramIncrement(this.tracker_program_increment_id);
     }
 }
 </script>

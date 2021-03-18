@@ -50,13 +50,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { programId } from "../../../configuration";
 import { getToBePlannedElements } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import EmptyState from "./EmptyState.vue";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
 import { Mutation, State } from "vuex-class";
 import type { ProgramElement } from "../../../type";
+import { namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: { ToBePlannedSkeleton, ToBePlannedCard, EmptyState },
@@ -70,11 +72,13 @@ export default class ToBePlanned extends Vue {
     readonly setToBePlannedElements!: (to_be_planned_elements: ProgramElement[]) => void;
     @State
     readonly to_be_planned_elements!: Array<ProgramElement>;
+    @configuration.State
+    readonly program_id!: number;
 
     async mounted(): Promise<void> {
         try {
             this.is_loading = true;
-            const to_be_planned_elements = await getToBePlannedElements(programId());
+            const to_be_planned_elements = await getToBePlannedElements(this.program_id);
             this.setToBePlannedElements(to_be_planned_elements);
         } catch (e) {
             this.has_error = true;

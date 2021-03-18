@@ -23,8 +23,8 @@ import {
     initVueGettext,
     getPOFileFromLocale,
 } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
-import { build } from "./src/configuration";
 import { createStore } from "./src/store";
+import type { ConfigurationState } from "./src/store/configuration";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("program-management-app");
@@ -95,20 +95,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
 
-    build(
-        project_name,
-        project_short_name,
-        project_privacy,
-        project_flags,
+    const configuration_state: ConfigurationState = {
+        public_name: project_name,
+        short_name: project_short_name,
+        privacy: project_privacy,
+        flags: project_flags,
         program_id,
         accessibility,
-        locale.replace("_", "-"),
+        user_locale: locale.replace("_", "-"),
         can_create_program_increment,
-        program_increment_tracker_id,
+        tracker_program_increment_id: program_increment_tracker_id,
         program_increment_artifact_link_id,
-        program_increment_label,
-        program_increment_sub_label
-    );
+        tracker_program_increment_label: program_increment_label,
+        tracker_program_increment_sub_label: program_increment_sub_label,
+    };
 
     await initVueGettext(
         Vue,
@@ -122,6 +122,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
 
     new AppComponent({
-        store: createStore(),
+        store: createStore(configuration_state),
     }).$mount(vue_mount_point);
 });

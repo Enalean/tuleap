@@ -21,15 +21,13 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import * as configuration from "../../../configuration";
 import type { ProgramElement } from "../../../type";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("ToBePlannedCard", () => {
     let component_options: ShallowMountOptions<ToBePlannedCard>;
 
     it("Displays a draggable card with accessibility pattern", async () => {
-        jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(true);
-        jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
         component_options = {
             propsData: {
                 element: {
@@ -43,6 +41,13 @@ describe("ToBePlannedCard", () => {
                 } as ProgramElement,
             },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: { accessibility: true, can_create_program_increment: true },
+                    },
+                }),
+            },
         };
 
         const wrapper = shallowMount(ToBePlannedCard, component_options);
@@ -50,8 +55,6 @@ describe("ToBePlannedCard", () => {
     });
 
     it("Displays a not draggable card without accessibility pattern", async () => {
-        jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(false);
-        jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(false);
         component_options = {
             propsData: {
                 element: {
@@ -65,6 +68,16 @@ describe("ToBePlannedCard", () => {
                 } as ProgramElement,
             },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            accessibility: false,
+                            can_create_program_increment: false,
+                        },
+                    },
+                }),
+            },
         };
 
         const wrapper = shallowMount(ToBePlannedCard, component_options);

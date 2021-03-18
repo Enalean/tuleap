@@ -71,9 +71,11 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { formatDateYearMonthDay } from "@tuleap/date-helper";
-import { getUserLocale } from "../../../configuration";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
+import { namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: { ProgramIncrementFeatureList },
@@ -82,9 +84,12 @@ export default class ProgramIncrementCard extends Vue {
     @Prop({ required: true })
     readonly increment!: ProgramIncrement;
 
+    @configuration.State
+    readonly user_locale!: string;
+
     private is_open = false;
 
-    formatDate = (date: string): string => formatDateYearMonthDay(getUserLocale(), date);
+    formatDate = (date: string): string => formatDateYearMonthDay(this.user_locale, date);
 
     toggleIsOpen(): void {
         this.is_open = !this.is_open;

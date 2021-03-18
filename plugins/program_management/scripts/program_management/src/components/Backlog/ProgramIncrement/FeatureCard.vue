@@ -47,21 +47,29 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
-import { userHasAccessibilityMode, canCreateProgramIncrement } from "../../../configuration";
+import { namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({})
 export default class FeatureCard extends Vue {
     @Prop({ required: true })
     readonly element!: Feature;
 
+    @configuration.State
+    readonly accessibility!: boolean;
+
+    @configuration.State
+    readonly can_create_program_increment!: boolean;
+
     get show_accessibility_pattern(): boolean {
-        return userHasAccessibilityMode() && this.element.background_color !== "";
+        return this.accessibility && this.element.background_color !== "";
     }
 
     get additional_classnames(): string {
         const classnames = [`element-card-${this.element.tracker.color_name}`];
 
-        if (canCreateProgramIncrement() && this.is_draggable) {
+        if (this.can_create_program_increment && this.is_draggable) {
             classnames.push("element-draggable-item");
         }
         if (this.element.background_color) {
