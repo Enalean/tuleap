@@ -23,6 +23,8 @@ export interface State {
     invalid_trackers: Array<Tracker>;
     reading_mode: boolean;
     is_report_saved: boolean;
+    is_user_admin: boolean;
+    report_id: number;
 }
 
 export interface Tracker {

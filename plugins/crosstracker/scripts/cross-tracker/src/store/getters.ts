@@ -17,14 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const state = {
-    report_id: null,
-    reading_mode: true,
-    is_report_saved: true,
-    error_message: null,
-    success_message: null,
-    invalid_trackers: [],
-    is_user_admin: false,
-};
+import type { State } from "../type";
 
-export default state;
+export const has_error_message = (state: State): boolean => state.error_message !== null;
+
+export const has_success_message = (state: State): boolean => state.success_message !== null;
+
+export const has_invalid_trackers = (state: State): boolean => state.invalid_trackers.length > 0;
+
+export const should_display_export_button = (state: State): boolean => {
+    if (state.error_message !== null) {
+        return false;
+    }
+    if (!state.is_user_admin) {
+        return true;
+    }
+
+    return state.is_user_admin && state.invalid_trackers.length === 0;
+};

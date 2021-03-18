@@ -21,7 +21,7 @@ import Vue from "vue";
 import GettextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 
-import { createStore } from "./store/index.js";
+import { createStore } from "./store/index";
 import { init as initUser } from "./user-service.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
@@ -54,8 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const reading_cross_tracker_report = new ReadingCrossTrackerReport();
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
 
-        const store = createStore();
-        store.commit("initWithDataset", { report_id, is_widget_admin });
+        const store = createStore(report_id, is_widget_admin);
 
         const vue_mount_point = widget_element.querySelector(".vue-mount-point");
         new Widget({

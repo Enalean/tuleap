@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { State, Tracker } from "../type";
+
 export {
-    initWithDataset,
     setErrorMessage,
     resetFeedbacks,
     switchToReadingMode,
@@ -29,46 +30,41 @@ export {
     resetInvalidTrackerList,
 };
 
-function initWithDataset(state, dataset) {
-    state.report_id = dataset.report_id;
-    state.is_user_admin = dataset.is_widget_admin;
-}
-
-function setErrorMessage(state, message) {
+function setErrorMessage(state: State, message: string): void {
     state.error_message = message;
 }
 
-function resetFeedbacks(state) {
+function resetFeedbacks(state: State): void {
     state.error_message = null;
     state.success_message = null;
 }
 
-function switchToReadingMode(state, { saved_state }) {
+function switchToReadingMode(state: State, saved_state: boolean): void {
     resetFeedbacks(state);
     state.reading_mode = true;
     state.is_report_saved = saved_state;
 }
 
-function switchToWritingMode(state) {
+function switchToWritingMode(state: State): void {
     resetFeedbacks(state);
     state.reading_mode = false;
 }
 
-function switchReportToSaved(state, message) {
+function switchReportToSaved(state: State, message: string): void {
     state.success_message = message;
     state.error_message = null;
     state.is_report_saved = true;
 }
 
-function discardUnsavedReport(state) {
+function discardUnsavedReport(state: State): void {
     resetFeedbacks(state);
     state.is_report_saved = true;
 }
 
-function setInvalidTrackers(state, invalid_trackers) {
+function setInvalidTrackers(state: State, invalid_trackers: Array<Tracker>): void {
     state.invalid_trackers = invalid_trackers;
 }
 
-function resetInvalidTrackerList(state) {
+function resetInvalidTrackerList(state: State): void {
     state.invalid_trackers = [];
 }

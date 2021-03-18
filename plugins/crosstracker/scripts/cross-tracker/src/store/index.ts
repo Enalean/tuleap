@@ -17,19 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const has_error_message = (state) => state.error_message !== null;
+import Vue from "vue";
+import Vuex from "vuex";
+import * as getters from "./getters";
+import * as mutations from "./mutations";
+import type { State } from "../type";
+import type { Store } from "vuex";
 
-export const has_success_message = (state) => state.success_message !== null;
+Vue.use(Vuex);
 
-export const has_invalid_trackers = (state) => state.invalid_trackers.length > 0;
-
-export const should_display_export_button = (state) => {
-    if (state.error_message !== null) {
-        return false;
-    }
-    if (state.is_user_admin === false) {
-        return true;
-    }
-
-    return state.is_user_admin === true && state.invalid_trackers.length === 0;
-};
+export function createStore(report_id: number, is_user_admin: boolean): Store<State> {
+    const state: State = {
+        report_id,
+        is_user_admin,
+        reading_mode: true,
+        is_report_saved: true,
+        error_message: null,
+        success_message: null,
+        invalid_trackers: [],
+    };
+    return new Vuex.Store({
+        getters,
+        mutations,
+        state: {
+            ...state,
+        },
+    });
+}

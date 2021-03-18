@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { localVue } from "../helpers/local-vue";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
-import { createStore } from "../store/index.js";
+import { createStore } from "../store/index";
 import TrackerSelection from "./TrackerSelection.vue";
 import * as project_cache from "./projects-cache";
 import * as rest_querier from "../api/rest-querier";
