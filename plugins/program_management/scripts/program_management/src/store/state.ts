@@ -22,6 +22,8 @@ import type { State } from "../type";
 const state: State = {
     to_be_planned_elements: [],
     program_increments: [],
+    modal_error_message: "",
+    has_modal_error: false,
 };
 
 export default state;

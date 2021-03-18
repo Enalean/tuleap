@@ -39,6 +39,7 @@
             </div>
             <program-increment-list class="program-increment" />
         </div>
+        <error-modal v-if="has_modal_error" />
     </div>
 </template>
 
@@ -72,16 +73,20 @@ import {
     checkAcceptsDrop,
     checkAfterDrag,
 } from "../helpers/drag-drop";
-import { Action } from "vuex-class";
+import { Action, State } from "vuex-class";
+import ErrorModal from "./Backlog/ErrorModal.vue";
 
 @Component({
-    components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb },
+    components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb, ErrorModal },
 })
 export default class App extends Vue {
     private drek!: Drekkenov | undefined;
 
     @Action
     private readonly handleDrop!: (handle_drop: HandleDropContextWithProgramId) => Promise<void>;
+
+    @State
+    private readonly has_modal_error!: boolean;
 
     beforeDestroy(): void {
         if (this.drek) {

@@ -31,6 +31,8 @@ import { createElement } from "../helpers/jest/create-dom-element";
 import * as dragDrop from "../helpers/drag-drop";
 import * as tlp from "tlp";
 import * as backlogAdder from "../helpers/ProgramIncrement/add-to-top-backlog";
+import type { FetchWrapperError } from "tlp";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 jest.mock("tlp");
 
@@ -156,7 +158,8 @@ describe("Actions", () => {
             target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
             target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
 
-            jest.spyOn(tlp, "put");
+            const put = jest.spyOn(tlp, "put");
+            mockFetchSuccess(put);
             const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
 
             const getProgramIncrementFromId = jest.fn().mockReturnValue({ id: 56, features: [] });
@@ -190,6 +193,56 @@ describe("Actions", () => {
             );
         });
 
+        it(`When a error is thrown during plan elements, Then error is stored`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "14");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+            target_dropzone.setAttribute("data-program-increment-id", "1");
+            target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
+            target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
+
+            const put = jest.spyOn(tlp, "put");
+            mockFetchError(put, {
+                status: 404,
+                error_json: { error: { code: 404, message: "Error" } },
+            });
+
+            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
+
+            const getProgramIncrementFromId = jest.fn().mockReturnValue({ id: 56, features: [] });
+            const getToBePlannedElementFromId = jest.fn().mockReturnValue({ artifact_id: 125 });
+
+            context.getters = { getProgramIncrementFromId, getToBePlannedElementFromId };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+            } as HandleDropContextWithProgramId);
+
+            expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
+            expect(getToBePlannedElementFromId).toHaveBeenCalledWith(14);
+
+            expect(context.commit).toHaveBeenCalledWith("removeToBePlannedElement", {
+                artifact_id: 125,
+            });
+
+            expect(plan_feature).toHaveBeenCalledWith(
+                {
+                    dropped_element,
+                    program_id: 101,
+                    source_dropzone,
+                    target_dropzone,
+                },
+                1,
+                14
+            );
+
+            expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "404 Error");
+        });
+
         it(`Removes elements from program increment`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
@@ -201,7 +254,8 @@ describe("Actions", () => {
 
             const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
             jest.spyOn(backlogAdder, "addElementToTopBackLog");
-            jest.spyOn(tlp, "put");
+            const put = jest.spyOn(tlp, "put");
+            mockFetchSuccess(put);
 
             const getProgramIncrementFromId = jest
                 .fn()
@@ -234,6 +288,56 @@ describe("Actions", () => {
             );
         });
 
+        it(`When an error is thrown during remove elements from program increment, Then error is stored`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "12");
+            dropped_element.setAttribute("data-program-increment-id", "1");
+            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
+            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+
+            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
+            jest.spyOn(backlogAdder, "addElementToTopBackLog");
+            const put = jest.spyOn(tlp, "put");
+            mockFetchError(put, {
+                status: 404,
+                error_json: { error: { code: 404, message: "Error" } },
+            });
+
+            const getProgramIncrementFromId = jest
+                .fn()
+                .mockReturnValue({ id: 56, features: [{ artifact_id: 12 }] });
+
+            context.getters = { getProgramIncrementFromId };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+            } as HandleDropContextWithProgramId);
+
+            expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
+
+            expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
+                artifact_id: 12,
+            });
+
+            expect(unplan_feature).toHaveBeenCalledWith(
+                {
+                    dropped_element,
+                    program_id: 101,
+                    source_dropzone,
+                    target_dropzone,
+                },
+                1,
+                12
+            );
+
+            expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "404 Error");
+        });
+
         it(`Moves elements from program increment to another`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
@@ -248,7 +352,8 @@ describe("Actions", () => {
 
             const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
             const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
-            jest.spyOn(tlp, "put");
+            const put = jest.spyOn(tlp, "put");
+            mockFetchSuccess(put);
 
             const getProgramIncrementFromId = jest
                 .fn()
@@ -287,6 +392,40 @@ describe("Actions", () => {
                 2,
                 12
             );
+        });
+    });
+
+    describe(`handleModalError`, () => {
+        it(`When a message can be extracted from the FetchWrapperError,
+            it will set an error message that will show up in a modal window`, async () => {
+            const error = {
+                response: {
+                    json: () =>
+                        Promise.resolve({
+                            error: { code: 500, message: "Internal Server Error" },
+                        }),
+                } as Response,
+            } as FetchWrapperError;
+
+            await actions.handleModalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "setModalErrorMessage",
+                "500 Internal Server Error"
+            );
+        });
+
+        it(`When a message can not be extracted from the FetchWrapperError,
+            it will leave the modal error message empty`, async () => {
+            const error = {
+                response: {
+                    json: () => Promise.reject(),
+                } as Response,
+            } as FetchWrapperError;
+
+            await actions.handleModalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "");
         });
     });
 });
