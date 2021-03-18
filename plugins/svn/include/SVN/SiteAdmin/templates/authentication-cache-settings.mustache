@@ -1,28 +1,28 @@
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">{{ settings_title }}</h1>
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-svn |SVN authentication cache settings{{/ dgettext }}</h1>
         </div>
 
         <section class="tlp-pane-section">
             <p>
-                {{ usage_information }}
+                {{# dgettext }} tuleap-svn |These settings only apply to instance using the modperl authentication mode, projects having SVN token authentication mode enabled or repositories in the SVN plugin.{{/ dgettext }}
             </p>
-            <form method="POST">
+            <form method="POST" action="{{ update_controller_url }}">
                 {{# csrf_token }}
                     {{> csrf_token_input }}
                 {{/ csrf_token }}
                 <div class="tlp-form-element">
-                    <label for="cache-maximum-credentials" class="tlp-label">{{ maximum_credentials_label }}</label>
+                    <label for="cache-maximum-credentials" class="tlp-label">{{# dgettext }} tuleap-svn |Maximum number of credentials cached by repository{{/ dgettext }}</label>
                     <input id="cache-maximum-credentials" type="number" min="0" name="cache-maximum-credentials" value="{{ maximum_credentials }}" class="tlp-input" size="5">
                 </div>
                 <div class="tlp-form-element">
-                    <label for="cache-lifetime" class="tlp-label">{{ lifetime_label }}</label>
+                    <label for="cache-lifetime" class="tlp-label">{{# dgettext }} tuleap-svn |Cache lifetime (in minutes){{/ dgettext }}</label>
                     <input id="cache-lifetime" type="number" name="cache-lifetime" min="0" value="{{ lifetime }}" class="tlp-input" size="5">
                 </div>
                 <div class="tlp-pane-section-submit">
                     <button class="tlp-button-primary" type="submit">
-                        <i class="fa fa-save tlp-button-icon"></i> {{ save_settings }}
+                        <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }} tuleap-svn |Save settings{{/ dgettext }}
                     </button>
                 </div>
             </form>

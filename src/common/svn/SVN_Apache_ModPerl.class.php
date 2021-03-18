@@ -40,8 +40,8 @@ class SVN_Apache_ModPerl extends SVN_Apache
     protected function getProjectAuthentication(Project $project): string
     {
         $tuleap_dsn          = $this->escapeStringForApacheConf($this->getDBIConnect());
-        $maximum_credentials = $this->escapeStringForApacheConf($this->cache_parameters->getMaximumCredentials());
-        $lifetime            = $this->escapeStringForApacheConf($this->cache_parameters->getLifetime());
+        $maximum_credentials = $this->escapeStringForApacheConf((string) $this->cache_parameters->getMaximumCredentials());
+        $lifetime            = $this->escapeStringForApacheConf((string) $this->cache_parameters->getLifetime());
 
         $conf  = '';
         $conf .= $this->getCommonAuthentication($project);

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Admin;
 
-use ForgeConfig;
 use TemplateRendererFactory;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
@@ -78,7 +77,7 @@ class AdminPageRenderer
     {
         $admin_sidebar_presenter = $this->getAdminSidebarPresenter();
 
-        $renderer = $this->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/admin/');
+        $renderer = $this->getRenderer(__DIR__ . '/../../templates/admin/');
 
         return $renderer->renderToString('sidebar', $admin_sidebar_presenter);
     }

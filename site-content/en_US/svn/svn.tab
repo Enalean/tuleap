@@ -175,39 +175,7 @@ svn_viewvc	access_denied	Access Denied
 svn_viewvc	acc_den_comment	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
 svn_viewvc	bad_roottype	Invalid roottype
 
-
 svn_widget	svnstats	Svn Statistics
-
-svn_siteadmin	global_title	Subversion
-svn_siteadmin	token_panel_title	Authentication tokens
-svn_siteadmin	cache_panel_title	Authentication cache
-
-svn_cache	settings_title	SVN authentication cache settings
-svn_cache	usage_information	These settings only apply to instance using the modperl authentication mode, projects having SVN token authentication mode enabled or repositories in the SVN plugin.
-svn_cache	maximum_credentials_label	Maximum number of credentials cached by repository
-svn_cache	lifetime_label	Cache lifetime (in minutes)
-svn_cache	save_settings	Save settings
-svn_cache	save_success	Your settings have been successfully saved and will be applied shortly.
-svn_cache	save_failure	Your settings could not be saved.
-
-svn_tokens	allowed_project_pane_title	Projects allowing SVN tokens usage
-svn_tokens	allowed_project_information	This section allows to define which projects will be able to use the tokens for SVN authentication.
-svn_tokens	allowed_project_list	List of allowed projects
-svn_tokens	allowed_project_list_allow_placeholder	Project name
-svn_tokens	allowed_project_list_allow_project	Authorize
-svn_tokens	allowed_project_list_filter_placeholder	Filter on project ID or name
-svn_tokens	allowed_project_list_id	Id
-svn_tokens	allowed_project_list_name	Nom
-svn_tokens	allowed_project_list_empty	Currently, there are no projects that allows SVN tokens.
-svn_tokens	allowed_project_allow_project	Submitted projects will allow SVN tokens (check System Events).
-svn_tokens	allowed_project_revoke_project	Submitted projects will not allow anymore SVN tokens (check System Events).
-svn_tokens	allowed_project_update_project_list_error	Something went wrong during the authorization.
-svn_tokens	allowed_project_revoke_title	Warning
-svn_tokens	allowed_project_revoke_description	You are about to revoke SVN tokens authorization to one or several projects. Are you sure you want to do this?
-svn_tokens	allowed_project_revoke_yes	Yes, revoke authorization
-svn_tokens	allowed_project_revoke_no	No
-svn_tokens	allowed_project_revoke_projects	Les projets soumis n'auront plus l'autorisation d'utiliser les jetons de connexion SVN
-svn_tokens	allowed_project_list_revoke_projects	Revoke authorization
 
 svn_intro	title	Subversion Access
 svn_intro	default_username	username
