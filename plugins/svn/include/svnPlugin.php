@@ -520,16 +520,16 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         }
     }
 
-    public function javascript_file() // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function javascript_file(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
+        $layout = $params['layout'];
+        assert($layout instanceof \Tuleap\Layout\BaseLayout);
         // Only show the javascript if we're actually in the svn pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $script_url = $this->getIncludeAssets()->getFileURL('svn.js');
-            echo '<script type="text/javascript" src="' . $script_url . '"></script>';
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'svn.js'));
         }
         if ($this->currentRequestIsForPlugin()) {
-            $script_url = $this->getIncludeAssets()->getFileURL('svn-admin.js');
-            echo '<script type="text/javascript" src="' . $script_url . '"></script>';
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'svn-admin.js'));
         }
     }
 
