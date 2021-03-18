@@ -18,6 +18,15 @@
  *
  */
 
+.rte_format { /* stylelint-disable-line selector-class-pattern */
+    display: flex;
+    align-items: baseline;
+}
+
+.rte-button {
+    margin: 0 0 0 5px;
+}
+
 .popover {
     max-width: none;
     padding: 0;
@@ -37,21 +46,6 @@
     width: 62px;
     height: 59px;
     background-image: url('../assets/image_example_commonmark.png');
-}
-
-
-.rte_format { /* stylelint-disable-line selector-class-pattern */
-    display: flex;
-    align-items: baseline;
-}
-
-.commonmark-button-help {
-    display: none;
-    margin: 0 0 0 5px;
-}
-
-.commonmark-button-help-show {
-    display: inline;
 }
 
 /* Classes needed for the modal v2 */

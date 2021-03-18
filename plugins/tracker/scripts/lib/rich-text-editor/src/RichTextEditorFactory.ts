@@ -29,10 +29,11 @@ import type {
 } from "./types";
 import { TextEditor } from "./TextEditor";
 import type { FormatSelectorInterface } from "./format-selector/FormatSelectorInterface";
-import { FormatSelectorBuilder } from "./format-selector/FormatSelectorBuilder";
 import type { TextFieldFormat } from "../../../constants/fields-constants";
 import { defaultOptionsIfNotProvided } from "./options-defaulter";
 import { ExistingFormatSelector } from "./format-selector/ExistingFormatSelector";
+import { FlamingParrotEditorAreaBuilder } from "./format-selector/editor-area/FlamingParrotEditorAreaBuilder";
+import { EditorAreaRenderer } from "./format-selector/editor-area/EditorAreaRenderer";
 
 export class RichTextEditorFactory {
     private readonly markdown_converter: HTMLToMarkdownConverterInterface;
@@ -85,9 +86,12 @@ export class RichTextEditorFactory {
     ): RichTextEditorFactory {
         const gettext_provider = initGettextSync("rich-text-editor", french_translations, locale);
         const document_adapter = new FlamingParrotDocumentAdapter(doc);
-        const format_selector = new FormatSelectorBuilder(document_adapter, gettext_provider);
+        const builder = new FlamingParrotEditorAreaBuilder(
+            document_adapter,
+            new EditorAreaRenderer(gettext_provider)
+        );
         const default_format = document_adapter.getDefaultFormat();
-        return new RichTextEditorFactory(format_selector, default_format, locale);
+        return new RichTextEditorFactory(builder, default_format, locale);
     }
 
     public static forFlamingParrotWithExistingFormatSelector(
