@@ -52,13 +52,12 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
      * @param array       $variables
      * @throws NotFoundException
      * @throws ForbiddenException
-     * @return void
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $request->getProject();
 
-        if ($project->isDeleted()) {
+        if ($project->isError() || $project->isDeleted()) {
             $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('include_exit', 'project_status_D'));
             $layout->redirect('/');
         }
