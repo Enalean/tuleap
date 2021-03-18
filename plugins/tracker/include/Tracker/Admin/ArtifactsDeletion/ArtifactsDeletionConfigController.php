@@ -29,8 +29,8 @@ use CSRFSynchronizerToken;
 use Feedback;
 use http\Exception;
 use PluginManager;
-use Response;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\BaseLayout;
 
 class ArtifactsDeletionConfigController
 {
@@ -86,7 +86,7 @@ class ArtifactsDeletionConfigController
         );
     }
 
-    public function update(Codendi_Request $request, Response $response)
+    public function update(Codendi_Request $request, BaseLayout $response)
     {
         $new_artifacts_limit = intval($request->get('artifacts_limit'));
 

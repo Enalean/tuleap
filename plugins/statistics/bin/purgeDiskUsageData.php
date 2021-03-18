@@ -37,6 +37,6 @@ try {
         new Statistics_ConfigurationDao()
     );
     $configuration_manager->activateDailyPurge();
-} catch (Statistics_PHPVersionException $e) {
+} catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;
 }
