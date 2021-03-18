@@ -73,6 +73,7 @@ final class CommonMarkInterpreter implements ContentInterpretor
         ExtensionInterface ...$extensions
     ): self {
         $environment = Environment::createCommonMarkEnvironment();
+        $environment->addExtension(new AutolinkExtension());
         $environment->addExtension(new TableTLPExtension());
         foreach ($extensions as $extension) {
             $environment->addExtension($extension);
