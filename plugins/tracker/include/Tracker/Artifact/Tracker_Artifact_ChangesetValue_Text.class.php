@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\FollowUpPresenter;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
@@ -280,9 +281,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     private function interpretMarkdownContent(string $text): string
     {
-        $content_interpreter = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
+        $content_interpreter = CommonMarkInterpreter::build(
             Codendi_HTMLPurifier::instance(),
-            CodeBlockFeaturesOnArtifact::getInstance()
+            new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance())
         );
 
         $interpreted_content_with_references = $content_interpreter->getInterpretedContentWithReferences(

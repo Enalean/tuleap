@@ -30,6 +30,7 @@ use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 
 /**
  * Blob controller class
@@ -241,9 +242,9 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('can_be_rendered', $can_file_be_rendered);
         if ($can_file_be_rendered && ! $this->params['show_source']) {
             $code_block_features = new \Tuleap\Markdown\CodeBlockFeatures();
-            $content_interpretor = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
+            $content_interpretor = CommonMarkInterpreter::build(
                 \Codendi_HTMLPurifier::instance(),
-                $code_block_features,
+                new EnhancedCodeBlockExtension($code_block_features),
                 new LinkToGitFileExtension(new LinkToGitFileBlobFinder($blob->GetPath(), $commit))
             );
             $this->tpl->assign(
