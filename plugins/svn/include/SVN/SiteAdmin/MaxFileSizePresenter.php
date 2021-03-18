@@ -22,25 +22,16 @@
 namespace Tuleap\SVN\SiteAdmin;
 
 use CSRFSynchronizerToken;
-use Tuleap\SvnCore\Cache\Parameters;
 
 /**
  * @psalm-immutable
  */
-final class CachePresenter extends AdminPresenter
+final class MaxFileSizePresenter extends AdminPresenter
 {
     /**
      * @var bool
      */
-    public $is_cache_pane_active = true;
-    /**
-     * @var int
-     */
-    public $maximum_credentials;
-    /**
-     * @var int
-     */
-    public $lifetime;
+    public $is_max_file_size_pane_active = true;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -48,12 +39,17 @@ final class CachePresenter extends AdminPresenter
     /**
      * @var string
      */
-    public $update_url = UpdateTuleapPMParamsController::URL;
+    public $update_url = UpdateMaxFileSizeController::URL;
+    /**
+     * @var string
+     */
+    public $max_file_size = '';
 
-    public function __construct(Parameters $parameters, CSRFSynchronizerToken $csrf_token)
+    public function __construct(CSRFSynchronizerToken $csrf_token, ?float $max_file_size)
     {
-        $this->maximum_credentials = $parameters->getMaximumCredentials();
-        $this->lifetime            = $parameters->getLifetime();
-        $this->csrf_token          = $csrf_token;
+        $this->csrf_token = $csrf_token;
+        if ($max_file_size !== null) {
+            $this->max_file_size = (string) $max_file_size;
+        }
     }
 }

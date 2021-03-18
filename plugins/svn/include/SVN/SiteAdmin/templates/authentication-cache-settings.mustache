@@ -8,7 +8,7 @@
             <p>
                 {{# dgettext }} tuleap-svn |These settings only apply to instance using the modperl authentication mode, projects having SVN token authentication mode enabled or repositories in the SVN plugin.{{/ dgettext }}
             </p>
-            <form method="POST" action="{{ update_controller_url }}">
+            <form method="POST" action="{{ update_url }}">
                 {{# csrf_token }}
                     {{> csrf_token_input }}
                 {{/ csrf_token }}
