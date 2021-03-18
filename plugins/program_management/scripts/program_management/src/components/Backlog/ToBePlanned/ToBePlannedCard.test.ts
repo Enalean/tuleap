@@ -19,13 +19,13 @@
 
 import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import ElementCard from "./ElementCard.vue";
-import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
-import type { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
-import * as configuration from "../../configuration";
+import ToBePlannedCard from "./ToBePlannedCard.vue";
+import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
+import * as configuration from "../../../configuration";
+import type { ProgramElement } from "../../../type";
 
-describe("ElementCard", () => {
-    let component_options: ShallowMountOptions<ElementCard>;
+describe("ToBePlannedCard", () => {
+    let component_options: ShallowMountOptions<ToBePlannedCard>;
 
     it("Displays a draggable card with accessibility pattern", async () => {
         jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(true);
@@ -40,12 +40,12 @@ describe("ElementCard", () => {
                         color_name: "lake_placid_blue",
                     },
                     background_color: "peggy_pink_text",
-                } as ToBePlannedElement,
+                } as ProgramElement,
             },
             localVue: await createProgramManagementLocalVue(),
         };
 
-        const wrapper = shallowMount(ElementCard, component_options);
+        const wrapper = shallowMount(ToBePlannedCard, component_options);
         expect(wrapper.element).toMatchSnapshot();
     });
 
@@ -62,12 +62,12 @@ describe("ElementCard", () => {
                         color_name: "lake_placid_blue",
                     },
                     background_color: "",
-                } as ToBePlannedElement,
+                } as ProgramElement,
             },
             localVue: await createProgramManagementLocalVue(),
         };
 
-        const wrapper = shallowMount(ElementCard, component_options);
+        const wrapper = shallowMount(ToBePlannedCard, component_options);
         expect(wrapper.element).toMatchSnapshot();
     });
 });

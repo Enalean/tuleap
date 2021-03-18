@@ -18,8 +18,8 @@
  */
 
 import * as tlp from "tlp";
-import type { ToBePlannedElement } from "./element-to-plan-retriever";
 import { getToBePlannedElements } from "./element-to-plan-retriever";
+import type { ProgramElement } from "../../type";
 
 jest.mock("tlp");
 
@@ -27,7 +27,7 @@ describe("Tracker reports retriever", () => {
     it("retrieves tracker reports", async () => {
         const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
 
-        const expected_elements: ToBePlannedElement[] = [
+        const expected_elements: ProgramElement[] = [
             {
                 artifact_id: 1,
                 artifact_title: "My bug name",

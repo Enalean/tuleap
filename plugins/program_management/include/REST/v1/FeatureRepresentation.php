@@ -50,18 +50,24 @@ final class FeatureRepresentation
      * @var string
      */
     public $background_color;
+    /**
+     * @var bool
+     */
+    public $has_user_story_planned;
 
     public function __construct(
         int $artifact_id,
         string $artifact_title,
         string $artifact_xref,
         MinimalTrackerRepresentation $minimal_tracker_representation,
-        BackgroundColor $background_color
+        BackgroundColor $background_color,
+        bool $has_user_story_planned
     ) {
-        $this->artifact_id      = $artifact_id;
-        $this->artifact_title   = $artifact_title;
-        $this->artifact_xref    = $artifact_xref;
-        $this->tracker          = $minimal_tracker_representation;
-        $this->background_color = $background_color->getBackgroundColorName();
+        $this->artifact_id            = $artifact_id;
+        $this->artifact_title         = $artifact_title;
+        $this->artifact_xref          = $artifact_xref;
+        $this->tracker                = $minimal_tracker_representation;
+        $this->background_color       = $background_color->getBackgroundColorName();
+        $this->has_user_story_planned = $has_user_story_planned;
     }
 }

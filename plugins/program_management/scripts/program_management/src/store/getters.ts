@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
-import type { State } from "../type";
+import type { ProgramElement, State } from "../type";
 import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
-import type { ToBePlannedElement } from "../helpers/ToBePlanned/element-to-plan-retriever";
 
 export const isProgramIncrementAlreadyAdded = (state: State) => (increment_id: number): boolean => {
     return (
@@ -49,7 +48,7 @@ export const getFeaturesInProgramIncrement = (state: State) => (
 
 export const getToBePlannedElementFromId = (state: State) => (
     to_be_planned_element_id: number
-): ToBePlannedElement => {
+): ProgramElement => {
     const to_be_planned_element = state.to_be_planned_elements.find(
         (to_be_planned_element) => to_be_planned_element.artifact_id === to_be_planned_element_id
     );

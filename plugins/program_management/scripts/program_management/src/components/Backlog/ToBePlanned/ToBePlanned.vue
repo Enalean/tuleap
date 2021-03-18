@@ -26,7 +26,7 @@
                 data-test="empty-state"
             />
 
-            <element-card
+            <to-be-planned-card
                 v-for="element in to_be_planned_elements"
                 v-bind:key="element.artifact_id"
                 v-bind:element="element"
@@ -51,15 +51,15 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { programId } from "../../../configuration";
-import type { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import { getToBePlannedElements } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import EmptyState from "./EmptyState.vue";
-import ElementCard from "../ElementCard.vue";
+import ToBePlannedCard from "./ToBePlannedCard.vue";
 import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
 import { Mutation, State } from "vuex-class";
+import type { ProgramElement } from "../../../type";
 
 @Component({
-    components: { ToBePlannedSkeleton, ElementCard, EmptyState },
+    components: { ToBePlannedSkeleton, ToBePlannedCard, EmptyState },
 })
 export default class ToBePlanned extends Vue {
     private error_message = "";
@@ -67,9 +67,9 @@ export default class ToBePlanned extends Vue {
     private is_loading = false;
 
     @Mutation
-    readonly setToBePlannedElements!: (to_be_planned_elements: ToBePlannedElement[]) => void;
+    readonly setToBePlannedElements!: (to_be_planned_elements: ProgramElement[]) => void;
     @State
-    readonly to_be_planned_elements!: Array<ToBePlannedElement>;
+    readonly to_be_planned_elements!: Array<ProgramElement>;
 
     async mounted(): Promise<void> {
         try {

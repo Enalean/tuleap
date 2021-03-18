@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { State } from "../type";
-import type { ToBePlannedElement } from "../helpers/ToBePlanned/element-to-plan-retriever";
+import type { ProgramElement, State } from "../type";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 
 export default {
@@ -34,11 +33,11 @@ export default {
         state.program_increments.push(program_increment);
     },
 
-    setToBePlannedElements(state: State, to_be_planned_elements: ToBePlannedElement[]): void {
+    setToBePlannedElements(state: State, to_be_planned_elements: ProgramElement[]): void {
         state.to_be_planned_elements = to_be_planned_elements;
     },
 
-    addToBePlannedElement(state: State, to_be_planned_elements: ToBePlannedElement): void {
+    addToBePlannedElement(state: State, to_be_planned_elements: ProgramElement): void {
         const element_already_exist = state.to_be_planned_elements.find(
             (element) => element.artifact_id === to_be_planned_elements.artifact_id
         );
@@ -54,7 +53,7 @@ export default {
         state.to_be_planned_elements.push(to_be_planned_elements);
     },
 
-    removeToBePlannedElement(state: State, element_to_remove: ToBePlannedElement): void {
+    removeToBePlannedElement(state: State, element_to_remove: ProgramElement): void {
         state.to_be_planned_elements = [...state.to_be_planned_elements].filter(
             (to_be_planned_element) =>
                 to_be_planned_element.artifact_id !== element_to_remove.artifact_id

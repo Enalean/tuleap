@@ -44,13 +44,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { ToBePlannedElement } from "../../helpers/ToBePlanned/element-to-plan-retriever";
-import { userHasAccessibilityMode, canCreateProgramIncrement } from "../../configuration";
+import { userHasAccessibilityMode, canCreateProgramIncrement } from "../../../configuration";
+import type { ProgramElement } from "../../../type";
 
 @Component({})
-export default class ElementCard extends Vue {
+export default class ToBePlannedCard extends Vue {
     @Prop({ required: true })
-    readonly element!: ToBePlannedElement;
+    readonly element!: ProgramElement;
 
     get show_accessibility_pattern(): boolean {
         return userHasAccessibilityMode() && this.element.background_color !== "";

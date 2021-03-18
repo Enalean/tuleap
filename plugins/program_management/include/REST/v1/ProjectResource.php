@@ -31,8 +31,10 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogUpdater;
@@ -132,7 +134,9 @@ final class ProjectResource extends AuthenticatedResource
             new FeatureRepresentationBuilder(
                 $artifact_factory,
                 $form_element_factory,
-                new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()))
+                new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
+                new ArtifactsLinkedToParentDao(),
+                new PlanningAdapter(\PlanningFactory::build())
             )
         );
         $this->program_increments_builder = new ProgramIncrementBuilder(

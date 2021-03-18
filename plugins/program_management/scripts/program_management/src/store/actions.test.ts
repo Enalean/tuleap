@@ -18,14 +18,13 @@
  */
 
 import * as actions from "./actions";
-import type { State } from "../type";
+import type { ProgramElement, State } from "../type";
 import type { ActionContext } from "vuex";
 import type {
     FeatureIdWithProgramIncrement,
     HandleDropContextWithProgramId,
 } from "../helpers/drag-drop";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
-import type { ToBePlannedElement } from "../helpers/ToBePlanned/element-to-plan-retriever";
 import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { FeatureIdToMoveFromProgramIncrementToAnother } from "../helpers/drag-drop";
 import { createElement } from "../helpers/jest/create-dom-element";
@@ -47,7 +46,7 @@ describe("Actions", () => {
 
     describe("planFeatureInProgramIncrement", () => {
         it("When a feature is planned in a program increment, Then it is deleted from to be planned elements and add to increment", () => {
-            const feature: ToBePlannedElement = { artifact_id: 125 } as ToBePlannedElement;
+            const feature: ProgramElement = { artifact_id: 125 } as ProgramElement;
             const feature_id_with_increment: FeatureIdWithProgramIncrement = {
                 feature_id: 125,
                 program_increment: {
@@ -56,7 +55,7 @@ describe("Actions", () => {
                 } as ProgramIncrement,
             };
 
-            context.getters = { getToBePlannedElementFromId: (): ToBePlannedElement => feature };
+            context.getters = { getToBePlannedElementFromId: (): ProgramElement => feature };
 
             actions.planFeatureInProgramIncrement(context, feature_id_with_increment);
 

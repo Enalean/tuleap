@@ -21,10 +21,10 @@ import { shallowMount } from "@vue/test-utils";
 import ToBePlanned from "./ToBePlanned.vue";
 import * as retriever from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import * as configuration from "../../../configuration";
-import type { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ProgramElement } from "../../../type";
 
 describe("ToBePlanned", () => {
     it("Displays the empty state when no artifact are found", async () => {
@@ -82,14 +82,14 @@ describe("ToBePlanned", () => {
             tracker: {
                 label: "bug",
             },
-        } as ToBePlannedElement;
+        } as ProgramElement;
         const element_two = {
             artifact_id: 2,
             artifact_title: "My user story",
             tracker: {
                 label: "user_stories",
             },
-        } as ToBePlannedElement;
+        } as ProgramElement;
 
         jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([
             element_one,
@@ -125,14 +125,14 @@ describe("ToBePlanned", () => {
             tracker: {
                 label: "bug",
             },
-        } as ToBePlannedElement;
+        } as ProgramElement;
         const element_two = {
             artifact_id: 2,
             artifact_title: "My user story",
             tracker: {
                 label: "user_stories",
             },
-        } as ToBePlannedElement;
+        } as ProgramElement;
 
         jest.spyOn(retriever, "getToBePlannedElements").mockImplementation(() =>
             Promise.resolve([element_one, element_two])
