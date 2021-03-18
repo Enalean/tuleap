@@ -20,9 +20,12 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
+use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\CIToken\BuildStatusChangePermissionDAO;
+use Tuleap\Git\CIToken\BuildStatusChangePermissionManager;
+use Tuleap\Git\CIToken\CITokenPanePresenterBuilder;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
-use Tuleap\Git\CIToken\Presenter as CITokenPresenter;
 use TemplateRendererFactory;
 
 class GitViewsRepoManagementPaneCIToken extends Pane
@@ -55,18 +58,21 @@ class GitViewsRepoManagementPaneCIToken extends Pane
      */
     public function getContent()
     {
-        $token_manager = new CITokenManager(new CITokenDao());
-        $token         = $token_manager->getToken($this->repository);
-        if ($token === null) {
-            $token = dgettext('tuleap-git', 'No CI Token');
-        }
         $renderer  = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
-        $presenter =  new CITokenPresenter(
-            $token,
-            $this->repository->getProjectId(),
-            $this->repository->getId()
-        );
-        $html      = $renderer->renderToString('ci-token-pane', $presenter);
-        return $html;
+        $presenter = (new CITokenPanePresenterBuilder(
+            new CITokenManager(new CITokenDao()),
+            $this->repository,
+            new AccessRightsPresenterOptionsBuilder(
+                new \User_ForgeUserGroupFactory(
+                    new \UserGroupDao()
+                ),
+                \PermissionsManager::instance()
+            ),
+            new BuildStatusChangePermissionManager(
+                new BuildStatusChangePermissionDAO()
+            )
+        ))->build();
+
+        return $renderer->renderToString('ci-token-pane', $presenter);
     }
 }

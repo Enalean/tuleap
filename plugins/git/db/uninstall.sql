@@ -36,6 +36,7 @@ DROP TABLE IF EXISTS plugin_git_repository_fine_grained_permissions;
 DROP TABLE IF EXISTS plugin_git_repository_fine_grained_permissions_writers;
 DROP TABLE IF EXISTS plugin_git_repository_fine_grained_permissions_rewinders;
 DROP TABLE IF EXISTS plugin_git_commit_details_cache;
+DROP TABLE IF EXISTS plugin_git_change_build_status_permissions;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;

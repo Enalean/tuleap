@@ -328,3 +328,8 @@ CREATE TABLE IF NOT EXISTS plugin_git_commit_details_cache (
     first_tag TEXT NOT NULL,
     INDEX idx(repository_id, commit_sha1)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_git_change_build_status_permissions (
+    repository_id INT(10) UNSIGNED PRIMARY KEY,
+    granted_user_groups_ids TEXT NOT NULL
+) ENGINE=InnoDB

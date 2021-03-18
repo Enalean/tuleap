@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.4.2\n"
 
 msgid " At least a git repository is migrated to gerrit"
 msgstr " Au moins un repertoire git est migré sur gerrit"
@@ -385,6 +385,13 @@ msgstr "Miroirs par défaut mis à jour."
 
 msgid "Default permissions"
 msgstr "Permissions par défaut"
+
+msgid ""
+"Define which user groups are allowed to change commits statuses after CI "
+"builds."
+msgstr ""
+"Définissez quels groupes d'utilisateurs sont autorisés à changer les statuts "
+"des commits après les builds CI."
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -939,6 +946,9 @@ msgstr "Permission"
 msgid "Permission successfully deleted."
 msgstr "Permission suprimée avec succès."
 
+msgid "Permission to set build status"
+msgstr "Permission de changer les statuts de builds"
+
 msgid "Permissions defined in Git"
 msgstr "Permissions définies dans Git"
 
@@ -1176,6 +1186,9 @@ msgstr ""
 "Sélectionnez les dépôts que vous souhaitez mettre à jour. Vous serez ensuite "
 "redirigé vers une page vous permettant d'appliquer des modifications en "
 "masse."
+
+msgid "Set build status"
+msgstr "Changer les statuts de builds"
 
 msgid "Settings"
 msgstr "Paramètres"
@@ -1606,6 +1619,13 @@ msgstr "Le groupe \"%s\" a été ajouté aux notifications"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"
+
+msgid ""
+"Users from selected user groups will be able to authenticate using their "
+"access keys when calling the build status update APIs."
+msgstr ""
+"Les utilisateurs des groupes sélectionnés pourront s'authentifier avec leurs "
+"clés d'accès lorsqu'ils appellent les APIs pour changer le status des builds."
 
 msgid "Warning"
 msgstr "Attention"

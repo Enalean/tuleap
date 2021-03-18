@@ -23,6 +23,7 @@ namespace Tuleap\Git\Repository\Settings;
 use CSRFSynchronizerToken;
 use GitRepository;
 use HTTPRequest;
+use Tuleap\Git\CIToken\BuildStatusChangePermissionManager;
 use Tuleap\Git\CIToken\Manager;
 use Tuleap\Git\GitViews\RepoManagement\Pane\GitViewsRepoManagementPaneCIToken;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
@@ -33,11 +34,19 @@ class CITokenController extends SettingsController
      * @var Manager
      */
     private $manager;
+    /**
+     * @var BuildStatusChangePermissionManager
+     */
+    private $build_status_change_manager;
 
-    public function __construct(RepositoryFromRequestRetriever $repository_retriever, Manager $manager)
-    {
+    public function __construct(
+        RepositoryFromRequestRetriever $repository_retriever,
+        Manager $manager,
+        BuildStatusChangePermissionManager $build_status_change_manager
+    ) {
         parent::__construct($repository_retriever);
-        $this->manager = $manager;
+        $this->manager                     = $manager;
+        $this->build_status_change_manager = $build_status_change_manager;
     }
 
     public function generateToken(HTTPRequest $request)
@@ -50,10 +59,25 @@ class CITokenController extends SettingsController
         $this->redirect($repository);
     }
 
+    public function setBuildStatusChangePermission(HTTPRequest $request): void
+    {
+        $this->checkCSRF($request);
+
+        $repository  = $this->getRepositoryUserCanAdministrate($request);
+        $permissions = $request->get('set-build-status-permissions') ?: [];
+
+        $this->build_status_change_manager->updateBuildStatusChangePermissions(
+            $repository,
+            $permissions
+        );
+
+        $this->redirect($repository);
+    }
+
     private function checkCSRF(HTTPRequest $request)
     {
         $project_id = $request->getProject()->getID();
-        $token      = new CSRFSynchronizerToken('plugins/git/?group_id=' . $project_id . '&pane=citoken');
+        $token      = new CSRFSynchronizerToken('/plugins/git/?group_id=' . $project_id . '&pane=citoken');
         $token->check();
     }
 

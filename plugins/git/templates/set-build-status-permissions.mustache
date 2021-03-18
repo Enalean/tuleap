@@ -1,0 +1,30 @@
+<h3>{{# dgettext }} tuleap-git | Permission to set build status {{/ dgettext }}</h3>
+<p>
+    {{# dgettext }} tuleap-git | Define which user groups are allowed to change commits statuses after CI builds. {{/ dgettext }}
+    <br/>
+    {{# dgettext }} tuleap-git | Users from selected user groups will be able to authenticate using their access keys when calling the build status update APIs. {{/ dgettext }}
+</p>
+<table class="table git-permission-table git-default-permission-table">
+    <thead>
+    <tr>
+        <th>{{# dgettext }} tuleap-git | Set build status {{/ dgettext }}
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="git-permission-table-selector">
+            <select
+                multiple="multiple"
+                id="set-build-status-permissions"
+                name="set-build-status-permissions[]"
+                size="6"
+                class="plugin_git_permissions_select"
+            >
+                {{# set_build_status_options }}
+                    <option value="{{ value }}" {{{ selected }}}>{{ label }}</option>
+                {{/ set_build_status_options }}
+            </select>
+        </td>
+    </tr>
+    </tbody>
+</table>

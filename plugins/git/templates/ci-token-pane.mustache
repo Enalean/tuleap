@@ -1,9 +1,36 @@
-<h3> {{ title }}</h3>
-</p>{{ description }}</p>
-<p>{{ token }} </p>
-<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id={{ project_id }}&pane=citoken">
-    {{{ csrf }}}
+<h3>{{# dgettext }} tuleap-git | Token for Continuous Integration {{/ dgettext }}</h3>
+<div class="alert alert-info">
+    {{# dgettext }} tuleap-git | This token is used to authenticate CIs like Jenkins when calling the build status update APIs {{/ dgettext }}
+    <br/>
+    <br/>
+    {{# ci_token }}
+        <code>{{ ci_token }}</code>
+    {{/ ci_token }}
+    {{^ ci_token }}
+        {{# dgettext }} tuleap-git | No CI Token {{/ dgettext }}
+    {{/ ci_token }}
+</div>
+<form id="repoAction" name="repoAction" method="POST" action="{{ form_action_url }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
     <input type="hidden" id="action" name="action" value="generate-ci-token" />
-    <input type="submit" class="btn btn-danger" name="generate_token" value="{{ generate_button }}"/>
+    <button type="submit" class="btn btn-danger">
+        {{# dgettext }} tuleap-git | Reset token {{/ dgettext }}
+    </button>
+</form>
+
+<form method="POST" action="{{ form_action_url }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+
+    {{> set-build-status-permissions }}
+
+    <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
+    <input type="hidden" id="action" name="action" value="set-build_status-permissions" />
+    <button type="submit" class="btn btn-primary">
+        {{# dgettext }} tuleap-git | Save permissions {{/ dgettext }}
+    </button>
 </form>

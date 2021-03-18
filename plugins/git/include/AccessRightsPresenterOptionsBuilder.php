@@ -72,10 +72,8 @@ class AccessRightsPresenterOptionsBuilder
         return $this->buildOptions($project, $selected_values, $permission);
     }
 
-    public function getAllOptions(Project $project)
+    public function getAllOptions(Project $project, array $selected_values = [])
     {
-        $selected_values = [];
-
         return $this->buildOptions($project, $selected_values, '');
     }
 
