@@ -50,11 +50,15 @@ import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-
 import { namespace } from "vuex-class";
 
 const configuration = namespace("configuration");
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
 @Component({})
 export default class FeatureCard extends Vue {
     @Prop({ required: true })
     readonly element!: Feature;
+
+    @Prop({ required: true })
+    readonly program_increment!: ProgramIncrement;
 
     @configuration.State
     readonly accessibility!: boolean;
@@ -95,12 +99,18 @@ export default class FeatureCard extends Vue {
     }
 
     get is_draggable(): boolean {
-        return !this.element.has_user_story_planned;
+        return !this.element.has_user_story_planned && this.program_increment.user_can_plan;
     }
 
     get reason_why_element_is_not_draggable(): string {
         if (this.is_draggable) {
             return "";
+        }
+
+        if (!this.program_increment.user_can_plan) {
+            return this.$gettext(
+                "The feature is not plannable, user does not have permission to update artifact or field link."
+            );
         }
         return this.$gettext(
             "The feature has elements planned in team project, it can not be unplanned"

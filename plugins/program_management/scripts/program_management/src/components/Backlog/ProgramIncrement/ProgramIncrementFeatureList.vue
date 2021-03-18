@@ -41,6 +41,7 @@
             v-for="element in features"
             v-bind:key="element.artifact_id"
             v-bind:element="element"
+            v-bind:program_increment="increment"
             data-test="to-be-planned-elements"
             v-bind:data-program-increment-id="increment.id"
             v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"

@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AddToTopBacklogPostActionFactoryTest extends TestCase
 {
@@ -77,7 +78,9 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
             \Workflow::class,
             [
                 'getId' => (string) $workflow_id,
-                'getTracker' => \Mockery::mock(\Tracker::class, ['getGroupId' => '101']),
+                'getTracker' =>
+                    TrackerTestBuilder::aTracker()
+                        ->withProject(new \Project(['group_id' => 101]))->build()
             ]
         );
 

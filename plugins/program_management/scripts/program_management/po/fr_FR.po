@@ -28,7 +28,8 @@ msgid "Edit"
 msgstr "Modifier"
 
 msgid "It seems an action you tried to perform can not be done."
-msgstr "Il semble que l'action que vous venez de tenter ne peut pas être réalisée."
+msgstr ""
+"Il semble que l'action que vous venez de tenter ne peut pas être réalisée."
 
 msgid "Oops, there's an issue"
 msgstr "Oups, il y a eu un problème"
@@ -47,6 +48,13 @@ msgid ""
 msgstr ""
 "La fonctionnalité a des éléments plannifié dans une équipe, elle ne peut pas "
 "être déplanifiée"
+
+msgid ""
+"The feature is not plannable, user does not have permission to update "
+"artifact or field link."
+msgstr ""
+"La fonctionnalité n'est pas planifiable, l'utilisateur n'a pas les "
+"permissions pour modifier l'artéfact ou le champs lien."
 
 msgid "The retrieval of the elements to be planned in program has failed"
 msgstr "La récupération des éléments à planifier dans le programme a échoué"

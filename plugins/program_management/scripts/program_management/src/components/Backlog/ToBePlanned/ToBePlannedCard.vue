@@ -45,6 +45,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { ProgramElement } from "../../../type";
+
 import { namespace } from "vuex-class";
 
 const configuration = namespace("configuration");
@@ -70,6 +71,7 @@ export default class ToBePlannedCard extends Vue {
         if (this.can_create_program_increment) {
             classnames.push("element-draggable-item");
         }
+
         if (this.element.background_color) {
             classnames.push(`element-card-background-${this.element.background_color}`);
         }

@@ -23,6 +23,7 @@ import FeatureCard from "./FeatureCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
 describe("FeatureCard", () => {
     let component_options: ShallowMountOptions<FeatureCard>;
@@ -40,6 +41,9 @@ describe("FeatureCard", () => {
                     background_color: "peggy_pink_text",
                     has_user_story_planned: false,
                 } as Feature,
+                program_increment: {
+                    user_can_plan: true,
+                } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
@@ -68,6 +72,9 @@ describe("FeatureCard", () => {
                     background_color: "",
                     has_user_story_planned: false,
                 } as Feature,
+                program_increment: {
+                    user_can_plan: true,
+                } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
@@ -99,6 +106,43 @@ describe("FeatureCard", () => {
                     background_color: "",
                     has_user_story_planned: true,
                 } as Feature,
+                program_increment: {
+                    user_can_plan: true,
+                } as ProgramIncrement,
+            },
+            localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            accessibility: false,
+                            can_create_program_increment: true,
+                        },
+                    },
+                }),
+            },
+        };
+
+        const wrapper = shallowMount(FeatureCard, component_options);
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Displays a not draggable card when user can not plan/unplan features", async () => {
+        component_options = {
+            propsData: {
+                element: {
+                    artifact_id: 100,
+                    artifact_title: "My artifact",
+                    tracker: {
+                        label: "bug",
+                        color_name: "lake_placid_blue",
+                    },
+                    background_color: "",
+                    has_user_story_planned: true,
+                } as Feature,
+                program_increment: {
+                    user_can_plan: false,
+                } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
