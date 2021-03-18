@@ -52,8 +52,9 @@
                 </option>
             </select>
             <commonmark-preview-button
-                v-on:commonmark-preview-event="toggleButtonAndSelector"
+                v-on:commonmark-preview-event="$emit('interpret-content-event')"
                 v-bind:is_in_preview_mode="is_in_preview_mode"
+                v-bind:is_preview_loading="is_preview_loading"
                 v-if="is_commonmark_button_displayed"
             />
             <commonmark-syntax-helper
@@ -88,11 +89,8 @@ export default {
             type: String,
             default: "",
         },
-    },
-    data() {
-        return {
-            is_in_preview_mode: false,
-        };
+        is_in_preview_mode: Boolean,
+        is_preview_loading: Boolean,
     },
     computed: {
         ...mapState(["field_id"]),
@@ -115,9 +113,6 @@ export default {
     methods: {
         input(event) {
             this.$emit("input", event, this.$refs.format.value);
-        },
-        toggleButtonAndSelector() {
-            this.is_in_preview_mode = !this.is_in_preview_mode;
         },
     },
 };

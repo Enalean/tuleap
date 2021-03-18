@@ -19,10 +19,11 @@
 
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createStore } from "./store/index.js";
+import { createStore } from "./store";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "./po/fr.po";
 import StepDefinitionField from "./StepDefinitionField.vue";
+import { setProjectId } from "./helpers/shared-properties.js";
 
 const StepDefinitionFieldComponent = Vue.extend(StepDefinitionField);
 
@@ -50,5 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 upload_max_size: mount_point.dataset.uploadMaxSize,
             },
         }).$mount(mount_point);
+        setProjectId(mount_point.dataset.projectId);
     }
 });
