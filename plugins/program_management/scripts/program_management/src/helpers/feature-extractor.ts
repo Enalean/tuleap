@@ -17,22 +17,23 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Store } from "vuex";
-import type { State } from "../type";
-import Vue from "vue";
-import Vuex from "vuex";
-import state from "./state";
-import mutations from "./mutations";
-import * as getters from "./getters";
-import * as actions from "./actions";
+import type { FeatureIdWithProgramIncrement } from "./drag-drop";
 
-Vue.use(Vuex);
+export function extractFeatureIndexFromProgramIncrement(
+    feature_id_with_increment: FeatureIdWithProgramIncrement
+): number {
+    const feature_index = feature_id_with_increment.program_increment.features.findIndex(
+        (feature) => feature_id_with_increment.feature_id === feature.artifact_id
+    );
 
-export function createStore(): Store<State> {
-    return new Vuex.Store({
-        actions,
-        mutations,
-        getters,
-        state: { ...state },
-    });
+    if (feature_index === -1) {
+        throw Error(
+            "No feature with id #" +
+                feature_id_with_increment.feature_id +
+                " in program increment #" +
+                feature_id_with_increment.program_increment.id
+        );
+    }
+
+    return feature_index;
 }

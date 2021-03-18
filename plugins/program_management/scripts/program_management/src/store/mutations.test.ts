@@ -21,6 +21,7 @@ import type { State } from "../type";
 import mutations from "./mutations";
 import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
+import type { ToBePlannedElement } from "../helpers/ToBePlanned/element-to-plan-retriever";
 
 describe("Mutations", () => {
     describe("addProgramIncrement", () => {
@@ -64,6 +65,74 @@ describe("Mutations", () => {
                 id: 14,
                 features: [{ artifact_id: 588 }],
             });
+        });
+    });
+
+    describe("addToBePlannedElement", () => {
+        it("When element already exists, Then error is thrown", () => {
+            const state = {
+                to_be_planned_elements: [{ artifact_id: 14 }] as ToBePlannedElement[],
+            } as State;
+
+            const to_be_planned_element = {
+                artifact_id: 14,
+            } as ToBePlannedElement;
+
+            expect(() =>
+                mutations.addToBePlannedElement(state, to_be_planned_element)
+            ).toThrowError("To be planned element with id #14 already exist");
+        });
+
+        it("When element does not exist in state, Then it is added", () => {
+            const state = {
+                to_be_planned_elements: [{ artifact_id: 14 }] as ToBePlannedElement[],
+            } as State;
+
+            const to_be_planned_element = {
+                artifact_id: 125,
+            } as ToBePlannedElement;
+
+            mutations.addToBePlannedElement(state, to_be_planned_element);
+            expect(state.to_be_planned_elements.length).toEqual(2);
+            expect(state.to_be_planned_elements[0]).toEqual({ artifact_id: 14 });
+            expect(state.to_be_planned_elements[1]).toEqual({ artifact_id: 125 });
+        });
+    });
+
+    describe("removeToBePlannedElement", () => {
+        it("When feature exist, Then it is deleted from state", () => {
+            const state = {
+                to_be_planned_elements: [
+                    { artifact_id: 14 },
+                    { artifact_id: 125 },
+                ] as ToBePlannedElement[],
+            } as State;
+
+            const element_to_remove = {
+                artifact_id: 125,
+            } as ToBePlannedElement;
+
+            mutations.removeToBePlannedElement(state, element_to_remove);
+            expect(state.to_be_planned_elements.length).toEqual(1);
+            expect(state.to_be_planned_elements[0]).toEqual({ artifact_id: 14 });
+        });
+
+        it("When feature does not exist, Then it is not deleted", () => {
+            const state = {
+                to_be_planned_elements: [
+                    { artifact_id: 14 },
+                    { artifact_id: 125 },
+                ] as ToBePlannedElement[],
+            } as State;
+
+            const element_to_remove = {
+                artifact_id: 536,
+            } as ToBePlannedElement;
+
+            mutations.removeToBePlannedElement(state, element_to_remove);
+            expect(state.to_be_planned_elements.length).toEqual(2);
+            expect(state.to_be_planned_elements[0]).toEqual({ artifact_id: 14 });
+            expect(state.to_be_planned_elements[1]).toEqual({ artifact_id: 125 });
         });
     });
 });

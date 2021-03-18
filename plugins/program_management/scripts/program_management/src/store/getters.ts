@@ -18,6 +18,8 @@
  */
 import type { State } from "../type";
 import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
+import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
+import type { ToBePlannedElement } from "../helpers/ToBePlanned/element-to-plan-retriever";
 
 export const isProgramIncrementAlreadyAdded = (state: State) => (increment_id: number): boolean => {
     return (
@@ -25,9 +27,9 @@ export const isProgramIncrementAlreadyAdded = (state: State) => (increment_id: n
     );
 };
 
-export const getFeaturesInProgramIncrement = (state: State) => (
+export const getProgramIncrementFromId = (state: State) => (
     increment_id: number
-): Feature[] => {
+): ProgramIncrement => {
     const program_increment = state.program_increments.find(
         (increment) => increment.id === increment_id
     );
@@ -36,5 +38,25 @@ export const getFeaturesInProgramIncrement = (state: State) => (
         throw Error("No program increment with id #" + increment_id);
     }
 
-    return program_increment.features;
+    return program_increment;
+};
+
+export const getFeaturesInProgramIncrement = (state: State) => (
+    increment_id: number
+): Feature[] => {
+    return getProgramIncrementFromId(state)(increment_id).features;
+};
+
+export const getToBePlannedElementFromId = (state: State) => (
+    to_be_planned_element_id: number
+): ToBePlannedElement => {
+    const to_be_planned_element = state.to_be_planned_elements.find(
+        (to_be_planned_element) => to_be_planned_element.artifact_id === to_be_planned_element_id
+    );
+
+    if (!to_be_planned_element) {
+        throw Error("No to be planned element with id #" + to_be_planned_element_id);
+    }
+
+    return to_be_planned_element;
 };

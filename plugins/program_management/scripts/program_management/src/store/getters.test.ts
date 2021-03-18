@@ -21,6 +21,7 @@ import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-incre
 import type { State } from "../type";
 import * as getters from "./getters";
 import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
+import type { ToBePlannedElement } from "../helpers/ToBePlanned/element-to-plan-retriever";
 
 describe("Getters", () => {
     describe("isProgramIncrementAlreadyAdded", () => {
@@ -71,6 +72,26 @@ describe("Getters", () => {
             } as State;
 
             expect(getters.getFeaturesInProgramIncrement(state)(14)).toEqual([{ artifact_id: 56 }]);
+        });
+    });
+
+    describe("getToBePlannedElementFromId", () => {
+        it("When to be planned element does not exist, Then error is thrown", () => {
+            const state = {
+                to_be_planned_elements: [] as ToBePlannedElement[],
+            } as State;
+
+            expect(() => getters.getToBePlannedElementFromId(state)(14)).toThrowError(
+                "No to be planned element with id #14"
+            );
+        });
+
+        it("When to be planned element exist in state, Then it is returned", () => {
+            const state = {
+                to_be_planned_elements: [{ artifact_id: 14 }] as ToBePlannedElement[],
+            } as State;
+
+            expect(getters.getToBePlannedElementFromId(state)(14)).toEqual({ artifact_id: 14 });
         });
     });
 });

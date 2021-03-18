@@ -37,4 +37,27 @@ export default {
     setToBePlannedElements(state: State, to_be_planned_elements: ToBePlannedElement[]): void {
         state.to_be_planned_elements = to_be_planned_elements;
     },
+
+    addToBePlannedElement(state: State, to_be_planned_elements: ToBePlannedElement): void {
+        const element_already_exist = state.to_be_planned_elements.find(
+            (element) => element.artifact_id === to_be_planned_elements.artifact_id
+        );
+
+        if (element_already_exist !== undefined) {
+            throw Error(
+                "To be planned element with id #" +
+                    to_be_planned_elements.artifact_id +
+                    " already exist"
+            );
+        }
+
+        state.to_be_planned_elements.push(to_be_planned_elements);
+    },
+
+    removeToBePlannedElement(state: State, element_to_remove: ToBePlannedElement): void {
+        state.to_be_planned_elements = [...state.to_be_planned_elements].filter(
+            (to_be_planned_element) =>
+                to_be_planned_element.artifact_id !== element_to_remove.artifact_id
+        );
+    },
 };

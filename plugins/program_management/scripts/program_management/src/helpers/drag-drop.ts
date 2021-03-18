@@ -16,13 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { HandleDragPayload } from "../type";
+import type { HandleDragPayload, State } from "../type";
 import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
 import { planElementInProgramIncrement } from "./ProgramIncrement/Feature/feature-planner";
 import { addElementToTopBackLog } from "./ProgramIncrement/add-to-top-backlog";
+import type { Store } from "vuex";
+import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 
 export interface FeatureToPlan {
     id: number;
+}
+
+export interface FeatureIdToMoveFromProgramIncrementToAnother {
+    feature_id: number;
+    from_program_increment: ProgramIncrement;
+    to_program_increment: ProgramIncrement;
+}
+
+export interface FeatureIdWithProgramIncrement {
+    feature_id: number;
+    program_increment: ProgramIncrement;
 }
 
 export function isContainer(element: HTMLElement): boolean {
@@ -77,9 +90,9 @@ export function checkAfterDrag(): void {
 }
 
 export async function handleDrop(
+    store: Store<State>,
     context: SuccessfulDropCallbackParameter,
-    program_id: number,
-    location: Location
+    program_id: number
 ): Promise<void> {
     const element_id = context.dropped_element.dataset.elementId;
     if (!element_id) {
@@ -87,51 +100,121 @@ export async function handleDrop(
     }
 
     const plan_in_program_increment_id = context.target_dropzone.dataset.programIncrementId;
+    const remove_from_program_increment_id = context.dropped_element.dataset.programIncrementId;
 
-    if (plan_in_program_increment_id) {
-        const feature_artifact_link_field_id = context.target_dropzone.dataset.artifactLinkFieldId;
-        if (!feature_artifact_link_field_id) {
-            return;
-        }
-
-        let features_id = context.target_dropzone.dataset.plannedFeatureIds;
-        if (!features_id) {
-            features_id = "";
-        }
-
-        const feature_to_plan = buildFeatureToPlan(features_id, parseInt(element_id, 10));
-        await planElementInProgramIncrement(
+    if (plan_in_program_increment_id && !remove_from_program_increment_id) {
+        await planFeatureInProgramIncrement(
+            store,
+            context,
             parseInt(plan_in_program_increment_id, 10),
-            parseInt(feature_artifact_link_field_id, 10),
-            feature_to_plan
+            parseInt(element_id, 10)
         );
 
-        location.reload();
+        const payload: FeatureIdWithProgramIncrement = {
+            feature_id: parseInt(element_id, 10),
+            program_increment: store.getters.getProgramIncrementFromId(
+                parseInt(plan_in_program_increment_id, 10)
+            ),
+        };
+
+        await store.dispatch("planFeatureInProgramIncrement", payload);
     }
 
-    const remove_from_program_increment_id = context.dropped_element.dataset.programIncrementId;
-    if (remove_from_program_increment_id) {
-        let features_id = context.dropped_element.dataset.plannedFeatureIds;
-        if (!features_id) {
-            features_id = "";
-        }
-
-        const feature_artifact_link_field_id = context.dropped_element.dataset.artifactLinkFieldId;
-        if (!feature_artifact_link_field_id) {
-            return;
-        }
-
-        const feature_to_unplan = buildFeatureToUnplan(features_id, parseInt(element_id, 10));
-        await planElementInProgramIncrement(
+    if (!plan_in_program_increment_id && remove_from_program_increment_id) {
+        await unplanFeature(
+            store,
+            context,
             parseInt(remove_from_program_increment_id, 10),
-            parseInt(feature_artifact_link_field_id, 10),
-            feature_to_unplan
+            parseInt(element_id, 10)
         );
 
         await addElementToTopBackLog(program_id, parseInt(element_id, 10));
 
-        location.reload();
+        const payload: FeatureIdWithProgramIncrement = {
+            feature_id: parseInt(element_id, 10),
+            program_increment: store.getters.getProgramIncrementFromId(
+                parseInt(remove_from_program_increment_id, 10)
+            ),
+        };
+
+        await store.dispatch("unplanFeatureFromProgramIncrement", payload);
     }
+
+    if (plan_in_program_increment_id && remove_from_program_increment_id) {
+        await unplanFeature(
+            store,
+            context,
+            parseInt(remove_from_program_increment_id, 10),
+            parseInt(element_id, 10)
+        );
+
+        await planFeatureInProgramIncrement(
+            store,
+            context,
+            parseInt(plan_in_program_increment_id, 10),
+            parseInt(element_id, 10)
+        );
+
+        const payload: FeatureIdToMoveFromProgramIncrementToAnother = {
+            feature_id: parseInt(element_id, 10),
+            from_program_increment: store.getters.getProgramIncrementFromId(
+                parseInt(remove_from_program_increment_id, 10)
+            ),
+            to_program_increment: store.getters.getProgramIncrementFromId(
+                parseInt(plan_in_program_increment_id, 10)
+            ),
+        };
+
+        await store.dispatch("moveFeatureFromProgramIncrementToAnother", payload);
+    }
+}
+
+async function planFeatureInProgramIncrement(
+    store: Store<State>,
+    context: SuccessfulDropCallbackParameter,
+    plan_in_program_increment_id: number,
+    element_id: number
+): Promise<void> {
+    const feature_artifact_link_field_id = context.target_dropzone.dataset.artifactLinkFieldId;
+    if (!feature_artifact_link_field_id) {
+        return;
+    }
+
+    let features_id = context.target_dropzone.dataset.plannedFeatureIds;
+    if (!features_id) {
+        features_id = "";
+    }
+
+    const feature_to_plan = buildFeatureToPlan(features_id, element_id);
+    await planElementInProgramIncrement(
+        plan_in_program_increment_id,
+        parseInt(feature_artifact_link_field_id, 10),
+        feature_to_plan
+    );
+}
+
+async function unplanFeature(
+    store: Store<State>,
+    context: SuccessfulDropCallbackParameter,
+    remove_from_program_increment_id: number,
+    element_id: number
+): Promise<void> {
+    let features_id = context.dropped_element.dataset.plannedFeatureIds;
+    if (!features_id) {
+        features_id = "";
+    }
+
+    const feature_artifact_link_field_id = context.dropped_element.dataset.artifactLinkFieldId;
+    if (!feature_artifact_link_field_id) {
+        return;
+    }
+
+    const feature_to_unplan = buildFeatureToUnplan(features_id, element_id);
+    await planElementInProgramIncrement(
+        remove_from_program_increment_id,
+        parseInt(feature_artifact_link_field_id, 10),
+        feature_to_unplan
+    );
 }
 
 function buildFeatureToUnplan(existing_features: string, element_id: number): Array<FeatureToPlan> {
