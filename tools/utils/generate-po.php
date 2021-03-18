@@ -209,7 +209,8 @@ function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_i
     );
 
     info("[$translated_plugin] Combining .pot files into one");
-    exec("msgcat --no-location --sort-output --use-first $plural $default $mustache > $template");
+
+    executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output --use-first $plural $default $mustache > $template");
     unlink("$path/site-content/tuleap-$translated_plugin-default.pot");
     unlink("$path/site-content/tuleap-$translated_plugin-plural.pot");
     unlink("$path/site-content/tuleap-$translated_plugin-mustache.pot");

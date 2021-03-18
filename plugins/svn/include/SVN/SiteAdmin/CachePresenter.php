@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,37 +16,44 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\SvnCore\Cache;
+namespace Tuleap\SVN\SiteAdmin;
+
+use CSRFSynchronizerToken;
+use Tuleap\SvnCore\Cache\Parameters;
 
 /**
  * @psalm-immutable
  */
-class Parameters
+final class CachePresenter
 {
     /**
-     * @var int
+     * @var bool
      */
-    private $maximum_credentials;
+    public $is_cache_pane_active = true;
     /**
      * @var int
      */
-    private $lifetime;
+    public $maximum_credentials;
+    /**
+     * @var int
+     */
+    public $lifetime;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+    /**
+     * @var string
+     */
+    public $update_controller_url = UpdateTuleapPMParamsController::URL;
 
-    public function __construct(int $maximum_credentials, int $lifetime)
+    public function __construct(Parameters $parameters, CSRFSynchronizerToken $csrf_token)
     {
-        $this->maximum_credentials = $maximum_credentials;
-        $this->lifetime            = $lifetime;
-    }
-
-    public function getMaximumCredentials(): int
-    {
-        return $this->maximum_credentials;
-    }
-
-    public function getLifetime(): int
-    {
-        return $this->lifetime;
+        $this->maximum_credentials = $parameters->getMaximumCredentials();
+        $this->lifetime            = $parameters->getLifetime();
+        $this->csrf_token          = $csrf_token;
     }
 }

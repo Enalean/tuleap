@@ -22,7 +22,9 @@ require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use FastRoute\RouteCollector;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
+use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
@@ -118,6 +120,8 @@ use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 use Tuleap\SVN\Repository\RuleName;
 use Tuleap\SVN\Service\ServiceActivator;
+use Tuleap\SVN\SiteAdmin\DisplayTuleapPMParamsController;
+use Tuleap\SVN\SiteAdmin\UpdateTuleapPMParamsController;
 use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVN\SvnCoreAccess;
 use Tuleap\SVN\SvnCoreUsage;
@@ -129,6 +133,9 @@ use Tuleap\SVN\ViewVC\AccessHistorySaver;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
 use Tuleap\SVN\XMLImporter;
 use Tuleap\SVN\XMLSvnExporter;
+use Tuleap\SvnCore\Cache\ParameterDao;
+use Tuleap\SvnCore\Cache\ParameterRetriever;
+use Tuleap\SvnCore\Cache\ParameterSaver;
 
 class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -218,6 +225,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(SvnCoreUsage::NAME);
         $this->addHook(SvnCoreAccess::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(SiteAdministrationAddOption::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -691,9 +699,31 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
+    public function routeDisplaySiteAdmin(): DispatchableWithRequest
+    {
+        return new DisplayTuleapPMParamsController(
+            new ParameterRetriever(
+                new ParameterDao(),
+            ),
+            new AdminPageRenderer(),
+        );
+    }
+
+    public function routeUpdateTuleapPMParams(): DispatchableWithRequest
+    {
+        return new UpdateTuleapPMParamsController(
+            new ParameterSaver(
+                new ParameterDao(),
+                EventManager::instance()
+            )
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->get('/admin', $this->getRouteHandler('routeDisplaySiteAdmin'));
+            $r->post('/admin/cache', $this->getRouteHandler('routeUpdateTuleapPMParams'));
             $r->get('/{project_name}/admin', $this->getRouteHandler('routeSvnAdmin'));
             $r->get('/{project_name}/admin-migrate', $this->getRouteHandler('routeDisplayMigrateFromCore'));
             $r->post('/{project_name}/admin-migrate', $this->getRouteHandler('routeUpdateMigrateFromCore'));
@@ -1234,5 +1264,15 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function getWhitelistedKeys(GetWhitelistedKeys $get_whitelisted_keys): void
     {
         $get_whitelisted_keys->addConfigClass(FileSizeValidator::class);
+    }
+
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $event): void
+    {
+        $event->addPluginOption(
+            \Tuleap\Admin\SiteAdministrationPluginOption::build(
+                dgettext('tuleap-svn', 'SVN'),
+                $this->getPluginPath() . '/admin'
+            )
+        );
     }
 }

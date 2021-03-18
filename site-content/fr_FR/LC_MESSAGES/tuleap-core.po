@@ -1855,9 +1855,6 @@ msgstr "Listes de diffusion (Service Listes)"
 msgid "Mailing lists administration"
 msgstr "Administration des listes de diffusion"
 
-msgid "Manage SVN"
-msgstr "Gérer SVN"
-
 msgid "Manage all plugins"
 msgstr "Gérer tous les plugins"
 
