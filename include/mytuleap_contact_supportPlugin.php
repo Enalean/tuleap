@@ -117,8 +117,10 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
 
     public function javascript_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
+        $layout = $params['layout'];
+        assert($layout instanceof \Tuleap\Layout\BaseLayout);
         $asset = $this->getIncludeAssets();
-        echo $asset->getHTMLSnippet('modal-flaming-parrot.js');
+        $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($asset, 'modal-flaming-parrot.js'));
     }
 
     public function site_help($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
