@@ -365,9 +365,10 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->currentRequestIsForPlugin()) {
-            echo $this->getAssets()->getHTMLSnippet('docman.js');
-
-            RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+            $layout = $params['layout'];
+            assert($layout instanceof \Layout);
+            $layout->includeJavascriptFile($this->getAssets()->getFileURL('docman.js'));
+            $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         }
     }
 

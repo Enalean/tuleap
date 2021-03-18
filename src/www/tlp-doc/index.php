@@ -67,7 +67,7 @@ if (isset($_GET['section'], $sections[$_GET['section']])) {
 $sections[$current_section]['selected'] = true;
 
 $include_asset_framework = new IncludeAssets(__DIR__ . '/../assets/core', '../assets/core');
-$tlp_script_tag          = $include_asset_framework->getHTMLSnippet('tlp-en_US.js');
+$tlp_script_url          = $include_asset_framework->getFileURL('tlp-en_US.js');
 $tlp_blue_css            = $include_asset_framework->getFileURL('tlp-blue.css');
 
 $include_asset_doc   = new IncludeAssets(__DIR__ . '/dist', 'dist');
@@ -269,7 +269,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
         </div>
     </section>
 </main>
-<?php echo $tlp_script_tag; ?>
+<script type="text/javascript" src="<?php echo $tlp_script_url; ?>"></script>
 <script type="text/javascript">
     window.manifest_framework_file = <?php
         echo (string) file_get_contents(__DIR__ . '/../assets/core/manifest.json');

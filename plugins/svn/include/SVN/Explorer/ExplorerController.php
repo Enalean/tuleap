@@ -97,10 +97,6 @@ class ExplorerController
                 $is_admin
             )
         );
-
-        if (count($repositories) > 0) {
-            RelativeDatesAssetsRetriever::includeAssetsInSnippet();
-        }
     }
 
     private function generateTokenForCeateRepository(Project $project)

@@ -113,7 +113,9 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     public function javascript_file($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
-            echo $this->getIncludeAssets()->getHTMLSnippet('rollup.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Tuleap\Layout\BaseLayout);
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'rollup.js'));
         }
     }
 

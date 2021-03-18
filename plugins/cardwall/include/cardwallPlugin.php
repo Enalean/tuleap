@@ -286,20 +286,22 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function javascript_file($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
+        $layout = $params['layout'];
+        assert($layout instanceof \Tuleap\Layout\BaseLayout);
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
             $agiledashboard_plugin = PluginManager::instance()->getAvailablePluginByName('agiledashboard');
             if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
                 $assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/trackers', '/assets/trackers');
-                echo $assets->getHTMLSnippet('tracker.js');
-                echo $assets->getHTMLSnippet('modal-v2.js');
+                $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'tracker.js'));
+                $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'modal-v2.js'));
             }
-            echo $this->getAssets()->getHTMLSnippet('cardwall.js');
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'cardwall.js'));
         }
 
         if (HTTPRequest::instance()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
-            RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+            $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         }
     }
 

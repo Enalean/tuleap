@@ -34,11 +34,6 @@ final class RelativeDatesAssetsRetriever
         return self::getCoreAssets()->getFileURL(self::SCRIPT_NAME);
     }
 
-    public static function includeAssetsInSnippet(): void
-    {
-        echo self::getCoreAssets()->getHTMLSnippet(self::SCRIPT_NAME);
-    }
-
     public static function getAsJavascriptAssets(): JavascriptAsset
     {
         return new JavascriptAsset(

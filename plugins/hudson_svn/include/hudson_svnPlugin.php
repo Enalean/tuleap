@@ -96,7 +96,9 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
     public function javascript_file($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
-            echo $this->getAssets()->getHTMLSnippet('form.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Tuleap\Layout\BaseLayout);
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'form.js'));
         }
     }
 

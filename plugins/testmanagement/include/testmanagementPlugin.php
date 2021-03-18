@@ -149,10 +149,12 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return parent::getHooksAndCallbacks();
     }
 
-    public function javascript_file(): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function javascript_file(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if ($this->canIncludeStepDefinitionAssets()) {
-            echo $this->getAssets()->getHTMLSnippet('step-definition-field.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Tuleap\Layout\BaseLayout);
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'step-definition-field.js'));
         }
     }
 

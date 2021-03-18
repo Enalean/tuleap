@@ -67,7 +67,7 @@ class GerritStatusPresenter
         }
 
         if ($this->has_migration_error === true) {
-            RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+            $GLOBALS['Response']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
             $this->purified_migration_time_ago = DateHelper::relativeDateInlineContext((int) $project_creator_status->getEventDate($repository), $user);
             $this->settings_gerrit_url         = $url = GIT_BASE_URL . '/?'
                 . http_build_query(

@@ -40,15 +40,6 @@ class IncludeAssets
      * @throws IncludeAssetsException
      * @throws IncludeAssetsManifestException
      */
-    public function getHTMLSnippet(string $file_name): string
-    {
-        return '<script type="text/javascript" src="' . $this->getFileURL($file_name) . '"></script>' . PHP_EOL;
-    }
-
-    /**
-     * @throws IncludeAssetsException
-     * @throws IncludeAssetsManifestException
-     */
     public function getFileURL(string $file_name): string
     {
         return $this->getBaseURLWithTrailingSlash() . $this->getHashedName($file_name);

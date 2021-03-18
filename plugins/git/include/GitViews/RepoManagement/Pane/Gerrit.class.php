@@ -326,7 +326,7 @@ class Gerrit extends Pane
 
     private function getMigratedToGerritError(Git_Driver_Gerrit_ProjectCreatorStatus $status, \PFUser $user): string
     {
-        RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+        $GLOBALS['Response']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         $date = DateHelper::relativeDateInlineContext((int) $status->getEventDate($this->repository), $user);
         return '<div class="alert alert-error">' . sprintf(dgettext('tuleap-git', 'The migration failed %1$s, the gerrit repository is probably <strong>corrupted or partially migrated</strong>, do not use it and contact your site administration'), $date) . '</div>' .
                '<pre class="pre-scrollable">' . $status->getLog($this->repository) . '</pre>';

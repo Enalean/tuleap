@@ -91,7 +91,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         $readonly = ! $report_can_be_modified || $user->isAnonymous();
 
         if (! $readonly && $this->chart_to_edit) {
-            $html .= $this->getAssets()->getHTMLSnippet('dependencies.js');
+            $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'dependencies.js'));
 
             $url   = '?' . http_build_query([
                                                'report'   => $this->report->id,

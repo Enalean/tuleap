@@ -157,7 +157,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     protected function includeSubsetOfCombined()
     {
-        echo $this->include_asset->getHTMLSnippet('tuleap_subset_flamingparrot.js');
+        $this->includeJavascriptFile($this->include_asset->getFileURL('tuleap_subset_flamingparrot.js'));
     }
 
     protected function displayCommonStylesheetElements($params)
@@ -476,6 +476,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     protected function includeJavascriptPolyfills()
     {
-        echo $this->include_asset->getHTMLSnippet('flamingparrot-with-polyfills.js');
+        $this->includeJavascriptFile($this->include_asset->getFileURL('flamingparrot-with-polyfills.js'));
     }
 }

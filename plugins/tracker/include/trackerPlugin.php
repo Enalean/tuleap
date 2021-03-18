@@ -493,8 +493,10 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function javascript_file($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->currentRequestIsForPlugin()) {
-            echo $this->getAssets()->getHTMLSnippet('tracker.js');
-            echo $this->getAssets()->getHTMLSnippet('modal-v2.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Layout);
+            $layout->includeJavascriptFile($this->getAssets()->getFileURL('tracker.js'));
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'modal-v2.js'));
         }
     }
 
