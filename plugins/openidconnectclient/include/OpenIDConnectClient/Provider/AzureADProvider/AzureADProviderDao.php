@@ -62,10 +62,10 @@ class AzureADProviderDao extends DataAccessObject
         );
     }
 
-    private function disableUniqueAuthenticationProvider(): bool
+    private function disableUniqueAuthenticationProvider(): void
     {
         $sql = "UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE";
-        return $this->getDB()->run($sql);
+        $this->getDB()->run($sql);
     }
 
     public function save(
