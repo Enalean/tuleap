@@ -154,7 +154,7 @@ if (! IS_SCRIPT) {
     $csp_rules                .= "upgrade-insecure-requests; ";
     $csp_rules                .= "report-uri /csp-violation; ";
 
-    header("Content-Security-Policy: default-src 'none' 'report-sample'; base-uri 'self'; $csp_rules");
+    header("Content-Security-Policy: default-src 'report-sample'; base-uri 'self'; $csp_rules");
 }
 
 $feedback = ''; // Initialize global var
