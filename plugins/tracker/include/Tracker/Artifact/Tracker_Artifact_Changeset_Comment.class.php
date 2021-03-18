@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentPresenterBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
@@ -159,9 +160,9 @@ class Tracker_Artifact_Changeset_Comment
             return $this->purifyHTMLBody();
         }
         if ($this->bodyFormat === self::COMMONMARK_COMMENT) {
-            $content_interpretor = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
+            $content_interpretor = CommonMarkInterpreter::build(
                 Codendi_HTMLPurifier::instance(),
-                CodeBlockFeaturesOnArtifact::getInstance()
+                new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance())
             );
 
             return $content_interpretor->getInterpretedContentWithReferences(

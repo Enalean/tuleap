@@ -29,6 +29,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Project\MappingRegistry;
 
 class ProjectNote extends \Widget
@@ -201,9 +202,9 @@ class ProjectNote extends \Widget
     public function interpretContent(): string
     {
         if ($this->interpreted_content === null) {
-            $interpreter = CommonMarkInterpreter::buildWithEnhancedCodeBlocks(
+            $interpreter = CommonMarkInterpreter::build(
                 \Codendi_HTMLPurifier::instance(),
-                $this->code_block_features,
+                new EnhancedCodeBlockExtension($this->code_block_features),
             );
 
             $this->interpreted_content = $interpreter->getInterpretedContent($this->content);
