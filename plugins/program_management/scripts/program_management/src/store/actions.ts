@@ -29,13 +29,13 @@ export function planFeatureInProgramIncrement(
     context: ActionContext<State, State>,
     feature_id_with_increment: FeatureIdWithProgramIncrement
 ): void {
-    const feature = context.getters.getToBePlannedElementFromId(
+    const to_be_planned_element = context.getters.getToBePlannedElementFromId(
         feature_id_with_increment.feature_id
     );
 
-    context.commit("removeToBePlannedElement", feature);
+    context.commit("removeToBePlannedElement", to_be_planned_element);
 
-    feature_id_with_increment.program_increment.features.push(feature);
+    feature_id_with_increment.program_increment.features.push(to_be_planned_element);
 }
 
 export function unplanFeatureFromProgramIncrement(

@@ -94,4 +94,22 @@ class ArtifactsLinkedToParentDao extends DataAccessObject
 
         return count($rows) > 0;
     }
+
+    /**
+     * @psalm-return array{user_story_id:int, project_id:int}[]
+     */
+    public function getPlannedUserStory(int $artifact_id): array
+    {
+        $sql = "SELECT feature_artlink.artifact_id AS user_story_id, user_story_tracker.group_id AS project_id FROM
+                tracker_artifact AS feature
+                    INNER JOIN tracker_field                        AS feature_field      ON (feature_field.tracker_id = feature.tracker_id AND feature_field.formElement_type = 'art_link' AND feature_field.use_it = 1)
+                    INNER JOIN tracker_changeset_value              AS feature_cv         ON (feature_cv.changeset_id = feature.last_changeset_id AND feature_cv.field_id = feature_field.id)
+                    INNER JOIN tracker_changeset_value_artifactlink AS feature_artlink    ON (feature_artlink.changeset_value_id = feature_cv.id)
+                    INNER JOIN plugin_program_management_plan       AS plan               ON feature.tracker_id = plan.plannable_tracker_id
+                    INNER JOIN tracker_artifact                     AS user_story         ON (user_story.id = feature_artlink.artifact_id)
+                    INNER JOIN tracker                              AS user_story_tracker ON (user_story_tracker.id = user_story.tracker_id)
+            WHERE feature.id  = ?";
+
+        return $this->getDB()->run($sql, $artifact_id);
+    }
 }

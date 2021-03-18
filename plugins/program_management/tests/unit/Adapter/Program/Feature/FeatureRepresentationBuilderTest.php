@@ -26,16 +26,31 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
+use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 final class FeatureRepresentationBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildPlanning
+     */
+    private $build_planning;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
+     */
+    private $parent_dao;
 
     /**
      * @var FeatureRepresentationBuilder
@@ -59,11 +74,15 @@ final class FeatureRepresentationBuilderTest extends TestCase
         $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
+        $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $this->build_planning       = \Mockery::mock(BuildPlanning::class);
 
         $this->builder = new FeatureRepresentationBuilder(
             $this->artifact_factory,
             $this->form_element_factory,
-            $this->retrieve_background
+            $this->retrieve_background,
+            $this->parent_dao,
+            $this->build_planning
         );
     }
 
@@ -117,12 +136,29 @@ final class FeatureRepresentationBuilderTest extends TestCase
         $background_color = new BackgroundColor("lake-placid-blue");
         $this->retrieve_background->shouldReceive('retrieveBackgroundColor')->andReturn($background_color);
 
+        $this->parent_dao->shouldReceive('getPlannedUserStory')->andReturn(
+            [
+                ['user_story_id' => 1, 'project_id' => 100]
+            ]
+        );
+        $this->parent_dao->shouldReceive('isLinkedToASprintInMirroredMilestones')->andReturnTrue();
+        $this->build_planning->shouldReceive('buildRootPlanning')->andReturn(
+            new Planning(
+                new ProgramTracker(TrackerTestBuilder::aTracker()->withId(20)->build()),
+                5,
+                'Release plan',
+                [50, 60],
+                new \Tuleap\ProgramManagement\Project(1, 'my-porject', "My project")
+            )
+        );
+
         $expected = new FeatureRepresentation(
             1,
             'title',
             'one #1',
             MinimalTrackerRepresentation::build($tracker),
-            $background_color
+            $background_color,
+            true
         );
 
         self::assertEquals($expected, $this->builder->buildFeatureRepresentation($user, 1, 101, 'title'));

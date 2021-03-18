@@ -26,8 +26,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
@@ -39,6 +41,11 @@ use Tuleap\Tracker\TrackerColor;
 class FeatureElementsRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
+     */
+    private $parent_dao;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BackgroundColorRetriever
@@ -77,6 +84,7 @@ class FeatureElementsRetrieverTest extends TestCase
         $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
+        $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
 
         $this->retriever = new FeatureElementsRetriever(
             $this->build_program,
@@ -84,7 +92,9 @@ class FeatureElementsRetrieverTest extends TestCase
             new FeatureRepresentationBuilder(
                 $this->artifact_factory,
                 $this->form_element_factory,
-                $this->retrieve_background
+                $this->retrieve_background,
+                $this->parent_dao,
+                \Mockery::mock(BuildPlanning::class)
             )
         );
     }
@@ -134,20 +144,24 @@ class FeatureElementsRetrieverTest extends TestCase
         $this->retrieve_background->shouldReceive('retrieveBackgroundColor')
             ->andReturn(new BackgroundColor("lake-placid-blue"));
 
+        $this->parent_dao->shouldReceive('getPlannedUserStory')->andReturn([]);
+
         $collection = [
             new FeatureRepresentation(
                 1,
                 'Artifact 1',
                 'one #1',
                 MinimalTrackerRepresentation::build($tracker_one),
-                new BackgroundColor("lake-placid-blue")
+                new BackgroundColor("lake-placid-blue"),
+                false
             ),
             new FeatureRepresentation(
                 2,
                 'Artifact 2',
                 'two #2',
                 MinimalTrackerRepresentation::build($tracker_two),
-                new BackgroundColor("lake-placid-blue")
+                new BackgroundColor("lake-placid-blue"),
+                false
             ),
         ];
 

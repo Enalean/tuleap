@@ -27,6 +27,12 @@ msgstr "Modifier"
 msgid "Program"
 msgstr "Programme"
 
+msgid ""
+"The feature has elements planned in team project, it can not be unplanned"
+msgstr ""
+"La fonctionnalité a des éléments plannifié dans une équipe, elle ne peut "
+"pas être déplanifiée"
+
 msgid "The retrieval of the elements to be planned in program has failed"
 msgstr "La récupération des éléments à planifier dans le programme a échoué"
 
@@ -43,4 +49,5 @@ msgid "To Be Planned"
 msgstr "À planifier"
 
 msgid "You are not allowed to plan in this program increment."
-msgstr "Vous n'êtes pas authorisé à plannifier dans cet incrément de programme."
+msgstr ""
+"Vous n'êtes pas autorisé à plannifier dans cet incrément de programme."

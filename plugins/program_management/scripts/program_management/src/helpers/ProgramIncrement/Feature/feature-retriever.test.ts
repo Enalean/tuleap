@@ -39,6 +39,7 @@ describe("Features retriever", () => {
                     color_name: "",
                     uri: "/tracker/100",
                 },
+                has_user_story_planned: false,
             },
             {
                 artifact_id: 2,
@@ -51,6 +52,7 @@ describe("Features retriever", () => {
                     color_name: "",
                     uri: "/tracker/200",
                 },
+                has_user_story_planned: false,
             },
         ];
 

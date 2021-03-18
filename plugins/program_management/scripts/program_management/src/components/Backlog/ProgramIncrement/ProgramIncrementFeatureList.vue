@@ -36,7 +36,7 @@
             data-test="empty-state"
         />
 
-        <element-card
+        <feature-card
             v-else
             v-for="element in features"
             v-bind:key="element.artifact_id"
@@ -61,7 +61,7 @@
 <script lang="ts">
 import ToBePlannedSkeleton from "../ToBePlanned/ToBePlannedSkeleton.vue";
 import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
-import ElementCard from "../ElementCard.vue";
+import FeatureCard from "./FeatureCard.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
@@ -75,7 +75,7 @@ import { Getter, Mutation } from "vuex-class";
     components: {
         ProgramIncrementNotPlannable,
         ToBePlannedSkeleton,
-        ElementCard,
+        FeatureCard,
         ProgramIncrementNoContent,
     },
 })

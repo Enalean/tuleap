@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { ProgramIncrement } from "./helpers/ProgramIncrement/program-increment-retriever";
-import type { ToBePlannedElement } from "./helpers/ToBePlanned/element-to-plan-retriever";
+
+export interface ProgramElement {
+    artifact_id: number;
+    artifact_title: string;
+    artifact_xref: string;
+    tracker: TrackerMinimalRepresentation;
+    background_color: string;
+}
 
 export interface TrackerMinimalRepresentation {
     id: number;
@@ -33,6 +40,6 @@ export interface HandleDragPayload {
 }
 
 export interface State {
-    to_be_planned_elements: ToBePlannedElement[];
+    to_be_planned_elements: ProgramElement[];
     program_increments: ProgramIncrement[];
 }

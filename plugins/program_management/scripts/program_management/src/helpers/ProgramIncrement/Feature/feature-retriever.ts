@@ -18,14 +18,10 @@
  */
 
 import { recursiveGet } from "tlp";
-import type { TrackerMinimalRepresentation } from "../../../type";
+import type { ProgramElement } from "../../../type";
 
-export interface Feature {
-    artifact_id: number;
-    artifact_title: string;
-    artifact_xref: string;
-    tracker: TrackerMinimalRepresentation;
-    background_color: string;
+export interface Feature extends ProgramElement {
+    has_user_story_planned: boolean;
 }
 
 export function getFeatures(increment_id: number): Promise<Feature[]> {
