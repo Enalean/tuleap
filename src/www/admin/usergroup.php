@@ -338,6 +338,7 @@ $invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
     ? $invited_by_builder->getInvitedByPresenter($user)
     : null;
 
+$GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 $siteadmin->renderAPresenter(
     $Language->getText('admin_usergroup', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
@@ -362,4 +363,3 @@ $siteadmin->renderAPresenter(
         $user_has_rest_read_only_administration_delegation
     )
 );
-RelativeDatesAssetsRetriever::includeAssetsInSnippet();

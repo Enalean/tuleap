@@ -71,17 +71,6 @@ final class IncludeAssetsTest extends TestCase
         $this->assertEquals('/path/to/file.js', $include_assets->getPath('file.js'));
     }
 
-    public function testItReturnsJavascriptHTMLSnippet(): void
-    {
-        file_put_contents($this->assets_dir_path . '/manifest.json', '{"file.js":"file-hashed.js"}');
-        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
-
-        $this->assertEquals(
-            '<script type="text/javascript" src="/path/to/file-hashed.js"></script>' . PHP_EOL,
-            $include_assets->getHTMLSnippet('file.js')
-        );
-    }
-
     public function testItRaisesAssetsExceptionIfBothFileAndFallbackDoNotExist(): void
     {
         file_put_contents($this->assets_dir_path . '/manifest.json', '{}');

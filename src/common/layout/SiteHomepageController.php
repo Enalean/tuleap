@@ -104,7 +104,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
             $news_collection
         );
         $layout->footer([]);
-        $this->includeRelativeDatesAssetsIfNeeded($news_collection);
+        $this->includeRelativeDatesAssetsIfNeeded($news_collection, $layout);
     }
 
     private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure, NewsCollection $news_collection): void
@@ -154,11 +154,11 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $renderer->renderToPage('homepage', $presenter);
     }
 
-    private function includeRelativeDatesAssetsIfNeeded(NewsCollection $news_collection): void
+    private function includeRelativeDatesAssetsIfNeeded(NewsCollection $news_collection, BaseLayout $layout): void
     {
         if (! $news_collection->hasNews()) {
             return;
         }
-        RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+        $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
     }
 }

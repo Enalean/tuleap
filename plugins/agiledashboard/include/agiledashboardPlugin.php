@@ -739,10 +739,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function javascript_file() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function javascript_file(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAnAgiledashboardRequest()) {
-            echo $this->getIncludeAssets()->getHTMLSnippet('home-burndowns.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Tuleap\Layout\BaseLayout);
+            $layout->addJavascriptAsset(new JavascriptAsset($this->getIncludeAssets(), 'home-burndowns.js'));
         }
     }
 

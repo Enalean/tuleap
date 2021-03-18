@@ -194,7 +194,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function javascript_file($params): void
     {
         if ($this->currentRequestIsForPlugin() || strpos($_SERVER['REQUEST_URI'], 'plugins/tracker') == true) {
-            echo $this->getAssets()->getHTMLSnippet('tracker_encryption.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Tuleap\Layout\BaseLayout);
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'tracker_encryption.js'));
         }
     }
 

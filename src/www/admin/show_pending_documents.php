@@ -97,7 +97,7 @@ switch ($func) {
 
 $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
 $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
-RelativeDatesAssetsRetriever::includeAssetsInSnippet();
+$GLOBALS['Response']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 
 $focus = $request->get('focus');
 if (! $focus) {

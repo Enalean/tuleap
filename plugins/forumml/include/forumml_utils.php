@@ -415,7 +415,7 @@ function plugin_forumml_reply(Codendi_HTMLPurifier $hp, $subject, $in_reply_to, 
     $tab_tmp = array_pad($tab_tmp, -count($tab_tmp) - 1, "$author wrote :");
     $assets  = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml');
 
-    echo $assets->getHTMLSnippet('forumml.js');
+    $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'forumml.js'));
     echo ' <div id="reply-' . $hp->purify($in_reply_to) . '" class="plugin_forumml_message_reply">' . "
             <form id='" . $hp->purify($in_reply_to) . "' action='index.php?group_id=" . $hp->purify(urlencode($request->get('group_id'))) . "&list=" . $hp->purify(urlencode($request->get('list'))) . "&topic=" . $hp->purify(urlencode($id_parent)) . "' name='replyform' method='post' enctype='multipart/form-data'>
             <input type='hidden' name='reply_to' value='" . $hp->purify($in_reply_to) . "'/>

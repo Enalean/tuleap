@@ -392,14 +392,14 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     public function displayJavascriptElements($params)
     {
         if ($this->shouldIncludeFatCombined($params)) {
-            echo $this->include_asset->getHTMLSnippet('tuleap.js');
+            $this->includeJavascriptFile($this->include_asset->getFileURL('tuleap.js'));
         } else {
             $this->includeSubsetOfCombined();
         }
 
-        echo $this->include_asset->getHTMLSnippet("ckeditor.js");
-        echo $this->include_asset->getHTMLSnippet("rich-text-editor.js");
-        echo $this->include_asset->getHTMLSnippet('switch-to-fp.js');
+        $this->includeJavascriptFile($this->include_asset->getFileURL('ckeditor.js'));
+        $this->includeJavascriptFile($this->include_asset->getFileURL('rich-text-editor.js'));
+        $this->includeJavascriptFile($this->include_asset->getFileURL('switch-to-fp.js'));
 
         //Javascript i18n
         echo '<script type="text/javascript">' . "\n";
@@ -411,7 +411,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->includeJavascriptPolyfills();
 
         $em = EventManager::instance();
-        $em->processEvent("javascript_file", null);
+        $em->processEvent("javascript_file", ['layout' => $this]);
 
         foreach ($this->javascript as $js) {
             if (isset($js['file'])) {
@@ -434,7 +434,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     protected function includeSubsetOfCombined()
     {
-        echo $this->include_asset->getHTMLSnippet('tuleap_subset.js');
+        $this->includeJavascriptFile($this->include_asset->getFileURL('tuleap_subset.js'));
     }
 
     /**

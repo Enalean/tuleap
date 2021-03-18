@@ -107,8 +107,10 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>' . "\n";
-            echo $this->getAssets()->getHTMLSnippet('hudson_tab.js');
+            $layout = $params['layout'];
+            assert($layout instanceof \Layout);
+            $layout->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'hudson_tab.js'));
         }
     }
 
