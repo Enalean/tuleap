@@ -48,6 +48,8 @@ use ProjectManager;
 use SystemEventManager;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
+use Tuleap\Git\CIToken\BuildStatusChangePermissionDAO;
+use Tuleap\Git\CIToken\BuildStatusChangePermissionManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
@@ -509,14 +511,14 @@ class RepositoryResource extends AuthenticatedResource
      * @param string $id_or_path       Git repository id or Git repository path
      * @param string $commit_reference Commit SHA-1
      * @param string $state            {@choice failure,success,pending} {@from body}
-     * @param string $token            {@from body}
+     * @param string $token            {@from body}{@required false}
      *
      * @status 201
      * @throws RestException 403
      * @throws RestException 404
      * @throws RestException 400
      */
-    public function postCommitStatus($id_or_path, $commit_reference, $state, $token)
+    protected function postCommitStatus($id_or_path, $commit_reference, $state, $token = null)
     {
         if (ctype_digit($id_or_path)) {
             $repository = $this->repository_factory->getRepositoryById((int) $id_or_path);
@@ -535,9 +537,10 @@ class RepositoryResource extends AuthenticatedResource
             $repository->getProject()
         );
 
-        $repo_ci_token = $this->ci_token_manager->getToken($repository);
-        if ($repo_ci_token === null || ! \hash_equals($token, $repo_ci_token)) {
-            throw new RestException(403, 'Invalid token');
+        if ($token !== null) {
+            $this->checkCITokenValidity($repository, $token);
+        } else {
+            $this->checkUserHasPermission($repository);
         }
 
         $commit_status_creator = new CommitStatusCreator(new CommitStatusDAO());
@@ -553,6 +556,35 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(404, $exception->getMessage());
         } catch (InvalidCommitReferenceException $exception) {
             throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function checkCITokenValidity(GitRepository $repository, string $ci_token): void
+    {
+        $repo_ci_token = $this->ci_token_manager->getToken($repository);
+        if ($repo_ci_token === null || ! \hash_equals($ci_token, $repo_ci_token)) {
+            throw new RestException(403, 'Invalid token');
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function checkUserHasPermission(GitRepository $repository): void
+    {
+        $user                                = $this->user_manager->getCurrentUser();
+        $set_build_status_permission_manager = new BuildStatusChangePermissionManager(
+            new BuildStatusChangePermissionDAO()
+        );
+
+        if (
+            ! $user ||
+            ! $set_build_status_permission_manager->canUserSetBuildStatusInRepository($user, $repository)
+        ) {
+            throw new RestException(403, 'You are not allowed to set the build status');
         }
     }
 
