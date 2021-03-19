@@ -19,7 +19,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Git\CIToken;
 
 class BuildStatusChangePermissionManager
@@ -29,8 +28,9 @@ class BuildStatusChangePermissionManager
      */
     private $dao;
 
-    public function __construct(BuildStatusChangePermissionDAO $dao)
-    {
+    public function __construct(
+        BuildStatusChangePermissionDAO $dao
+    ) {
         $this->dao = $dao;
     }
 
@@ -50,5 +50,19 @@ class BuildStatusChangePermissionManager
         }
 
         return explode(',', $permissions);
+    }
+
+    public function canUserSetBuildStatusInRepository(\PFUser $user, \GitRepository $repository): bool
+    {
+        $project            = $repository->getProject();
+        $granted_groups_ids = $this->getBuildStatusChangePermissions($repository);
+
+        foreach ($granted_groups_ids as $group_id) {
+            if ($user->isMemberOfUGroup($group_id, (int) $project->getID())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
