@@ -25,8 +25,9 @@
             data-placement="left"
             data-trigger="click"
             ref="button_helper"
+            v-bind:disabled="is_in_preview_mode"
         >
-            <i class="fas fa-question-circle tlp-button-icon"></i>
+            <i class="fas fa-question-circle tlp-button-icon" aria-hidden="true"></i>
             {{ help }}
         </button>
 
@@ -161,6 +162,9 @@ import {
 
 export default {
     name: "CommonmarkSyntaxHelper",
+    props: {
+        is_in_preview_mode: Boolean,
+    },
     computed: {
         // Translate attribute does not work with ng-vue out of the box.
         help() {

@@ -25,6 +25,8 @@
             v-bind:disabled="false"
             v-bind:required="false"
             v-bind:value="format"
+            v-bind:is_in_preview_mode="is_in_preview_mode"
+            v-on:interpret-content-event="togglePreview"
         />
         <rich-text-editor
             id="followup_comment"
@@ -42,11 +44,17 @@
 import FormatSelector from "../common/FormatSelector.vue";
 import RichTextEditor from "../common/RichTextEditor.vue";
 import { getCommentLabel } from "../gettext-catalog";
+
 export default {
     name: "FollowupEditor",
     components: { RichTextEditor, FormatSelector },
     props: {
         value: Object,
+    },
+    data() {
+        return {
+            is_in_preview_mode: false,
+        };
     },
     computed: {
         label() {
@@ -72,6 +80,9 @@ export default {
         },
         reemit(...args) {
             this.$emit("upload-image", ...args);
+        },
+        togglePreview() {
+            this.is_in_preview_mode = !this.is_in_preview_mode;
         },
     },
 };

@@ -27,7 +27,7 @@
             <select
                 v-bind:id="selectbox_id"
                 v-model="format"
-                v-bind:disabled="disabled"
+                v-bind:disabled="disabled_format_selectbox"
                 class="tlp-select tlp-select-small tlp-select-adjusted"
                 data-test="format"
             >
@@ -35,7 +35,15 @@
                 <option v-bind:value="html_format">{{ html_label }}</option>
                 <option v-bind:value="commonmark_format">{{ commonmark_label }}</option>
             </select>
-            <commonmark-syntax-helper v-if="is_commonmark_format" />
+            <commonmark-preview-button
+                v-if="is_commonmark_format"
+                v-bind:is_in_preview_mode="is_in_preview_mode"
+                v-on:commonmark-preview-event="$emit('interpret-content-event')"
+            />
+            <commonmark-syntax-helper
+                v-if="is_commonmark_format"
+                v-bind:is_in_preview_mode="is_in_preview_mode"
+            />
         </div>
     </div>
 </template>
@@ -47,10 +55,11 @@ import {
 } from "../../../constants/fields-constants.js";
 import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
 import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../gettext-catalog";
+import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
 
 export default {
     name: "FormatSelector",
-    components: { CommonmarkSyntaxHelper },
+    components: { CommonmarkPreviewButton, CommonmarkSyntaxHelper },
     props: {
         id: String,
         label: String,
@@ -62,8 +71,12 @@ export default {
         },
         disabled: Boolean,
         required: Boolean,
+        is_in_preview_mode: Boolean,
     },
     computed: {
+        disabled_format_selectbox() {
+            return this.disabled || this.is_in_preview_mode;
+        },
         format: {
             get() {
                 return this.value;
