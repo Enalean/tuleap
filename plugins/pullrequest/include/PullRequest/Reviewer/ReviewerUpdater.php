@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Reviewer;
 
 use DateTimeImmutable;
 use PFUser;
+use Project_AccessException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -74,7 +75,7 @@ final class ReviewerUpdater
         foreach ($new_reviewers as $user) {
             try {
                 $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($pull_request, $user);
-            } catch (UserCannotReadGitRepositoryException $exception) {
+            } catch (\GitRepoNotFoundException | Project_AccessException | UserCannotReadGitRepositoryException $exception) {
                 throw new UserCannotBeAddedAsReviewerException($pull_request, $user);
             }
 

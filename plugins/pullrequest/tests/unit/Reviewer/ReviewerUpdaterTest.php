@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer;
 
+use GitRepoNotFoundException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project_AccessException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -152,6 +154,52 @@ final class ReviewerUpdaterTest extends TestCase
 
         $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')
             ->andThrow(UserCannotReadGitRepositoryException::class);
+
+        $this->expectException(UserCannotBeAddedAsReviewerException::class);
+        $this->reviewer_updater->updatePullRequestReviewers(
+            $pull_request,
+            $this->user_doing_the_changes,
+            new \DateTimeImmutable('@1'),
+            $user
+        );
+    }
+
+    public function testUpdateTheListOfReviewersIsRejectedIfOneOfTheNewReviewerCanNotAccessTheProject(): void
+    {
+        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturn(85);
+        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn('101');
+
+        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')
+            ->andThrow(
+                new class extends Project_AccessException
+                {
+                }
+            );
+
+        $this->expectException(UserCannotBeAddedAsReviewerException::class);
+        $this->reviewer_updater->updatePullRequestReviewers(
+            $pull_request,
+            $this->user_doing_the_changes,
+            new \DateTimeImmutable('@1'),
+            $user
+        );
+    }
+
+    public function testUpdateTheListOfReviewersIsRejectedIfOneOfTheNewReviewerCanNotAccessTheGitRepository(): void
+    {
+        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturn(85);
+        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn('101');
+
+        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')
+            ->andThrow(GitRepoNotFoundException::class);
 
         $this->expectException(UserCannotBeAddedAsReviewerException::class);
         $this->reviewer_updater->updatePullRequestReviewers(
