@@ -116,7 +116,7 @@ final class FPMSessionRedis implements FPMSessionInterface
         $protocol = $this->use_tls ? 'tls' : 'tcp';
         $base     = sprintf('%s://%s:%d', $protocol, $this->server, $this->port);
         if ($this->password !== null && $this->password !== '') {
-            return $base . '?auth=' . $this->password;
+            return $base . '?auth=' . urlencode($this->password);
         }
         return $base;
     }
