@@ -1,0 +1,13 @@
+{
+  "name": "tuleap/plugin-roadmap",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Roadmap\\": "include/Roadmap"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Roadmap\\": "tests/unit/Roadmap"
+    }
+  }
+}

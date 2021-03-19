@@ -390,6 +390,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-label
 %{summary}.
 
+%package plugin-roadmap
+Summary: Displays roadmap in a widget
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+%description plugin-roadmap
+%{summary}.
+
 %package plugin-oauth2-server
 Summary: OAuth2 Server
 Group: Development/Tools
@@ -555,6 +562,7 @@ done
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/roadmap
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/textualreport
@@ -1400,6 +1408,10 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/label
 %{APP_DIR}/src/www/assets/label
+
+%files plugin-roadmap
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/roadmap
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
