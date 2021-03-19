@@ -75,9 +75,17 @@ final class OAuth2RefreshTokenTest extends TestCase
         );
     }
 
+    /**
+     * @return AuthenticationScope<OAuth2ScopeIdentifier>
+     */
     private function buildTestScopeRefreshToken(): AuthenticationScope
     {
-        return new class implements AuthenticationScope {
+        // Some PHPCS rules do not like the annotations on the anonymous class
+        // phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact,Squiz.WhiteSpace.ScopeClosingBrace.Indent
+        return new /**
+             * @psalm-immutable
+             * @implements AuthenticationScope<OAuth2ScopeIdentifier>
+             */ class implements AuthenticationScope {
             /**
              * @var OAuth2ScopeIdentifier
              */
@@ -88,11 +96,17 @@ final class OAuth2RefreshTokenTest extends TestCase
                 $this->identifier = OAuth2ScopeIdentifier::fromIdentifierKey('refresh_token_test');
             }
 
+            /**
+             * @psalm-pure
+             */
             public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('Not supposed to be called during the tests');
             }
 
+            /**
+             * @psalm-pure
+             */
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new \LogicException('Not supposed to be called during the tests');
@@ -114,5 +128,6 @@ final class OAuth2RefreshTokenTest extends TestCase
                 return $this->identifier->toString() === $scope->getIdentifier()->toString();
             }
         };
+        // phpcs:enable
     }
 }
