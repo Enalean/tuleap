@@ -42,15 +42,11 @@ function initApp(
         project_url,
         date_time_format,
         root_title,
-        user_can_create_wiki,
         max_files_dragndrop,
         max_size_upload,
         warning_threshold,
         max_archive_size,
-        embedded_are_allowed,
         is_deletion_allowed,
-        is_item_status_metadata_used,
-        is_obsolescence_date_metadata_used,
         is_changelog_proposed_after_dnd,
         user_locale,
         relative_dates_display,
@@ -61,15 +57,11 @@ function initApp(
     state.project_url = project_url;
     state.date_time_format = date_time_format;
     state.root_title = root_title;
-    state.user_can_create_wiki = user_can_create_wiki;
     state.max_files_dragndrop = max_files_dragndrop;
     state.max_size_upload = max_size_upload;
     state.warning_threshold = warning_threshold;
     state.max_archive_size = max_archive_size;
-    state.embedded_are_allowed = embedded_are_allowed;
     state.is_deletion_allowed = is_deletion_allowed;
-    state.is_item_status_metadata_used = is_item_status_metadata_used;
-    state.is_obsolescence_date_metadata_used = is_obsolescence_date_metadata_used;
     state.is_changelog_proposed_after_dnd = is_changelog_proposed_after_dnd;
     state.user_locale = user_locale;
     state.relative_dates_display = relative_dates_display;

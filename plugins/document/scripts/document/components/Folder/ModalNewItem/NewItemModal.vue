@@ -126,12 +126,12 @@ export default {
         };
     },
     computed: {
-        ...mapState([
-            "current_folder",
-            "is_obsolescence_date_metadata_used",
+        ...mapState(["current_folder"]),
+        ...mapState("configuration", [
+            "project_id",
             "is_item_status_metadata_used",
+            "is_obsolescence_date_metadata_used",
         ]),
-        ...mapState("configuration", ["project_id"]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
         ...mapState("permissions", ["project_ugroups"]),

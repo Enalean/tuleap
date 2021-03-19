@@ -27,7 +27,7 @@ describe("StatusMetadataWithCustomBindingForDocumentCreate", () => {
     let status_metadata, state, store;
     beforeEach(() => {
         state = {
-            is_item_status_metadata_used: false,
+            configuration: { is_item_status_metadata_used: false },
             current_folder: {
                 id: 4,
             },
@@ -68,7 +68,7 @@ describe("StatusMetadataWithCustomBindingForDocumentCreate", () => {
             },
         });
 
-        store.state.is_item_status_metadata_used = true;
+        store.state.configuration.is_item_status_metadata_used = true;
         await wrapper.vm.$nextTick();
 
         expect(
@@ -97,7 +97,7 @@ describe("StatusMetadataWithCustomBindingForDocumentCreate", () => {
             },
         });
 
-        store.state.is_item_status_metadata_used = false;
+        store.state.configuration.is_item_status_metadata_used = false;
 
         expect(
             wrapper.find("[data-test=document-status-metadata-for-item-create]").exists()
@@ -126,7 +126,7 @@ describe("StatusMetadataWithCustomBindingForDocumentCreate", () => {
             },
         });
 
-        store.state.is_item_status_metadata_used = true;
+        store.state.configuration.is_item_status_metadata_used = true;
 
         expect(wrapper.vm.status_value).toEqual("rejected");
     });
@@ -162,7 +162,7 @@ describe("StatusMetadataWithCustomBindingForDocumentCreate", () => {
             },
         });
 
-        store.state.is_item_status_metadata_used = true;
+        store.state.configuration.is_item_status_metadata_used = true;
 
         wrapper.vm.status_value = "approved";
 

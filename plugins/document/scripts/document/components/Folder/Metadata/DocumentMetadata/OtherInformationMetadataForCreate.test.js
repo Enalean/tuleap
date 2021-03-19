@@ -28,8 +28,11 @@ describe("OtherInformationMetadataForCreate", () => {
     let factory, store;
     beforeEach(() => {
         store = createStoreMock(
-            { is_obsolescence_date_metadata_used: true },
-            { metadata: { has_loaded_metadata: true } }
+            {},
+            {
+                metadata: { has_loaded_metadata: true },
+                configuration: { is_obsolescence_date_metadata_used: true },
+            }
         );
 
         factory = (props = {}) => {
@@ -63,7 +66,7 @@ describe("OtherInformationMetadataForCreate", () => {
         await wrapper.vm.$nextTick().then(() => {});
 
         store.state = {
-            is_obsolescence_date_metadata_used: true,
+            configuration: { is_obsolescence_date_metadata_used: true },
             metadata: {
                 has_loaded_metadata: true,
             },
@@ -74,7 +77,7 @@ describe("OtherInformationMetadataForCreate", () => {
     });
 
     it(`Given obsolescence date is disabled for project
-        Then obsolescence date component is not rendered`, () => {
+        Then obsolescence date component is not rendered`, async () => {
         const wrapper = factory({
             currentlyUpdatedItem: {
                 metadata: null,
@@ -86,11 +89,12 @@ describe("OtherInformationMetadataForCreate", () => {
         });
 
         store.state = {
-            is_obsolescence_date_metadata_used: false,
+            configuration: { is_obsolescence_date_metadata_used: false },
             metadata: {
                 has_loaded_metadata: true,
             },
         };
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-other-information-spinner]").exists()).toBeFalsy();
@@ -109,7 +113,7 @@ describe("OtherInformationMetadataForCreate", () => {
         });
 
         store.state = {
-            is_obsolescence_date_metadata_used: true,
+            configuration: { is_obsolescence_date_metadata_used: true },
             metadata: {
                 has_loaded_metadata: false,
             },

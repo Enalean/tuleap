@@ -27,7 +27,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
     let status_metadata, state, store;
     beforeEach(() => {
         state = {
-            is_item_status_metadata_used: false,
+            configuration: { is_item_status_metadata_used: false },
         };
 
         const store_options = { state };
@@ -62,7 +62,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
             },
         });
 
-        store.state.is_item_status_metadata_used = true;
+        store.state.configuration.is_item_status_metadata_used = true;
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=document-status-for-item-update]").exists()).toBeTruthy();
@@ -87,7 +87,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
             },
         });
 
-        store.state.is_item_status_metadata_used = false;
+        store.state.configuration.is_item_status_metadata_used = false;
 
         expect(wrapper.find("[data-test=document-status-for-item-update]").exists()).toBeFalsy();
     });
@@ -110,7 +110,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
             },
         });
 
-        store.state.is_item_status_metadata_used = true;
+        store.state.configuration.is_item_status_metadata_used = true;
         await wrapper.vm.$nextTick();
         wrapper.vm.status_value = "approved";
         await wrapper.vm.$nextTick();

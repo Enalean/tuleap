@@ -62,8 +62,6 @@ describe("NewFolderModal", () => {
                         can_manage: [],
                     },
                 },
-                is_obsolescence_date_metadata_used: true,
-                is_item_status_metadata_used: true,
                 configuration: {
                     project_id: 102,
                 },

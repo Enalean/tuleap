@@ -26,6 +26,10 @@ export interface ConfigurationState {
     readonly project_name: string;
     readonly project_public_name: string;
     readonly user_is_admin: boolean;
+    readonly user_can_create_wiki: boolean;
+    readonly embedded_are_allowed: boolean;
+    readonly is_item_status_metadata_used: boolean;
+    readonly is_obsolescence_date_metadata_used: boolean;
 }
 
 export function createConfigurationModule(

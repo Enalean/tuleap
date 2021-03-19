@@ -36,14 +36,10 @@ describe("App", () => {
         router = new VueRouter({});
 
         const default_prop = {
-            user_can_create_wiki: false,
             date_time_format: "Ymd",
             max_files_dragndrop: 5,
             max_size_upload: 10000,
-            embedded_are_allowed: true,
             is_deletion_allowed: true,
-            is_item_status_metadata_used: false,
-            is_obsolescence_date_metadata_used: false,
             is_changelog_proposed_after_dnd: true,
             csrf_token: "challenge_value",
             csrf_token_name: "challenge_name",

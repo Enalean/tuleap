@@ -26,7 +26,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
     let default_property, store;
     beforeEach(() => {
         store = createStoreMock(
-            { is_item_status_metadata_used: true },
+            { configuration: { is_item_status_metadata_used: true } },
             { metadata: { has_loaded_metadata: true } }
         );
 
@@ -42,7 +42,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
     describe("Component display -", () => {
         it(`Given project uses status, default properties are rendered`, () => {
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -79,7 +79,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
         });
         it(`Given item has custom metadata, default properties are rendered`, () => {
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -115,7 +115,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
         });
         it(`Given item has no custom metadata and status is not available, default properties are not rendered`, () => {
             store.state = {
-                is_item_status_metadata_used: false,
+                configuration: { is_item_status_metadata_used: false },
                 metadata: {
                     has_loaded_metadata: true,
                 },

@@ -57,7 +57,7 @@ export default {
         parent: Object,
     },
     computed: {
-        ...mapState(["is_item_status_metadata_used"]),
+        ...mapState("configuration", ["is_item_status_metadata_used"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
         has_recursion_metadata() {
             return (
