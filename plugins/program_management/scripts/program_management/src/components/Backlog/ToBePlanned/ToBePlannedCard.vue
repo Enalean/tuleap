@@ -44,22 +44,30 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { userHasAccessibilityMode, canCreateProgramIncrement } from "../../../configuration";
 import type { ProgramElement } from "../../../type";
+import { namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({})
 export default class ToBePlannedCard extends Vue {
     @Prop({ required: true })
     readonly element!: ProgramElement;
 
+    @configuration.State
+    readonly accessibility!: boolean;
+
+    @configuration.State
+    readonly can_create_program_increment!: boolean;
+
     get show_accessibility_pattern(): boolean {
-        return userHasAccessibilityMode() && this.element.background_color !== "";
+        return this.accessibility && this.element.background_color !== "";
     }
 
     get additional_classnames(): string {
         const classnames = [`element-card-${this.element.tracker.color_name}`];
 
-        if (canCreateProgramIncrement()) {
+        if (this.can_create_program_increment) {
             classnames.push("element-draggable-item");
         }
         if (this.element.background_color) {

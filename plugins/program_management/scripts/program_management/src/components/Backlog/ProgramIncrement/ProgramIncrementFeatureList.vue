@@ -25,7 +25,7 @@
         data-test="program-increment-feature-list"
         v-bind:data-program-increment-id="increment.id"
         v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"
-        v-bind:data-artifact-link-field-id="getProgramIncrementArtifactLinkField()"
+        v-bind:data-artifact-link-field-id="program_increment_artifact_link_id"
     >
         <to-be-planned-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
 
@@ -44,7 +44,7 @@
             data-test="to-be-planned-elements"
             v-bind:data-program-increment-id="increment.id"
             v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"
-            v-bind:data-artifact-link-field-id="getProgramIncrementArtifactLinkField()"
+            v-bind:data-artifact-link-field-id="program_increment_artifact_link_id"
         />
 
         <div
@@ -68,8 +68,9 @@ import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-
 import { getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
-import { artifactLinkId } from "../../../configuration";
-import { Getter, Mutation } from "vuex-class";
+import { Getter, Mutation, namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: {
@@ -94,6 +95,8 @@ export default class ProgramIncrementFeatureList extends Vue {
     readonly getFeaturesInProgramIncrement!: (increment_id: number) => Feature[];
     @Getter
     readonly isProgramIncrementAlreadyAdded!: (increment_id: number) => boolean;
+    @configuration.State
+    readonly program_increment_artifact_link_id!: number | null;
 
     async mounted(): Promise<void> {
         if (this.isProgramIncrementAlreadyAdded(this.increment.id)) {
@@ -118,10 +121,6 @@ export default class ProgramIncrementFeatureList extends Vue {
 
     public doesIncrementAcceptPlannableItems(): boolean {
         return this.increment.user_can_plan;
-    }
-
-    public getProgramIncrementArtifactLinkField(): number | null {
-        return artifactLinkId();
     }
 
     public getFeaturesAlreadyLinked(): string {

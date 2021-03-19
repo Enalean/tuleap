@@ -22,17 +22,19 @@
         <form v-bind:action="create_new_program_increment" method="post">
             <div class="program-increment-title-with-button">
                 <h2 data-test="program-increment-title" class="program-increment-title">
-                    {{ program_increment_label }}
+                    {{ tracker_program_increment_label }}
                 </h2>
                 <button
                     class="tlp-button-primary tlp-button-outline tlp-button-small program-increment-title-button"
-                    v-if="can_create_program_increment"
+                    v-if="user_can_create_program_increment"
                     data-test="create-program-increment-button"
                 >
                     <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
                     <span
                         data-test="button-add-program-increment-label"
-                        v-translate="{ program_increment_sub_label }"
+                        v-translate="{
+                            program_increment_sub_label: tracker_program_increment_sub_label,
+                        }"
                     >
                         Add %{ program_increment_sub_label }
                     </span>
@@ -72,15 +74,11 @@ import EmptyState from "./EmptyState.vue";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { getProgramIncrements } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import {
-    programId,
-    canCreateProgramIncrement,
-    programIncrementId,
-    getProgramIncrementLabel,
-    getProgramIncrementSubLabel,
-} from "../../../configuration";
 import ProgramIncrementSkeleton from "./ProgramIncrementSkeleton.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
+import { namespace } from "vuex-class";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: { ProgramIncrementSkeleton, ProgramIncrementCard, EmptyState },
@@ -91,10 +89,25 @@ export default class ProgramIncrementList extends Vue {
     private program_increments: Array<ProgramIncrement> = [];
     private is_loading = false;
 
+    @configuration.State
+    readonly can_create_program_increment!: boolean;
+
+    @configuration.State
+    readonly tracker_program_increment_label!: string;
+
+    @configuration.State
+    readonly tracker_program_increment_sub_label!: string;
+
+    @configuration.State
+    readonly tracker_program_increment_id!: number;
+
+    @configuration.State
+    readonly program_id!: number;
+
     async mounted(): Promise<void> {
         try {
             this.is_loading = true;
-            this.program_increments = await getProgramIncrements(programId());
+            this.program_increments = await getProgramIncrements(this.program_id);
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext(
@@ -106,20 +119,12 @@ export default class ProgramIncrementList extends Vue {
         }
     }
 
-    get can_create_program_increment(): boolean {
-        return canCreateProgramIncrement() && this.program_increments.length > 0;
+    get user_can_create_program_increment(): boolean {
+        return this.can_create_program_increment && this.program_increments.length > 0;
     }
 
     get create_new_program_increment(): string {
-        return buildCreateNewProgramIncrement(programIncrementId());
-    }
-
-    get program_increment_label(): string {
-        return getProgramIncrementLabel();
-    }
-
-    get program_increment_sub_label(): string {
-        return getProgramIncrementSubLabel();
+        return buildCreateNewProgramIncrement(this.tracker_program_increment_id);
     }
 }
 </script>

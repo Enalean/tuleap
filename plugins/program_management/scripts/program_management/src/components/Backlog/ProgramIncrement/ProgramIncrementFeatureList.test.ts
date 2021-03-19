@@ -1,6 +1,5 @@
 import * as retriever from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
-import * as configuration from "../../../configuration";
 import { shallowMount } from "@vue/test-utils";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
@@ -11,7 +10,6 @@ import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapp
 describe("ProgramIncrementFeatureList", () => {
     it("Displays the empty state when no features are found", async () => {
         jest.spyOn(retriever, "getFeatures").mockResolvedValue([]);
-        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
         const wrapper = shallowMount(ProgramIncrementFeatureList, {
             localVue: await createProgramManagementLocalVue(),
@@ -38,6 +36,9 @@ describe("ProgramIncrementFeatureList", () => {
                         getFeaturesInProgramIncrement: jest.fn().mockReturnValue([]),
                         isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
                     },
+                    state: {
+                        configuration: { program_id: 202 },
+                    },
                 }),
             },
         });
@@ -53,7 +54,6 @@ describe("ProgramIncrementFeatureList", () => {
 
     it("Displays an error when rest route fail", async () => {
         jest.spyOn(retriever, "getFeatures").mockResolvedValue([]);
-        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
         const wrapper = shallowMount(ProgramIncrementFeatureList, {
             localVue: await createProgramManagementLocalVue(),
             data(): DefaultData<ProgramIncrementFeatureList> {
@@ -79,6 +79,9 @@ describe("ProgramIncrementFeatureList", () => {
                     getters: {
                         getFeaturesInProgramIncrement: jest.fn().mockReturnValue([]),
                         isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
+                    },
+                    state: {
+                        configuration: { program_id: 202 },
                     },
                 }),
             },
@@ -110,7 +113,6 @@ describe("ProgramIncrementFeatureList", () => {
         } as Feature;
 
         jest.spyOn(retriever, "getFeatures").mockResolvedValue([element_one, element_two]);
-        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
         const wrapper = shallowMount(ProgramIncrementFeatureList, {
             localVue: await createProgramManagementLocalVue(),
@@ -139,6 +141,9 @@ describe("ProgramIncrementFeatureList", () => {
                             .fn()
                             .mockReturnValue([element_one, element_two]),
                         isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
+                    },
+                    state: {
+                        configuration: { program_id: 202 },
                     },
                 }),
             },
@@ -174,7 +179,6 @@ describe("ProgramIncrementFeatureList", () => {
         jest.spyOn(retriever, "getFeatures").mockImplementation(() =>
             Promise.resolve([element_one, element_two])
         );
-        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
         const wrapper = shallowMount(ProgramIncrementFeatureList, {
             localVue: await createProgramManagementLocalVue(),
@@ -196,6 +200,9 @@ describe("ProgramIncrementFeatureList", () => {
                             .mockReturnValue([element_one, element_two]),
                         isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(false),
                     },
+                    state: {
+                        configuration: { program_id: 202 },
+                    },
                 }),
             },
         });
@@ -215,7 +222,6 @@ describe("ProgramIncrementFeatureList", () => {
 
     it("Does not have the can-plan attribute when user can not plan elements", async () => {
         jest.spyOn(retriever, "getFeatures").mockResolvedValue([]);
-        jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
         const wrapper = shallowMount(ProgramIncrementFeatureList, {
             localVue: await createProgramManagementLocalVue(),
@@ -242,6 +248,9 @@ describe("ProgramIncrementFeatureList", () => {
                     getters: {
                         getFeaturesInProgramIncrement: jest.fn().mockReturnValue([]),
                         isProgramIncrementAlreadyAdded: jest.fn().mockReturnValue(true),
+                    },
+                    state: {
+                        configuration: { program_id: 202 },
                     },
                 }),
             },

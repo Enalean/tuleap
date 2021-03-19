@@ -21,15 +21,13 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FeatureCard from "./FeatureCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import * as configuration from "../../../configuration";
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("FeatureCard", () => {
     let component_options: ShallowMountOptions<FeatureCard>;
 
     it("Displays a draggable card with accessibility pattern", async () => {
-        jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(true);
-        jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
         component_options = {
             propsData: {
                 element: {
@@ -44,6 +42,13 @@ describe("FeatureCard", () => {
                 } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: { accessibility: true, can_create_program_increment: true },
+                    },
+                }),
+            },
         };
 
         const wrapper = shallowMount(FeatureCard, component_options);
@@ -51,8 +56,6 @@ describe("FeatureCard", () => {
     });
 
     it("Displays a not draggable card without accessibility pattern", async () => {
-        jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(false);
-        jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(false);
         component_options = {
             propsData: {
                 element: {
@@ -67,6 +70,16 @@ describe("FeatureCard", () => {
                 } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            accessibility: false,
+                            can_create_program_increment: false,
+                        },
+                    },
+                }),
+            },
         };
 
         const wrapper = shallowMount(FeatureCard, component_options);
@@ -74,8 +87,6 @@ describe("FeatureCard", () => {
     });
 
     it("Displays a not draggable card when feature has planned user stories", async () => {
-        jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(false);
-        jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
         component_options = {
             propsData: {
                 element: {
@@ -90,6 +101,13 @@ describe("FeatureCard", () => {
                 } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: { accessibility: false, can_create_program_increment: true },
+                    },
+                }),
+            },
         };
 
         const wrapper = shallowMount(FeatureCard, component_options);

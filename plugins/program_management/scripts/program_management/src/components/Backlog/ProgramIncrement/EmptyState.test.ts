@@ -21,18 +21,24 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmptyState from "./EmptyState.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import * as configuration from "../../../configuration";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("EmptyState", () => {
     let component_options: ShallowMountOptions<EmptyState>;
 
     it("Displays the empty state for Program Increment", async () => {
         component_options = {
-            propsData: {
-                project_public_name: "Public name",
-                project_short_name: "short-name",
-            },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            can_create_program_increment: false,
+                            tracker_program_increment_id: 1,
+                        },
+                    },
+                }),
+            },
         };
 
         const wrapper = shallowMount(EmptyState, component_options);
@@ -40,14 +46,13 @@ describe("EmptyState", () => {
     });
 
     it("Display the create new program increment button", async () => {
-        jest.spyOn(configuration, "canCreateProgramIncrement").mockImplementation(() => true);
-
         component_options = {
-            propsData: {
-                project_public_name: "Public name",
-                project_short_name: "short-name",
-            },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: { configuration: { can_create_program_increment: true } },
+                }),
+            },
         };
 
         const wrapper = shallowMount(EmptyState, component_options);
@@ -56,14 +61,13 @@ describe("EmptyState", () => {
     });
 
     it("No button is displayed when user can not add program increments", async () => {
-        jest.spyOn(configuration, "canCreateProgramIncrement").mockImplementation(() => false);
-
         component_options = {
-            propsData: {
-                project_public_name: "Public name",
-                project_short_name: "short-name",
-            },
             localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: { configuration: { can_create_program_increment: false } },
+                }),
+            },
         };
 
         const wrapper = shallowMount(EmptyState, component_options);

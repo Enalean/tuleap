@@ -22,23 +22,22 @@ import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
 import * as drekkenov from "@tuleap/drag-and-drop";
-import * as configuration from "../configuration";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("App", () => {
     async function createWrapper(): Promise<Wrapper<App>> {
         return shallowMount(App, {
             mocks: {
-                $store: {
+                $store: createStoreMock({
                     state: {
                         has_modal_error: false,
+                        configuration: {
+                            can_create_program_increment: true,
+                        },
                     },
-                },
+                }),
             },
             localVue: await createProgramManagementLocalVue(),
-            propsData: {
-                project_public_name: "Public name",
-                project_short_name: "short-name",
-            },
         });
     }
 
@@ -49,7 +48,6 @@ describe("App", () => {
 
     describe(`mounted()`, () => {
         it(`will create a "drek"`, async () => {
-            jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
             const init = jest.spyOn(drekkenov, "init");
             await createWrapper();
 
@@ -59,7 +57,6 @@ describe("App", () => {
 
     describe(`destroy()`, () => {
         it(`will destroy the "drek"`, async () => {
-            jest.spyOn(configuration, "canCreateProgramIncrement").mockReturnValue(true);
             const mock_drek = {
                 destroy: jest.fn(),
             };

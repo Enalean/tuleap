@@ -20,10 +20,10 @@
 <template>
     <div>
         <breadcrumb
-            v-bind:project_public_name="projectPublicName()"
-            v-bind:project_short_name="projectShortName()"
-            v-bind:project_privacy="projectPrivacy()"
-            v-bind:project_flags="projectFlags()"
+            v-bind:project_public_name="public_name"
+            v-bind:project_short_name="short_name"
+            v-bind:project_privacy="privacy"
+            v-bind:project_flags="flags"
         />
         <h1 class="program-management-title-header" v-translate>Backlog</h1>
         <div class="program-backlog" data-test="backlog-section">
@@ -47,14 +47,6 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import Breadcrumb from "./Breadcrumb.vue";
-import {
-    getProjectPublicName,
-    projectShortName,
-    projectPrivacy,
-    projectFlags,
-    canCreateProgramIncrement,
-    programId,
-} from "../configuration";
 import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
 import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
@@ -73,8 +65,10 @@ import {
     checkAcceptsDrop,
     checkAfterDrag,
 } from "../helpers/drag-drop";
-import { Action, State } from "vuex-class";
+import { Action, State, namespace } from "vuex-class";
 import ErrorModal from "./Backlog/ErrorModal.vue";
+
+const configuration = namespace("configuration");
 
 @Component({
     components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb, ErrorModal },
@@ -88,6 +82,24 @@ export default class App extends Vue {
     @State
     private readonly has_modal_error!: boolean;
 
+    @configuration.State
+    readonly public_name!: string;
+
+    @configuration.State
+    readonly short_name!: string;
+
+    @configuration.State
+    readonly privacy!: ProjectPrivacy;
+
+    @configuration.State
+    readonly flags!: Array<ProjectFlag>;
+
+    @configuration.State
+    readonly can_create_program_increment!: boolean;
+
+    @configuration.State
+    readonly program_id!: number;
+
     beforeDestroy(): void {
         if (this.drek) {
             this.drek.destroy();
@@ -95,7 +107,7 @@ export default class App extends Vue {
     }
 
     mounted(): void {
-        if (!canCreateProgramIncrement()) {
+        if (!this.can_create_program_increment) {
             return;
         }
 
@@ -113,25 +125,12 @@ export default class App extends Vue {
                 });
             },
             onDrop: async (context: SuccessfulDropCallbackParameter): Promise<void> => {
-                await this.handleDrop({ program_id: programId(), ...context });
+                await this.handleDrop({ program_id: this.program_id, ...context });
             },
             cleanupAfterDragCallback: (): void => {
                 return checkAfterDrag();
             },
         });
-    }
-
-    public projectPublicName(): string {
-        return getProjectPublicName();
-    }
-    public projectShortName(): string {
-        return projectShortName();
-    }
-    public projectPrivacy(): ProjectPrivacy {
-        return projectPrivacy();
-    }
-    public projectFlags(): Array<ProjectFlag> {
-        return projectFlags();
     }
 }
 </script>

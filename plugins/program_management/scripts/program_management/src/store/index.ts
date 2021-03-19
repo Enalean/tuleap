@@ -25,14 +25,21 @@ import state from "./state";
 import mutations from "./mutations";
 import * as getters from "./getters";
 import * as actions from "./actions";
+import type { ConfigurationState } from "./configuration";
+import { createConfigurationModule } from "./configuration";
 
 Vue.use(Vuex);
 
-export function createStore(): Store<State> {
+export function createStore(configuration_state: ConfigurationState): Store<State> {
+    const configuration = createConfigurationModule(configuration_state);
+
     return new Vuex.Store({
         actions,
         mutations,
         getters,
         state: { ...state },
+        modules: {
+            configuration,
+        },
     });
 }

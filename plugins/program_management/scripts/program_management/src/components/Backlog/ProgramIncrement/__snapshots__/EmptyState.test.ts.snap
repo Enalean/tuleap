@@ -3,8 +3,6 @@
 exports[`EmptyState Displays the empty state for Program Increment 1`] = `
 <div
   class="program-increment-empty-state"
-  project_public_name="Public name"
-  project_short_name="short-name"
 >
   <empty-svg-stub />
    
@@ -17,7 +15,7 @@ exports[`EmptyState Displays the empty state for Program Increment 1`] = `
   </p>
    
   <form
-    action="/plugins/tracker/?program_increment=create&tracker=undefined&func=new-artifact"
+    action="/plugins/tracker/?program_increment=create&tracker=1&func=new-artifact"
     method="post"
   >
     <!---->
