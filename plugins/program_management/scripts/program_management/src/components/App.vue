@@ -65,7 +65,7 @@ import {
     checkAcceptsDrop,
     checkAfterDrag,
 } from "../helpers/drag-drop";
-import { Action, State, namespace } from "vuex-class";
+import { Action, State, namespace, Getter } from "vuex-class";
 import ErrorModal from "./Backlog/ErrorModal.vue";
 
 const configuration = namespace("configuration");
@@ -100,13 +100,19 @@ export default class App extends Vue {
     @configuration.State
     readonly program_id!: number;
 
+    @Getter
+    readonly hasAnElementMovedInsideIncrement!: boolean;
+
     beforeDestroy(): void {
+        window.removeEventListener("beforeunload", this.beforeUnload);
         if (this.drek) {
             this.drek.destroy();
         }
     }
 
     mounted(): void {
+        window.addEventListener("beforeunload", this.beforeUnload);
+
         if (!this.can_create_program_increment) {
             return;
         }
@@ -131,6 +137,13 @@ export default class App extends Vue {
                 return checkAfterDrag();
             },
         });
+    }
+
+    beforeUnload(event: Event): void {
+        if (this.hasAnElementMovedInsideIncrement) {
+            event.preventDefault();
+            event.returnValue = false;
+        }
     }
 }
 </script>

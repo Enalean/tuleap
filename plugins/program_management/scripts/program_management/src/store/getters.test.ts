@@ -93,4 +93,21 @@ describe("Getters", () => {
             expect(getters.getToBePlannedElementFromId(state)(14)).toEqual({ artifact_id: 14 });
         });
     });
+
+    describe("hasAnElementMovedInsideIncrement", () => {
+        it("When there are not elements moving, Then return false", () => {
+            const state = {
+                ongoing_move_elements_id: [] as number[],
+            } as State;
+
+            expect(getters.hasAnElementMovedInsideIncrement(state)).toEqual(false);
+        });
+        it("When there are elements moving, Then return true", () => {
+            const state = {
+                ongoing_move_elements_id: [14],
+            } as State;
+
+            expect(getters.hasAnElementMovedInsideIncrement(state)).toEqual(true);
+        });
+    });
 });

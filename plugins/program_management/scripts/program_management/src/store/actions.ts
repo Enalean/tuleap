@@ -78,17 +78,18 @@ export async function handleDrop(
     context: ActionContext<State, State>,
     handle_drop: HandleDropContextWithProgramId
 ): Promise<void> {
-    const element_id = handle_drop.dropped_element.dataset.elementId;
-    if (!element_id) {
+    const data_element_id = handle_drop.dropped_element.dataset.elementId;
+    if (!data_element_id) {
         return;
     }
+    const element_id = parseInt(data_element_id, 10);
 
     const plan_in_program_increment_id = handle_drop.target_dropzone.dataset.programIncrementId;
     const remove_from_program_increment_id = handle_drop.dropped_element.dataset.programIncrementId;
 
     if (plan_in_program_increment_id && !remove_from_program_increment_id) {
         const payload: FeatureIdWithProgramIncrement = {
-            feature_id: parseInt(element_id, 10),
+            feature_id: element_id,
             program_increment: context.getters.getProgramIncrementFromId(
                 parseInt(plan_in_program_increment_id, 10)
             ),
@@ -97,19 +98,18 @@ export async function handleDrop(
         planFeatureInProgramIncrement(context, payload);
 
         try {
-            await planFeature(
-                handle_drop,
-                parseInt(plan_in_program_increment_id, 10),
-                parseInt(element_id, 10)
-            );
+            context.commit("startMoveElementInAProgramIncrement", element_id);
+            await planFeature(handle_drop, parseInt(plan_in_program_increment_id, 10), element_id);
         } catch (error) {
             await handleModalError(context, error);
+        } finally {
+            context.commit("finishMoveElement", element_id);
         }
     }
 
     if (!plan_in_program_increment_id && remove_from_program_increment_id) {
         const payload: FeatureIdWithProgramIncrement = {
-            feature_id: parseInt(element_id, 10),
+            feature_id: element_id,
             program_increment: context.getters.getProgramIncrementFromId(
                 parseInt(remove_from_program_increment_id, 10)
             ),
@@ -118,21 +118,24 @@ export async function handleDrop(
         unplanFeatureFromProgramIncrement(context, payload);
 
         try {
+            context.commit("startMoveElementInAProgramIncrement", element_id);
             await unplanFeature(
                 handle_drop,
                 parseInt(remove_from_program_increment_id, 10),
-                parseInt(element_id, 10)
+                element_id
             );
 
-            await addElementToTopBackLog(handle_drop.program_id, parseInt(element_id, 10));
+            await addElementToTopBackLog(handle_drop.program_id, element_id);
         } catch (error) {
             await handleModalError(context, error);
+        } finally {
+            context.commit("finishMoveElement", element_id);
         }
     }
 
     if (plan_in_program_increment_id && remove_from_program_increment_id) {
         const payload: FeatureIdToMoveFromProgramIncrementToAnother = {
-            feature_id: parseInt(element_id, 10),
+            feature_id: element_id,
             from_program_increment: context.getters.getProgramIncrementFromId(
                 parseInt(remove_from_program_increment_id, 10)
             ),
@@ -144,19 +147,20 @@ export async function handleDrop(
         moveFeatureFromProgramIncrementToAnother(context, payload);
 
         try {
-            await unplanFeature(
-                handle_drop,
-                parseInt(remove_from_program_increment_id, 10),
-                parseInt(element_id, 10)
-            );
+            context.commit("startMoveElementInAProgramIncrement", element_id);
 
-            await planFeature(
-                handle_drop,
-                parseInt(plan_in_program_increment_id, 10),
-                parseInt(element_id, 10)
-            );
+            await Promise.all([
+                unplanFeature(
+                    handle_drop,
+                    parseInt(remove_from_program_increment_id, 10),
+                    element_id
+                ),
+                planFeature(handle_drop, parseInt(plan_in_program_increment_id, 10), element_id),
+            ]);
         } catch (error) {
             await handleModalError(context, error);
+        } finally {
+            context.commit("finishMoveElement", element_id);
         }
     }
 }

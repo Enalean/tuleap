@@ -24,6 +24,7 @@ const state: State = {
     program_increments: [],
     modal_error_message: "",
     has_modal_error: false,
+    ongoing_move_elements_id: [],
 };
 
 export default state;

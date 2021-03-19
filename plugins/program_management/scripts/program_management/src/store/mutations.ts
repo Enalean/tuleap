@@ -64,4 +64,18 @@ export default {
         state.modal_error_message = message;
         state.has_modal_error = true;
     },
+
+    startMoveElementInAProgramIncrement(state: State, program_element_id: number): void {
+        if (state.ongoing_move_elements_id.indexOf(program_element_id) !== -1) {
+            throw Error("Program element #" + program_element_id + " is already moving");
+        }
+
+        state.ongoing_move_elements_id.push(program_element_id);
+    },
+
+    finishMoveElement(state: State, ongoing_move_elements_id_id: number): void {
+        state.ongoing_move_elements_id = [...state.ongoing_move_elements_id].filter(
+            (element_id) => element_id !== ongoing_move_elements_id_id
+        );
+    },
 };

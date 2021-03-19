@@ -134,4 +134,50 @@ describe("Mutations", () => {
             expect(state.to_be_planned_elements[1]).toEqual({ artifact_id: 125 });
         });
     });
+
+    describe("startMoveElementInAProgramIncrement", () => {
+        it("When the element is not already moving, Then it is added in state", () => {
+            const state = {
+                ongoing_move_elements_id: [14],
+            } as State;
+
+            mutations.startMoveElementInAProgramIncrement(state, 536);
+            expect(state.ongoing_move_elements_id.length).toEqual(2);
+            expect(state.ongoing_move_elements_id[0]).toEqual(14);
+            expect(state.ongoing_move_elements_id[1]).toEqual(536);
+        });
+
+        it("When the element is already moving, Then error is thrown", () => {
+            const state = {
+                ongoing_move_elements_id: [536],
+            } as State;
+
+            expect(() => mutations.startMoveElementInAProgramIncrement(state, 536)).toThrowError(
+                "Program element #536 is already moving"
+            );
+        });
+    });
+
+    describe("finishMoveElement", () => {
+        it("When element is moving, Then it is deleted from state", () => {
+            const state = {
+                ongoing_move_elements_id: [536, 537],
+            } as State;
+
+            mutations.finishMoveElement(state, 536);
+            expect(state.ongoing_move_elements_id.length).toEqual(1);
+            expect(state.ongoing_move_elements_id[0]).toEqual(537);
+        });
+
+        it("When element is not moving, Then it is not deleted", () => {
+            const state = {
+                ongoing_move_elements_id: [536, 537],
+            } as State;
+
+            mutations.finishMoveElement(state, 14);
+            expect(state.ongoing_move_elements_id.length).toEqual(2);
+            expect(state.ongoing_move_elements_id[0]).toEqual(536);
+            expect(state.ongoing_move_elements_id[1]).toEqual(537);
+        });
+    });
 });

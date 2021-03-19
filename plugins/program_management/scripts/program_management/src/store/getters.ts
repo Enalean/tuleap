@@ -59,3 +59,6 @@ export const getToBePlannedElementFromId = (state: State) => (
 
     return to_be_planned_element;
 };
+
+export const hasAnElementMovedInsideIncrement = (state: State): boolean =>
+    state.ongoing_move_elements_id.length > 0;

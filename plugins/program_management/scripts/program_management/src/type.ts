@@ -44,4 +44,5 @@ export interface State {
     program_increments: ProgramIncrement[];
     modal_error_message: string;
     has_modal_error: boolean;
+    ongoing_move_elements_id: number[];
 }
