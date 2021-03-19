@@ -959,7 +959,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                         $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
                     }
                     $mapping[] = [
-                        'from'    => $from_row['id'],
+                        'from'    => (int) $from_row['id'],
                         'to'      => $id,
                         'values'  => $created_values,
                         'workflow' => $has_workflow
