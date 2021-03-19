@@ -2,8 +2,11 @@
     <h1 class="tlp-framed-horizontally">{{# dgettext }} tuleap-svn | Subversion {{/ dgettext }}</h1>
 
     <nav class="tlp-tabs">
-        <a class="tlp-tab {{# is_cache_pane_active }} tlp-tab-active {{/ is_cache_pane_active }}" href="?pane=cache">
+        <a class="tlp-tab {{# is_cache_pane_active }} tlp-tab-active {{/ is_cache_pane_active }}" href="{{ cache_display_url }}">
             {{# dgettext }} tuleap-svn |Authentication cache{{/ dgettext }}
+        </a>
+        <a class="tlp-tab  {{# is_max_file_size_pane_active }} tlp-tab-active {{/ is_max_file_size_pane_active }}" href="{{ max_file_size_display_url }}">
+            {{# dgettext }} tuleap-svn |Max file size{{/ dgettext }}
         </a>
     </nav>
 
@@ -11,5 +14,9 @@
         {{# is_cache_pane_active }}
             {{> authentication-cache-settings }}
         {{/ is_cache_pane_active }}
+
+        {{# is_max_file_size_pane_active }}
+            {{> max-file-size }}
+        {{/ is_max_file_size_pane_active }}
     </div>
 </div>

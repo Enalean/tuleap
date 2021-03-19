@@ -57,7 +57,7 @@ final class FileSizeValidator implements PathValidator
     public function assertPathIsValid(Repository $repository, string $transaction, string $path): void
     {
         try {
-            if (! ForgeConfig::exists(self::CONFIG_KEY)) {
+            if (! self::isLimitSet()) {
                 return;
             }
             $filename = $this->getFilenameFromNonDeletedPath($path);
@@ -76,6 +76,11 @@ final class FileSizeValidator implements PathValidator
             $this->logger->error($exception->getProcess()->getErrorOutput());
             throw $exception;
         }
+    }
+
+    public static function isLimitSet(): bool
+    {
+        return ForgeConfig::getInt(self::CONFIG_KEY, 0) !== 0;
     }
 
     private function getFilenameFromNonDeletedPath(string $path): ?string

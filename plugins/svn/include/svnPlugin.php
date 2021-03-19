@@ -29,6 +29,7 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\ConfigSet;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Httpd\PostRotateEvent;
@@ -120,7 +121,9 @@ use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 use Tuleap\SVN\Repository\RuleName;
 use Tuleap\SVN\Service\ServiceActivator;
+use Tuleap\SVN\SiteAdmin\DisplayMaxFileSizeController;
 use Tuleap\SVN\SiteAdmin\DisplayTuleapPMParamsController;
+use Tuleap\SVN\SiteAdmin\UpdateMaxFileSizeController;
 use Tuleap\SVN\SiteAdmin\UpdateTuleapPMParamsController;
 use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVN\SvnCoreAccess;
@@ -719,11 +722,32 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
+    public function routeDisplaySiteAdminMaxFileSize(): DispatchableWithRequest
+    {
+        return new DisplayMaxFileSizeController(
+            new AdminPageRenderer(),
+        );
+    }
+
+    public function routeUpdateSiteAdminMaxFileSize(): DispatchableWithRequest
+    {
+        return new UpdateMaxFileSizeController(
+            new ConfigSet(
+                EventManager::instance(),
+                new ConfigDao()
+            )
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
-            $r->get('/admin', $this->getRouteHandler('routeDisplaySiteAdmin'));
-            $r->post('/admin/cache', $this->getRouteHandler('routeUpdateTuleapPMParams'));
+            $r->addGroup('/admin', function (RouteCollector $r) {
+                $r->get('', $this->getRouteHandler('routeDisplaySiteAdmin'));
+                $r->post('/cache', $this->getRouteHandler('routeUpdateTuleapPMParams'));
+                $r->get('/max-file-size', $this->getRouteHandler('routeDisplaySiteAdminMaxFileSize'));
+                $r->post('/max-file-size', $this->getRouteHandler('routeUpdateSiteAdminMaxFileSize'));
+            });
             $r->get('/{project_name}/admin', $this->getRouteHandler('routeSvnAdmin'));
             $r->get('/{project_name}/admin-migrate', $this->getRouteHandler('routeDisplayMigrateFromCore'));
             $r->post('/{project_name}/admin-migrate', $this->getRouteHandler('routeUpdateMigrateFromCore'));

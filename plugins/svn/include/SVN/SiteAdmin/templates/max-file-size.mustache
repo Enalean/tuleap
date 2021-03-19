@@ -1,0 +1,33 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }} tuleap-svn |Max file size{{/ dgettext }}</h1>
+        </div>
+
+        <section class="tlp-pane-section">
+            <p>
+                {{# dgettext }} tuleap-svn |This limit will apply on all files on all svn plugin repositories.{{/ dgettext }}
+            </p>
+            <p>
+                {{# dgettext }} tuleap-svn |If a file is already bigger than the limit it can no longer be modified. It can be deleted and re-created (keep in mind the big file will stay in the history).{{/ dgettext }}
+            </p>
+            <p>
+                {{# dgettext }} tuleap-svn |0 or no value means no limits.{{/ dgettext }}
+            </p>
+            <form method="POST" action="{{ update_url }}">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+                <div class="tlp-form-element">
+                    <label for="max-file-size" class="tlp-label">{{# dgettext }} tuleap-svn |Maximum individual file size (in Megabits){{/ dgettext }}</label>
+                    <input id="max-file-size" type="number" min="0" name="max-file-size" value="{{ max_file_size }}" class="tlp-input" size="4">
+                </div>
+                <div class="tlp-pane-section-submit">
+                    <button class="tlp-button-primary" type="submit">
+                        <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }} tuleap-svn |Save settings{{/ dgettext }}
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</section>
