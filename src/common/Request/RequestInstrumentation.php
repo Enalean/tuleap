@@ -77,7 +77,12 @@ class RequestInstrumentation
         $this->prometheus->increment(
             self::COUNT_NAME,
             self::COUNT_HELP,
-            ['code' => $code, 'router' => $router, 'browser' => $detected_browser->getName() ?? 'Not identified']
+            [
+                'code' => $code,
+                'router' => $router,
+                'browser' => $detected_browser->getName() ?? 'Not identified',
+                'browser_is_outdated' => $detected_browser->isAnOutdatedBrowser() ? 'true' : 'false'
+            ]
         );
     }
 
