@@ -87,7 +87,7 @@ describe("Empty Followup", () => {
             .should("have.attr", "data-changeset-id")
             .then((id) => {
                 cy.get(`[data-test=tracker_artifact_followup_changes_${id}]`).should("exist");
-                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should("not.exist");
+                cy.get(`[data-test=tracker_artifact_followup_comment_${id}]`).should("contain", "");
             });
 
         cy.get("[data-test=artifact-follow-up]")

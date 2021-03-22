@@ -165,6 +165,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $empty_comment = Mockery::mock(Tracker_Artifact_Changeset_Comment::class);
         $empty_comment->shouldReceive('hasEmptyBody')->andReturn(true);
         $empty_comment->shouldReceive('hasEmptyBodyForUser')->andReturn(true);
+        $empty_comment->shouldReceive('fetchFollowUp')->andReturn(null);
 
         return $empty_comment;
     }
@@ -459,5 +460,44 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $follow_up_content = $changeset->fetchFollowUp("", $user);
 
         self::assertStringContainsString("<div class='tracker-followup'></div>", $follow_up_content);
+    }
+
+    public function testItGetFollowUpCommentSectionIfThereIsAtLeastFollowUpChanges(): void
+    {
+        $user = \Mockery::spy(\PFUser::class)->shouldReceive('isSuperUser')->andReturns(true)->getMock();
+
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('userIsAdmin')->with($user)->andReturns(true);
+
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $comment = $this->getEmptyComment();
+
+        $changeset = $this->buildChangeset(1234, $artifact, 101, time(), "user@example.com", $comment);
+
+        $changeset
+            ->shouldReceive("getAvatar")
+            ->once()
+            ->andReturn("<div class='tracker-avatar'></div>");
+        $changeset
+            ->shouldReceive("fetchChangesetActionButtons")
+            ->once()
+            ->andReturn("");
+        $changeset
+            ->shouldReceive("fetchImportedFromXmlData")
+            ->once()
+            ->andReturn("");
+        $changeset
+            ->shouldReceive("getUserLink")
+            ->once()
+            ->andReturn("");
+        $changeset
+            ->shouldReceive("getTimeAgo")
+            ->once()
+            ->andReturn("");
+
+        $follow_up_content = $changeset->fetchFollowUp("<div></div>", $user);
+
+        self::assertStringContainsString('<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_1234"></div>', $follow_up_content);
     }
 }
