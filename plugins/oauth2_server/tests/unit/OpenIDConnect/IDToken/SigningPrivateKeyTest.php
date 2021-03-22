@@ -79,6 +79,6 @@ final class SigningPrivateKeyTest extends TestCase
         );
 
         $this->assertEquals(self::SIGNING_PUBLIC_KEY_FINGERPRINT, $private_key->getFingerprintPublicKey());
-        $this->assertEquals(self::SIGNING_PRIVATE_KEY, $private_key->getPrivateKey()->getContent());
+        $this->assertEquals(self::SIGNING_PRIVATE_KEY, $private_key->getPrivateKey()->contents());
     }
 }

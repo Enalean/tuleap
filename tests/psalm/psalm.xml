@@ -16,6 +16,7 @@
         <directory name="plugins/*/include/" />
         <directory name="plugins/*/bin/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
+        <directory name="plugins/oauth2_server/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>
@@ -39,8 +40,10 @@
     </stubs>
 
     <plugins>
-        <plugin filename="tests/lib/Psalm/Plugin/ConcealedString/PreventConcealedStringMisuses.php" />
-        <plugin filename="tests/lib/Psalm/Plugin/NoWritableRESTRepresentation/DoNotAllowWritableRESTRepresentation.php" />
+        <plugin filename="tests/lib/Psalm/Plugin/ConcealedString/PreventConcealedStringMisuses.php"/>
+        <plugin filename="tests/lib/Psalm/Plugin/NoWritableRESTRepresentation/DoNotAllowWritableRESTRepresentation.php"/>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+        <pluginClass class="Psalm\MockeryPlugin\Plugin"/>
     </plugins>
 
     <issueHandlers>
@@ -52,7 +55,13 @@
         <DeprecatedTrait errorLevel="info" />
 
         <PropertyNotSetInConstructor errorLevel="info" />
-        <MissingConstructor errorLevel="info" />
+        <MissingConstructor errorLevel="info">
+            <errorLevel type="suppress"> <!-- See https://github.com/psalm/psalm-plugin-phpunit/issues/107 -->
+                <file name="src/vendor/phpunit/phpunit/src/Framework/TestCase.php"/>
+                <directory name="plugins/*/tests/unit/"/>
+                <directory name="tests/unit/"/>
+            </errorLevel>
+        </MissingConstructor>
 
         <RedundantCondition errorLevel="info" />
 

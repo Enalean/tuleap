@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap;
 
 use ForgeConfig;
@@ -32,7 +34,7 @@ trait ForgeConfigSandbox
     /**
      * @before
      */
-    protected function backupForgeConfig()
+    protected function backupForgeConfig(): void
     {
         ForgeConfig::store();
     }
@@ -40,7 +42,7 @@ trait ForgeConfigSandbox
     /**
      * @after
      */
-    protected function restoreForgeConfig()
+    protected function restoreForgeConfig(): void
     {
         ForgeConfig::restore();
     }
