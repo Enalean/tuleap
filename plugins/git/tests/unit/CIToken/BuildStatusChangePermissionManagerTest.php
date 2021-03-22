@@ -19,7 +19,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\CIToken;
+namespace Tuleap\Git\CIBuilds;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

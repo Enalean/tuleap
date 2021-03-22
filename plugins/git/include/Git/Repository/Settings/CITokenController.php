@@ -23,15 +23,15 @@ namespace Tuleap\Git\Repository\Settings;
 use CSRFSynchronizerToken;
 use GitRepository;
 use HTTPRequest;
-use Tuleap\Git\CIToken\BuildStatusChangePermissionManager;
-use Tuleap\Git\CIToken\Manager;
-use Tuleap\Git\GitViews\RepoManagement\Pane\GitViewsRepoManagementPaneCIToken;
+use Tuleap\Git\CIBuilds\BuildStatusChangePermissionManager;
+use Tuleap\Git\CIBuilds\CITokenManager;
+use Tuleap\Git\GitViews\RepoManagement\Pane\CIBuilds;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 
 class CITokenController extends SettingsController
 {
     /**
-     * @var Manager
+     * @var CITokenManager
      */
     private $manager;
     /**
@@ -41,7 +41,7 @@ class CITokenController extends SettingsController
 
     public function __construct(
         RepositoryFromRequestRetriever $repository_retriever,
-        Manager $manager,
+        CITokenManager $manager,
         BuildStatusChangePermissionManager $build_status_change_manager
     ) {
         parent::__construct($repository_retriever);
@@ -77,18 +77,22 @@ class CITokenController extends SettingsController
     private function checkCSRF(HTTPRequest $request)
     {
         $project_id = $request->getProject()->getID();
-        $token      = new CSRFSynchronizerToken('/plugins/git/?group_id=' . $project_id . '&pane=citoken');
+        $pane_url   = GIT_BASE_URL . '/?' . http_build_query([
+            'group_id' => $project_id,
+            'pane' => CIBuilds::ID
+        ]);
+        $token      = new CSRFSynchronizerToken($pane_url);
         $token->check();
     }
 
     private function redirect(GitRepository $repository)
     {
         $redirect_url = GIT_BASE_URL . '/?' . http_build_query([
-                'action' => 'repo_management',
-                'group_id' => $repository->getProjectId(),
-                'repo_id' => $repository->getId(),
-                'pane' => GitViewsRepoManagementPaneCIToken::ID
-            ]);
+            'action' => 'repo_management',
+            'group_id' => $repository->getProjectId(),
+            'repo_id' => $repository->getId(),
+            'pane' => CIBuilds::ID
+        ]);
 
         $GLOBALS['Response']->redirect($redirect_url);
     }

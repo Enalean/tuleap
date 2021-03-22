@@ -29,7 +29,7 @@ use GitRepositoryManager;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
-use Tuleap\Git\CIToken\Manager;
+use Tuleap\Git\CIBuilds\CITokenManager;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
@@ -69,7 +69,7 @@ class RepositoryCreator
      */
     private $history_value_formatter;
     /**
-     * @var Manager
+     * @var CITokenManager
      */
     private $ci_token_manager;
     /**
@@ -86,7 +86,7 @@ class RepositoryCreator
         FineGrainedPermissionReplicator $fine_grained_replicator,
         ProjectHistoryDao $history_dao,
         HistoryValueFormatter $history_value_formatter,
-        Manager $ci_token_manager,
+        CITokenManager $ci_token_manager,
         EventManager $event_manager
     ) {
         $this->factory                 = $factory;
