@@ -883,10 +883,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         if ($comment_content === "") {
             return null;
         }
+        $project_id = $this->getTracker()->getGroupId();
 
         $classnames    = 'tracker_artifact_followup ';
         $classnames   .= $this->getFollowUpClassnames($diff_to_previous, $user);
-        $comment_html  = '<li id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up" data-changeset-id="followup_' . $this->getId() . '">';
+        $comment_html  = '<li id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up" data-changeset-id="followup_' . $this->getId() . '" data-project-id="' . $project_id . '">';
         $comment_html .= $comment_content;
         $comment_html .= '</li>';
 

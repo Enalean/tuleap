@@ -34,6 +34,7 @@ import {
     getFormatOrDefault,
     getLocaleFromBody,
     getTextAreaValue,
+    getProjectId,
 } from "./edit-follow-up-comment-helpers";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { initMentions } from "@tuleap/mention";
@@ -52,7 +53,8 @@ document.observe("dom:loaded", function () {
             );
             edit.observe("click", function (evt) {
                 Event.stop(evt);
-                var comment_panel = $("followup_" + id).down(".tracker_artifact_followup_comment");
+                const followup_body = $("followup_" + id);
+                var comment_panel = followup_body.down(".tracker_artifact_followup_comment");
                 if (comment_panel.visible()) {
                     var textarea = new Element("textarea", {
                         id: "tracker_followup_comment_edit_" + id,
@@ -60,6 +62,7 @@ document.observe("dom:loaded", function () {
                     });
                     const format = getFormatOrDefault(document, id);
                     textarea.value = getTextAreaValue(comment_panel, format);
+                    textarea.dataset.projectId = getProjectId(followup_body);
 
                     var rteSpan = new Element("span", { style: "text-align: left;" }).update(
                         textarea
