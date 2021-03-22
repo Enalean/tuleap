@@ -62,6 +62,14 @@ export function getTextAreaValue(comment_panel: Element, format: TextFieldFormat
     return comment_body.textContent?.trim() ?? "";
 }
 
+export function getProjectId(followup_body: HTMLElement): string {
+    const project_id = followup_body.dataset.projectId;
+    if (project_id === undefined) {
+        throw new Error("Could not find the data-project-id attribute from the followup content");
+    }
+    return project_id;
+}
+
 export function createEditFollowupEditor(
     editor_factory: RichTextEditorFactory,
     textarea: HTMLElement,

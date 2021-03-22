@@ -22,6 +22,7 @@ import {
     getFormatOrDefault,
     getLocaleFromBody,
     getTextAreaValue,
+    getProjectId,
 } from "./edit-follow-up-comment-helpers";
 import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 
@@ -119,6 +120,27 @@ describe(`edit-follow-up-comment-helpers`, () => {
 
                 expect(getTextAreaValue(comment_panel, "commonmark")).toEqual("");
             });
+        });
+    });
+
+    describe(`getProjectId()`, () => {
+        it(`when the followup body has no [data-project-id], it will throw an error`, () => {
+            const followups = doc.createElement("ul");
+            const followup_body = doc.createElement("li");
+            followups.append(followup_body);
+            doc.body.append(followups);
+
+            expect(() => getProjectId(followup_body)).toThrow();
+        });
+
+        it(`will return the value of the [data-project-id] from the followup body`, () => {
+            const followups = doc.createElement("ul");
+            const followup_body = doc.createElement("li");
+            followup_body.dataset.projectId = "128";
+            followups.append(followup_body);
+            doc.body.append(followups);
+
+            expect(getProjectId(followup_body)).toEqual("128");
         });
     });
 
