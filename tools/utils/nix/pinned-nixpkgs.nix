@@ -1,5 +1,5 @@
 {}:
 
 let
-    pinnedNixpkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/04d5f1e3a87d413181af5d6dd68568228addf1c3.tar.gz") {};
+    pinnedNixpkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/8e1891d5b8d0b898db8890ddab73141f0cd3c2bc.tar.gz") {};
 in pinnedNixpkgs

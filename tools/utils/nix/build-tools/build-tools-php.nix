@@ -42,5 +42,5 @@ let
 in
 [
     php
-    php.packages.composer2
+    php.packages.composer
 ]
