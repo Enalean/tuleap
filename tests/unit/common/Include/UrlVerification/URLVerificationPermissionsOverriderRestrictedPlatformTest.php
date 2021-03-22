@@ -26,24 +26,17 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PHPUnit\Framework\TestCase;
 
-final class URLVerificationPermissionsOverriderRegularPlatformAndNoOverriderTest extends TestCase
+final class URLVerificationPermissionsOverriderRestrictedPlatformTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
     private $url_verification;
-    private $event_manager;
-    private $overrider_manager;
     private $server;
     private $user;
-    /**
-     * @var string
-     */
-    private $fixtures;
 
     protected function setUp(): void
     {
@@ -51,29 +44,20 @@ final class URLVerificationPermissionsOverriderRegularPlatformAndNoOverriderTest
 
         $this->user = \Mockery::mock(\PFUser::class);
 
-        $this->event_manager     = \Mockery::spy(\EventManager::class);
-        $this->overrider_manager = \Mockery::spy(\PermissionsOverrider_PermissionsOverriderManager::class);
+        $event_manager = \Mockery::spy(\EventManager::class);
 
         $this->url_verification = \Mockery::mock(\URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->url_verification->shouldReceive('getEventManager')->andReturns($this->event_manager);
+        $this->url_verification->shouldReceive('getEventManager')->andReturns($event_manager);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($this->user);
-        PermissionsOverrider_PermissionsOverriderManager::setInstance($this->overrider_manager);
-        $this->fixtures = dirname(__FILE__) . '/_fixtures';
-        $GLOBALS['Language']->shouldReceive('getContent')->andReturns($this->fixtures . '/empty.txt');
+        $fixtures = dirname(__FILE__) . '/_fixtures';
+        $GLOBALS['Language']->shouldReceive('getContent')->andReturns($fixtures . '/empty.txt');
 
         $this->server = ['SERVER_NAME' => 'example.com'];
 
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $this->overrider_manager->shouldReceive('doesOverriderAllowUserToAccessPlatform')->andReturns(false);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
     }
 
-    protected function tearDown(): void
-    {
-        PermissionsOverrider_PermissionsOverriderManager::clearInstance();
-        parent::tearDown();
-    }
-
-    protected function getScriptChunk(): ?string
+    private function getScriptChunk(): ?string
     {
         $this->url_verification->verifyRequest($this->server);
         $chunks = $this->url_verification->getUrlChunks();

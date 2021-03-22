@@ -71,7 +71,6 @@ $mail_builder = new MailBuilder(
     new MailFilter(
         UserManager::instance(),
         new ProjectAccessChecker(
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
             new RestrictedUserCanAccessProjectVerifier(),
             EventManager::instance()
         ),

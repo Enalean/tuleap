@@ -26,7 +26,6 @@ use EventManager;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
@@ -43,10 +42,6 @@ class ProjectAccessCheckerTest extends TestCase
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
-    /**
-     * @var Mockery\MockInterface|PermissionsOverrider_PermissionsOverriderManager
-     */
-    private $overrider;
     /**
      * @var Mockery\MockInterface|RestrictedUserCanAccessVerifier
      */
@@ -65,11 +60,10 @@ class ProjectAccessCheckerTest extends TestCase
      */
     public function createInstance(): void
     {
-        $this->overrider     = Mockery::mock(PermissionsOverrider_PermissionsOverriderManager::class);
         $this->verifier      = Mockery::mock(RestrictedUserCanAccessUrlOrProjectVerifier::class);
         $this->event_manager = Mockery::mock(EventManager::class);
 
-        $this->checker = new ProjectAccessChecker($this->overrider, $this->verifier, $this->event_manager);
+        $this->checker = new ProjectAccessChecker($this->verifier, $this->event_manager);
     }
 
     public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowRestricted(): void
@@ -93,8 +87,6 @@ class ProjectAccessCheckerTest extends TestCase
                 'getId'            => 101
             ]
         );
-
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => false]);
 
         $this->expectException(\Project_AccessRestrictedException::class);
 
@@ -123,7 +115,6 @@ class ProjectAccessCheckerTest extends TestCase
             ]
         );
 
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => false]);
         $this->verifier->shouldReceive(['isRestrictedUserAllowedToAccess' => true]);
 
         $this->checker->checkUserCanAccessProject($user, $project);
@@ -151,7 +142,6 @@ class ProjectAccessCheckerTest extends TestCase
             ]
         );
 
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => false]);
         $this->verifier->shouldReceive(['isRestrictedUserAllowedToAccess' => false]);
 
         $this->expectException(\Project_AccessRestrictedException::class);
@@ -261,8 +251,6 @@ class ProjectAccessCheckerTest extends TestCase
             ]
         );
 
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => false]);
-
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -287,8 +275,6 @@ class ProjectAccessCheckerTest extends TestCase
                 'allowsRestricted' => false
             ]
         );
-
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => false]);
 
         $this->expectException(Project_AccessRestrictedException::class);
 
@@ -342,7 +328,6 @@ class ProjectAccessCheckerTest extends TestCase
             ]
         );
 
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => false]);
         $this->event_manager->shouldReceive('processEvent');
 
         $this->expectException(Project_AccessPrivateException::class);
@@ -373,37 +358,7 @@ class ProjectAccessCheckerTest extends TestCase
             ]
         );
 
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => false]);
-
         $this->expectException(Project_AccessRestrictedException::class);
-
-        $this->checker->checkUserCanAccessProject($user, $project);
-    }
-
-    public function testItAllowsRestrictedUsersToAccessProjectsTheyAreNotMemberOfButOverriderAllowsTo(): void
-    {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive(
-            [
-                'isMember'     => false,
-                'isRestricted' => true,
-                'isSuperUser'  => false,
-                'isAnonymous'  => false,
-            ]
-        );
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive(
-            [
-                'getID'            => 110,
-                'isPublic'         => true,
-                'isActive'         => true,
-                'isError'          => false,
-                'allowsRestricted' => false
-            ]
-        );
-
-        $this->overrider->shouldReceive(['doesOverriderAllowUserToAccessProject' => true]);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -526,7 +481,6 @@ class ProjectAccessCheckerTest extends TestCase
             ]
         );
 
-        $this->overrider->shouldReceive('doesOverriderAllowUserToAccessProject')->andReturn(false);
         $this->event_manager->shouldReceive('processEvent')->withArgs(
             static function (DelegatedUserAccessForProject $event): bool {
                 $event->enableAccessToProjectToTheUser();
@@ -574,8 +528,6 @@ class ProjectAccessCheckerTest extends TestCase
                 'isError'   => false,
             ]
         );
-        $this->overrider->shouldReceive('doesOverriderAllowUserToAccessProject')->andReturn(false);
-
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 }

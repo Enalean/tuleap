@@ -44,7 +44,6 @@ if ($request->exist('wsdl')) {
         ProjectManager::instance(),
         $user_manager,
         new ProjectAccessChecker(
-            new PermissionsOverrider_PermissionsOverriderManager(),
             new RestrictedUserCanAccessProjectVerifier(),
             EventManager::instance()
         )

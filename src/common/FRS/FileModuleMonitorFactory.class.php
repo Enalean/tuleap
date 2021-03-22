@@ -280,7 +280,6 @@ class FileModuleMonitorFactory
             new MailFilter(
                 UserManager::instance(),
                 new ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
                 ),
@@ -321,7 +320,6 @@ class FileModuleMonitorFactory
             new MailFilter(
                 UserManager::instance(),
                 new ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
                 ),

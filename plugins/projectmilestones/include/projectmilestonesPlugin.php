@@ -112,7 +112,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         }
 
         $project_milestones_widget_retriever = new ProjectMilestonesWidgetRetriever(
-            new ProjectAccessChecker(PermissionsOverrider_PermissionsOverriderManager::instance(), new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
+            new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
             ProjectManager::instance(),
             new ProjectMilestonesDao(),
             $this->getRenderer(),

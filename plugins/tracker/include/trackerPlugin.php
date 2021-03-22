@@ -2375,7 +2375,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new MailFilter(
                     UserManager::instance(),
                     new ProjectAccessChecker(
-                        PermissionsOverrider_PermissionsOverriderManager::instance(),
                         new RestrictedUserCanAccessProjectVerifier(),
                         EventManager::instance()
                     ),

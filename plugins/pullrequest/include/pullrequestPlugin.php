@@ -381,7 +381,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return new PullRequestPermissionChecker(
             $this->getRepositoryFactory(),
             new \Tuleap\Project\ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             ),

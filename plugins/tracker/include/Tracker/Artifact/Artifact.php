@@ -32,7 +32,6 @@ use Feedback;
 use ForgeConfig;
 use MustacheRenderer;
 use PermissionsManager;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use ProjectManager;
 use Recent_Element_Interface;
@@ -296,7 +295,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $permission_checker = new Tracker_Permission_PermissionChecker(
             $user_manager,
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             )

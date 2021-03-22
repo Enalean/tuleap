@@ -124,7 +124,6 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         if (! isset(self::$_instance)) {
             $project_access_checker = new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             );

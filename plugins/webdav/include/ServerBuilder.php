@@ -25,7 +25,6 @@ namespace Tuleap\WebDAV;
 
 use BrowserPlugin;
 use ForgeConfig;
-use PermissionsOverrider_PermissionsOverriderManager;
 use Sabre\DAV\Locks\Plugin;
 use Sabre\DAV\Server;
 use Tuleap\Project\ProjectAccessChecker;
@@ -71,7 +70,6 @@ final class ServerBuilder
             \WebDAVUtils::getInstance(),
             \PluginManager::instance(),
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance(),
             )

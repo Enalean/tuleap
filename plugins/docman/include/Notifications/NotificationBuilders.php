@@ -29,7 +29,6 @@ use Docman_NotificationsManager_Subscribers;
 use EventManager;
 use HTTPRequest;
 use MailBuilder;
-use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
@@ -149,7 +148,6 @@ class NotificationBuilders
             new MailFilter(
                 UserManager::instance(),
                 new ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
                 ),

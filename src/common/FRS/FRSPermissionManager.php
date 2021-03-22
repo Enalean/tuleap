@@ -21,7 +21,6 @@
 namespace Tuleap\FRS;
 
 use EventManager;
-use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
 use PFUser;
 use Tuleap\Project\ProjectAccessChecker;
@@ -57,7 +56,6 @@ class FRSPermissionManager
             new FRSPermissionDao(),
             new FRSPermissionFactory(new FRSPermissionDao()),
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             )

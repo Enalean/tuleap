@@ -27,7 +27,6 @@ use HTTPRequest;
 use MailBuilder;
 use MailEnhancer;
 use MailNotificationBuilder;
-use PermissionsOverrider_PermissionsOverriderManager;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use trackerPlugin;
@@ -99,7 +98,6 @@ class MailSender
                 new MailFilter(
                     UserManager::instance(),
                     new ProjectAccessChecker(
-                        PermissionsOverrider_PermissionsOverriderManager::instance(),
                         new RestrictedUserCanAccessProjectVerifier(),
                         EventManager::instance()
                     ),

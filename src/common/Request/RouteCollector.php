@@ -31,7 +31,6 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use MailingListDao;
 use MailManager;
-use PermissionsOverrider_PermissionsOverriderManager;
 use ProjectHistoryDao;
 use ProjectManager;
 use ReferenceManager;
@@ -840,7 +839,6 @@ class RouteCollector
             ),
             new HeaderNavigationDisplayer(),
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             )

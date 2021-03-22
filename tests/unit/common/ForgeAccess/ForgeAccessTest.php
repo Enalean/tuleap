@@ -22,59 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\ForgeAccess;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\GlobalLanguageMock;
 
 class ForgeAccessTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
-    use GlobalLanguageMock;
 
-    private $permissions_overrider_manager;
-
-    protected function setUp(): void
+    public function testLoginIsNotRequiredWhenAnonymousAreAllowed(): void
     {
-        $this->permissions_overrider_manager = \Mockery::mock(\PermissionsOverrider_PermissionsOverriderManager::class);
-        \PermissionsOverrider_PermissionsOverriderManager::setInstance($this->permissions_overrider_manager);
-    }
-
-    protected function tearDown(): void
-    {
-        \PermissionsOverrider_PermissionsOverriderManager::clearInstance();
-    }
-
-    public function testLoginIsNotRequiredWhenAnonymousAreAllowedAndThereIsNoPermissionOverride(): void
-    {
-        $forge_access = new \ForgeAccess($this->permissions_overrider_manager);
+        $forge_access = new \ForgeAccess();
 
         \ForgeConfig::set(\ForgeAccess::CONFIG, \ForgeAccess::ANONYMOUS);
-        $this->permissions_overrider_manager->shouldReceive('doesOverriderForceUsageOfAnonymous')->andReturns(false);
 
-        $this->assertFalse($forge_access->doesPlatformRequireLogin());
+        self::assertFalse($forge_access->doesPlatformRequireLogin());
     }
 
-    public function testLoginIsRequiredWhenAnonymousAreNotAllowedAndThereIsNoPermissionOverride(): void
+    public function testLoginIsRequiredWhenAnonymousAreNotAllowed(): void
     {
-        $forge_access = new \ForgeAccess($this->permissions_overrider_manager);
+        $forge_access = new \ForgeAccess();
 
         \ForgeConfig::set(\ForgeAccess::CONFIG, \ForgeAccess::REGULAR);
-        $this->permissions_overrider_manager->shouldReceive('doesOverriderForceUsageOfAnonymous')->andReturns(false);
-        $this->permissions_overrider_manager->shouldReceive('doesOverriderAllowUserToAccessPlatform')->andReturns(false);
 
-        $this->assertTrue($forge_access->doesPlatformRequireLogin());
-    }
-
-    public function testLoginRequirementCanBeOverriddenByThePermissionOverrider(): void
-    {
-        $forge_access = new \ForgeAccess($this->permissions_overrider_manager);
-
-        \ForgeConfig::set(\ForgeAccess::CONFIG, \ForgeAccess::REGULAR);
-        $this->permissions_overrider_manager->shouldReceive('doesOverriderForceUsageOfAnonymous')->andReturns(false);
-        $this->permissions_overrider_manager->shouldReceive('doesOverriderAllowUserToAccessPlatform')->andReturns(true);
-
-        $this->assertFalse($forge_access->doesPlatformRequireLogin());
+        self::assertTrue($forge_access->doesPlatformRequireLogin());
     }
 }

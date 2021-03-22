@@ -391,7 +391,6 @@ class FRSReleaseFactory
         }
 
         $project_access_checker = new ProjectAccessChecker(
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
             new RestrictedUserCanAccessProjectVerifier(),
             EventManager::instance()
         );
@@ -561,7 +560,6 @@ class FRSReleaseFactory
             new MailFilter(
                 UserManager::instance(),
                 new ProjectAccessChecker(
-                    PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
                 ),

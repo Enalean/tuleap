@@ -1785,7 +1785,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         $permission_checker = new Tracker_Permission_PermissionChecker(
             $user_manager,
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             )

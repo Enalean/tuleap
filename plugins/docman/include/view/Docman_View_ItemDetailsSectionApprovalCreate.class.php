@@ -65,7 +65,6 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                     new MailFilter(
                         UserManager::instance(),
                         new ProjectAccessChecker(
-                            PermissionsOverrider_PermissionsOverriderManager::instance(),
                             new RestrictedUserCanAccessProjectVerifier(),
                             EventManager::instance()
                         ),

@@ -24,7 +24,6 @@ namespace Tuleap\Project;
 
 use EventManager;
 use ForgeConfig;
-use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use Project;
 use Project_AccessDeletedException;
@@ -35,10 +34,6 @@ use Project_AccessRestrictedException;
 class ProjectAccessChecker
 {
     /**
-     * @var PermissionsOverrider_PermissionsOverriderManager
-     */
-    private $permissions_overrider_manager;
-    /**
      * @var RestrictedUserCanAccessVerifier
      */
     private $verifier;
@@ -48,13 +43,11 @@ class ProjectAccessChecker
     private $event_manager;
 
     public function __construct(
-        PermissionsOverrider_PermissionsOverriderManager $permissions_overrider_manager,
         RestrictedUserCanAccessVerifier $verifier,
         EventManager $event_manager
     ) {
-        $this->permissions_overrider_manager = $permissions_overrider_manager;
-        $this->verifier                      = $verifier;
-        $this->event_manager                 = $event_manager;
+        $this->verifier      = $verifier;
+        $this->event_manager = $event_manager;
     }
 
     /**
@@ -94,10 +87,6 @@ class ProjectAccessChecker
             ) {
                 throw new Project_AccessProjectNotFoundException(_('Project does not exist'));
             }
-            return;
-        }
-
-        if ($this->permissions_overrider_manager->doesOverriderAllowUserToAccessProject($user, $project)) {
             return;
         }
 

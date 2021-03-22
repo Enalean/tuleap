@@ -42,24 +42,9 @@ class ForgeAccess
     public const REGULAR    = 'regular';
     public const RESTRICTED = 'restricted';
 
-    /**
-     * @var PermissionsOverrider_PermissionsOverriderManager
-     */
-    private $permissions_overrider_manager;
-
-    public function __construct(PermissionsOverrider_PermissionsOverriderManager $permissions_overrider_manager)
-    {
-        $this->permissions_overrider_manager = $permissions_overrider_manager;
-    }
-
     public function doesPlatformRequireLogin(): bool
     {
-        if (ForgeConfig::areAnonymousAllowed() && ! $this->permissions_overrider_manager->doesOverriderForceUsageOfAnonymous()) {
-            return false;
-        }
-
-        $anonymous_user = new PFUser(['user_id' => 0]);
-        if ($this->permissions_overrider_manager->doesOverriderAllowUserToAccessPlatform($anonymous_user)) {
+        if (ForgeConfig::areAnonymousAllowed()) {
             return false;
         }
 

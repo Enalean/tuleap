@@ -481,7 +481,6 @@ final class program_managementPlugin extends Plugin
     {
         $project_manager        = ProjectManager::instance();
         $project_access_checker = new ProjectAccessChecker(
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
@@ -514,7 +513,6 @@ final class program_managementPlugin extends Plugin
     {
         $project_manager        = ProjectManager::instance();
         $project_access_checker = new ProjectAccessChecker(
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
@@ -575,7 +573,6 @@ final class program_managementPlugin extends Plugin
     private function getTopBacklogChangeProcessor(): TopBacklogChangeProcessor
     {
         $project_access_checker = new ProjectAccessChecker(
-            PermissionsOverrider_PermissionsOverriderManager::instance(),
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
@@ -787,7 +784,6 @@ final class program_managementPlugin extends Plugin
         return new ProgramAdapter(
             ProjectManager::instance(),
             new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
