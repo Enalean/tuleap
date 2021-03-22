@@ -262,7 +262,7 @@ class WikiEntry
             );
             return false;
         } else {
-            if (db_affected_rows() === 0) {
+            if (db_affected_rows($res) === 0) {
                    $feedback .= $GLOBALS['Language']->getText(
                        'wiki_lib_wikientry',
                        'no_update',
