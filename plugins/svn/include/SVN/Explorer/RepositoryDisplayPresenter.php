@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\Explorer;
 
+use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Repository\Repository;
 
 class RepositoryDisplayPresenter
@@ -32,6 +33,10 @@ class RepositoryDisplayPresenter
     public $is_repository_created;
     public $help_command;
     public $help_message;
+    /**
+     * @var string
+     */
+    public $max_file_size = '';
 
     public function __construct(
         Repository $repository,
@@ -45,6 +50,10 @@ class RepositoryDisplayPresenter
 
         $this->help_message           = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
         $this->repository_not_created = dgettext('tuleap-svn', 'The repository is in queue for creation. Please check back here in a few minutes');
+
+        if (FileSizeValidator::isLimitSet()) {
+            $this->max_file_size = (string) \ForgeConfig::getInt(FileSizeValidator::CONFIG_KEY);
+        }
     }
 
     public function repository_name() //phpcs:ignore

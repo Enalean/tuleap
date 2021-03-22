@@ -66,8 +66,9 @@ final class FileSizeValidator implements PathValidator
             }
             $size = $this->svnlook->getFileSize($repository, $transaction, $filename);
             $this->logger->debug("Computed size for $filename: $size");
-            if ($size > ForgeConfig::getInt(self::CONFIG_KEY)) {
-                throw new CommittedFileTooLargeException($filename, $size);
+            $limit = $this->getLimitInBytes();
+            if ($size > $limit) {
+                throw new CommittedFileTooLargeException($filename, $size, $limit);
             }
         } catch (ProcessFailedException $exception) {
             if (str_starts_with($exception->getProcess()->getErrorOutput(), self::SVNLOOK_ERROR_IS_NOT_FILE)) {
@@ -76,6 +77,11 @@ final class FileSizeValidator implements PathValidator
             $this->logger->error($exception->getProcess()->getErrorOutput());
             throw $exception;
         }
+    }
+
+    private function getLimitInBytes(): int
+    {
+        return ForgeConfig::getInt(self::CONFIG_KEY) * 1024 * 1024;
     }
 
     public static function isLimitSet(): bool

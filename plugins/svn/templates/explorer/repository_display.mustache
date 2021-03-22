@@ -11,12 +11,17 @@
     </div>
 
     <div id="svn-repository-viewvc" data-test="svn-repository-view">
-        <div id="svn-repository-help" class="alert alert-info">
-            <p>{{ help_message }}</p>
-
-            <div class="svn-intro-command">
-                <pre>{{ help_command }}</pre>
+        <div id="svn-repository-help">
+            <div class="alert alert-info">
+                <p>{{ help_message }}</p>
+                <div class="svn-intro-command">
+                    <pre>{{ help_command }}</pre>
+                </div>
             </div>
+
+            {{# max_file_size }}
+                <p class="alert alert-info">{{# dgettext }} tuleap-svn |Site administrator defined a limit on allowed file size. One can no longer commit files bigger than %1$sMB|{{ max_file_size }}{{/ dgettext }}</p>
+            {{/ max_file_size }}
         </div>
 
         {{# is_repository_created }}

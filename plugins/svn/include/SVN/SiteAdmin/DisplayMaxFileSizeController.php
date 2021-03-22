@@ -59,24 +59,17 @@ final class DisplayMaxFileSizeController implements DispatchableWithRequest, Dis
             'admin',
             new MaxFileSizePresenter(
                 self::getCSRFToken(),
-                $this->getMaxFileSizeInMegabits(),
+                $this->getMaxFileSize(),
             )
         );
     }
 
-    private function getMaxFileSizeInMegabits(): ?float
+    private function getMaxFileSize(): ?int
     {
         if (! FileSizeValidator::isLimitSet()) {
             return null;
-        } else {
-            return $this->byteToMegabits(ForgeConfig::getInt(FileSizeValidator::CONFIG_KEY));
         }
-    }
-
-
-    private function byteToMegabits(int $value): float
-    {
-        return floor($value) / 1024 / 1024;
+        return ForgeConfig::getInt(FileSizeValidator::CONFIG_KEY);
     }
 
     public static function getCSRFToken(): CSRFSynchronizerToken

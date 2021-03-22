@@ -54,7 +54,7 @@ final class UpdateMaxFileSizeController implements DispatchableWithRequest
         DisplayMaxFileSizeController::getCSRFToken()->check();
 
         try {
-            $this->config_set->set(FileSizeValidator::CONFIG_KEY, (string) $this->megabitsToBytes((int) $request->get('max-file-size')));
+            $this->config_set->set(FileSizeValidator::CONFIG_KEY, (string) $request->getValidated('max-file-size', 'uint', 0));
             $layout->addFeedback(
                 Feedback::INFO,
                 dgettext('tuleap-svn', 'Your settings have been successfully saved.')
@@ -66,10 +66,5 @@ final class UpdateMaxFileSizeController implements DispatchableWithRequest
             );
         }
         $layout->redirect(DisplayMaxFileSizeController::URL);
-    }
-
-    private function megabitsToBytes(int $value): int
-    {
-        return $value * 1024 * 1024;
     }
 }

@@ -83,9 +83,9 @@ final class FileSizeValidatorTest extends TestCase
 
     public function testItBlockCommitWhenFileSizeIsUnderLimit(): void
     {
-        ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '100');
+        ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '1');
 
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->andReturn(150);
+        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->andReturn(2097152);
 
         $this->expectException(CommittedFileTooLargeException::class);
 

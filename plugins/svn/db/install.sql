@@ -87,3 +87,5 @@ CREATE TABLE plugin_svn_last_access (
   repository_id INT(11) UNSIGNED PRIMARY KEY,
   commit_date INT(11) UNSIGNED NOT NULL
 );
+
+INSERT INTO forgeconfig(name, value) VALUES ('plugin_svn_file_size_limit', '50');

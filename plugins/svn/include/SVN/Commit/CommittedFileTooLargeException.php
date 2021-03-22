@@ -25,8 +25,8 @@ namespace Tuleap\SVN\Commit;
 
 final class CommittedFileTooLargeException extends \Exception
 {
-    public function __construct(string $filepath, int $filesize)
+    public function __construct(string $filepath, int $filesize, int $limit)
     {
-        parent::__construct(sprintf('`%s` file size is %d bytes. Allowed limit is %d bytes.', $filepath, $filesize, \ForgeConfig::getInt(FileSizeValidator::CONFIG_KEY)));
+        parent::__construct(sprintf('`%s` file size is %d bytes. Allowed limit is %d bytes.', $filepath, $filesize, $limit));
     }
 }

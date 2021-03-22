@@ -45,7 +45,7 @@ final class MaxFileSizePresenter extends AdminPresenter
      */
     public $max_file_size = '';
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, ?float $max_file_size)
+    public function __construct(CSRFSynchronizerToken $csrf_token, ?int $max_file_size)
     {
         $this->csrf_token = $csrf_token;
         if ($max_file_size !== null) {

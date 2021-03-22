@@ -19,8 +19,8 @@
                     {{> csrf_token_input }}
                 {{/ csrf_token }}
                 <div class="tlp-form-element">
-                    <label for="max-file-size" class="tlp-label">{{# dgettext }} tuleap-svn |Maximum individual file size (in Megabits){{/ dgettext }}</label>
-                    <input id="max-file-size" type="number" min="0" name="max-file-size" value="{{ max_file_size }}" class="tlp-input" size="4">
+                    <label for="max-file-size" class="tlp-label">{{# dgettext }} tuleap-svn |Maximum individual file size (in Megabytes){{/ dgettext }}</label>
+                    <input id="max-file-size" type="number" min="0" name="max-file-size" value="{{ max_file_size }}" class="tlp-input" size="4"placeholder="50">
                 </div>
                 <div class="tlp-pane-section-submit">
                     <button class="tlp-button-primary" type="submit">
