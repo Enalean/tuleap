@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer;
 
+use Project_AccessException;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
@@ -67,7 +68,7 @@ class ReviewerRetriever
             try {
                 $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($pull_request, $reviewer);
                 $users[] = $reviewer;
-            } catch (UserCannotReadGitRepositoryException $exception) {
+            } catch (\GitRepoNotFoundException | Project_AccessException | UserCannotReadGitRepositoryException $exception) {
             }
         }
 

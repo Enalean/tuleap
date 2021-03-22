@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer;
 
+use GitRepoNotFoundException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project_AccessException;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
@@ -100,6 +102,46 @@ final class ReviewerRetrieverTest extends TestCase
         $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row)->andReturn($user);
 
         $this->permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrow(new UserCannotReadGitRepositoryException());
+
+        $pr = Mockery::mock(PullRequest::class);
+        $pr->shouldReceive('getId')->andReturn(13);
+        $reviewers = $this->retriever->getReviewers($pr);
+
+        $this->assertEmpty($reviewers);
+    }
+
+    public function testUsersNotAbleToAccessTheProjectAreNotAddedToTheReviewerList(): void
+    {
+        $user_row = ['user_id' => 149];
+        $this->dao->shouldReceive('searchReviewers')->andReturn([$user_row]);
+
+        $user = Mockery::mock(\PFUser::class);
+        $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row)->andReturn($user);
+
+        $this->permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
+            ->andThrow(
+                new class extends Project_AccessException
+                {
+                }
+            );
+
+        $pr = Mockery::mock(PullRequest::class);
+        $pr->shouldReceive('getId')->andReturn(13);
+        $reviewers = $this->retriever->getReviewers($pr);
+
+        $this->assertEmpty($reviewers);
+    }
+
+    public function testUsersNotAbleToAccessTheGitRepositoryAreNotAddedToTheReviewerList(): void
+    {
+        $user_row = ['user_id' => 149];
+        $this->dao->shouldReceive('searchReviewers')->andReturn([$user_row]);
+
+        $user = Mockery::mock(\PFUser::class);
+        $this->user_manager->shouldReceive('getUserInstanceFromRow')->with($user_row)->andReturn($user);
+
+        $this->permission_checker->shouldReceive('checkPullRequestIsReadableByUser')
+            ->andThrow(GitRepoNotFoundException::class);
 
         $pr = Mockery::mock(PullRequest::class);
         $pr->shouldReceive('getId')->andReturn(13);
