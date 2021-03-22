@@ -38,7 +38,8 @@ use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 class TrackerFactory
 {
 
-    public const LEGACY_SUFFIX = '_from_tv3';
+    public const LEGACY_SUFFIX       = '_from_tv3';
+    public const TRACKER_MAPPING_KEY = 'plugin_tracker_tracker';
 
     /** @var array of Tracker */
     protected $trackers;
@@ -550,6 +551,8 @@ class TrackerFactory
         }
 
         if (! empty($tracker_mapping)) {
+            $mapping_registry->setCustomMapping(self::TRACKER_MAPPING_KEY, $tracker_mapping);
+
             $hierarchy_factory = $this->getHierarchyFactory();
             $hierarchy_factory->duplicate($tracker_mapping);
 
