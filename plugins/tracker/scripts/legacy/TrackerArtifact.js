@@ -30,10 +30,6 @@ var tuleap = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
 codendi.tracker.artifact.editor = {
-    disableWarnOnPageLeave: function () {
-        window.onbeforeunload = function () {};
-    },
-
     warnOnPageLeave: function () {
         if (
             "tracker" in tuleap &&
