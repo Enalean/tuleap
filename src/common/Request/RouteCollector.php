@@ -43,9 +43,10 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\HelpDropdown\AdminReleaseNoteLinkController;
 use Tuleap\admin\HelpDropdown\PostAdminReleaseNoteLinkController;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
-use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
-use Tuleap\Admin\ProjectCreation\ProjectFieldsUpdateController;
-use Tuleap\Admin\ProjectCreation\ProjectsFieldDescriptionUpdater;
+use Tuleap\admin\ProjectCreation\ProjectFields\ProjectFieldsDao;
+use Tuleap\Admin\ProjectCreation\ProjetFields\ProjectFieldsDisplayController;
+use Tuleap\Admin\ProjectCreation\ProjetFields\ProjectFieldsUpdateController;
+use Tuleap\Admin\ProjectCreation\ProjetFields\ProjectsFieldDescriptionUpdater;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigDisplayController;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigUpdateController;
@@ -268,7 +269,8 @@ class RouteCollector
             new ProjectsFieldDescriptionUpdater(
                 new \Project_CustomDescription_CustomDescriptionDao(),
                 new ConfigDao()
-            )
+            ),
+            new ProjectFieldsDao()
         );
     }
 

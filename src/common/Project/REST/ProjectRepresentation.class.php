@@ -42,22 +42,37 @@ class ProjectRepresentation extends MinimalProjectRepresentation
      */
     public $is_member_of;
 
-    private function __construct(Project $project, bool $is_member_of, array $resources, array $informations)
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var array
+     */
+    public $additional_fields;
+
+
+    private function __construct(Project $project, bool $is_member_of, array $resources, array $informations, array $project_field_representations, string $description)
     {
         parent::__construct($project);
         $this->is_member_of            = $is_member_of;
         $this->resources               = $resources;
         $this->additional_informations = $informations;
+        $this->additional_fields       = $project_field_representations;
+        $this->description             = $description;
     }
 
 
-    public static function build(Project $project, PFUser $user, array $resources, array $informations): self
+    public static function build(Project $project, PFUser $user, array $resources, array $informations, array $project_field_representations): self
     {
         return new self(
             $project,
             JsonCast::toBoolean(self::isProjectMember($user, $project)),
             $resources,
-            $informations
+            $informations,
+            $project_field_representations,
+            $project->getDescription()
         );
     }
 

@@ -429,8 +429,22 @@ class ProjectTest extends ProjectBase
         $this->assertArrayHasKey('label', $json_project);
         $this->assertEquals('Private member', $json_project['label']);
 
+        $this->assertArrayHasKey('description', $json_project);
+        $this->assertEquals("For test", $json_project['description']);
+
         $this->assertEquals($response->getStatusCode(), 200);
     }
+
+    public function testGETbyIdForAdminProjectReturnAdditionalField()
+    {
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/' . REST_TestDataBuilder::ADMIN_PROJECT_ID));
+
+        $json_project = $response->json();
+
+        $this->assertArrayHasKey('additional_fields', $json_project);
+        $this->assertEquals([["name" => "Test Rest", "value" => "Admin test"]], $json_project['additional_fields']);
+    }
+
 
     public function testGETbyIdForDelegatedRestProjectManager()
     {

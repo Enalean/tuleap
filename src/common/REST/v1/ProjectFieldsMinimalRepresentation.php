@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +13,28 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ . '/../vendor/autoload.php';
+declare(strict_types=1);
 
-$data_builder = new REST_TestDataBuilder();
-$data_builder
-    ->instanciateFactories()
-    ->generateUsers()
-    ->delegateForgePermissions()
-    ->deleteTracker()
-    ->deleteProject()
-    ->suspendProject()
-    ->createProjectField();
+namespace Tuleap\REST\v1;
+
+class ProjectFieldsMinimalRepresentation
+{
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var string
+     */
+    public $value;
+
+    public function __construct(string $name, string $value)
+    {
+        $this->name  = $name;
+        $this->value = $value;
+    }
+}

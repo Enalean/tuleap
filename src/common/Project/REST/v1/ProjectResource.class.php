@@ -81,6 +81,7 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
+use Tuleap\REST\v1\ProjectFieldsMinimalRepresentation;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
 use TuleapRegisterMail;
@@ -501,12 +502,26 @@ class ProjectResource extends AuthenticatedResource
             ]
         );
 
+        $project_field_representations = $this->getAdditionalFields($project);
+
         return ProjectRepresentation::build(
             $project,
             $this->user_manager->getCurrentUser(),
             $resources,
-            $informations
+            $informations,
+            $project_field_representations
         );
+    }
+
+    private function getFieldValue(array $project_custom_fields, array $custom_field): string
+    {
+        foreach ($project_custom_fields as $project_field) {
+            if ($project_field['group_desc_id'] == $custom_field['group_desc_id']) {
+                return $project_field['value'];
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -1155,6 +1170,11 @@ class ProjectResource extends AuthenticatedResource
         return BackendLogger::getDefaultLogger();
     }
 
+    private function getDescriptionFieldsFactory(): DescriptionFieldsFactory
+    {
+        return new DescriptionFieldsFactory(new DescriptionFieldsDao());
+    }
+
     private function getRestProjectCreator(): RestProjectCreator
     {
         return new RestProjectCreator(
@@ -1185,5 +1205,29 @@ class ProjectResource extends AuthenticatedResource
                 ProjectXMLImporter::getLogger(),
             )
         );
+    }
+
+    /**
+     * @return ProjectFieldsMinimalRepresentation[]
+     */
+    private function getAdditionalFields(Project $project): array
+    {
+        $description_fields_infos = $this->getDescriptionFieldsFactory()->getAllDescriptionFields();
+        $fields_values            = $project->getProjectsDescFieldsValue();
+
+        $values = [];
+        foreach ($description_fields_infos as $description_fields_info) {
+            $values[$description_fields_info["desc_name"]] = $this->getFieldValue(
+                $fields_values,
+                $description_fields_info
+            );
+        }
+
+        $project_field_representations = [];
+        foreach ($values as $key => $value) {
+            $project_field_representations[] = new ProjectFieldsMinimalRepresentation($key, $value);
+        }
+
+        return $project_field_representations;
     }
 }
