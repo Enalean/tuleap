@@ -17,7 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { RichTextEditorFactory } from "./RichTextEditorFactory";
-export type { RichTextEditorOptions } from "./types";
-export type { TextEditorInterface } from "./TextEditorInterface";
-import "../themes/style.css";
+import type { TextFieldFormat } from "../../../../../constants/fields-constants";
+
+export interface EditorAreaStateInterface {
+    readonly selectbox_id: string;
+    readonly selectbox_name?: string;
+    readonly current_format: TextFieldFormat;
+    readonly textarea: HTMLTextAreaElement;
+    readonly mount_point: HTMLDivElement;
+
+    isInEditMode(): boolean;
+    isCurrentFormatCommonMark(): boolean;
+    switchToPreviewMode(): void;
+    switchToEditMode(): void;
+    changeFormat(new_format: TextFieldFormat): void;
+}

@@ -20,9 +20,11 @@
 import type { TextFieldFormat } from "../../../../../constants/fields-constants";
 import { TEXT_FORMAT_COMMONMARK } from "../../../../../constants/fields-constants";
 import type { FormatChangedCallback, FormatSelectorPresenter } from "../FormatSelectorInterface";
+import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
 
-export class EditorAreaState {
-    public selected_value: TextFieldFormat;
+export class EditorAreaState implements EditorAreaStateInterface {
+    private is_in_preview_mode = false;
+    public current_format: TextFieldFormat;
     public readonly selectbox_id: string;
     public readonly selectbox_name?: string;
     private readonly presenterOnFormatChangedCallback: FormatChangedCallback;
@@ -34,16 +36,28 @@ export class EditorAreaState {
     ) {
         this.selectbox_id = presenter.id;
         this.selectbox_name = presenter.name;
-        this.selected_value = presenter.selected_value;
+        this.current_format = presenter.selected_value;
         this.presenterOnFormatChangedCallback = presenter.formatChangedCallback;
     }
 
-    public isCurrentFormatMarkdown(): boolean {
-        return this.selected_value === TEXT_FORMAT_COMMONMARK;
+    public isCurrentFormatCommonMark(): boolean {
+        return this.current_format === TEXT_FORMAT_COMMONMARK;
     }
 
-    public onFormatChange(new_format: TextFieldFormat): void {
-        this.selected_value = new_format;
+    public changeFormat(new_format: TextFieldFormat): void {
+        this.current_format = new_format;
         this.presenterOnFormatChangedCallback(new_format);
+    }
+
+    public isInEditMode(): boolean {
+        return !this.is_in_preview_mode;
+    }
+
+    public switchToPreviewMode(): void {
+        this.is_in_preview_mode = true;
+    }
+
+    public switchToEditMode(): void {
+        this.is_in_preview_mode = false;
     }
 }

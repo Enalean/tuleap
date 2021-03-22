@@ -25,6 +25,10 @@ import {
 import { EditorAreaState } from "./EditorAreaState";
 import type { FormatSelectorPresenter } from "../FormatSelectorInterface";
 
+const emptyFunction = (): void => {
+    //Do nothing
+};
+
 describe(`EditorAreaState`, () => {
     let mount_point: HTMLDivElement,
         textarea: HTMLTextAreaElement,
@@ -33,36 +37,37 @@ describe(`EditorAreaState`, () => {
         const doc = document.implementation.createHTMLDocument();
         mount_point = doc.createElement("div");
         textarea = doc.createElement("textarea");
+
         presenter = {
             id: "selectbox_id",
             name: "selectbox_name",
             selected_value: TEXT_FORMAT_COMMONMARK,
-            formatChangedCallback: jest.fn(),
+            formatChangedCallback: emptyFunction,
         };
     });
 
-    describe(`isCurrentFormatMarkdown()`, () => {
+    describe(`isCurrentFormatCommonMark()`, () => {
         it.each([
             [TEXT_FORMAT_TEXT, false],
             [TEXT_FORMAT_HTML, false],
             [TEXT_FORMAT_COMMONMARK, true],
-        ])(
-            `when the current selected value is %s, it will return %s`,
-            (selected_value, expected_value) => {
-                presenter.selected_value = selected_value;
-                const state = new EditorAreaState(mount_point, textarea, presenter);
-                expect(state.isCurrentFormatMarkdown()).toBe(expected_value);
-            }
-        );
+        ])(`when the current format is %s, it will return %s`, (current_format, expected_value) => {
+            const state = new EditorAreaState(mount_point, textarea, presenter);
+            state.current_format = current_format;
+            expect(state.isCurrentFormatCommonMark()).toBe(expected_value);
+        });
     });
 
-    describe(`onFormatChange()`, () => {
-        it(`will change the selected value to the new format
+    describe(`changeFormat()`, () => {
+        it(`will change the current format to the given new format
             and will call the presenter's callback`, () => {
+            const presenterCallback = jest.spyOn(presenter, "formatChangedCallback");
             const state = new EditorAreaState(mount_point, textarea, presenter);
-            state.onFormatChange(TEXT_FORMAT_HTML);
-            expect(state.selected_value).toEqual(TEXT_FORMAT_HTML);
-            expect(presenter.formatChangedCallback).toHaveBeenCalledWith(TEXT_FORMAT_HTML);
+
+            state.changeFormat(TEXT_FORMAT_HTML);
+
+            expect(state.current_format).toEqual(TEXT_FORMAT_HTML);
+            expect(presenterCallback).toHaveBeenCalledWith(TEXT_FORMAT_HTML);
         });
     });
 });
