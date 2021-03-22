@@ -20,7 +20,7 @@
 
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
-use Tuleap\Git\GitViews\RepoManagement\Pane\GitViewsRepoManagementPaneCIToken;
+use Tuleap\Git\GitViews\RepoManagement\Pane\CIBuilds;
 use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
 use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
@@ -178,7 +178,7 @@ class GitViews_RepoManagement
             $this->git_permission_manager,
             $this->regexp_retriever
         ));
-        $collection->add(new GitViewsRepoManagementPaneCIToken($repository, $this->request));
+        $collection->add(new CIBuilds($repository, $this->request));
 
         $mirrors = $this->mirror_data_mapper->fetchAllForProject($repository->getProject());
         if (count($mirrors) > 0) {

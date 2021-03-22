@@ -279,6 +279,9 @@ msgstr "La requête n'est pas valide."
 msgid "Branches"
 msgstr "Branches"
 
+msgid "CI Builds"
+msgstr "Builds CI"
+
 msgid "CI Token"
 msgstr "Jeton"
 

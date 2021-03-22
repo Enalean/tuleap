@@ -21,21 +21,21 @@
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
-use Tuleap\Git\CIToken\BuildStatusChangePermissionDAO;
-use Tuleap\Git\CIToken\BuildStatusChangePermissionManager;
-use Tuleap\Git\CIToken\CITokenPanePresenterBuilder;
-use Tuleap\Git\CIToken\Manager as CITokenManager;
-use Tuleap\Git\CIToken\Dao as CITokenDao;
+use Tuleap\Git\CIBuilds\BuildStatusChangePermissionDAO;
+use Tuleap\Git\CIBuilds\BuildStatusChangePermissionManager;
+use Tuleap\Git\CIBuilds\CIBuildsPanePresenterBuilder;
+use Tuleap\Git\CIBuilds\CITokenManager;
+use Tuleap\Git\CIBuilds\CITokenDao;
 use TemplateRendererFactory;
 
-class GitViewsRepoManagementPaneCIToken extends Pane
+class CIBuilds extends Pane
 {
-    public const ID = 'citoken';
+    public const ID = 'cibuilds';
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return self::ID;
     }
@@ -43,23 +43,23 @@ class GitViewsRepoManagementPaneCIToken extends Pane
     /**
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
-    public function getTitle()
+    public function getTitle(): string
     {
-        return dgettext('tuleap-git', 'Token for Continuous Integration');
+        return dgettext('tuleap-git', 'CI Builds');
     }
 
-    public function getLabel()
+    public function getLabel(): string
     {
-        return dgettext('tuleap-git', 'CI Token');
+        return dgettext('tuleap-git', 'CI Builds');
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getContent()
      */
-    public function getContent()
+    public function getContent(): string
     {
         $renderer  = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
-        $presenter = (new CITokenPanePresenterBuilder(
+        $presenter = (new CIBuildsPanePresenterBuilder(
             new CITokenManager(new CITokenDao()),
             $this->repository,
             new AccessRightsPresenterOptionsBuilder(
@@ -73,6 +73,6 @@ class GitViewsRepoManagementPaneCIToken extends Pane
             )
         ))->build();
 
-        return $renderer->renderToString('ci-token-pane', $presenter);
+        return $renderer->renderToString('ci-builds-pane', $presenter);
     }
 }

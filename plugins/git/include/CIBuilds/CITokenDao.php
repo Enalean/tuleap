@@ -19,23 +19,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Git\CIToken;
+namespace Tuleap\Git\CIBuilds;
 
 use Tuleap\DB\DataAccessObject;
 
-class Dao extends DataAccessObject
+class CITokenDao extends DataAccessObject
 {
-    public function getTokenForRepositoryId($repository_id)
+    public function getTokenForRepositoryId(int $repository_id): ?string
     {
         $sql = 'SELECT ci_token FROM plugin_git WHERE repository_id= ?';
 
-        return $this->getDB()->single($sql, [$repository_id]);
+        return $this->getDB()->single($sql, [$repository_id]) ?: null;
     }
 
-    public function updateTokenForRepositoryId($repository_id, $new_token)
+    public function updateTokenForRepositoryId(int $repository_id, string $new_token): void
     {
         $sql = 'UPDATE plugin_git SET ci_token=? WHERE repository_id=?';
 
-        return $this->getDB()->run($sql, $new_token, $repository_id);
+        $this->getDB()->run($sql, $new_token, $repository_id);
     }
 }

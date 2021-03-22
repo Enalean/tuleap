@@ -19,14 +19,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Git\CIToken;
+namespace Tuleap\Git\CIBuilds;
 
 use CSRFSynchronizerToken;
+use Tuleap\Git\GitViews\RepoManagement\Pane\CIBuilds;
 
 /**
  * @psalm-immutable
  */
-final class CITokenPresenter
+final class CIBuildsPanePresenter
 {
     /**
      * @var string|null
@@ -59,7 +60,7 @@ final class CITokenPresenter
         $this->repository_id            = $repository_id;
         $this->form_action_url          = GIT_BASE_URL . '/?' . http_build_query([
             'group_id' => $project_id,
-            'pane' => 'citoken'
+            'pane' => CIBuilds::ID
         ]);
         $this->csrf_token               = new CSRFSynchronizerToken($this->form_action_url);
         $this->set_build_status_options = $set_build_status_options;

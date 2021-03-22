@@ -19,15 +19,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Git\CIToken;
+namespace Tuleap\Git\CIBuilds;
 
 use GitRepository;
 use RandomNumberGenerator;
 
-class Manager
+class CITokenManager
 {
     /**
-     * @var Dao
+     * @var CITokenDao
      */
     private $dao;
 
@@ -36,27 +36,21 @@ class Manager
      */
     private $token_generator;
 
-    public function __construct(Dao $dao)
+    public function __construct(CITokenDao $dao)
     {
         $this->dao             = $dao;
         $this->token_generator = new RandomNumberGenerator(32);
     }
 
-    public function generateNewTokenForRepository(GitRepository $git_repository)
+    public function generateNewTokenForRepository(GitRepository $git_repository): void
     {
         $new_token = $this->token_generator->getNumber();
 
-        $this->dao->updateTokenForRepositoryId($git_repository->getId(), $new_token);
+        $this->dao->updateTokenForRepositoryId((int) $git_repository->getId(), $new_token);
     }
 
-    public function getToken(GitRepository $git_repository)
+    public function getToken(GitRepository $git_repository): ?string
     {
-        $token = $this->dao->getTokenForRepositoryId($git_repository->getId());
-
-        if ($token === false) {
-            return null;
-        }
-
-        return $token;
+        return $this->dao->getTokenForRepositoryId((int) $git_repository->getId());
     }
 }

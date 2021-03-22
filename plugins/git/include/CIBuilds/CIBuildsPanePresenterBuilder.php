@@ -19,14 +19,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\CIToken;
+namespace Tuleap\Git\CIBuilds;
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 
-class CITokenPanePresenterBuilder
+class CIBuildsPanePresenterBuilder
 {
     /**
-     * @var Manager
+     * @var CITokenManager
      */
     private $ci_token_manager;
     /**
@@ -43,7 +43,7 @@ class CITokenPanePresenterBuilder
     private $build_status_change_permission_manager;
 
     public function __construct(
-        Manager $ci_token_manager,
+        CITokenManager $ci_token_manager,
         \GitRepository $repository,
         AccessRightsPresenterOptionsBuilder $access_right_options_builder,
         BuildStatusChangePermissionManager $build_status_change_permission_manager
@@ -54,12 +54,12 @@ class CITokenPanePresenterBuilder
         $this->build_status_change_permission_manager = $build_status_change_permission_manager;
     }
 
-    public function build(): CITokenPresenter
+    public function build(): CIBuildsPanePresenter
     {
         $granted_groups_ids = $this->build_status_change_permission_manager->getBuildStatusChangePermissions($this->repository);
         $all_options        = $this->access_right_options_builder->getAllOptions($this->repository->getProject(), $granted_groups_ids);
 
-        return new CITokenPresenter(
+        return new CIBuildsPanePresenter(
             (int) $this->repository->getId(),
             (int) $this->repository->getProjectId(),
             $all_options,
