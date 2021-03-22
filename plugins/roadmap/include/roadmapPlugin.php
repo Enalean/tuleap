@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Roadmap\REST\ResourcesInjector;
 use Tuleap\Roadmap\RoadmapProjectWidget;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 
@@ -72,6 +73,7 @@ class RoadmapPlugin extends Plugin
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(Event::REST_RESOURCES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -109,5 +111,14 @@ class RoadmapPlugin extends Plugin
     private function isFeatureFlagEnabled(): bool
     {
         return (bool) ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY);
+    }
+
+    /**
+     * @see Event::REST_RESOURCES
+     */
+    public function restResources(array $params): void
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }

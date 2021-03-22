@@ -63,6 +63,15 @@ class RoadmapWidgetDao extends DataAccessObject
         return (int) $this->getDB()->lastInsertId();
     }
 
+    public function searchById(int $id): ?array
+    {
+        $sql = "SELECT *
+                FROM plugin_roadmap_widget
+                WHERE id = ?";
+
+        return $this->getDB()->row($sql, $id);
+    }
+
     public function searchContent(int $id, int $owner_id, string $owner_type): ?array
     {
         $sql = "SELECT *
