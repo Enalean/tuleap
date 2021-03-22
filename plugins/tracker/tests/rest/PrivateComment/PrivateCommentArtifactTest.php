@@ -44,28 +44,12 @@ class PrivateCommentArtifactTest extends TrackerBase
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
         $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
         $this->assertCount(2, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals(
-            [
-                'id' => '115',
-                'uri' => 'user_groups/115',
-                'label' => 'ugroup_john_snow',
-                'users_uri' => 'user_groups/115/users',
-                'short_name' => 'ugroup_john_snow',
-                'key' => 'ugroup_john_snow',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][0]
-        );
-        $this->assertEquals(
-            [
-                'id' => '116',
-                'uri' => 'user_groups/116',
-                'label' => 'ugroup_daenerys',
-                'users_uri' => 'user_groups/116/users',
-                'short_name' => 'ugroup_daenerys',
-                'key' => 'ugroup_daenerys',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][1]
-        );
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['key']);
     }
 
     public function testTrackerAdminCanSeePrivateComment(): void
@@ -83,28 +67,12 @@ class PrivateCommentArtifactTest extends TrackerBase
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
         $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
         $this->assertCount(2, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals(
-            [
-                'id' => '115',
-                'uri' => 'user_groups/115',
-                'label' => 'ugroup_john_snow',
-                'users_uri' => 'user_groups/115/users',
-                'short_name' => 'ugroup_john_snow',
-                'key' => 'ugroup_john_snow',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][0]
-        );
-        $this->assertEquals(
-            [
-                'id' => '116',
-                'uri' => 'user_groups/116',
-                'label' => 'ugroup_daenerys',
-                'users_uri' => 'user_groups/116/users',
-                'short_name' => 'ugroup_daenerys',
-                'key' => 'ugroup_daenerys',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][1]
-        );
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['key']);
     }
 
     public function testSiteAdminCanSeePrivateComment(): void
@@ -122,28 +90,12 @@ class PrivateCommentArtifactTest extends TrackerBase
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
         $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
         $this->assertCount(2, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals(
-            [
-                'id' => '115',
-                'uri' => 'user_groups/115',
-                'label' => 'ugroup_john_snow',
-                'users_uri' => 'user_groups/115/users',
-                'short_name' => 'ugroup_john_snow',
-                'key' => 'ugroup_john_snow',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][0]
-        );
-        $this->assertEquals(
-            [
-                'id' => '116',
-                'uri' => 'user_groups/116',
-                'label' => 'ugroup_daenerys',
-                'users_uri' => 'user_groups/116/users',
-                'short_name' => 'ugroup_daenerys',
-                'key' => 'ugroup_daenerys',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][1]
-        );
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][1]['key']);
     }
 
     public function testMembersOfUgroupCanSeeCommentAndOnlyItsUgroup(): void
@@ -161,17 +113,9 @@ class PrivateCommentArtifactTest extends TrackerBase
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
         $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
         $this->assertCount(1, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals(
-            [
-                'id' => '115',
-                'uri' => 'user_groups/115',
-                'label' => 'ugroup_john_snow',
-                'users_uri' => 'user_groups/115/users',
-                'short_name' => 'ugroup_john_snow',
-                'key' => 'ugroup_john_snow',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][0]
-        );
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
 
         $response = $this->getResponse(
             $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
@@ -186,17 +130,9 @@ class PrivateCommentArtifactTest extends TrackerBase
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
         $this->assertEquals('Lorem ipsum', $artifact_changesets[1]["last_comment"]['body']);
         $this->assertCount(1, $artifact_changesets[1]["last_comment"]['ugroups']);
-        $this->assertEquals(
-            [
-                'id' => '116',
-                'uri' => 'user_groups/116',
-                'label' => 'ugroup_daenerys',
-                'users_uri' => 'user_groups/116/users',
-                'short_name' => 'ugroup_daenerys',
-                'key' => 'ugroup_daenerys',
-            ],
-            $artifact_changesets[1]["last_comment"]['ugroups'][0]
-        );
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][0]['label']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][0]['short_name']);
+        $this->assertEquals('ugroup_daenerys', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
     }
 
     public function testMemberNotInUgroupCanNotSeePrivateComment(): void

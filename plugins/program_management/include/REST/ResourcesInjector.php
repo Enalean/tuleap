@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST;
 
 use Luracast\Restler\Restler;
+use Tuleap\ProgramManagement\REST\v1\ProgramBacklogItemsResource;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\ProgramManagement\REST\v1\ProgramIncrementResource;
 use Tuleap\ProgramManagement\REST\v1\ProjectResource;
@@ -33,5 +34,6 @@ class ResourcesInjector
     {
         $restler->addAPIClass(ProjectResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(ProgramIncrementResource::class, ProgramIncrementResource::ROUTE);
+        $restler->addAPIClass(ProgramBacklogItemsResource::class, ProgramBacklogItemsResource::ROUTE);
     }
 }

@@ -136,6 +136,24 @@ class ProjectResourceTest extends \RestBase
     }
 
     /**
+     * @depends testManipulateFeature
+     */
+    public function testGetProgramBacklogChildren(): void
+    {
+        $project_id = $this->getProgramProjectId();
+        $featureA   = $this->getArtifactWithArtifactLink('description', 'FeatureA', $project_id, 'features');
+        $response   = $this->getResponse(
+            $this->client->get('program_backlog_items/' . urlencode((string) $featureA['id']) . '/children')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $program_increments = $response->json();
+        self::assertCount(2, $program_increments);
+        self::assertEquals('US1', $program_increments[0]['title']);
+        self::assertEquals('US2', $program_increments[1]['title']);
+    }
+
+    /**
      * @depends testPUTTeam
      */
     public function testManipulateTopBacklog(): void
