@@ -31,9 +31,7 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/botmattermost_agiledashboard/")
         ),
         module: {
-            rules: [
-                webpack_configurator.configureBabelRule(),
-            ],
+            rules: [webpack_configurator.configureBabelRule()],
         },
         externals: {
             tlp: "tlp",
