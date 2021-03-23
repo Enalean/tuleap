@@ -48,6 +48,7 @@ final class RoadmapResource
      * Retrieve paginated tasks of a given roadmap
      *
      * @url GET {id}/tasks
+     * @access hybrid
      *
      * @param int $id     Id of the roadmap
      * @param int $offset Position of the first element to display{ @min 0}

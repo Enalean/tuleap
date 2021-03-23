@@ -312,6 +312,7 @@ class TrackerXmlImport
             $tracker_created                           = $this->instantiateTrackerFromXml($project, $xml_tracker, $configuration);
             $created_trackers_objects[$xml_tracker_id] = $tracker_created;
             $created_trackers_mapping                  = $created_trackers_mapping + [$xml_tracker_id => $tracker_created->getId()];
+            $registery->addReference($xml_tracker_id, $tracker_created->getId());
         }
 
         foreach ($this->renderers_xml_mapping as $xml_reference => $renderer_xml_mapping) {

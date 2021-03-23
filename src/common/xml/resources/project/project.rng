@@ -1564,7 +1564,7 @@
     <optional>
       <!-- old ids -->
       <attribute name="id">
-        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
       </attribute>
     </optional>
     <optional>

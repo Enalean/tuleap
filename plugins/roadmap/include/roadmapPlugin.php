@@ -26,6 +26,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Roadmap\REST\ResourcesInjector;
 use Tuleap\Roadmap\RoadmapProjectWidget;
 use Tuleap\Roadmap\RoadmapWidgetDao;
+use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -74,6 +75,7 @@ class RoadmapPlugin extends Plugin
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(ConfigureAtXMLImport::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -120,5 +122,10 @@ class RoadmapPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function configureAtXMLImport(ConfigureAtXMLImport $event): void
+    {
+        (new Tuleap\Roadmap\Widget\RoadmapConfigureAtXMLImport())->configure($event);
     }
 }

@@ -41,7 +41,7 @@
     <optional>
       <!-- old ids -->
       <attribute name="id">
-        <data type="string"/>
+        <data type="ID"/>
       </attribute>
     </optional>
     <optional>
