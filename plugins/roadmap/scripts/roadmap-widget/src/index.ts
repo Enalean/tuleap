@@ -41,6 +41,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
 
     for (const vue_mount_point of all_vue_mount_points) {
-        new AppComponent().$mount(vue_mount_point);
+        if (!(vue_mount_point instanceof HTMLElement)) {
+            continue;
+        }
+
+        const roadmap_id = vue_mount_point.dataset.roadmapId;
+        if (!roadmap_id) {
+            continue;
+        }
+
+        new AppComponent({
+            propsData: {
+                roadmap_id,
+            },
+        }).$mount(vue_mount_point);
     }
 });
