@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`lit-html-adapter createSyntaxHelpButton() will create a custom element with the button and the popover content 1`] = `
+exports[`SyntaxHelpButton will create a custom element with the button and the popover content 1`] = `
 <!---->
 <fp-popover-button>
-  <button type="button" class="btn btn-small rte-button" data-button="">
+  <button type="button" class="btn btn-small rte-button" data-button="" data-test="help-button">
     <i class="fas fa-question-circle" aria-hidden="true"></i>
     Help
   </button>

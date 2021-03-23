@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { RichTextEditorFactory } from "./RichTextEditorFactory";
-export type { RichTextEditorOptions } from "./types";
-export type { TextEditorInterface } from "./TextEditorInterface";
-import "../themes/style.css";
+import type { TextFieldFormat } from "../../../constants/fields-constants";
+
+export interface TextEditorInterface {
+    onFormatChange(new_format: TextFieldFormat): void;
+    getContent(): string;
+    destroy(): void;
+}

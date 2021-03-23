@@ -15,6 +15,9 @@ msgstr ""
 msgid "...to get"
 msgstr "...pour voir"
 
+msgid "Edit"
+msgstr "Editer"
+
 msgid "For your information..."
 msgstr "Pour votre information..."
 
@@ -29,6 +32,9 @@ msgstr "Aide"
 
 msgid "Markdown"
 msgstr "Markdown"
+
+msgid "Preview"
+msgstr "Aperçu"
 
 msgid "Text"
 msgstr "Texte"

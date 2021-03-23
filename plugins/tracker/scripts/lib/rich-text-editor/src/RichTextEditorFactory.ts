@@ -34,6 +34,7 @@ import { defaultOptionsIfNotProvided } from "./options-defaulter";
 import { ExistingFormatSelector } from "./format-selector/ExistingFormatSelector";
 import { FlamingParrotEditorAreaBuilder } from "./format-selector/editor-area/FlamingParrotEditorAreaBuilder";
 import { EditorAreaRenderer } from "./format-selector/editor-area/EditorAreaRenderer";
+import type { TextEditorInterface } from "./TextEditorInterface";
 
 export class RichTextEditorFactory {
     private readonly markdown_converter: HTMLToMarkdownConverterInterface;
@@ -56,7 +57,7 @@ export class RichTextEditorFactory {
     public createRichTextEditor(
         textarea: HTMLTextAreaElement,
         options: RichTextEditorOptions
-    ): TextEditor {
+    ): TextEditorInterface {
         const defaulted_options = defaultOptionsIfNotProvided(this.locale, options);
         const editor = new TextEditor(
             textarea,

@@ -25,6 +25,7 @@ import type {
     InternalTextEditorOptions,
     MarkdownToHTMLRendererInterface,
 } from "./types";
+import type { TextEditorInterface } from "./TextEditorInterface";
 
 const DEFAULT_LOCALE = "en_US";
 const CKEDITOR_DEFAULT_OPTIONS = {
@@ -46,7 +47,7 @@ const CKEDITOR_DEFAULT_OPTIONS = {
     disableNativeSpellChecker: false,
 };
 
-export class TextEditor {
+export class TextEditor implements TextEditorInterface {
     private ckeditor: CKEDITOR.editor | null = null;
 
     constructor(

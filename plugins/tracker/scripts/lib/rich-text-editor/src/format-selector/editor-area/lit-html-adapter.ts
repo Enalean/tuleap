@@ -19,98 +19,7 @@
 
 import type { TemplateResult } from "lit-html";
 import { html, render } from "lit-html";
-import type { TextFieldFormat } from "../../../../../constants/fields-constants";
-import {
-    isValidTextFormat,
-    TEXT_FORMAT_COMMONMARK,
-    TEXT_FORMAT_HTML,
-    TEXT_FORMAT_TEXT,
-} from "../../../../../constants/fields-constants";
 import type { GettextProvider } from "@tuleap/gettext";
-import { getCommonMarkSyntaxPopoverHelperContent } from "./commonmark-syntax-helper";
-
-interface OptionPresenter {
-    readonly value: TextFieldFormat;
-    readonly is_selected: boolean;
-    readonly text: string;
-}
-
-const createOption = (presenter: OptionPresenter): TemplateResult => html`
-    <option value="${presenter.value}" ?selected=${presenter.is_selected}>${presenter.text}</option>
-`;
-
-const createOptions = (
-    presenter: SelectboxPresenter,
-    gettext_provider: GettextProvider
-): TemplateResult[] =>
-    presenter.options.map((format) => {
-        const is_selected = format === presenter.selected_value;
-        if (format === TEXT_FORMAT_TEXT) {
-            return createOption({
-                value: TEXT_FORMAT_TEXT,
-                is_selected,
-                text: gettext_provider.gettext("Text"),
-            });
-        }
-        if (format === TEXT_FORMAT_HTML) {
-            return createOption({
-                value: TEXT_FORMAT_HTML,
-                is_selected,
-                text: gettext_provider.gettext("HTML"),
-            });
-        }
-        return createOption({
-            value: TEXT_FORMAT_COMMONMARK,
-            is_selected,
-            text: gettext_provider.gettext("Markdown"),
-        });
-    });
-
-type FormatChangedCallback = (new_value: TextFieldFormat) => void;
-
-export interface SelectboxPresenter {
-    readonly id: string;
-    readonly name: string;
-    readonly options: TextFieldFormat[];
-    readonly selected_value: TextFieldFormat;
-    readonly formatChangedCallback: FormatChangedCallback;
-}
-
-export function createSelect(
-    presenter: SelectboxPresenter,
-    gettext_provider: GettextProvider
-): TemplateResult {
-    const inputHandler = (event: InputEvent): void => {
-        if (event.target instanceof HTMLSelectElement && isValidTextFormat(event.target.value)) {
-            presenter.formatChangedCallback(event.target.value);
-        }
-    };
-    const options = createOptions(presenter, gettext_provider);
-    return html`
-        <select
-            id="${presenter.id}"
-            name="${presenter.name}"
-            class="input-small"
-            @input="${inputHandler}"
-            data-test="format-select"
-        >
-            ${options}
-        </select>
-    `;
-}
-
-export function createSyntaxHelpButton(gettext_provider: GettextProvider): TemplateResult {
-    const helper_popover = getCommonMarkSyntaxPopoverHelperContent(gettext_provider);
-    return html`
-        <fp-popover-button>
-            <button type="button" class="btn btn-small rte-button" data-button>
-                <i class="fas fa-question-circle" aria-hidden="true"></i>
-                ${gettext_provider.gettext("Help")}
-            </button>
-            <template data-popover-content>${helper_popover}</template>
-        </fp-popover-button>
-    `;
-}
 
 export const wrapTextArea = (textarea: HTMLTextAreaElement): TemplateResult =>
     html`
@@ -120,6 +29,7 @@ export const wrapTextArea = (textarea: HTMLTextAreaElement): TemplateResult =>
 export interface RichTextEditorAreaPresenter {
     readonly mount_point: HTMLDivElement;
     readonly selectbox: TemplateResult;
+    readonly preview_button?: TemplateResult;
     readonly helper_button?: TemplateResult;
     readonly textarea: TemplateResult;
 }
@@ -133,7 +43,7 @@ export const renderRichTextEditorArea = (
             <div class="rte_format">
                 ${gettext_provider.gettext(
                     "Format:"
-                )}${presenter.selectbox}${presenter.helper_button}
+                )}${presenter.selectbox}${presenter.preview_button}${presenter.helper_button}
             </div>
             ${presenter.textarea}
         `,
