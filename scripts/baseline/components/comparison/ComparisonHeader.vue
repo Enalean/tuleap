@@ -27,7 +27,7 @@
         />
 
         <h2>
-            <template v-if="comparison.name">{{ comparison.name }} - </template>
+            <template v-if="comparison.name">{{ comparison.name }} -</template>
             {{ base_baseline.name }}
             <i class="fa fa-tlp-baseline-comparison baseline-comparison-separator"></i>
             {{ compared_to_baseline.name }}

@@ -30,7 +30,12 @@
                 <h1 id="modal-label" class="tlp-modal-title" data-test-type="modal-title">
                     {{ modal_content.title }}
                 </h1>
-                <button class="tlp-modal-close" type="button" v-bind:aria-label="close_label" data-dismiss="modal">
+                <button
+                    class="tlp-modal-close"
+                    type="button"
+                    v-bind:aria-label="close_label"
+                    data-dismiss="modal"
+                >
                     ×
                 </button>
             </div>
