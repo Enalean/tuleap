@@ -128,6 +128,8 @@ final class FeatureRepresentationBuilderTest extends TestCase
             new Project(['group_id' => 101, 'group_name' => "My project"])
         );
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 2)->once()->andReturnNull();
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 3)->once()->andReturn(\Mockery::mock(Artifact::class));
 
         $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $this->form_element_factory->shouldReceive('getFieldById')->with(101)->andReturn($field);
@@ -139,6 +141,11 @@ final class FeatureRepresentationBuilderTest extends TestCase
         $this->parent_dao->shouldReceive('getPlannedUserStory')->andReturn(
             [
                 ['user_story_id' => 1, 'project_id' => 100]
+            ]
+        );
+        $this->parent_dao->shouldReceive('getChildrenOfFeatureInTeamProjects')->andReturn(
+            [
+                ['children_id' => 2], ['children_id' => 3]
             ]
         );
         $this->parent_dao->shouldReceive('isLinkedToASprintInMirroredMilestones')->andReturnTrue();
@@ -158,6 +165,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
             'one #1',
             MinimalTrackerRepresentation::build($tracker),
             $background_color,
+            true,
             true
         );
 

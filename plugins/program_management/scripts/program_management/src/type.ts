@@ -24,6 +24,7 @@ export interface ProgramElement {
     artifact_xref: string;
     tracker: TrackerMinimalRepresentation;
     background_color: string;
+    has_user_story_linked: boolean;
 }
 
 export interface TrackerMinimalRepresentation {

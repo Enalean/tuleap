@@ -160,6 +160,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
             ->andReturn(new BackgroundColor("lake-placid-blue"));
 
         $this->parent_dao->shouldReceive('getPlannedUserStory')->andReturn([]);
+        $this->parent_dao->shouldReceive('getChildrenOfFeatureInTeamProjects')->twice()->andReturn([]);
 
         $collection = [
             new FeatureRepresentation(
@@ -168,6 +169,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
                 'one #1',
                 MinimalTrackerRepresentation::build($tracker_one),
                 new BackgroundColor("lake-placid-blue"),
+                false,
                 false
             ),
             new FeatureRepresentation(
@@ -176,6 +178,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
                 'two #2',
                 MinimalTrackerRepresentation::build($tracker_two),
                 new BackgroundColor("lake-placid-blue"),
+                false,
                 false
             ),
         ];
