@@ -12,5 +12,8 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Oops, something went wrong."
+msgstr "Oups, quelque chose ne va pas."
+
 msgid "There is no data to show. Please come back later."
 msgstr "Il n'y a pas de données à afficher. Veuillez revenir plus tard."

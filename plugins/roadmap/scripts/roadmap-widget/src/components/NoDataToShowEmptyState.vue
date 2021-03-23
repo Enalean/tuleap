@@ -19,13 +19,13 @@
   -->
 
 <template>
-    <div class="roadmap-no-data-empty-state">
+    <div class="roadmap-empty-state">
         <svg
             width="136"
             height="106"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            class="roadmap-no-data-empty-state-illustration"
+            class="roadmap-empty-state-illustration"
         >
             <circle opacity=".3" cx="68.5" cy="53" r="53" fill="var(--tlp-illustration-grey)" />
             <path
@@ -41,7 +41,7 @@
                 fill="var(--tlp-illustration-yellow)"
             />
         </svg>
-        <p class="roadmap-no-data-empty-state-text" v-translate>
+        <p class="roadmap-empty-state-text" v-translate>
             There is no data to show. Please come back later.
         </p>
     </div>

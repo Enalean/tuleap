@@ -36,6 +36,9 @@ module.exports = [
         resolve: {
             extensions: [".js", ".ts", ".vue"],
         },
+        externals: {
+            tlp: "tlp",
+        },
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(

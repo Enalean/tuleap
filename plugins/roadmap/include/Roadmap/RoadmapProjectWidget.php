@@ -81,7 +81,9 @@ final class RoadmapProjectWidget extends \Widget
             'Total number of display of roadmap project widget',
         );
 
-        return $this->renderer->renderToString('widget-roadmap', []);
+        return $this->renderer->renderToString('widget-roadmap', [
+            'roadmap_id' => $this->content_id,
+        ]);
     }
 
     public function isAjax(): bool

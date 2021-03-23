@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.roadmap-no-data-empty-state {
+.roadmap-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,13 +25,13 @@
     padding: var(--tlp-x-large-spacing);
 }
 
-.roadmap-no-data-empty-state-illustration {
+.roadmap-empty-state-illustration {
     margin: 0 0 var(--tlp-medium-spacing);
 }
 
-.roadmap-no-data-empty-state-text {
+.roadmap-empty-state-text {
     color: var(--tlp-ui-dimmed);
     font-size: .8125rem;
-    line-height: 1.375rem;
+    line-height: .9375rem;
     text-align: center;
 }
