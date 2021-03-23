@@ -33,13 +33,10 @@ let factory;
 
 describe(`StepDefinitionActions`, () => {
     beforeEach(() => {
-        factory = (props = {}, data = {}) => {
+        factory = (props = {}) => {
             return shallowMount(StepDefinitionActions, {
                 localVue,
                 propsData: { ...props },
-                data() {
-                    return { ...data };
-                },
             });
         };
     });
@@ -93,9 +90,7 @@ describe(`StepDefinitionActions`, () => {
     });
     describe("Enabling of the selectbox", () => {
         it(`Enable the selectbox when we are in edit mode AND if the step is not disabled`, () => {
-            const props = { disabled: false };
-            const data = { is_in_preview_mode: false };
-            const wrapper = factory(props, data);
+            const wrapper = factory({ disabled: false, is_in_preview_mode: false });
 
             expect(
                 wrapper.find("[data-test=ttm-definition-step-description-format]").element.disabled
@@ -109,9 +104,7 @@ describe(`StepDefinitionActions`, () => {
         ])(
             `Disable the select box when the user is in preview mode OR if the step is disabled`,
             (disabled, is_in_preview_mode) => {
-                const props = { disabled };
-                const data = { is_in_preview_mode };
-                const wrapper = factory(props, data);
+                const wrapper = factory({ disabled, is_in_preview_mode });
 
                 expect(
                     wrapper.find("[data-test=ttm-definition-step-description-format]").element

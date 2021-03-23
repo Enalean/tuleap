@@ -33,12 +33,34 @@ describe("CommonmarkPreviewButton", () => {
                 localVue,
                 propsData: {
                     is_in_preview_mode,
+                    is_preview_loading: false,
                 },
             });
-            expect(wrapper.find("[data-test=button-commonmark-preview-icon]").classes()).toContain(
-                expected_class
-            );
+
+            const icon_classes = wrapper
+                .find("[data-test=button-commonmark-preview-icon]")
+                .classes();
+            expect(icon_classes).toContain(expected_class);
+            expect(icon_classes).not.toContain("fa-circle-notch");
+            expect(icon_classes).not.toContain("fa-spin");
             expect(wrapper.text()).toBe(expected_button_label);
         }
     );
+
+    it("disables the button and display the spinner when the preview is loading", () => {
+        const wrapper = shallowMount(CommonmarkPreviewButton, {
+            localVue,
+            propsData: {
+                is_in_preview_mode: false,
+                is_preview_loading: true,
+            },
+        });
+
+        const icon_classes = wrapper.find("[data-test=button-commonmark-preview-icon]").classes();
+
+        expect(icon_classes).toContain("fa-circle-notch");
+        expect(icon_classes).toContain("fa-spin");
+
+        expect(wrapper.find("[data-test=button-commonmark-preview]").element.disabled).toBe(true);
+    });
 });

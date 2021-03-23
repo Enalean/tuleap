@@ -548,6 +548,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
                     'name' => 'empty-step',
                     'value' => json_encode($empty_step_presenter)
                 ],
+                [
+                    'name' => 'project-id',
+                    'value' => (int) $tracker->getGroupId()
+                ],
             ],
             $rich_textarea_provider->getDataAttributes($tracker, $this->getCurrentUser(), $artifact)
         );

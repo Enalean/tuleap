@@ -28,7 +28,10 @@
         <step-definition-actions
             v-bind:value="step.description_format"
             v-bind:format_select_id="format_select_id"
+            v-bind:is_in_preview_mode="is_in_preview_mode"
+            v-bind:is_preview_loading="is_preview_loading"
             v-on:input="toggleRTE"
+            v-on:interpret-content-event="togglePreview"
         >
             <step-deletion-action-button-mark-as-deleted
                 v-bind:mark-as-deleted="markAsDeleted"
@@ -49,9 +52,24 @@
             v-bind:data-upload-url="upload_url"
             v-bind:data-upload-field-name="upload_field_name"
             v-bind:data-upload-max-size="upload_max_size"
+            data-test="description-textarea"
             rows="3"
             v-model="step.raw_description"
+            v-show="!is_in_preview_mode && !is_preview_in_error"
         ></textarea>
+        <div
+            v-if="is_in_preview_mode && !is_preview_in_error"
+            v-dompurify-html="interpreted_description"
+            data-test="description-preview"
+        ></div>
+        <div
+            class="alert alert-error"
+            v-if="is_preview_in_error"
+            data-test="description-error"
+            v-translate
+        >
+            An error occurred during the Markdown interpretation.
+        </div>
         <div class="muted tracker-richtexteditor-help shown" v-bind:id="description_help_id"></div>
 
         <section class="ttm-definition-step-expected">
@@ -77,7 +95,22 @@
                     v-bind:data-upload-max-size="upload_max_size"
                     rows="3"
                     v-model="step.raw_expected_results"
+                    v-show="!is_in_preview_mode && !is_preview_in_error"
+                    data-test="expected-results-textarea"
                 ></textarea>
+                <div
+                    v-if="is_in_preview_mode"
+                    v-dompurify-html="interpreted_expected_result"
+                    data-test="expected-results-preview"
+                ></div>
+                <div
+                    class="alert alert-error"
+                    v-if="is_preview_in_error"
+                    data-test="expected-results-error"
+                    v-translate
+                >
+                    An error occurred during the Markdown interpretation.
+                </div>
                 <div
                     class="muted tracker-richtexteditor-help shown"
                     v-bind:id="expected_results_help_id"
@@ -99,6 +132,7 @@ import {
     UploadImageFormFactory,
 } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
+import { interpretCommonMark } from "./api/tuleap-api.js";
 
 export default {
     name: "StepDefinitionEditableStep",
@@ -109,6 +143,15 @@ export default {
     },
     props: {
         step: Object,
+    },
+    data() {
+        return {
+            interpreted_description: "",
+            interpreted_expected_result: "",
+            is_in_preview_mode: false,
+            is_preview_loading: false,
+            is_preview_in_error: false,
+        };
     },
     computed: {
         ...mapState([
@@ -146,6 +189,12 @@ export default {
                 this.getEditorsContent();
             }
         },
+    },
+    beforeDestroy() {
+        if (this.editors) {
+            this.editors[0].destroy();
+            this.editors[1].destroy();
+        }
     },
     mounted() {
         this.loadEditor();
@@ -193,6 +242,31 @@ export default {
         },
         loadEditor() {
             this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];
+        },
+        togglePreview() {
+            this.is_preview_in_error = false;
+
+            if (this.is_in_preview_mode) {
+                this.is_in_preview_mode = false;
+                return Promise.resolve();
+            }
+
+            this.is_preview_loading = true;
+            return Promise.all([
+                interpretCommonMark(this.step.raw_description),
+                interpretCommonMark(this.step.raw_expected_results),
+            ])
+                .then((interpreted_fields) => {
+                    this.interpreted_description = interpreted_fields[0];
+                    this.interpreted_expected_result = interpreted_fields[1];
+                })
+                .catch(() => {
+                    this.is_preview_in_error = true;
+                })
+                .finally(() => {
+                    this.is_preview_loading = false;
+                    this.is_in_preview_mode = !this.is_in_preview_mode;
+                });
         },
     },
 };

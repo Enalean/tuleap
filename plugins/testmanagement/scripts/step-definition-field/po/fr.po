@@ -18,6 +18,9 @@ msgstr "...pour voir"
 msgid "Add step"
 msgstr "Ajouter une étape"
 
+msgid "An error occurred during the Markdown interpretation."
+msgstr "Une erreur est survenue durant le rendu du Markdown."
+
 msgid "Delete"
 msgstr "Supprimer"
 
