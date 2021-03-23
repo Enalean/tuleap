@@ -307,7 +307,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
         $html = '<input type="hidden"
              id="artifact[' . $this->id . ']_body_format"
-             name="artifact[' . $this->id . ']_body_format"
+             name="artifact[' . $this->id . '][format]"
              value="' . $hp->purify($format) . '" />';
 
         $html .= $rich_textarea_provider->getTextarea(
