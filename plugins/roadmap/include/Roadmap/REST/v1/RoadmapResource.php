@@ -27,6 +27,7 @@ use Tuleap\REST\Header;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class RoadmapResource
 {
@@ -64,13 +65,19 @@ final class RoadmapResource
     {
         $this->optionsTasks($id);
 
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            \Tracker_FormElementFactory::instance()
+        );
+
         $retriever = new RoadmapTasksRetriever(
             new RoadmapWidgetDao(),
             \ProjectManager::instance(),
             \UserManager::instance(),
             new \URLVerification(),
             \TrackerFactory::instance(),
-            new SemanticTimeframeBuilder(new SemanticTimeframeDao(), \Tracker_FormElementFactory::instance()),
+            $semantic_timeframe_builder,
+            new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger()),
             \Tracker_ArtifactFactory::instance(),
         );
 

@@ -25,7 +25,7 @@
             v-else-if="should_display_error_state"
             v-bind:message="error_message"
         />
-        <gantt-board v-else v-bind:tasks="tasks" />
+        <gantt-board v-else-if="tasks.length" v-bind:tasks="tasks" v-bind:locale="locale" />
     </div>
 </template>
 
@@ -35,9 +35,9 @@ import { Component, Prop } from "vue-property-decorator";
 import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import type { FetchWrapperError } from "tlp";
-import { recursiveGet } from "tlp";
 import GanttBoard from "./Gantt/GanttBoard.vue";
 import type { Task } from "../type";
+import { retrieveAllTasks } from "../helpers/task-retriever";
 
 @Component({
     components: { GanttBoard, SomethingWentWrongEmptyState, NoDataToShowEmptyState },
@@ -45,6 +45,9 @@ import type { Task } from "../type";
 export default class App extends Vue {
     @Prop({ required: true })
     readonly roadmap_id!: number;
+
+    @Prop({ required: true })
+    private readonly locale!: string;
 
     private tasks: Task[] = [];
     private error_message = "";
@@ -57,7 +60,7 @@ export default class App extends Vue {
 
     async loadTasks(): Promise<void> {
         try {
-            this.tasks = await recursiveGet(`/api/roadmaps/${this.roadmap_id}/tasks`);
+            this.tasks = await retrieveAllTasks(this.roadmap_id);
             if (this.tasks.length === 0) {
                 this.should_display_empty_state = true;
             }

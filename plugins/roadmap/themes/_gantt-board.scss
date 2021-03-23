@@ -18,11 +18,12 @@
  */
 
 @use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+@use 'roadmap-variables';
 
 .roadmap-gantt-task {
     $radius: 4px;
 
-    height: 40px;
+    height: roadmap-variables.$task-height;
     border-bottom: 1px solid var(--tlp-ui-border-normal);
 
     &:last-child {
@@ -42,7 +43,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 286px;
+    width: roadmap-variables.$task-header-width;
     height: 100%;
     padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-large-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
     border-right: 2px solid var(--tlp-ui-border-normal);

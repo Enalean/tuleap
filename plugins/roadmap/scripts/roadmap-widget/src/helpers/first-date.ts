@@ -17,12 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Task {
-    id: number;
-    title: string;
-    xref: string;
-    color_name: string;
-    html_url: string;
-    start: Date | null;
-    end: Date | null;
+import type { Task } from "../type";
+
+export function getFirstDate(tasks: Task[]): Date | null {
+    return tasks.reduce((first: Date | null, current: Task): Date | null => {
+        if (!first) {
+            return current.start || current.end;
+        }
+
+        if (current.start && current.start < first) {
+            return current.start;
+        }
+
+        if (!current.start && current.end && current.end < first) {
+            return current.end;
+        }
+
+        return first;
+    }, null);
 }

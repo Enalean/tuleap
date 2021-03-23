@@ -18,28 +18,26 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import GanttTask from "./GanttTask.vue";
-import type { Task } from "../../../type";
-import TaskHeader from "./TaskHeader.vue";
+import TimePeriodMonth from "./TimePeriodMonth.vue";
 
-describe("GanttTask", () => {
-    it("Displays the header of the task", () => {
-        const task: Task = {
-            id: 123,
-            title: "Do this",
-            xref: "task #123",
-            color_name: "fiesta-red",
-            html_url: "/plugins/tracker?aid=123",
-            start: null,
-            end: null,
-        };
-
-        const wrapper = shallowMount(GanttTask, {
+describe("TimePeriodeMonth", () => {
+    it("Displays formatted months", () => {
+        const wrapper = shallowMount(TimePeriodMonth, {
             propsData: {
-                task,
+                locale: "en_US",
+                months: [new Date(2020, 3, 1), new Date(2020, 4, 1)],
             },
         });
 
-        expect(wrapper.findComponent(TaskHeader).exists()).toBe(true);
+        expect(wrapper).toMatchInlineSnapshot(`
+            <div class="roadmap-gantt-timeperiod-months">
+              <div data-tlp-tooltip="April 2020" class="roadmap-gantt-timeperiod-month tlp-tooltip tlp-tooltip-bottom">
+                Apr
+              </div>
+              <div data-tlp-tooltip="May 2020" class="roadmap-gantt-timeperiod-month tlp-tooltip tlp-tooltip-bottom">
+                May
+              </div>
+            </div>
+        `);
     });
 });

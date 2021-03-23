@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.

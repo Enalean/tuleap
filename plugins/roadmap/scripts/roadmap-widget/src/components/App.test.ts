@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,22 +18,24 @@
  */
 
 import { createRoadmapLocalVue } from "../helpers/local-vue-for-test";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import * as tlp from "tlp";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
+import GanttBoard from "./Gantt/GanttBoard.vue";
+import type { Task } from "../type";
 
 jest.mock("tlp");
 
 describe("App", () => {
-    it("Displays an empty state", async () => {
-        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([]);
-
+    async function mountComponent(): Promise<Wrapper<App>> {
         const wrapper = shallowMount(App, {
             propsData: {
                 roadmap_id: 123,
+                locale: "en_US",
             },
             localVue: await createRoadmapLocalVue(),
         });
@@ -41,9 +43,19 @@ describe("App", () => {
         // wait for load & parse response
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        return wrapper;
+    }
+
+    it("Displays an empty state", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([]);
+
+        const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
     });
 
     it("Displays an error state for a 400", async () => {
@@ -57,18 +69,10 @@ describe("App", () => {
             },
         });
 
-        const wrapper = shallowMount(App, {
-            propsData: {
-                roadmap_id: 123,
-            },
-            localVue: await createRoadmapLocalVue(),
-        });
-
-        // wait for load & parse response
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
 
         const error_state = wrapper.findComponent(SomethingWentWrongEmptyState);
         expect(error_state.exists()).toBe(true);
@@ -81,19 +85,11 @@ describe("App", () => {
             status,
         });
 
-        const wrapper = shallowMount(App, {
-            propsData: {
-                roadmap_id: 123,
-            },
-            localVue: await createRoadmapLocalVue(),
-        });
-
-        // wait for load & parse response
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
     });
 
     it("Displays a generic error state for a 500", async () => {
@@ -107,21 +103,30 @@ describe("App", () => {
             },
         });
 
-        const wrapper = shallowMount(App, {
-            propsData: {
-                roadmap_id: 123,
-            },
-            localVue: await createRoadmapLocalVue(),
-        });
-
-        // wait for load & parse response
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
 
         const error_state = wrapper.findComponent(SomethingWentWrongEmptyState);
         expect(error_state.exists()).toBe(true);
         expect(error_state.props("message")).toBe("");
+    });
+
+    it("Displays a gantt board with tasks", async () => {
+        const tasks = [
+            { id: 1, start: null, end: null },
+            { id: 2, start: null, end: null },
+        ] as Task[];
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue(tasks);
+
+        const wrapper = await mountComponent();
+
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
+
+        const gantt_board = wrapper.findComponent(GanttBoard);
+        expect(gantt_board.exists()).toBe(true);
+        expect(gantt_board.props("tasks")).toStrictEqual(tasks);
     });
 });

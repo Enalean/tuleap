@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -29,6 +29,8 @@ describe("TaskHeader", () => {
             xref: "task #123",
             color_name: "fiesta-red",
             html_url: "/plugins/tracker?aid=123",
+            start: null,
+            end: null,
         };
 
         const wrapper = shallowMount(TaskHeader, {
