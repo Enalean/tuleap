@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1\Helper;
 
+use Psr\Log\NullLogger;
 use REST_TestDataBuilder;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
@@ -45,10 +46,6 @@ class ProgramDataBuilder extends REST_TestDataBuilder
      * @var ReplicationDataAdapter
      */
     public $replication_data_adapter;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
     /**
      * @var CreateProgramIncrementsRunner
      */
@@ -93,10 +90,9 @@ class ProgramDataBuilder extends REST_TestDataBuilder
             new PendingArtifactCreationDao(),
             Tracker_Artifact_ChangesetFactoryBuilder::build()
         );
-        $this->logger                   = \BackendLogger::getDefaultLogger("/tmp/mag");
         $this->runner                   = new CreateProgramIncrementsRunner(
-            $this->logger,
-            new QueueFactory($this->logger),
+            new NullLogger(),
+            new QueueFactory(new NullLogger()),
             new ReplicationDataAdapter(
                 Tracker_ArtifactFactory::instance(),
                 UserManager::instance(),
