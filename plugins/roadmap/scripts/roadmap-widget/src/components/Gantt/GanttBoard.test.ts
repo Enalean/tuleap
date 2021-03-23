@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'empty-state';
-@use 'gantt-board';
+import { shallowMount } from "@vue/test-utils";
+import GanttBoard from "./GanttBoard.vue";
+import type { Task } from "../../type";
+import GanttTask from "./Task/GanttTask.vue";
+
+describe("GanttBoard", () => {
+    it("Display all tasks", () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                tasks: [{ id: 1 }, { id: 2 }, { id: 3 }] as Task[],
+            },
+        });
+
+        expect(wrapper.findAllComponents(GanttTask).length).toBe(3);
+    });
+});

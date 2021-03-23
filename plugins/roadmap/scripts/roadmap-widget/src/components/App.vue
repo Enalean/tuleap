@@ -25,7 +25,7 @@
             v-else-if="should_display_error_state"
             v-bind:message="error_message"
         />
-        <div v-else>Nothing yet to display. This is under construction.</div>
+        <gantt-board v-else v-bind:tasks="tasks" />
     </div>
 </template>
 
@@ -36,14 +36,17 @@ import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import type { FetchWrapperError } from "tlp";
 import { recursiveGet } from "tlp";
+import GanttBoard from "./Gantt/GanttBoard.vue";
+import type { Task } from "../type";
 
 @Component({
-    components: { SomethingWentWrongEmptyState, NoDataToShowEmptyState },
+    components: { GanttBoard, SomethingWentWrongEmptyState, NoDataToShowEmptyState },
 })
 export default class App extends Vue {
     @Prop({ required: true })
     readonly roadmap_id!: number;
 
+    private tasks: Task[] = [];
     private error_message = "";
     private should_display_error_state = false;
     private should_display_empty_state = false;
@@ -54,8 +57,8 @@ export default class App extends Vue {
 
     async loadTasks(): Promise<void> {
         try {
-            const tasks = await recursiveGet(`/api/roadmaps/${this.roadmap_id}/tasks`);
-            if (tasks.length === 0) {
+            this.tasks = await recursiveGet(`/api/roadmaps/${this.roadmap_id}/tasks`);
+            if (this.tasks.length === 0) {
                 this.should_display_empty_state = true;
             }
         } catch (e) {
