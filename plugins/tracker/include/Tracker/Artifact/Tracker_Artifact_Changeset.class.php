@@ -220,14 +220,18 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $comment = $this->getComment();
         if ($comment) {
             $follow_up = $comment->fetchFollowUp($current_user);
-            if ($follow_up) {
-                $html .= '<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_' . $this->getId() . '">';
-                $html .= $follow_up;
-                $html .= '</div>';
+            if (! $follow_up && ! $diff_to_previous) {
+                return "";
+            }
 
-                if ($diff_to_previous) {
-                    $html .= '<hr size="1" />';
-                }
+            $html .= '<div class="tracker_artifact_followup_comment" data-test="tracker_artifact_followup_comment_followup_' . $this->getId() . '">';
+            if ($follow_up) {
+                $html .= $follow_up;
+            }
+            $html .= '</div>';
+
+            if ($follow_up && $diff_to_previous) {
+                $html .= '<hr size="1" />';
             }
         }
 
