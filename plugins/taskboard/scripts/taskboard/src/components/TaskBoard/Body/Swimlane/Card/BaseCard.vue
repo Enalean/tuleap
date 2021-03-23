@@ -20,14 +20,15 @@
 
 <template>
     <div class="taskboard-card" v-bind:class="additional_classnames">
-        <span
+        <button
             v-if="can_user_update_card"
             class="taskboard-card-edit-trigger"
             v-on:click="switchToEditMode"
             data-test="card-edit-button"
+            type="button"
         >
             <i class="fas fa-pencil-alt"></i>
-        </span>
+        </button>
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
             <card-info v-bind:card="card" v-bind:tracker="tracker" v-model="assignees">

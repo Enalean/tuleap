@@ -69,9 +69,12 @@
     &:first-child {
         background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
 
-        &:hover > .taskboard-swimlane-toggle {
-            opacity: 1;
-            background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
+        &:hover,
+        &:focus-within {
+            > .taskboard-swimlane-toggle {
+                opacity: 1;
+                background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
+            }
         }
     }
 
@@ -108,14 +111,13 @@
     z-index: 10;
     top: 5px;
     left: 6px;
+    padding: 0;
     transition: opacity ease-in-out 100ms;
+    border: 0;
     opacity: 0;
+    color: var(--primary-color);
     font-size: 14px;
     cursor: pointer;
-
-    &::before {
-        color: var(--primary-color);
-    }
 }
 
 .taskboard-no-mapping:last-child,

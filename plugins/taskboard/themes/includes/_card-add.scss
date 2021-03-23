@@ -22,8 +22,9 @@ $button-with-label-height: 32px;
 $button-margin: $tlp-small-spacing;
 
 .taskboard-add-card-form {
-    display: none;
+    display: flex;
     justify-content: center;
+    opacity: 0;
 
     &:first-child > {
         .taskboard-add-in-place-button {
@@ -33,14 +34,10 @@ $button-margin: $tlp-small-spacing;
 }
 
 .taskboard-cell-with-add-form {
-    padding: $tlp-small-spacing $tlp-small-spacing ($button-size + 2 * $button-margin + $tlp-small-spacing);
-
     &:hover,
     &:focus-within {
-        padding: $tlp-small-spacing;
-
         > .taskboard-add-card-form {
-            display: flex;
+            opacity: 1;
         }
     }
 }

@@ -24,13 +24,17 @@
         v-bind:class="taskboard_cell_swimlane_header_classes"
         v-if="backlog_items_have_children"
     >
-        <i
-            class="fa fa-minus-square taskboard-swimlane-toggle"
-            v-bind:class="additional_classnames"
-            role="button"
-            v-bind:title="title"
-            v-on:click="collapseSwimlane(swimlane)"
-        ></i>
+        <slot name="toggle">
+            <button
+                class="taskboard-swimlane-toggle"
+                v-bind:class="additional_classnames"
+                type="button"
+                v-bind:title="title"
+                v-on:click="collapseSwimlane(swimlane)"
+            >
+                <i class="fa fa-minus-square" aria-hidden="true"></i>
+            </button>
+        </slot>
         <slot />
     </div>
 </template>

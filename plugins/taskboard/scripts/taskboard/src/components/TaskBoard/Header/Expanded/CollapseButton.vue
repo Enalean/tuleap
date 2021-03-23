@@ -19,16 +19,15 @@
   -->
 
 <template>
-    <span class="taskboard-header-collapse-column" v-bind:title="title">
-        <i
-            class="fa fa-minus-square"
-            role="button"
-            tabindex="0"
-            v-bind:aria-label="title"
-            v-on:click="collapseColumn(column)"
-            data-test="button"
-        ></i>
-    </span>
+    <button
+        class="taskboard-header-collapse-column"
+        type="button"
+        v-bind:title="title"
+        v-on:click="collapseColumn(column)"
+        data-test="button"
+    >
+        <i class="fa fa-minus-square" aria-hidden="true"></i>
+    </button>
 </template>
 
 <script lang="ts">

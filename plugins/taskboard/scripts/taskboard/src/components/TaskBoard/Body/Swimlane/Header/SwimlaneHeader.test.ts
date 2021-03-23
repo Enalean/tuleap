@@ -62,13 +62,7 @@ describe("SwimlaneHeader", () => {
     it("displays a toggle icon", async () => {
         const wrapper = await createWrapper(false, true);
 
-        expect(
-            wrapper
-                .find(
-                    ".fa-minus-square.taskboard-swimlane-toggle.tlp-swatch-fiesta-red[role=button]"
-                )
-                .exists()
-        ).toBe(true);
+        expect(wrapper.find(".taskboard-swimlane-toggle").exists()).toBe(true);
         expect(wrapper.find(".taskboard-fullscreen").exists()).toBe(false);
     });
 

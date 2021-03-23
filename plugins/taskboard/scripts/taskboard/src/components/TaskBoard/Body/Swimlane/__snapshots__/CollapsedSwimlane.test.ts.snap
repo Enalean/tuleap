@@ -4,14 +4,20 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
 <div
   class="taskboard-swimlane taskboard-swimlane-collapsed"
 >
-  <swimlane-header-stub
-    swimlane="[object Object]"
+  <div
+    class="taskboard-cell taskboard-cell-swimlane-header"
   >
-    <i
-      class="fa fa-plus-square taskboard-swimlane-toggle tlp-swatch-fiesta-red"
-      role="button"
+    <button
+      class="taskboard-swimlane-toggle tlp-swatch-fiesta-red"
+      data-test="swimlane-toggle"
       title="Expand"
-    />
+      type="button"
+    >
+      <i
+        aria-hidden="true"
+        class="fa fa-plus-square"
+      />
+    </button>
      
     <div
       class="taskboard-card taskboard-card-collapsed taskboard-card-fiesta-red"
@@ -25,6 +31,6 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
         />
       </div>
     </div>
-  </swimlane-header-stub>
+  </div>
 </div>
 `;
