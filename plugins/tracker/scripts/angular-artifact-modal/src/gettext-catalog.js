@@ -41,3 +41,5 @@ export const getNoPasteMessage = () =>
     gettextCatalog.getString("You are not allowed to paste images here");
 export const getCommonMarkSyntaxHelperPopoverTitle = () =>
     gettextCatalog.getString("For your information...");
+export const getEditButtonLabel = () => gettextCatalog.getString("Edit");
+export const getPreviewButtonLabel = () => gettextCatalog.getString("Preview");

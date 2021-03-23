@@ -32,6 +32,8 @@
             v-bind:disabled="disabled"
             v-bind:required="field.required"
             v-bind:value="format"
+            v-bind:is_in_preview_mode="is_in_preview_mode"
+            v-on:interpret-content-event="togglePreview"
         />
         <rich-text-editor
             v-bind:id="id"
@@ -56,6 +58,11 @@ export default {
     props: {
         field: Object,
         value: Object,
+    },
+    data() {
+        return {
+            is_in_preview_mode: false,
+        };
     },
     computed: {
         disabled() {
@@ -87,6 +94,9 @@ export default {
         },
         reemit(...args) {
             this.$emit("upload-image", ...args);
+        },
+        togglePreview() {
+            this.is_in_preview_mode = !this.is_in_preview_mode;
         },
     },
 };

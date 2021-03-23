@@ -124,6 +124,9 @@ msgstr "Veuillez choisir une date"
 msgid "Please select an item in the list"
 msgstr "Veuillez choisir un élément dans la liste"
 
+msgid "Preview"
+msgstr "Aperçu"
+
 msgid "References list is empty."
 msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
 
