@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Task {
-    id: number;
-    title: string;
-    xref: string;
-    color_name: string;
-    html_url: string;
-    start: Date | null;
-    end: Date | null;
-}
+import { getBeginningOfNextNthMonth } from "./beginning-of-next-nth-month";
+
+describe("beginning-of-next-nth-month", () => {
+    it("Returns the beginning of next nth month", () => {
+        expect(getBeginningOfNextNthMonth(new Date(2020, 3, 15), 3).toDateString()).toBe(
+            "Wed Jul 01 2020"
+        );
+    });
+});

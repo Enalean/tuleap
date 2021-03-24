@@ -17,12 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Task {
-    id: number;
-    title: string;
-    xref: string;
-    color_name: string;
-    html_url: string;
-    start: Date | null;
-    end: Date | null;
+export function getBeginningOfNextNthMonth(base_month: Date, nth: number): Date {
+    const same_date_months_later = new Date(
+        new Date(base_month).setMonth(base_month.getMonth() + nth)
+    );
+
+    return new Date(same_date_months_later.setDate(1));
 }

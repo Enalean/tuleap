@@ -20,6 +20,11 @@
 
 <template>
     <div class="roadmap-gantt">
+        <time-period-month
+            v-bind:months="extended_months"
+            v-bind:locale="locale"
+            ref="time_period"
+        />
         <gantt-task v-for="task of tasks" v-bind:key="task.id" v-bind:task="task" />
     </div>
 </template>
@@ -29,12 +34,73 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import GanttTask from "./Task/GanttTask.vue";
 import type { Task } from "../../type";
+import TimePeriodMonth from "./TimePeriod/TimePeriodMonth.vue";
+import { getMonths } from "../../helpers/months";
+import { getFirstDate } from "../../helpers/first-date";
+import { getLastDate } from "../../helpers/last-date";
+import { getAdditionalMonths } from "../../helpers/additional-months";
+
+enum Styles {
+    TIME_UNIT_WIDTH_IN_PX = 100,
+}
 
 @Component({
-    components: { GanttTask },
+    components: { TimePeriodMonth, GanttTask },
 })
 export default class GanttBoard extends Vue {
+    $refs!: {
+        time_period: TimePeriodMonth;
+    };
+
     @Prop({ required: true })
     readonly tasks!: Task[];
+
+    @Prop({ required: true })
+    private readonly locale!: string;
+
+    private additional_months: Date[] = [];
+
+    private observer: ResizeObserver | null = null;
+
+    mounted(): void {
+        this.observer = new ResizeObserver(this.adjustAdditionalMonths);
+        this.observer.observe(this.$refs.time_period.$el);
+    }
+
+    beforeDestroy(): void {
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+    }
+
+    adjustAdditionalMonths(entries: ResizeObserverEntry[]): void {
+        if (this.months.length === 0) {
+            return;
+        }
+
+        for (const entry of entries) {
+            if (entry.target !== this.$refs.time_period.$el) {
+                continue;
+            }
+
+            const nb_visible_months = Math.ceil(
+                entry.contentRect.width / Styles.TIME_UNIT_WIDTH_IN_PX
+            );
+            const nb_missing_months = nb_visible_months - this.months.length - 1;
+
+            this.additional_months = getAdditionalMonths(
+                this.months[this.months.length - 1],
+                nb_missing_months
+            );
+        }
+    }
+
+    get months(): Date[] {
+        return getMonths(getFirstDate(this.tasks), getLastDate(this.tasks));
+    }
+
+    get extended_months(): Date[] {
+        return [...this.months, ...this.additional_months];
+    }
 }
 </script>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Task {
-    id: number;
-    title: string;
-    xref: string;
-    color_name: string;
-    html_url: string;
-    start: Date | null;
-    end: Date | null;
+@use 'roadmap-variables';
+
+.roadmap-gantt-timeperiod-months {
+    display: flex;
+    height: 28px;
+    margin: 0 0 0 roadmap-variables.$task-header-width;
+}
+
+.roadmap-gantt-timeperiod-month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: roadmap-variables.$time-unit-width;
+    min-width: roadmap-variables.$time-unit-width;
+    color: var(--tlp-ui-dimmed);
+    font-size: .625rem;
+    font-weight: 600;
+    line-height: .75rem;
 }

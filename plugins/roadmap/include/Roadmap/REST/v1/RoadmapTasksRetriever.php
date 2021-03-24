@@ -29,6 +29,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 use UserManager;
 
@@ -62,6 +63,10 @@ final class RoadmapTasksRetriever
      * @var \Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var TimeframeBuilder
+     */
+    private $timeframe_builder;
 
     public function __construct(
         RoadmapWidgetDao $dao,
@@ -70,6 +75,7 @@ final class RoadmapTasksRetriever
         URLVerification $url_verification,
         TrackerFactory $tracker_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
+        TimeframeBuilder $timeframe_builder,
         \Tracker_ArtifactFactory $artifact_factory
     ) {
         $this->dao                        = $dao;
@@ -79,6 +85,7 @@ final class RoadmapTasksRetriever
         $this->tracker_factory            = $tracker_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
         $this->artifact_factory           = $artifact_factory;
+        $this->timeframe_builder          = $timeframe_builder;
     }
 
     /**
@@ -112,11 +119,18 @@ final class RoadmapTasksRetriever
             $offset,
             false
         );
-        $representations     = [];
+
+        $representations = [];
         foreach ($paginated_artifacts->getArtifacts() as $artifact) {
             if (! $artifact->userCanView($user)) {
                 continue;
             }
+
+            $time_period = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
+            $start_date  = $time_period->getStartDate();
+            $start       = $start_date ? (new \DateTimeImmutable())->setTimestamp($start_date) : null;
+            $end_date    = $time_period->getEndDate();
+            $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
             $representations[] = new TaskRepresentation(
                 $artifact->getId(),
@@ -124,6 +138,8 @@ final class RoadmapTasksRetriever
                 $artifact->getUri(),
                 (string) $artifact->getTitle(),
                 $tracker->getColor()->getName(),
+                $start,
+                $end,
             );
         }
 

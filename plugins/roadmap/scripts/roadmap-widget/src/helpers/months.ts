@@ -17,12 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Task {
-    id: number;
-    title: string;
-    xref: string;
-    color_name: string;
-    html_url: string;
-    start: Date | null;
-    end: Date | null;
+export function getMonths(start: Date | null, end: Date | null): Date[] {
+    if (!start || !end) {
+        return [];
+    }
+    if (start > end) {
+        return [];
+    }
+
+    const months = [new Date(start.setDate(1))];
+    let i = 1;
+    while (months[months.length - 1] < end) {
+        const same_date_months_later = new Date(new Date(start).setMonth(start.getMonth() + i++));
+        const beginning_of_month = new Date(same_date_months_later.setDate(1));
+        months.push(beginning_of_month);
+    }
+
+    return months;
 }

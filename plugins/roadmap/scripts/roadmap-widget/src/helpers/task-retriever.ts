@@ -17,12 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Task {
-    id: number;
-    title: string;
-    xref: string;
-    color_name: string;
-    html_url: string;
-    start: Date | null;
-    end: Date | null;
+import type { Task } from "../type";
+import { recursiveGet } from "tlp";
+
+export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
+    const tasks = await recursiveGet<Array<unknown>, Task>(`/api/roadmaps/${roadmap_id}/tasks`);
+
+    return tasks.map(
+        (task: Task): Task => {
+            return {
+                ...task,
+                start: task.start ? new Date(task.start) : null,
+                end: task.end ? new Date(task.end) : null,
+            };
+        }
+    );
 }

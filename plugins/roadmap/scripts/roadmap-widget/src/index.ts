@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         new AppComponent({
             propsData: {
                 roadmap_id,
+                locale: document.body.dataset.userLocale,
             },
         }).$mount(vue_mount_point);
     }

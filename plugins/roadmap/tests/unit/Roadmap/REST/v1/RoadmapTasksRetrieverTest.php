@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectManager;
+use Psr\Log\NullLogger;
 use Tracker;
 use TrackerFactory;
 use Tuleap\Roadmap\RoadmapWidgetDao;
@@ -37,6 +38,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 class RoadmapTasksRetrieverTest extends TestCase
@@ -101,6 +103,7 @@ class RoadmapTasksRetrieverTest extends TestCase
             $this->url_verification,
             $this->tracker_factory,
             $this->semantic_timeframe_builder,
+            new TimeframeBuilder($this->semantic_timeframe_builder, new NullLogger()),
             $this->artifact_factory,
         );
 
@@ -716,59 +719,58 @@ class RoadmapTasksRetrieverTest extends TestCase
             ->with(self::TRACKER_ID)
             ->andReturn($tracker);
 
+        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
         $this->semantic_timeframe_builder
             ->shouldReceive('getSemantic')
             ->with($tracker)
-            ->once()
-            ->andReturn(
-                new SemanticTimeframe(
-                    $tracker,
-                    Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
-                    null,
-                    Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
-                )
-            );
+            ->andReturn(new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field));
+
+        $task_201 = Mockery::mock(
+            Artifact::class,
+            [
+                'userCanView' => true,
+                'getId'       => 201,
+                'getXRef'     => 'task #201',
+                'getUri'      => '/plugins/tracker?aid=201',
+                'getTitle'    => 'Do this',
+                'getTracker'  => $tracker,
+            ]
+        );
+        $task_202 = Mockery::mock(
+            Artifact::class,
+            [
+                'userCanView' => false,
+                'getId'       => 202,
+                'getXRef'     => 'task #202',
+                'getUri'      => '/plugins/tracker?aid=202',
+                'getTitle'    => 'Do that',
+                'getTracker'  => $tracker,
+            ]
+        );
+        $task_203 = Mockery::mock(
+            Artifact::class,
+            [
+                'userCanView' => true,
+                'getId'       => 203,
+                'getXRef'     => 'task #203',
+                'getUri'      => '/plugins/tracker?aid=203',
+                'getTitle'    => 'Do those',
+                'getTracker'  => $tracker,
+            ]
+        );
+
+        $this->mockDate($task_201, $start_date_field, 1234567890);
+        $this->mockDate($task_201, $end_date_field, 1234567890);
+        $this->mockDate($task_203, $start_date_field, null);
+        $this->mockDate($task_203, $end_date_field, 1234567890);
 
         $this->artifact_factory
             ->shouldReceive('getPaginatedArtifactsByTrackerId')
             ->with(self::TRACKER_ID, 0, 10, false)
             ->once()
             ->andReturn(
-                new \Tracker_Artifact_PaginatedArtifacts(
-                    [
-                        Mockery::mock(
-                            Artifact::class,
-                            [
-                                'userCanView' => true,
-                                'getId'       => 201,
-                                'getXRef'     => 'task #201',
-                                'getUri'      => '/plugins/tracker?aid=201',
-                                'getTitle'    => 'Do this',
-                            ]
-                        ),
-                        Mockery::mock(
-                            Artifact::class,
-                            [
-                                'userCanView' => false,
-                                'getId'       => 202,
-                                'getXRef'     => 'task #202',
-                                'getUri'      => '/plugins/tracker?aid=202',
-                                'getTitle'    => 'Do that',
-                            ]
-                        ),
-                        Mockery::mock(
-                            Artifact::class,
-                            [
-                                'userCanView' => true,
-                                'getId'       => 203,
-                                'getXRef'     => 'task #203',
-                                'getUri'      => '/plugins/tracker?aid=203',
-                                'getTitle'    => 'Do those',
-                            ]
-                        ),
-                    ],
-                    3
-                )
+                new \Tracker_Artifact_PaginatedArtifacts([$task_201, $task_202, $task_203,], 3)
             );
 
         $collection = $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
@@ -776,10 +778,51 @@ class RoadmapTasksRetrieverTest extends TestCase
         self::assertCount(2, $collection->getRepresentations());
         self::assertEquals(
             [
-                new TaskRepresentation(201, 'task #201', '/plugins/tracker?aid=201', 'Do this', 'acid-green'),
-                new TaskRepresentation(203, 'task #203', '/plugins/tracker?aid=203', 'Do those', 'acid-green'),
+                new TaskRepresentation(
+                    201,
+                    'task #201',
+                    '/plugins/tracker?aid=201',
+                    'Do this',
+                    'acid-green',
+                    (new \DateTimeImmutable())->setTimestamp(1234567890),
+                    (new \DateTimeImmutable())->setTimestamp(1234567890)
+                ),
+                new TaskRepresentation(
+                    203,
+                    'task #203',
+                    '/plugins/tracker?aid=203',
+                    'Do those',
+                    'acid-green',
+                    null,
+                    (new \DateTimeImmutable())->setTimestamp(1234567890)
+                ),
             ],
             $collection->getRepresentations()
         );
+    }
+
+    private function mockDate(Artifact $artifact, Mockery\MockInterface $date_field, ?int $timestamp): void
+    {
+        if (! $timestamp) {
+            $date_field
+                ->shouldReceive('getLastChangesetValue')
+                ->with($artifact)
+                ->andReturn(null);
+
+            return;
+        }
+
+        $value = new \Tracker_Artifact_ChangesetValue_Date(
+            1,
+            Mockery::mock(\Tracker_Artifact_Changeset::class),
+            $date_field,
+            false,
+            $timestamp
+        );
+
+        $date_field
+            ->shouldReceive('getLastChangesetValue')
+            ->with($artifact)
+            ->andReturn($value);
     }
 }

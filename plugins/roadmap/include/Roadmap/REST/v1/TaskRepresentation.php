@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use Tuleap\REST\JsonCast;
+
 /**
  * @psalm-immutable
  */
@@ -47,13 +49,30 @@ final class TaskRepresentation
      * @var string
      */
     public $color_name;
+    /**
+     * @var string|null
+     */
+    public $start;
+    /**
+     * @var string|null
+     */
+    public $end;
 
-    public function __construct(int $id, string $xref, string $html_url, string $title, string $color_name)
-    {
+    public function __construct(
+        int $id,
+        string $xref,
+        string $html_url,
+        string $title,
+        string $color_name,
+        ?\DateTimeImmutable $start,
+        ?\DateTimeImmutable $end
+    ) {
         $this->id         = $id;
         $this->xref       = $xref;
         $this->html_url   = $html_url;
         $this->title      = $title;
         $this->color_name = $color_name;
+        $this->start      = JsonCast::fromDateTimeToDate($start);
+        $this->end        = JsonCast::fromDateTimeToDate($end);
     }
 }
