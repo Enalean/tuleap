@@ -18,33 +18,21 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import GanttTask from "./GanttTask.vue";
-import type { Task } from "../../../type";
-import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
 
-describe("GanttTask", () => {
-    it("Displays the header of the task", () => {
-        const task: Task = {
-            id: 123,
-            title: "Do this",
-            xref: "task #123",
-            color_name: "fiesta-red",
-            html_url: "/plugins/tracker?aid=123",
-            start: null,
-            end: null,
-        };
-
-        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
-
-        const wrapper = shallowMount(GanttTask, {
+describe("BackgroundGrid", () => {
+    it("Display the grid to help user distinguish months", () => {
+        const wrapper = shallowMount(BackgroundGrid, {
             propsData: {
-                task,
-                time_units,
+                time_units: [new Date(2020, 3, 1), new Date(2020, 4, 1)],
             },
         });
 
-        expect(wrapper.findComponent(TaskHeader).exists()).toBe(true);
-        expect(wrapper.findComponent(BackgroundGrid).exists()).toBe(true);
+        expect(wrapper).toMatchInlineSnapshot(`
+            <div class="roadmap-gantt-task-background-grid">
+              <div class="roadmap-gantt-task-background-grid-unit"></div>
+              <div class="roadmap-gantt-task-background-grid-unit"></div>
+            </div>
+        `);
     });
 });

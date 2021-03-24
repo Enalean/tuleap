@@ -17,25 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'roadmap-variables';
-@use 'grid';
+@mixin alternate-background() {
+    background: var(--tlp-ui-white);
 
-.roadmap-gantt-timeperiod-months {
-    display: flex;
-    height: 28px;
-    margin: 0 0 0 roadmap-variables.$task-header-width;
-}
-
-.roadmap-gantt-timeperiod-month {
-    @include grid.alternate-background;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: roadmap-variables.$time-unit-width;
-    min-width: roadmap-variables.$time-unit-width;
-    color: var(--tlp-ui-dimmed);
-    font-size: .625rem;
-    font-weight: 600;
-    line-height: .75rem;
+    &:nth-child(even) {
+        background: var(--tlp-theme-color-dimmed-background);
+    }
 }

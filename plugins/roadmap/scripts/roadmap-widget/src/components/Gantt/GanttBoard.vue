@@ -20,12 +20,13 @@
 
 <template>
     <div class="roadmap-gantt">
-        <time-period-month
-            v-bind:months="extended_months"
-            v-bind:locale="locale"
-            ref="time_period"
+        <time-period-month v-bind:months="time_units" v-bind:locale="locale" ref="time_period" />
+        <gantt-task
+            v-for="task of tasks"
+            v-bind:key="task.id"
+            v-bind:task="task"
+            v-bind:time_units="time_units"
         />
-        <gantt-task v-for="task of tasks" v-bind:key="task.id" v-bind:task="task" />
     </div>
 </template>
 
@@ -99,7 +100,7 @@ export default class GanttBoard extends Vue {
         return getMonths(getFirstDate(this.tasks), getLastDate(this.tasks));
     }
 
-    get extended_months(): Date[] {
+    get time_units(): Date[] {
         return [...this.months, ...this.additional_months];
     }
 }

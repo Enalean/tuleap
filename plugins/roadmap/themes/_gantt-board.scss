@@ -19,10 +19,12 @@
 
 @use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 @use 'roadmap-variables';
+@use 'grid';
 
 .roadmap-gantt-task {
     $radius: 4px;
 
+    display: flex;
     height: roadmap-variables.$task-height;
     border-bottom: 1px solid var(--tlp-ui-border-normal);
 
@@ -44,6 +46,7 @@
     flex-direction: column;
     justify-content: space-between;
     width: roadmap-variables.$task-header-width;
+    min-width: roadmap-variables.$task-header-width;
     height: 100%;
     padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-large-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
     border-right: 2px solid var(--tlp-ui-border-normal);
@@ -71,4 +74,15 @@
             color: map-get($colors, 'text');
         }
     }
+}
+
+.roadmap-gantt-task-background-grid {
+    display: flex;
+}
+
+.roadmap-gantt-task-background-grid-unit {
+    @include grid.alternate-background;
+
+    display: flex;
+    width: roadmap-variables.$time-unit-width;
 }

@@ -19,26 +19,21 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-task">
-        <task-header v-bind:task="task" />
-        <background-grid v-bind:time_units="time_units" />
+    <div class="roadmap-gantt-task-background-grid">
+        <div
+            class="roadmap-gantt-task-background-grid-unit"
+            v-for="unit in time_units"
+            v-bind:key="'grid-month-' + unit.toISOString()"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Task } from "../../../type";
-import TaskHeader from "./TaskHeader.vue";
-import BackgroundGrid from "./BackgroundGrid.vue";
 
-@Component({
-    components: { BackgroundGrid, TaskHeader },
-})
-export default class GanttTask extends Vue {
-    @Prop({ required: true })
-    readonly task!: Task;
-
+@Component
+export default class BackgroundGrid extends Vue {
     @Prop({ required: true })
     readonly time_units!: Date[];
 }
