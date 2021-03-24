@@ -7,11 +7,11 @@
 
     .contact-support-modal-form,
     .tlp-pane {
+        margin: 0 0 20px;
         padding: 20px;
         border: 1px solid #e8e8e8;
         border-radius: 3px;
         background: #ffffff;
-        margin: 0 0 20px;
 
         h1,
         .tlp-pane-subtitle {
@@ -38,8 +38,8 @@
         width: 100%;
 
         > .controls > label {
+            color: #666666;
             font-weight: 600;
-            color: #666;
         }
     }
 
