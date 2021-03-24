@@ -33,6 +33,7 @@
                     value="text"
                     v-bind:selected="is_text"
                     data-test="ttm-definition-step-description-format-text"
+                    v-if="is_text_format_option_enabled"
                 >
                     Text
                 </option>
@@ -91,6 +92,7 @@ export default {
         },
         is_in_preview_mode: Boolean,
         is_preview_loading: Boolean,
+        initial_step_format: String,
     },
     computed: {
         ...mapState(["field_id"]),
@@ -108,6 +110,9 @@ export default {
         },
         is_commonmark_button_displayed() {
             return !this.disabled && this.is_commonmark;
+        },
+        is_text_format_option_enabled() {
+            return this.initial_step_format === TEXT_FORMAT_TEXT;
         },
     },
     methods: {

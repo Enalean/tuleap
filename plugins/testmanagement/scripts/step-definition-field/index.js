@@ -40,10 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
         const store = createStore();
+        const initial_steps = addInitialFormatToSteps(JSON.parse(mount_point.dataset.steps));
+
         new StepDefinitionFieldComponent({
             store,
             propsData: {
-                initial_steps: JSON.parse(mount_point.dataset.steps),
+                initial_steps,
                 artifact_field_id: JSON.parse(mount_point.dataset.fieldId),
                 empty_step: JSON.parse(mount_point.dataset.emptyStep),
                 upload_url: mount_point.dataset.uploadUrl,
@@ -54,3 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setProjectId(mount_point.dataset.projectId);
     }
 });
+
+function addInitialFormatToSteps(steps) {
+    return steps.map((step) => ({ ...step, initial_format: step.description_format }));
+}
