@@ -115,8 +115,8 @@ describe("App", () => {
 
     it("Displays a gantt board with tasks", async () => {
         const tasks = [
-            { id: 1, start: null, end: null },
-            { id: 2, start: null, end: null },
+            { id: 1, start: new Date(2020, 3, 15), end: null },
+            { id: 2, start: new Date(2020, 4, 15), end: null },
         ] as Task[];
         jest.spyOn(tlp, "recursiveGet").mockResolvedValue(tasks);
 

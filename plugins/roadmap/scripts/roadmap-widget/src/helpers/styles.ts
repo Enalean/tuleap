@@ -19,4 +19,6 @@
 
 export enum Styles {
     TIME_UNIT_WIDTH_IN_PX = 100,
+    MILESTONE_WIDTH_IN_PX = 21,
+    TASK_BAR_MIN_WIDTH_IN_PX = 10,
 }
