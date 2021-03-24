@@ -126,6 +126,10 @@
         &.help-dropdown-link-highlight {
             color: $tlp-ui-warning;
         }
+
+        > .review-link-icon {
+            color: $tlp-swatch-fiesta-red-text;
+        }
     }
 
     .dropdown-menu-item-alt {

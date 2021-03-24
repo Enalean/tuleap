@@ -21,12 +21,21 @@ declare(strict_types=1);
 
 namespace Tuleap\HelpDropdown;
 
+use ForgeConfig;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Sanitizer\URISanitizer;
 
 class HelpDropdownPresenterBuilder
 {
+    /**
+     * Set to 0 to hide Tuleap review link
+     *
+     * @tlp-config-key
+     */
+    public const  DISPLAY_TULEAP_REVIEW_LINK = 'display_tuleap_review_link';
+    private const REVIEW_LINK                = 'https://www.tuleap.org/write-a-review';
+
     /**
      * @var EventDispatcherInterface
      */
@@ -76,6 +85,7 @@ class HelpDropdownPresenterBuilder
         ];
 
         $release_note = $this->getReleaseNoteLink($tuleap_version);
+        $review_link  = $this->getReviewLink();
 
         if ($current_user->isAnonymous()) {
             $has_release_note_been_seen = true;
@@ -88,6 +98,7 @@ class HelpDropdownPresenterBuilder
         return new HelpDropdownPresenter(
             $main_items,
             $explorer_endpoint_event->getEndpointURL(),
+            $review_link,
             $release_note,
             $has_release_note_been_seen,
             $this->getSiteContentLinks(),
@@ -140,5 +151,22 @@ class HelpDropdownPresenterBuilder
         }
 
         return $links;
+    }
+
+    private function getReviewLink(): ?HelpLinkPresenter
+    {
+        if (! ForgeConfig::get(self::DISPLAY_TULEAP_REVIEW_LINK)) {
+            return null;
+        }
+
+        return HelpLinkPresenter::build(
+            dgettext(
+                'tuleap-core',
+                'You enjoy Tuleap? Make a review'
+            ),
+            self::REVIEW_LINK,
+            "fa-heart",
+            $this->uri_sanitizer
+        );
     }
 }
