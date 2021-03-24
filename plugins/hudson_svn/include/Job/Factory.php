@@ -35,10 +35,7 @@ class Factory
         $this->dao = $dao;
     }
 
-    /**
-     * @return Job | null
-     */
-    public function getJobById($job_id)
+    public function getJobById(int $job_id): ?Job
     {
         $row = $this->dao->getJob($job_id);
 

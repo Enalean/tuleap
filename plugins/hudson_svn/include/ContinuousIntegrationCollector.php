@@ -20,6 +20,7 @@
 
 namespace Tuleap\HudsonSvn;
 
+use Tuleap\HudsonSvn\Job\Job;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\HudsonSvn\Job\Dao;
@@ -62,7 +63,7 @@ class ContinuousIntegrationCollector
         $this->factory            = $factory;
     }
 
-    public function collect(Project $project, $job_id)
+    public function collect(Project $project, ?int $job_id)
     {
         $job_ids      = $this->getJobIdsThatTriggerCommit($project);
         $job          = $this->getJob($job_id);
@@ -97,7 +98,7 @@ class ContinuousIntegrationCollector
         return '';
     }
 
-    private function getJob($job_id)
+    private function getJob(?int $job_id): ?Job
     {
         if ($job_id !== null) {
             return $this->factory->getJobById($job_id);
@@ -115,8 +116,8 @@ class ContinuousIntegrationCollector
     {
         $used = [];
 
-        foreach ($this->getJobIds($project) as $job_id) {
-            $used[$job_id] = true;
+        foreach ($this->getJobIds($project) as $row) {
+            $used[$row["id"]] = true;
         }
 
         return $used;

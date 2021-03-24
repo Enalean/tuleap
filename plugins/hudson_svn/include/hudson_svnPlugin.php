@@ -226,7 +226,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
             if ($params['request']->valid($vRepoId)) {
                 $this->getJobManager()->save($params);
             } else {
-                $this->getJobManager()->delete($params['job_id']);
+                $this->getJobManager()->delete((int) $params['job_id']);
             }
         }
     }
@@ -234,7 +234,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
     public function delete_ci_triggers($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isJobValid($params['job_id'])) {
-            if (! $this->getJobManager()->delete($params['job_id'])) {
+            if (! $this->getJobManager()->delete((int) $params['job_id'])) {
                 $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson_svn', 'An error occurred while deleting job.'));
             }
         }
