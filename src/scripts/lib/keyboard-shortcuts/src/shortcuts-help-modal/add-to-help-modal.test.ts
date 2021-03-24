@@ -20,7 +20,10 @@
 import { GLOBAL_SCOPE } from "../type";
 import type { ShortcutsGroup } from "../type";
 
-import { createShortcutsGroupInHelpModal } from "./add-to-help-modal";
+import {
+    addShortcutsGroupToShortcutsModal,
+    createShortcutsGroupContainer,
+} from "./add-to-help-modal";
 import * as getter_shortcuts_group_head from "./create-shortcuts-group-head";
 import * as getter_shortcuts_group_table from "./create-shortcuts-group-table";
 import * as getter_shortcut_section from "./get-shortcuts-section";
@@ -38,7 +41,7 @@ describe("add-to-help-modal.ts", () => {
     let shortcuts_group_head: HTMLElement;
     let shortcuts_group_table: HTMLTableElement;
 
-    const shortcuts_group: ShortcutsGroup = {} as ShortcutsGroup;
+    const shortcuts_group: ShortcutsGroup = { title: "Shortcuts group title" } as ShortcutsGroup;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
@@ -63,30 +66,40 @@ describe("add-to-help-modal.ts", () => {
         );
     });
 
-    it("adds to the global shortcuts section in the shortcuts modal if GLOBAL_SCOPE is provided", () => {
-        const get_global_shortcuts_section = jest.spyOn(
-            getter_shortcut_section,
-            "getGlobalShortcutsSection"
-        );
-        createShortcutsGroupInHelpModal(doc, shortcuts_group, GLOBAL_SCOPE);
+    describe("addShortcutsGroupToShortcutsModal", () => {
+        it("adds to the global shortcuts section in the shortcuts modal if GLOBAL_SCOPE is provided", () => {
+            const get_global_shortcuts_section = jest.spyOn(
+                getter_shortcut_section,
+                "getGlobalShortcutsSection"
+            );
+            addShortcutsGroupToShortcutsModal(doc, shortcuts_group, GLOBAL_SCOPE);
 
-        expect(get_global_shortcuts_section).toHaveBeenCalled();
+            expect(get_global_shortcuts_section).toHaveBeenCalled();
+        });
+
+        it("adds to the specific shortcuts section in the shortcuts modal if no scope is provided", () => {
+            const get_specific_shortcuts_section = jest.spyOn(
+                getter_shortcut_section,
+                "getSpecificShortcutsSection"
+            );
+            addShortcutsGroupToShortcutsModal(doc, shortcuts_group);
+
+            expect(get_specific_shortcuts_section).toHaveBeenCalled();
+        });
     });
 
-    it("adds to the specific shortcuts section in the shortcuts modal if no scope is provided", () => {
-        const get_specific_shortcuts_section = jest.spyOn(
-            getter_shortcut_section,
-            "getSpecificShortcutsSection"
-        );
-        createShortcutsGroupInHelpModal(doc, shortcuts_group);
+    describe("createShortcutsGroupContainer", () => {
+        it("appends a group head and table to the shortcuts group in shortcuts section", () => {
+            const shortcuts_group_container = createShortcutsGroupContainer(doc, shortcuts_group);
 
-        expect(get_specific_shortcuts_section).toHaveBeenCalled();
-    });
+            expect(shortcuts_group_container.firstChild).toBe(shortcuts_group_head);
+            expect(shortcuts_group_container.lastChild).toBe(shortcuts_group_table);
+        });
 
-    it("appends a group head and table to the shortcuts section", () => {
-        createShortcutsGroupInHelpModal(doc, shortcuts_group);
+        it("appends its title as a data-attribute to the shortcuts group", () => {
+            const shortcuts_group_container = createShortcutsGroupContainer(doc, shortcuts_group);
 
-        expect(specific_shortcuts_section.firstChild).toBe(shortcuts_group_head);
-        expect(specific_shortcuts_section.lastChild).toBe(shortcuts_group_table);
+            expect(shortcuts_group_container.dataset.shortcutsGroup).toBe(shortcuts_group.title);
+        });
     });
 });

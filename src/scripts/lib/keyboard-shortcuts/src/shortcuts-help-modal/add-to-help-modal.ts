@@ -24,16 +24,27 @@ import { createShortcutsGroupHead } from "./create-shortcuts-group-head";
 import { createShortcutsGroupTable } from "./create-shortcuts-group-table";
 import { getGlobalShortcutsSection, getSpecificShortcutsSection } from "./get-shortcuts-section";
 
-export function createShortcutsGroupInHelpModal(
+export function addShortcutsGroupToShortcutsModal(
     doc: Document,
     shortcuts_group: ShortcutsGroup,
     scope: Scope = PLUGIN_SCOPE
 ): void {
+    const shortcuts_group_container = createShortcutsGroupContainer(doc, shortcuts_group);
+    const shortcuts_modal_section =
+        scope === GLOBAL_SCOPE ? getGlobalShortcutsSection(doc) : getSpecificShortcutsSection(doc);
+    shortcuts_modal_section.append(shortcuts_group_container);
+}
+
+export function createShortcutsGroupContainer(
+    doc: Document,
+    shortcuts_group: ShortcutsGroup
+): HTMLElement {
     const shortcuts_group_head = createShortcutsGroupHead(doc, shortcuts_group);
     const shortcuts_group_table = createShortcutsGroupTable(doc, shortcuts_group);
 
-    const shortcuts_section =
-        scope === GLOBAL_SCOPE ? getGlobalShortcutsSection(doc) : getSpecificShortcutsSection(doc);
+    const shortcuts_group_container = doc.createElement("div");
+    shortcuts_group_container.dataset.shortcutsGroup = shortcuts_group.title;
+    shortcuts_group_container.append(shortcuts_group_head, shortcuts_group_table);
 
-    shortcuts_section.append(shortcuts_group_head, shortcuts_group_table);
+    return shortcuts_group_container;
 }
