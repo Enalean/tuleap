@@ -352,12 +352,6 @@ document.observe("dom:loaded", function () {
         }
 
         function load_behavior_in_renderer_panel(renderer_panel) {
-            codendi.tracker.artifact.editor.disableWarnOnPageLeave();
-
-            $("lightwindow_title_bar_close_link").observe("click", function () {
-                window.onbeforeunload = codendi.tracker.artifact.editor.warnOnPageLeave;
-            });
-
             codendi.Tooltip.load(renderer_panel);
             tuleap.dateTimePicker.init();
 
@@ -712,6 +706,7 @@ document.observe("dom:loaded", function () {
 
                             //stop the propagation of the event (don't submit any forms)
                             Event.stop(evt);
+
                             return false;
                         });
                     }
