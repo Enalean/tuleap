@@ -58,7 +58,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends TestCase
     {
         $this->jira_client->shouldReceive('getUrl')
             ->once()
-            ->with('/rest/api/3/configuration/timetracking')
+            ->with('/rest/api/2/configuration/timetracking')
             ->andReturn([
                 'key'  => "JIRA",
                 'name' => "JIRA provided time tracking"
@@ -74,7 +74,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends TestCase
     {
         $this->jira_client->shouldReceive('getUrl')
             ->once()
-            ->with('/rest/api/3/configuration/timetracking')
+            ->with('/rest/api/2/configuration/timetracking')
             ->andReturn([]);
 
         $configuration = $this->retriever->getJiraTimetrackingConfiguration();
@@ -86,7 +86,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends TestCase
     {
         $this->jira_client->shouldReceive('getUrl')
             ->once()
-            ->with('/rest/api/3/configuration/timetracking')
+            ->with('/rest/api/2/configuration/timetracking')
             ->andReturn([
                 'name' => "JIRA provided time tracking"
             ]);
@@ -100,7 +100,7 @@ class JiraTimetrackingConfigurationRetrieverTest extends TestCase
     {
         $this->jira_client->shouldReceive('getUrl')
             ->once()
-            ->with('/rest/api/3/configuration/timetracking')
+            ->with('/rest/api/2/configuration/timetracking')
             ->andReturn([
                 'key'  => "whatever",
                 'name' => "JIRA provided time tracking"
