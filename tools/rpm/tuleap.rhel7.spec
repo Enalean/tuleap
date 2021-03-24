@@ -1413,7 +1413,7 @@ fi
 %files plugin-roadmap
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/roadmap
-%{APP_DIR}/plugins/roadmap/assets
+%{APP_DIR}/src/www/assets/roadmap
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
