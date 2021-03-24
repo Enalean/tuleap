@@ -33,7 +33,13 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 class ClientWrapper implements JiraClient
 {
-    public const JIRA_CORE_BASE_URL = '/rest/api/3';
+    /**
+     * According to [1] the v3 API is only available on Jira Cloud with no forseen implementation on Jira Server (on prem)
+     * So we stick to v2 because this code should run against on prem instances.
+     *
+     * [1] https://community.atlassian.com/t5/Jira-questions/When-will-Jira-Server-support-REST-API-v3/qaq-p/1303614
+     */
+    public const JIRA_CORE_BASE_URL = '/rest/api/2';
 
     /**
      * @var ClientInterface
