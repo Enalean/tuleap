@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin alternate-background() {
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
-    background: var(--tlp-ui-white);
+import { getLeftForDate } from "./left-postion";
 
-    &:nth-child(even) {
-        background: var(--tlp-theme-color-dimmed-background);
-    }
-}
+describe("getLeftForDate", () => {
+    it("Gives a left position according to the time period", () => {
+        expect(
+            getLeftForDate(new Date(2020, 3, 15), [
+                new Date(2020, 1, 1),
+                new Date(2020, 2, 1),
+                new Date(2020, 3, 1),
+                new Date(2020, 4, 1),
+            ])
+        ).toBe(247);
+    });
+});

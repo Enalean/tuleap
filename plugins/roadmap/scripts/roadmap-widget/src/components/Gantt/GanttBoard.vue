@@ -21,12 +21,15 @@
 <template>
     <div class="roadmap-gantt">
         <time-period-month v-bind:months="time_units" v-bind:locale="locale" ref="time_period" />
-        <gantt-task
-            v-for="task of tasks"
-            v-bind:key="task.id"
-            v-bind:task="task"
-            v-bind:time_units="time_units"
-        />
+        <div>
+            <gantt-task
+                v-for="task of tasks"
+                v-bind:key="task.id"
+                v-bind:task="task"
+                v-bind:time_units="time_units"
+            />
+        </div>
+        <today-indicator v-bind:locale="locale" v-bind:months="months" v-bind:now="now" />
     </div>
 </template>
 
@@ -40,13 +43,11 @@ import { getMonths } from "../../helpers/months";
 import { getFirstDate } from "../../helpers/first-date";
 import { getLastDate } from "../../helpers/last-date";
 import { getAdditionalMonths } from "../../helpers/additional-months";
-
-enum Styles {
-    TIME_UNIT_WIDTH_IN_PX = 100,
-}
+import TodayIndicator from "./TodayIndicator.vue";
+import { Styles } from "../../helpers/styles";
 
 @Component({
-    components: { TimePeriodMonth, GanttTask },
+    components: { TodayIndicator, TimePeriodMonth, GanttTask },
 })
 export default class GanttBoard extends Vue {
     $refs!: {
@@ -62,6 +63,8 @@ export default class GanttBoard extends Vue {
     private additional_months: Date[] = [];
 
     private observer: ResizeObserver | null = null;
+
+    private now = new Date();
 
     mounted(): void {
         this.observer = new ResizeObserver(this.adjustAdditionalMonths);
@@ -97,7 +100,7 @@ export default class GanttBoard extends Vue {
     }
 
     get months(): Date[] {
-        return getMonths(getFirstDate(this.tasks), getLastDate(this.tasks));
+        return getMonths(getFirstDate(this.tasks), getLastDate(this.tasks), this.now);
     }
 
     get time_units(): Date[] {

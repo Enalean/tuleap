@@ -34,6 +34,7 @@
     justify-content: center;
     width: roadmap-variables.$time-unit-width;
     min-width: roadmap-variables.$time-unit-width;
+    border-bottom: 0;
     color: var(--tlp-ui-dimmed);
     font-size: .625rem;
     font-weight: 600;
