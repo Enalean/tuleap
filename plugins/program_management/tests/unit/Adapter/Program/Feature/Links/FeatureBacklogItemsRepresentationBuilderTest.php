@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Mockery;
 use Tracker_ArtifactFactory;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\ProgramTracker;
@@ -51,12 +53,17 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
      */
     private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BackgroundColorRetriever
+     */
+    private $retrieve_background;
 
     protected function setUp(): void
     {
-        $this->dao              = \Mockery::mock(ArtifactsLinkedToParentDao::class);
-        $this->artifact_factory = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->user             = \Mockery::mock(\PFUser::class);
+        $this->dao                 = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $this->artifact_factory    = \Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->user                = \Mockery::mock(\PFUser::class);
+        $this->retrieve_background = \Mockery::mock(BackgroundColorRetriever::class);
 
         $plan_store = new class () implements PlanStore {
             public function isPlannable(int $plannable_tracker_id): bool
@@ -94,7 +101,8 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
         $this->builder = new FeatureBacklogItemsRepresentationBuilder(
             $this->dao,
             $this->artifact_factory,
-            $plan_store
+            $plan_store,
+            $this->retrieve_background
         );
     }
 
@@ -112,23 +120,37 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
             ->once()
             ->andReturn(\Mockery::mock(Artifact::class, ['getTrackerId' => 56]));
 
+        $artifact_125 = $this->buildArtifact(125);
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, 125)
             ->once()
-            ->andReturn($this->buildArtifact(125));
+            ->andReturn($artifact_125);
 
+        $artifact_126 = $this->buildArtifact(126);
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, 126)
             ->once()
-            ->andReturn($this->buildArtifact(126));
+            ->andReturn($artifact_126);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
             ->with($this->user, 666)
             ->once()
             ->andReturnNull();
+
+        $this->retrieve_background
+            ->shouldReceive('retrieveBackgroundColor')
+            ->with($artifact_125, $this->user)
+            ->once()
+            ->andReturn(new BackgroundColor("lake-placid-blue"));
+
+        $this->retrieve_background
+            ->shouldReceive('retrieveBackgroundColor')
+            ->with($artifact_126, $this->user)
+            ->once()
+            ->andReturn(new BackgroundColor("fiesta-red"));
 
         $children = $this->builder->buildFeatureBacklogItems(10, $this->user);
 
@@ -142,6 +164,8 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
         self::assertEquals(true, $children[0]->project->id);
         self::assertEquals("Project", $children[0]->project->label);
         self::assertEquals("projects/100", $children[0]->project->uri);
+        self::assertEquals("lake-placid-blue", $children[0]->background_color);
+        self::assertEquals("inca-silver", $children[0]->color_xref_name);
 
         self::assertEquals(126, $children[1]->id);
         self::assertEquals('Title', $children[1]->title);
@@ -151,6 +175,8 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
         self::assertEquals(true, $children[1]->project->id);
         self::assertEquals("Project", $children[1]->project->label);
         self::assertEquals("projects/100", $children[1]->project->uri);
+        self::assertEquals("fiesta-red", $children[1]->background_color);
+        self::assertEquals("inca-silver", $children[1]->color_xref_name);
     }
 
     public function testThrowErrorIfUserCanNotSeeFeature(): void
@@ -189,7 +215,7 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
         $artifact->shouldReceive('getTitle')->once()->andReturn("Title");
         $artifact->shouldReceive('isOpen')->once()->andReturn(true);
         $artifact->shouldReceive('getTracker')
-            ->once()
+            ->twice()
             ->andReturn(
                 TrackerTestBuilder::aTracker()
                     ->withProject(

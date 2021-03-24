@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureBacklogItemsRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureIsNotPlannableException;
@@ -31,6 +33,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureBacklogItems;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 final class ProgramBacklogItemsResource extends AuthenticatedResource
 {
@@ -51,7 +54,8 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
         $this->feature_backlog_children = new FeatureBacklogItemsRepresentationBuilder(
             new ArtifactsLinkedToParentDao(),
             \Tracker_ArtifactFactory::instance(),
-            new PlanDao()
+            new PlanDao(),
+            new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()))
         );
     }
 

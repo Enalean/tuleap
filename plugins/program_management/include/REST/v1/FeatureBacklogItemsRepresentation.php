@@ -53,14 +53,32 @@ final class FeatureBacklogItemsRepresentation
      * @var ProjectReference
      */
     public $project;
+    /**
+     * @var string
+     */
+    public $color_xref_name;
+    /**
+     * @var string
+     */
+    public $background_color;
 
-    public function __construct(int $id, string $uri, string $xref, ?string $title, bool $is_open, ProjectReference $project)
-    {
-        $this->id      = $id;
-        $this->uri     = $uri;
-        $this->xref    = $xref;
-        $this->title   = $title;
-        $this->is_open = $is_open;
-        $this->project = $project;
+    public function __construct(
+        int $id,
+        string $uri,
+        string $xref,
+        ?string $title,
+        bool $is_open,
+        ProjectReference $project,
+        string $color_xref_name,
+        string $background_color
+    ) {
+        $this->id               = $id;
+        $this->uri              = $uri;
+        $this->xref             = $xref;
+        $this->title            = $title;
+        $this->is_open          = $is_open;
+        $this->project          = $project;
+        $this->color_xref_name  = $color_xref_name;
+        $this->background_color = $background_color;
     }
 }

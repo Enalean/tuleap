@@ -43,6 +43,8 @@
         <feature-card-backlog-items
             v-bind:class="{ 'backlog-items-draggable': is_draggable }"
             v-if="element.has_user_story_linked"
+            v-bind:feature="element"
+            v-bind:program_increment="program_increment"
         />
     </div>
 </template>

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { ProgramIncrement } from "./helpers/ProgramIncrement/program-increment-retriever";
+import type { UserStory } from "./helpers/BacklogItems/children-feature-retriever";
 
 export interface ProgramElement {
     artifact_id: number;
@@ -25,6 +26,7 @@ export interface ProgramElement {
     tracker: TrackerMinimalRepresentation;
     background_color: string;
     has_user_story_linked: boolean;
+    user_stories?: UserStory[];
 }
 
 export interface TrackerMinimalRepresentation {
