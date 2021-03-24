@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project unix-name="roadmap" full-name="roadmap" description="roadmap" access="private">
+  <long-description>roadmap</long-description>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="true"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T754" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
+      <name><![CDATA[Task]]></name>
+      <item_name><![CDATA[tasks]]></item_name>
+      <description><![CDATA[Thinks to do]]></description>
+      <color><![CDATA[fiesta-red]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F15825" rank="7" id="15825" tracker_id="754" parent_id="0">
+          <name><![CDATA[access_information]]></name>
+          <label><![CDATA[Access Information]]></label>
+          <formElements>
+            <formElement type="column" ID="F15826" rank="0" id="15826" tracker_id="754" parent_id="15825">
+              <name><![CDATA[column_0]]></name>
+              <label><![CDATA[Access information left column]]></label>
+              <formElements>
+                <formElement type="aid" ID="F15827" rank="0" id="15827" tracker_id="754" parent_id="15826">
+                  <name><![CDATA[artifact_id]]></name>
+                  <label><![CDATA[Artifact ID]]></label>
+                  <description><![CDATA[Unique artifact identifier]]></description>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F15833" rank="38" id="15833" tracker_id="754" parent_id="0" required="1">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <formElements>
+            <formElement type="string" ID="F15834" rank="0" id="15834" tracker_id="754" parent_id="15833" required="1">
+              <name><![CDATA[summary]]></name>
+              <label><![CDATA[Summary]]></label>
+              <description><![CDATA[One line description of the artifact]]></description>
+              <properties maxchars="150" size="60"/>
+            </formElement>
+            <formElement type="text" ID="F15835" rank="4" id="15835" tracker_id="754" parent_id="15833">
+              <name><![CDATA[details]]></name>
+              <label><![CDATA[Original Submission]]></label>
+              <description><![CDATA[A full description of the artifact]]></description>
+              <properties rows="7" cols="60"/>
+            </formElement>
+            <formElement type="date" ID="F15874" rank="0" id="15874" tracker_id="756" parent_id="15873" required="1">
+              <name><![CDATA[start_date]]></name>
+              <label><![CDATA[Start Date]]></label>
+              <properties display_time="0"/>
+            </formElement>
+            <formElement type="date" ID="F15875" rank="2" id="15875" tracker_id="756" parent_id="15873" required="1">
+              <name><![CDATA[end_date]]></name>
+              <label><![CDATA[End Date]]></label>
+              <properties display_time="0"/>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F15834"/>
+        </semantic>
+        <semantic type="description">
+          <shortname><![CDATA[description]]></shortname>
+          <label><![CDATA[Description]]></label>
+          <description><![CDATA[Define the description of an artifact]]></description>
+          <field REF="F15835"/>
+        </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F15874"/>
+          <end_date_field REF="F15875"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[All Task]]></name>
+          <description><![CDATA[Task Report]]></description>
+          <criterias>
+            <criteria rank="1">
+              <field REF="F15834"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R2598" type="table" rank="0" chunksz="15">
+              <name><![CDATA[All Task]]></name>
+              <columns>
+                <field REF="F15834"/>
+                <field REF="F15835"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F15827" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F15834" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F15834" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F15834" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F15835" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F15835" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F15835" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F15874" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F15874" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F15874" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F15875" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F15875" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F15875" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts><artifact id="2207">
+        <changeset id="CHANGESET_9714">
+          <submitted_by format="username">rest_api_tester_1</submitted_by>
+          <submitted_on format="ISO8601">2021-03-16T09:08:19+01:00</submitted_on>
+          <comments/>
+          <field_change type="string" field_name="summary">
+            <value><![CDATA[My artifact]]></value>
+          </field_change>
+        </changeset>
+      </artifact>
+      </artifacts>
+    </tracker>
+  </trackers>
+  <natures>
+    <nature><![CDATA[_is_child]]></nature>
+  </natures>
+  <dashboards>
+    <dashboard name="Project Dashboard">
+      <line>
+        <column>
+          <widget name="plugin_roadmap_project_widget">
+            <preference name="roadmap">
+              <reference name="tracker_id" REF="T754"/>
+            </preference>
+          </widget>
+        </column>
+      </line>
+    </dashboard>
+  </dashboards>
+</project>

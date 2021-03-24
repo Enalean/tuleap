@@ -21,7 +21,7 @@ trackers =
 
 tracker =
         # old ids
-        attribute id { xsd:string }?,
+        attribute id { xsd:ID }?,
         attribute parent_id { xsd:string }?,
         attribute group_id { xsd:long }?,
         # these attributes should be optional and have default values
