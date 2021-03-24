@@ -9,7 +9,7 @@
     "@tuleap/filter-inline-table": "file://../lib/filter-table",
     "@tuleap/list-picker": "file://../lib/list-picker",
     "codemirror": "^5.59.4",
-    "dompurify": "^2.2.6"
+    "dompurify": "^2.2.7"
   },
   "devDependencies": {},
   "scripts": {
