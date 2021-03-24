@@ -19,15 +19,29 @@
 
 import type { TextFieldFormat } from "../../../../../constants/fields-constants";
 import { TEXT_FORMAT_COMMONMARK } from "../../../../../constants/fields-constants";
-import type { FormatChangedCallback, FormatSelectorPresenter } from "../FormatSelectorInterface";
+import type { FormatSelectorPresenter } from "../FormatSelectorInterface";
+import { postMarkdown } from "../../api/tuleap-api";
 import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
+import type { TextEditorInterface } from "../../TextEditorInterface";
+
+const readProjectId = (textarea: HTMLTextAreaElement): string => {
+    const attribute = textarea.dataset.projectId;
+    if (!attribute) {
+        throw new Error(
+            `Missing data-project-id attribute on the Rich text editor textarea #${textarea.id}`
+        );
+    }
+    return attribute;
+};
 
 export class EditorAreaState implements EditorAreaStateInterface {
     private is_in_preview_mode = false;
     public current_format: TextFieldFormat;
+    public rendered_html: Promise<string> | null = null;
     public readonly selectbox_id: string;
     public readonly selectbox_name?: string;
-    private readonly presenterOnFormatChangedCallback: FormatChangedCallback;
+    private readonly editor: TextEditorInterface;
+    private readonly project_id: string;
 
     constructor(
         public readonly mount_point: HTMLDivElement,
@@ -37,7 +51,8 @@ export class EditorAreaState implements EditorAreaStateInterface {
         this.selectbox_id = presenter.id;
         this.selectbox_name = presenter.name;
         this.current_format = presenter.selected_value;
-        this.presenterOnFormatChangedCallback = presenter.formatChangedCallback;
+        this.editor = presenter.editor;
+        this.project_id = readProjectId(textarea);
     }
 
     public isCurrentFormatCommonMark(): boolean {
@@ -46,7 +61,7 @@ export class EditorAreaState implements EditorAreaStateInterface {
 
     public changeFormat(new_format: TextFieldFormat): void {
         this.current_format = new_format;
-        this.presenterOnFormatChangedCallback(new_format);
+        this.editor.onFormatChange(new_format);
     }
 
     public isInEditMode(): boolean {
@@ -55,9 +70,11 @@ export class EditorAreaState implements EditorAreaStateInterface {
 
     public switchToPreviewMode(): void {
         this.is_in_preview_mode = true;
+        this.rendered_html = postMarkdown(this.editor.getContent(), this.project_id);
     }
 
     public switchToEditMode(): void {
         this.is_in_preview_mode = false;
+        this.rendered_html = null;
     }
 }

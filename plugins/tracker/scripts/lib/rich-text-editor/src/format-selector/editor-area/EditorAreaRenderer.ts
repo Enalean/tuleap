@@ -26,42 +26,81 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "../../../../../constants/fields-constants";
-import { renderRichTextEditorArea, wrapTextArea } from "./lit-html-adapter";
+import { renderHTMLOrTextEditor, renderMarkdownEditor, wrapTextArea } from "./lit-html-adapter";
 import { createSyntaxHelpButton } from "./components/SyntaxHelpButton";
 import { createPreviewEditButton } from "./components/PreviewEditButton";
+import { createPreviewArea } from "./components/PreviewArea";
 import { createSelect } from "./components/FormatSelect";
+import { createFormatHiddenInput } from "./components/FormatHiddenInput";
 
 const SELECTBOX_ID_PREFIX = "rte_format_selectbox";
 const SELECTBOX_NAME_PREFIX = "comment_format";
+const HIDDEN_TEXTAREA_CLASSNAME = "rte-hide-textarea";
+
+const getFormatSelectboxName = (state: EditorAreaStateInterface): string =>
+    state.selectbox_name ? state.selectbox_name : SELECTBOX_NAME_PREFIX + state.selectbox_id;
 
 export class EditorAreaRenderer {
     constructor(private readonly gettext_provider: GettextProvider) {}
 
     public render(state: EditorAreaStateInterface): void {
-        let helper_button, preview_button;
         if (state.isCurrentFormatCommonMark()) {
-            helper_button = createSyntaxHelpButton(
-                { is_disabled: !state.isInEditMode() },
-                this.gettext_provider
-            );
-            preview_button = createPreviewEditButton(
-                {
-                    is_in_edit_mode: state.isInEditMode(),
-                    onClickCallback: () => this.onEditPreviewClick(state),
-                },
-                this.gettext_provider
-            );
+            this.renderMarkdown(state);
+            return;
         }
-        const textarea = wrapTextArea(state.textarea);
         const selectbox = this.createSelectbox(state);
+        const textarea = wrapTextArea(state.textarea);
 
-        renderRichTextEditorArea(
+        renderHTMLOrTextEditor(
             {
                 mount_point: state.mount_point,
                 selectbox,
-                preview_button,
-                helper_button,
                 textarea,
+            },
+            this.gettext_provider
+        );
+    }
+
+    private renderMarkdown(state: EditorAreaStateInterface): void {
+        const help_button = createSyntaxHelpButton(
+            { is_disabled: !state.isInEditMode() },
+            this.gettext_provider
+        );
+        const preview_button = createPreviewEditButton(
+            {
+                is_in_edit_mode: state.isInEditMode(),
+                promise_of_preview: Promise.resolve(state.rendered_html),
+                onClickCallback: () => this.onEditPreviewClick(state),
+            },
+            this.gettext_provider
+        );
+        const preview_area = createPreviewArea(state.rendered_html, this.gettext_provider);
+        const selectbox = this.createSelectbox(state);
+
+        if (state.isInEditMode()) {
+            state.textarea.classList.remove(HIDDEN_TEXTAREA_CLASSNAME);
+        } else {
+            // Only hide the textarea in Preview mode, otherwise it won't be submitted in the <form>
+            state.textarea.classList.add(HIDDEN_TEXTAREA_CLASSNAME);
+        }
+        const textarea = wrapTextArea(state.textarea);
+        let hidden_format_input;
+        if (!state.isInEditMode()) {
+            hidden_format_input = createFormatHiddenInput({
+                name: getFormatSelectboxName(state),
+                value: state.current_format,
+            });
+        }
+
+        renderMarkdownEditor(
+            {
+                mount_point: state.mount_point,
+                selectbox,
+                textarea,
+                help_button,
+                preview_button,
+                preview_area,
+                hidden_format_input,
             },
             this.gettext_provider
         );
@@ -78,13 +117,10 @@ export class EditorAreaRenderer {
     }
 
     private createSelectbox(state: EditorAreaStateInterface): TemplateResult {
-        const selectbox_name = state.selectbox_name
-            ? state.selectbox_name
-            : SELECTBOX_NAME_PREFIX + state.selectbox_id;
         return createSelect(
             {
                 id: SELECTBOX_ID_PREFIX + state.selectbox_id,
-                name: selectbox_name,
+                name: getFormatSelectboxName(state),
                 is_disabled: !state.isInEditMode(),
                 options: [TEXT_FORMAT_TEXT, TEXT_FORMAT_HTML, TEXT_FORMAT_COMMONMARK],
                 selected_value: state.current_format,

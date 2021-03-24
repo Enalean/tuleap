@@ -54,6 +54,7 @@ module.exports = {
         "!**/tests/**",
         "!**/coverage/**",
         "!**/webpack*js",
+        "!**/vite.config.ts",
         "!**/jest.config.js",
         "!**/*.d.ts",
     ],

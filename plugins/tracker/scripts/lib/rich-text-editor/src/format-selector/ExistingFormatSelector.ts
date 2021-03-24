@@ -31,7 +31,7 @@ export class ExistingFormatSelector implements FormatSelectorInterface {
         }
         format_input.addEventListener("input", () => {
             if (isValidTextFormat(format_input.value)) {
-                presenter.formatChangedCallback(format_input.value);
+                presenter.editor.onFormatChange(format_input.value);
             } else {
                 throw new Error(`${format_input.value} is an invalid form`);
             }

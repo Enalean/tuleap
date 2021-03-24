@@ -20,9 +20,11 @@
 import type { GettextProvider } from "@tuleap/gettext";
 import type { TemplateResult } from "lit-html";
 import { html } from "lit-html";
+import { until } from "lit-html/directives/until";
 
 export interface PreviewButtonPresenter {
     readonly is_in_edit_mode: boolean;
+    readonly promise_of_preview: Promise<unknown>;
     readonly onClickCallback: () => void;
 }
 
@@ -33,9 +35,14 @@ export function createPreviewEditButton(
     const button_label = presenter.is_in_edit_mode
         ? gettext_provider.gettext("Preview")
         : gettext_provider.gettext("Edit");
+    const loading_button = html`
+        <button type="button" class="btn btn-small rte-button" disabled>
+            <i class="fas fa-fw fa-spin fa-circle-notch" aria-hidden="true"></i>
+            ${button_label}
+        </button>
+    `;
     const icon_class = presenter.is_in_edit_mode ? "fa-eye" : "fa-pencil-alt";
-
-    return html`
+    const enabled_button = html`
         <button
             type="button"
             class="btn btn-small rte-button"
@@ -44,5 +51,14 @@ export function createPreviewEditButton(
             <i class="fas fa-fw ${icon_class}" aria-hidden="true" data-test="button-icon"></i>
             ${button_label}
         </button>
+    `;
+    // If loading fails, keep the button enabled to retry
+    const promise_of_button = presenter.promise_of_preview.then(
+        () => enabled_button,
+        () => enabled_button
+    );
+
+    return html`
+        ${until(promise_of_button, loading_button)}
     `;
 }

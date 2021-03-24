@@ -71,6 +71,7 @@ class RichTextareaProvider
                 'value' => $help_id
             ];
         }
+        $data_attributes[] = ['name' => 'project-id', 'value' => $tracker->getGroupId()];
 
         return $renderer->renderToString(
             'rich-textarea',
