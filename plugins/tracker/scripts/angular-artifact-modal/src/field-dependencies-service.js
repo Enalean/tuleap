@@ -36,7 +36,7 @@ export default function TuleapArtifactModalFieldDependenciesService() {
                     (field) => field.field_id === rule.target_field_id
                 );
 
-                if (_.isFunction(callback)) {
+                if (typeof callback === "function") {
                     callback(rule.source_field_id, target_field, field_dependencies_rules);
                 }
             });
