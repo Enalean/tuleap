@@ -4,3 +4,4 @@ nbproject
 node_modules
 .phpunit.result.cache
 *.pot
+*.mo
