@@ -19,25 +19,30 @@
 
 <template>
     <div
-        class="element-card"
-        v-bind:class="additional_classnames"
+        class="element-backlog-items"
         draggable="true"
         v-bind:data-element-id="element.artifact_id"
     >
-        <div class="element-card-content">
-            <div class="element-card-xref-label">
-                <a
-                    v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
-                    class="element-card-xref"
-                    v-bind:class="`element-card-xref-${element.tracker.color_name}`"
-                    data-not-drag-handle="true"
-                >
-                    {{ element.artifact_xref }}
-                </a>
-                <span class="element-card-label">{{ element.artifact_title }}</span>
+        <div class="element-card" v-bind:class="additional_classnames">
+            <div class="element-card-content">
+                <div class="element-card-xref-label">
+                    <a
+                        v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
+                        class="element-card-xref"
+                        v-bind:class="`element-card-xref-${element.tracker.color_name}`"
+                        data-not-drag-handle="true"
+                    >
+                        {{ element.artifact_xref }}
+                    </a>
+                    <span class="element-card-label">{{ element.artifact_title }}</span>
+                </div>
             </div>
+            <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
         </div>
-        <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
+        <to-be-planned-backlog-items
+            class="backlog-items-draggable"
+            v-if="element.has_user_story_linked"
+        />
     </div>
 </template>
 
@@ -47,10 +52,13 @@ import { Component, Prop } from "vue-property-decorator";
 import type { ProgramElement } from "../../../type";
 
 import { namespace } from "vuex-class";
+import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 
 const configuration = namespace("configuration");
 
-@Component({})
+@Component({
+    components: { ToBePlannedBacklogItems },
+})
 export default class ToBePlannedCard extends Vue {
     @Prop({ required: true })
     readonly element!: ProgramElement;

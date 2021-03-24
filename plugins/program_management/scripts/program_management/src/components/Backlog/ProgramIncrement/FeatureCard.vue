@@ -40,6 +40,10 @@
             </div>
             <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
         </div>
+        <feature-card-backlog-items
+            v-bind:class="{ 'backlog-items-draggable': is_draggable }"
+            v-if="element.has_user_story_linked"
+        />
     </div>
 </template>
 
@@ -51,8 +55,11 @@ import { namespace } from "vuex-class";
 
 const configuration = namespace("configuration");
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 
-@Component({})
+@Component({
+    components: { FeatureCardBacklogItems },
+})
 export default class FeatureCard extends Vue {
     @Prop({ required: true })
     readonly element!: Feature;
@@ -88,7 +95,7 @@ export default class FeatureCard extends Vue {
     }
 
     get additional_tooltip_classnames(): string {
-        const classnames = [];
+        const classnames = ["element-backlog-items"];
 
         if (!this.is_draggable) {
             classnames.push("tlp-tooltip");

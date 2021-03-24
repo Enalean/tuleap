@@ -54,6 +54,10 @@ final class FeatureRepresentation
      * @var bool
      */
     public $has_user_story_planned;
+    /**
+     * @var bool
+     */
+    public $has_user_story_linked;
 
     public function __construct(
         int $artifact_id,
@@ -61,7 +65,8 @@ final class FeatureRepresentation
         string $artifact_xref,
         MinimalTrackerRepresentation $minimal_tracker_representation,
         BackgroundColor $background_color,
-        bool $has_user_story_planned
+        bool $has_user_story_planned,
+        bool $has_user_story_linked
     ) {
         $this->artifact_id            = $artifact_id;
         $this->artifact_title         = $artifact_title;
@@ -69,5 +74,6 @@ final class FeatureRepresentation
         $this->tracker                = $minimal_tracker_representation;
         $this->background_color       = $background_color->getBackgroundColorName();
         $this->has_user_story_planned = $has_user_story_planned;
+        $this->has_user_story_linked  = $has_user_story_linked;
     }
 }

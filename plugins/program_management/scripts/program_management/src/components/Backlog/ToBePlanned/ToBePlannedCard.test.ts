@@ -23,6 +23,7 @@ import ToBePlannedCard from "./ToBePlannedCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { ProgramElement } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 
 describe("ToBePlannedCard", () => {
     let component_options: ShallowMountOptions<ToBePlannedCard>;
@@ -82,5 +83,36 @@ describe("ToBePlannedCard", () => {
 
         const wrapper = shallowMount(ToBePlannedCard, component_options);
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Displays a draggable card with backlog items container", async () => {
+        component_options = {
+            propsData: {
+                element: {
+                    artifact_id: 100,
+                    artifact_title: "My artifact",
+                    tracker: {
+                        label: "bug",
+                        color_name: "lake_placid_blue",
+                    },
+                    background_color: "",
+                    has_user_story_linked: true,
+                } as ProgramElement,
+            },
+            localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            accessibility: false,
+                            can_create_program_increment: false,
+                        },
+                    },
+                }),
+            },
+        };
+
+        const wrapper = shallowMount(ToBePlannedCard, component_options);
+        expect(wrapper.findComponent(ToBePlannedBacklogItems).exists()).toBeTruthy();
     });
 });

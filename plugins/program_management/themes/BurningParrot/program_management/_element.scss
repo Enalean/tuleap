@@ -93,6 +93,10 @@
     }
 }
 
+.element-card-container {
+    width: 100%;
+}
+
 .element-card-xref {
     width: max-content;
     margin: 0 0 $tlp-small-spacing 0;
@@ -125,4 +129,33 @@
 
 .element-draggable-item {
     cursor: move;
+}
+
+.element-backlog-items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 $tlp-small-spacing $tlp-small-spacing;
+
+    .element-card {
+        width: 100%;
+        margin: 0 0 0 $tlp-small-spacing;
+    }
+}
+
+.backlog-items-container {
+    width: 95%;
+
+    &.backlog-items-draggable:hover {
+        cursor: move;
+    }
+}
+
+.backlog-items-children-container {
+    padding: 8px;
+    border-right: 1px solid $tlp-ui-border-normal;
+    border-bottom: 1px solid $tlp-ui-border-normal;
+    border-left: 1px solid $tlp-ui-border-normal;
+    border-radius: 0 0 3px 3px;
+    background: $tlp-ui-border-light;
 }

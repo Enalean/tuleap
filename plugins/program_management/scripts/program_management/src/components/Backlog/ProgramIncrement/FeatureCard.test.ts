@@ -24,6 +24,7 @@ import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 
 describe("FeatureCard", () => {
     let component_options: ShallowMountOptions<FeatureCard>;
@@ -156,5 +157,37 @@ describe("FeatureCard", () => {
 
         const wrapper = shallowMount(FeatureCard, component_options);
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Displays a draggable card with items backlog container", async () => {
+        component_options = {
+            propsData: {
+                element: {
+                    artifact_id: 100,
+                    artifact_title: "My artifact",
+                    tracker: {
+                        label: "bug",
+                        color_name: "lake_placid_blue",
+                    },
+                    background_color: "",
+                    has_user_story_planned: true,
+                    has_user_story_linked: true,
+                } as Feature,
+                program_increment: {
+                    user_can_plan: false,
+                } as ProgramIncrement,
+            },
+            localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: { accessibility: false, can_create_program_increment: true },
+                    },
+                }),
+            },
+        };
+
+        const wrapper = shallowMount(FeatureCard, component_options);
+        expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
     });
 });

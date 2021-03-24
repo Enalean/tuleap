@@ -40,6 +40,7 @@ describe("Features retriever", () => {
                     uri: "/tracker/100",
                 },
                 has_user_story_planned: false,
+                has_user_story_linked: false,
             },
             {
                 artifact_id: 2,
@@ -53,6 +54,7 @@ describe("Features retriever", () => {
                     uri: "/tracker/200",
                 },
                 has_user_story_planned: false,
+                has_user_story_linked: false,
             },
         ];
 

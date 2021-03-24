@@ -39,6 +39,7 @@ describe("Tracker reports retriever", () => {
                     uri: "/tracker/1",
                 },
                 background_color: "peggy_pink_text",
+                has_user_story_linked: false,
             },
             {
                 artifact_id: 2,
@@ -51,6 +52,7 @@ describe("Tracker reports retriever", () => {
                     uri: "/tracker/2",
                 },
                 background_color: "",
+                has_user_story_linked: false,
             },
         ];
 

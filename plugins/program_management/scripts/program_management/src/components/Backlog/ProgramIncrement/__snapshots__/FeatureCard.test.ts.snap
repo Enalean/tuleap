@@ -2,7 +2,7 @@
 
 exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = `
 <div
-  class=""
+  class="element-backlog-items"
   data-element-id="100"
   data-tlp-tooltip=""
   draggable="true"
@@ -38,12 +38,14 @@ exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = 
       class="element-card-accessibility"
     />
   </div>
+   
+  <!---->
 </div>
 `;
 
 exports[`FeatureCard Displays a not draggable card when feature has planned user stories 1`] = `
 <div
-  class="tlp-tooltip tlp-tooltip-left"
+  class="element-backlog-items tlp-tooltip tlp-tooltip-left"
   data-element-id="100"
   data-tlp-tooltip="The feature has elements planned in team project, it can not be unplanned"
   draggable="false"
@@ -77,12 +79,14 @@ exports[`FeatureCard Displays a not draggable card when feature has planned user
      
     <!---->
   </div>
+   
+  <!---->
 </div>
 `;
 
 exports[`FeatureCard Displays a not draggable card when user can not plan/unplan features 1`] = `
 <div
-  class="tlp-tooltip tlp-tooltip-left"
+  class="element-backlog-items tlp-tooltip tlp-tooltip-left"
   data-element-id="100"
   data-tlp-tooltip="The feature is not plannable, user does not have permission to update artifact or field link."
   draggable="false"
@@ -116,12 +120,14 @@ exports[`FeatureCard Displays a not draggable card when user can not plan/unplan
      
     <!---->
   </div>
+   
+  <!---->
 </div>
 `;
 
 exports[`FeatureCard Displays a not draggable card without accessibility pattern 1`] = `
 <div
-  class=""
+  class="element-backlog-items"
   data-element-id="100"
   data-tlp-tooltip=""
   draggable="true"
@@ -155,5 +161,7 @@ exports[`FeatureCard Displays a not draggable card without accessibility pattern
      
     <!---->
   </div>
+   
+  <!---->
 </div>
 `;

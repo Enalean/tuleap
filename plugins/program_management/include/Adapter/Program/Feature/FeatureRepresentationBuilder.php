@@ -88,7 +88,8 @@ class FeatureRepresentationBuilder
             $full_artifact->getXRef(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
             $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user),
-            $this->hasAPlannedStory($user, $artifact_id)
+            $this->hasAPlannedStory($user, $artifact_id),
+            $this->hasStoryLinked($user, $artifact_id)
         );
     }
 
@@ -104,6 +105,19 @@ class FeatureRepresentationBuilder
                 $user_story['project_id']
             );
             if ($is_linked_to_a_sprint_in_mirrored_milestones) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function hasStoryLinked(PFUser $user, int $artifact_id): bool
+    {
+        $linked_children = $this->stories_linked_to_feature_dao->getChildrenOfFeatureInTeamProjects($artifact_id);
+        foreach ($linked_children as $linked_child) {
+            $child = $this->artifact_factory->getArtifactByIdUserCanView($user, $linked_child['children_id']);
+            if ($child) {
                 return true;
             }
         }
