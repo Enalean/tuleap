@@ -33,13 +33,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class RoadmapPlugin extends Plugin
 {
-    /**
-     * Should we display the roadmap plugin that is still under construction?
-     *
-     * @tlp-config-feature-flag-key
-     */
-    public const FEATURE_FLAG_KEY = 'plugin_roadmap_display_underconstruction_widget';
-
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -87,10 +80,6 @@ class RoadmapPlugin extends Plugin
 
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void
     {
-        if (! $this->isFeatureFlagEnabled()) {
-            return;
-        }
-
         if ($get_widget_event->getName() === RoadmapProjectWidget::ID) {
             $get_widget_event->setWidget(new RoadmapProjectWidget(
                 HTTPRequest::instance()->getProject(),
@@ -103,16 +92,7 @@ class RoadmapPlugin extends Plugin
 
     public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event): void
     {
-        if (! $this->isFeatureFlagEnabled()) {
-            return;
-        }
-
         $event->addWidget(RoadmapProjectWidget::ID);
-    }
-
-    private function isFeatureFlagEnabled(): bool
-    {
-        return (bool) ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY);
     }
 
     /**
