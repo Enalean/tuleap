@@ -22,9 +22,90 @@ import GanttTask from "./GanttTask.vue";
 import type { Task } from "../../../type";
 import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
+import TaskBar from "./TaskBar.vue";
+import { Styles } from "../../../helpers/styles";
 
 describe("GanttTask", () => {
-    it("Displays the header of the task", () => {
+    it("Displays the header, the grid, and the bar of the task", () => {
+        const task: Task = {
+            id: 123,
+            title: "Do this",
+            xref: "task #123",
+            color_name: "fiesta-red",
+            html_url: "/plugins/tracker?aid=123",
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 3, 25),
+        };
+
+        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+
+        const wrapper = shallowMount(GanttTask, {
+            propsData: {
+                task,
+                time_units,
+            },
+        });
+
+        expect(wrapper.findComponent(TaskHeader).exists()).toBe(true);
+        expect(wrapper.findComponent(BackgroundGrid).exists()).toBe(true);
+
+        const task_bar = wrapper.findComponent(TaskBar);
+        expect(task_bar.exists()).toBe(true);
+        expect(task_bar.props("width")).toBe(67);
+        expect(task_bar.props("left")).toBe(13);
+    });
+
+    it("Has a minimum width", () => {
+        const task: Task = {
+            id: 123,
+            title: "Do this",
+            xref: "task #123",
+            color_name: "fiesta-red",
+            html_url: "/plugins/tracker?aid=123",
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 3, 6),
+        };
+
+        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+
+        const wrapper = shallowMount(GanttTask, {
+            propsData: {
+                task,
+                time_units,
+            },
+        });
+
+        const task_bar = wrapper.findComponent(TaskBar);
+        expect(task_bar.exists()).toBe(true);
+        expect(task_bar.props("width")).toBe(Styles.TASK_BAR_MIN_WIDTH_IN_PX);
+    });
+
+    it("If start = end, it is a milestone", () => {
+        const task: Task = {
+            id: 123,
+            title: "Do this",
+            xref: "task #123",
+            color_name: "fiesta-red",
+            html_url: "/plugins/tracker?aid=123",
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 3, 5),
+        };
+
+        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+
+        const wrapper = shallowMount(GanttTask, {
+            propsData: {
+                task,
+                time_units,
+            },
+        });
+
+        const task_bar = wrapper.findComponent(TaskBar);
+        expect(task_bar.exists()).toBe(true);
+        expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
+    });
+
+    it("Doesn't know yet where to put a task without start and end date, so it puts it at the beginning of the period", () => {
         const task: Task = {
             id: 123,
             title: "Do this",
@@ -44,7 +125,61 @@ describe("GanttTask", () => {
             },
         });
 
-        expect(wrapper.findComponent(TaskHeader).exists()).toBe(true);
-        expect(wrapper.findComponent(BackgroundGrid).exists()).toBe(true);
+        const task_bar = wrapper.findComponent(TaskBar);
+        expect(task_bar.exists()).toBe(true);
+        expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
+        expect(task_bar.props("left")).toBe(0);
+    });
+
+    it("Consider a task without a start date as a milestone", () => {
+        const task: Task = {
+            id: 123,
+            title: "Do this",
+            xref: "task #123",
+            color_name: "fiesta-red",
+            html_url: "/plugins/tracker?aid=123",
+            start: null,
+            end: new Date(2020, 3, 25),
+        };
+
+        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+
+        const wrapper = shallowMount(GanttTask, {
+            propsData: {
+                task,
+                time_units,
+            },
+        });
+
+        const task_bar = wrapper.findComponent(TaskBar);
+        expect(task_bar.exists()).toBe(true);
+        expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
+        expect(task_bar.props("left")).toBe(80);
+    });
+
+    it("Consider a task without an end date as a milestone", () => {
+        const task: Task = {
+            id: 123,
+            title: "Do this",
+            xref: "task #123",
+            color_name: "fiesta-red",
+            html_url: "/plugins/tracker?aid=123",
+            start: new Date(2020, 3, 25),
+            end: null,
+        };
+
+        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+
+        const wrapper = shallowMount(GanttTask, {
+            propsData: {
+                task,
+                time_units,
+            },
+        });
+
+        const task_bar = wrapper.findComponent(TaskBar);
+        expect(task_bar.exists()).toBe(true);
+        expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
+        expect(task_bar.props("left")).toBe(80);
     });
 });

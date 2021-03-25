@@ -22,6 +22,7 @@
     <div class="roadmap-gantt-task">
         <task-header v-bind:task="task" />
         <background-grid v-bind:time_units="time_units" />
+        <task-bar v-bind:task="task" v-bind:left="left" v-bind:width="width" />
     </div>
 </template>
 
@@ -31,9 +32,12 @@ import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
 import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
+import TaskBar from "./TaskBar.vue";
+import { getLeftForDate } from "../../../helpers/left-postion";
+import { Styles } from "../../../helpers/styles";
 
 @Component({
-    components: { BackgroundGrid, TaskHeader },
+    components: { TaskBar, BackgroundGrid, TaskHeader },
 })
 export default class GanttTask extends Vue {
     @Prop({ required: true })
@@ -41,5 +45,32 @@ export default class GanttTask extends Vue {
 
     @Prop({ required: true })
     readonly time_units!: Date[];
+
+    get left(): number {
+        if (this.task.start) {
+            return getLeftForDate(this.task.start, this.time_units);
+        }
+
+        if (this.task.end) {
+            return getLeftForDate(this.task.end, this.time_units);
+        }
+
+        return 0;
+    }
+
+    get width(): number {
+        if (
+            this.task.start &&
+            this.task.end &&
+            this.task.start.toISOString() !== this.task.end.toISOString()
+        ) {
+            return Math.max(
+                getLeftForDate(this.task.end, this.time_units) - this.left,
+                Styles.TASK_BAR_MIN_WIDTH_IN_PX
+            );
+        }
+
+        return Styles.MILESTONE_WIDTH_IN_PX;
+    }
 }
 </script>

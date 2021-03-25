@@ -23,13 +23,25 @@ import { recursiveGet } from "tlp";
 export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
     const tasks = await recursiveGet<Array<unknown>, Task>(`/api/roadmaps/${roadmap_id}/tasks`);
 
-    return tasks.map(
-        (task: Task): Task => {
-            return {
-                ...task,
-                start: task.start ? new Date(task.start) : null,
-                end: task.end ? new Date(task.end) : null,
-            };
-        }
-    );
+    return tasks
+        .map(
+            (task: Task): Task => {
+                return {
+                    ...task,
+                    start: task.start ? new Date(task.start) : null,
+                    end: task.end ? new Date(task.end) : null,
+                };
+            }
+        )
+        .filter((task: Task): boolean => {
+            if (!task.start && !task.end) {
+                return false;
+            }
+
+            if (task.start && task.end && task.end < task.start) {
+                return false;
+            }
+
+            return true;
+        });
 }
