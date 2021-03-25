@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 use REST_TestDataBuilder;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -139,6 +140,8 @@ class ProgramDataBuilder extends REST_TestDataBuilder
         assert($featureA_artifact_link instanceof \Tracker_FormElement_Field_ArtifactLink);
         $fieldsA_data                                                     = [];
         $fieldsA_data[$featureA_artifact_link->getId()]['new_values']     = (string) $us1->getId();
+        $fieldsA_data[$featureA_artifact_link->getId()]['nature']         = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        $fieldsA_data[$featureA_artifact_link->getId()]['natures']        = [$us1->getId() => Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD];
         $fieldsA_data[$featureA_artifact_link->getId()]['removed_values'] = [];
 
         $featureA->createNewChangeset($fieldsA_data, "", $this->user);
