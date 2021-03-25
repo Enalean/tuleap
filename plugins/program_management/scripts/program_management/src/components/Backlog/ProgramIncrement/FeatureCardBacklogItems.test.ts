@@ -57,12 +57,15 @@ describe("FeatureCardBacklogItems", () => {
         getLinkedUserStoriesToFeature.mockImplementation(() => Promise.resolve([]));
 
         const wrapper = shallowMount(FeatureCardBacklogItems, component_options);
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+
         wrapper.setData({
             user_stories: [],
             is_loading_user_story: true,
             message_error_rest: "",
         });
-
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeTruthy();
@@ -86,6 +89,9 @@ describe("FeatureCardBacklogItems", () => {
         };
 
         const wrapper = shallowMount(FeatureCardBacklogItems, component_options);
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeTruthy();
@@ -130,6 +136,8 @@ describe("FeatureCardBacklogItems", () => {
         );
 
         const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick(); // Init the component & load user stories
         await wrapper.vm.$nextTick(); // Display user stories
 
@@ -172,7 +180,58 @@ describe("FeatureCardBacklogItems", () => {
 
         const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);
 
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+
         expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
+    });
+
+    it("When user stories are loaded, Then user can hide stories", async () => {
+        component_options = {
+            propsData: {
+                feature: {
+                    artifact_id: 100,
+                    user_stories: [
+                        {
+                            id: 14,
+                            title: "My US",
+                            xref: "us #14",
+                            background_color: "lake-placid-blue",
+                            color_xref_name: "fiesta-red",
+                            is_open: true,
+                            uri: "tracker?aid=14",
+                            project: {
+                                label: "project",
+                            },
+                        } as UserStory,
+                    ],
+                } as ProgramElement,
+                program_increment: { id: 11 } as ProgramIncrement,
+            },
+            localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {},
+                }),
+            },
+        };
+
+        const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });
 });

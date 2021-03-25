@@ -146,6 +146,7 @@
 .backlog-items-container {
     width: 95%;
     margin: 0 0 0 $tlp-small-spacing;
+    background: $tlp-ui-border-light;
 
     &.backlog-items-draggable:hover {
         cursor: move;
@@ -155,12 +156,32 @@
 .backlog-items-children-container {
     padding: 8px;
     border-right: 1px solid $tlp-ui-border-normal;
-    border-bottom: 1px solid $tlp-ui-border-normal;
     border-left: 1px solid $tlp-ui-border-normal;
-    border-radius: 0 0 3px 3px;
-    background: $tlp-ui-border-light;
 
     .element-card {
         margin: $tlp-small-spacing 0 0 0;
     }
+}
+
+.backlog-items-children-container-handle {
+    position: relative;
+    height: 13px;
+    border: 1px solid $tlp-ui-border-normal;
+    border-top: 0;
+    border-radius: 0 0 3px 3px;
+    cursor: pointer;
+
+    &:hover {
+        background: lighten($tlp-theme-background-color, 3%);
+    }
+}
+
+.backlog-items-children-container-handle-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: darken($tlp-ui-border-dark, 20%);
+    font-size: 8px;
+    font-weight: 900;
 }
