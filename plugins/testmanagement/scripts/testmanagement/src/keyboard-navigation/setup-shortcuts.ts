@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { addShortcutsGroup } from "@tuleap/keyboard-shortcuts";
-
+import { addShortcutsGroup, removeShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 import type { Shortcut, ShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 export type { Shortcut, ShortcutsGroup };
 
@@ -29,15 +28,42 @@ import { createTestsListNavigation } from "./campaign/navigation-in-tests-list";
 import { createCampaignShortcutsGroup } from "./campaign/campaign-shortcuts";
 import { createTestExecutionShortcutsGroup } from "./campaign/test-execution-shortcuts";
 
-export function setupTestManagementShortcuts(gettextCatalog: GettextProvider): void {
-    const shortcuts_groups = [
-        createTestExecutionShortcutsGroup(gettextCatalog),
-        createCampaignShortcutsGroup(gettextCatalog),
-        createTestsListNavigation(gettextCatalog),
-        createCampaignsListShortcutsGroup(gettextCatalog),
-    ];
+export class KeyboardShortcuts {
+    private readonly test_execution_shortcuts_group: ShortcutsGroup;
+    private readonly campaign_shortcuts_group: ShortcutsGroup;
+    private readonly tests_list_navigation_shortcuts_group: ShortcutsGroup;
+    private readonly campaigns_list_shortcuts_group: ShortcutsGroup;
 
-    shortcuts_groups.forEach((group) => {
-        addShortcutsGroup(document, group);
-    });
+    constructor(gettextCatalog: GettextProvider) {
+        this.test_execution_shortcuts_group = createTestExecutionShortcutsGroup(gettextCatalog);
+        this.campaign_shortcuts_group = createCampaignShortcutsGroup(gettextCatalog);
+        this.tests_list_navigation_shortcuts_group = createTestsListNavigation(gettextCatalog);
+        this.campaigns_list_shortcuts_group = createCampaignsListShortcutsGroup(gettextCatalog);
+    }
+
+    setCampaignPageShortcuts(): void {
+        removeShortcutsGroup(document, this.campaigns_list_shortcuts_group);
+
+        const shortcuts_groups = [
+            this.test_execution_shortcuts_group,
+            this.campaign_shortcuts_group,
+            this.tests_list_navigation_shortcuts_group,
+        ];
+        shortcuts_groups.forEach((shortcut_group) => {
+            addShortcutsGroup(document, shortcut_group);
+        });
+    }
+
+    setCampaignsListPageShortcuts(): void {
+        const shortcuts_groups = [
+            this.test_execution_shortcuts_group,
+            this.campaign_shortcuts_group,
+            this.tests_list_navigation_shortcuts_group,
+        ];
+        shortcuts_groups.forEach((shortcut_group) => {
+            removeShortcutsGroup(document, shortcut_group);
+        });
+
+        addShortcutsGroup(document, this.campaigns_list_shortcuts_group);
+    }
 }

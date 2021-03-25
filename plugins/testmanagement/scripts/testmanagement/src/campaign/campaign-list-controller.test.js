@@ -26,6 +26,8 @@ import "angular-mocks";
 import BaseController from "./campaign-list-controller.js";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
+jest.mock("../keyboard-navigation/setup-shortcuts");
+
 describe("CampaignListController -", () => {
     const project_id = 68;
     const milestone = { id: 85 };

@@ -83,6 +83,9 @@ msgstr "Label de la campagne"
 msgid "Campaigns"
 msgstr "Campagnes"
 
+msgid "Campaigns list"
+msgstr "Liste des campagnes"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -219,8 +222,8 @@ msgstr "Marquer le test comme passé avec succès"
 msgid "Milestone tests"
 msgstr "Tests du jalon"
 
-msgid "Navigation in campaign tests list"
-msgstr "Navigation dans la liste de tests d'une campagne"
+msgid "Navigation in tests list"
+msgstr "Navigation dans la liste de tests"
 
 msgid "Navigation in tests list when a test is selected."
 msgstr "Navigation dans la liste de tests lorsqu'un test est sélectionné."
@@ -285,14 +288,8 @@ msgstr "Donner le focus au champ de recherche"
 msgid "Set focus in tests list"
 msgstr "Donner le focus à la liste de tests"
 
-msgid "Shortcuts available in a campaign page."
-msgstr "Raccourcis disponibles dans la page d'une campagne."
-
-msgid "Shortcuts available in test campaigns list page."
-msgstr "Raccourcis disponibles dans la page listant les campagnes."
-
-msgid "Shortcuts available on the test currently open in a campaign."
-msgstr "Raccourcis disponibles dans une campagne pour le test affiché."
+msgid "Shortcuts available on the test currently open."
+msgstr "Raccourcis disponibles pour le test affiché."
 
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
@@ -311,9 +308,6 @@ msgstr "Campagne de tests"
 
 msgid "Test campaigns"
 msgstr "Campagne de tests"
-
-msgid "Test campaigns list"
-msgstr "Liste des campagnes de test"
 
 msgid "Test description"
 msgstr "Description du test"

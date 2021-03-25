@@ -66,7 +66,6 @@ export function createCampaignShortcutsGroup(gettextCatalog: GettextProvider): S
 
     return {
         title: gettextCatalog.getString("Test campaign"),
-        details: gettextCatalog.getString("Shortcuts available in a campaign page."),
         shortcuts: [
             select_tests,
             focus_test_list,
