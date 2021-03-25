@@ -20,16 +20,13 @@
 import { GLOBAL_SCOPE } from "../type";
 import type { ShortcutsGroup } from "../type";
 
-import {
-    addShortcutsGroupToShortcutsModal,
-    createShortcutsGroupContainer,
-} from "./add-to-help-modal";
-import * as getter_shortcuts_group_head from "./create-shortcuts-group-head";
-import * as getter_shortcuts_group_table from "./create-shortcuts-group-table";
+import { addShortcutsGroupToShortcutsModal, createShortcutsGroupContainer } from "./add-to-modal";
+import * as getter_shortcuts_group_head from "./create-shortcuts-group-container/create-shortcuts-group-head";
+import * as getter_shortcuts_group_table from "./create-shortcuts-group-container/create-shortcuts-group-table";
 import * as getter_shortcut_section from "./get-shortcuts-section";
 
-jest.mock("./create-shortcuts-group-head");
-jest.mock("./create-shortcuts-group-table");
+jest.mock("./create-shortcuts-group-container/create-shortcuts-group-head");
+jest.mock("./create-shortcuts-group-container/create-shortcuts-group-table");
 jest.mock("./get-shortcuts-section");
 
 describe("add-to-help-modal.ts", () => {

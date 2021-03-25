@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ShortcutsGroup } from "../type";
+import type { ShortcutsGroup } from "../../type";
 
 export function createShortcutsGroupHead(
     doc: Document,

@@ -20,8 +20,8 @@
 import type { ShortcutsGroup, Scope } from "../type";
 import { GLOBAL_SCOPE, PLUGIN_SCOPE } from "../type";
 
-import { createShortcutsGroupHead } from "./create-shortcuts-group-head";
-import { createShortcutsGroupTable } from "./create-shortcuts-group-table";
+import { createShortcutsGroupHead } from "./create-shortcuts-group-container/create-shortcuts-group-head";
+import { createShortcutsGroupTable } from "./create-shortcuts-group-container/create-shortcuts-group-table";
 import { getGlobalShortcutsSection, getSpecificShortcutsSection } from "./get-shortcuts-section";
 
 export function addShortcutsGroupToShortcutsModal(
