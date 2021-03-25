@@ -37,4 +37,6 @@ function showModal(contact_support_modal: JQuery<Element>): void {
     contact_support_modal.modal("show");
 }
 
-setupContactSupportModalFlamingParrot(document, get, buildThenShowModal);
+if (window.self === window.top) {
+    setupContactSupportModalFlamingParrot(document, get, buildThenShowModal);
+}
