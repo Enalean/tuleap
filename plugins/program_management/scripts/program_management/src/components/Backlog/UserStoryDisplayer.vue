@@ -64,6 +64,10 @@ export default class UserStoryDisplayer extends Vue {
             classnames.push("element-card-with-accessibility");
         }
 
+        if (!this.user_story.is_open) {
+            classnames.push("element-card-user-story-closed");
+        }
+
         return classnames.join(" ");
     }
 

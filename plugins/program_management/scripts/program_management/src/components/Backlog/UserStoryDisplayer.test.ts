@@ -88,4 +88,35 @@ describe("UserStoryDisplayer", () => {
 
         expect(wrapper.element).toMatchSnapshot();
     });
+
+    it("Displays a closed user story with accessibility", async () => {
+        component_options = {
+            propsData: {
+                user_story: {
+                    id: 14,
+                    title: "My US",
+                    xref: "us #14",
+                    background_color: "lake-placid-blue",
+                    color_xref_name: "fiesta-red",
+                    is_open: false,
+                    uri: "tracker?aid=14",
+                    project: {
+                        label: "project",
+                    },
+                } as UserStory,
+            },
+            localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: { accessibility: true },
+                    },
+                }),
+            },
+        };
+
+        const wrapper = shallowMount(UserStoryDisplayer, component_options);
+
+        expect(wrapper.element).toMatchSnapshot();
+    });
 });

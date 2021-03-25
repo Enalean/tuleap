@@ -185,3 +185,9 @@
     font-size: 8px;
     font-weight: 900;
 }
+
+.element-card-user-story-closed {
+    border-color: transparentize($tlp-ui-border-normal, .5);
+    opacity: .5;
+    background: transparent;
+}
