@@ -145,6 +145,7 @@
 
 .backlog-items-container {
     width: 95%;
+    margin: 0 0 0 $tlp-small-spacing;
 
     &.backlog-items-draggable:hover {
         cursor: move;
@@ -158,4 +159,8 @@
     border-left: 1px solid $tlp-ui-border-normal;
     border-radius: 0 0 3px 3px;
     background: $tlp-ui-border-light;
+
+    .element-card {
+        margin: $tlp-small-spacing 0 0 0;
+    }
 }

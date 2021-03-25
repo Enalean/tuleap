@@ -19,6 +19,18 @@
 
 import type { ProgramElement, State } from "../type";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
+import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extractor";
+import type { FeatureIdWithProgramIncrement } from "../helpers/drag-drop";
+import type { UserStory } from "../helpers/BacklogItems/children-feature-retriever";
+
+export interface LinkUserStoryToPlannedElement {
+    element_id: number;
+    user_stories: UserStory[];
+}
+
+export interface LinkUserStoryToFeature extends LinkUserStoryToPlannedElement {
+    program_increment: ProgramIncrement;
+}
 
 export default {
     addProgramIncrement(state: State, program_increment: ProgramIncrement): void {
@@ -77,5 +89,48 @@ export default {
         state.ongoing_move_elements_id = [...state.ongoing_move_elements_id].filter(
             (element_id) => element_id !== ongoing_move_elements_id_id
         );
+    },
+
+    linkUserStoriesToFeature(state: State, user_story_feature: LinkUserStoryToFeature): void {
+        const existing_increment = state.program_increments.find(
+            (existing_increment) =>
+                existing_increment.id === user_story_feature.program_increment.id
+        );
+
+        if (existing_increment === undefined) {
+            throw Error(
+                "Program increment with id #" +
+                    user_story_feature.program_increment.id +
+                    " does not exist"
+            );
+        }
+
+        const payload: FeatureIdWithProgramIncrement = {
+            feature_id: user_story_feature.element_id,
+            program_increment: existing_increment,
+        };
+
+        const feature_index = extractFeatureIndexFromProgramIncrement(payload);
+
+        existing_increment.features[feature_index].user_stories = user_story_feature.user_stories;
+    },
+
+    linkUserStoriesToBePlannedElement(
+        state: State,
+        user_story_element: LinkUserStoryToPlannedElement
+    ): void {
+        const element = state.to_be_planned_elements.find(
+            (element) => element.artifact_id === user_story_element.element_id
+        );
+
+        if (element === undefined) {
+            throw Error(
+                "To be planned element with id #" +
+                    user_story_element.element_id +
+                    " does not exist"
+            );
+        }
+
+        element.user_stories = user_story_element.user_stories;
     },
 };

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
+use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureBacklogItems;
 use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\REST\v1\FeatureBacklogItemsRepresentation;
@@ -41,15 +42,21 @@ class FeatureBacklogItemsRepresentationBuilder implements RetrieveFeatureBacklog
      * @var PlanStore
      */
     private $plan_store;
+    /**
+     * @var BackgroundColorRetriever
+     */
+    private $retrieve_background_color;
 
     public function __construct(
         ArtifactsLinkedToParentDao $dao,
         \Tracker_ArtifactFactory $artifact_factory,
-        PlanStore $plan_store
+        PlanStore $plan_store,
+        BackgroundColorRetriever $retrieve_background_color
     ) {
-        $this->dao              = $dao;
-        $this->artifact_factory = $artifact_factory;
-        $this->plan_store       = $plan_store;
+        $this->dao                       = $dao;
+        $this->artifact_factory          = $artifact_factory;
+        $this->plan_store                = $plan_store;
+        $this->retrieve_background_color = $retrieve_background_color;
     }
 
     /**
@@ -80,7 +87,9 @@ class FeatureBacklogItemsRepresentationBuilder implements RetrieveFeatureBacklog
                     $child->getXRef(),
                     $child->getTitle(),
                     $child->isOpen(),
-                    new ProjectReference($child->getTracker()->getProject())
+                    new ProjectReference($child->getTracker()->getProject()),
+                    $child->getTracker()->getColor()->getName(),
+                    $this->retrieve_background_color->retrieveBackgroundColor($child, $user)->getBackgroundColorName(),
                 );
             }
         }

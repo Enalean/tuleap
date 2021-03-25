@@ -42,6 +42,7 @@
         <to-be-planned-backlog-items
             class="backlog-items-draggable"
             v-if="element.has_user_story_linked"
+            v-bind:to_be_planned_element="element"
         />
     </div>
 </template>

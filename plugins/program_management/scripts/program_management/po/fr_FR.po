@@ -31,6 +31,9 @@ msgid "It seems an action you tried to perform can not be done."
 msgstr ""
 "Il semble que l'action que vous venez de tenter ne peut pas être réalisée."
 
+msgid "Oops, an error occurred!"
+msgstr "Oups, une erreur s'est produite !"
+
 msgid "Oops, there's an issue"
 msgstr "Oups, il y a eu un problème"
 

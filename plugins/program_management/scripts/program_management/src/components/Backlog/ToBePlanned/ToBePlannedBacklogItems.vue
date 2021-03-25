@@ -19,14 +19,72 @@
 
 <template>
     <div class="backlog-items-container">
-        <div class="backlog-items-children-container"></div>
+        <div class="backlog-items-children-container">
+            <to-be-planned-skeleton v-if="is_loading_user_story" />
+            <backlog-items-error-show
+                v-else-if="message_error_rest.length > 0"
+                v-bind:message_error_rest="message_error_rest"
+            />
+            <user-story-displayer
+                v-else
+                v-for="user_story in user_stories"
+                v-bind:key="user_story.id"
+                v-bind:user_story="user_story"
+            />
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
+import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
+import { getLinkedUserStoriesToFeature } from "../../../helpers/BacklogItems/children-feature-retriever";
+import { Mutation } from "vuex-class";
+import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
+import type { ProgramElement } from "../../../type";
+import type { LinkUserStoryToPlannedElement } from "../../../store/mutations";
+import { handleError } from "../../../helpers/error-handler";
+import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
+import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 
-@Component
-export default class ToBePlannedBacklogItems extends Vue {}
+@Component({
+    components: { UserStoryDisplayer, BacklogItemsErrorShow, ToBePlannedSkeleton },
+})
+export default class ToBePlannedBacklogItems extends Vue {
+    @Prop({ required: true })
+    readonly to_be_planned_element!: ProgramElement;
+
+    @Mutation
+    readonly linkUserStoriesToBePlannedElement!: (
+        user_story_feature: LinkUserStoryToPlannedElement
+    ) => void;
+
+    private user_stories: UserStory[] = [];
+    private is_loading_user_story = false;
+    private message_error_rest = "";
+
+    async mounted(): Promise<void> {
+        if (this.to_be_planned_element.user_stories) {
+            this.user_stories = this.to_be_planned_element.user_stories;
+            return;
+        }
+
+        try {
+            this.is_loading_user_story = true;
+            this.user_stories = await getLinkedUserStoriesToFeature(
+                this.to_be_planned_element.artifact_id
+            );
+            this.linkUserStoriesToBePlannedElement({
+                user_stories: this.user_stories,
+                element_id: this.to_be_planned_element.artifact_id,
+            });
+        } catch (rest_error) {
+            this.message_error_rest = await handleError(rest_error, this);
+            throw rest_error;
+        } finally {
+            this.is_loading_user_story = false;
+        }
+    }
+}
 </script>

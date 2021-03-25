@@ -18,9 +18,11 @@
  */
 
 import type { ProgramElement, State } from "../type";
+import type { LinkUserStoryToFeature, LinkUserStoryToPlannedElement } from "./mutations";
 import mutations from "./mutations";
 import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
+import type { UserStory } from "../helpers/BacklogItems/children-feature-retriever";
 
 describe("Mutations", () => {
     describe("addProgramIncrement", () => {
@@ -178,6 +180,82 @@ describe("Mutations", () => {
             expect(state.ongoing_move_elements_id.length).toEqual(2);
             expect(state.ongoing_move_elements_id[0]).toEqual(536);
             expect(state.ongoing_move_elements_id[1]).toEqual(537);
+        });
+    });
+
+    describe("linkUserStoriesToFeature", () => {
+        it("When program increment does not exist, Then error is thrown", () => {
+            const state = {
+                program_increments: [] as ProgramIncrement[],
+            } as State;
+
+            const link: LinkUserStoryToFeature = {
+                program_increment: { id: 14 } as ProgramIncrement,
+                element_id: 101,
+                user_stories: [],
+            };
+
+            expect(() => mutations.linkUserStoriesToFeature(state, link)).toThrowError(
+                "Program increment with id #14 does not exist"
+            );
+        });
+
+        it("When program increment and feature exist, Then stories are added", () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 14,
+                        features: [
+                            { artifact_id: 101, user_stories: [] as UserStory[] },
+                        ] as Feature[],
+                    } as ProgramIncrement,
+                ],
+            } as State;
+
+            const link: LinkUserStoryToFeature = {
+                program_increment: { id: 14 } as ProgramIncrement,
+                element_id: 101,
+                user_stories: [{ id: 18 } as UserStory],
+            };
+
+            mutations.linkUserStoriesToFeature(state, link);
+            expect(state.program_increments[0].features[0].user_stories).toEqual([{ id: 18 }]);
+        });
+    });
+
+    describe("linkUserStoriesToBePlannedElement", () => {
+        it("When feature does not exist, Then error is thrown", () => {
+            const state = {
+                to_be_planned_elements: [] as ProgramElement[],
+            } as State;
+
+            const link: LinkUserStoryToPlannedElement = {
+                element_id: 101,
+                user_stories: [],
+            };
+
+            expect(() => mutations.linkUserStoriesToBePlannedElement(state, link)).toThrowError(
+                "To be planned element with id #101 does not exist"
+            );
+        });
+
+        it("When feature exists, Then stories are added", () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        artifact_id: 101,
+                        user_stories: [] as UserStory[],
+                    } as ProgramElement,
+                ] as ProgramElement[],
+            } as State;
+
+            const link: LinkUserStoryToPlannedElement = {
+                element_id: 101,
+                user_stories: [{ id: 18 } as UserStory],
+            };
+
+            mutations.linkUserStoriesToBePlannedElement(state, link);
+            expect(state.to_be_planned_elements[0].user_stories).toEqual([{ id: 18 }]);
         });
     });
 });
