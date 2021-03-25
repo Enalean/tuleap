@@ -49,7 +49,7 @@ describe("GanttBoard", () => {
         expect(wrapper.findAllComponents(GanttTask).length).toBe(3);
     });
 
-    it("Displays months according to tasks", () => {
+    it("Displays months according to tasks", async () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 tasks: [
@@ -59,6 +59,11 @@ describe("GanttBoard", () => {
                 locale: "en_US",
             },
         });
+
+        wrapper.setData({
+            now: new Date(2020, 3, 15),
+        });
+        await wrapper.vm.$nextTick();
 
         const time_period = wrapper.findComponent(TimePeriodMonth);
         expect(time_period.exists()).toBe(true);
@@ -107,6 +112,11 @@ describe("GanttBoard", () => {
                 locale: "en_US",
             },
         });
+
+        wrapper.setData({
+            now: new Date(2020, 3, 15),
+        });
+        await wrapper.vm.$nextTick();
 
         const time_period = wrapper.findComponent(TimePeriodMonth);
         expect(time_period.exists()).toBe(true);

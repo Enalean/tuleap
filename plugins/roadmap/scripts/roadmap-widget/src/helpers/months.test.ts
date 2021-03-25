@@ -19,52 +19,188 @@
 
 import { getMonths } from "./months";
 
+function toDateString(collection: Date[]): string[] {
+    return collection.map((date) => date.toDateString());
+}
+
 describe("months", () => {
-    it("Returns empty array if no start", () => {
-        const start = null;
-        const end = new Date(2020, 2, 15);
+    let start: Date | null;
+    let end: Date | null;
+    let now: Date;
 
-        expect(getMonths(start, end)).toStrictEqual([]);
-    });
+    it("Returns current month if no start and no end", () => {
+        start = null;
+        end = null;
+        now = new Date(2020, 3, 15);
 
-    it("Returns empty array if no end", () => {
-        const start = new Date(2020, 2, 15);
-        const end = null;
-
-        expect(getMonths(start, end)).toStrictEqual([]);
-    });
-
-    it("Returns empty array if start is greater than end", () => {
-        const start = new Date(2020, 5, 15);
-        const end = new Date(2020, 2, 15);
-
-        expect(getMonths(start, end)).toStrictEqual([]);
-    });
-
-    it("Returns an array of months that encloses the date range", () => {
-        const start = new Date(2020, 2, 15);
-        const end = new Date(2020, 5, 15);
-
-        const months = getMonths(start, end);
-
-        expect(months.map((month) => month.toDateString())).toStrictEqual([
-            "Sun Mar 01 2020",
+        expect(toDateString(getMonths(start, end, now))).toStrictEqual([
             "Wed Apr 01 2020",
             "Fri May 01 2020",
-            "Mon Jun 01 2020",
-            "Wed Jul 01 2020",
         ]);
     });
 
-    it("Returns an array of months that encloses the date range even if the start and end date are in the same month", () => {
-        const start = new Date(2020, 2, 15);
-        const end = new Date(2020, 2, 15);
+    describe("when there is no start", () => {
+        beforeEach(() => {
+            start = null;
+        });
 
-        const months = getMonths(start, end);
+        it("returns months between now and end", () => {
+            now = new Date(2020, 2, 15);
+            end = new Date(2020, 3, 15);
 
-        expect(months.map((month) => month.toDateString())).toStrictEqual([
-            "Sun Mar 01 2020",
-            "Wed Apr 01 2020",
-        ]);
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+            ]);
+        });
+
+        it("returns months between end and now", () => {
+            now = new Date(2020, 3, 15);
+            end = new Date(2020, 2, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+            ]);
+        });
+
+        it("returns one month when end and now are in the same month", () => {
+            now = new Date(2020, 2, 15);
+            end = new Date(2020, 2, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+            ]);
+        });
+    });
+
+    describe("when there is no end", () => {
+        beforeEach(() => {
+            end = null;
+        });
+
+        it("returns months between now and start", () => {
+            now = new Date(2020, 2, 15);
+            start = new Date(2020, 3, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+            ]);
+        });
+
+        it("returns months between start and now", () => {
+            now = new Date(2020, 3, 15);
+            start = new Date(2020, 2, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+            ]);
+        });
+
+        it("returns one month when start and now are in the same month", () => {
+            now = new Date(2020, 2, 15);
+            start = new Date(2020, 2, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+            ]);
+        });
+    });
+
+    describe("when start is lesser than end", () => {
+        beforeEach(() => {
+            start = new Date(2020, 2, 15);
+            end = new Date(2020, 3, 15);
+        });
+
+        it("returns months when now is lesser than start", () => {
+            now = new Date(2020, 1, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sat Feb 01 2020",
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+            ]);
+        });
+
+        it("returns months when now is greater than end", () => {
+            now = new Date(2020, 5, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+                "Mon Jun 01 2020",
+                "Wed Jul 01 2020",
+            ]);
+        });
+    });
+
+    describe("when start is in the same month than end", () => {
+        beforeEach(() => {
+            start = new Date(2020, 2, 15);
+            end = new Date(2020, 2, 15);
+        });
+
+        it("returns months when now is lesser than start", () => {
+            now = new Date(2020, 1, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sat Feb 01 2020",
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+            ]);
+        });
+
+        it("returns months when now is greater than end", () => {
+            now = new Date(2020, 5, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+                "Mon Jun 01 2020",
+                "Wed Jul 01 2020",
+            ]);
+        });
+    });
+
+    describe("when start is greater than end", () => {
+        beforeEach(() => {
+            start = new Date(2020, 3, 15);
+            end = new Date(2020, 2, 15);
+        });
+
+        it("returns months when now is lesser than start", () => {
+            now = new Date(2020, 1, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sat Feb 01 2020",
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+            ]);
+        });
+
+        it("returns months when now is greater than end", () => {
+            now = new Date(2020, 5, 15);
+
+            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+                "Sun Mar 01 2020",
+                "Wed Apr 01 2020",
+                "Fri May 01 2020",
+                "Mon Jun 01 2020",
+                "Wed Jul 01 2020",
+            ]);
+        });
     });
 });

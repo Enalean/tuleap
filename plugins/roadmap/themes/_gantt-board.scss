@@ -17,72 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 @use 'roadmap-variables';
-@use 'grid';
+@use 'task';
 
-.roadmap-gantt-task {
-    $radius: 4px;
+.roadmap-gantt {
+    position: relative;
+}
 
-    display: flex;
-    height: roadmap-variables.$task-height;
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
+.roadmap-gantt-today {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 7px;
+    transform: translateX(roadmap-variables.$task-header-width - 3);
 
-    &:last-child {
-        border: 0;
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 3px;
+        width: 1px;
+        height: 100%;
+        background: var(--tlp-theme-color);
     }
 
-    &:first-child > .roadmap-gantt-task-header {
-        border-top-left-radius: $radius;
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--tlp-theme-color);
     }
-
-    &:last-child > .roadmap-gantt-task-header {
-        border-bottom-left-radius: $radius;
-    }
-}
-
-.roadmap-gantt-task-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: roadmap-variables.$task-header-width;
-    min-width: roadmap-variables.$task-header-width;
-    height: 100%;
-    padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-large-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
-    border-right: 2px solid var(--tlp-ui-border-normal);
-    color: var(--tlp-typo-default-text-color);
-    white-space: nowrap;
-}
-
-.roadmap-gantt-task-header-xref {
-    font-size: .625rem;
-    line-height: .75rem;
-}
-
-.roadmap-gantt-task-header-title {
-    overflow: hidden;
-    font-size: .8125rem;
-    line-height: .9375rem;
-    text-overflow: ellipsis;
-}
-
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-    .roadmap-gantt-task-header-#{$color-name} {
-        border-left: 4px solid map-get($colors, 'border');
-
-        > .roadmap-gantt-task-header-xref {
-            color: map-get($colors, 'text');
-        }
-    }
-}
-
-.roadmap-gantt-task-background-grid {
-    display: flex;
-}
-
-.roadmap-gantt-task-background-grid-unit {
-    @include grid.alternate-background;
-
-    display: flex;
-    width: roadmap-variables.$time-unit-width;
 }

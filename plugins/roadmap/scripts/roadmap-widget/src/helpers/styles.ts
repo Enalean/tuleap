@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin alternate-background() {
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
-    background: var(--tlp-ui-white);
-
-    &:nth-child(even) {
-        background: var(--tlp-theme-color-dimmed-background);
-    }
+export enum Styles {
+    TIME_UNIT_WIDTH_IN_PX = 100,
 }

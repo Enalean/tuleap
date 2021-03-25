@@ -16,22 +16,57 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { getBeginningOfNextNthMonth } from "./beginning-of-next-nth-month";
 
-export function getMonths(start: Date | null, end: Date | null): Date[] {
-    if (!start || !end) {
-        return [];
-    }
-    if (start > end) {
-        return [];
-    }
+export function getMonths(start: Date | null, end: Date | null, now: Date): Date[] {
+    const beginning_of_period = getBeginningOfPeriod(start, end, now);
+    const end_of_period = getEndOfPeriod(start, end, now);
 
-    const months = [new Date(start.setDate(1))];
+    const months = [new Date(new Date(beginning_of_period).setDate(1))];
     let i = 1;
-    while (months[months.length - 1] < end) {
-        const same_date_months_later = new Date(new Date(start).setMonth(start.getMonth() + i++));
-        const beginning_of_month = new Date(same_date_months_later.setDate(1));
-        months.push(beginning_of_month);
+    while (months[months.length - 1] < end_of_period) {
+        months.push(getBeginningOfNextNthMonth(beginning_of_period, i++));
     }
 
     return months;
+}
+
+function getBeginningOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
+    if (!start) {
+        if (!end) {
+            return now;
+        }
+
+        return now < end ? now : end;
+    }
+
+    if (!end) {
+        return now < start ? now : start;
+    }
+
+    if (start <= end) {
+        return now < start ? now : start;
+    }
+
+    return now < end ? now : end;
+}
+
+function getEndOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
+    if (!start) {
+        if (!end) {
+            return now;
+        }
+
+        return end < now ? now : end;
+    }
+
+    if (!end) {
+        return start < now ? now : start;
+    }
+
+    if (start <= end) {
+        return end < now ? now : end;
+    }
+
+    return start < now ? now : start;
 }
