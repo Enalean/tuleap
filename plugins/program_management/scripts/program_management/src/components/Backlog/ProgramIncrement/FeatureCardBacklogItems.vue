@@ -19,7 +19,7 @@
 
 <template>
     <div class="backlog-items-container">
-        <div class="backlog-items-children-container">
+        <div class="backlog-items-children-container" v-if="is_opened">
             <program-increment-skeleton v-if="is_loading_user_story" />
             <backlog-items-error-show
                 v-else-if="message_error_rest.length > 0"
@@ -31,6 +31,16 @@
                 v-bind:key="user_story.id"
                 v-bind:user_story="user_story"
             />
+        </div>
+        <div
+            class="backlog-items-children-container-handle"
+            ref="openCloseButton"
+            data-test="backlog-items-open-close-button"
+        >
+            <i
+                class="fa fa-fw backlog-items-children-container-handle-icon"
+                v-bind:class="{ 'fa-chevron-down': !is_opened, 'fa-chevron-up': is_opened }"
+            ></i>
         </div>
     </div>
 </template>
@@ -65,8 +75,24 @@ export default class FeatureCardBacklogItems extends Vue {
     private user_stories: UserStory[] = [];
     private is_loading_user_story = false;
     private message_error_rest = "";
+    private is_opened = false;
 
-    async mounted(): Promise<void> {
+    mounted(): void {
+        const button_close_stories = this.$refs.openCloseButton;
+
+        if (!(button_close_stories instanceof HTMLElement)) {
+            throw Error("No openCloseButton in component");
+        }
+
+        button_close_stories.addEventListener("click", async () => {
+            this.is_opened = !this.is_opened;
+            if (this.is_opened && this.user_stories.length === 0) {
+                await this.loadUserStories();
+            }
+        });
+    }
+
+    async loadUserStories(): Promise<void> {
         if (this.feature.user_stories) {
             this.user_stories = this.feature.user_stories;
             return;

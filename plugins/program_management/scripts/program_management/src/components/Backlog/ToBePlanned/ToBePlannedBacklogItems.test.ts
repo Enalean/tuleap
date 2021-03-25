@@ -29,6 +29,7 @@ import type { UserStory } from "../../../helpers/BacklogItems/children-feature-r
 import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
+import ProgramIncrementSkeleton from "../ProgramIncrement/ProgramIncrementSkeleton.vue";
 
 describe("ToBePlannedBacklogItems", () => {
     let component_options: ShallowMountOptions<ToBePlannedBacklogItems>;
@@ -55,6 +56,10 @@ describe("ToBePlannedBacklogItems", () => {
         getLinkedUserStoriesToFeature.mockImplementation(() => Promise.resolve([]));
 
         const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+
         wrapper.setData({
             user_stories: [],
             is_loading_user_story: true,
@@ -83,6 +88,9 @@ describe("ToBePlannedBacklogItems", () => {
         };
 
         const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ToBePlannedSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeTruthy();
@@ -127,12 +135,16 @@ describe("ToBePlannedBacklogItems", () => {
 
         const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
 
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick(); // Load User Stories
+        await wrapper.vm.$nextTick(); // Display User Stories
+
         expect(wrapper.findComponent(ToBePlannedSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
     });
 
-    it("No rest call when user stories are already loaded in feature", async () => {
+    it("No rest call when user stories are already loaded in feature and user can hide user stories", async () => {
         component_options = {
             propsData: {
                 to_be_planned_element: {
@@ -163,8 +175,18 @@ describe("ToBePlannedBacklogItems", () => {
 
         const wrapper = await shallowMount(ToBePlannedBacklogItems, component_options);
 
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+
         expect(wrapper.findComponent(ToBePlannedSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
+
+        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
+        expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });
 });
