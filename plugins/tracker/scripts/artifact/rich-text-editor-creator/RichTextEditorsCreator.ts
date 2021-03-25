@@ -24,7 +24,7 @@ import type {
     RichTextEditorOptions,
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { TextFieldFormat } from "../../constants/fields-constants";
-import { isValidTextFormat, TEXT_FORMAT_TEXT } from "../../constants/fields-constants";
+import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "../../constants/fields-constants";
 import { initMentionsOnEditorDataReady } from "./init-mentions";
 
 const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
@@ -107,6 +107,6 @@ export class RichTextEditorsCreator {
                 return format;
             }
         }
-        return TEXT_FORMAT_TEXT;
+        return TEXT_FORMAT_COMMONMARK;
     }
 }

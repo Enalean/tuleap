@@ -21,6 +21,11 @@
 import type { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorsCreator } from "./RichTextEditorsCreator";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../constants/fields-constants";
 
 // Mock @tuleap/mention because it needs jquery in tests
 jest.mock("@tuleap/mention", () => {
@@ -113,7 +118,7 @@ describe(`RichTextEditorsCreator`, () => {
         describe(`when there are text field textareas in the document`, () => {
             it(`and no matching hidden input fields,
                 it enables image upload and creates a rich text editor on each one
-                and defaults the format to "text"`, () => {
+                and defaults the format to "commonmark"`, () => {
                 doc.body.insertAdjacentHTML(
                     "beforeend",
                     `<div class="tracker_artifact_field"><textarea id="field_1234"></textarea>`
@@ -128,7 +133,7 @@ describe(`RichTextEditorsCreator`, () => {
 
                 expect(options.format_selectbox_id).toEqual("field_1234");
                 expect(options.format_selectbox_name).toEqual("artifact[1234][format]");
-                expect(options.format_selectbox_value).toEqual("text");
+                expect(options.format_selectbox_value).toEqual(TEXT_FORMAT_COMMONMARK);
             });
 
             it(`and matching hidden input fields,
@@ -155,13 +160,13 @@ describe(`RichTextEditorsCreator`, () => {
 
                 expect(first_options.format_selectbox_id).toEqual("field_1234");
                 expect(first_options.format_selectbox_name).toEqual("artifact[1234][format]");
-                expect(first_options.format_selectbox_value).toEqual("html");
+                expect(first_options.format_selectbox_value).toEqual(TEXT_FORMAT_HTML);
 
                 const second_options = createRichTextEditor.mock.calls[1][1];
 
                 expect(second_options.format_selectbox_id).toEqual("field_4567");
                 expect(second_options.format_selectbox_name).toEqual("artifact[4567][format]");
-                expect(second_options.format_selectbox_value).toEqual("text");
+                expect(second_options.format_selectbox_value).toEqual(TEXT_FORMAT_TEXT);
             });
 
             it(`and when options were passed,

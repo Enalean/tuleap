@@ -25,6 +25,11 @@ import {
     getProjectId,
 } from "./edit-follow-up-comment-helpers";
 import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../constants/fields-constants";
 
 describe(`edit-follow-up-comment-helpers`, () => {
     let doc: Document;
@@ -33,17 +38,17 @@ describe(`edit-follow-up-comment-helpers`, () => {
     });
 
     describe(`getFormatOrDefault()`, () => {
-        it(`when the hidden input can't be found, it will default to "text" format`, () => {
-            expect(getFormatOrDefault(doc, "123")).toEqual("text");
+        it(`when the hidden input can't be found, it will default to "commonmark" format`, () => {
+            expect(getFormatOrDefault(doc, "123")).toEqual(TEXT_FORMAT_COMMONMARK);
         });
 
-        it(`when the hidden input's value is not a valid format, it will default to "text" format`, () => {
+        it(`when the hidden input's value is not a valid format, it will default to "commonmark" format`, () => {
             createHiddenInput(doc, "invalid");
 
-            expect(getFormatOrDefault(doc, "123")).toEqual("text");
+            expect(getFormatOrDefault(doc, "123")).toEqual(TEXT_FORMAT_COMMONMARK);
         });
 
-        it.each([["html"], ["text"], ["commonmark"]])(
+        it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT], [TEXT_FORMAT_COMMONMARK]])(
             `when the hidden input's value is %s, it will return it`,
             (expected_format: string) => {
                 createHiddenInput(doc, expected_format);
@@ -60,7 +65,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
         });
 
         it(`when the comment body element can't be found, it will default to empty string`, () => {
-            expect(getTextAreaValue(comment_panel, "text")).toEqual("");
+            expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toEqual("");
         });
 
         it(`when the given format is html, it returns the comment body's trimmed innerHTML`, () => {
@@ -71,7 +76,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     </div>`
             );
 
-            expect(getTextAreaValue(comment_panel, "html")).toEqual(
+            expect(getTextAreaValue(comment_panel, TEXT_FORMAT_HTML)).toEqual(
                 `<p>Some <strong>HTML</strong> content</p>`
             );
         });
@@ -84,7 +89,9 @@ describe(`edit-follow-up-comment-helpers`, () => {
                             Some Text content
                         </div>`
                 );
-                expect(getTextAreaValue(comment_panel, "text")).toEqual("Some Text content");
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toEqual(
+                    "Some Text content"
+                );
             });
 
             it(`defaults the textContent to empty string`, () => {
@@ -93,7 +100,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     `<div class="tracker_artifact_followup_comment_body"></div>`
                 );
 
-                expect(getTextAreaValue(comment_panel, "text")).toEqual("");
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toEqual("");
             });
         });
 
@@ -107,7 +114,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                         ><p>Some <strong>Markdown</strong> content</p></div>`
                 );
 
-                expect(getTextAreaValue(comment_panel, "commonmark")).toEqual(
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toEqual(
                     "Some **Markdown** content"
                 );
             });
@@ -118,7 +125,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     `<div class="tracker_artifact_followup_comment_body"><p>Some <strong>Markdown</strong> content</p></div>`
                 );
 
-                expect(getTextAreaValue(comment_panel, "commonmark")).toEqual("");
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toEqual("");
             });
         });
     });
@@ -156,7 +163,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
             const div = doc.createElement("div");
             doc.body.append(div);
 
-            createEditFollowupEditor(editor_factory, div, "123", "text");
+            createEditFollowupEditor(editor_factory, div, "123", TEXT_FORMAT_TEXT);
 
             expect(editor_factory.createRichTextEditor).not.toHaveBeenCalled();
         });
@@ -166,7 +173,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
             doc.body.append(textarea);
             const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
 
-            createEditFollowupEditor(editor_factory, textarea, "123", "commonmark");
+            createEditFollowupEditor(editor_factory, textarea, "123", TEXT_FORMAT_COMMONMARK);
 
             const options = createRichTextEditor.mock.calls[0][1];
             expect(options.format_selectbox_id).toEqual("123");

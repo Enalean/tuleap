@@ -28,6 +28,7 @@ import type { TextFieldFormat } from "../../../../../constants/fields-constants"
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
 } from "../../../../../constants/fields-constants";
 import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
 
@@ -35,7 +36,11 @@ const emptyFunction = (): void => {
     //Do nothing
 };
 
-function createState(selectbox_id: string, selectbox_name?: string): EditorAreaStateInterface {
+function createState(
+    selectbox_id: string,
+    selectbox_name?: string,
+    initial_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK
+): EditorAreaStateInterface {
     const doc = document.implementation.createHTMLDocument();
     const mount_point = doc.createElement("div");
     const textarea = doc.createElement("textarea");
@@ -45,6 +50,7 @@ function createState(selectbox_id: string, selectbox_name?: string): EditorAreaS
             public mount_point: HTMLDivElement,
             public textarea: HTMLTextAreaElement,
             public selectbox_id: string,
+            public initial_format: TextFieldFormat,
             public selectbox_name?: string,
             public current_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK,
             public rendered_html = null,
@@ -56,6 +62,9 @@ function createState(selectbox_id: string, selectbox_name?: string): EditorAreaS
         isCurrentFormatCommonMark(): boolean {
             return this.current_format === TEXT_FORMAT_COMMONMARK;
         }
+        isInitialFormatText(): boolean {
+            return this.initial_format === TEXT_FORMAT_TEXT;
+        }
         isInEditMode(): boolean {
             return !this.is_in_preview_mode;
         }
@@ -65,7 +74,7 @@ function createState(selectbox_id: string, selectbox_name?: string): EditorAreaS
         switchToPreviewMode(): void {
             this.is_in_preview_mode = true;
         }
-    })(mount_point, textarea, selectbox_id, selectbox_name);
+    })(mount_point, textarea, selectbox_id, initial_format, selectbox_name);
 }
 
 describe(`EditorAreaRenderer`, () => {
@@ -213,6 +222,23 @@ describe(`EditorAreaRenderer`, () => {
                 expect(stateCallback).toHaveBeenCalledWith(TEXT_FORMAT_HTML);
                 expect(render).toHaveBeenCalledTimes(2);
             });
+
+            it.each([
+                [TEXT_FORMAT_TEXT, "contain", true],
+                [TEXT_FORMAT_HTML, "not contain", false],
+                [TEXT_FORMAT_COMMONMARK, "not contain", false],
+            ])(
+                `when the state's initial format is %s, it will set the selectbox options to %s the Text format`,
+                (initial_format, contain, expected_result) => {
+                    const createSelect = jest.spyOn(FormatSelect, "createSelect");
+                    const state = createState("irrelevant", "irrelevant", initial_format);
+
+                    renderer.render(state);
+
+                    const options = createSelect.mock.calls[0][0].options;
+                    expect(options.includes(TEXT_FORMAT_TEXT)).toBe(expected_result);
+                }
+            );
         });
     });
 });
