@@ -101,7 +101,8 @@ final class jira_importPlugin extends Plugin
                         ),
                         new PlatformConfigurationRetriever(
                             EventManager::instance()
-                        )
+                        ),
+                        ProjectManager::instance(),
                     )
                 );
             }

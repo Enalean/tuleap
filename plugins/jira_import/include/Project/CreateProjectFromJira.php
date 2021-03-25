@@ -92,6 +92,10 @@ final class CreateProjectFromJira
      * @var PlatformConfigurationRetriever
      */
     private $platform_configuration_collection_builder;
+    /**
+     * @var \ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         UserManager $user_manager,
@@ -100,7 +104,8 @@ final class CreateProjectFromJira
         IFindUserFromXMLReference $user_finder,
         JiraTrackerBuilder $jira_tracker_builder,
         ArtifactLinkTypeImporter $artifact_link_type_importer,
-        PlatformConfigurationRetriever $platform_configuration_collection_builder
+        PlatformConfigurationRetriever $platform_configuration_collection_builder,
+        \ProjectManager $project_manager
     ) {
         $this->user_manager                              = $user_manager;
         $this->user_finder                               = $user_finder;
@@ -109,6 +114,7 @@ final class CreateProjectFromJira
         $this->jira_tracker_builder                      = $jira_tracker_builder;
         $this->artifact_link_type_importer               = $artifact_link_type_importer;
         $this->platform_configuration_collection_builder = $platform_configuration_collection_builder;
+        $this->project_manager                           = $project_manager;
     }
 
     public function create(
@@ -121,6 +127,9 @@ final class CreateProjectFromJira
         string $jira_epic_issue_type
     ): \Project {
         try {
+            if ($this->project_manager->getProjectByCaseInsensitiveUnixName($shortname) !== null) {
+                throw new \RuntimeException('Project shortname already exists');
+            }
             $xml_element = $this->generateFromJira(
                 $logger,
                 $jira_client,
