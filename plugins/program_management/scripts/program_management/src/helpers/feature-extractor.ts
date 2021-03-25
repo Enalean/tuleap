@@ -23,7 +23,7 @@ export function extractFeatureIndexFromProgramIncrement(
     feature_id_with_increment: FeatureIdWithProgramIncrement
 ): number {
     const feature_index = feature_id_with_increment.program_increment.features.findIndex(
-        (feature) => feature_id_with_increment.feature_id === feature.artifact_id
+        (feature) => feature_id_with_increment.feature_id === feature.id
     );
 
     if (feature_index === -1) {

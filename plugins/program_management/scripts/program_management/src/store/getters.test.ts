@@ -18,9 +18,8 @@
  */
 
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
-import type { ProgramElement, State } from "../type";
+import type { Feature, State } from "../type";
 import * as getters from "./getters";
-import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 
 describe("Getters", () => {
     describe("isProgramIncrementAlreadyAdded", () => {
@@ -65,19 +64,19 @@ describe("Getters", () => {
                 program_increments: [
                     {
                         id: 14,
-                        features: [{ artifact_id: 56 }] as Feature[],
+                        features: [{ id: 56 }] as Feature[],
                     } as ProgramIncrement,
                 ],
             } as State;
 
-            expect(getters.getFeaturesInProgramIncrement(state)(14)).toEqual([{ artifact_id: 56 }]);
+            expect(getters.getFeaturesInProgramIncrement(state)(14)).toEqual([{ id: 56 }]);
         });
     });
 
     describe("getToBePlannedElementFromId", () => {
         it("When to be planned element does not exist, Then error is thrown", () => {
             const state = {
-                to_be_planned_elements: [] as ProgramElement[],
+                to_be_planned_elements: [] as Feature[],
             } as State;
 
             expect(() => getters.getToBePlannedElementFromId(state)(14)).toThrowError(
@@ -87,10 +86,10 @@ describe("Getters", () => {
 
         it("When to be planned element exist in state, Then it is returned", () => {
             const state = {
-                to_be_planned_elements: [{ artifact_id: 14 }] as ProgramElement[],
+                to_be_planned_elements: [{ id: 14 }] as Feature[],
             } as State;
 
-            expect(getters.getToBePlannedElementFromId(state)(14)).toEqual({ artifact_id: 14 });
+            expect(getters.getToBePlannedElementFromId(state)(14)).toEqual({ id: 14 });
         });
     });
 

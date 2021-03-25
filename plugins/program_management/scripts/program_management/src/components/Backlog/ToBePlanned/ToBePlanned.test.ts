@@ -23,7 +23,7 @@ import * as retriever from "../../../helpers/ToBePlanned/element-to-plan-retriev
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import type { ProgramElement } from "../../../type";
+import type { Feature } from "../../../type";
 
 describe("ToBePlanned", () => {
     it("Displays the empty state when no artifact are found", async () => {
@@ -74,19 +74,19 @@ describe("ToBePlanned", () => {
 
     it("Displays the elements to be planned", async () => {
         const element_one = {
-            artifact_id: 1,
-            artifact_title: "My artifact",
+            id: 1,
+            title: "My artifact",
             tracker: {
                 label: "bug",
             },
-        } as ProgramElement;
+        } as Feature;
         const element_two = {
-            artifact_id: 2,
-            artifact_title: "My user story",
+            id: 2,
+            title: "My user story",
             tracker: {
                 label: "user_stories",
             },
-        } as ProgramElement;
+        } as Feature;
 
         jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([
             element_one,
@@ -119,19 +119,19 @@ describe("ToBePlanned", () => {
 
     it("During loading, Then elements are retrieved and stored in store", async () => {
         const element_one = {
-            artifact_id: 1,
-            artifact_title: "My artifact",
+            id: 1,
+            title: "My artifact",
             tracker: {
                 label: "bug",
             },
-        } as ProgramElement;
+        } as Feature;
         const element_two = {
-            artifact_id: 2,
-            artifact_title: "My user story",
+            id: 2,
+            title: "My user story",
             tracker: {
                 label: "user_stories",
             },
-        } as ProgramElement;
+        } as Feature;
 
         jest.spyOn(retriever, "getToBePlannedElements").mockImplementation(() =>
             Promise.resolve([element_one, element_two])

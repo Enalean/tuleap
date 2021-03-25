@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureBacklogItems;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
 use Tuleap\ProgramManagement\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\REST\v1\FeatureBacklogItemsRepresentation;
+use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 use Tuleap\Project\REST\ProjectReference;
 
-class FeatureBacklogItemsRepresentationBuilder implements RetrieveFeatureBacklogItems
+class UserStoryRepresentationBuilder implements RetrieveFeatureUserStories
 {
     /**
      * @var ArtifactsLinkedToParentDao
@@ -60,11 +60,11 @@ class FeatureBacklogItemsRepresentationBuilder implements RetrieveFeatureBacklog
     }
 
     /**
-     * @return FeatureBacklogItemsRepresentation[]
+     * @return UserStoryRepresentation[]
      * @throws FeatureNotAccessException
      * @throws FeatureIsNotPlannableException
      */
-    public function buildFeatureBacklogItems(int $feature_id, \PFUser $user): array
+    public function buildFeatureStories(int $feature_id, \PFUser $user): array
     {
         $feature = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
         if (! $feature) {
@@ -79,17 +79,17 @@ class FeatureBacklogItemsRepresentationBuilder implements RetrieveFeatureBacklog
         $linked_children  = [];
         $planned_children = $this->dao->getChildrenOfFeatureInTeamProjects($feature_id);
         foreach ($planned_children as $planned_child) {
-            $child = $this->artifact_factory->getArtifactByIdUserCanView($user, $planned_child['children_id']);
-            if ($child) {
-                $linked_children[] = new FeatureBacklogItemsRepresentation(
-                    $child->getId(),
-                    $child->getUri(),
-                    $child->getXRef(),
-                    $child->getTitle(),
-                    $child->isOpen(),
-                    new ProjectReference($child->getTracker()->getProject()),
-                    $child->getTracker()->getColor()->getName(),
-                    $this->retrieve_background_color->retrieveBackgroundColor($child, $user)->getBackgroundColorName(),
+            $story = $this->artifact_factory->getArtifactByIdUserCanView($user, $planned_child['children_id']);
+            if ($story) {
+                $linked_children[] = new UserStoryRepresentation(
+                    $story->getId(),
+                    $story->getUri(),
+                    $story->getXRef(),
+                    $story->getTitle(),
+                    $story->isOpen(),
+                    new ProjectReference($story->getTracker()->getProject()),
+                    $story->getTracker()->getColor()->getName(),
+                    $this->retrieve_background_color->retrieveBackgroundColor($story, $user)->getBackgroundColorName(),
                 );
             }
         }

@@ -98,6 +98,8 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         return new ProgramIncrement(
             $program_increment_artifact->getId(),
             $title,
+            $program_increment_artifact->getUri(),
+            $program_increment_artifact->getXRef(),
             $program_increment_artifact->userCanUpdate($user),
             $this->userCanPlan($program_increment_artifact, $user),
             $status,

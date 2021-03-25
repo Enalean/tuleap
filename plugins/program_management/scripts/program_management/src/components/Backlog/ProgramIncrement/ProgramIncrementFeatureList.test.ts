@@ -1,11 +1,11 @@
 import * as retriever from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
-import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import { shallowMount } from "@vue/test-utils";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Feature } from "../../../type";
 
 describe("ProgramIncrementFeatureList", () => {
     it("Displays the empty state when no features are found", async () => {
@@ -98,15 +98,15 @@ describe("ProgramIncrementFeatureList", () => {
 
     it("Displays the elements to be planned", async () => {
         const element_one = {
-            artifact_id: 1,
-            artifact_title: "My artifact",
+            id: 1,
+            title: "My artifact",
             tracker: {
                 label: "bug",
             },
         } as Feature;
         const element_two = {
-            artifact_id: 2,
-            artifact_title: "My user story",
+            id: 2,
+            title: "My user story",
             tracker: {
                 label: "user_stories",
             },
@@ -162,15 +162,15 @@ describe("ProgramIncrementFeatureList", () => {
 
     it("Retrieve elements to display and store them in store", async () => {
         const element_one = {
-            artifact_id: 1,
-            artifact_title: "My artifact",
+            id: 1,
+            title: "My artifact",
             tracker: {
                 label: "bug",
             },
         } as Feature;
         const element_two = {
-            artifact_id: 2,
-            artifact_title: "My user story",
+            id: 2,
+            title: "My user story",
             tracker: {
                 label: "user_stories",
             },

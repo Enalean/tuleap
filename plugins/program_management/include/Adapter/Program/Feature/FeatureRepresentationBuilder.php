@@ -86,6 +86,7 @@ class FeatureRepresentationBuilder
             $artifact_id,
             $artifact_title,
             $full_artifact->getXRef(),
+            $full_artifact->getUri(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
             $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user),
             $this->hasAPlannedStory($user, $artifact_id),

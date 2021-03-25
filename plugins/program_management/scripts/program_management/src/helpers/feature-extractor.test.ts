@@ -18,9 +18,9 @@
  */
 
 import type { FeatureIdWithProgramIncrement } from "./drag-drop";
-import type { Feature } from "./ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 import * as featureExtractor from "./feature-extractor";
+import type { Feature } from "../type";
 
 describe("FeatureExtractor", () => {
     describe("extractFeatureIndexFromProgramIncrement", () => {
@@ -29,7 +29,7 @@ describe("FeatureExtractor", () => {
                 feature_id: 125,
                 program_increment: {
                     id: 4,
-                    features: [{ artifact_id: 14 } as Feature],
+                    features: [{ id: 14 } as Feature],
                 } as ProgramIncrement,
             };
 
@@ -43,11 +43,7 @@ describe("FeatureExtractor", () => {
                 feature_id: 15,
                 program_increment: {
                     id: 4,
-                    features: [
-                        { artifact_id: 14 },
-                        { artifact_id: 15 },
-                        { artifact_id: 16 },
-                    ] as Feature[],
+                    features: [{ id: 14 }, { id: 15 }, { id: 16 }] as Feature[],
                 } as ProgramIncrement,
             };
 

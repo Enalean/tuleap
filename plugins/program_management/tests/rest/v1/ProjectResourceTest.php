@@ -132,7 +132,7 @@ class ProjectResourceTest extends \RestBase
         $content = $response->json();
 
         self::assertGreaterThan(1, $content);
-        self::assertEquals('My artifact', $content[0]['artifact_title']);
+        self::assertEquals('My artifact', $content[0]['title']);
     }
 
     /**
@@ -267,7 +267,7 @@ class ProjectResourceTest extends \RestBase
         $top_backlog_element_ids = [];
 
         foreach ($top_backlog_elements as $top_backlog_element) {
-            $top_backlog_element_ids[] = $top_backlog_element['artifact_id'];
+            $top_backlog_element_ids[] = $top_backlog_element['id'];
         }
 
         return $top_backlog_element_ids;

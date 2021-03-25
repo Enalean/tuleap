@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links;
 
-use Tuleap\ProgramManagement\REST\v1\FeatureBacklogItemsRepresentation;
+use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 
-interface RetrieveFeatureBacklogItems
+interface RetrieveFeatureUserStories
 {
     /**
-     * @return FeatureBacklogItemsRepresentation[]
+     * @return UserStoryRepresentation[]
      */
-    public function buildFeatureBacklogItems(int $feature_id, \PFUser $user): array;
+    public function buildFeatureStories(int $feature_id, \PFUser $user): array;
 }

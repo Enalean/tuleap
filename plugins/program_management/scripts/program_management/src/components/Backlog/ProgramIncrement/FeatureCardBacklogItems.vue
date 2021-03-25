@@ -48,7 +48,6 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { Mutation } from "vuex-class";
@@ -58,6 +57,7 @@ import type { LinkUserStoryToFeature } from "../../../store/mutations";
 import { handleError } from "../../../helpers/error-handler";
 import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
+import type { Feature } from "../../../type";
 
 @Component({
     components: { UserStoryDisplayer, BacklogItemsErrorShow, BacklogElementSkeleton },
@@ -100,10 +100,10 @@ export default class FeatureCardBacklogItems extends Vue {
 
         try {
             this.is_loading_user_story = true;
-            this.user_stories = await getLinkedUserStoriesToFeature(this.feature.artifact_id);
+            this.user_stories = await getLinkedUserStoriesToFeature(this.feature.id);
             this.linkUserStoriesToFeature({
                 user_stories: this.user_stories,
-                element_id: this.feature.artifact_id,
+                element_id: this.feature.id,
                 program_increment: this.program_increment,
             });
         } catch (rest_error) {

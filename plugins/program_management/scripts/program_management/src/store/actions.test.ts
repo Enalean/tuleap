@@ -18,14 +18,13 @@
  */
 
 import * as actions from "./actions";
-import type { ProgramElement, State } from "../type";
+import type { Feature, State } from "../type";
 import type { ActionContext } from "vuex";
 import type {
     FeatureIdWithProgramIncrement,
     HandleDropContextWithProgramId,
 } from "../helpers/drag-drop";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
-import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { FeatureIdToMoveFromProgramIncrementToAnother } from "../helpers/drag-drop";
 import { createElement } from "../helpers/jest/create-dom-element";
 import * as dragDrop from "../helpers/drag-drop";
@@ -48,26 +47,26 @@ describe("Actions", () => {
 
     describe("planFeatureInProgramIncrement", () => {
         it("When a feature is planned in a program increment, Then it is deleted from to be planned elements and add to increment", () => {
-            const feature: ProgramElement = { artifact_id: 125 } as ProgramElement;
+            const feature: Feature = { id: 125 } as Feature;
             const feature_id_with_increment: FeatureIdWithProgramIncrement = {
                 feature_id: 125,
                 program_increment: {
                     id: 4,
-                    features: [{ artifact_id: 14 } as Feature],
+                    features: [{ id: 14 } as Feature],
                 } as ProgramIncrement,
             };
 
-            context.getters = { getToBePlannedElementFromId: (): ProgramElement => feature };
+            context.getters = { getToBePlannedElementFromId: (): Feature => feature };
 
             actions.planFeatureInProgramIncrement(context, feature_id_with_increment);
 
             expect(context.commit).toHaveBeenCalledWith("removeToBePlannedElement", feature);
             expect(feature_id_with_increment.program_increment.features.length).toEqual(2);
             expect(feature_id_with_increment.program_increment.features[0]).toEqual({
-                artifact_id: 14,
+                id: 14,
             });
             expect(feature_id_with_increment.program_increment.features[1]).toEqual({
-                artifact_id: 125,
+                id: 125,
             });
         });
     });
@@ -78,7 +77,7 @@ describe("Actions", () => {
                 feature_id: 125,
                 program_increment: {
                     id: 4,
-                    features: [{ artifact_id: 14 } as Feature],
+                    features: [{ id: 14 } as Feature],
                 } as ProgramIncrement,
             };
 
@@ -92,13 +91,13 @@ describe("Actions", () => {
                 feature_id: 125,
                 program_increment: {
                     id: 4,
-                    features: [{ artifact_id: 125 } as Feature],
+                    features: [{ id: 125 } as Feature],
                 } as ProgramIncrement,
             };
 
             actions.unplanFeatureFromProgramIncrement(context, feature_id_with_increment);
             expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
-                artifact_id: 125,
+                id: 125,
             });
             expect(feature_id_with_increment.program_increment.features.length).toEqual(0);
         });
@@ -110,7 +109,7 @@ describe("Actions", () => {
                 feature_id: 125,
                 from_program_increment: {
                     id: 4,
-                    features: [{ artifact_id: 14 } as Feature],
+                    features: [{ id: 14 } as Feature],
                 } as ProgramIncrement,
                 to_program_increment: {
                     id: 5,
@@ -128,7 +127,7 @@ describe("Actions", () => {
                 feature_id: 125,
                 from_program_increment: {
                     id: 4,
-                    features: [{ artifact_id: 14 } as Feature, { artifact_id: 125 } as Feature],
+                    features: [{ id: 14 } as Feature, { id: 125 } as Feature],
                 } as ProgramIncrement,
                 to_program_increment: {
                     id: 5,
@@ -139,11 +138,11 @@ describe("Actions", () => {
             actions.moveFeatureFromProgramIncrementToAnother(context, feature_id_with_increment);
             expect(feature_id_with_increment.from_program_increment.features.length).toEqual(1);
             expect(feature_id_with_increment.from_program_increment.features[0]).toEqual({
-                artifact_id: 14,
+                id: 14,
             });
             expect(feature_id_with_increment.to_program_increment.features.length).toEqual(1);
             expect(feature_id_with_increment.to_program_increment.features[0]).toEqual({
-                artifact_id: 125,
+                id: 125,
             });
         });
     });
@@ -163,7 +162,7 @@ describe("Actions", () => {
             const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
 
             const getProgramIncrementFromId = jest.fn().mockReturnValue({ id: 56, features: [] });
-            const getToBePlannedElementFromId = jest.fn().mockReturnValue({ artifact_id: 125 });
+            const getToBePlannedElementFromId = jest.fn().mockReturnValue({ id: 125 });
 
             context.getters = { getProgramIncrementFromId, getToBePlannedElementFromId };
 
@@ -178,7 +177,7 @@ describe("Actions", () => {
             expect(getToBePlannedElementFromId).toHaveBeenCalledWith(14);
 
             expect(context.commit).toHaveBeenCalledWith("removeToBePlannedElement", {
-                artifact_id: 125,
+                id: 125,
             });
 
             expect(plan_feature).toHaveBeenCalledWith(
@@ -211,7 +210,7 @@ describe("Actions", () => {
             const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
 
             const getProgramIncrementFromId = jest.fn().mockReturnValue({ id: 56, features: [] });
-            const getToBePlannedElementFromId = jest.fn().mockReturnValue({ artifact_id: 125 });
+            const getToBePlannedElementFromId = jest.fn().mockReturnValue({ id: 125 });
 
             context.getters = { getProgramIncrementFromId, getToBePlannedElementFromId };
 
@@ -226,7 +225,7 @@ describe("Actions", () => {
             expect(getToBePlannedElementFromId).toHaveBeenCalledWith(14);
 
             expect(context.commit).toHaveBeenCalledWith("removeToBePlannedElement", {
-                artifact_id: 125,
+                id: 125,
             });
 
             expect(plan_feature).toHaveBeenCalledWith(
@@ -259,7 +258,7 @@ describe("Actions", () => {
 
             const getProgramIncrementFromId = jest
                 .fn()
-                .mockReturnValue({ id: 56, features: [{ artifact_id: 12 }] });
+                .mockReturnValue({ id: 56, features: [{ id: 12 }] });
 
             context.getters = { getProgramIncrementFromId };
 
@@ -273,7 +272,7 @@ describe("Actions", () => {
             expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
 
             expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
-                artifact_id: 12,
+                id: 12,
             });
 
             expect(unplan_feature).toHaveBeenCalledWith(
@@ -307,7 +306,7 @@ describe("Actions", () => {
 
             const getProgramIncrementFromId = jest
                 .fn()
-                .mockReturnValue({ id: 56, features: [{ artifact_id: 12 }] });
+                .mockReturnValue({ id: 56, features: [{ id: 12 }] });
 
             context.getters = { getProgramIncrementFromId };
 
@@ -321,7 +320,7 @@ describe("Actions", () => {
             expect(getProgramIncrementFromId).toHaveBeenCalledWith(1);
 
             expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
-                artifact_id: 12,
+                id: 12,
             });
 
             expect(unplan_feature).toHaveBeenCalledWith(
@@ -357,7 +356,7 @@ describe("Actions", () => {
 
             const getProgramIncrementFromId = jest
                 .fn()
-                .mockReturnValueOnce({ id: 1, features: [{ artifact_id: 12 }] } as ProgramIncrement)
+                .mockReturnValueOnce({ id: 1, features: [{ id: 12 }] } as ProgramIncrement)
                 .mockReturnValueOnce({ id: 2, features: [] as Feature[] } as ProgramIncrement);
 
             context.getters = { getProgramIncrementFromId };

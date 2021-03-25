@@ -21,7 +21,7 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import type { ProgramElement } from "../../../type";
+import type { Feature } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import * as UserStoryRetriever from "../../../helpers/BacklogItems/children-feature-retriever";
 import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
@@ -37,8 +37,8 @@ describe("ToBePlannedBacklogItems", () => {
         component_options = {
             propsData: {
                 to_be_planned_element: {
-                    artifact_id: 100,
-                } as ProgramElement,
+                    id: 100,
+                } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
@@ -79,9 +79,9 @@ describe("ToBePlannedBacklogItems", () => {
             },
             propsData: {
                 to_be_planned_element: {
-                    artifact_id: 100,
+                    id: 100,
                     user_stories: [{ id: 14 } as UserStory],
-                } as ProgramElement,
+                } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
         };
@@ -100,8 +100,8 @@ describe("ToBePlannedBacklogItems", () => {
         component_options = {
             propsData: {
                 to_be_planned_element: {
-                    artifact_id: 100,
-                } as ProgramElement,
+                    id: 100,
+                } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
@@ -147,7 +147,7 @@ describe("ToBePlannedBacklogItems", () => {
         component_options = {
             propsData: {
                 to_be_planned_element: {
-                    artifact_id: 100,
+                    id: 100,
                     user_stories: [
                         {
                             id: 14,
@@ -162,7 +162,7 @@ describe("ToBePlannedBacklogItems", () => {
                             },
                         } as UserStory,
                     ],
-                } as ProgramElement,
+                } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {

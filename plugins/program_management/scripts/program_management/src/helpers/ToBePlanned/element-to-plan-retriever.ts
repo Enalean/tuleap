@@ -18,9 +18,9 @@
  */
 
 import { recursiveGet } from "tlp";
-import type { ProgramElement } from "../../type";
+import type { Feature } from "../../type";
 
-export function getToBePlannedElements(program_id: number): Promise<ProgramElement[]> {
+export function getToBePlannedElements(program_id: number): Promise<Feature[]> {
     return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/program_backlog`, {
         params: {
             limit: 50,

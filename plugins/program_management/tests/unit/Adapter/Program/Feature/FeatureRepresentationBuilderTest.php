@@ -119,6 +119,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
         $artifact = \Mockery::mock(Artifact::class);
         $artifact->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $artifact->shouldReceive('getXRef')->andReturn('one #1');
+        $artifact->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=1');
         $tracker = \Mockery::mock(\Tracker::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $tracker->shouldReceive("getColor")->andReturn(TrackerColor::fromName("lake-placid-blue"));
@@ -163,6 +164,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
             1,
             'title',
             'one #1',
+            '/plugins/tracker/?aid=1',
             MinimalTrackerRepresentation::build($tracker),
             $background_color,
             true,
