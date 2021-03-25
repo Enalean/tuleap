@@ -44,12 +44,14 @@ use Kanban_SemanticStatusNotBoundToStaticValuesException;
 use Kanban_SemanticStatusNotDefinedException;
 use Luracast\Restler\RestException;
 use PFUser;
+use Tracker;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryChange;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
+use Tracker_Semantic_StatusFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -58,7 +60,6 @@ use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Report;
 use Tracker_ReportFactory;
-use Tracker_Semantic_Status;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use TrackerFactory;
@@ -96,6 +97,9 @@ use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotOpenValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use UserManager;
 
 class KanbanResource extends AuthenticatedResource
@@ -689,20 +693,20 @@ class KanbanResource extends AuthenticatedResource
 
     private function moveArtifactsInArchive(AgileDashboard_Kanban $kanban, PFUser $user, KanbanAddRepresentation $add)
     {
-        $a_closed_value_id = null;
-        $status_field      = $this->getStatusField($kanban, $user);
-        $open_values       = $this->getSemanticStatus($kanban)->getOpenValues();
-        foreach ($status_field->getAllValues() as $value_id => $value) {
-            if (! $value->isHidden() && ! in_array($value_id, $open_values)) {
-                $a_closed_value_id = $value_id;
-                break;
-            }
-        }
+        $status_value_retriever = new StatusValueRetriever(
+            Tracker_Semantic_StatusFactory::instance()
+        );
 
-        if (! $a_closed_value_id) {
+        try {
+            $tracker        = $this->getTrackerForKanban($kanban);
+            $not_open_value = $status_value_retriever->getFirstNonOpenValueUserCanRead($tracker, $user);
+
+            $this->moveArtifactsInColumn($kanban, $user, $add, $not_open_value->getId());
+        } catch (SemanticStatusNotDefinedException $exception) {
+            throw new RestException(403);
+        } catch (SemanticStatusNotOpenValueNotFoundException $exception) {
             throw new RestException(500, 'Cannot found any suitable value corresponding to the [archive] column.');
         }
-        $this->moveArtifactsInColumn($kanban, $user, $add, $a_closed_value_id);
     }
 
     private function moveArtifactsInColumn(
@@ -1490,25 +1494,7 @@ class KanbanResource extends AuthenticatedResource
         return $user;
     }
 
-    private function getSemanticStatus(AgileDashboard_Kanban $kanban)
-    {
-        $tracker = $this->getTrackerForKanban($kanban);
-        if (! $tracker) {
-            return;
-        }
-
-        $semantic = Tracker_Semantic_Status::load($tracker);
-        if (! $semantic->getFieldId()) {
-            return;
-        }
-
-        return $semantic;
-    }
-
-    /**
-     * @return Tracker
-     */
-    private function getTrackerForKanban(AgileDashboard_Kanban $kanban)
+    private function getTrackerForKanban(AgileDashboard_Kanban $kanban): Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if (! $tracker) {

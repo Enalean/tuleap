@@ -31,6 +31,12 @@ class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_F
      */
     public function getField(Tracker $tracker)
     {
-        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+        $field = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+        assert(
+            $field instanceof Tracker_FormElement_Field_Selectbox ||
+            $field === null
+        );
+
+        return $field;
     }
 }
