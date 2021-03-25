@@ -745,6 +745,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $theme_variant       = new ThemeVariant();
         $color               = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
         $theme_color_variant = $color->getVariant();
+        $user_locale         = $current_user->getLocale();
 
         $this->includeCalendarScripts();
         echo '<!DOCTYPE html>
@@ -755,7 +756,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo $this->displayStylesheetElements([]);
         echo $this->displaySyndicationElements();
         echo '</head>';
-        echo '<body class="' . Codendi_HTMLPurifier::instance()->purify($theme_color_variant) . '" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">';
+        echo '<body class="' . Codendi_HTMLPurifier::instance()->purify($theme_color_variant) . '" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0" data-user-locale="' . Codendi_HTMLPurifier::instance()->purify($user_locale) . '">';
         echo '<div class="main_body_row"><div class="contenttable">';
         echo $this->getNotificationPlaceholder();
     }
