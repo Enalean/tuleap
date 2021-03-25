@@ -199,6 +199,7 @@
     name="TextField"
     v-props-field="field"
     v-props-value="modal.values[field.field_id].value"
+    v-props-project-id="modal.tracker.project.id"
     v-on-input="modal.setFieldValue(field.field_id)"
     v-on-upload-image="modal.addToFilesAddedByTextField"
 ></vue-component>

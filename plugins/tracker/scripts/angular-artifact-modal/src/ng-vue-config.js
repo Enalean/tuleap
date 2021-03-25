@@ -17,10 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { store } from "./vuex-store.js";
+import Vue from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 export default NgVueConfig;
 
 NgVueConfig.$inject = ["$ngVueProvider"];
+
+Vue.use(VueDOMPurifyHTML);
 
 function NgVueConfig($ngVueProvider) {
     $ngVueProvider.setRootVueInstanceProps({

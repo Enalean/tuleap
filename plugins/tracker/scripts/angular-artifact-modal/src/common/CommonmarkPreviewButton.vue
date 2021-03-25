@@ -23,12 +23,15 @@
         class="tlp-button-secondary tlp-button-small artifact-modal-preview-button"
         type="button"
         v-on:click="$emit('commonmark-preview-event')"
+        v-bind:disabled="is_preview_loading"
+        data-test="button-commonmark-preview"
     >
         <i
             class="fas tlp-button-icon"
             v-bind:class="{
-                'fa-eye': !is_in_preview_mode,
-                'fa-pencil-alt': is_in_preview_mode,
+                'fa-circle-notch fa-spin': is_preview_loading,
+                'fa-eye': !is_in_preview_mode && !is_preview_loading,
+                'fa-pencil-alt': is_in_preview_mode && !is_preview_loading,
             }"
             data-test="button-commonmark-preview-icon"
             aria-hidden="true"
@@ -44,6 +47,7 @@ export default {
     name: "CommonmarkPreviewButton",
     props: {
         is_in_preview_mode: Boolean,
+        is_preview_loading: Boolean,
     },
     computed: {
         button_preview_label() {

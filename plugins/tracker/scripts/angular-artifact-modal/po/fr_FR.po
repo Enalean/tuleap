@@ -152,6 +152,9 @@ msgstr "Texte"
 msgid "The artifact will be linked to {{ modal.parent.title }}."
 msgstr "L'artefact sera lié à  {{ modal.parent.title }}."
 
+msgid "There was an error in the Markdown preview:"
+msgstr "Il y a eu une erreur dans l'aperçu Markdown :"
+
 msgid "Type..."
 msgstr "Ecrivez..."
 

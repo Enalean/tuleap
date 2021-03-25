@@ -43,3 +43,5 @@ export const getCommonMarkSyntaxHelperPopoverTitle = () =>
     gettextCatalog.getString("For your information...");
 export const getEditButtonLabel = () => gettextCatalog.getString("Edit");
 export const getPreviewButtonLabel = () => gettextCatalog.getString("Preview");
+export const getCommonMarkPreviewErrorIntroduction = () =>
+    gettextCatalog.getString("There was an error in the Markdown preview: ");

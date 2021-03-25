@@ -38,11 +38,12 @@
             <commonmark-preview-button
                 v-if="is_commonmark_format"
                 v-bind:is_in_preview_mode="is_in_preview_mode"
+                v-bind:is_preview_loading="is_preview_loading"
                 v-on:commonmark-preview-event="$emit('interpret-content-event')"
             />
             <commonmark-syntax-helper
                 v-if="is_commonmark_format"
-                v-bind:is_in_preview_mode="is_in_preview_mode"
+                v-bind:disabled="is_syntax_helper_button_disabled"
             />
         </div>
     </div>
@@ -72,10 +73,11 @@ export default {
         disabled: Boolean,
         required: Boolean,
         is_in_preview_mode: Boolean,
+        is_preview_loading: Boolean,
     },
     computed: {
         disabled_format_selectbox() {
-            return this.disabled || this.is_in_preview_mode;
+            return this.disabled || this.is_in_preview_mode || this.is_preview_loading;
         },
         format: {
             get() {
@@ -108,6 +110,9 @@ export default {
         },
         commonmark_label() {
             return getCommonMarkLabel();
+        },
+        is_syntax_helper_button_disabled() {
+            return this.is_in_preview_mode || this.is_preview_loading;
         },
     },
 };

@@ -33,6 +33,7 @@
             v-bind:required="field.required"
             v-bind:value="format"
             v-bind:is_in_preview_mode="is_in_preview_mode"
+            v-bind:is_preview_loading="is_preview_loading"
             v-on:interpret-content-event="togglePreview"
         />
         <rich-text-editor
@@ -44,13 +45,24 @@
             v-model="content"
             v-on:upload-image="reemit"
             v-on:format-change="onFormatChange"
+            v-show="!is_in_preview_mode && !is_in_error"
         />
+        <div
+            v-if="is_in_preview_mode && !is_in_error"
+            v-dompurify-html="interpreted_commonmark"
+            data-test="text-field-commonmark-preview"
+        ></div>
+        <div v-if="is_in_error" class="tlp-alert-danger" data-test="text-field-error">
+            {{ error_introduction }} {{ error_text }}
+        </div>
     </div>
 </template>
 <script>
 import RichTextEditor from "../../common/RichTextEditor.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
 import { isDisabled } from "../disabled-field-detector.js";
+import { postInterpretCommonMark } from "../../api/tuleap-api";
+import { getCommonMarkPreviewErrorIntroduction } from "../../gettext-catalog.js";
 
 export default {
     name: "TextField",
@@ -58,10 +70,15 @@ export default {
     props: {
         field: Object,
         value: Object,
+        projectId: Number,
     },
     data() {
         return {
             is_in_preview_mode: false,
+            interpreted_commonmark: "",
+            is_preview_loading: false,
+            is_in_error: false,
+            error_text: "",
         };
     },
     computed: {
@@ -87,6 +104,9 @@ export default {
         is_required_and_empty() {
             return this.field.required && this.content === "";
         },
+        error_introduction() {
+            return getCommonMarkPreviewErrorIntroduction();
+        },
     },
     methods: {
         onFormatChange(new_format, new_content) {
@@ -95,8 +115,27 @@ export default {
         reemit(...args) {
             this.$emit("upload-image", ...args);
         },
-        togglePreview() {
-            this.is_in_preview_mode = !this.is_in_preview_mode;
+        async togglePreview() {
+            this.is_in_error = false;
+            this.error_text = "";
+
+            if (this.is_in_preview_mode) {
+                this.is_in_preview_mode = !this.is_in_preview_mode;
+                return;
+            }
+            try {
+                this.is_preview_loading = true;
+                this.interpreted_commonmark = await postInterpretCommonMark(
+                    this.content,
+                    this.projectId
+                );
+            } catch (error) {
+                this.is_in_error = true;
+                this.error_text = error;
+            } finally {
+                this.is_in_preview_mode = !this.is_in_preview_mode;
+                this.is_preview_loading = false;
+            }
         },
     },
 };
