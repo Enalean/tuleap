@@ -54,7 +54,7 @@
             data-test="program-increments"
         />
 
-        <program-increment-skeleton v-if="is_loading" dat-test="program-increment-skeleton" />
+        <backlog-element-skeleton v-if="is_loading" dat-test="program-increment-skeleton" />
 
         <div
             id="program-increment-error"
@@ -74,14 +74,14 @@ import EmptyState from "./EmptyState.vue";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { getProgramIncrements } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import ProgramIncrementSkeleton from "./ProgramIncrementSkeleton.vue";
+import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import { buildCreateNewProgramIncrement } from "../../../helpers/location-helper";
 import { namespace } from "vuex-class";
 
 const configuration = namespace("configuration");
 
 @Component({
-    components: { ProgramIncrementSkeleton, ProgramIncrementCard, EmptyState },
+    components: { BacklogElementSkeleton, ProgramIncrementCard, EmptyState },
 })
 export default class ProgramIncrementList extends Vue {
     private error_message = "";

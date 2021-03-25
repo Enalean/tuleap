@@ -20,7 +20,7 @@
 <template>
     <div class="backlog-items-container">
         <div class="backlog-items-children-container" v-if="is_opened">
-            <to-be-planned-skeleton v-if="is_loading_user_story" />
+            <backlog-element-skeleton v-if="is_loading_user_story" />
             <backlog-items-error-show
                 v-else-if="message_error_rest.length > 0"
                 v-bind:message_error_rest="message_error_rest"
@@ -51,7 +51,7 @@ import Vue from "vue";
 import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
 import { getLinkedUserStoriesToFeature } from "../../../helpers/BacklogItems/children-feature-retriever";
 import { Mutation } from "vuex-class";
-import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
+import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramElement } from "../../../type";
 import type { LinkUserStoryToPlannedElement } from "../../../store/mutations";
 import { handleError } from "../../../helpers/error-handler";
@@ -59,7 +59,7 @@ import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 
 @Component({
-    components: { UserStoryDisplayer, BacklogItemsErrorShow, ToBePlannedSkeleton },
+    components: { UserStoryDisplayer, BacklogItemsErrorShow, BacklogElementSkeleton },
 })
 export default class ToBePlannedBacklogItems extends Vue {
     @Prop({ required: true })

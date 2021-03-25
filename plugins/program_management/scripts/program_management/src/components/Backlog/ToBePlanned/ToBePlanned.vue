@@ -43,7 +43,7 @@
             {{ error_message }}
         </div>
 
-        <to-be-planned-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
+        <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
     </div>
 </template>
 
@@ -53,7 +53,7 @@ import { Component } from "vue-property-decorator";
 import { getToBePlannedElements } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import EmptyState from "./EmptyState.vue";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
-import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
+import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import { Mutation, State } from "vuex-class";
 import type { ProgramElement } from "../../../type";
 import { namespace } from "vuex-class";
@@ -61,7 +61,7 @@ import { namespace } from "vuex-class";
 const configuration = namespace("configuration");
 
 @Component({
-    components: { ToBePlannedSkeleton, ToBePlannedCard, EmptyState },
+    components: { BacklogElementSkeleton, ToBePlannedCard, EmptyState },
 })
 export default class ToBePlanned extends Vue {
     private error_message = "";

@@ -20,7 +20,7 @@
 <template>
     <div class="backlog-items-container">
         <div class="backlog-items-children-container" v-if="is_opened">
-            <program-increment-skeleton v-if="is_loading_user_story" />
+            <backlog-element-skeleton v-if="is_loading_user_story" />
             <backlog-items-error-show
                 v-else-if="message_error_rest.length > 0"
                 v-bind:message_error_rest="message_error_rest"
@@ -49,7 +49,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
-import ProgramIncrementSkeleton from "./ProgramIncrementSkeleton.vue";
+import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import { Mutation } from "vuex-class";
 import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
@@ -60,7 +60,7 @@ import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 
 @Component({
-    components: { UserStoryDisplayer, BacklogItemsErrorShow, ProgramIncrementSkeleton },
+    components: { UserStoryDisplayer, BacklogItemsErrorShow, BacklogElementSkeleton },
 })
 export default class FeatureCardBacklogItems extends Vue {
     @Prop({ required: true })

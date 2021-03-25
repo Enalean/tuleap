@@ -23,13 +23,12 @@ import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { ProgramElement } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
 import * as UserStoryRetriever from "../../../helpers/BacklogItems/children-feature-retriever";
 import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
 import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
-import ProgramIncrementSkeleton from "../ProgramIncrement/ProgramIncrementSkeleton.vue";
+import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 
 describe("ToBePlannedBacklogItems", () => {
     let component_options: ShallowMountOptions<ToBePlannedBacklogItems>;
@@ -68,7 +67,7 @@ describe("ToBePlannedBacklogItems", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ToBePlannedSkeleton).exists()).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeTruthy();
     });
 
     it("Displays error message if api rest error exists", async () => {
@@ -92,7 +91,7 @@ describe("ToBePlannedBacklogItems", () => {
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ToBePlannedSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeTruthy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });
@@ -139,7 +138,7 @@ describe("ToBePlannedBacklogItems", () => {
         await wrapper.vm.$nextTick(); // Load User Stories
         await wrapper.vm.$nextTick(); // Display User Stories
 
-        expect(wrapper.findComponent(ToBePlannedSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
     });
@@ -178,14 +177,14 @@ describe("ToBePlannedBacklogItems", () => {
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ToBePlannedSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
 
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });

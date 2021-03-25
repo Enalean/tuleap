@@ -23,7 +23,7 @@ import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { ProgramElement } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
-import ProgramIncrementSkeleton from "../ProgramIncrement/ProgramIncrementSkeleton.vue";
+import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import * as UserStoryRetriever from "../../../helpers/BacklogItems/children-feature-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
@@ -68,7 +68,7 @@ describe("FeatureCardBacklogItems", () => {
         });
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeTruthy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeTruthy();
     });
 
     it("Displays error message if api rest error exists", async () => {
@@ -93,7 +93,7 @@ describe("FeatureCardBacklogItems", () => {
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeTruthy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });
@@ -141,7 +141,7 @@ describe("FeatureCardBacklogItems", () => {
         await wrapper.vm.$nextTick(); // Init the component & load user stories
         await wrapper.vm.$nextTick(); // Display user stories
 
-        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
     });
@@ -183,7 +183,7 @@ describe("FeatureCardBacklogItems", () => {
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
     });
@@ -223,14 +223,14 @@ describe("FeatureCardBacklogItems", () => {
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
 
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(ProgramIncrementSkeleton).exists()).toBeFalsy();
+        expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });

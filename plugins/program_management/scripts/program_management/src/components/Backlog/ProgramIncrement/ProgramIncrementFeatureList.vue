@@ -27,7 +27,7 @@
         v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"
         v-bind:data-artifact-link-field-id="program_increment_artifact_link_id"
     >
-        <to-be-planned-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
+        <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
 
         <program-increment-not-plannable />
 
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import ToBePlannedSkeleton from "../ToBePlanned/ToBePlannedSkeleton.vue";
+import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
 import FeatureCard from "./FeatureCard.vue";
 import Vue from "vue";
@@ -76,7 +76,7 @@ const configuration = namespace("configuration");
 @Component({
     components: {
         ProgramIncrementNotPlannable,
-        ToBePlannedSkeleton,
+        BacklogElementSkeleton,
         FeatureCard,
         ProgramIncrementNoContent,
     },
