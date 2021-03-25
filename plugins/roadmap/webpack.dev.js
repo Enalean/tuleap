@@ -19,5 +19,32 @@
 
 const common = require("./webpack.common.js");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+module.exports = webpack_configurator.extendDevConfiguration([
+    ...common,
+    {
+        entry: {
+            "index-arrows": "./scripts/roadmap-widget/src/index-arrows.ts",
+        },
+        output: {
+            path: __dirname + "/public",
+            filename: "index_bundle.js",
+        },
+        resolve: {
+            extensions: [".js", ".ts"],
+        },
+        module: {
+            rules: [
+                ...webpack_configurator.configureTypescriptRules(
+                    webpack_configurator.babel_options_chrome_firefox
+                ),
+            ],
+        },
+        plugins: [
+            new HtmlWebpackPlugin(),
+            webpack_configurator.getCleanWebpackPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(true),
+        ],
+    },
+]);
