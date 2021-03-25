@@ -20,14 +20,13 @@
 .tree-blank,
 .tree-node,
 .tree-pipe,
-.tree-last { /* stylelint-disable order/properties-order */
+.tree-last {
     display: inline-block;
     width: 16px;
     height: 100%;
     background-image: url('#{$tuleap-common-theme-basepath}images/TreeNodeSprites.png');
     background-repeat: repeat-y;
 }
-/* stylelint-enable */
 
 .tree-last {
     background-position: -48px 0;

@@ -20,14 +20,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* stylelint-disable selector-id-pattern */
 #header,
 #navigation,
 .toolbar,
 .footer {
     display: none !important;
 }
-/* stylelint-enable selector-id-pattern */
 
 /* stylelint-disable-next-line selector-class-pattern */
 .main_body_row {

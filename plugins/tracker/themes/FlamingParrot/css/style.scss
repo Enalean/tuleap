@@ -170,7 +170,6 @@
         min-height: 0;
     }
 
-    /* stylelint-disable selector-no-qualifying-type */
     &.tracker-administration {
         background: $main-background;
 
@@ -184,7 +183,6 @@
             }
         }
     }
-    /* stylelint-enable selector-no-qualifying-type */
 
 
     .tracker-cross-reference-delete-link {
