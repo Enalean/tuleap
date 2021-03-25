@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
+use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
 
 class ArtifactsLinkedToParentDao extends DataAccessObject
@@ -128,8 +129,8 @@ class ArtifactsLinkedToParentDao extends DataAccessObject
                         INNER JOIN tracker_artifact                        AS user_story         ON (user_story.id = feature_artlink.artifact_id)
                         INNER JOIN tracker                                 AS user_story_tracker ON (user_story_tracker.id = user_story.tracker_id)
                         INNER JOIN plugin_program_management_team_projects AS team_project       ON (user_story_tracker.group_id = team_project.team_project_id AND team_project.program_project_id = feature_tracker.group_id)
-                WHERE feature.id  = ?";
+                WHERE feature.id = ? AND feature_artlink.nature = ?";
 
-        return $this->getDB()->run($sql, $artifact_id);
+        return $this->getDB()->run($sql, $artifact_id, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
     }
 }
