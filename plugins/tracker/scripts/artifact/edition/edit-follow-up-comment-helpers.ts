@@ -19,7 +19,6 @@
 
 import {
     TEXT_FORMAT_HTML,
-    TEXT_FORMAT_TEXT,
     isValidTextFormat,
     TEXT_FORMAT_COMMONMARK,
 } from "../../constants/fields-constants";
@@ -39,11 +38,11 @@ export function getFormatOrDefault(doc: Document, changeset_id: string): TextFie
     const format_hidden_input = doc.getElementById(input_id);
     if (!(format_hidden_input instanceof HTMLInputElement)) {
         // There is no hidden input if I'm editing a follow-up without comment
-        return TEXT_FORMAT_TEXT;
+        return TEXT_FORMAT_COMMONMARK;
     }
     return isValidTextFormat(format_hidden_input.value)
         ? format_hidden_input.value
-        : TEXT_FORMAT_TEXT;
+        : TEXT_FORMAT_COMMONMARK;
 }
 
 export function getTextAreaValue(comment_panel: Element, format: TextFieldFormat): string {

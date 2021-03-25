@@ -34,14 +34,15 @@ const emptyFunction = (): void => {
 describe(`EditorAreaState`, () => {
     let mount_point: HTMLDivElement,
         textarea: HTMLTextAreaElement,
-        presenter: FormatSelectorPresenter;
+        presenter: FormatSelectorPresenter,
+        editor: TextEditorInterface;
     beforeEach(() => {
         const doc = document.implementation.createHTMLDocument();
         mount_point = doc.createElement("div");
         textarea = doc.createElement("textarea");
         textarea.dataset.projectId = "101";
 
-        const editor = new (class implements TextEditorInterface {
+        editor = new (class implements TextEditorInterface {
             destroy = emptyFunction;
             onFormatChange = emptyFunction;
             getContent(): string {
@@ -72,6 +73,26 @@ describe(`EditorAreaState`, () => {
             state.current_format = current_format;
             expect(state.isCurrentFormatCommonMark()).toBe(expected_value);
         });
+    });
+
+    describe(`isInitialFormatText()`, () => {
+        it.each([
+            [TEXT_FORMAT_TEXT, true],
+            [TEXT_FORMAT_HTML, false],
+            [TEXT_FORMAT_COMMONMARK, false],
+        ])(
+            `when the presenter's initial format is %s, it will return %s`,
+            (initial_format, expected_value) => {
+                presenter = {
+                    id: "irrelevant",
+                    name: "irrelevant",
+                    selected_value: initial_format,
+                    editor,
+                };
+                const state = new EditorAreaState(mount_point, textarea, presenter);
+                expect(state.isInitialFormatText()).toBe(expected_value);
+            }
+        );
     });
 
     describe(`Edit/Preview mode`, () => {
