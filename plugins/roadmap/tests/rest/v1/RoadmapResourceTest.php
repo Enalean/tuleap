@@ -33,7 +33,7 @@ class RoadmapResourceTest extends \RestBase
         self::assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetTasks(): int
+    public function testGetTasks(): void
     {
         // The widget id is hardcoded because we do not have any REST route which can provide us the widget id
         $response = $this->getResponse(
@@ -42,9 +42,13 @@ class RoadmapResourceTest extends \RestBase
 
         self::assertEquals(200, $response->getStatusCode());
         $tasks = $response->json();
-        self::assertCount(1, $tasks);
-        self::assertEquals('My artifact', $tasks[0]['title']);
+        self::assertCount(2, $tasks);
 
-        return $tasks[0]['id'];
+        $my_artifact = $tasks[0];
+        self::assertEquals('My artifact', $my_artifact['title']);
+
+        $other_artifact = $tasks[1];
+        self::assertEquals('Another artifact', $other_artifact['title']);
+        self::assertEquals(['' => [$my_artifact['id']]], $other_artifact['dependencies']);
     }
 }

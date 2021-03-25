@@ -88,6 +88,10 @@
               <label><![CDATA[End Date]]></label>
               <properties display_time="0"/>
             </formElement>
+            <formElement type="art_link" ID="F15876" rank="10">
+              <name>art_link</name>
+              <label><![CDATA[Art link]]></label>
+            </formElement>
           </formElements>
         </formElement>
       </formElements>
@@ -148,17 +152,34 @@
         <permission scope="field" REF="F15875" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F15875" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F15875" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F15876" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F15876" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F15876" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
-      <artifacts><artifact id="2207">
-        <changeset id="CHANGESET_9714">
-          <submitted_by format="username">rest_api_tester_1</submitted_by>
-          <submitted_on format="ISO8601">2021-03-16T09:08:19+01:00</submitted_on>
-          <comments/>
-          <field_change type="string" field_name="summary">
-            <value><![CDATA[My artifact]]></value>
-          </field_change>
-        </changeset>
-      </artifact>
+      <artifacts>
+        <artifact id="2207">
+          <changeset id="CHANGESET_9714">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2021-03-16T09:08:19+01:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="summary">
+              <value><![CDATA[My artifact]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2208">
+          <changeset id="CHANGESET_9715">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2021-03-17T09:08:19+01:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="summary">
+              <value><![CDATA[Another artifact]]></value>
+            </field_change>
+            <field_change type="art_link" field_name="art_link">
+              <value>2207</value>
+            </field_change>
+          </changeset>
+        </artifact>
       </artifacts>
     </tracker>
   </trackers>

@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use Tuleap\Roadmap\RoadmapWidgetDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -47,6 +48,10 @@ final class RoadmapResource
      * Get the tasks
      *
      * Retrieve paginated tasks of a given roadmap
+     *
+     * <pre>
+     * /!\ Roadmap REST route is under construction and subject to changes /!\
+     * </pre>
      *
      * @url GET {id}/tasks
      * @access hybrid
@@ -80,6 +85,7 @@ final class RoadmapResource
             $semantic_timeframe_builder,
             new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger()),
             \Tracker_ArtifactFactory::instance(),
+            new DependenciesRetriever(new NatureDao()),
         );
 
         $tasks = $retriever->getTasks($id, $limit, $offset);

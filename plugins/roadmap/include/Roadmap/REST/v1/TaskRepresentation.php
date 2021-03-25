@@ -57,7 +57,14 @@ final class TaskRepresentation
      * @var string|null
      */
     public $end;
+    /**
+     * @var array<string, int[]>
+     */
+    public $dependencies;
 
+    /**
+     * @param DependenciesByNature[] $dependencies
+     */
     public function __construct(
         int $id,
         string $xref,
@@ -65,7 +72,8 @@ final class TaskRepresentation
         string $title,
         string $color_name,
         ?\DateTimeImmutable $start,
-        ?\DateTimeImmutable $end
+        ?\DateTimeImmutable $end,
+        array $dependencies
     ) {
         $this->id         = $id;
         $this->xref       = $xref;
@@ -74,5 +82,10 @@ final class TaskRepresentation
         $this->color_name = $color_name;
         $this->start      = JsonCast::fromDateTimeToDate($start);
         $this->end        = JsonCast::fromDateTimeToDate($end);
+
+        $this->dependencies = [];
+        foreach ($dependencies as $dep) {
+            $this->dependencies[$dep->nature] = $dep->artifact_ids;
+        }
     }
 }

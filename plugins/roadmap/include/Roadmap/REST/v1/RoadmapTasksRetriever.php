@@ -67,6 +67,10 @@ final class RoadmapTasksRetriever
      * @var TimeframeBuilder
      */
     private $timeframe_builder;
+    /**
+     * @var IRetrieveDependencies
+     */
+    private $dependencies_retriever;
 
     public function __construct(
         RoadmapWidgetDao $dao,
@@ -76,7 +80,8 @@ final class RoadmapTasksRetriever
         TrackerFactory $tracker_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         TimeframeBuilder $timeframe_builder,
-        \Tracker_ArtifactFactory $artifact_factory
+        \Tracker_ArtifactFactory $artifact_factory,
+        IRetrieveDependencies $dependencies_retriever
     ) {
         $this->dao                        = $dao;
         $this->project_manager            = $project_manager;
@@ -86,6 +91,7 @@ final class RoadmapTasksRetriever
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
         $this->artifact_factory           = $artifact_factory;
         $this->timeframe_builder          = $timeframe_builder;
+        $this->dependencies_retriever     = $dependencies_retriever;
     }
 
     /**
@@ -140,6 +146,7 @@ final class RoadmapTasksRetriever
                 $tracker->getColor()->getName(),
                 $start,
                 $end,
+                $this->dependencies_retriever->getDependencies($artifact),
             );
         }
 
