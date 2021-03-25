@@ -19,26 +19,30 @@
 
 <template>
     <div
-        v-bind:data-tlp-tooltip="reason_why_element_is_not_draggable"
-        v-bind:class="additional_tooltip_classnames"
         v-bind:draggable="is_draggable"
         v-bind:data-element-id="element.artifact_id"
+        class="element-backlog-items"
     >
-        <div class="element-card" v-bind:class="additional_classnames">
-            <div class="element-card-content">
-                <div class="element-card-xref-label">
-                    <a
-                        v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
-                        class="element-card-xref"
-                        v-bind:class="`element-card-xref-${element.tracker.color_name}`"
-                        data-not-drag-handle="true"
-                    >
-                        {{ element.artifact_xref }}
-                    </a>
-                    <span class="element-card-label">{{ element.artifact_title }}</span>
+        <div
+            v-bind:data-tlp-tooltip="reason_why_element_is_not_draggable"
+            v-bind:class="additional_tooltip_classnames"
+        >
+            <div class="element-card" v-bind:class="additional_classnames">
+                <div class="element-card-content">
+                    <div class="element-card-xref-label">
+                        <a
+                            v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
+                            class="element-card-xref"
+                            v-bind:class="`element-card-xref-${element.tracker.color_name}`"
+                            data-not-drag-handle="true"
+                        >
+                            {{ element.artifact_xref }}
+                        </a>
+                        <span class="element-card-label">{{ element.artifact_title }}</span>
+                    </div>
                 </div>
+                <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
             </div>
-            <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
         </div>
         <feature-card-backlog-items
             v-bind:class="{ 'backlog-items-draggable': is_draggable }"
@@ -97,7 +101,7 @@ export default class FeatureCard extends Vue {
     }
 
     get additional_tooltip_classnames(): string {
-        const classnames = ["element-backlog-items"];
+        const classnames = ["element-card-container"];
 
         if (!this.is_draggable) {
             classnames.push("tlp-tooltip");

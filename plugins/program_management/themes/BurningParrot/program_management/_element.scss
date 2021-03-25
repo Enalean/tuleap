@@ -93,10 +93,6 @@
     }
 }
 
-.element-card-container {
-    width: 100%;
-}
-
 .element-card-xref {
     width: max-content;
     margin: 0 0 $tlp-small-spacing 0;
@@ -136,6 +132,14 @@
     flex-direction: column;
     align-items: center;
     margin: 0 0 $tlp-small-spacing $tlp-small-spacing;
+
+    .element-card-container {
+        width: 100%;
+
+        > .element-card {
+            margin: 0;
+        }
+    }
 
     .element-card {
         width: 100%;

@@ -4,39 +4,43 @@ exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = 
 <div
   class="element-backlog-items"
   data-element-id="100"
-  data-tlp-tooltip=""
   draggable="true"
 >
   <div
-    class="element-card element-card-lake_placid_blue element-draggable-item element-card-background-peggy_pink_text element-card-with-accessibility"
+    class="element-card-container"
+    data-tlp-tooltip=""
   >
     <div
-      class="element-card-content"
+      class="element-card element-card-lake_placid_blue element-draggable-item element-card-background-peggy_pink_text element-card-with-accessibility"
     >
       <div
-        class="element-card-xref-label"
+        class="element-card-content"
       >
-        <a
-          class="element-card-xref element-card-xref-lake_placid_blue"
-          data-not-drag-handle="true"
-          href="/plugins/tracker/?aid=100"
+        <div
+          class="element-card-xref-label"
         >
-          
+          <a
+            class="element-card-xref element-card-xref-lake_placid_blue"
+            data-not-drag-handle="true"
+            href="/plugins/tracker/?aid=100"
+          >
+            
+                        
                     
-                
-        </a>
-         
-        <span
-          class="element-card-label"
-        >
-          My artifact
-        </span>
+          </a>
+           
+          <span
+            class="element-card-label"
+          >
+            My artifact
+          </span>
+        </div>
       </div>
+       
+      <div
+        class="element-card-accessibility"
+      />
     </div>
-     
-    <div
-      class="element-card-accessibility"
-    />
   </div>
    
   <!---->
@@ -45,39 +49,43 @@ exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = 
 
 exports[`FeatureCard Displays a not draggable card when feature has planned user stories 1`] = `
 <div
-  class="element-backlog-items tlp-tooltip tlp-tooltip-left"
+  class="element-backlog-items"
   data-element-id="100"
-  data-tlp-tooltip="The feature has elements planned in team project, it can not be unplanned"
   draggable="false"
 >
   <div
-    class="element-card element-card-lake_placid_blue"
+    class="element-card-container tlp-tooltip tlp-tooltip-left"
+    data-tlp-tooltip="The feature has elements planned in team project, it can not be unplanned"
   >
     <div
-      class="element-card-content"
+      class="element-card element-card-lake_placid_blue"
     >
       <div
-        class="element-card-xref-label"
+        class="element-card-content"
       >
-        <a
-          class="element-card-xref element-card-xref-lake_placid_blue"
-          data-not-drag-handle="true"
-          href="/plugins/tracker/?aid=100"
+        <div
+          class="element-card-xref-label"
         >
-          
+          <a
+            class="element-card-xref element-card-xref-lake_placid_blue"
+            data-not-drag-handle="true"
+            href="/plugins/tracker/?aid=100"
+          >
+            
+                        
                     
-                
-        </a>
-         
-        <span
-          class="element-card-label"
-        >
-          My artifact
-        </span>
+          </a>
+           
+          <span
+            class="element-card-label"
+          >
+            My artifact
+          </span>
+        </div>
       </div>
+       
+      <!---->
     </div>
-     
-    <!---->
   </div>
    
   <!---->
@@ -86,39 +94,43 @@ exports[`FeatureCard Displays a not draggable card when feature has planned user
 
 exports[`FeatureCard Displays a not draggable card when user can not plan/unplan features 1`] = `
 <div
-  class="element-backlog-items tlp-tooltip tlp-tooltip-left"
+  class="element-backlog-items"
   data-element-id="100"
-  data-tlp-tooltip="The feature is not plannable, user does not have permission to update artifact or field link."
   draggable="false"
 >
   <div
-    class="element-card element-card-lake_placid_blue"
+    class="element-card-container tlp-tooltip tlp-tooltip-left"
+    data-tlp-tooltip="The feature is not plannable, user does not have permission to update artifact or field link."
   >
     <div
-      class="element-card-content"
+      class="element-card element-card-lake_placid_blue"
     >
       <div
-        class="element-card-xref-label"
+        class="element-card-content"
       >
-        <a
-          class="element-card-xref element-card-xref-lake_placid_blue"
-          data-not-drag-handle="true"
-          href="/plugins/tracker/?aid=100"
+        <div
+          class="element-card-xref-label"
         >
-          
+          <a
+            class="element-card-xref element-card-xref-lake_placid_blue"
+            data-not-drag-handle="true"
+            href="/plugins/tracker/?aid=100"
+          >
+            
+                        
                     
-                
-        </a>
-         
-        <span
-          class="element-card-label"
-        >
-          My artifact
-        </span>
+          </a>
+           
+          <span
+            class="element-card-label"
+          >
+            My artifact
+          </span>
+        </div>
       </div>
+       
+      <!---->
     </div>
-     
-    <!---->
   </div>
    
   <!---->
@@ -129,37 +141,41 @@ exports[`FeatureCard Displays a not draggable card without accessibility pattern
 <div
   class="element-backlog-items"
   data-element-id="100"
-  data-tlp-tooltip=""
   draggable="true"
 >
   <div
-    class="element-card element-card-lake_placid_blue"
+    class="element-card-container"
+    data-tlp-tooltip=""
   >
     <div
-      class="element-card-content"
+      class="element-card element-card-lake_placid_blue"
     >
       <div
-        class="element-card-xref-label"
+        class="element-card-content"
       >
-        <a
-          class="element-card-xref element-card-xref-lake_placid_blue"
-          data-not-drag-handle="true"
-          href="/plugins/tracker/?aid=100"
+        <div
+          class="element-card-xref-label"
         >
-          
+          <a
+            class="element-card-xref element-card-xref-lake_placid_blue"
+            data-not-drag-handle="true"
+            href="/plugins/tracker/?aid=100"
+          >
+            
+                        
                     
-                
-        </a>
-         
-        <span
-          class="element-card-label"
-        >
-          My artifact
-        </span>
+          </a>
+           
+          <span
+            class="element-card-label"
+          >
+            My artifact
+          </span>
+        </div>
       </div>
+       
+      <!---->
     </div>
-     
-    <!---->
   </div>
    
   <!---->
