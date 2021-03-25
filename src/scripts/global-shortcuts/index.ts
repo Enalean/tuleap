@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,10 @@ import { initGettext, getPOFileFromLocale } from "../tuleap/gettext/gettext-init
 import { createGlobalShortcutsGroup } from "./src/global-shortcuts";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    if (window.self !== window.top) {
+        return;
+    }
+
     const language = document.body.dataset.userLocale;
     if (language === undefined) {
         throw new Error("Not able to find the user language.");
