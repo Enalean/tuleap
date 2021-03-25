@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 
 class WorklogRetriever
 {
@@ -52,37 +53,26 @@ class WorklogRetriever
     public function getIssueWorklogsFromAPI(IssueAPIRepresentation $issue_representation): array
     {
         $worklogs = [];
-        $start_at = 0;
-        $total    = 0;
 
-        do {
-            $worklog_url = $this->getWorklogUrl($issue_representation, $start_at);
-            $this->logger->info("Get worklogs (start at $start_at) for " . $issue_representation->getKey());
-            $json = $this->client->getUrl($worklog_url);
-            if (! isset($json['total'], $json['worklogs'])) {
-                throw new \RuntimeException(
-                    sprintf(
-                        '%s route did not return the expected format: `total` or `worklogs` key are missing',
-                        $this->getWorklogUrl($issue_representation, $start_at)
-                    )
-                );
-            }
-            foreach ($json['worklogs'] as $json_worklog) {
-                $worklogs[] = Worklog::buildFromAPIResponse($json_worklog);
-                $start_at++;
-                $total++;
-            }
-        } while ($total < (int) $json['total']);
+        $url      = $this->getWorklogUrl($issue_representation);
+        $iterator = JiraCollectionBuilder::iterateUntilTotal(
+            $this->client,
+            $this->logger,
+            $url,
+            'worklogs'
+        );
+        foreach ($iterator as $json_worklog) {
+            $worklogs[] = Worklog::buildFromAPIResponse($json_worklog);
+        }
 
         return $worklogs;
     }
 
-    private function getWorklogUrl(IssueAPIRepresentation $issue_representation, int $start_at): string
+    private function getWorklogUrl(IssueAPIRepresentation $issue_representation): string
     {
         return ClientWrapper::JIRA_CORE_BASE_URL .
             '/issue/' .
             $issue_representation->getKey() .
-            '/worklog?' .
-            http_build_query(['startAt' => $start_at]);
+            '/worklog';
     }
 }
