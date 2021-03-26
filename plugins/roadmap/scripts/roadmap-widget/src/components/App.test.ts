@@ -27,6 +27,7 @@ import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
 import type { Task } from "../type";
+import LoadingState from "./LoadingState.vue";
 
 jest.mock("tlp");
 
@@ -56,6 +57,7 @@ describe("App", () => {
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
     });
 
     it("Displays an error state for a 400", async () => {
@@ -72,6 +74,7 @@ describe("App", () => {
         const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
 
         const error_state = wrapper.findComponent(SomethingWentWrongEmptyState);
@@ -90,6 +93,7 @@ describe("App", () => {
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
     });
 
     it("Displays a generic error state for a 500", async () => {
@@ -106,6 +110,7 @@ describe("App", () => {
         const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
 
         const error_state = wrapper.findComponent(SomethingWentWrongEmptyState);
@@ -123,6 +128,7 @@ describe("App", () => {
         const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
 
         const gantt_board = wrapper.findComponent(GanttBoard);

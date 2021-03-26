@@ -67,6 +67,10 @@
     font-size: .8125rem;
     line-height: .9375rem;
     text-overflow: ellipsis;
+
+    > .tlp-skeleton-text {
+        width: 100%;
+    }
 }
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
@@ -110,6 +114,19 @@
             > .roadmap-gantt-task-bar-progress {
                 background: map-get($colors, 'primary');
             }
+        }
+    }
+
+    &.tlp-skeleton-text {
+        border: 0;
+        background: none;
+
+        &::after {
+            height: 100%;
+        }
+
+        > .roadmap-gantt-task-bar-progress {
+            display: none;
         }
     }
 }
