@@ -146,6 +146,11 @@ export default {
     props: {
         is_in_preview_mode: Boolean,
     },
+    data() {
+        return {
+            escapeHandler: this.handleKeyUp.bind(this),
+        };
+    },
     mounted() {
         $(this.$refs.button_helper).popover({
             content: $(this.$refs.popover_content).html(),
@@ -153,6 +158,19 @@ export default {
             html: true,
             placement: "right",
         });
+        document.addEventListener("keyup", this.escapeHandler);
+    },
+    destroyed() {
+        $(this.$refs.button_helper).popover("destroy");
+        document.removeEventListener("keyup", this.escapeHandler);
+    },
+    methods: {
+        handleKeyUp(event) {
+            if (event.key !== "Escape") {
+                return;
+            }
+            $(this.$refs.button_helper).popover("hide");
+        },
     },
 };
 </script>

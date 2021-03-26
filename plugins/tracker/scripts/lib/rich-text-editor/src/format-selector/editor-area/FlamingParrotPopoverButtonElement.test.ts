@@ -54,9 +54,19 @@ describe(`FlamingParrotPopoverButtonElement`, () => {
         document.body.append(custom_element);
         expect(popoverSpy).toHaveBeenCalled();
     });
-    it(`disconnectedCallback() destroys the popover`, () => {
+
+    it(`disconnectedCallback() destroys the popover and removes the Escape listener`, () => {
+        const removeListener = jest.spyOn(document, "removeEventListener");
         document.body.append(custom_element);
         custom_element.remove();
+
         expect(popoverSpy).toHaveBeenCalledWith("destroy");
+        expect(removeListener).toHaveBeenCalled();
+    });
+
+    it(`when I hit the "Escape" button, the popover will be hidden`, () => {
+        document.body.append(custom_element);
+        document.dispatchEvent(new KeyboardEvent("keyup", { key: "Escape" }));
+        expect(popoverSpy).toHaveBeenCalledWith("hide");
     });
 });
