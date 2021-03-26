@@ -18,4 +18,9 @@
  */
 
 import { createLocalVue } from "@vue/test-utils";
-export default createLocalVue();
+import VueDOMPurifyHTML from "vue-dompurify-html";
+
+const localVue = createLocalVue();
+localVue.use(VueDOMPurifyHTML);
+
+export default localVue;
