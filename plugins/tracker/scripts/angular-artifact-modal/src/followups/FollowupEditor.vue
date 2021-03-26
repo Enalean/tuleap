@@ -26,6 +26,7 @@
             v-bind:required="false"
             v-bind:value="format"
             v-bind:is_in_preview_mode="is_in_preview_mode"
+            v-bind:is_text_format_option_enabled="false"
             v-on:interpret-content-event="togglePreview"
         />
         <rich-text-editor
