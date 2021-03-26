@@ -50,11 +50,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { getToBePlannedElements } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import EmptyState from "./EmptyState.vue";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
-import { Mutation, State } from "vuex-class";
+import { State } from "vuex-class";
 import type { Feature } from "../../../type";
 import { namespace } from "vuex-class";
 
@@ -68,8 +67,6 @@ export default class ToBePlanned extends Vue {
     private has_error = false;
     private is_loading = false;
 
-    @Mutation
-    readonly setToBePlannedElements!: (to_be_planned_elements: Feature[]) => void;
     @State
     readonly to_be_planned_elements!: Array<Feature>;
     @configuration.State
@@ -78,8 +75,7 @@ export default class ToBePlanned extends Vue {
     async mounted(): Promise<void> {
         try {
             this.is_loading = true;
-            const to_be_planned_elements = await getToBePlannedElements(this.program_id);
-            this.setToBePlannedElements(to_be_planned_elements);
+            await this.$store.dispatch("retrieveToBePlannedElement", this.program_id);
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext(

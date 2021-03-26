@@ -50,10 +50,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import { Mutation } from "vuex-class";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
-import { getLinkedUserStoriesToFeature } from "../../../helpers/UserStories/user-stories-retriever";
-import type { LinkUserStoryToFeature } from "../../../store/mutations";
 import { handleError } from "../../../helpers/error-handler";
 import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
@@ -68,9 +65,6 @@ export default class FeatureCardBacklogItems extends Vue {
 
     @Prop({ required: true })
     readonly program_increment!: ProgramIncrement;
-
-    @Mutation
-    readonly linkUserStoriesToFeature!: (user_story_feature: LinkUserStoryToFeature) => void;
 
     private user_stories: UserStory[] = [];
     private is_loading_user_story = false;
@@ -100,10 +94,8 @@ export default class FeatureCardBacklogItems extends Vue {
 
         try {
             this.is_loading_user_story = true;
-            this.user_stories = await getLinkedUserStoriesToFeature(this.feature.id);
-            this.linkUserStoriesToFeature({
-                user_stories: this.user_stories,
-                element_id: this.feature.id,
+            this.user_stories = await this.$store.dispatch("linkUserStoriesToFeature", {
+                artifact_id: this.feature.id,
                 program_increment: this.program_increment,
             });
         } catch (rest_error) {

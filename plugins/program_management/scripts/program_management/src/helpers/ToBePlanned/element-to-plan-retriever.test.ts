@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp from "@tuleap/tlp-fetch";
 import { getToBePlannedElements } from "./element-to-plan-retriever";
 import type { Feature } from "../../type";
 
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-fetch");
 
 describe("Tracker reports retriever", () => {
     it("retrieves tracker reports", async () => {

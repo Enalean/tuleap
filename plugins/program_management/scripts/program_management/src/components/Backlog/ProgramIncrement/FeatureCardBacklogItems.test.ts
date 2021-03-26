@@ -24,16 +24,21 @@ import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-
 import type { Feature } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
-import * as UserStoryRetriever from "../../../helpers/UserStories/user-stories-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
+import type { Store } from "vuex-mock-store";
 
 describe("FeatureCardBacklogItems", () => {
     let component_options: ShallowMountOptions<FeatureCardBacklogItems>;
-
+    let store: Store;
+    beforeEach(() => {
+        store = createStoreMock({
+            state: {},
+        });
+    });
     it("Displays a skeleton during get user stories", async () => {
         component_options = {
             propsData: {
@@ -44,17 +49,11 @@ describe("FeatureCardBacklogItems", () => {
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
+                $store: store,
             },
         };
 
-        const getLinkedUserStoriesToFeature = jest.spyOn(
-            UserStoryRetriever,
-            "getLinkedUserStoriesToFeature"
-        );
-        getLinkedUserStoriesToFeature.mockImplementation(() => Promise.resolve([]));
+        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([]));
 
         const wrapper = shallowMount(FeatureCardBacklogItems, component_options);
 
@@ -108,17 +107,11 @@ describe("FeatureCardBacklogItems", () => {
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
+                $store: store,
             },
         };
 
-        const getLinkedUserStoriesToFeature = jest.spyOn(
-            UserStoryRetriever,
-            "getLinkedUserStoriesToFeature"
-        );
-        getLinkedUserStoriesToFeature.mockImplementation(() =>
+        jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve([
                 {
                     id: 14,
@@ -147,6 +140,7 @@ describe("FeatureCardBacklogItems", () => {
     });
 
     it("No rest call when user stories are already loaded in feature", async () => {
+        store.state = { configuration: { accessibility: true } };
         component_options = {
             propsData: {
                 feature: {
@@ -170,19 +164,18 @@ describe("FeatureCardBacklogItems", () => {
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { accessibility: true },
-                    },
-                }),
+                $store: store,
             },
         };
+
+        const dispatchSpy = jest.spyOn(store, "dispatch");
 
         const wrapper = await shallowMount(FeatureCardBacklogItems, component_options);
 
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
+        expect(dispatchSpy).not.toHaveBeenCalled();
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeTruthy();
@@ -212,9 +205,7 @@ describe("FeatureCardBacklogItems", () => {
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
+                $store: store,
             },
         };
 

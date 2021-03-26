@@ -19,19 +19,20 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ToBePlanned from "./ToBePlanned.vue";
-import * as retriever from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Feature } from "../../../type";
+import type { Store } from "vuex-mock-store";
 
 describe("ToBePlanned", () => {
     it("Displays the empty state when no artifact are found", async () => {
-        jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([]);
-
-        const store = createStoreMock({
+        const store: Store = createStoreMock({
             state: { to_be_planned_elements: [], configuration: { program_id: 202 } },
         });
+
+        jest.spyOn(store, "dispatch").mockResolvedValue([]);
+
         const wrapper = shallowMount(ToBePlanned, {
             mocks: { $store: store },
             localVue: await createProgramManagementLocalVue(),
@@ -50,10 +51,12 @@ describe("ToBePlanned", () => {
     });
 
     it("Displays an error when rest route fail", async () => {
-        jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([]);
-        const store = createStoreMock({
+        const store: Store = createStoreMock({
             state: { to_be_planned_elements: [], configuration: { program_id: 202 } },
         });
+
+        jest.spyOn(store, "dispatch").mockResolvedValue([]);
+
         const wrapper = shallowMount(ToBePlanned, {
             mocks: { $store: store },
             localVue: await createProgramManagementLocalVue(),
@@ -88,17 +91,15 @@ describe("ToBePlanned", () => {
             },
         } as Feature;
 
-        jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([
-            element_one,
-            element_two,
-        ]);
-
-        const store = createStoreMock({
+        const store: Store = createStoreMock({
             state: {
                 to_be_planned_elements: [element_one, element_two],
                 configuration: { program_id: 202 },
             },
         });
+
+        jest.spyOn(store, "dispatch").mockResolvedValue([element_one, element_two]);
+
         const wrapper = shallowMount(ToBePlanned, {
             mocks: { $store: store },
             localVue: await createProgramManagementLocalVue(),
@@ -133,13 +134,11 @@ describe("ToBePlanned", () => {
             },
         } as Feature;
 
-        jest.spyOn(retriever, "getToBePlannedElements").mockImplementation(() =>
-            Promise.resolve([element_one, element_two])
-        );
-
-        const store = createStoreMock({
+        const store: Store = createStoreMock({
             state: { to_be_planned_elements: [], configuration: { program_id: 202 } },
         });
+
+        jest.spyOn(store, "dispatch").mockResolvedValue([element_one, element_two]);
 
         const wrapper = shallowMount(ToBePlanned, {
             mocks: { $store: store },
@@ -148,9 +147,6 @@ describe("ToBePlanned", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setToBePlannedElements", [
-            element_one,
-            element_two,
-        ]);
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("retrieveToBePlannedElement", 202);
     });
 });

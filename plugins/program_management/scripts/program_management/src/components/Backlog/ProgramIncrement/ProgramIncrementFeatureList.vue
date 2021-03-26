@@ -65,10 +65,9 @@ import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
 import FeatureCard from "./FeatureCard.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
-import { Getter, Mutation, namespace } from "vuex-class";
+import { Getter, namespace } from "vuex-class";
 import type { Feature } from "../../../type";
 
 const configuration = namespace("configuration");
@@ -90,8 +89,6 @@ export default class ProgramIncrementFeatureList extends Vue {
     private has_error = false;
     private is_loading = false;
 
-    @Mutation
-    readonly addProgramIncrement!: (program_increment: ProgramIncrement) => void;
     @Getter
     readonly getFeaturesInProgramIncrement!: (increment_id: number) => Feature[];
     @Getter
@@ -107,8 +104,10 @@ export default class ProgramIncrementFeatureList extends Vue {
 
         try {
             this.is_loading = true;
-            this.features = await getFeatures(this.increment.id);
-            this.addProgramIncrement({ ...this.increment, features: this.features });
+            this.features = await this.$store.dispatch(
+                "getFeatureAndStoreInProgramIncrement",
+                this.increment
+            );
         } catch (e) {
             this.has_error = true;
             this.error_message = this.$gettext(

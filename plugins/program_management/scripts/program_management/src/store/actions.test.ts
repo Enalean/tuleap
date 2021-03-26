@@ -29,11 +29,14 @@ import type { FeatureIdToMoveFromProgramIncrementToAnother } from "../helpers/dr
 import { createElement } from "../helpers/jest/create-dom-element";
 import * as dragDrop from "../helpers/drag-drop";
 import * as tlp from "tlp";
+import * as tlpFetch from "@tuleap/tlp-fetch";
 import * as backlogAdder from "../helpers/ProgramIncrement/add-to-top-backlog";
 import type { FetchWrapperError } from "tlp";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 
 jest.mock("tlp");
+jest.mock("@tuleap/tlp-fetch");
 
 describe("Actions", () => {
     let context: ActionContext<State, State>;
@@ -425,6 +428,77 @@ describe("Actions", () => {
             await actions.handleModalError(context, error);
 
             expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "");
+        });
+    });
+
+    describe("linkUserStoriesToBePlannedElements", () => {
+        it("When user stories are retrieved, Then they are linked to planned element and returned", async () => {
+            const expected_stories = [{ id: 104 }] as UserStory[];
+
+            const recursiveGet = jest.spyOn(tlpFetch, "recursiveGet");
+            recursiveGet.mockResolvedValue(expected_stories);
+
+            const stories = await actions.linkUserStoriesToBePlannedElements(context, 14);
+            expect(context.commit).toHaveBeenCalledWith("linkUserStoriesToBePlannedElement", {
+                user_stories: expected_stories,
+                element_id: 14,
+            });
+            expect(stories).toEqual(expected_stories);
+        });
+    });
+
+    describe("linkUserStoriesToFeature", () => {
+        it("When user stories are retrieved, Then they are linked to planned element and returned", async () => {
+            const expected_stories = [{ id: 104 }] as UserStory[];
+            const program_increment: ProgramIncrement = { id: 45 } as ProgramIncrement;
+
+            const recursiveGet = jest.spyOn(tlpFetch, "recursiveGet");
+            recursiveGet.mockResolvedValue(expected_stories);
+
+            const stories = await actions.linkUserStoriesToFeature(context, {
+                artifact_id: 14,
+                program_increment,
+            });
+            expect(context.commit).toHaveBeenCalledWith("linkUserStoriesToFeature", {
+                user_stories: expected_stories,
+                element_id: 14,
+                program_increment,
+            });
+            expect(stories).toEqual(expected_stories);
+        });
+    });
+
+    describe("retrieveToBePlannedElement", () => {
+        it("retrieve to be planned element and store it", async () => {
+            const expected_features = [{ id: 104 }] as Feature[];
+
+            const recursiveGet = jest.spyOn(tlpFetch, "recursiveGet");
+            recursiveGet.mockResolvedValue(expected_features);
+
+            await actions.retrieveToBePlannedElement(context, 201);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "setToBePlannedElements",
+                expected_features
+            );
+        });
+    });
+
+    describe("getFeatureAndStoreInProgramIncrement", () => {
+        it("retrieve features, store in increment and return them", async () => {
+            const expected_features = [{ id: 104 }] as Feature[];
+
+            const recursiveGet = jest.spyOn(tlpFetch, "recursiveGet");
+            recursiveGet.mockResolvedValue(expected_features);
+
+            const features = await actions.getFeatureAndStoreInProgramIncrement(context, {
+                id: 101,
+            } as ProgramIncrement);
+            expect(context.commit).toHaveBeenCalledWith("addProgramIncrement", {
+                id: 101,
+                features,
+            });
+            expect(features).toEqual(expected_features);
         });
     });
 });
