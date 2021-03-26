@@ -19,8 +19,16 @@
 
 import jQuery from "jquery";
 
+type KeyUpHandler = (event: KeyboardEvent) => void;
+
 export class FlamingParrotPopoverButtonElement extends HTMLElement {
-    private button: HTMLButtonElement | undefined;
+    private button?: HTMLButtonElement;
+    private readonly escapeHandler: KeyUpHandler;
+
+    public constructor() {
+        super();
+        this.escapeHandler = this.handleKeyUp.bind(this);
+    }
 
     public connectedCallback(): void {
         const potential_button = this.querySelector("[data-button]");
@@ -39,9 +47,11 @@ export class FlamingParrotPopoverButtonElement extends HTMLElement {
             html: true,
             placement: "right",
         });
+        this.ownerDocument.addEventListener("keyup", this.escapeHandler);
     }
 
     public disconnectedCallback(): void {
+        this.ownerDocument.removeEventListener("keyup", this.escapeHandler);
         if (this.button) {
             jQuery(this.button).popover("destroy");
         }
@@ -53,6 +63,19 @@ export class FlamingParrotPopoverButtonElement extends HTMLElement {
             return null;
         }
         return popover_template.content.querySelector("[data-popover-root]");
+    }
+
+    private handleKeyUp(event: KeyboardEvent): void {
+        if (event.key !== "Escape") {
+            return;
+        }
+        this.hidePopover();
+    }
+
+    private hidePopover(): void {
+        if (this.button) {
+            jQuery(this.button).popover("hide");
+        }
     }
 }
 
