@@ -479,6 +479,7 @@
                 name="FollowupEditor"
                 ng-if="modal.isFollowupCommentFormDisplayed()"
                 v-props-value="modal.new_followup_comment"
+                v-props-project-id="modal.tracker.project.id"
                 v-on-input="modal.setFollowupComment"
                 v-on-upload-image="modal.addToFilesAddedByTextField"
             ></vue-component>
