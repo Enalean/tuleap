@@ -60,6 +60,10 @@ import { namespace } from "vuex-class";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { Feature } from "../../../type";
+import {
+    getAccessibilityClasses,
+    showAccessibilityPattern,
+} from "../../../helpers/element-card-css-extractor";
 
 const configuration = namespace("configuration");
 
@@ -80,21 +84,14 @@ export default class FeatureCard extends Vue {
     readonly can_create_program_increment!: boolean;
 
     get show_accessibility_pattern(): boolean {
-        return this.accessibility && this.feature.background_color !== "";
+        return showAccessibilityPattern(this.feature, this.accessibility);
     }
 
     get additional_classnames(): string {
-        const classnames = [`element-card-${this.feature.tracker.color_name}`];
+        const classnames = getAccessibilityClasses(this.feature, this.accessibility);
 
         if (this.can_create_program_increment && this.is_draggable) {
             classnames.push("element-draggable-item");
-        }
-        if (this.feature.background_color) {
-            classnames.push(`element-card-background-${this.feature.background_color}`);
-        }
-
-        if (this.show_accessibility_pattern) {
-            classnames.push("element-card-with-accessibility");
         }
 
         return classnames.join(" ");

@@ -27,9 +27,9 @@
             />
 
             <to-be-planned-card
-                v-for="element in to_be_planned_elements"
-                v-bind:key="element.id"
-                v-bind:element="element"
+                v-for="feature in to_be_planned_elements"
+                v-bind:key="feature.id"
+                v-bind:feature="feature"
                 data-test="to-be-planned-elements"
             />
         </div>

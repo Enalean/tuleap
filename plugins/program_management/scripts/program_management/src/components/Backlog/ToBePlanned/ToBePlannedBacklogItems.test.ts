@@ -29,6 +29,7 @@ import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { Store } from "vuex-mock-store";
+import type { TrackerMinimalRepresentation } from "../../../type";
 
 describe("ToBePlannedBacklogItems", () => {
     let component_options: ShallowMountOptions<ToBePlannedBacklogItems>;
@@ -116,7 +117,9 @@ describe("ToBePlannedBacklogItems", () => {
                     title: "My US",
                     xref: "us #14",
                     background_color: "lake-placid-blue",
-                    color_xref_name: "fiesta-red",
+                    tracker: {
+                        color_name: "fiesta-red",
+                    } as TrackerMinimalRepresentation,
                     is_open: true,
                     uri: "tracker?aid=14",
                     project: {
@@ -148,7 +151,9 @@ describe("ToBePlannedBacklogItems", () => {
                             title: "My US",
                             xref: "us #14",
                             background_color: "lake-placid-blue",
-                            color_xref_name: "fiesta-red",
+                            tracker: {
+                                color_name: "fiesta-red",
+                            } as TrackerMinimalRepresentation,
                             is_open: true,
                             uri: "tracker?aid=14",
                             project: {

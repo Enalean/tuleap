@@ -20,6 +20,7 @@
 import * as tlp from "@tuleap/tlp-fetch";
 import type { UserStory } from "./user-stories-retriever";
 import { getLinkedUserStoriesToFeature } from "./user-stories-retriever";
+import type { TrackerMinimalRepresentation } from "../../type";
 
 jest.mock("tlp");
 
@@ -41,7 +42,9 @@ describe("User stories retriever", () => {
                         uri: "project/team",
                     },
                     background_color: "fiesta-red",
-                    color_xref_name: "lake-placid-blue",
+                    tracker: {
+                        color_name: "lake-placid-blue",
+                    } as TrackerMinimalRepresentation,
                 },
                 {
                     id: 2,
@@ -55,7 +58,9 @@ describe("User stories retriever", () => {
                         uri: "project/team",
                     },
                     background_color: "fiesta-red",
-                    color_xref_name: "lake-placid-blue",
+                    tracker: {
+                        color_name: "lake-placid-blue",
+                    } as TrackerMinimalRepresentation,
                 },
             ];
 

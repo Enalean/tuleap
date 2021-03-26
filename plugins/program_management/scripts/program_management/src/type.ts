@@ -19,12 +19,9 @@
 import type { ProgramIncrement } from "./helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "./helpers/UserStories/user-stories-retriever";
 
-export interface Feature extends Element {
-    tracker: TrackerMinimalRepresentation;
+export interface Feature extends ElementWithAccessibility {
     has_user_story_linked: boolean;
     has_user_story_planned: boolean;
-    background_color: string;
-    color_xref_name: string;
     user_stories?: UserStory[];
 }
 
@@ -33,6 +30,11 @@ export interface Element {
     uri: string;
     xref: string;
     title: string;
+}
+
+export interface ElementWithAccessibility extends Element {
+    background_color: string;
+    tracker: TrackerMinimalRepresentation;
 }
 
 export interface Project {

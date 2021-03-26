@@ -24,7 +24,7 @@
                 <a
                     v-bind:href="`/plugins/tracker/?aid=${user_story.id}`"
                     class="element-card-xref"
-                    v-bind:class="`element-card-xref-${user_story.color_xref_name}`"
+                    v-bind:class="`element-card-xref-${user_story.tracker.color_name}`"
                 >
                     {{ user_story.project.label }}
                     <i class="fas fa-fw fa-long-arrow-alt-right"></i>
@@ -42,6 +42,10 @@ import { namespace } from "vuex-class";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { UserStory } from "../../helpers/UserStories/user-stories-retriever";
+import {
+    getAccessibilityClasses,
+    showAccessibilityPattern,
+} from "../../helpers/element-card-css-extractor";
 
 const configuration = namespace("configuration");
 
@@ -54,15 +58,7 @@ export default class UserStoryDisplayer extends Vue {
     readonly accessibility!: boolean;
 
     get additional_classnames(): string {
-        const classnames = [`element-card-${this.user_story.color_xref_name}`];
-
-        if (this.user_story.background_color) {
-            classnames.push(`element-card-background-${this.user_story.background_color}`);
-        }
-
-        if (this.show_accessibility_pattern) {
-            classnames.push("element-card-with-accessibility");
-        }
+        const classnames = getAccessibilityClasses(this.user_story, this.accessibility);
 
         if (!this.user_story.is_open) {
             classnames.push("element-card-user-story-closed");
@@ -72,7 +68,7 @@ export default class UserStoryDisplayer extends Vue {
     }
 
     get show_accessibility_pattern(): boolean {
-        return this.accessibility && this.user_story.background_color !== "";
+        return showAccessibilityPattern(this.user_story, this.accessibility);
     }
 }
 </script>

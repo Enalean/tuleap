@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST\v1;
 
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
  * @psalm-immutable
@@ -38,9 +39,9 @@ final class UserStoryRepresentation extends ElementRepresentation
      */
     public $project;
     /**
-     * @var string
+     * @var MinimalTrackerRepresentation
      */
-    public $color_xref_name;
+    public $tracker;
     /**
      * @var string
      */
@@ -53,13 +54,13 @@ final class UserStoryRepresentation extends ElementRepresentation
         ?string $title,
         bool $is_open,
         ProjectReference $project,
-        string $color_xref_name,
+        MinimalTrackerRepresentation $tracker,
         string $background_color
     ) {
         parent::__construct($id, $uri, $xref, $title);
         $this->is_open          = $is_open;
         $this->project          = $project;
-        $this->color_xref_name  = $color_xref_name;
+        $this->tracker          = $tracker;
         $this->background_color = $background_color;
     }
 }

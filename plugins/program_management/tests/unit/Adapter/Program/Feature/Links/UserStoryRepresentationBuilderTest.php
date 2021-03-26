@@ -165,7 +165,7 @@ class UserStoryRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         self::assertEquals("Project", $children[0]->project->label);
         self::assertEquals("projects/100", $children[0]->project->uri);
         self::assertEquals("lake-placid-blue", $children[0]->background_color);
-        self::assertEquals("inca-silver", $children[0]->color_xref_name);
+        self::assertEquals("inca-silver", $children[0]->tracker->color_name);
 
         self::assertEquals(126, $children[1]->id);
         self::assertEquals('Title', $children[1]->title);
@@ -176,7 +176,7 @@ class UserStoryRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         self::assertEquals("Project", $children[1]->project->label);
         self::assertEquals("projects/100", $children[1]->project->uri);
         self::assertEquals("fiesta-red", $children[1]->background_color);
-        self::assertEquals("inca-silver", $children[1]->color_xref_name);
+        self::assertEquals("inca-silver", $children[1]->tracker->color_name);
     }
 
     public function testThrowErrorIfUserCanNotSeeFeature(): void

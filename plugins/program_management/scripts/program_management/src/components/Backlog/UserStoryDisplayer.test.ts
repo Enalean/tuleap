@@ -23,6 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
 import type { UserStory } from "../../helpers/UserStories/user-stories-retriever";
+import type { Project, TrackerMinimalRepresentation } from "../../type";
 
 describe("UserStoryDisplayer", () => {
     let component_options: ShallowMountOptions<UserStoryDisplayer>;
@@ -35,12 +36,14 @@ describe("UserStoryDisplayer", () => {
                     title: "My US",
                     xref: "us #14",
                     background_color: "lake-placid-blue",
-                    color_xref_name: "fiesta-red",
+                    tracker: {
+                        color_name: "fiesta-red",
+                    } as TrackerMinimalRepresentation,
                     is_open: true,
                     uri: "tracker?aid=14",
                     project: {
                         label: "project",
-                    },
+                    } as Project,
                 } as UserStory,
             },
             localVue: await createProgramManagementLocalVue(),
@@ -66,7 +69,9 @@ describe("UserStoryDisplayer", () => {
                     title: "My US",
                     xref: "us #14",
                     background_color: "lake-placid-blue",
-                    color_xref_name: "fiesta-red",
+                    tracker: {
+                        color_name: "fiesta-red",
+                    } as TrackerMinimalRepresentation,
                     is_open: true,
                     uri: "tracker?aid=14",
                     project: {
@@ -97,7 +102,9 @@ describe("UserStoryDisplayer", () => {
                     title: "My US",
                     xref: "us #14",
                     background_color: "lake-placid-blue",
-                    color_xref_name: "fiesta-red",
+                    tracker: {
+                        color_name: "fiesta-red",
+                    } as TrackerMinimalRepresentation,
                     is_open: false,
                     uri: "tracker?aid=14",
                     project: {
