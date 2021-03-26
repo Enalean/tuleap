@@ -31,7 +31,9 @@
                 class="tlp-select tlp-select-small tlp-select-adjusted"
                 data-test="format"
             >
-                <option v-bind:value="text_format">{{ text_label }}</option>
+                <option v-bind:value="text_format" v-if="is_text_format_option_enabled">
+                    {{ text_label }}
+                </option>
                 <option v-bind:value="html_format">{{ html_label }}</option>
                 <option v-bind:value="commonmark_format">{{ commonmark_label }}</option>
             </select>
@@ -50,6 +52,7 @@
 </template>
 <script>
 import {
+    isValidTextFormat,
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
@@ -67,13 +70,14 @@ export default {
         value: {
             type: String,
             validator(value) {
-                return [TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT, TEXT_FORMAT_COMMONMARK].includes(value);
+                return isValidTextFormat(value);
             },
         },
         disabled: Boolean,
         required: Boolean,
         is_in_preview_mode: Boolean,
         is_preview_loading: Boolean,
+        is_text_format_option_enabled: Boolean,
     },
     computed: {
         disabled_format_selectbox() {

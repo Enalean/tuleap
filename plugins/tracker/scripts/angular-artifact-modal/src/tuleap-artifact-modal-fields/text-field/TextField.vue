@@ -34,6 +34,7 @@
             v-bind:value="format"
             v-bind:is_in_preview_mode="is_in_preview_mode"
             v-bind:is_preview_loading="is_preview_loading"
+            v-bind:is_text_format_option_enabled="is_text_format_option_enabled"
             v-on:interpret-content-event="togglePreview"
         />
         <rich-text-editor
@@ -61,6 +62,7 @@
 import RichTextEditor from "../../common/RichTextEditor.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
 import { isDisabled } from "../disabled-field-detector.js";
+import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
 import { postInterpretCommonMark } from "../../api/tuleap-api";
 import { getCommonMarkPreviewErrorIntroduction } from "../../gettext-catalog.js";
 
@@ -74,6 +76,7 @@ export default {
     },
     data() {
         return {
+            initial_step_format: undefined,
             is_in_preview_mode: false,
             interpreted_commonmark: "",
             is_preview_loading: false,
@@ -104,9 +107,15 @@ export default {
         is_required_and_empty() {
             return this.field.required && this.content === "";
         },
+        is_text_format_option_enabled() {
+            return this.initial_step_format === TEXT_FORMAT_TEXT;
+        },
         error_introduction() {
             return getCommonMarkPreviewErrorIntroduction();
         },
+    },
+    mounted() {
+        this.initial_step_format = this.format;
     },
     methods: {
         onFormatChange(new_format, new_content) {
