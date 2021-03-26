@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GanttTask from "./GanttTask.vue";
 import type { Task } from "../../../type";
@@ -25,18 +26,24 @@ import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
 import { Styles } from "../../../helpers/styles";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
+import { TasksByNature, TasksDependencies } from "../../../type";
+import DependencyArrow from "./DependencyArrow.vue";
 
 describe("GanttTask", () => {
-    it("Displays the header, the grid, and the bar of the task", () => {
+    function mountGanttTask(
+        start: Date | null,
+        end: Date | null,
+        tasks_by_nature: TasksByNature | null = null
+    ): Wrapper<GanttTask> {
         const task: Task = {
             id: 123,
             title: "Do this",
             xref: "task #123",
             color_name: "fiesta-red",
             html_url: "/plugins/tracker?aid=123",
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 3, 25),
-        };
+            start,
+            end,
+        } as Task;
 
         const time_period = new TimePeriodMonth(
             new Date(2020, 3, 1),
@@ -45,13 +52,24 @@ describe("GanttTask", () => {
             "en_US"
         );
 
-        const wrapper = shallowMount(GanttTask, {
+        const dependencies = new TasksDependencies();
+        if (tasks_by_nature) {
+            dependencies.set(task, tasks_by_nature);
+        }
+
+        return shallowMount(GanttTask, {
             propsData: {
                 task,
                 time_period,
                 nb_additional_units: 2,
+                tasks: [task],
+                dependencies,
             },
         });
+    }
+
+    it("Displays the header, the grid, and the bar of the task", () => {
+        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 25));
 
         expect(wrapper.findComponent(TaskHeader).exists()).toBe(true);
         expect(wrapper.findComponent(BackgroundGrid).exists()).toBe(true);
@@ -63,30 +81,7 @@ describe("GanttTask", () => {
     });
 
     it("Has a minimum width", () => {
-        const task: Task = {
-            id: 123,
-            title: "Do this",
-            xref: "task #123",
-            color_name: "fiesta-red",
-            html_url: "/plugins/tracker?aid=123",
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 3, 6),
-        };
-
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 1),
-            new Date(2020, 4, 1),
-            new Date(2020, 4, 1),
-            "en_US"
-        );
-
-        const wrapper = shallowMount(GanttTask, {
-            propsData: {
-                task,
-                time_period,
-                nb_additional_units: 2,
-            },
-        });
+        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 6));
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -94,30 +89,7 @@ describe("GanttTask", () => {
     });
 
     it("If start = end, it is a milestone", () => {
-        const task: Task = {
-            id: 123,
-            title: "Do this",
-            xref: "task #123",
-            color_name: "fiesta-red",
-            html_url: "/plugins/tracker?aid=123",
-            start: new Date(2020, 3, 5),
-            end: new Date(2020, 3, 5),
-        };
-
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 1),
-            new Date(2020, 4, 1),
-            new Date(2020, 4, 1),
-            "en_US"
-        );
-
-        const wrapper = shallowMount(GanttTask, {
-            propsData: {
-                task,
-                time_period,
-                nb_additional_units: 2,
-            },
-        });
+        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 5));
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -125,30 +97,7 @@ describe("GanttTask", () => {
     });
 
     it("Doesn't know yet where to put a task without start and end date, so it puts it at the beginning of the period", () => {
-        const task: Task = {
-            id: 123,
-            title: "Do this",
-            xref: "task #123",
-            color_name: "fiesta-red",
-            html_url: "/plugins/tracker?aid=123",
-            start: null,
-            end: null,
-        };
-
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 1),
-            new Date(2020, 4, 1),
-            new Date(2020, 4, 1),
-            "en_US"
-        );
-
-        const wrapper = shallowMount(GanttTask, {
-            propsData: {
-                task,
-                time_period,
-                nb_additional_units: 2,
-            },
-        });
+        const wrapper = mountGanttTask(null, null);
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -157,30 +106,7 @@ describe("GanttTask", () => {
     });
 
     it("Consider a task without a start date as a milestone", () => {
-        const task: Task = {
-            id: 123,
-            title: "Do this",
-            xref: "task #123",
-            color_name: "fiesta-red",
-            html_url: "/plugins/tracker?aid=123",
-            start: null,
-            end: new Date(2020, 3, 25),
-        };
-
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 1),
-            new Date(2020, 4, 1),
-            new Date(2020, 4, 1),
-            "en_US"
-        );
-
-        const wrapper = shallowMount(GanttTask, {
-            propsData: {
-                task,
-                time_period,
-                nb_additional_units: 2,
-            },
-        });
+        const wrapper = mountGanttTask(null, new Date(2020, 3, 25));
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -189,34 +115,38 @@ describe("GanttTask", () => {
     });
 
     it("Consider a task without an end date as a milestone", () => {
-        const task: Task = {
-            id: 123,
-            title: "Do this",
-            xref: "task #123",
-            color_name: "fiesta-red",
-            html_url: "/plugins/tracker?aid=123",
-            start: new Date(2020, 3, 25),
-            end: null,
-        };
-
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 1),
-            new Date(2020, 4, 1),
-            new Date(2020, 4, 1),
-            "en_US"
-        );
-
-        const wrapper = shallowMount(GanttTask, {
-            propsData: {
-                task,
-                time_period,
-                nb_additional_units: 2,
-            },
-        });
+        const wrapper = mountGanttTask(new Date(2020, 3, 25), null);
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
         expect(task_bar.props("left")).toBe(80);
+    });
+
+    it("Displays no arrows if no dependencies", () => {
+        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 25));
+
+        expect(wrapper.findComponent(DependencyArrow).exists()).toBe(false);
+    });
+
+    it("Displays an arrow for each possible dependency", () => {
+        const dep_1 = { id: 124 } as Task;
+        const dep_2 = { id: 125 } as Task;
+        const dep_3 = { id: 126 } as Task;
+
+        const wrapper = mountGanttTask(
+            new Date(2020, 3, 5),
+            new Date(2020, 3, 25),
+            new TasksByNature([
+                ["depends_on", [dep_1, dep_2]],
+                ["", [dep_3]],
+            ])
+        );
+
+        const arrows = wrapper.findAllComponents(DependencyArrow);
+        expect(arrows.length).toBe(3);
+        expect(arrows.at(0).props("dependency")).toBe(dep_1);
+        expect(arrows.at(1).props("dependency")).toBe(dep_2);
+        expect(arrows.at(2).props("dependency")).toBe(dep_3);
     });
 });

@@ -25,26 +25,41 @@
             v-bind:time_period="time_period"
             v-bind:nb_additional_units="nb_additional_units"
         />
-        <task-bar v-bind:task="task" v-bind:left="left" v-bind:width="width" />
+        <dependency-arrow
+            v-for="dependency of dependencies_to_display"
+            v-bind:key="dependency.id"
+            v-bind:time_period="time_period"
+            v-bind:task="task"
+            v-bind:dependency="dependency"
+            v-bind:tasks="tasks"
+        />
+        <task-bar
+            v-bind:task="task"
+            v-bind:left="dimensions.left"
+            v-bind:width="dimensions.width"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Task, TimePeriod } from "../../../type";
+import type { Task, TimePeriod, TasksDependencies, TaskDimension } from "../../../type";
 import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
-import { getLeftForDate } from "../../../helpers/left-postion";
-import { Styles } from "../../../helpers/styles";
+import { getDimensions } from "../../../helpers/tasks-dimensions";
+import DependencyArrow from "./DependencyArrow.vue";
 
 @Component({
-    components: { TaskBar, BackgroundGrid, TaskHeader },
+    components: { DependencyArrow, TaskBar, BackgroundGrid, TaskHeader },
 })
 export default class GanttTask extends Vue {
     @Prop({ required: true })
     readonly task!: Task;
+
+    @Prop({ required: true })
+    readonly tasks!: Task[];
 
     @Prop({ required: true })
     readonly time_period!: TimePeriod;
@@ -52,31 +67,25 @@ export default class GanttTask extends Vue {
     @Prop({ required: true })
     readonly nb_additional_units!: number;
 
-    get left(): number {
-        if (this.task.start) {
-            return getLeftForDate(this.task.start, this.time_period);
-        }
+    @Prop({ required: true })
+    readonly dependencies!: TasksDependencies;
 
-        if (this.task.end) {
-            return getLeftForDate(this.task.end, this.time_period);
-        }
-
-        return 0;
+    get dimensions(): TaskDimension {
+        return getDimensions(this.task, this.time_period);
     }
 
-    get width(): number {
-        if (
-            this.task.start &&
-            this.task.end &&
-            this.task.start.toISOString() !== this.task.end.toISOString()
-        ) {
-            return Math.max(
-                getLeftForDate(this.task.end, this.time_period) - this.left,
-                Styles.TASK_BAR_MIN_WIDTH_IN_PX
-            );
+    get dependencies_to_display(): Task[] {
+        const dependencies_for_current_task = this.dependencies.get(this.task);
+        if (!dependencies_for_current_task) {
+            return [];
         }
 
-        return Styles.MILESTONE_WIDTH_IN_PX;
+        let flattened_deps: Task[] = [];
+        dependencies_for_current_task.forEach((dependencies_for_a_nature) => {
+            flattened_deps = [...flattened_deps, ...dependencies_for_a_nature];
+        });
+
+        return flattened_deps;
     }
 }
 </script>

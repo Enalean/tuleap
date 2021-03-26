@@ -31,6 +31,7 @@ describe("TaskHeader", () => {
             html_url: "/plugins/tracker?aid=123",
             start: null,
             end: null,
+            dependencies: {},
         };
 
         const wrapper = shallowMount(TaskHeader, {

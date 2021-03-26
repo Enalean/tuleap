@@ -17,14 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$task-header-width: 286px;
-$task-height: 40px;
-$task-bar-height: 25px;
-$task-bar-min-width: 10px;
+@use 'roadmap-variables';
 
-$task-milestone-width: 21px;
+.roadmap-gantt-task-dependency {
+    position: absolute;
+    z-index: roadmap-variables.$z-index-dependencies;
+    transform: translateX(roadmap-variables.$task-header-width);
+}
 
-$time-unit-width: 100px;
-
-$z-index-dependencies: 1;
-$z-index-bars: 2;
+.roadmap-gantt-task-dependency-line {
+    stroke-width: 1.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke: var(--tlp-ui-dimmed);
+    fill: none;
+}
