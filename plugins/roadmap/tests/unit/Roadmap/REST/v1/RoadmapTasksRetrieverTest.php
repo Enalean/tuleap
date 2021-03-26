@@ -96,7 +96,12 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $this->artifact_factory           = Mockery::mock(\Tracker_ArtifactFactory::class);
 
-        $this->retriever = new RoadmapTasksRetriever(
+        $this->user = UserTestBuilder::anActiveUser()->build();
+    }
+
+    private function getRetriever(IRetrieveDependencies $dependencies_retriever): RoadmapTasksRetriever
+    {
+        return new RoadmapTasksRetriever(
             $this->dao,
             $this->project_manager,
             $this->user_manager,
@@ -105,9 +110,18 @@ class RoadmapTasksRetrieverTest extends TestCase
             $this->semantic_timeframe_builder,
             new TimeframeBuilder($this->semantic_timeframe_builder, new NullLogger()),
             $this->artifact_factory,
+            $dependencies_retriever
         );
+    }
 
-        $this->user = UserTestBuilder::anActiveUser()->build();
+    private function getRetrieverWithoutDependencies(): RoadmapTasksRetriever
+    {
+        return $this->getRetriever(new class implements IRetrieveDependencies {
+            public function getDependencies(Artifact $artifact): array
+            {
+                return [];
+            }
+        });
     }
 
     public function test404IfRoadmapNotFound(): void
@@ -121,7 +135,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfProjectNotFound(): void
@@ -159,7 +173,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test403IfUserCannotAccessProject(): void
@@ -197,7 +211,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfTrackerNotFound(): void
@@ -237,7 +251,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfTrackerIsNotActive(): void
@@ -281,7 +295,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfTrackerIsNotAccessibleForUser(): void
@@ -329,7 +343,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfTrackerDoesNotHaveTitleField(): void
@@ -377,7 +391,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfTitleFieldIsNotReadable(): void
@@ -426,7 +440,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfTimeframeIsNotDefined(): void
@@ -481,7 +495,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfStartDateIsNotReadable(): void
@@ -543,7 +557,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfEndDateIsNotReadable(): void
@@ -605,7 +619,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfDurationIsNotReadable(): void
@@ -667,7 +681,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function testItReturnsAPaginatedListOfReadableTaskRepresentation(): void
@@ -773,7 +787,18 @@ class RoadmapTasksRetrieverTest extends TestCase
                 new \Tracker_Artifact_PaginatedArtifacts([$task_201, $task_202, $task_203,], 3)
             );
 
-        $collection = $this->retriever->getTasks(self::ROADMAP_ID, 0, 10);
+        $dependency_retriever = new class implements IRetrieveDependencies {
+            public function getDependencies(Artifact $artifact): array
+            {
+                if ($artifact->getId() === 201) {
+                    return [new DependenciesByNature('depends_on', [202, 203])];
+                }
+
+                return [];
+            }
+        };
+
+        $collection = $this->getRetriever($dependency_retriever)->getTasks(self::ROADMAP_ID, 0, 10);
         self::assertEquals(3, $collection->getTotalSize());
         self::assertCount(2, $collection->getRepresentations());
         self::assertEquals(
@@ -785,7 +810,8 @@ class RoadmapTasksRetrieverTest extends TestCase
                     'Do this',
                     'acid-green',
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
-                    (new \DateTimeImmutable())->setTimestamp(1234567890)
+                    (new \DateTimeImmutable())->setTimestamp(1234567890),
+                    [new DependenciesByNature('depends_on', [202, 203])],
                 ),
                 new TaskRepresentation(
                     203,
@@ -794,7 +820,8 @@ class RoadmapTasksRetrieverTest extends TestCase
                     'Do those',
                     'acid-green',
                     null,
-                    (new \DateTimeImmutable())->setTimestamp(1234567890)
+                    (new \DateTimeImmutable())->setTimestamp(1234567890),
+                    [],
                 ),
             ],
             $collection->getRepresentations()
