@@ -20,15 +20,23 @@
 import { shallowMount } from "@vue/test-utils";
 import TodayIndicator from "./TodayIndicator.vue";
 import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
+import { TimePeriodMonth } from "../../helpers/time-period-month";
 
 describe("TodayIndicator", () => {
     it("Displays a div with a left position depending on the time period", async () => {
+        const now = new Date(2020, 3, 15);
+        const locale = "en_US";
         const wrapper = shallowMount(TodayIndicator, {
             localVue: await createRoadmapLocalVue(),
             propsData: {
-                locale: "en_US",
-                now: new Date(2020, 3, 15),
-                months: [new Date(2020, 3, 1), new Date(2020, 4, 1)],
+                now,
+                locale,
+                time_period: new TimePeriodMonth(
+                    new Date(2020, 3, 1),
+                    new Date(2020, 4, 1),
+                    now,
+                    locale
+                ),
             },
         });
 

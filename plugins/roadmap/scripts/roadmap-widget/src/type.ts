@@ -26,3 +26,11 @@ export interface Task {
     start: Date | null;
     end: Date | null;
 }
+
+export interface TimePeriod {
+    readonly units: Date[];
+    formatShort(unit: Date): string;
+    formatLong(unit: Date): string;
+    additionalUnits(nb: number): Date[];
+    getBeginningOfNextNthUnit(unit: Date, nth: number): Date;
+}

@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getMonths } from "./months";
+import { TimePeriodMonth } from "./time-period-month";
 
 function toDateString(collection: Date[]): string[] {
     return collection.map((date) => date.toDateString());
 }
 
-describe("months", () => {
+describe("TimePeriodMonth", () => {
     let start: Date | null;
     let end: Date | null;
     let now: Date;
@@ -33,10 +33,8 @@ describe("months", () => {
         end = null;
         now = new Date(2020, 3, 15);
 
-        expect(toDateString(getMonths(start, end, now))).toStrictEqual([
-            "Wed Apr 01 2020",
-            "Fri May 01 2020",
-        ]);
+        const period = new TimePeriodMonth(start, end, now, "en_US");
+        expect(toDateString(period.units)).toStrictEqual(["Wed Apr 01 2020", "Fri May 01 2020"]);
     });
 
     describe("when there is no start", () => {
@@ -48,7 +46,8 @@ describe("months", () => {
             now = new Date(2020, 2, 15);
             end = new Date(2020, 3, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
                 "Fri May 01 2020",
@@ -59,7 +58,8 @@ describe("months", () => {
             now = new Date(2020, 3, 15);
             end = new Date(2020, 2, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
                 "Fri May 01 2020",
@@ -70,7 +70,8 @@ describe("months", () => {
             now = new Date(2020, 2, 15);
             end = new Date(2020, 2, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
             ]);
@@ -86,7 +87,8 @@ describe("months", () => {
             now = new Date(2020, 2, 15);
             start = new Date(2020, 3, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
                 "Fri May 01 2020",
@@ -97,7 +99,8 @@ describe("months", () => {
             now = new Date(2020, 3, 15);
             start = new Date(2020, 2, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
                 "Fri May 01 2020",
@@ -108,7 +111,8 @@ describe("months", () => {
             now = new Date(2020, 2, 15);
             start = new Date(2020, 2, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
             ]);
@@ -124,7 +128,8 @@ describe("months", () => {
         it("returns months when now is lesser than start", () => {
             now = new Date(2020, 1, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sat Feb 01 2020",
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
@@ -135,7 +140,8 @@ describe("months", () => {
         it("returns months when now is greater than end", () => {
             now = new Date(2020, 5, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
                 "Fri May 01 2020",
@@ -154,7 +160,8 @@ describe("months", () => {
         it("returns months when now is lesser than start", () => {
             now = new Date(2020, 1, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sat Feb 01 2020",
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
@@ -164,7 +171,8 @@ describe("months", () => {
         it("returns months when now is greater than end", () => {
             now = new Date(2020, 5, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
                 "Fri May 01 2020",
@@ -183,7 +191,8 @@ describe("months", () => {
         it("returns months when now is lesser than start", () => {
             now = new Date(2020, 1, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sat Feb 01 2020",
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
@@ -194,7 +203,8 @@ describe("months", () => {
         it("returns months when now is greater than end", () => {
             now = new Date(2020, 5, 15);
 
-            expect(toDateString(getMonths(start, end, now))).toStrictEqual([
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+            expect(toDateString(period.units)).toStrictEqual([
                 "Sun Mar 01 2020",
                 "Wed Apr 01 2020",
                 "Fri May 01 2020",
@@ -202,5 +212,45 @@ describe("months", () => {
                 "Wed Jul 01 2020",
             ]);
         });
+    });
+
+    it("Builds a dummy period that can be used for skeletons", () => {
+        const period = TimePeriodMonth.getDummyTimePeriod(new Date(2020, 5, 15));
+        expect(toDateString(period.units)).toStrictEqual(["Mon Jun 01 2020", "Wed Jul 01 2020"]);
+    });
+
+    it("Format a unit", () => {
+        start = new Date(2020, 2, 15);
+        end = new Date(2020, 7, 15);
+        now = new Date(2020, 5, 15);
+        const period = new TimePeriodMonth(start, end, now, "en_US");
+
+        expect(period.formatShort(now)).toStrictEqual("Jun");
+        expect(period.formatLong(now)).toStrictEqual("June 2020");
+    });
+
+    it.each([[-1], [0]])(
+        "Returns empty array for additional units when nb is lesser than 0",
+        (nb_missing_months) => {
+            start = new Date(2020, 2, 15);
+            end = new Date(2020, 7, 15);
+            now = new Date(2020, 5, 15);
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+
+            expect(period.additionalUnits(nb_missing_months)).toStrictEqual([]);
+        }
+    );
+
+    it("Returns an array of additional months", () => {
+        start = new Date(2020, 2, 15);
+        end = new Date(2020, 3, 15);
+        now = new Date(2020, 2, 15);
+        const period = new TimePeriodMonth(start, end, now, "en_US");
+
+        expect(toDateString(period.additionalUnits(3))).toStrictEqual([
+            "Mon Jun 01 2020",
+            "Wed Jul 01 2020",
+            "Sat Aug 01 2020",
+        ]);
     });
 });

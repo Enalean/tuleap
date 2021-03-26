@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import GanttBoard from "./GanttBoard.vue";
 import type { Task } from "../../type";
 import GanttTask from "./Task/GanttTask.vue";
-import TimePeriodMonth from "./TimePeriod/TimePeriodMonth.vue";
+import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -65,11 +65,12 @@ describe("GanttBoard", () => {
         });
         await wrapper.vm.$nextTick();
 
-        const time_period = wrapper.findComponent(TimePeriodMonth);
-        expect(time_period.exists()).toBe(true);
+        const time_period_header = wrapper.findComponent(TimePeriodHeader);
+        expect(time_period_header.exists()).toBe(true);
         expect(
-            time_period.props("months").map((month: Date) => month.toDateString())
+            time_period_header.props("time_period").units.map((month: Date) => month.toDateString())
         ).toStrictEqual(["Wed Apr 01 2020", "Fri May 01 2020"]);
+        expect(time_period_header.props("nb_additional_units")).toBe(0);
     });
 
     it("Observes the resize of the time period", () => {
@@ -90,7 +91,7 @@ describe("GanttBoard", () => {
             },
         });
 
-        const time_period = wrapper.findComponent(TimePeriodMonth);
+        const time_period = wrapper.findComponent(TimePeriodHeader);
         expect(time_period.exists()).toBe(true);
         expect(observe).toHaveBeenCalledWith(time_period.element);
     });
@@ -118,27 +119,21 @@ describe("GanttBoard", () => {
         });
         await wrapper.vm.$nextTick();
 
-        const time_period = wrapper.findComponent(TimePeriodMonth);
-        expect(time_period.exists()).toBe(true);
+        const time_period_header = wrapper.findComponent(TimePeriodHeader);
+        expect(time_period_header.exists()).toBe(true);
         expect(
-            time_period.props("months").map((month: Date) => month.toDateString())
+            time_period_header.props("time_period").units.map((month: Date) => month.toDateString())
         ).toStrictEqual(["Wed Apr 01 2020", "Fri May 01 2020"]);
+        expect(time_period_header.props("nb_additional_units")).toBe(0);
 
         const observerCallback = mockResizeObserver.mock.calls[0][0];
         await observerCallback([
             ({
                 contentRect: { width: 450 } as DOMRectReadOnly,
-                target: time_period.element,
+                target: time_period_header.element,
             } as unknown) as ResizeObserverEntry,
         ]);
 
-        expect(
-            time_period.props("months").map((month: Date) => month.toDateString())
-        ).toStrictEqual([
-            "Wed Apr 01 2020",
-            "Fri May 01 2020",
-            "Mon Jun 01 2020",
-            "Wed Jul 01 2020",
-        ]);
+        expect(time_period_header.props("nb_additional_units")).toBe(2);
     });
 });

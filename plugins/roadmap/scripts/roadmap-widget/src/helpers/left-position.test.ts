@@ -18,16 +18,20 @@
  */
 
 import { getLeftForDate } from "./left-postion";
+import { TimePeriodMonth } from "./time-period-month";
 
 describe("getLeftForDate", () => {
     it("Gives a left position according to the time period", () => {
         expect(
-            getLeftForDate(new Date(2020, 3, 15), [
-                new Date(2020, 1, 1),
-                new Date(2020, 2, 1),
-                new Date(2020, 3, 1),
-                new Date(2020, 4, 1),
-            ])
+            getLeftForDate(
+                new Date(2020, 3, 15),
+                new TimePeriodMonth(
+                    new Date(2020, 1, 1),
+                    new Date(2020, 3, 1),
+                    new Date(2020, 4, 1),
+                    "en_US"
+                )
+            )
         ).toBe(247);
     });
 });

@@ -31,10 +31,21 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import type { TimePeriod } from "../../../type";
 
 @Component
 export default class BackgroundGrid extends Vue {
     @Prop({ required: true })
-    readonly time_units!: Date[];
+    readonly time_period!: TimePeriod;
+
+    @Prop({ required: true })
+    readonly nb_additional_units!: number;
+
+    get time_units(): Date[] {
+        return [
+            ...this.time_period.units,
+            ...this.time_period.additionalUnits(this.nb_additional_units),
+        ];
+    }
 }
 </script>

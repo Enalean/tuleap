@@ -24,6 +24,7 @@ import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
 import { Styles } from "../../../helpers/styles";
+import { TimePeriodMonth } from "../../../helpers/time-period-month";
 
 describe("GanttTask", () => {
     it("Displays the header, the grid, and the bar of the task", () => {
@@ -37,12 +38,18 @@ describe("GanttTask", () => {
             end: new Date(2020, 3, 25),
         };
 
-        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+        const time_period = new TimePeriodMonth(
+            new Date(2020, 3, 1),
+            new Date(2020, 4, 1),
+            new Date(2020, 4, 1),
+            "en_US"
+        );
 
         const wrapper = shallowMount(GanttTask, {
             propsData: {
                 task,
-                time_units,
+                time_period,
+                nb_additional_units: 2,
             },
         });
 
@@ -66,12 +73,18 @@ describe("GanttTask", () => {
             end: new Date(2020, 3, 6),
         };
 
-        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+        const time_period = new TimePeriodMonth(
+            new Date(2020, 3, 1),
+            new Date(2020, 4, 1),
+            new Date(2020, 4, 1),
+            "en_US"
+        );
 
         const wrapper = shallowMount(GanttTask, {
             propsData: {
                 task,
-                time_units,
+                time_period,
+                nb_additional_units: 2,
             },
         });
 
@@ -91,12 +104,18 @@ describe("GanttTask", () => {
             end: new Date(2020, 3, 5),
         };
 
-        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+        const time_period = new TimePeriodMonth(
+            new Date(2020, 3, 1),
+            new Date(2020, 4, 1),
+            new Date(2020, 4, 1),
+            "en_US"
+        );
 
         const wrapper = shallowMount(GanttTask, {
             propsData: {
                 task,
-                time_units,
+                time_period,
+                nb_additional_units: 2,
             },
         });
 
@@ -116,12 +135,18 @@ describe("GanttTask", () => {
             end: null,
         };
 
-        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+        const time_period = new TimePeriodMonth(
+            new Date(2020, 3, 1),
+            new Date(2020, 4, 1),
+            new Date(2020, 4, 1),
+            "en_US"
+        );
 
         const wrapper = shallowMount(GanttTask, {
             propsData: {
                 task,
-                time_units,
+                time_period,
+                nb_additional_units: 2,
             },
         });
 
@@ -142,12 +167,18 @@ describe("GanttTask", () => {
             end: new Date(2020, 3, 25),
         };
 
-        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+        const time_period = new TimePeriodMonth(
+            new Date(2020, 3, 1),
+            new Date(2020, 4, 1),
+            new Date(2020, 4, 1),
+            "en_US"
+        );
 
         const wrapper = shallowMount(GanttTask, {
             propsData: {
                 task,
-                time_units,
+                time_period,
+                nb_additional_units: 2,
             },
         });
 
@@ -168,12 +199,18 @@ describe("GanttTask", () => {
             end: null,
         };
 
-        const time_units = [new Date(2020, 3, 1), new Date(2020, 4, 1)];
+        const time_period = new TimePeriodMonth(
+            new Date(2020, 3, 1),
+            new Date(2020, 4, 1),
+            new Date(2020, 4, 1),
+            "en_US"
+        );
 
         const wrapper = shallowMount(GanttTask, {
             propsData: {
                 task,
-                time_units,
+                time_period,
+                nb_additional_units: 2,
             },
         });
 

@@ -16,9 +16,58 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import type { TimePeriod } from "../type";
+import { toBCP47 } from "./locale-for-intl";
 import { getBeginningOfNextNthMonth } from "./beginning-of-next-nth-month";
 
-export function getMonths(start: Date | null, end: Date | null, now: Date): Date[] {
+export class TimePeriodMonth implements TimePeriod {
+    private readonly months: Date[];
+    private readonly formatter_short: Intl.DateTimeFormat;
+    private readonly formatter_long: Intl.DateTimeFormat;
+
+    constructor(
+        readonly from: Date | null,
+        readonly to: Date | null,
+        readonly now: Date,
+        readonly locale: string
+    ) {
+        this.months = getMonths(from, to, now);
+        this.formatter_short = new Intl.DateTimeFormat(toBCP47(locale), {
+            month: "short",
+        });
+        this.formatter_long = new Intl.DateTimeFormat(toBCP47(locale), {
+            month: "long",
+            year: "numeric",
+        });
+    }
+
+    static getDummyTimePeriod(now: Date): TimePeriod {
+        return new TimePeriodMonth(now, now, now, "en_US");
+    }
+
+    get units(): Date[] {
+        return this.months;
+    }
+
+    formatShort(unit: Date): string {
+        return this.formatter_short.format(unit);
+    }
+
+    formatLong(unit: Date): string {
+        return this.formatter_long.format(unit);
+    }
+
+    additionalUnits(nb: number): Date[] {
+        return getAdditionalMonths(this.months[this.months.length - 1], nb);
+    }
+
+    getBeginningOfNextNthUnit(unit: Date, nth: number): Date {
+        return getBeginningOfNextNthMonth(unit, nth);
+    }
+}
+
+function getMonths(start: Date | null, end: Date | null, now: Date): Date[] {
     const beginning_of_period = getBeginningOfPeriod(start, end, now);
     const end_of_period = getEndOfPeriod(start, end, now);
 
@@ -69,4 +118,18 @@ function getEndOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
     }
 
     return start < now ? now : start;
+}
+
+function getAdditionalMonths(base_month: Date, nb_missing_months: number): Date[] {
+    const additional_months: Date[] = [];
+
+    if (nb_missing_months <= 0) {
+        return additional_months;
+    }
+
+    for (let i = 0; i < nb_missing_months; i++) {
+        additional_months.push(getBeginningOfNextNthMonth(base_month, i + 1));
+    }
+
+    return additional_months;
 }
