@@ -114,7 +114,7 @@ describe("StepDefinitionEditableStep", () => {
     });
     describe("The preview event handling", () => {
         it(`interprets the CommonMark when the user switch to the preview mode`, async () => {
-            jest.spyOn(tuleap_api, "interpretCommonMark").mockResolvedValue("<p>HTML</p>");
+            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
             const wrapper = getComponentInstance({
                 is_in_preview_mode: false,
@@ -123,8 +123,8 @@ describe("StepDefinitionEditableStep", () => {
             });
 
             const promise = wrapper.vm.togglePreview();
-            expect(tuleap_api.interpretCommonMark).toHaveBeenCalledWith("raw description");
-            expect(tuleap_api.interpretCommonMark).toHaveBeenCalledWith("raw expected results");
+            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith("raw description");
+            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith("raw expected results");
             expect(wrapper.vm.$data.is_preview_loading).toBe(true);
 
             await promise;
@@ -134,7 +134,7 @@ describe("StepDefinitionEditableStep", () => {
         });
 
         it(`does not interpret the CommonMark when the user switch to the edit mode`, () => {
-            jest.spyOn(tuleap_api, "interpretCommonMark").mockResolvedValue("<p>HTML</p>");
+            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
 
             const wrapper = getComponentInstance({
                 is_in_preview_mode: true,
@@ -142,11 +142,14 @@ describe("StepDefinitionEditableStep", () => {
 
             wrapper.vm.togglePreview();
 
-            expect(tuleap_api.interpretCommonMark).not.toHaveBeenCalled();
+            expect(tuleap_api.postInterpretCommonMark).not.toHaveBeenCalled();
         });
 
         it(`cannot interpret the CommonMark because the route failed to interpret the content`, async () => {
-            jest.spyOn(tuleap_api, "interpretCommonMark").mockRejectedValue(new Error());
+            const expected_error_text = new Error("FAIL!");
+            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockRejectedValue(
+                expected_error_text
+            );
 
             const wrapper = getComponentInstance({
                 is_in_preview_mode: false,
@@ -156,12 +159,13 @@ describe("StepDefinitionEditableStep", () => {
 
             const promise = wrapper.vm.togglePreview();
 
-            expect(tuleap_api.interpretCommonMark).toHaveBeenCalledWith("raw description");
+            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith("raw description");
             expect(wrapper.vm.$data.is_preview_loading).toBe(true);
 
             await promise;
             expect(wrapper.vm.$data.is_in_preview_mode).toBe(true);
             expect(wrapper.vm.$data.is_preview_in_error).toBe(true);
+            expect(wrapper.vm.$data.error_text).toBe(expected_error_text);
             expect(wrapper.vm.$data.is_preview_loading).toBe(false);
         });
     });

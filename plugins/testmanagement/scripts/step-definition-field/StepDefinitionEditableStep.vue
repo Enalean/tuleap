@@ -63,13 +63,9 @@
             v-dompurify-html="interpreted_description"
             data-test="description-preview"
         ></div>
-        <div
-            class="alert alert-error"
-            v-if="is_preview_in_error"
-            data-test="description-error"
-            v-translate
-        >
-            An error occurred during the Markdown interpretation.
+        <div class="alert alert-error" v-if="is_preview_in_error" data-test="description-error">
+            <translate>There was an error in the Markdown preview:</translate>
+            {{ error_text }}
         </div>
         <div class="muted tracker-richtexteditor-help shown" v-bind:id="description_help_id"></div>
 
@@ -108,9 +104,9 @@
                     class="alert alert-error"
                     v-if="is_preview_in_error"
                     data-test="expected-results-error"
-                    v-translate
                 >
-                    An error occurred during the Markdown interpretation.
+                    <translate>There was an error in the Markdown preview:</translate>
+                    {{ error_text }}
                 </div>
                 <div
                     class="muted tracker-richtexteditor-help shown"
@@ -133,7 +129,7 @@ import {
     UploadImageFormFactory,
 } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
-import { interpretCommonMark } from "./api/tuleap-api.js";
+import { postInterpretCommonMark } from "./api/tuleap-api.js";
 
 export default {
     name: "StepDefinitionEditableStep",
@@ -152,6 +148,7 @@ export default {
             is_in_preview_mode: false,
             is_preview_loading: false,
             is_preview_in_error: false,
+            error_text: "",
         };
     },
     computed: {
@@ -246,6 +243,7 @@ export default {
         },
         togglePreview() {
             this.is_preview_in_error = false;
+            this.error_text = "";
 
             if (this.is_in_preview_mode) {
                 this.is_in_preview_mode = false;
@@ -254,15 +252,16 @@ export default {
 
             this.is_preview_loading = true;
             return Promise.all([
-                interpretCommonMark(this.step.raw_description),
-                interpretCommonMark(this.step.raw_expected_results),
+                postInterpretCommonMark(this.step.raw_description),
+                postInterpretCommonMark(this.step.raw_expected_results),
             ])
                 .then((interpreted_fields) => {
                     this.interpreted_description = interpreted_fields[0];
                     this.interpreted_expected_result = interpreted_fields[1];
                 })
-                .catch(() => {
+                .catch((error) => {
                     this.is_preview_in_error = true;
+                    this.error_text = error;
                 })
                 .finally(() => {
                     this.is_preview_loading = false;

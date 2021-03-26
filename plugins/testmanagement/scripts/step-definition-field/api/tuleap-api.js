@@ -21,16 +21,17 @@
 import { post } from "@tuleap/tlp-fetch";
 import { getProjectId } from "../helpers/shared-properties.js";
 
-export async function interpretCommonMark(content) {
-    const response = await post(
-        "/project/" + encodeURIComponent(getProjectId()) + "/interpret-commonmark",
-        {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: "content=" + encodeURIComponent(content),
-        }
+export function postInterpretCommonMark(content) {
+    const form_data = new FormData();
+    form_data.set("content", content);
+    return post(encodeURI(`/project/${getProjectId()}/interpret-commonmark`), {
+        body: form_data,
+    }).then(
+        (response) => response.text(),
+        (error) =>
+            error.response.text().then((error_text) => {
+                //Re-throw the error to trigger the next .catch()
+                throw new Error(error_text);
+            })
     );
-
-    return response.text();
 }

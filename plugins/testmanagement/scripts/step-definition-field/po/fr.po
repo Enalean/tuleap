@@ -18,9 +18,6 @@ msgstr "...pour voir"
 msgid "Add step"
 msgstr "Ajouter une étape"
 
-msgid "An error occurred during the Markdown interpretation."
-msgstr "Une erreur est survenue durant le rendu du Markdown."
-
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -50,6 +47,9 @@ msgstr "Arrêter de réordonner les étapes"
 
 msgid "There isn't any step defined yet. Start by adding one."
 msgstr "Aucune étape n'est définie. Commencez par en ajouter une."
+
+msgid "There was an error in the Markdown preview:"
+msgstr "Il y a eu une erreur dans l'aperçu Markdown : "
 
 msgid "Type..."
 msgstr "Ecrivez..."
