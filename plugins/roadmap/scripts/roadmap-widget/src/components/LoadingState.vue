@@ -20,9 +20,9 @@
 
 <template>
     <div class="roadmap-gantt">
-        <div class="roadmap-gantt-timeperiod-months" ref="time_period">
+        <div class="roadmap-gantt-timeperiod" ref="time_period">
             <div
-                class="roadmap-gantt-timeperiod-month"
+                class="roadmap-gantt-timeperiod-unit"
                 v-for="unit in time_units"
                 v-bind:key="unit.toISOString()"
             >
@@ -58,7 +58,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Styles } from "../helpers/styles";
-import { getAdditionalMonths } from "../helpers/additional-months";
+import { TimePeriodMonth } from "../helpers/time-period-month";
 
 @Component
 export default class LoadingState extends Vue {
@@ -87,11 +87,10 @@ export default class LoadingState extends Vue {
                 continue;
             }
 
-            const nb_missing_units = Math.ceil(
-                entry.contentRect.width / Styles.TIME_UNIT_WIDTH_IN_PX
-            );
+            const nb = Math.ceil(entry.contentRect.width / Styles.TIME_UNIT_WIDTH_IN_PX) - 1;
 
-            this.time_units = getAdditionalMonths(new Date(), nb_missing_units - 1);
+            const time_period = TimePeriodMonth.getDummyTimePeriod(new Date());
+            this.time_units = time_period.additionalUnits(nb);
         }
     }
 

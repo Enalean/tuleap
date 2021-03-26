@@ -26,11 +26,12 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { getLeftForDate } from "../../helpers/left-postion";
+import type { TimePeriod } from "../../type";
 
 @Component
 export default class TodayIndicator extends Vue {
     @Prop({ required: true })
-    readonly months!: Date[];
+    readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
     readonly now!: Date;
@@ -39,7 +40,7 @@ export default class TodayIndicator extends Vue {
     readonly locale!: string;
 
     get style(): string {
-        const left = getLeftForDate(this.now, this.months);
+        const left = getLeftForDate(this.now, this.time_period);
         return `left: ${left}px;`;
     }
 

@@ -17,18 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getBeginningOfNextNthMonth } from "./beginning-of-next-nth-month";
+import { toBCP47 } from "./locale-for-intl";
 
-export function getAdditionalMonths(base_month: Date, nb_missing_months: number): Date[] {
-    const additional_months: Date[] = [];
-
-    if (nb_missing_months <= 0) {
-        return additional_months;
-    }
-
-    for (let i = 0; i < nb_missing_months; i++) {
-        additional_months.push(getBeginningOfNextNthMonth(base_month, i + 1));
-    }
-
-    return additional_months;
-}
+describe("locale-for-intl", () => {
+    it("Ensures that a locale follows BCP 47 standard", () => {
+        expect(toBCP47("en_US")).toBe("en-US");
+    });
+});

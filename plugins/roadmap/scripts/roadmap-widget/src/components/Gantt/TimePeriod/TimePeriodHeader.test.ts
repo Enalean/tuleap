@@ -18,12 +18,12 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import BackgroundGrid from "./BackgroundGrid.vue";
+import TimePeriodHeader from "./TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
 
-describe("BackgroundGrid", () => {
-    it("Display the grid to help user distinguish months", () => {
-        const wrapper = shallowMount(BackgroundGrid, {
+describe("TimePeriodeHeader", () => {
+    it("Headers formatted months", () => {
+        const wrapper = shallowMount(TimePeriodHeader, {
             propsData: {
                 time_period: new TimePeriodMonth(
                     new Date(2020, 3, 1),
@@ -36,11 +36,19 @@ describe("BackgroundGrid", () => {
         });
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-task-background-grid">
-              <div class="roadmap-gantt-task-background-grid-unit"></div>
-              <div class="roadmap-gantt-task-background-grid-unit"></div>
-              <div class="roadmap-gantt-task-background-grid-unit"></div>
-              <div class="roadmap-gantt-task-background-grid-unit"></div>
+            <div class="roadmap-gantt-timeperiod">
+              <div data-tlp-tooltip="April 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+                Apr
+              </div>
+              <div data-tlp-tooltip="May 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+                May
+              </div>
+              <div data-tlp-tooltip="June 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+                Jun
+              </div>
+              <div data-tlp-tooltip="July 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+                Jul
+              </div>
             </div>
         `);
     });

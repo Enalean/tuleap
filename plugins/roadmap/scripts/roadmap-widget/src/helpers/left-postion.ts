@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { Styles } from "./styles";
-import { getBeginningOfNextNthMonth } from "./beginning-of-next-nth-month";
+import type { TimePeriod } from "../type";
 
-export function getLeftForDate(date: Date, months: Date[]): number {
+export function getLeftForDate(date: Date, time_period: TimePeriod): number {
     let left = 0;
     let i = 1;
-    while (i < months.length && months[i] < date) {
+    while (i < time_period.units.length && time_period.units[i] < date) {
         left += Styles.TIME_UNIT_WIDTH_IN_PX;
         i++;
     }
 
-    const current_month = getBeginningOfNextNthMonth(date, 0);
-    const next_month = getBeginningOfNextNthMonth(date, 1);
-    const ms_since_beginning_of_month = date.getTime() - current_month.getTime();
-    const ms_in_the_month = next_month.getTime() - current_month.getTime();
-    left += (Styles.TIME_UNIT_WIDTH_IN_PX * ms_since_beginning_of_month) / ms_in_the_month;
+    const current_unit = time_period.getBeginningOfNextNthUnit(date, 0);
+    const next_unit = time_period.getBeginningOfNextNthUnit(date, 1);
+    const ms_since_beginning_of_unit = date.getTime() - current_unit.getTime();
+    const ms_in_the_unit = next_unit.getTime() - current_unit.getTime();
+    left += (Styles.TIME_UNIT_WIDTH_IN_PX * ms_since_beginning_of_unit) / ms_in_the_unit;
 
     return Math.round(left);
 }

@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-timeperiod-months">
+    <div class="roadmap-gantt-timeperiod">
         <div
-            class="roadmap-gantt-timeperiod-month tlp-tooltip tlp-tooltip-bottom"
-            v-for="month in months"
-            v-bind:key="month.toISOString()"
-            v-bind:data-tlp-tooltip="month_with_year_format.format(month)"
+            class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom"
+            v-for="unit in time_units"
+            v-bind:key="unit.toISOString()"
+            v-bind:data-tlp-tooltip="time_period.formatLong(unit)"
         >
-            {{ month_format.format(month) }}
+            {{ time_period.formatShort(unit) }}
         </div>
     </div>
 </template>
@@ -34,30 +34,21 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import type { TimePeriod } from "../../../type";
 
 @Component
-export default class TimePeriodMonth extends Vue {
+export default class TimePeriodHeader extends Vue {
     @Prop({ required: true })
-    private readonly months!: Date[];
+    private readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
-    private readonly locale!: string;
+    readonly nb_additional_units!: number;
 
-    get standard_locale(): string {
-        return this.locale.replace("_", "-");
-    }
-
-    get month_format(): Intl.DateTimeFormat {
-        return new Intl.DateTimeFormat(this.standard_locale, {
-            month: "short",
-        });
-    }
-
-    get month_with_year_format(): Intl.DateTimeFormat {
-        return new Intl.DateTimeFormat(this.standard_locale, {
-            month: "long",
-            year: "numeric",
-        });
+    get time_units(): Date[] {
+        return [
+            ...this.time_period.units,
+            ...this.time_period.additionalUnits(this.nb_additional_units),
+        ];
     }
 }
 </script>
