@@ -52,7 +52,7 @@ final class ArtifactUpdaterTest extends \PHPUnit\Framework\TestCase
         unset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
     }
 
-    public function testUpdateDefaultsCommentToEmptyTextFormat(): void
+    public function testUpdateDefaultsCommentToEmptyCommonmarkFormat(): void
     {
         $artifact = \Mockery::spy(Artifact::class);
         $artifact->shouldReceive('userCanUpdate')->andReturnTrue();
@@ -67,7 +67,7 @@ final class ArtifactUpdaterTest extends \PHPUnit\Framework\TestCase
 
         $this->updater->update($user, $artifact, $values, null);
 
-        $artifact->shouldHaveReceived('createNewChangeset', [$fields_data, '', $user, true, 'text']);
+        $artifact->shouldHaveReceived('createNewChangeset', [$fields_data, '', $user, true, \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT]);
     }
 
     public function testUpdatePassesComment(): void

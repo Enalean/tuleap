@@ -21,14 +21,14 @@
 
 namespace Tuleap\Tracker\Artifact;
 
-use Logger;
 use Mockery;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Response;
 use Tracker;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
@@ -39,19 +39,19 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_XMLImport;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPrivateCommentUGroupExtractor;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use UserManager;
 use Workflow;
 use XML_RNGValidator;
@@ -112,11 +112,6 @@ class XmlImportTest extends TestCase
      * @var BindStaticValueDao
      */
     private $static_value_dao;
-
-    /**
-     * @var Logger
-     */
-    private $logger;
 
     /**
      * @var XML_RNGValidator
@@ -215,10 +210,6 @@ class XmlImportTest extends TestCase
 
         $this->extraction_path = $this->getTmpDir();
 
-        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->logger->shouldReceive('log')->with(LogLevel::INFO, Mockery::any(), Mockery::any());
-        $this->logger->shouldReceive('log')->with(LogLevel::DEBUG, Mockery::any(), Mockery::any());
-
         $this->rng_validator =  Mockery::mock(XML_RNGValidator::class);
         $this->rng_validator->shouldReceive('validate');
 
@@ -235,7 +226,7 @@ class XmlImportTest extends TestCase
             $this->formelement_factory,
             $this->xml_import_helper,
             $this->static_value_dao,
-            $this->logger,
+            new NullLogger(),
             false,
             $this->tracker_artifact_factory,
             Mockery::mock(NatureDao::class),
@@ -293,7 +284,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 $this->import_config,
                 []
@@ -314,7 +305,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 $this->import_config,
                 []
@@ -399,7 +390,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -420,7 +411,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -496,7 +487,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -517,7 +508,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -542,6 +533,25 @@ class XmlImportTest extends TestCase
 
     public function testUpdateModeWithWrongSourcePlatformAttributeItCreateArtifactAndChangesetInExistingTracker(): void
     {
+        $logger   = \Mockery::spy(LoggerInterface::class);
+        $importer = new Tracker_Artifact_XMLImport(
+            $this->rng_validator,
+            $this->artifact_creator,
+            $this->new_changeset_creator,
+            $this->formelement_factory,
+            $this->xml_import_helper,
+            $this->static_value_dao,
+            $logger,
+            false,
+            $this->tracker_artifact_factory,
+            Mockery::mock(NatureDao::class),
+            $this->xml_artifact_source_platform_extractor,
+            $this->existing_artifact_source_id_extractor,
+            $this->artifact_source_id_dao,
+            $this->external_field_extractor,
+            $this->private_comment_extractor
+        );
+
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
 
         $this->artifact_source_id_dao->shouldReceive('getSourceArtifactId')->andReturn();
@@ -590,7 +600,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -611,7 +621,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -623,11 +633,11 @@ class XmlImportTest extends TestCase
 
         $this->existing_artifact_source_id_extractor->shouldReceive('getSourceArtifactIds')->andReturn();
 
-        $this->logger->shouldReceive('warn')->with("[XML import] No correspondence between artifact_id and source_artifact_id. New artifact created.", null);
+        $logger->shouldReceive('warn')->with("[XML import] No correspondence between artifact_id and source_artifact_id. New artifact created.", null);
 
         $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
 
-        $this->importer->importFromXML(
+        $importer->importFromXML(
             $this->tracker,
             $xml_input,
             $this->extraction_path,
@@ -676,7 +686,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -697,7 +707,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []
@@ -718,7 +728,7 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text",
+                \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT,
                 $this->url_mapping,
                 Mockery::type(TrackerXmlImportConfig::class),
                 []

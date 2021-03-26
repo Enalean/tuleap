@@ -309,7 +309,7 @@ class Tracker_Artifact_Changeset_Comment
     public static function checkCommentFormat($comment_format)
     {
         if (! in_array($comment_format, self::$available_comment_formats, $strict = true)) {
-            $comment_format = self::TEXT_COMMENT;
+            $comment_format = self::COMMONMARK_COMMENT;
         }
 
         return $comment_format;

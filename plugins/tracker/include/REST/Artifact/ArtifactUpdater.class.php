@@ -53,7 +53,7 @@ class Tracker_REST_Artifact_ArtifactUpdater
         $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);
 
         $comment_body   = '';
-        $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        $comment_format = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
         if ($comment) {
             $comment_body   = $comment->body;
             $comment_format = $comment->format;
