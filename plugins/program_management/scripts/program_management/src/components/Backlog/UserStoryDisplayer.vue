@@ -41,7 +41,7 @@
 import { namespace } from "vuex-class";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { UserStory } from "../../helpers/BacklogItems/children-feature-retriever";
+import type { UserStory } from "../../helpers/UserStories/user-stories-retriever";
 
 const configuration = namespace("configuration");
 

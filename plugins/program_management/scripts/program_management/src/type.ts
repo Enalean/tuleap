@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { ProgramIncrement } from "./helpers/ProgramIncrement/program-increment-retriever";
-import type { UserStory } from "./helpers/BacklogItems/children-feature-retriever";
+import type { UserStory } from "./helpers/UserStories/user-stories-retriever";
 
 export interface Feature extends Element {
     tracker: TrackerMinimalRepresentation;

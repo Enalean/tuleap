@@ -22,7 +22,7 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
-import type { UserStory } from "../../helpers/BacklogItems/children-feature-retriever";
+import type { UserStory } from "../../helpers/UserStories/user-stories-retriever";
 
 describe("UserStoryDisplayer", () => {
     let component_options: ShallowMountOptions<UserStoryDisplayer>;

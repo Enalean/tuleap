@@ -21,7 +21,7 @@ import type { Feature, State } from "../type";
 import type { LinkUserStoryToFeature, LinkUserStoryToPlannedElement } from "./mutations";
 import mutations from "./mutations";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
-import type { UserStory } from "../helpers/BacklogItems/children-feature-retriever";
+import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 
 describe("Mutations", () => {
     describe("addProgramIncrement", () => {

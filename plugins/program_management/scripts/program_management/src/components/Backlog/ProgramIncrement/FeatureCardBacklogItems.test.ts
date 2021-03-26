@@ -24,9 +24,9 @@ import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-
 import type { Feature } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
-import * as UserStoryRetriever from "../../../helpers/BacklogItems/children-feature-retriever";
+import * as UserStoryRetriever from "../../../helpers/UserStories/user-stories-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
+import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
