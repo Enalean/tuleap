@@ -10,7 +10,11 @@
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@types/dompurify": "^2.2.1",
     "@vue/test-utils": "^1.1.2",
+    "dompurify": "^2.2.7",
+    "html-webpack-plugin": "^5.3.1",
+    "light-server": "^2.9.1",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
     "vuex-class": "^0.3.2"
@@ -22,6 +26,7 @@
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\"",
+    "dev:serve-arrows": "./node_modules/light-server/bin/light-server -s public -o -w \"public/*.html\""
   }
 }
