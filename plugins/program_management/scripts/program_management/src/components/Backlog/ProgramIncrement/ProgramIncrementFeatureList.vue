@@ -48,14 +48,11 @@
             v-bind:data-artifact-link-field-id="program_increment_artifact_link_id"
         />
 
-        <div
-            id="to-be-planned-backlog-error"
-            class="tlp-alert-danger"
+        <error-displayer
             v-if="has_error"
+            v-bind:message_error_rest="error_message"
             data-test="to-be-planned-error"
-        >
-            {{ error_message }}
-        </div>
+        />
     </div>
 </template>
 
@@ -69,11 +66,13 @@ import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
 import { Getter, namespace } from "vuex-class";
 import type { Feature } from "../../../type";
+import ErrorDisplayer from "../ErrorDisplayer.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
     components: {
+        ErrorDisplayer,
         ProgramIncrementNotPlannable,
         BacklogElementSkeleton,
         FeatureCard,

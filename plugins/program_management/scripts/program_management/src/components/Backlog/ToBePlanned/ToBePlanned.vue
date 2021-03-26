@@ -34,14 +34,11 @@
             />
         </div>
 
-        <div
-            id="to-be-planned-backlog-error"
-            class="tlp-alert-danger"
+        <error-displayer
             v-if="has_error"
+            v-bind:message_error_rest="error_message"
             data-test="to-be-planned-error"
-        >
-            {{ error_message }}
-        </div>
+        />
 
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
     </div>
@@ -56,11 +53,12 @@ import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import { State } from "vuex-class";
 import type { Feature } from "../../../type";
 import { namespace } from "vuex-class";
+import ErrorDisplayer from "../ErrorDisplayer.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
-    components: { BacklogElementSkeleton, ToBePlannedCard, EmptyState },
+    components: { ErrorDisplayer, BacklogElementSkeleton, ToBePlannedCard, EmptyState },
 })
 export default class ToBePlanned extends Vue {
     private error_message = "";

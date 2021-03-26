@@ -24,7 +24,7 @@ import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-
 import type { Feature } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
-import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
+import ErrorDisplayer from "../ErrorDisplayer.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
@@ -92,7 +92,7 @@ describe("ToBePlannedBacklogItems", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeTruthy();
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeTruthy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });
 
@@ -133,7 +133,7 @@ describe("ToBePlannedBacklogItems", () => {
         await wrapper.vm.$nextTick(); // Display User Stories
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
     });
 
@@ -172,14 +172,14 @@ describe("ToBePlannedBacklogItems", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
 
         wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
-        expect(wrapper.findComponent(BacklogItemsErrorShow).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists()).toBeFalsy();
     });
 });
