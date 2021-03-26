@@ -19,7 +19,7 @@
 
 import * as tlp from "tlp";
 import { getToBePlannedElements } from "./element-to-plan-retriever";
-import type { ProgramElement } from "../../type";
+import type { Feature } from "../../type";
 
 jest.mock("tlp");
 
@@ -27,11 +27,11 @@ describe("Tracker reports retriever", () => {
     it("retrieves tracker reports", async () => {
         const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
 
-        const expected_elements: ProgramElement[] = [
+        const expected_elements: Feature[] = [
             {
-                artifact_id: 1,
-                artifact_title: "My bug name",
-                artifact_xref: "bug #1",
+                id: 1,
+                title: "My bug name",
+                xref: "bug #1",
                 tracker: {
                     label: "bug",
                     color_name: "plum_crazy",
@@ -40,11 +40,11 @@ describe("Tracker reports retriever", () => {
                 },
                 background_color: "peggy_pink_text",
                 has_user_story_linked: false,
-            },
+            } as Feature,
             {
-                artifact_id: 2,
-                artifact_title: "My story",
-                artifact_xref: "story #2",
+                id: 2,
+                title: "My story",
+                xref: "story #2",
                 tracker: {
                     label: "story",
                     color_name: "flamingo_pink",
@@ -53,7 +53,7 @@ describe("Tracker reports retriever", () => {
                 },
                 background_color: "",
                 has_user_story_linked: false,
-            },
+            } as Feature,
         ];
 
         recursiveGetSpy.mockResolvedValueOnce(expected_elements);

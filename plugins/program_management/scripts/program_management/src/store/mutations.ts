@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { ProgramElement, State } from "../type";
+import type { Feature, State } from "../type";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extractor";
 import type { FeatureIdWithProgramIncrement } from "../helpers/drag-drop";
@@ -45,30 +45,27 @@ export default {
         state.program_increments.push(program_increment);
     },
 
-    setToBePlannedElements(state: State, to_be_planned_elements: ProgramElement[]): void {
+    setToBePlannedElements(state: State, to_be_planned_elements: Feature[]): void {
         state.to_be_planned_elements = to_be_planned_elements;
     },
 
-    addToBePlannedElement(state: State, to_be_planned_elements: ProgramElement): void {
+    addToBePlannedElement(state: State, to_be_planned_elements: Feature): void {
         const element_already_exist = state.to_be_planned_elements.find(
-            (element) => element.artifact_id === to_be_planned_elements.artifact_id
+            (element) => element.id === to_be_planned_elements.id
         );
 
         if (element_already_exist !== undefined) {
             throw Error(
-                "To be planned element with id #" +
-                    to_be_planned_elements.artifact_id +
-                    " already exist"
+                "To be planned element with id #" + to_be_planned_elements.id + " already exist"
             );
         }
 
         state.to_be_planned_elements.push(to_be_planned_elements);
     },
 
-    removeToBePlannedElement(state: State, element_to_remove: ProgramElement): void {
+    removeToBePlannedElement(state: State, element_to_remove: Feature): void {
         state.to_be_planned_elements = [...state.to_be_planned_elements].filter(
-            (to_be_planned_element) =>
-                to_be_planned_element.artifact_id !== element_to_remove.artifact_id
+            (to_be_planned_element) => to_be_planned_element.id !== element_to_remove.id
         );
     },
 
@@ -120,7 +117,7 @@ export default {
         user_story_element: LinkUserStoryToPlannedElement
     ): void {
         const element = state.to_be_planned_elements.find(
-            (element) => element.artifact_id === user_story_element.element_id
+            (element) => element.id === user_story_element.element_id
         );
 
         if (element === undefined) {

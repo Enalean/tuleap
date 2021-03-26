@@ -21,7 +21,7 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import type { ProgramElement } from "../../../type";
+import type { Feature } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 
@@ -32,14 +32,14 @@ describe("ToBePlannedCard", () => {
         component_options = {
             propsData: {
                 element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",
                     },
                     background_color: "peggy_pink_text",
-                } as ProgramElement,
+                } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
@@ -59,14 +59,14 @@ describe("ToBePlannedCard", () => {
         component_options = {
             propsData: {
                 element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",
                     },
                     background_color: "",
-                } as ProgramElement,
+                } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {
@@ -89,15 +89,15 @@ describe("ToBePlannedCard", () => {
         component_options = {
             propsData: {
                 element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",
                     },
                     background_color: "",
                     has_user_story_linked: true,
-                } as ProgramElement,
+                } as Feature,
             },
             localVue: await createProgramManagementLocalVue(),
             mocks: {

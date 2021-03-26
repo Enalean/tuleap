@@ -28,7 +28,7 @@
 
             <to-be-planned-card
                 v-for="element in to_be_planned_elements"
-                v-bind:key="element.artifact_id"
+                v-bind:key="element.id"
                 v-bind:element="element"
                 data-test="to-be-planned-elements"
             />
@@ -55,7 +55,7 @@ import EmptyState from "./EmptyState.vue";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import { Mutation, State } from "vuex-class";
-import type { ProgramElement } from "../../../type";
+import type { Feature } from "../../../type";
 import { namespace } from "vuex-class";
 
 const configuration = namespace("configuration");
@@ -69,9 +69,9 @@ export default class ToBePlanned extends Vue {
     private is_loading = false;
 
     @Mutation
-    readonly setToBePlannedElements!: (to_be_planned_elements: ProgramElement[]) => void;
+    readonly setToBePlannedElements!: (to_be_planned_elements: Feature[]) => void;
     @State
-    readonly to_be_planned_elements!: Array<ProgramElement>;
+    readonly to_be_planned_elements!: Array<Feature>;
     @configuration.State
     readonly program_id!: number;
 

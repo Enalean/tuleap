@@ -57,10 +57,20 @@ final class ProgramIncrement
      * @var bool
      */
     public $user_can_plan;
+    /**
+     * @var string
+     */
+    public $uri;
+    /**
+     * @var string
+     */
+    public $xref;
 
     public function __construct(
         int $id,
         string $title,
+        string $uri,
+        string $xref,
         bool $user_can_update,
         bool $user_can_plan,
         ?string $status,
@@ -74,5 +84,7 @@ final class ProgramIncrement
         $this->id              = $id;
         $this->user_can_update = $user_can_update;
         $this->user_can_plan   = $user_can_plan;
+        $this->uri             = $uri;
+        $this->xref            = $xref;
     }
 }

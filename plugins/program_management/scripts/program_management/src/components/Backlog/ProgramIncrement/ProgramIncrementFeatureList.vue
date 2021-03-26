@@ -38,9 +38,9 @@
 
         <feature-card
             v-else
-            v-for="element in features"
-            v-bind:key="element.artifact_id"
-            v-bind:element="element"
+            v-for="feature in features"
+            v-bind:key="feature.id"
+            v-bind:feature="feature"
             v-bind:program_increment="increment"
             data-test="to-be-planned-elements"
             v-bind:data-program-increment-id="increment.id"
@@ -65,11 +65,11 @@ import ProgramIncrementNoContent from "./ProgramIncrementNoContent.vue";
 import FeatureCard from "./FeatureCard.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import { getFeatures } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
 import { Getter, Mutation, namespace } from "vuex-class";
+import type { Feature } from "../../../type";
 
 const configuration = namespace("configuration");
 
@@ -127,7 +127,7 @@ export default class ProgramIncrementFeatureList extends Vue {
     public getFeaturesAlreadyLinked(): string {
         return this.features
             .map((feature) => {
-                return feature.artifact_id;
+                return feature.id;
             })
             .toString();
     }

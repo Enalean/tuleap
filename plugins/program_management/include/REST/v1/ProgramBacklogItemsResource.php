@@ -26,11 +26,11 @@ use Luracast\Restler\RestException;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureBacklogItemsRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureIsNotPlannableException;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureBacklogItems;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -44,14 +44,14 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
      */
     private $user_manager;
     /**
-     * @var RetrieveFeatureBacklogItems
+     * @var RetrieveFeatureUserStories
      */
-    private $feature_backlog_children;
+    private $user_story_representation_builder;
 
     public function __construct()
     {
-        $this->user_manager             = \UserManager::instance();
-        $this->feature_backlog_children = new FeatureBacklogItemsRepresentationBuilder(
+        $this->user_manager                      = \UserManager::instance();
+        $this->user_story_representation_builder = new UserStoryRepresentationBuilder(
             new ArtifactsLinkedToParentDao(),
             \Tracker_ArtifactFactory::instance(),
             new PlanDao(),
@@ -71,7 +71,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
-     * @return FeatureBacklogItemsRepresentation[]
+     * @return UserStoryRepresentation[]
      *
      * @throws RestException 400
      * @throws RestException 404
@@ -80,7 +80,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $children = $this->feature_backlog_children->buildFeatureBacklogItems($id, $user);
+            $children = $this->user_story_representation_builder->buildFeatureStories($id, $user);
 
             Header::sendPaginationHeaders($limit, $offset, count($children), self::MAX_LIMIT);
 

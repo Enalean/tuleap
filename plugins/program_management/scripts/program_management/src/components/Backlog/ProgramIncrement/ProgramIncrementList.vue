@@ -49,7 +49,7 @@
 
         <program-increment-card
             v-for="increment in program_increments"
-            v-bind:key="increment.artifact_id"
+            v-bind:key="increment.id"
             v-bind:increment="increment"
             data-test="program-increments"
         />

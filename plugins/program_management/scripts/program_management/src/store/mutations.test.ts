@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { ProgramElement, State } from "../type";
+import type { Feature, State } from "../type";
 import type { LinkUserStoryToFeature, LinkUserStoryToPlannedElement } from "./mutations";
 import mutations from "./mutations";
-import type { Feature } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../helpers/BacklogItems/children-feature-retriever";
 
@@ -31,7 +30,7 @@ describe("Mutations", () => {
                 program_increments: [
                     {
                         id: 14,
-                        features: [{ artifact_id: 588 } as Feature],
+                        features: [{ id: 588 } as Feature],
                     } as ProgramIncrement,
                 ],
             } as State;
@@ -56,7 +55,7 @@ describe("Mutations", () => {
 
             const program_increment = {
                 id: 14,
-                features: [{ artifact_id: 588 } as Feature],
+                features: [{ id: 588 } as Feature],
             } as ProgramIncrement;
 
             mutations.addProgramIncrement(state, program_increment);
@@ -64,7 +63,7 @@ describe("Mutations", () => {
             expect(state.program_increments[0]).toEqual({ id: 15 });
             expect(state.program_increments[1]).toEqual({
                 id: 14,
-                features: [{ artifact_id: 588 }],
+                features: [{ id: 588 }],
             });
         });
     });
@@ -72,12 +71,12 @@ describe("Mutations", () => {
     describe("addToBePlannedElement", () => {
         it("When element already exists, Then error is thrown", () => {
             const state = {
-                to_be_planned_elements: [{ artifact_id: 14 }] as ProgramElement[],
+                to_be_planned_elements: [{ id: 14 }] as Feature[],
             } as State;
 
             const to_be_planned_element = {
-                artifact_id: 14,
-            } as ProgramElement;
+                id: 14,
+            } as Feature;
 
             expect(() =>
                 mutations.addToBePlannedElement(state, to_be_planned_element)
@@ -86,54 +85,48 @@ describe("Mutations", () => {
 
         it("When element does not exist in state, Then it is added", () => {
             const state = {
-                to_be_planned_elements: [{ artifact_id: 14 }] as ProgramElement[],
+                to_be_planned_elements: [{ id: 14 }] as Feature[],
             } as State;
 
             const to_be_planned_element = {
-                artifact_id: 125,
-            } as ProgramElement;
+                id: 125,
+            } as Feature;
 
             mutations.addToBePlannedElement(state, to_be_planned_element);
             expect(state.to_be_planned_elements.length).toEqual(2);
-            expect(state.to_be_planned_elements[0]).toEqual({ artifact_id: 14 });
-            expect(state.to_be_planned_elements[1]).toEqual({ artifact_id: 125 });
+            expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
+            expect(state.to_be_planned_elements[1]).toEqual({ id: 125 });
         });
     });
 
     describe("removeToBePlannedElement", () => {
         it("When feature exist, Then it is deleted from state", () => {
             const state = {
-                to_be_planned_elements: [
-                    { artifact_id: 14 },
-                    { artifact_id: 125 },
-                ] as ProgramElement[],
+                to_be_planned_elements: [{ id: 14 }, { id: 125 }] as Feature[],
             } as State;
 
             const element_to_remove = {
-                artifact_id: 125,
-            } as ProgramElement;
+                id: 125,
+            } as Feature;
 
             mutations.removeToBePlannedElement(state, element_to_remove);
             expect(state.to_be_planned_elements.length).toEqual(1);
-            expect(state.to_be_planned_elements[0]).toEqual({ artifact_id: 14 });
+            expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
         });
 
         it("When feature does not exist, Then it is not deleted", () => {
             const state = {
-                to_be_planned_elements: [
-                    { artifact_id: 14 },
-                    { artifact_id: 125 },
-                ] as ProgramElement[],
+                to_be_planned_elements: [{ id: 14 }, { id: 125 }] as Feature[],
             } as State;
 
             const element_to_remove = {
-                artifact_id: 536,
-            } as ProgramElement;
+                id: 536,
+            } as Feature;
 
             mutations.removeToBePlannedElement(state, element_to_remove);
             expect(state.to_be_planned_elements.length).toEqual(2);
-            expect(state.to_be_planned_elements[0]).toEqual({ artifact_id: 14 });
-            expect(state.to_be_planned_elements[1]).toEqual({ artifact_id: 125 });
+            expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
+            expect(state.to_be_planned_elements[1]).toEqual({ id: 125 });
         });
     });
 
@@ -205,9 +198,7 @@ describe("Mutations", () => {
                 program_increments: [
                     {
                         id: 14,
-                        features: [
-                            { artifact_id: 101, user_stories: [] as UserStory[] },
-                        ] as Feature[],
+                        features: [{ id: 101, user_stories: [] as UserStory[] }] as Feature[],
                     } as ProgramIncrement,
                 ],
             } as State;
@@ -226,7 +217,7 @@ describe("Mutations", () => {
     describe("linkUserStoriesToBePlannedElement", () => {
         it("When feature does not exist, Then error is thrown", () => {
             const state = {
-                to_be_planned_elements: [] as ProgramElement[],
+                to_be_planned_elements: [] as Feature[],
             } as State;
 
             const link: LinkUserStoryToPlannedElement = {
@@ -243,10 +234,10 @@ describe("Mutations", () => {
             const state = {
                 to_be_planned_elements: [
                     {
-                        artifact_id: 101,
+                        id: 101,
                         user_stories: [] as UserStory[],
-                    } as ProgramElement,
-                ] as ProgramElement[],
+                    } as Feature,
+                ] as Feature[],
             } as State;
 
             const link: LinkUserStoryToPlannedElement = {

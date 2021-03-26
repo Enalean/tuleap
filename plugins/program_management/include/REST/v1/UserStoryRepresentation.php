@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -27,24 +27,8 @@ use Tuleap\Project\REST\ProjectReference;
 /**
  * @psalm-immutable
  */
-final class FeatureBacklogItemsRepresentation
+final class UserStoryRepresentation extends ElementRepresentation
 {
-    /**
-     * @var int
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $uri;
-    /**
-     * @var string
-     */
-    public $xref;
-    /**
-     * @var ?string
-     */
-    public $title;
     /**
      * @var bool
      */
@@ -72,10 +56,7 @@ final class FeatureBacklogItemsRepresentation
         string $color_xref_name,
         string $background_color
     ) {
-        $this->id               = $id;
-        $this->uri              = $uri;
-        $this->xref             = $xref;
-        $this->title            = $title;
+        parent::__construct($id, $uri, $xref, $title);
         $this->is_open          = $is_open;
         $this->project          = $project;
         $this->color_xref_name  = $color_xref_name;

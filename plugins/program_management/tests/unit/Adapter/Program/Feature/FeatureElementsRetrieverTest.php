@@ -118,6 +118,7 @@ class FeatureElementsRetrieverTest extends TestCase
         $artifact_one = \Mockery::mock(Artifact::class);
         $artifact_one->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $artifact_one->shouldReceive('getXRef')->andReturn('one #1');
+        $artifact_one->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=1');
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
         $tracker_one = \Mockery::mock(\Tracker::class);
         $tracker_one->shouldReceive("getColor")->andReturn(TrackerColor::fromName("lake-placid-blue"));
@@ -131,6 +132,7 @@ class FeatureElementsRetrieverTest extends TestCase
         $artifact_two = \Mockery::mock(Artifact::class);
         $artifact_two->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $artifact_two->shouldReceive('getXRef')->andReturn('two #2');
+        $artifact_two->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=2');
         $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
         $tracker_two = \Mockery::mock(\Tracker::class);
         $tracker_two->shouldReceive("getColor")->andReturn(TrackerColor::fromName("deep-blue"));
@@ -152,6 +154,7 @@ class FeatureElementsRetrieverTest extends TestCase
                 1,
                 'Artifact 1',
                 'one #1',
+                '/plugins/tracker/?aid=1',
                 MinimalTrackerRepresentation::build($tracker_one),
                 new BackgroundColor("lake-placid-blue"),
                 false,
@@ -161,6 +164,7 @@ class FeatureElementsRetrieverTest extends TestCase
                 2,
                 'Artifact 2',
                 'two #2',
+                '/plugins/tracker/?aid=2',
                 MinimalTrackerRepresentation::build($tracker_two),
                 new BackgroundColor("lake-placid-blue"),
                 false,

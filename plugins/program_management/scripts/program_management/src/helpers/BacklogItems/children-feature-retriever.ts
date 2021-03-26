@@ -18,20 +18,13 @@
  */
 
 import { recursiveGet } from "@tuleap/tlp-fetch";
+import type { Project, Element } from "../../type";
 
-export interface UserStory {
-    id: number;
-    uri: string;
-    xref: string;
-    title: string;
+export interface UserStory extends Element {
     is_open: boolean;
-    project: {
-        id: number;
-        uri: string;
-        label: string;
-    };
-    color_xref_name: string;
+    project: Project;
     background_color: string;
+    color_xref_name: string;
 }
 
 export function getLinkedUserStoriesToFeature(feature_id: number): Promise<UserStory[]> {

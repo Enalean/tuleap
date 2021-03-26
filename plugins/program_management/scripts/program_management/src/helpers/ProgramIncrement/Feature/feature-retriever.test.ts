@@ -18,8 +18,8 @@
  */
 
 import * as tlp from "tlp";
-import type { Feature } from "./feature-retriever";
 import { getFeatures } from "./feature-retriever";
+import type { Feature } from "../../../type";
 
 jest.mock("tlp");
 
@@ -29,9 +29,9 @@ describe("Features retriever", () => {
 
         const features: Feature[] = [
             {
-                artifact_id: 1,
-                artifact_title: "My artifact",
-                artifact_xref: "art #1",
+                id: 1,
+                title: "My artifact",
+                xref: "art #1",
                 background_color: "",
                 tracker: {
                     id: 100,
@@ -41,11 +41,11 @@ describe("Features retriever", () => {
                 },
                 has_user_story_planned: false,
                 has_user_story_linked: false,
-            },
+            } as Feature,
             {
-                artifact_id: 2,
-                artifact_title: "My story",
-                artifact_xref: "art #2",
+                id: 2,
+                title: "My story",
+                xref: "art #2",
                 background_color: "",
                 tracker: {
                     id: 200,
@@ -55,7 +55,7 @@ describe("Features retriever", () => {
                 },
                 has_user_story_planned: false,
                 has_user_story_linked: false,
-            },
+            } as Feature,
         ];
 
         recursiveGetSpy.mockResolvedValueOnce(features);

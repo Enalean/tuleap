@@ -21,7 +21,7 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import type { ProgramElement } from "../../../type";
+import type { Feature } from "../../../type";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import * as UserStoryRetriever from "../../../helpers/BacklogItems/children-feature-retriever";
@@ -38,8 +38,8 @@ describe("FeatureCardBacklogItems", () => {
         component_options = {
             propsData: {
                 feature: {
-                    artifact_id: 100,
-                } as ProgramElement,
+                    id: 100,
+                } as Feature,
                 program_increment: { id: 11 } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
@@ -80,9 +80,9 @@ describe("FeatureCardBacklogItems", () => {
             },
             propsData: {
                 feature: {
-                    artifact_id: 100,
+                    id: 100,
                     user_stories: [{ id: 14 } as UserStory],
-                } as ProgramElement,
+                } as Feature,
                 program_increment: { id: 11 } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
@@ -102,8 +102,8 @@ describe("FeatureCardBacklogItems", () => {
         component_options = {
             propsData: {
                 feature: {
-                    artifact_id: 100,
-                } as ProgramElement,
+                    id: 100,
+                } as Feature,
                 program_increment: { id: 11 } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
@@ -150,7 +150,7 @@ describe("FeatureCardBacklogItems", () => {
         component_options = {
             propsData: {
                 feature: {
-                    artifact_id: 100,
+                    id: 100,
                     user_stories: [
                         {
                             id: 14,
@@ -165,7 +165,7 @@ describe("FeatureCardBacklogItems", () => {
                             },
                         } as UserStory,
                     ],
-                } as ProgramElement,
+                } as Feature,
                 program_increment: { id: 11 } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),
@@ -192,7 +192,7 @@ describe("FeatureCardBacklogItems", () => {
         component_options = {
             propsData: {
                 feature: {
-                    artifact_id: 100,
+                    id: 100,
                     user_stories: [
                         {
                             id: 14,
@@ -207,7 +207,7 @@ describe("FeatureCardBacklogItems", () => {
                             },
                         } as UserStory,
                     ],
-                } as ProgramElement,
+                } as Feature,
                 program_increment: { id: 11 } as ProgramIncrement,
             },
             localVue: await createProgramManagementLocalVue(),

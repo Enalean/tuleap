@@ -33,7 +33,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
+class UserStoryRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -46,7 +46,7 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
      */
     private $artifact_factory;
     /**
-     * @var FeatureBacklogItemsRepresentationBuilder
+     * @var UserStoryRepresentationBuilder
      */
     private $builder;
     /**
@@ -98,7 +98,7 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
             }
         };
 
-        $this->builder = new FeatureBacklogItemsRepresentationBuilder(
+        $this->builder = new UserStoryRepresentationBuilder(
             $this->dao,
             $this->artifact_factory,
             $plan_store,
@@ -152,7 +152,7 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
             ->once()
             ->andReturn(new BackgroundColor("fiesta-red"));
 
-        $children = $this->builder->buildFeatureBacklogItems(10, $this->user);
+        $children = $this->builder->buildFeatureStories(10, $this->user);
 
         self::assertCount(2, $children);
 
@@ -188,7 +188,7 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
             ->andReturnNull();
 
         $this->expectException(FeatureNotAccessException::class);
-        $this->builder->buildFeatureBacklogItems(10, $this->user);
+        $this->builder->buildFeatureStories(10, $this->user);
     }
 
     public function testThrowErrorIfFeatureTrackerIsNotPlannable(): void
@@ -200,7 +200,7 @@ class FeatureBacklogItemsRepresentationBuilderTest extends \PHPUnit\Framework\Te
             ->andReturn(\Mockery::mock(Artifact::class, ['getTrackerId' => 666]));
 
         $this->expectException(FeatureIsNotPlannableException::class);
-        $this->builder->buildFeatureBacklogItems(10, $this->user);
+        $this->builder->buildFeatureStories(10, $this->user);
     }
 
     /**

@@ -37,8 +37,7 @@ describe("Tracker reports retriever", () => {
                 user_can_update: true,
                 user_can_plan: true,
                 artifact_link_field_id: 1,
-                features: [],
-            },
+            } as ProgramIncrement,
             {
                 title: "PI 2",
                 status: "Planned",
@@ -48,8 +47,7 @@ describe("Tracker reports retriever", () => {
                 user_can_update: true,
                 user_can_plan: true,
                 artifact_link_field_id: 1,
-                features: [],
-            },
+            } as ProgramIncrement,
         ];
 
         recursiveGetSpy.mockResolvedValueOnce(program_increments);

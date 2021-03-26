@@ -21,10 +21,10 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FeatureCard from "./FeatureCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
+import type { Feature } from "../../../type";
 
 describe("FeatureCard", () => {
     let component_options: ShallowMountOptions<FeatureCard>;
@@ -32,9 +32,9 @@ describe("FeatureCard", () => {
     it("Displays a draggable card with accessibility pattern", async () => {
         component_options = {
             propsData: {
-                element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                feature: {
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",
@@ -63,9 +63,9 @@ describe("FeatureCard", () => {
     it("Displays a not draggable card without accessibility pattern", async () => {
         component_options = {
             propsData: {
-                element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                feature: {
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",
@@ -97,9 +97,9 @@ describe("FeatureCard", () => {
     it("Displays a not draggable card when feature has planned user stories", async () => {
         component_options = {
             propsData: {
-                element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                feature: {
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",
@@ -131,9 +131,9 @@ describe("FeatureCard", () => {
     it("Displays a not draggable card when user can not plan/unplan features", async () => {
         component_options = {
             propsData: {
-                element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                feature: {
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",
@@ -162,9 +162,9 @@ describe("FeatureCard", () => {
     it("Displays a draggable card with items backlog container", async () => {
         component_options = {
             propsData: {
-                element: {
-                    artifact_id: 100,
-                    artifact_title: "My artifact",
+                feature: {
+                    id: 100,
+                    title: "My artifact",
                     tracker: {
                         label: "bug",
                         color_name: "lake_placid_blue",

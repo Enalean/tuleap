@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
@@ -17,14 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp";
-import type { Feature } from "../../../type";
+declare(strict_types=1);
 
-export function getFeatures(increment_id: number): Promise<Feature[]> {
-    return recursiveGet(`/api/v1/program_increment/${encodeURIComponent(increment_id)}/content`, {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-    });
+namespace Tuleap\ProgramManagement\REST\v1;
+
+/**
+ * @psalm-immutable
+ */
+class ElementRepresentation
+{
+    /**
+     * @var int
+     */
+    public $id;
+    /**
+     * @var string
+     */
+    public $uri;
+    /**
+     * @var string
+     */
+    public $xref;
+    /**
+     * @var ?string
+     */
+    public $title;
+
+    public function __construct(
+        int $id,
+        string $uri,
+        string $xref,
+        ?string $title
+    ) {
+        $this->id    = $id;
+        $this->uri   = $uri;
+        $this->xref  = $xref;
+        $this->title = $title;
+    }
 }

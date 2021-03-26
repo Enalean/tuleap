@@ -18,11 +18,9 @@
  */
 
 import { recursiveGet } from "tlp";
-import type { Feature } from "./Feature/feature-retriever";
+import type { Element, Feature } from "../../type";
 
-export interface ProgramIncrement {
-    id: number;
-    title: string;
+export interface ProgramIncrement extends Element {
     status: string;
     start_date: string | null;
     end_date: string | null;

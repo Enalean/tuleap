@@ -19,14 +19,26 @@
 import type { ProgramIncrement } from "./helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "./helpers/BacklogItems/children-feature-retriever";
 
-export interface ProgramElement {
-    artifact_id: number;
-    artifact_title: string;
-    artifact_xref: string;
+export interface Feature extends Element {
     tracker: TrackerMinimalRepresentation;
-    background_color: string;
     has_user_story_linked: boolean;
+    has_user_story_planned: boolean;
+    background_color: string;
+    color_xref_name: string;
     user_stories?: UserStory[];
+}
+
+export interface Element {
+    id: number;
+    uri: string;
+    xref: string;
+    title: string;
+}
+
+export interface Project {
+    id: number;
+    uri: string;
+    label: string;
 }
 
 export interface TrackerMinimalRepresentation {
@@ -43,7 +55,7 @@ export interface HandleDragPayload {
 }
 
 export interface State {
-    to_be_planned_elements: ProgramElement[];
+    to_be_planned_elements: Feature[];
     program_increments: ProgramIncrement[];
     modal_error_message: string;
     has_modal_error: boolean;

@@ -28,20 +28,8 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 /**
  * @psalm-immutable
  */
-final class FeatureRepresentation
+final class FeatureRepresentation extends ElementRepresentation
 {
-    /**
-     * @var int
-     */
-    public $artifact_id;
-    /**
-     * @var string
-     */
-    public $artifact_title;
-    /**
-     * @var string
-     */
-    public $artifact_xref;
     /**
      * @var MinimalTrackerRepresentation
      */
@@ -63,14 +51,13 @@ final class FeatureRepresentation
         int $artifact_id,
         string $artifact_title,
         string $artifact_xref,
+        string $artifact_url,
         MinimalTrackerRepresentation $minimal_tracker_representation,
         BackgroundColor $background_color,
         bool $has_user_story_planned,
         bool $has_user_story_linked
     ) {
-        $this->artifact_id            = $artifact_id;
-        $this->artifact_title         = $artifact_title;
-        $this->artifact_xref          = $artifact_xref;
+        parent::__construct($artifact_id, $artifact_url, $artifact_xref, $artifact_title);
         $this->tracker                = $minimal_tracker_representation;
         $this->background_color       = $background_color->getBackgroundColorName();
         $this->has_user_story_planned = $has_user_story_planned;

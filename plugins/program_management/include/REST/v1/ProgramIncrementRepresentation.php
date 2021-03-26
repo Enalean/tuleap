@@ -28,16 +28,8 @@ use Tuleap\REST\JsonCast;
 /**
  * @psalm-immutable
  */
-final class ProgramIncrementRepresentation
+final class ProgramIncrementRepresentation extends ElementRepresentation
 {
-    /**
-     * @var int
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $title;
     /**
      * @var string | null
      */
@@ -62,14 +54,15 @@ final class ProgramIncrementRepresentation
     private function __construct(
         int $id,
         string $title,
+        string $uri,
+        string $xref,
         bool $user_can_update,
         bool $user_can_plan,
         ?string $status,
         ?int $start_date,
         ?int $end_date
     ) {
-        $this->id              = $id;
-        $this->title           = $title;
+        parent::__construct($id, $uri, $xref, $title);
         $this->status          = $status;
         $this->start_date      = JsonCast::toDate($start_date);
         $this->end_date        = JsonCast::toDate($end_date);
@@ -82,6 +75,8 @@ final class ProgramIncrementRepresentation
         return new self(
             $program_increment->id,
             $program_increment->title,
+            $program_increment->uri,
+            $program_increment->xref,
             $program_increment->user_can_update,
             $program_increment->user_can_plan,
             $program_increment->status,

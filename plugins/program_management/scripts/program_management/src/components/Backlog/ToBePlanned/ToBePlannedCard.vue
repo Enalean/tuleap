@@ -18,23 +18,19 @@
   -->
 
 <template>
-    <div
-        class="element-backlog-items"
-        draggable="true"
-        v-bind:data-element-id="element.artifact_id"
-    >
+    <div class="element-backlog-items" draggable="true" v-bind:data-element-id="element.id">
         <div class="element-card" v-bind:class="additional_classnames">
             <div class="element-card-content">
                 <div class="element-card-xref-label">
                     <a
-                        v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
+                        v-bind:href="`/plugins/tracker/?aid=${element.id}`"
                         class="element-card-xref"
                         v-bind:class="`element-card-xref-${element.tracker.color_name}`"
                         data-not-drag-handle="true"
                     >
-                        {{ element.artifact_xref }}
+                        {{ element.xref }}
                     </a>
-                    <span class="element-card-label">{{ element.artifact_title }}</span>
+                    <span class="element-card-label">{{ element.title }}</span>
                 </div>
             </div>
             <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
@@ -50,7 +46,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { ProgramElement } from "../../../type";
+import type { Feature } from "../../../type";
 
 import { namespace } from "vuex-class";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
@@ -62,7 +58,7 @@ const configuration = namespace("configuration");
 })
 export default class ToBePlannedCard extends Vue {
     @Prop({ required: true })
-    readonly element!: ProgramElement;
+    readonly element!: Feature;
 
     @configuration.State
     readonly accessibility!: boolean;

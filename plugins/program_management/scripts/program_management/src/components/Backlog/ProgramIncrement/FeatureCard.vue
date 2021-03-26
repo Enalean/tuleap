@@ -20,25 +20,25 @@
 <template>
     <div
         v-bind:draggable="is_draggable"
-        v-bind:data-element-id="element.artifact_id"
+        v-bind:data-element-id="feature.id"
         class="element-backlog-items"
     >
         <div
-            v-bind:data-tlp-tooltip="reason_why_element_is_not_draggable"
+            v-bind:data-tlp-tooltip="reason_why_feature_is_not_draggable"
             v-bind:class="additional_tooltip_classnames"
         >
             <div class="element-card" v-bind:class="additional_classnames">
                 <div class="element-card-content">
                     <div class="element-card-xref-label">
                         <a
-                            v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
+                            v-bind:href="`/plugins/tracker/?aid=${feature.id}`"
                             class="element-card-xref"
-                            v-bind:class="`element-card-xref-${element.tracker.color_name}`"
+                            v-bind:class="`element-card-xref-${feature.tracker.color_name}`"
                             data-not-drag-handle="true"
                         >
-                            {{ element.artifact_xref }}
+                            {{ feature.xref }}
                         </a>
-                        <span class="element-card-label">{{ element.artifact_title }}</span>
+                        <span class="element-card-label">{{ feature.title }}</span>
                     </div>
                 </div>
                 <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
@@ -46,8 +46,8 @@
         </div>
         <feature-card-backlog-items
             v-bind:class="{ 'backlog-items-draggable': is_draggable }"
-            v-if="element.has_user_story_linked"
-            v-bind:feature="element"
+            v-if="feature.has_user_story_linked"
+            v-bind:feature="feature"
             v-bind:program_increment="program_increment"
         />
     </div>
@@ -56,19 +56,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Feature } from "../../../helpers/ProgramIncrement/Feature/feature-retriever";
 import { namespace } from "vuex-class";
+import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
+import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
+import type { Feature } from "../../../type";
 
 const configuration = namespace("configuration");
-import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 
 @Component({
     components: { FeatureCardBacklogItems },
 })
 export default class FeatureCard extends Vue {
     @Prop({ required: true })
-    readonly element!: Feature;
+    readonly feature!: Feature;
 
     @Prop({ required: true })
     readonly program_increment!: ProgramIncrement;
@@ -80,17 +80,17 @@ export default class FeatureCard extends Vue {
     readonly can_create_program_increment!: boolean;
 
     get show_accessibility_pattern(): boolean {
-        return this.accessibility && this.element.background_color !== "";
+        return this.accessibility && this.feature.background_color !== "";
     }
 
     get additional_classnames(): string {
-        const classnames = [`element-card-${this.element.tracker.color_name}`];
+        const classnames = [`element-card-${this.feature.tracker.color_name}`];
 
         if (this.can_create_program_increment && this.is_draggable) {
             classnames.push("element-draggable-item");
         }
-        if (this.element.background_color) {
-            classnames.push(`element-card-background-${this.element.background_color}`);
+        if (this.feature.background_color) {
+            classnames.push(`element-card-background-${this.feature.background_color}`);
         }
 
         if (this.show_accessibility_pattern) {
@@ -112,10 +112,10 @@ export default class FeatureCard extends Vue {
     }
 
     get is_draggable(): boolean {
-        return !this.element.has_user_story_planned && this.program_increment.user_can_plan;
+        return !this.feature.has_user_story_planned && this.program_increment.user_can_plan;
     }
 
-    get reason_why_element_is_not_draggable(): string {
+    get reason_why_feature_is_not_draggable(): string {
         if (this.is_draggable) {
             return "";
         }
