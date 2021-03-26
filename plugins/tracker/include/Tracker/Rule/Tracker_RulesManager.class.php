@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
@@ -123,6 +124,15 @@ class Tracker_RulesManager
         }
 
         return $this->rule_date_factory;
+    }
+
+
+    private function getIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
+        );
     }
 
     /**
@@ -509,7 +519,9 @@ class Tracker_RulesManager
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Define dependencies');
-        $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
+
+        $GLOBALS['HTML']->addStylesheet($this->getIncludeAssets()->getFileURL('dependencies-matrix.css'));
+        $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title, ['body_class' => ['has-sidebar-with-pinned-header']]);
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
@@ -529,22 +541,22 @@ class Tracker_RulesManager
 
         $purifier = Codendi_HTMLPurifier::instance();
         echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies']) . '" method="POST">';
-        echo '<table id="tracker_field_dependencies_matrix">';
+        echo '<table class="tlp-table" id="tracker-field-dependencies-matrix">';
 
-        echo "<tr class=\"" . util_get_alt_row_color(1) . "\">\n";
-        echo "<td></td>";
+        echo "<thead><th class='matrix-cell matrix-empty-cell matrix-label-cell'></th>";
         foreach ($target_field_values as $target_field_value_id => $target_field_value) {
-            echo '<td class="matrix_cell">' . $purifier->purify($target_field_value->getLabel()) . "</td>";
+            echo '<th class="matrix-cell matrix-label-cell">' . $purifier->purify($target_field_value->getLabel()) . "</th>";
         }
-        echo "</tr>";
+        echo "</thead>";
 
         $dependencies = $this->getDependenciesBySourceTarget($this->tracker->id, $source_field->getId(), $target_field->getId());
 
         $j = 0;
+        echo "<tbody>";
        //Display the available transitions
         foreach ($source_field_values as $source_field_value_id => $source_field_value) {
             echo "<tr class=\"" . util_get_alt_row_color($j) . "\">\n";
-            echo "<td>" . $purifier->purify($source_field_value->getLabel()) . "</td>";
+            echo "<th class='matrix-label-cell'>" . $purifier->purify($source_field_value->getLabel()) . "</th>";
             foreach ($target_field_values as $target_field_value_id => $target_field_value) {
                 $box_value = $source_field_value_id . '_' . $target_field_value_id;
                 $this->displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value);
@@ -553,7 +565,7 @@ class Tracker_RulesManager
             $j++;
         }
 
-        echo '</table>';
+        echo '</tbody></table>';
         echo '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => (int) $this->tracker->id,
@@ -578,7 +590,7 @@ class Tracker_RulesManager
             }
         }
 
-          echo '<td class="matrix_cell" ><label class="pc_checkbox"><input type="checkbox" class=" tracker-field-dependencies-checkbox" name="' . $box_value . '" ' . $checked . '>&nbsp;</label></td>';
+          echo '<td class="matrix-cell" ><label class="pc_checkbox"><input type="checkbox" class=" tracker-field-dependencies-checkbox" name="' . $box_value . '" ' . $checked . '>&nbsp;</label></td>';
     }
 
     public function displayRulesAsJavascript()

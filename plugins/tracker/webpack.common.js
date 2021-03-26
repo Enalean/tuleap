@@ -186,6 +186,7 @@ let entry_points = {
     print: "./themes/default/css/print.scss",
     "burndown-chart": "./themes/burndown-chart.scss",
     colorpicker: "./themes/FlamingParrot/css/colorpicker.scss",
+    "dependencies-matrix": "./themes/FlamingParrot/css/dependencies-matrix.scss",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
