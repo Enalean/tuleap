@@ -21,7 +21,7 @@ import type { Feature, State } from "../type";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extractor";
 import type { FeatureIdWithProgramIncrement } from "../helpers/drag-drop";
-import type { UserStory } from "../helpers/BacklogItems/children-feature-retriever";
+import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 
 export interface LinkUserStoryToPlannedElement {
     element_id: number;

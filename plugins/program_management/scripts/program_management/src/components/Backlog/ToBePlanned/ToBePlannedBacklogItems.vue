@@ -48,8 +48,8 @@
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import type { UserStory } from "../../../helpers/BacklogItems/children-feature-retriever";
-import { getLinkedUserStoriesToFeature } from "../../../helpers/BacklogItems/children-feature-retriever";
+import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
+import { getLinkedUserStoriesToFeature } from "../../../helpers/UserStories/user-stories-retriever";
 import { Mutation } from "vuex-class";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { Feature } from "../../../type";

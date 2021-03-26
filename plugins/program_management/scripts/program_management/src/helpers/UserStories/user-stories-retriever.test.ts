@@ -18,12 +18,12 @@
  */
 
 import * as tlp from "@tuleap/tlp-fetch";
-import type { UserStory } from "./children-feature-retriever";
-import { getLinkedUserStoriesToFeature } from "./children-feature-retriever";
+import type { UserStory } from "./user-stories-retriever";
+import { getLinkedUserStoriesToFeature } from "./user-stories-retriever";
 
 jest.mock("tlp");
 
-describe("Features retriever", () => {
+describe("User stories retriever", () => {
     describe("getLinkedUserStoriesToFeature", () => {
         it("Get children of a feature", async () => {
             const recursiveGet = jest.spyOn(tlp, "recursiveGet");
