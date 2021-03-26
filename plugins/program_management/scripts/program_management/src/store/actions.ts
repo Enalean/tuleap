@@ -18,7 +18,7 @@
  */
 
 import type { ActionContext } from "vuex";
-import type { State } from "../type";
+import type { Feature, State } from "../type";
 import type {
     FeatureIdToMoveFromProgramIncrementToAnother,
     FeatureIdWithProgramIncrement,
@@ -28,6 +28,16 @@ import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extr
 import { addElementToTopBackLog } from "../helpers/ProgramIncrement/add-to-top-backlog";
 import { unplanFeature, planFeatureInProgramIncrement as planFeature } from "../helpers/drag-drop";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
+import { getToBePlannedElements } from "../helpers/ToBePlanned/element-to-plan-retriever";
+import { getFeatures } from "../helpers/ProgramIncrement/Feature/feature-retriever";
+import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
+import { getLinkedUserStoriesToFeature } from "../helpers/UserStories/user-stories-retriever";
+
+export interface LinkUserStoriesToFeature {
+    artifact_id: number;
+    program_increment: ProgramIncrement;
+}
 
 export function planFeatureInProgramIncrement(
     context: ActionContext<State, State>,
@@ -175,4 +185,50 @@ export async function handleModalError(
     } catch (e) {
         context.commit("setModalErrorMessage", "");
     }
+}
+
+export async function linkUserStoriesToBePlannedElements(
+    context: ActionContext<State, State>,
+    artifact_id: number
+): Promise<UserStory[]> {
+    const user_stories = await getLinkedUserStoriesToFeature(artifact_id);
+    context.commit("linkUserStoriesToBePlannedElement", {
+        user_stories: user_stories,
+        element_id: artifact_id,
+    });
+
+    return user_stories;
+}
+
+export async function linkUserStoriesToFeature(
+    context: ActionContext<State, State>,
+    link_user_stories_to_feature: LinkUserStoriesToFeature
+): Promise<UserStory[]> {
+    const user_stories = await getLinkedUserStoriesToFeature(
+        link_user_stories_to_feature.artifact_id
+    );
+    context.commit("linkUserStoriesToFeature", {
+        user_stories: user_stories,
+        element_id: link_user_stories_to_feature.artifact_id,
+        program_increment: link_user_stories_to_feature.program_increment,
+    });
+
+    return user_stories;
+}
+
+export async function retrieveToBePlannedElement(
+    context: ActionContext<State, State>,
+    program_id: number
+): Promise<void> {
+    const to_be_planned_elements = await getToBePlannedElements(program_id);
+    context.commit("setToBePlannedElements", to_be_planned_elements);
+}
+
+export async function getFeatureAndStoreInProgramIncrement(
+    context: ActionContext<State, State>,
+    program_increment: ProgramIncrement
+): Promise<Feature[]> {
+    const features = await getFeatures(program_increment.id);
+    context.commit("addProgramIncrement", { ...program_increment, features });
+    return features;
 }

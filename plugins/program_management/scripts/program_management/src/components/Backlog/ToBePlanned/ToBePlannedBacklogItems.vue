@@ -49,11 +49,8 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
-import { getLinkedUserStoriesToFeature } from "../../../helpers/UserStories/user-stories-retriever";
-import { Mutation } from "vuex-class";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { Feature } from "../../../type";
-import type { LinkUserStoryToPlannedElement } from "../../../store/mutations";
 import { handleError } from "../../../helpers/error-handler";
 import BacklogItemsErrorShow from "../BacklogItemsErrorShow.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
@@ -64,11 +61,6 @@ import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 export default class ToBePlannedBacklogItems extends Vue {
     @Prop({ required: true })
     readonly to_be_planned_element!: Feature;
-
-    @Mutation
-    readonly linkUserStoriesToBePlannedElement!: (
-        user_story_feature: LinkUserStoryToPlannedElement
-    ) => void;
 
     private user_stories: UserStory[] = [];
     private is_loading_user_story = false;
@@ -98,11 +90,10 @@ export default class ToBePlannedBacklogItems extends Vue {
 
         try {
             this.is_loading_user_story = true;
-            this.user_stories = await getLinkedUserStoriesToFeature(this.to_be_planned_element.id);
-            this.linkUserStoriesToBePlannedElement({
-                user_stories: this.user_stories,
-                element_id: this.to_be_planned_element.id,
-            });
+            this.user_stories = await this.$store.dispatch(
+                "linkUserStoriesToBePlannedElements",
+                this.to_be_planned_element.id
+            );
         } catch (rest_error) {
             this.message_error_rest = await handleError(rest_error, this);
             throw rest_error;

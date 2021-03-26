@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp from "@tuleap/tlp-fetch";
 import { getFeatures } from "./feature-retriever";
 import type { Feature } from "../../../type";
 
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-fetch");
 
 describe("Features retriever", () => {
     it("retrieves feature planned in a program increment", async () => {
