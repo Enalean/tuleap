@@ -47,11 +47,11 @@ class Worklog
     private $author;
 
     /**
-     * @var WorklogComment|null
+     * @var string
      */
     private $comment;
 
-    public function __construct(DateTimeImmutable $start_date, int $seconds, JiraUser $author, ?WorklogComment $comment)
+    public function __construct(DateTimeImmutable $start_date, int $seconds, JiraUser $author, string $comment)
     {
         $this->start_date = $start_date;
         $this->seconds    = $seconds;
@@ -91,9 +91,9 @@ class Worklog
         $seconds    = (int) $worklog_response['timeSpentSeconds'];
         $author     = new JiraUser($worklog_response['author']);
 
-        $comment = null;
+        $comment = '';
         if (isset($worklog_response['comment'])) {
-            $comment = WorklogComment::buildFromAPIResponse($worklog_response['comment']);
+            $comment = $worklog_response['comment'];
         }
 
         return new self(
@@ -119,7 +119,7 @@ class Worklog
         return $this->author;
     }
 
-    public function getComment(): ?WorklogComment
+    public function getComment(): string
     {
         return $this->comment;
     }

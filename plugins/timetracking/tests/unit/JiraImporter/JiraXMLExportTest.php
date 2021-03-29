@@ -29,7 +29,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Timetracking\JiraImporter\Worklog\Worklog;
-use Tuleap\Timetracking\JiraImporter\Worklog\WorklogComment;
 use Tuleap\Timetracking\JiraImporter\Worklog\WorklogRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -103,9 +102,7 @@ final class JiraXMLExportTest extends TestCase
                             "displayName"  => "What Ever",
                         ]
                     ),
-                    new WorklogComment(
-                        ["content 01", "content 02"]
-                    )
+                    "content 01 content 02"
                 )
             ]);
 
