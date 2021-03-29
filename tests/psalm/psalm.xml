@@ -17,7 +17,6 @@
         <directory name="plugins/*/bin/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <directory name="plugins/oauth2_server/tests/unit/" />
-        <directory name="plugins/roadmap/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>
