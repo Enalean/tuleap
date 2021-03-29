@@ -36,9 +36,10 @@
             <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
         </div>
         <to-be-planned-backlog-items
-            class="backlog-items-draggable"
             v-if="feature.has_user_story_linked"
             v-bind:to_be_planned_element="feature"
+            data-not-drag-handle="true"
+            draggable="true"
         />
     </div>
 </template>

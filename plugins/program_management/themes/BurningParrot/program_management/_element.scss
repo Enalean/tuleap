@@ -151,10 +151,6 @@
     width: 95%;
     margin: 0 0 0 $tlp-small-spacing;
     background: $tlp-ui-border-light;
-
-    &.backlog-items-draggable:hover {
-        cursor: move;
-    }
 }
 
 .backlog-items-children-container {
