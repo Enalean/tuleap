@@ -22,6 +22,9 @@ import GanttBoard from "./GanttBoard.vue";
 import type { Task } from "../../type";
 import GanttTask from "./Task/GanttTask.vue";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
+import { TimePeriodMonth } from "../../helpers/time-period-month";
+import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
+import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -139,5 +142,26 @@ describe("GanttBoard", () => {
         ]);
 
         expect(time_period_header.props("nb_additional_units")).toBe(2);
+    });
+
+    it("Use a different time period if user chose a different timescale", async () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                tasks: [
+                    { id: 1, dependencies: {} },
+                    { id: 2, dependencies: {} },
+                    { id: 3, dependencies: {} },
+                ] as Task[],
+                locale: "en_US",
+            },
+        });
+
+        expect(wrapper.findComponent(TimePeriodHeader).props("time_period")).toBeInstanceOf(
+            TimePeriodMonth
+        );
+        await wrapper.findComponent(TimePeriodControl).vm.$emit("input", "quarter");
+        expect(wrapper.findComponent(TimePeriodHeader).props("time_period")).toBeInstanceOf(
+            TimePeriodQuarter
+        );
     });
 });

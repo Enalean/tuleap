@@ -12,11 +12,26 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Month"
+msgstr "Mois"
+
 msgid "Oops, something went wrong."
 msgstr "Oups, quelque chose ne va pas."
 
+msgid "Q%{ quarter }"
+msgstr "Trim. %{ quarter }"
+
+msgid "Quarter"
+msgstr "Trimestre"
+
+msgid "Quarter %{ quarter } of %{ year }"
+msgstr "Trimestre %{ quarter } de %{ year }"
+
 msgid "There is no data to show. Please come back later."
 msgstr "Il n'y a pas de données à afficher. Veuillez revenir plus tard."
+
+msgid "Timescale"
+msgstr "Échelle"
 
 msgid "Today: %{ date }"
 msgstr "Aujourd'hui : %{ date }"

@@ -28,6 +28,8 @@ export interface Task {
     readonly dependencies: Record<string, number[]>;
 }
 
+export type TimeScale = "month" | "quarter";
+
 export interface TimePeriod {
     readonly units: Date[];
     formatShort(unit: Date): string;

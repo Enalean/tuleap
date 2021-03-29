@@ -61,6 +61,7 @@ function createParser(gettext_extractor) {
                 "[this].gettext_provider.gettext",
                 "$gettext",
                 "gettext_provider.$gettext",
+                "[this].gettext_provider.$gettext",
                 "gettext_provider.gettext",
             ],
             {

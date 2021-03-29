@@ -37,16 +37,16 @@ describe("TimePeriodeHeader", () => {
 
         expect(wrapper).toMatchInlineSnapshot(`
             <div class="roadmap-gantt-timeperiod">
-              <div data-tlp-tooltip="April 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+              <div data-tlp-tooltip="April 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top">
                 Apr
               </div>
-              <div data-tlp-tooltip="May 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+              <div data-tlp-tooltip="May 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top">
                 May
               </div>
-              <div data-tlp-tooltip="June 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+              <div data-tlp-tooltip="June 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top">
                 Jun
               </div>
-              <div data-tlp-tooltip="July 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-bottom">
+              <div data-tlp-tooltip="July 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top">
                 Jul
               </div>
             </div>

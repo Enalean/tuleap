@@ -19,44 +19,53 @@
   -->
 
 <template>
-    <div class="roadmap-gantt">
-        <time-period-header
-            v-bind:time_period="time_period"
-            v-bind:nb_additional_units="nb_additional_units"
-            v-bind:locale="locale"
-            ref="time_period"
-        />
-        <div>
-            <gantt-task
-                v-for="task of tasks"
-                v-bind:key="task.id"
-                v-bind:task="task"
+    <div>
+        <time-period-control v-model="timescale" />
+        <div class="roadmap-gantt">
+            <time-period-header
                 v-bind:time_period="time_period"
                 v-bind:nb_additional_units="nb_additional_units"
-                v-bind:dependencies="dependencies"
-                v-bind:dimensions_map="dimensions_map"
+                v-bind:locale="locale"
+                ref="time_period"
+            />
+            <div>
+                <gantt-task
+                    v-for="task of tasks"
+                    v-bind:key="task.id"
+                    v-bind:task="task"
+                    v-bind:time_period="time_period"
+                    v-bind:nb_additional_units="nb_additional_units"
+                    v-bind:dependencies="dependencies"
+                    v-bind:dimensions_map="dimensions_map"
+                />
+            </div>
+            <today-indicator
+                v-bind:locale="locale"
+                v-bind:time_period="time_period"
+                v-bind:now="now"
             />
         </div>
-        <today-indicator v-bind:locale="locale" v-bind:time_period="time_period" v-bind:now="now" />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import GanttTask from "./Task/GanttTask.vue";
-import type { Task, TimePeriod, TasksDependencies, TaskDimensionMap } from "../../type";
+import type { Task, TimePeriod, TasksDependencies, TaskDimensionMap, TimeScale } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
 import { getLastDate } from "../../helpers/last-date";
 import TodayIndicator from "./TodayIndicator.vue";
 import { Styles } from "../../helpers/styles";
-import { TimePeriodMonth } from "../../helpers/time-period-month";
+import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import { getTasksDependencies } from "../../helpers/dependency-map-builder";
 import { getDimensionsMap } from "../../helpers/tasks-dimensions";
+import { TimePeriodMonth } from "../../helpers/time-period-month";
+import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 
 @Component({
-    components: { TodayIndicator, TimePeriodHeader, GanttTask },
+    components: { TimePeriodControl, TodayIndicator, TimePeriodHeader, GanttTask },
 })
 export default class GanttBoard extends Vue {
     $refs!: {
@@ -74,6 +83,8 @@ export default class GanttBoard extends Vue {
     private observer: ResizeObserver | null = null;
 
     private now = new Date();
+
+    private timescale: TimeScale = "month";
 
     mounted(): void {
         this.observer = new ResizeObserver(this.adjustAdditionalUnits);
@@ -96,12 +107,32 @@ export default class GanttBoard extends Vue {
             return;
         }
 
-        const nb_visible_units = Math.ceil(entry.contentRect.width / Styles.TIME_UNIT_WIDTH_IN_PX);
+        this.setAdditionalUnitsNumberAccordingToWidth(entry.contentRect.width);
+    }
+
+    @Watch("timescale")
+    adjustAdditionalUnitsAfterTimescaleChang(): void {
+        this.setAdditionalUnitsNumberAccordingToWidth(
+            this.$refs.time_period.$el.getBoundingClientRect().width
+        );
+    }
+
+    setAdditionalUnitsNumberAccordingToWidth(width: number): void {
+        const nb_visible_units = Math.ceil(width / Styles.TIME_UNIT_WIDTH_IN_PX);
 
         this.nb_additional_units = nb_visible_units - this.time_period.units.length - 1;
     }
 
     get time_period(): TimePeriod {
+        if (this.timescale === "quarter") {
+            return new TimePeriodQuarter(
+                getFirstDate(this.tasks),
+                getLastDate(this.tasks),
+                this.now,
+                this
+            );
+        }
+
         return new TimePeriodMonth(
             getFirstDate(this.tasks),
             getLastDate(this.tasks),

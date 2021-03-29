@@ -19,36 +19,39 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-timeperiod">
-        <div
-            class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top"
-            v-for="unit in time_units"
-            v-bind:key="unit.toISOString()"
-            v-bind:data-tlp-tooltip="time_period.formatLong(unit)"
+    <div class="tlp-form-element roadmap-gantt-control">
+        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id" v-translate>
+            Timescale
+        </label>
+        <select
+            class="tlp-select tlp-select-adjusted"
+            v-bind:id="id"
+            v-on:change="$emit('input', $event.target.value)"
+            data-test="select-timescale"
         >
-            {{ time_period.formatShort(unit) }}
-        </div>
+            <option value="month" v-bind:selected="this.value === 'month'" v-translate>
+                Month
+            </option>
+            <option value="quarter" v-bind:selected="this.value === 'quarter'" v-translate>
+                Quarter
+            </option>
+        </select>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { TimePeriod } from "../../../type";
+import { getUniqueId } from "../../../helpers/uniq-id-generator";
+import type { TimeScale } from "../../../type";
 
 @Component
-export default class TimePeriodHeader extends Vue {
+export default class TimePeriodControl extends Vue {
     @Prop({ required: true })
-    private readonly time_period!: TimePeriod;
+    readonly value!: TimeScale;
 
-    @Prop({ required: true })
-    readonly nb_additional_units!: number;
-
-    get time_units(): Date[] {
-        return [
-            ...this.time_period.units,
-            ...this.time_period.additionalUnits(this.nb_additional_units),
-        ];
+    get id(): string {
+        return getUniqueId("roadmap-gantt-timescale");
     }
 }
 </script>
