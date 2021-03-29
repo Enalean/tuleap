@@ -15,7 +15,7 @@
   },
   "types": "types/index.d.ts",
   "dependencies": {
-    "hotkeys-js": "^3.8.2"
+    "hotkeys-js": "^3.8.3"
   },
   "devDependencies": {},
   "config": {
