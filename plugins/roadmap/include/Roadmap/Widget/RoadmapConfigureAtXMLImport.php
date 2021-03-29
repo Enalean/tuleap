@@ -53,41 +53,37 @@ final class RoadmapConfigureAtXMLImport
      */
     private function getParametersFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry): array
     {
-        $params = [
+        return [
             'roadmap' => [
-                'tracker_id' => '',
-                'title'      => ''
+                'tracker_id' => $this->getReferencedTrackerIdFromXML($xml, $mapping_registry),
+                'title'      => $this->getWidgetTitleFromXML($xml),
             ],
         ];
-        if (! isset($xml->preference)) {
-            throw new \RuntimeException("Widget Roadmap does not have a preference node xml");
-        }
-        $this->setTrackerDataFromPreference($xml->preference[0], $mapping_registry, $params);
-
-        return $params;
     }
 
-    private function setTrackerDataFromPreference(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry, array &$params): void
+    private function getWidgetTitleFromXML(\SimpleXMLElement $xml): string
     {
-        $reference_node =  $xml->xpath("reference[@name='tracker_id']");
-        if (count($reference_node) === 0) {
-            throw new \RuntimeException("Reference tracker_id is not found in xml");
-        }
-        $ref = (string) $reference_node[0]['REF'];
+        $title_nodes = $xml->xpath("preference/value[@name='title']");
 
-        $tracker = $mapping_registry->getReference($ref);
-        if ($tracker === null) {
+        return count($title_nodes) > 0 ? (string) $title_nodes[0] : 'Roadmap';
+    }
+
+    /**
+     * @return string
+     */
+    private function getReferencedTrackerIdFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry)
+    {
+        $tracker_id_nodes = $xml->xpath("preference/value[@name='tracker_id']");
+        if (count($tracker_id_nodes) === 0) {
+            throw new \RuntimeException("Reference tracker_id for roadmap widget was not found");
+        }
+        $ref = (string) $tracker_id_nodes[0];
+
+        $imported_tracker_id = $mapping_registry->getReference($ref);
+        if ($imported_tracker_id === null) {
             throw new \RuntimeException("Reference tracker_id for roadmap widget was not found");
         }
 
-        $title_node = $xml->xpath("reference[@name='title']");
-        if (count($title_node) === 0) {
-            $title = 'Roadmap';
-        } else {
-            $title = (string) $title_node[0]['REF'];
-        }
-
-        $params['roadmap']['tracker_id'] = $tracker;
-        $params['roadmap']['title']      = $title;
+        return (string) $imported_tracker_id;
     }
 }
