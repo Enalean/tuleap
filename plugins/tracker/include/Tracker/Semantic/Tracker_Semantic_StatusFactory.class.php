@@ -43,7 +43,7 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker)
+    public function getByTracker(Tracker $tracker): Tracker_Semantic_Status
     {
         return Tracker_Semantic_Status::load($tracker);
     }
