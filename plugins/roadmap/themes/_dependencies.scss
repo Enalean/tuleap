@@ -32,3 +32,7 @@
     stroke: var(--tlp-ui-dimmed);
     fill: none;
 }
+
+.roadmap-gantt-task-dependency-line-ends-after-start {
+    stroke: var(--tlp-ui-danger);
+}

@@ -20,7 +20,11 @@
 
 <template>
     <svg class="roadmap-gantt-task-dependency" v-bind:style="style">
-        <path class="roadmap-gantt-task-dependency-line" v-bind:d="path" />
+        <path
+            class="roadmap-gantt-task-dependency-line"
+            v-bind:class="line_class"
+            v-bind:d="path"
+        />
     </svg>
 </template>
 
@@ -71,21 +75,30 @@ export default class DependencyArrow extends Vue {
         const width = this.width_with_gap;
 
         const is_task_above_dependency = this.index_task < this.index_dependency;
-        const is_task_ends_after_dependency = this.right_of_task > this.left_of_dependency;
 
-        if (is_task_above_dependency && !is_task_ends_after_dependency) {
+        if (is_task_above_dependency && !this.is_task_ends_after_dependency_start) {
             return getDownRightArrow(width, height);
         }
 
-        if (is_task_above_dependency && is_task_ends_after_dependency) {
+        if (is_task_above_dependency && this.is_task_ends_after_dependency_start) {
             return getDownLeftArrow(width, height);
         }
 
-        if (!is_task_above_dependency && !is_task_ends_after_dependency) {
+        if (!is_task_above_dependency && !this.is_task_ends_after_dependency_start) {
             return getUpRightArrow(width, height);
         }
 
         return getUpLeftArrow(width, height);
+    }
+
+    get line_class(): string {
+        return this.is_task_ends_after_dependency_start
+            ? "roadmap-gantt-task-dependency-line-ends-after-start"
+            : "";
+    }
+
+    get is_task_ends_after_dependency_start(): boolean {
+        return this.right_of_task > this.left_of_dependency;
     }
 
     get task_dimensions(): TaskDimension {

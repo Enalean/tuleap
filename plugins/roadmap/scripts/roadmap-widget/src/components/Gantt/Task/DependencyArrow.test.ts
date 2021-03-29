@@ -85,7 +85,7 @@ describe("DependencyArrow", () => {
                         L24 64
                         L16 56
                         M24 64
-                        L16 72" class="roadmap-gantt-task-dependency-line"></path>
+                        L16 72" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });
@@ -110,7 +110,7 @@ describe("DependencyArrow", () => {
                         L24 24
                         L16 16
                         M24 24
-                        L16 32" class="roadmap-gantt-task-dependency-line"></path>
+                        L16 32" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });

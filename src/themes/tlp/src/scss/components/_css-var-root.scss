@@ -19,6 +19,10 @@
 
 :root {
     // colors
+    --tlp-ui-info: #{$tlp-ui-info};
+    --tlp-ui-success: #{$tlp-ui-success};
+    --tlp-ui-warning: #{$tlp-ui-warning};
+    --tlp-ui-danger: #{$tlp-ui-danger};
     --tlp-ui-dimmed: #{$tlp-ui-dimmed};
     --tlp-ui-white: #{$tlp-ui-white};
     --tlp-theme-color: #{$tlp-theme-color};
