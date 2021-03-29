@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum Styles {
-    TIME_UNIT_WIDTH_IN_PX = 100,
-    MILESTONE_WIDTH_IN_PX = 21,
-    TASK_BAR_MIN_WIDTH_IN_PX = 10,
-    TASK_HEIGHT_IN_PX = 40,
-}
+export const Styles = {
+    TIME_UNIT_WIDTH_IN_PX: 100,
+    MILESTONE_WIDTH_IN_PX: 21,
+    TASK_BAR_MIN_WIDTH_IN_PX: 10,
+    TASK_HEIGHT_IN_PX: 40,
+} as const;
