@@ -21,18 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
-/**
- * @psalm-immutable
- */
-interface JiraUser
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+
+final class InvalidMappingValueException extends \Exception
 {
-    public const NO_EMAIL_ADDRESS_SHARED = '';
-
-    public function getDisplayName(): string;
-
-    public function getJiraAccountId(): string;
-
-    public function getEmailAddress(): string;
+    public function __construct(FieldMapping $mapping, string $value)
+    {
+        parent::__construct('Value ' . $value . ' doesnt exist in structure mapping for ' . $mapping->getJiraFieldId());
+    }
 }

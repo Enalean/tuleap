@@ -33,7 +33,7 @@ use Tuleap\Timetracking\JiraImporter\Worklog\WorklogRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use XML_SimpleXMLCDATAFactory;
 
@@ -95,7 +95,7 @@ final class JiraXMLExportTest extends TestCase
                 new Worklog(
                     new \DateTimeImmutable('2021-02-08T19:06:41.386+0100'),
                     18000,
-                    new JiraUser(
+                    new ActiveJiraUser(
                         [
                             "accountId"    => "whatever123",
                             "emailAddress" => "whatever@example.com",

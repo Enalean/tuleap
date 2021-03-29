@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use DateTimeImmutable;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\AnonymousJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 /**
@@ -68,11 +70,7 @@ class ChangelogEntryValueRepresentation
      */
     public static function buildFromAPIResponse(array $changelog_response): self
     {
-        if (
-            ! array_key_exists('items', $changelog_response) ||
-            ! array_key_exists('id', $changelog_response) ||
-            ! array_key_exists('created', $changelog_response)
-        ) {
+        if (! isset($changelog_response['items'], $changelog_response['id'], $changelog_response['created'])) {
             throw new ChangelogAPIResponseNotWellFormedException();
         }
 
@@ -81,10 +79,15 @@ class ChangelogEntryValueRepresentation
             $items[] = ChangelogEntryItemsRepresentation::buildFromAPIResponse($changelog_reponse_item);
         }
 
+        $author = new AnonymousJiraUser();
+        if (isset($changelog_response['author'])) {
+            $author = new ActiveJiraUser($changelog_response['author']);
+        }
+
         return new self(
             (int) $changelog_response['id'],
             new DateTimeImmutable($changelog_response['created']),
-            new JiraUser($changelog_response['author']),
+            $author,
             array_filter($items),
         );
     }

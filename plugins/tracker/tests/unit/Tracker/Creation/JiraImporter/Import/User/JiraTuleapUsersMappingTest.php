@@ -48,7 +48,7 @@ final class JiraTuleapUsersMappingTest extends TestCase
 
     public function testItStoresIdentifiedUsersInTheListOfIdentifiedUsers(): void
     {
-        $jira_user = new JiraUser([
+        $jira_user = new ActiveJiraUser([
             'displayName' => 'Jeannot',
             'accountId' => 'e8a4sd5d6',
             'emailAddress' => 'john.doe@example.com'
@@ -76,7 +76,7 @@ final class JiraTuleapUsersMappingTest extends TestCase
 
     public function testItStoresUsersInTheListOfNotMatchingEmailAddresses(): void
     {
-        $jira_user = new JiraUser([
+        $jira_user = new ActiveJiraUser([
             'displayName' => 'Jeannot',
             'accountId' => 'e8a4sd5d6',
             'emailAddress' => 'john.doe@example.com'
@@ -95,7 +95,7 @@ final class JiraTuleapUsersMappingTest extends TestCase
 
     public function testItStoresUnknownUsers(): void
     {
-        $jira_user = new JiraUser([
+        $jira_user = new ActiveJiraUser([
             'displayName' => 'Jeannot',
             'accountId' => 'e8a4sd5d6',
         ]);

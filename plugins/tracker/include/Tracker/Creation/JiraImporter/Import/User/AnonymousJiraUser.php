@@ -26,13 +26,20 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 /**
  * @psalm-immutable
  */
-interface JiraUser
+final class AnonymousJiraUser implements JiraUser
 {
-    public const NO_EMAIL_ADDRESS_SHARED = '';
+    public function getDisplayName(): string
+    {
+        return '';
+    }
 
-    public function getDisplayName(): string;
+    public function getJiraAccountId(): string
+    {
+        return '';
+    }
 
-    public function getJiraAccountId(): string;
-
-    public function getEmailAddress(): string;
+    public function getEmailAddress(): string
+    {
+        return '';
+    }
 }

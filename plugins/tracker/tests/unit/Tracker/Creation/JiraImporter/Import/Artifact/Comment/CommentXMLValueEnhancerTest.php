@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class CommentXMLValueEnhancerTest extends TestCase
@@ -42,7 +42,7 @@ class CommentXMLValueEnhancerTest extends TestCase
         $commenter->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
         $comment = new Comment(
-            new JiraUser([
+            new ActiveJiraUser([
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw'
             ]),
@@ -62,7 +62,7 @@ class CommentXMLValueEnhancerTest extends TestCase
         $commenter = \Mockery::mock(\PFUser::class);
         $commenter->shouldReceive('getId')->andReturn(105);
 
-        $update_author = new JiraUser(
+        $update_author = new ActiveJiraUser(
             [
                 'displayName'  => 'userO1',
                 'accountId'    => 'e12ds5123sw',

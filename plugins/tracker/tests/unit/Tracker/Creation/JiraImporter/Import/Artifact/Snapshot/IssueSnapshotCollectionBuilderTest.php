@@ -38,7 +38,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
 class IssueSnapshotCollectionBuilderTest extends TestCase
@@ -449,7 +449,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     private function buildCommentSnapshot(): Comment
     {
         return new Comment(
-            new JiraUser([
+            new ActiveJiraUser([
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw'
             ]),
@@ -461,7 +461,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     private function buildCommentSnapshotWithSameTimestampOfInitialChangelog(): Comment
     {
         return new Comment(
-            new JiraUser([
+            new ActiveJiraUser([
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw'
             ]),

@@ -59,7 +59,7 @@ class JiraUserInfoQuerier
             throw JiraConnectionException::canNotRetrieveUserInfoException($account_id);
         }
 
-        $jira_user = new JiraUser($user_response);
+        $jira_user = new ActiveJiraUser($user_response);
 
         $this->logger->debug('Information of user ' . $jira_user->getDisplayName() . ' have been retrieved.');
 
