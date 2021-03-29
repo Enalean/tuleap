@@ -39,6 +39,7 @@ class WorklogTest extends TestCase
                 "emailAddress" => "whatever@example.com",
                 "displayName"  => "What Ever",
             ],
+            'comment' => "*Comment* {color:#36b37e}*RED*{color}"
         ];
 
         $worklog = Worklog::buildFromAPIResponse($response);
@@ -49,6 +50,7 @@ class WorklogTest extends TestCase
         $this->assertSame("What Ever", $worklog->getAuthor()->getDisplayName());
         $this->assertSame("whatever123", $worklog->getAuthor()->getJiraAccountId());
         $this->assertSame("whatever@example.com", $worklog->getAuthor()->getEmailAddress());
+        $this->assertSame("*Comment* {color:#36b37e}*RED*{color}", $worklog->getComment());
     }
 
     public function testItThrowsAnExceptionIfMandatoryKeyIsMissing(): void

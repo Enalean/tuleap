@@ -28,7 +28,6 @@ use ProjectUGroup;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Timetracking\JiraImporter\Configuration\JiraTimetrackingConfigurationRetriever;
-use Tuleap\Timetracking\JiraImporter\Worklog\WorklogComment;
 use Tuleap\Timetracking\JiraImporter\Worklog\WorklogRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentationCollection;
@@ -145,7 +144,7 @@ class JiraXMLExport
                 );
 
                 $worklog_comment = $worklog->getComment();
-                if ($worklog_comment !== null) {
+                if ($worklog_comment !== '') {
                     $this->cdata_factory->insert(
                         $xml_time,
                         'step',
@@ -161,7 +160,7 @@ class JiraXMLExport
     }
 
     private function getTimeStepTextContent(
-        WorklogComment $worklog_comment,
+        string $worklog_comment,
         JiraUser $comment_author,
         PFUser $user_time
     ): string {
@@ -170,7 +169,7 @@ class JiraXMLExport
             $step_content = "Time added by " . $comment_author->getDisplayName() . " | ";
         }
 
-        $step_content .= $worklog_comment->getCommentInTextFormat();
+        $step_content .= $worklog_comment;
 
         return $step_content;
     }
