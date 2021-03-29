@@ -570,7 +570,8 @@ class Tracker_ArtifactDao extends DataAccessObject
                      INNER JOIN tracker                              AS child_tracker ON (child_art.tracker_id = child_tracker.id)
                 WHERE parent_art.id IN (" . $this->da->escapeIntImplode($artifact_ids) . ")
                     AND artlink.nature=$is_child_shortname
-                    AND child_tracker.deletion_date IS NULL";
+                    AND child_tracker.deletion_date IS NULL
+                GROUP BY parent_art.id";
 
         $children_count = [];
         foreach ($this->retrieve($sql) as $row) {
