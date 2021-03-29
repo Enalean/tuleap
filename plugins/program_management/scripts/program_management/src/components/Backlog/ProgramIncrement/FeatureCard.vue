@@ -45,10 +45,11 @@
             </div>
         </div>
         <feature-card-backlog-items
-            v-bind:class="{ 'backlog-items-draggable': is_draggable }"
             v-if="feature.has_user_story_linked"
             v-bind:feature="feature"
             v-bind:program_increment="program_increment"
+            data-not-drag-handle="true"
+            draggable="true"
         />
     </div>
 </template>

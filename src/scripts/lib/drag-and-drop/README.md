@@ -2,9 +2,10 @@
 
 ## General concepts:
 
-- add draggable="true" on elements that should be drag & dropped
-- add data-is-container="true" on elements you to transform into a drop zone
-- add data-not-drag-handle="true" on buttons and links inside the containers (to make them not draggable)
+- add `draggable="true"` on elements that should be drag & dropped
+- add `data-is-container="true"` on elements you to transform into a drop zone
+- add `data-not-drag-handle="true"` on buttons and links inside the containers (to make them not draggable)
+  - For elements others than links, you must add `draggable="true"` with `data-not-drag-handle="true"`
 
 ## Implementation:
 
