@@ -26,7 +26,6 @@ namespace Tuleap\LDAP;
 use Account_TimezonesCollection;
 use HTTPRequest;
 use LDAP_UserDao;
-use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -93,8 +92,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
             $current_user->setTimezone($timezone);
             $current_user->setMailVA($mailVa);
             $current_user->setMailSiteUpdates($mailSite);
-            $current_user->setUnixStatus('A');
-            if ($this->userValuesHaveNotBeenModified($current_user, $timezone, $mailVa, $mailSite) || $this->user_manager->updateDb($current_user)) {
+            if ($this->user_manager->updateDb($current_user)) {
                 $this->ldap_user_dao->setLoginDate($current_user->getId(), $_SERVER['REQUEST_TIME']);
             } else {
                 $this->welcomeExitError($request, $layout, dgettext('tuleap-ldap', 'User settings update error'), sprintf(dgettext('tuleap-ldap', 'An error occured during account update: %1$s.'), ''));
@@ -124,12 +122,5 @@ class WelcomeUpdateController implements DispatchableWithRequest
         } else {
             $layout->footer(['showfeedback' => false]);
         }
-    }
-
-    private function userValuesHaveNotBeenModified(PFUser $current_user, $timezone, $mailVa, $mailSite): bool
-    {
-        return $current_user->getTimezone() == $timezone &&
-            $current_user->getMailVA() == $mailVa &&
-            $current_user->getMailSiteUpdates() == $mailSite;
     }
 }
