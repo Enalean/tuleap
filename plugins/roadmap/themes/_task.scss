@@ -21,6 +21,7 @@
 @use 'roadmap-variables';
 @use 'grid';
 @use 'sass:math';
+@use 'dependencies';
 
 .roadmap-gantt-task {
     $radius: 4px;
@@ -96,6 +97,7 @@
 
 .roadmap-gantt-task-bar {
     position: absolute;
+    z-index: roadmap-variables.$z-index-bars;
     top: math.floor((roadmap-variables.$task-height - roadmap-variables.$task-bar-height) / 2);
     min-width: roadmap-variables.$task-bar-min-width;
     height: roadmap-variables.$task-bar-height;

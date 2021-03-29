@@ -18,13 +18,14 @@
  */
 
 export interface Task {
-    id: number;
-    title: string;
-    xref: string;
-    color_name: string;
-    html_url: string;
-    start: Date | null;
-    end: Date | null;
+    readonly id: number;
+    readonly title: string;
+    readonly xref: string;
+    readonly color_name: string;
+    readonly html_url: string;
+    readonly start: Date | null;
+    readonly end: Date | null;
+    readonly dependencies: Record<string, number[]>;
 }
 
 export interface TimePeriod {
@@ -34,3 +35,11 @@ export interface TimePeriod {
     additionalUnits(nb: number): Date[];
     getBeginningOfNextNthUnit(unit: Date, nth: number): Date;
 }
+
+export interface TaskDimension {
+    readonly left: number;
+    readonly width: number;
+}
+
+export class TasksByNature extends Map<string, Task[]> {}
+export class TasksDependencies extends WeakMap<Task, TasksByNature> {}

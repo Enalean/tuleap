@@ -41,7 +41,11 @@ describe("GanttBoard", () => {
     it("Displays all tasks", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
-                tasks: [{ id: 1 }, { id: 2 }, { id: 3 }] as Task[],
+                tasks: [
+                    { id: 1, dependencies: {} },
+                    { id: 2, dependencies: {} },
+                    { id: 3, dependencies: {} },
+                ] as Task[],
                 locale: "en_US",
             },
         });
@@ -53,8 +57,8 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 tasks: [
-                    { id: 1, start: new Date(2020, 3, 15) },
-                    { id: 2, start: new Date(2020, 3, 20) },
+                    { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
+                    { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
                 ] as Task[],
                 locale: "en_US",
             },
@@ -84,8 +88,8 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 tasks: [
-                    { id: 1, start: new Date(2020, 3, 15) },
-                    { id: 2, start: new Date(2020, 3, 20) },
+                    { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
+                    { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
                 ] as Task[],
                 locale: "en_US",
             },
@@ -107,8 +111,8 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 tasks: [
-                    { id: 1, start: new Date(2020, 3, 15) },
-                    { id: 2, start: new Date(2020, 3, 20) },
+                    { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
+                    { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
                 ] as Task[],
                 locale: "en_US",
             },
