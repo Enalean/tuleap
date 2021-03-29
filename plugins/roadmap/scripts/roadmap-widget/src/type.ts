@@ -39,7 +39,9 @@ export interface TimePeriod {
 export interface TaskDimension {
     readonly left: number;
     readonly width: number;
+    readonly index: number;
 }
+export class TaskDimensionMap extends WeakMap<Task, TaskDimension> {}
 
 export class TasksByNature extends Map<string, Task[]> {}
 export class TasksDependencies extends WeakMap<Task, TasksByNature> {}

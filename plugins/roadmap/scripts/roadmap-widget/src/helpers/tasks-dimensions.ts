@@ -19,12 +19,30 @@
 import type { Task, TaskDimension, TimePeriod } from "../type";
 import { getLeftForDate } from "./left-postion";
 import { Styles } from "./styles";
+import { TaskDimensionMap } from "../type";
 
-export function getDimensions(task: Task, time_period: TimePeriod): TaskDimension {
-    const left = getLeftForTask(task, time_period);
-    const width = getWidthForTask(task, time_period, left);
+export function getDimensions(task: Task, dimensions_map: TaskDimensionMap): TaskDimension {
+    const dimensions = dimensions_map.get(task);
+    if (!dimensions) {
+        throw Error("Unable to find dimensions of task " + task.id);
+    }
 
-    return { left, width };
+    return dimensions;
+}
+
+export function getDimensionsMap(tasks: Task[], time_period: TimePeriod): TaskDimensionMap {
+    const map = new TaskDimensionMap();
+    for (const [index, task] of tasks.entries()) {
+        const left = getLeftForTask(task, time_period);
+
+        map.set(task, {
+            index,
+            left,
+            width: getWidthForTask(task, time_period, left),
+        });
+    }
+
+    return map;
 }
 
 function getLeftForTask(task: Task, time_period: TimePeriod): number {

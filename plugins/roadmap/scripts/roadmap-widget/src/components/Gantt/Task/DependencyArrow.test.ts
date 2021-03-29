@@ -22,20 +22,22 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { Task } from "../../../type";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
+import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
 
 describe("DependencyArrow", () => {
     function mountComponent(task: Task, dependency: Task, tasks: Task[]): Wrapper<DependencyArrow> {
+        const time_period = new TimePeriodMonth(
+            new Date(2020, 3, 10),
+            new Date(2020, 3, 25),
+            new Date(2020, 3, 7),
+            "en_US"
+        );
+
         return shallowMount(DependencyArrow, {
             propsData: {
                 task,
                 dependency,
-                tasks,
-                time_period: new TimePeriodMonth(
-                    new Date(2020, 3, 10),
-                    new Date(2020, 3, 25),
-                    new Date(2020, 3, 7),
-                    "en_US"
-                ),
+                dimensions_map: getDimensionsMap(tasks, time_period),
             },
         });
     }

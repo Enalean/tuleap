@@ -28,10 +28,9 @@
         <dependency-arrow
             v-for="dependency of dependencies_to_display"
             v-bind:key="dependency.id"
-            v-bind:time_period="time_period"
             v-bind:task="task"
             v-bind:dependency="dependency"
-            v-bind:tasks="tasks"
+            v-bind:dimensions_map="dimensions_map"
         />
         <task-bar
             v-bind:task="task"
@@ -44,12 +43,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Task, TimePeriod, TasksDependencies, TaskDimension } from "../../../type";
+import type {
+    Task,
+    TimePeriod,
+    TasksDependencies,
+    TaskDimension,
+    TaskDimensionMap,
+} from "../../../type";
 import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
-import { getDimensions } from "../../../helpers/tasks-dimensions";
 import DependencyArrow from "./DependencyArrow.vue";
+import { getDimensions } from "../../../helpers/tasks-dimensions";
 
 @Component({
     components: { DependencyArrow, TaskBar, BackgroundGrid, TaskHeader },
@@ -59,7 +64,7 @@ export default class GanttTask extends Vue {
     readonly task!: Task;
 
     @Prop({ required: true })
-    readonly tasks!: Task[];
+    readonly dimensions_map!: TaskDimensionMap;
 
     @Prop({ required: true })
     readonly time_period!: TimePeriod;
@@ -71,7 +76,7 @@ export default class GanttTask extends Vue {
     readonly dependencies!: TasksDependencies;
 
     get dimensions(): TaskDimension {
-        return getDimensions(this.task, this.time_period);
+        return getDimensions(this.task, this.dimensions_map);
     }
 
     get dependencies_to_display(): Task[] {

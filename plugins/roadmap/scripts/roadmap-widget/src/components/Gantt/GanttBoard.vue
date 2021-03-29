@@ -34,7 +34,7 @@
                 v-bind:time_period="time_period"
                 v-bind:nb_additional_units="nb_additional_units"
                 v-bind:dependencies="dependencies"
-                v-bind:tasks="tasks"
+                v-bind:dimensions_map="dimensions_map"
             />
         </div>
         <today-indicator v-bind:locale="locale" v-bind:time_period="time_period" v-bind:now="now" />
@@ -45,7 +45,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import GanttTask from "./Task/GanttTask.vue";
-import type { Task, TimePeriod, TasksDependencies } from "../../type";
+import type { Task, TimePeriod, TasksDependencies, TaskDimensionMap } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
 import { getLastDate } from "../../helpers/last-date";
@@ -53,6 +53,7 @@ import TodayIndicator from "./TodayIndicator.vue";
 import { Styles } from "../../helpers/styles";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import { getTasksDependencies } from "../../helpers/dependency-map-builder";
+import { getDimensionsMap } from "../../helpers/tasks-dimensions";
 
 @Component({
     components: { TodayIndicator, TimePeriodHeader, GanttTask },
@@ -111,6 +112,10 @@ export default class GanttBoard extends Vue {
 
     get dependencies(): TasksDependencies {
         return getTasksDependencies(this.tasks);
+    }
+
+    get dimensions_map(): TaskDimensionMap {
+        return getDimensionsMap(this.tasks, this.time_period);
     }
 }
 </script>
