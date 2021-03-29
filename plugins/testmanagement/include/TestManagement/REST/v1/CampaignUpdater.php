@@ -18,45 +18,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker;
-use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotOpenValueNotFoundException;
 
 class CampaignUpdater
 {
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
     /** @var Tracker_REST_Artifact_ArtifactUpdater */
     private $artifact_updater;
     /** @var CampaignSaver */
     private $campaign_saver;
+    /**
+     * @var CampaignArtifactUpdateFieldValuesBuilder
+     */
+    private $field_values_builder;
 
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
         Tracker_REST_Artifact_ArtifactUpdater $artifact_updater,
-        CampaignSaver $campaign_saver
+        CampaignSaver $campaign_saver,
+        CampaignArtifactUpdateFieldValuesBuilder $field_values_builder
     ) {
-        $this->formelement_factory = $formelement_factory;
-        $this->artifact_updater    = $artifact_updater;
-        $this->campaign_saver      = $campaign_saver;
+        $this->artifact_updater     = $artifact_updater;
+        $this->campaign_saver       = $campaign_saver;
+        $this->field_values_builder = $field_values_builder;
     }
 
     /**
-     * @param PFUser   $user     The user trying to update the campaign
-     * @param Campaign $campaign Campaign to update
-     *
-     * @return void
-     *
      * @throws LabelFieldNotFoundException
+     * @throws SemanticStatusNotDefinedException
+     * @throws SemanticStatusNotOpenValueNotFoundException
+     * @throws CampaignStatusChangeUnknownValueException
      * @throws \Luracast\Restler\RestException
      * @throws \Tracker_AfterSaveException
      * @throws \Tracker_ChangesetCommitException
@@ -68,53 +67,20 @@ class CampaignUpdater
      */
     public function updateCampaign(
         PFUser $user,
-        Campaign $campaign
-    ) {
+        Campaign $campaign,
+        ?string $change_status
+    ): void {
         $this->campaign_saver->save($campaign);
 
         $artifact = $campaign->getArtifact();
         $tracker  = $artifact->getTracker();
-        $values   = $this->getFieldValuesForCampaignArtifactUpdate($tracker, $user, $campaign->getLabel());
+        $values   = $this->field_values_builder->getFieldValuesForCampaignArtifactUpdate(
+            $tracker,
+            $user,
+            $campaign->getLabel(),
+            $change_status
+        );
 
         $this->artifact_updater->update($user, $artifact, $values);
-    }
-
-    /**
-     * @throws LabelFieldNotFoundException
-     *
-     * @return ArtifactValuesRepresentation[]
-     *
-     * @psalm-return array{0: ArtifactValuesRepresentation}
-     */
-    private function getFieldValuesForCampaignArtifactUpdate(
-        Tracker $tracker,
-        PFUser $user,
-        string $label
-    ): array {
-        $label_field = $this->getLabelField($tracker, $user);
-
-        $label_value           = new ArtifactValuesRepresentation();
-        $label_value->field_id = (int) $label_field->getId();
-        $label_value->value    = $label;
-
-        return [$label_value];
-    }
-
-    /**
-     * @throws LabelFieldNotFoundException
-     *
-     */
-    private function getLabelField(Tracker $tracker, PFUser $user): \Tracker_FormElement_Field
-    {
-        $field = $this->formelement_factory->getUsedFieldByNameForUser(
-            $tracker->getId(),
-            CampaignRepresentation::FIELD_NAME,
-            $user
-        );
-        if (! $field) {
-            throw new LabelFieldNotFoundException($tracker);
-        }
-
-        return $field;
     }
 }

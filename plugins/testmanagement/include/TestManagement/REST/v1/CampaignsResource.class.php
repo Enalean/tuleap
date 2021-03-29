@@ -50,6 +50,7 @@ use Tracker_ReportFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
+use Tracker_Semantic_StatusFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
@@ -100,6 +101,9 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotOpenValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -295,9 +299,14 @@ class CampaignsResource
         );
 
         $this->campaign_updater = new CampaignUpdater(
-            $this->formelement_factory,
             $this->artifact_updater,
-            new CampaignSaver($campaign_dao, $key_factory)
+            new CampaignSaver($campaign_dao, $key_factory),
+            new CampaignArtifactUpdateFieldValuesBuilder(
+                $this->formelement_factory,
+                new StatusValueRetriever(
+                    Tracker_Semantic_StatusFactory::instance()
+                )
+            )
         );
 
         $priority_manager = new Tracker_Artifact_PriorityManager(
@@ -639,6 +648,7 @@ class CampaignsResource
      * @param string                                  $label New label of the campaign {@from body}
      * @param JobConfigurationRepresentation          $job_configuration {@from body}
      * @param AutomatedTestsResultPATCHRepresentation $automated_tests_results {@from body}
+     * @param string | null                           $change_status {@from body} {@required false} {@choice closed}
      *
      * @return CampaignRepresentation
      *
@@ -650,7 +660,8 @@ class CampaignsResource
         $id,
         $label = null,
         ?JobConfigurationRepresentation $job_configuration = null,
-        ?AutomatedTestsResultPATCHRepresentation $automated_tests_results = null
+        ?AutomatedTestsResultPATCHRepresentation $automated_tests_results = null,
+        ?string $change_status = null
     ) {
         $user              = $this->getCurrentUser();
         $campaign          = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
@@ -669,7 +680,11 @@ class CampaignsResource
         }
 
         try {
-            $this->campaign_updater->updateCampaign($user, $campaign);
+            $this->campaign_updater->updateCampaign(
+                $user,
+                $campaign,
+                $change_status
+            );
         } catch (Tracker_ChangesetNotCreatedException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_CommentNotStoredException $exception) {
@@ -688,6 +703,12 @@ class CampaignsResource
             throw new RestException(500, $exception->getMessage());
         } catch (Tracker_Exception $exception) {
             throw new RestException(500, $exception->getMessage());
+        } catch (
+            SemanticStatusNotDefinedException |
+            SemanticStatusNotOpenValueNotFoundException |
+            CampaignStatusChangeUnknownValueException $exception
+        ) {
+            throw new RestException(400, $exception->getMessage());
         }
 
         if ($automated_tests_results !== null) {
