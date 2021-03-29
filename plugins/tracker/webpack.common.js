@@ -42,7 +42,7 @@ const webpack_config_for_burndown_chart = {
         },
     },
     module: {
-        rules: [webpack_configurator.configureBabelRule(), webpack_configurator.rule_po_files],
+        rules: [webpack_configurator.rule_po_files],
     },
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
@@ -75,7 +75,6 @@ const config_for_flaming_parrot = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
         ],
     },
@@ -97,11 +96,7 @@ const config_for_vue_flaming_parrot = {
         extensions: [".js", ".vue"],
     },
     module: {
-        rules: [
-            webpack_configurator.configureBabelRule(),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-        ],
+        rules: [webpack_configurator.rule_easygettext_loader, webpack_configurator.rule_vue_loader],
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
@@ -132,7 +127,6 @@ const config_for_burning_parrot = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(), // gettext-init.js needs Babel
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],

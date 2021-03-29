@@ -53,7 +53,6 @@ const webpack_config_for_angular = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_vue_images,
             ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_vue_loader,
@@ -90,7 +89,6 @@ const webpack_config_for_vue_components = {
     module: {
         rules: [
             webpack_configurator.rule_vue_images,
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],

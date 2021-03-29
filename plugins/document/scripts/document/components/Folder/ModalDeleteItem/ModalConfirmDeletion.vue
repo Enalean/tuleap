@@ -159,13 +159,13 @@ export default {
     },
     methods: {
         async deleteItem() {
-            const deleted_item = { ...this.item };
+            const deleted_item_parent_id = this.item.parent_id;
             this.is_item_being_deleted = true;
 
             await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
 
             if (!this.has_modal_error) {
-                await this.redirectToParentFolderIfNeeded(deleted_item);
+                await this.redirectToParentFolderIfNeeded(deleted_item_parent_id);
                 this.$store.commit("showPostDeletionNotification");
 
                 this.modal.hide();
@@ -188,7 +188,7 @@ export default {
             this.$store.commit("error/resetModalError");
             this.$emit("delete-modal-closed");
         },
-        async redirectToParentFolderIfNeeded(deleted_item) {
+        async redirectToParentFolderIfNeeded(deleted_item_parent_id) {
             const is_item_the_current_folder = this.item.id === this.current_folder.id;
             const is_item_being_previewed =
                 this.currently_previewed_item !== null &&
@@ -201,7 +201,7 @@ export default {
             this.$store.commit("updateCurrentlyPreviewedItem", null);
             await this.$router.replace({
                 name: "folder",
-                params: { item_id: deleted_item.parent_id },
+                params: { item_id: deleted_item_parent_id },
             });
         },
     },

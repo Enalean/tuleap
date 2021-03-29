@@ -43,11 +43,7 @@ module.exports = [
             },
         },
         module: {
-            rules: [
-                webpack_configurator.rule_scss_loader,
-                webpack_configurator.configureBabelRule(),
-                webpack_configurator.rule_po_files,
-            ],
+            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_po_files],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

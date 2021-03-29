@@ -31,10 +31,7 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/artifactsfolders/")
         ),
         module: {
-            rules: [
-                webpack_configurator.configureBabelRule(),
-                webpack_configurator.rule_scss_loader,
-            ],
+            rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

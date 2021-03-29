@@ -18,3 +18,4 @@
  */
 
 export const browserlist_config: string;
+export const esbuild_target: string;

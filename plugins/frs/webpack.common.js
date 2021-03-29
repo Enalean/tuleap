@@ -45,7 +45,6 @@ module.exports = [
         },
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(),
                 webpack_configurator.rule_ng_cache_loader,
                 webpack_configurator.rule_angular_gettext_loader,
                 webpack_configurator.rule_scss_loader,

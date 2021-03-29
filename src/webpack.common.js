@@ -21,16 +21,30 @@ const loadJsonFile = require("load-json-file");
 const WebpackAssetsManifest = require("../node_modules/webpack-assets-manifest");
 const path = require("path");
 const webpack_configurator = require("../tools/utils/scripts/webpack-configurator.js");
+const { esbuild_target } = require("../tools/utils/scripts/browserslist_config");
 // Dependency is defined at the root of the repo
 // eslint-disable-next-line import/no-extraneous-dependencies
-const TerserPlugin = require("terser-webpack-plugin");
-
+const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./www/assets/core");
 const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/");
 
 const pkg = loadJsonFile.sync(path.resolve(__dirname, "package-lock.json"));
 const ckeditor_version = pkg.dependencies.ckeditor4.version;
+
+// Prototype doesn't like to have its "$super" argument mangled due to the fact
+// that it checks for its presence during class initialization
+const optimization_target_with_prototypejs_support = {
+    minimizer: [
+        new ESBuildMinifyPlugin({
+            target: esbuild_target,
+            minifySyntax: true,
+            minifyWhitespace: true,
+            minifyIdentifiers: false,
+            include: [/including-prototypejs/],
+        }),
+    ],
+};
 
 const manifest_plugin = new WebpackAssetsManifest({
     output: "manifest.json",
@@ -39,20 +53,6 @@ const manifest_plugin = new WebpackAssetsManifest({
     apply(manifest) {
         manifest.set("ckeditor.js", `ckeditor-${ckeditor_version}/ckeditor.js`);
     },
-});
-
-// Prototype doesn't like to have its "$super" argument mangled due to the fact
-// that it checks for its presence during class initialization
-const terser_plugin_with_prototypejs_support = new TerserPlugin({
-    terserOptions: {
-        format: {
-            comments: false,
-        },
-        mangle: {
-            reserved: ["$super"],
-        },
-    },
-    extractComments: false,
 });
 
 const webpack_config_for_ckeditor = {
@@ -145,7 +145,6 @@ const webpack_config_for_tlp_doc = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_scss_loader,
             webpack_configurator.rule_po_files,
         ],
@@ -177,7 +176,6 @@ const webpack_config_for_flaming_parrot_code = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
         ],
     },
@@ -186,7 +184,7 @@ const webpack_config_for_flaming_parrot_code = {
 
 const webpack_config_for_rich_text_editor = {
     entry: {
-        "rich-text-editor": "./scripts/tuleap/textarea_rte.js",
+        "rich-text-editor-including-prototypejs": "./scripts/tuleap/textarea_rte.js",
     },
     context,
     output,
@@ -198,11 +196,11 @@ const webpack_config_for_rich_text_editor = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
         ],
     },
-    plugins: [manifest_plugin, terser_plugin_with_prototypejs_support],
+    plugins: [manifest_plugin],
+    optimization: optimization_target_with_prototypejs_support,
 };
 
 const webpack_config_for_burning_parrot_code = {
@@ -268,7 +266,6 @@ const webpack_config_for_burning_parrot_code = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_mustache_files,
         ],
@@ -307,7 +304,6 @@ const webpack_config_for_vue = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],
@@ -398,15 +394,15 @@ const webpack_config_legacy_combined = {
     output,
     plugins: [
         ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
-            "tuleap.js": fat_combined_files,
+            "tuleap-including-prototypejs.js": fat_combined_files,
             "tuleap_subset.js": subset_combined_files,
             "tuleap_subset_flamingparrot.js": subset_combined_files.concat(
                 subset_combined_flamingparrot_files
             ),
         }),
         manifest_plugin,
-        terser_plugin_with_prototypejs_support,
     ],
+    optimization: optimization_target_with_prototypejs_support,
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];

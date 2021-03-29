@@ -46,11 +46,7 @@ module.exports = [
             jquery: "jQuery",
         },
         module: {
-            rules: [
-                webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets,
-                webpack_configurator.configureBabelRule(),
-            ],
+            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

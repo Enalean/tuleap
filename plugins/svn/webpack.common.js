@@ -43,7 +43,6 @@ const webpack_config_for_vue_and_themes = {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_scss_loader,
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],
@@ -70,9 +69,6 @@ const webpack_config_for_vanilla = {
     externals: {
         codendi: "codendi",
         jquery: "jQuery",
-    },
-    module: {
-        rules: [webpack_configurator.configureBabelRule()],
     },
     plugins: [manifest_plugin],
 };

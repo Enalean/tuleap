@@ -392,13 +392,13 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     public function displayJavascriptElements($params)
     {
         if ($this->shouldIncludeFatCombined($params)) {
-            $this->includeJavascriptFile($this->include_asset->getFileURL('tuleap.js'));
+            $this->includeJavascriptFile($this->include_asset->getFileURL('tuleap-including-prototypejs.js'));
         } else {
             $this->includeSubsetOfCombined();
         }
 
         $this->includeJavascriptFile($this->include_asset->getFileURL('ckeditor.js'));
-        $this->includeJavascriptFile($this->include_asset->getFileURL('rich-text-editor.js'));
+        $this->includeJavascriptFile($this->include_asset->getFileURL('rich-text-editor-including-prototypejs.js'));
         $this->includeJavascriptFile($this->include_asset->getFileURL('switch-to-fp.js'));
 
         //Javascript i18n

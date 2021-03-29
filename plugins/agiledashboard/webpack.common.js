@@ -71,7 +71,6 @@ const webpack_config_for_typescript = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
         ],
     },
@@ -99,7 +98,7 @@ const webpack_config_for_charts = {
         },
     },
     module: {
-        rules: [webpack_configurator.configureBabelRule(), webpack_configurator.rule_po_files],
+        rules: [webpack_configurator.rule_po_files],
     },
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
@@ -120,11 +119,7 @@ const webpack_config_for_javascript = {
         jquery: "jQuery",
     },
     module: {
-        rules: [
-            webpack_configurator.configureBabelRule(),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-        ],
+        rules: [webpack_configurator.rule_easygettext_loader, webpack_configurator.rule_vue_loader],
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
@@ -165,7 +160,6 @@ const webpack_config_for_kanban = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_vue_images,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_ng_cache_loader,
@@ -213,7 +207,6 @@ const webpack_config_for_planning_v2 = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_vue_images,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_ng_cache_loader,
