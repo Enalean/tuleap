@@ -1160,7 +1160,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @param string $comment           The comment (follow-up) associated with the artifact update
      * @param PFUser $submitter         The user who is doing the update
      * @param bool   $send_notification true if a notification must be sent, false otherwise
-     * @param string $comment_format    The comment (follow-up) type ("text" | "html")
+     * @param string $comment_format    The comment (follow-up) type ("text" | "html" | "commonmark")
      *
      * @return Tracker_Artifact_Changeset|null
      * @throws Tracker_NoChangeException In the validation
@@ -1171,7 +1171,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $comment,
         PFUser $submitter,
         $send_notification = true,
-        $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+        $comment_format = Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT
     ) {
         $submitted_on = $_SERVER['REQUEST_TIME'];
         $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
