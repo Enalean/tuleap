@@ -155,7 +155,6 @@
 import { createPopover } from "tlp";
 import {
     getCommonMarkSyntaxHelperPopoverTitle,
-    getSyntaxHelperLabel,
     getSyntaxHelperTitle,
     getSyntaxHelperToGet,
     getSyntaxHelperType,
@@ -166,13 +165,16 @@ export default {
     props: {
         disabled: Boolean,
     },
+    data() {
+        return {
+            escapeHandler: this.handleKeyUp.bind(this),
+            popover: undefined,
+        };
+    },
     computed: {
         // Translate attribute does not work with ng-vue out of the box.
         help() {
             return getSyntaxHelperTitle();
-        },
-        title() {
-            return getSyntaxHelperLabel();
         },
         type() {
             return getSyntaxHelperType();
@@ -185,7 +187,24 @@ export default {
         },
     },
     mounted() {
-        createPopover(this.$refs.button_helper, this.$refs.popover_helper);
+        this.popover = createPopover(this.$refs.button_helper, this.$refs.popover_helper);
+        document.addEventListener("keyup", this.escapeHandler);
+    },
+    destroyed() {
+        document.removeEventListener("keyup", this.escapeHandler);
+        if (this.popover) {
+            this.popover.destroy();
+        }
+    },
+    methods: {
+        handleKeyUp(event) {
+            if (event.key !== "Escape") {
+                return;
+            }
+            if (this.popover) {
+                this.popover.hide();
+            }
+        },
     },
 };
 </script>

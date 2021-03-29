@@ -28,8 +28,6 @@ export const getHTMLLabel = () => gettextCatalog.getString("HTML");
 export const getCommonMarkLabel = () => gettextCatalog.getString("Markdown");
 export const getCommentLabel = () => gettextCatalog.getString("Comment");
 export const getSyntaxHelperTitle = () => gettextCatalog.getString("Help");
-export const getSyntaxHelperLabel = () =>
-    gettextCatalog.getString("Markdown mostly used formatting");
 export const getSyntaxHelperType = () => gettextCatalog.getString("Type...");
 export const getSyntaxHelperToGet = () => gettextCatalog.getString("...to get");
 export const getRTEHelpMessage = () =>

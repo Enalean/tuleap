@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PopperOptions, Placement } from "popper.js";
+import type { Placement, PopperOptions } from "popper.js";
 import Popper from "popper.js";
 import { findClosestElement } from "./dom-walker";
 
@@ -26,6 +26,7 @@ export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
 export type PopoverOptions = PopperOptions & { anchor?: HTMLElement; trigger?: "click" | "hover" };
 
 export interface Popover {
+    hide(): void;
     destroy(): void;
 }
 
@@ -49,13 +50,14 @@ export function createPopover(
     );
     attachListeners(listeners);
 
-    const destroy = (): void => {
-        destroyListeners(listeners);
-        popper.destroy();
-    };
-
     return {
-        destroy,
+        destroy: (): void => {
+            destroyListeners(listeners);
+            popper.destroy();
+        },
+        hide: (): void => {
+            popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
+        },
     };
 }
 
