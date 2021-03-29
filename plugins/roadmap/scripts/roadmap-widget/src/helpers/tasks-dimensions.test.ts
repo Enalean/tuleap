@@ -17,99 +17,143 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getDimensions } from "./tasks-dimensions";
+import { getDimensions, getDimensionsMap } from "./tasks-dimensions";
 import { TimePeriodMonth } from "./time-period-month";
-import type { Task } from "../type";
+import type { Task, TaskDimension } from "../type";
 import { Styles } from "./styles";
+import { TaskDimensionMap } from "../type";
 
-describe("getDimensions", () => {
-    it("Returns milestone dimensions, not positioned, for task without start nor end", () => {
-        const task = { start: null, end: null } as Task;
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 10),
-            new Date(2020, 3, 20),
-            new Date(2020, 3, 15),
-            "en_US"
-        );
+describe("tasks-dimensions", () => {
+    describe("getDimensionsMap", () => {
+        it("Returns milestone dimensions, not positioned, for task without start nor end", () => {
+            const task = { start: null, end: null } as Task;
+            const time_period = new TimePeriodMonth(
+                new Date(2020, 3, 10),
+                new Date(2020, 3, 20),
+                new Date(2020, 3, 15),
+                "en_US"
+            );
 
-        expect(getDimensions(task, time_period)).toStrictEqual({
-            left: 0,
-            width: Styles.MILESTONE_WIDTH_IN_PX,
+            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+                index: 0,
+                left: 0,
+                width: Styles.MILESTONE_WIDTH_IN_PX,
+            });
+        });
+
+        it("Returns milestone dimensions, positioned at start date", () => {
+            const task = { start: new Date(2020, 3, 20), end: null } as Task;
+            const time_period = new TimePeriodMonth(
+                new Date(2020, 3, 10),
+                new Date(2020, 3, 20),
+                new Date(2020, 3, 15),
+                "en_US"
+            );
+
+            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+                index: 0,
+                left: 63,
+                width: Styles.MILESTONE_WIDTH_IN_PX,
+            });
+        });
+
+        it("Returns milestone dimensions, positioned at end date", () => {
+            const task = { start: null, end: new Date(2020, 3, 20) } as Task;
+            const time_period = new TimePeriodMonth(
+                new Date(2020, 3, 10),
+                new Date(2020, 3, 20),
+                new Date(2020, 3, 15),
+                "en_US"
+            );
+
+            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+                index: 0,
+                left: 63,
+                width: Styles.MILESTONE_WIDTH_IN_PX,
+            });
+        });
+
+        it("Returns milestone dimensions, positioned at start date, when start == end", () => {
+            const task = { start: new Date(2020, 3, 20), end: new Date(2020, 3, 20) } as Task;
+            const time_period = new TimePeriodMonth(
+                new Date(2020, 3, 10),
+                new Date(2020, 3, 20),
+                new Date(2020, 3, 15),
+                "en_US"
+            );
+
+            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+                index: 0,
+                left: 63,
+                width: Styles.MILESTONE_WIDTH_IN_PX,
+            });
+        });
+
+        it("Returns task dimensions, positioned at start date", () => {
+            const task = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 20) } as Task;
+            const time_period = new TimePeriodMonth(
+                new Date(2020, 3, 10),
+                new Date(2020, 3, 20),
+                new Date(2020, 3, 15),
+                "en_US"
+            );
+
+            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+                index: 0,
+                left: 30,
+                width: 33,
+            });
+        });
+
+        it("Enusures that task width has a minimum width", () => {
+            const task = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
+            const time_period = new TimePeriodMonth(
+                new Date(2020, 3, 10),
+                new Date(2020, 3, 20),
+                new Date(2020, 3, 15),
+                "en_US"
+            );
+
+            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+                index: 0,
+                left: 30,
+                width: Styles.TASK_BAR_MIN_WIDTH_IN_PX,
+            });
+        });
+
+        it("Returns the index of the task, so that we can know if a task is before or after another one", () => {
+            const task_1 = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
+            const task_2 = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
+            const time_period = new TimePeriodMonth(
+                new Date(2020, 3, 10),
+                new Date(2020, 3, 20),
+                new Date(2020, 3, 15),
+                "en_US"
+            );
+
+            const dimensions_map = getDimensionsMap([task_1, task_2], time_period);
+            const dimensions_task_1 = getDimensions(task_1, dimensions_map);
+            const dimensions_task_2 = getDimensions(task_2, dimensions_map);
+
+            expect(dimensions_task_1.index).toBe(0);
+            expect(dimensions_task_2.index).toBe(1);
         });
     });
 
-    it("Returns milestone dimensions, positioned at start date", () => {
-        const task = { start: new Date(2020, 3, 20), end: null } as Task;
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 10),
-            new Date(2020, 3, 20),
-            new Date(2020, 3, 15),
-            "en_US"
-        );
+    describe("getDimensions", function () {
+        it("Returns a TaskDimension of a task that is stored in the map", () => {
+            const task = { id: 1 } as Task;
+            const dimension: TaskDimension = { index: 0, left: 0, width: 10 };
+            const map = new TaskDimensionMap([[task, dimension]]);
 
-        expect(getDimensions(task, time_period)).toStrictEqual({
-            left: 63,
-            width: Styles.MILESTONE_WIDTH_IN_PX,
+            expect(getDimensions(task, map)).toStrictEqual(dimension);
         });
-    });
 
-    it("Returns milestone dimensions, positioned at end date", () => {
-        const task = { start: null, end: new Date(2020, 3, 20) } as Task;
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 10),
-            new Date(2020, 3, 20),
-            new Date(2020, 3, 15),
-            "en_US"
-        );
+        it("Throws an error if task is not part of the map", () => {
+            const task = { id: 1 } as Task;
+            const map = new TaskDimensionMap();
 
-        expect(getDimensions(task, time_period)).toStrictEqual({
-            left: 63,
-            width: Styles.MILESTONE_WIDTH_IN_PX,
-        });
-    });
-
-    it("Returns milestone dimensions, positioned at start date, when start == end", () => {
-        const task = { start: new Date(2020, 3, 20), end: new Date(2020, 3, 20) } as Task;
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 10),
-            new Date(2020, 3, 20),
-            new Date(2020, 3, 15),
-            "en_US"
-        );
-
-        expect(getDimensions(task, time_period)).toStrictEqual({
-            left: 63,
-            width: Styles.MILESTONE_WIDTH_IN_PX,
-        });
-    });
-
-    it("Returns task dimensions, positioned at start date", () => {
-        const task = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 20) } as Task;
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 10),
-            new Date(2020, 3, 20),
-            new Date(2020, 3, 15),
-            "en_US"
-        );
-
-        expect(getDimensions(task, time_period)).toStrictEqual({
-            left: 30,
-            width: 33,
-        });
-    });
-
-    it("Enusures that task width has a minimum width", () => {
-        const task = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
-        const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 10),
-            new Date(2020, 3, 20),
-            new Date(2020, 3, 15),
-            "en_US"
-        );
-
-        expect(getDimensions(task, time_period)).toStrictEqual({
-            left: 30,
-            width: Styles.TASK_BAR_MIN_WIDTH_IN_PX,
+            expect(() => getDimensions(task, map)).toThrow();
         });
     });
 });

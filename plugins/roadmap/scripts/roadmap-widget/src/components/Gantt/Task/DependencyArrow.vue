@@ -31,8 +31,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Task, TaskDimension, TimePeriod } from "../../../type";
-import { getDimensions } from "../../../helpers/tasks-dimensions";
+import type { Task, TaskDimension, TaskDimensionMap } from "../../../type";
 import { Styles } from "../../../helpers/styles";
 import { gap } from "../../../helpers/path";
 import {
@@ -41,20 +40,18 @@ import {
     getUpLeftArrow,
     getUpRightArrow,
 } from "../../../helpers/svg-arrow-path";
+import { getDimensions } from "../../../helpers/tasks-dimensions";
 
 @Component
 export default class DependencyArrow extends Vue {
     @Prop({ required: true })
-    readonly tasks!: Task[];
+    readonly dimensions_map!: TaskDimensionMap;
 
     @Prop({ required: true })
     readonly task!: Task;
 
     @Prop({ required: true })
     readonly dependency!: Task;
-
-    @Prop({ required: true })
-    readonly time_period!: TimePeriod;
 
     get style(): string {
         let top = Styles.TASK_HEIGHT_IN_PX / 2;
@@ -102,19 +99,19 @@ export default class DependencyArrow extends Vue {
     }
 
     get task_dimensions(): TaskDimension {
-        return getDimensions(this.task, this.time_period);
+        return getDimensions(this.task, this.dimensions_map);
     }
 
     get dependency_dimensions(): TaskDimension {
-        return getDimensions(this.dependency, this.time_period);
+        return getDimensions(this.dependency, this.dimensions_map);
     }
 
     get index_task(): number {
-        return this.tasks.findIndex((matching_task) => matching_task.id === this.task.id);
+        return this.task_dimensions.index;
     }
 
     get index_dependency(): number {
-        return this.tasks.findIndex((matching_task) => matching_task.id === this.dependency.id);
+        return this.dependency_dimensions.index;
     }
 
     get width_without_gap(): number {

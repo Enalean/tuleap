@@ -28,6 +28,7 @@ import { Styles } from "../../../helpers/styles";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import { TasksByNature, TasksDependencies } from "../../../type";
 import DependencyArrow from "./DependencyArrow.vue";
+import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
 
 describe("GanttTask", () => {
     function mountGanttTask(
@@ -62,7 +63,7 @@ describe("GanttTask", () => {
                 task,
                 time_period,
                 nb_additional_units: 2,
-                tasks: [task],
+                dimensions_map: getDimensionsMap([task], time_period),
                 dependencies,
             },
         });
