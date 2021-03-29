@@ -43,7 +43,7 @@
 
         &:hover,
         &:focus {
-            color: darken($tlp-theme-color, 5%);
+            color: darken($tlp-theme-color, 15%);
         }
     }
 
@@ -104,6 +104,7 @@
         padding: 0;
         transition: opacity ease-in-out 100ms;
         border: 0;
+        border-radius: 50%;
         opacity: 0;
         color: var(--text-color, var(--card-text-color, $tlp-ui-dimmed));
         font-size: 14px;
@@ -111,7 +112,11 @@
 
         > .fa-pencil-alt {
             position: relative;
-            top: 5px;
+            top: 6px;
+        }
+
+        &:focus {
+            background: lighten($tlp-theme-color, 50%);
         }
     }
 
@@ -173,6 +178,10 @@
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not([class*='taskboard-card-background-']) > .taskboard-card-edit-trigger {
     @include pencil-background($tlp-theme-background-color);
+
+    &:focus {
+        background: lighten($tlp-theme-color, 90%);
+    }
 }
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card,
@@ -240,8 +249,13 @@
         }
     }
 
-    &:not(.taskboard-card-remaining-effort-edit-mode):hover::before {
-        opacity: 1;
+    &:not(.taskboard-card-remaining-effort-edit-mode) {
+        &:hover,
+        &:focus {
+            &::before {
+                opacity: 1;
+            }
+        }
     }
 
     &.taskboard-card-remaining-effort-edit-mode {
@@ -265,18 +279,18 @@
 
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.tlp-badge-#{$color-name}::before {
-            color: darken(map-get($colors, 'primary'), 5%);
+            color: darken(map-get($colors, 'primary'), 10%);
         }
 
         &.taskboard-card-remaining-effort-edit-mode,
         &:focus,
         &:hover {
             &.tlp-badge-#{$color-name} {
-                border: 1px solid darken(map-get($colors, 'primary'), 5%);
-                background: darken(map-get($colors, 'primary'), 5%);
+                border: 1px solid darken(map-get($colors, 'primary'), 10%);
+                background: darken(map-get($colors, 'primary'), 10%);
 
                 &::after {
-                    border-color: transparent transparent transparent darken(map-get($colors, 'primary'), 5%);
+                    border-color: transparent transparent transparent darken(map-get($colors, 'primary'), 10%);
                 }
             }
         }
