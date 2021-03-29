@@ -192,7 +192,8 @@
         <column>
           <widget name="plugin_roadmap_project_widget">
             <preference name="roadmap">
-              <reference name="tracker_id" REF="T754"/>
+              <value name="title">Roadmap</value>
+              <value name="tracker_id">T754</value>
             </preference>
           </widget>
         </column>

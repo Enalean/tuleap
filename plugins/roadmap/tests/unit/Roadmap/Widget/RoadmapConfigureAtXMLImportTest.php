@@ -51,32 +51,6 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($event->isWidgetConfigured());
     }
 
-    public function testItThrowsAnErrorWhenPreferenceNodeIsNotSet(): void
-    {
-        $project = ProjectTestBuilder::aProject()->build();
-        $event   = new ConfigureAtXMLImport(
-            new \Tuleap\Roadmap\RoadmapProjectWidget(
-                $project,
-                Mockery::mock(RoadmapWidgetDao::class),
-                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class)
-            ),
-            new SimpleXMLElement(
-                '<?xml version="1.0" encoding="UTF-8"?>
-                <widget name="plugin_roadmap_project_widget">
-                </widget>'
-            ),
-            new MappingsRegistry(),
-            $project
-        );
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectErrorMessage("Widget Roadmap does not have a preference node xml");
-
-        $configurator = new RoadmapConfigureAtXMLImport();
-        $configurator->configure($event);
-    }
-
     public function testItThrowsAnErrorWhenTrackerIdReferenceIsNotSetInXml(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
@@ -91,7 +65,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 '<?xml version="1.0" encoding="UTF-8"?>
                 <widget name="plugin_roadmap_project_widget">
                     <preference name="roadmap">
-                      <reference name="stuff" REF="T754"/>
+                      <value name="stuff">T754</value>
                     </preference>
                 </widget>'
             ),
@@ -100,7 +74,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectErrorMessage("Reference tracker_id is not found in xml");
+        $this->expectErrorMessage("Reference tracker_id for roadmap widget was not found");
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -120,7 +94,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 '<?xml version="1.0" encoding="UTF-8"?>
                 <widget name="plugin_roadmap_project_widget">
                     <preference name="roadmap">
-                      <reference name="tracker_id" REF="T754"/>
+                      <value name="tracker_id">T754</value>
                     </preference>
                 </widget>'
             ),
@@ -152,15 +126,17 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 '<?xml version="1.0" encoding="UTF-8"?>
                 <widget name="plugin_roadmap_project_widget">
                     <preference name="roadmap">
-                      <reference name="tracker_id" REF="T754"/>
-                      <reference name="title" REF="My roadmap"/>
+                      <value name="tracker_id">T754</value>
+                      <value name="title">My Roadmap</value>
                     </preference>
                 </widget>'
             ),
             $registry,
             $project
         );
-        $dao->shouldReceive('insertContent')->once();
+        $dao->shouldReceive('insertContent')
+            ->once()
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", 1234);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
