@@ -23,7 +23,6 @@ import TextField from "./TextField.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
 import RichTextEditor from "../../common/RichTextEditor.vue";
 import * as disabled_field_detector from "../disabled-field-detector.js";
-import * as tuleap_api from "../../api/tuleap-api";
 import { setCatalog } from "../../gettext-catalog.js";
 
 let isDisabled;
@@ -104,62 +103,6 @@ describe(`TextField`, () => {
         expect(label.props("id")).toEqual("tracker_field_197");
         expect(editor.props("id")).toEqual("tracker_field_197");
     });
-    describe("togglePreview()", () => {
-        it("does not interpret the CommonMark when user change to the edit mode", () => {
-            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
-
-            const is_in_preview_mode = true;
-            const wrapper = getInstance({ field, value }, { is_in_preview_mode });
-
-            wrapper.vm.togglePreview();
-
-            expect(tuleap_api.postInterpretCommonMark).not.toHaveBeenCalled();
-        });
-
-        it("inteprets the CommonMark", async () => {
-            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockResolvedValue("<p>HTML</p>");
-
-            const is_in_preview_mode = false;
-            const wrapper = getInstance({ field, value }, { is_in_preview_mode });
-
-            wrapper.vm.togglePreview();
-
-            expect(wrapper.vm.$data.is_preview_loading).toBe(true);
-            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalled();
-
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.is_in_error).toBe(false);
-            expect(wrapper.vm.$data.error_text).toBe("");
-            expect(wrapper.vm.$data.is_preview_loading).toBe(false);
-            expect(wrapper.vm.$data.is_in_preview_mode).toBe(true);
-            expect(wrapper.vm.$data.interpreted_commonmark).toBe("<p>HTML</p>");
-        });
-
-        it("displays error if the CommonMark cannot be interpreted", async () => {
-            setCatalog({ getString: () => "" });
-            const error_text = new Error("Fail to interpret the CommonMark");
-            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockRejectedValue(error_text);
-
-            const is_in_preview_mode = false;
-            const wrapper = getInstance({ field, value }, { is_in_preview_mode });
-
-            wrapper.vm.togglePreview();
-
-            expect(wrapper.vm.$data.is_preview_loading).toBe(true);
-            expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalled();
-
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.is_in_error).toBe(true);
-            expect(wrapper.vm.$data.error_text).toBe(error_text);
-            expect(wrapper.vm.$data.is_preview_loading).toBe(false);
-            expect(wrapper.vm.$data.is_in_preview_mode).toBe(true);
-            expect(wrapper.vm.$data.interpreted_commonmark).toBe("");
-        });
-    });
     describe("Component display", () => {
         it("shows the Rich Text Editor if there is no error and if the user is in edit mode", () => {
             const is_in_error = false;
@@ -181,7 +124,7 @@ describe(`TextField`, () => {
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(false);
         });
         it("shows the error message if there was a problem during the CommonMark interpretation", () => {
-            setCatalog({ getString: () => "There was an error in the Markdown preview:" });
+            setCatalog({ getString: (msgid) => msgid });
             const is_in_error = true;
             const error_text = "Interpretation failed !!!!!!!!";
             const is_in_preview_mode = false;
@@ -193,8 +136,8 @@ describe(`TextField`, () => {
             expect(wrapper.findComponent(RichTextEditor).isVisible()).toBe(false);
             expect(wrapper.find("[data-test=text-field-commonmark-preview]").exists()).toBe(false);
             expect(wrapper.find("[data-test=text-field-error]").exists()).toBe(true);
-            expect(wrapper.find("[data-test=text-field-error]").text()).toBe(
-                "There was an error in the Markdown preview: Interpretation failed !!!!!!!!"
+            expect(wrapper.find("[data-test=text-field-error]").text()).toEqual(
+                expect.stringContaining("Interpretation failed !!!!!!!!")
             );
         });
     });

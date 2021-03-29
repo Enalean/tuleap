@@ -54,7 +54,7 @@
             data-test="text-field-commonmark-preview"
         ></div>
         <div v-if="is_in_error" class="tlp-alert-danger" data-test="text-field-error">
-            {{ error_introduction }} {{ error_text }}
+            {{ error_introduction }}{{ error_text }}
         </div>
     </div>
 </template>
@@ -63,25 +63,18 @@ import RichTextEditor from "../../common/RichTextEditor.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
 import { isDisabled } from "../disabled-field-detector.js";
 import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
-import { postInterpretCommonMark } from "../../api/tuleap-api";
-import { getCommonMarkPreviewErrorIntroduction } from "../../gettext-catalog.js";
+import { textfield_mixin } from "../../common/textfield-mixin.js";
 
 export default {
     name: "TextField",
     components: { FormatSelector, RichTextEditor },
+    mixins: [textfield_mixin],
     props: {
         field: Object,
-        value: Object,
-        projectId: Number,
     },
     data() {
         return {
-            initial_step_format: undefined,
-            is_in_preview_mode: false,
-            interpreted_commonmark: "",
-            is_preview_loading: false,
-            is_in_error: false,
-            error_text: "",
+            initial_text_field_format: undefined,
         };
     },
     computed: {
@@ -96,11 +89,6 @@ export default {
                 this.$emit("input", { format: this.format, content: new_content });
             },
         },
-        format: {
-            get() {
-                return this.value.format;
-            },
-        },
         id() {
             return "tracker_field_" + this.field.field_id;
         },
@@ -108,43 +96,18 @@ export default {
             return this.field.required && this.content === "";
         },
         is_text_format_option_enabled() {
-            return this.initial_step_format === TEXT_FORMAT_TEXT;
-        },
-        error_introduction() {
-            return getCommonMarkPreviewErrorIntroduction();
+            return this.initial_text_field_format === TEXT_FORMAT_TEXT;
         },
     },
     mounted() {
-        this.initial_step_format = this.format;
+        this.initial_text_field_format = this.format;
     },
     methods: {
         onFormatChange(new_format, new_content) {
             this.$emit("input", { format: new_format, content: new_content });
         },
-        reemit(...args) {
-            this.$emit("upload-image", ...args);
-        },
-        async togglePreview() {
-            this.is_in_error = false;
-            this.error_text = "";
-
-            if (this.is_in_preview_mode) {
-                this.is_in_preview_mode = !this.is_in_preview_mode;
-                return;
-            }
-            try {
-                this.is_preview_loading = true;
-                this.interpreted_commonmark = await postInterpretCommonMark(
-                    this.content,
-                    this.projectId
-                );
-            } catch (error) {
-                this.is_in_error = true;
-                this.error_text = error;
-            } finally {
-                this.is_in_preview_mode = !this.is_in_preview_mode;
-                this.is_preview_loading = false;
-            }
+        togglePreview() {
+            this.interpretCommonMark(this.content);
         },
     },
 };
