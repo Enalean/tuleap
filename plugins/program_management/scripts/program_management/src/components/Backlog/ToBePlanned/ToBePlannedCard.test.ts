@@ -31,7 +31,7 @@ describe("ToBePlannedCard", () => {
     it("Displays a draggable card with accessibility pattern", async () => {
         component_options = {
             propsData: {
-                element: {
+                feature: {
                     id: 100,
                     title: "My artifact",
                     tracker: {
@@ -58,7 +58,7 @@ describe("ToBePlannedCard", () => {
     it("Displays a not draggable card without accessibility pattern", async () => {
         component_options = {
             propsData: {
-                element: {
+                feature: {
                     id: 100,
                     title: "My artifact",
                     tracker: {
@@ -88,7 +88,7 @@ describe("ToBePlannedCard", () => {
     it("Displays a draggable card with backlog items container", async () => {
         component_options = {
             propsData: {
-                element: {
+                feature: {
                     id: 100,
                     title: "My artifact",
                     tracker: {

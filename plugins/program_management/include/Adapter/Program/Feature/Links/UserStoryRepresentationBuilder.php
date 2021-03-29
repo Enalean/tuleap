@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatu
 use Tuleap\ProgramManagement\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class UserStoryRepresentationBuilder implements RetrieveFeatureUserStories
 {
@@ -88,7 +89,7 @@ class UserStoryRepresentationBuilder implements RetrieveFeatureUserStories
                     $story->getTitle(),
                     $story->isOpen(),
                     new ProjectReference($story->getTracker()->getProject()),
-                    $story->getTracker()->getColor()->getName(),
+                    MinimalTrackerRepresentation::build($story->getTracker()),
                     $this->retrieve_background_color->retrieveBackgroundColor($story, $user)->getBackgroundColorName(),
                 );
             }

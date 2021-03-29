@@ -18,27 +18,27 @@
   -->
 
 <template>
-    <div class="element-backlog-items" draggable="true" v-bind:data-element-id="element.id">
+    <div class="element-backlog-items" draggable="true" v-bind:data-element-id="feature.id">
         <div class="element-card" v-bind:class="additional_classnames">
             <div class="element-card-content">
                 <div class="element-card-xref-label">
                     <a
-                        v-bind:href="`/plugins/tracker/?aid=${element.id}`"
+                        v-bind:href="`/plugins/tracker/?aid=${feature.id}`"
                         class="element-card-xref"
-                        v-bind:class="`element-card-xref-${element.tracker.color_name}`"
+                        v-bind:class="`element-card-xref-${feature.tracker.color_name}`"
                         data-not-drag-handle="true"
                     >
-                        {{ element.xref }}
+                        {{ feature.xref }}
                     </a>
-                    <span class="element-card-label">{{ element.title }}</span>
+                    <span class="element-card-label">{{ feature.title }}</span>
                 </div>
             </div>
             <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
         </div>
         <to-be-planned-backlog-items
             class="backlog-items-draggable"
-            v-if="element.has_user_story_linked"
-            v-bind:to_be_planned_element="element"
+            v-if="feature.has_user_story_linked"
+            v-bind:to_be_planned_element="feature"
         />
     </div>
 </template>
@@ -47,9 +47,12 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Feature } from "../../../type";
-
 import { namespace } from "vuex-class";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
+import {
+    getAccessibilityClasses,
+    showAccessibilityPattern,
+} from "../../../helpers/element-card-css-extractor";
 
 const configuration = namespace("configuration");
 
@@ -58,7 +61,7 @@ const configuration = namespace("configuration");
 })
 export default class ToBePlannedCard extends Vue {
     @Prop({ required: true })
-    readonly element!: Feature;
+    readonly feature!: Feature;
 
     @configuration.State
     readonly accessibility!: boolean;
@@ -67,22 +70,14 @@ export default class ToBePlannedCard extends Vue {
     readonly can_create_program_increment!: boolean;
 
     get show_accessibility_pattern(): boolean {
-        return this.accessibility && this.element.background_color !== "";
+        return showAccessibilityPattern(this.feature, this.accessibility);
     }
 
     get additional_classnames(): string {
-        const classnames = [`element-card-${this.element.tracker.color_name}`];
+        const classnames = getAccessibilityClasses(this.feature, this.accessibility);
 
         if (this.can_create_program_increment) {
             classnames.push("element-draggable-item");
-        }
-
-        if (this.element.background_color) {
-            classnames.push(`element-card-background-${this.element.background_color}`);
-        }
-
-        if (this.show_accessibility_pattern) {
-            classnames.push("element-card-with-accessibility");
         }
 
         return classnames.join(" ");

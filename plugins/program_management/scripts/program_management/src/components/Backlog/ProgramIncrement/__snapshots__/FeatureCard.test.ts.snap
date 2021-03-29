@@ -11,7 +11,7 @@ exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = 
     data-tlp-tooltip=""
   >
     <div
-      class="element-card element-card-lake_placid_blue element-draggable-item element-card-background-peggy_pink_text element-card-with-accessibility"
+      class="element-card element-card-lake_placid_blue element-card-background-peggy_pink_text element-card-with-accessibility element-draggable-item"
     >
       <div
         class="element-card-content"
