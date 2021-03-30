@@ -22,16 +22,6 @@
     <div class="taskboard-card-cancel-save-buttons" data-not-drag-handle="true">
         <button
             type="button"
-            class="tlp-button tlp-button-primary tlp-button-small taskboard-card-save-button"
-            v-bind:disabled="is_action_ongoing"
-            v-on:click="save"
-            data-test="save"
-        >
-            <i class="fa tlp-button-icon" v-bind:class="save_icon" data-test="save-icon"></i>
-            <translate>Save</translate>
-        </button>
-        <button
-            type="button"
             class="tlp-button tlp-button-primary tlp-button-outline tlp-button-small taskboard-card-cancel-button"
             v-bind:disabled="is_action_ongoing"
             v-on:click="cancel"
@@ -39,6 +29,16 @@
         >
             <i class="fa fa-tlp-esc-key tlp-button-icon"></i>
             <translate>Cancel</translate>
+        </button>
+        <button
+            type="button"
+            class="tlp-button tlp-button-primary tlp-button-small taskboard-card-save-button"
+            v-bind:disabled="is_action_ongoing"
+            v-on:click="save"
+            data-test="save"
+        >
+            <i class="fa tlp-button-icon" v-bind:class="save_icon" data-test="save-icon"></i>
+            <translate>Save</translate>
         </button>
     </div>
 </template>
