@@ -26,9 +26,7 @@ describe("DropDownMenu", () => {
     let dropdown_menu_factory, store;
     beforeEach(() => {
         const state = {
-            max_files_dragndrop: 10,
-            max_size_upload: 10000,
-            configuration: { project_id: 101 },
+            configuration: { project_id: 101, max_files_dragndrop: 10, max_size_upload: 10000 },
         };
         const store_options = { state };
         store = createStoreMock(store_options);

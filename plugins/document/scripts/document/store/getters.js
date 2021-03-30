@@ -31,7 +31,7 @@ export const current_folder_title = (state) => {
     return hierarchy[hierarchy.length - 1] ? hierarchy[hierarchy.length - 1].title : "";
 };
 
-export const user_can_dragndrop = (state) => state.max_files_dragndrop > 0;
+export const user_can_dragndrop = (state) => state.configuration.max_files_dragndrop > 0;
 
 export const global_upload_progress = (state) => {
     const ongoing_uploads = state.folder_content.filter((item) => {

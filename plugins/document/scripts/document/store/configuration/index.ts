@@ -19,6 +19,7 @@
 
 import type { RootState } from "../../type";
 import type { Module } from "vuex";
+import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
 export interface ConfigurationState {
     readonly user_id: string;
@@ -30,6 +31,18 @@ export interface ConfigurationState {
     readonly embedded_are_allowed: boolean;
     readonly is_item_status_metadata_used: boolean;
     readonly is_obsolescence_date_metadata_used: boolean;
+    readonly max_files_dragndrop: number;
+    readonly max_size_upload: number;
+    readonly warning_threshold: number;
+    readonly max_archive_size: number;
+    readonly project_url: string;
+    readonly date_time_format: string;
+    readonly privacy: ProjectPrivacy;
+    readonly project_flags: ProjectFlag[];
+    readonly is_changelog_proposed_after_dnd: boolean;
+    readonly is_deletion_allowed: boolean;
+    readonly user_locale: string;
+    readonly relative_dates_display: string;
 }
 
 export function createConfigurationModule(

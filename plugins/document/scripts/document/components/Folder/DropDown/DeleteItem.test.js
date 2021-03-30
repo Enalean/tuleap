@@ -31,7 +31,7 @@ import EventBus from "../../../helpers/event-bus.js";
 describe("DeleteItem", () => {
     let delete_button_factory, store;
     beforeEach(() => {
-        const state = {};
+        const state = { configuration: {} };
         const store_options = { state };
         store = createStoreMock(store_options);
         delete_button_factory = (user_can_write, item_type) => {
@@ -43,22 +43,22 @@ describe("DeleteItem", () => {
         };
     });
     it(`Displays the delete button because the user can write and deletion is allowed`, () => {
-        store.state.is_deletion_allowed = true;
+        store.state.configuration.is_deletion_allowed = true;
         const wrapper = delete_button_factory(true, TYPE_FILE);
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeTruthy();
     });
     it(`Does not display the delete button if the user can't write but deletion is allowed`, () => {
-        store.state.is_deletion_allowed = true;
+        store.state.configuration.is_deletion_allowed = true;
         const wrapper = delete_button_factory(false, TYPE_FILE);
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
     });
     it(`Does not display the delete button if the user can write but deletion is  not allowed`, () => {
-        store.state.is_deletion_allowed = false;
+        store.state.configuration.is_deletion_allowed = false;
         const wrapper = delete_button_factory(true, TYPE_FILE);
         expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
     });
     it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
-        store.state.is_deletion_allowed = true;
+        store.state.configuration.is_deletion_allowed = true;
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const wrapper = delete_button_factory(true, TYPE_FILE);

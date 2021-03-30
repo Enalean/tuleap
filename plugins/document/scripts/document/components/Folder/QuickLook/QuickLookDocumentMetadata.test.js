@@ -17,18 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("QuickLookDocumentMetadata", () => {
-    let metadata_factory, store;
+    let metadata_factory;
 
     beforeEach(() => {
-        store = new Vuex.Store();
+        const state = {
+            configuration: {},
+        };
+
+        const store_options = {
+            state,
+        };
+
+        const store = createStoreMock(store_options);
 
         metadata_factory = (props = {}) => {
             return shallowMount(QuickLookDocumentMetadata, {
@@ -41,7 +49,7 @@ describe("QuickLookDocumentMetadata", () => {
             });
         };
 
-        store.state.date_time_format = "d/m/Y H:i";
+        store.state.configuration.date_time_format = "d/m/Y H:i";
     });
 
     it(`Given document has multiple metadata

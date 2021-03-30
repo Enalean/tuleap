@@ -25,7 +25,7 @@ import ModalArchiveSizeWarningModal from "./ModalArchiveSizeWarning.vue";
 describe("ModalArchiveSizeWarningModal", () => {
     function getWrapper() {
         const state = {
-            warning_threshold: 1,
+            configuration: { warning_threshold: 1 },
         };
         const store_options = { state };
         const store = createStoreMock(store_options);

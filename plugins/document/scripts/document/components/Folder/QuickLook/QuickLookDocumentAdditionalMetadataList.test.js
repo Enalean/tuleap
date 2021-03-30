@@ -28,7 +28,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
     let metadata_factory, state, store;
 
     beforeEach(() => {
-        state = {};
+        state = { configuration: {} };
 
         const store_options = { state };
 
@@ -54,7 +54,6 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
                 value: "2019-08-02",
                 post_processed_value: "2019-08-02",
             };
-            store.state.date_time_format = "d/m/Y H:i";
 
             const wrapper = metadata_factory(metadata_date);
 

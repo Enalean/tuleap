@@ -59,14 +59,13 @@ export default {
     },
     computed: {
         ...mapGetters(["user_can_dragndrop"]),
-        ...mapState([
-            "current_folder",
-            "folder_content",
+        ...mapState(["current_folder", "folder_content"]),
+        ...mapState("configuration", [
+            "user_id",
             "max_files_dragndrop",
             "max_size_upload",
             "is_changelog_proposed_after_dnd",
         ]),
-        ...mapState("configuration", ["user_id"]),
         user_can_dragndrop_in_current_folder() {
             return (
                 this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write

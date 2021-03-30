@@ -127,7 +127,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["warning_threshold"]),
+        ...mapState("configuration", ["warning_threshold"]),
         size_in_MB() {
             const size_in_mb = this.size / Math.pow(10, 6);
             return Number.parseFloat(size_in_mb).toFixed(2);

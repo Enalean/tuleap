@@ -28,7 +28,7 @@ import EventBus from "../../../helpers/event-bus.js";
 describe("QuickLookDeleteButton", () => {
     let delete_button_factory, store;
     beforeEach(() => {
-        const state = {};
+        const state = { configuration: { is_deletion_allowed: true } };
 
         const store_options = {
             state,
@@ -52,23 +52,20 @@ describe("QuickLookDeleteButton", () => {
     });
 
     it(`Displays the delete button because the user can write and has the right to delete items`, () => {
-        store.state.is_deletion_allowed = true;
         const wrapper = delete_button_factory(true, TYPE_LINK);
         expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeTruthy();
     });
     it(`Does not display the delete button if the user can't write but has the right to delete items`, () => {
-        store.state.is_deletion_allowed = true;
         const wrapper = delete_button_factory(false, TYPE_LINK);
         expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeFalsy();
     });
     it(`Does not display the delete button if the user can write but cannot to delete items`, () => {
-        store.state.is_deletion_allowed = false;
+        store.state.configuration.is_deletion_allowed = false;
         const wrapper = delete_button_factory(true, TYPE_LINK);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
     });
 
     it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
-        store.state.is_deletion_allowed = true;
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = delete_button_factory(true, TYPE_FILE);
         wrapper.get("[data-test=document-quick-look-delete-button]").trigger("click");

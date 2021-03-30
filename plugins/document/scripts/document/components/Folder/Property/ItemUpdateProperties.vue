@@ -49,7 +49,6 @@ import VersionTitleProperty from "./VersionTitleProperty.vue";
 import ChangelogProperty from "./ChangelogProperty.vue";
 import LockProperty from "./LockProperty.vue";
 import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
-import { mapState } from "vuex";
 
 export default {
     name: "ItemUpdateProperties",
@@ -61,9 +60,6 @@ export default {
             type: Boolean,
             default: false,
         },
-    },
-    computed: {
-        ...mapState(["is_changelog_proposed_after_dnd"]),
     },
     methods: {
         emitApprovalUpdateAction(action) {

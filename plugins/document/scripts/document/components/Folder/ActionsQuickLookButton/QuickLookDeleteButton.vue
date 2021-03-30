@@ -40,7 +40,7 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapState(["is_deletion_allowed"]),
+        ...mapState("configuration", ["is_deletion_allowed"]),
     },
     methods: {
         processDeletion() {

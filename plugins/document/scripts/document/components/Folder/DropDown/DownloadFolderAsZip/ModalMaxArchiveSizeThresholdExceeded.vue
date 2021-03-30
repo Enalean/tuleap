@@ -87,7 +87,7 @@ export default {
         this.modal.show();
     },
     computed: {
-        ...mapState(["max_archive_size"]),
+        ...mapState("configuration", ["max_archive_size"]),
         size_in_MB() {
             const size_in_mb = this.size / Math.pow(10, 6);
             return Number.parseFloat(size_in_mb).toFixed(2);

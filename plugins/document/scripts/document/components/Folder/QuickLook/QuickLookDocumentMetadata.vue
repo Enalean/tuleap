@@ -106,7 +106,7 @@ import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 import {
     relativeDatePlacement,
     relativeDatePreference,
-} from "../../../../../../../src/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+} from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
 
 export default {
     components: { ApprovalTableBadge, QuickLookDocumentAdditionalMetadataList, UserBadge },
@@ -114,7 +114,7 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapState(["date_time_format", "relative_dates_display", "user_locale"]),
+        ...mapState("configuration", ["date_time_format", "relative_dates_display", "user_locale"]),
         metadata_right_column() {
             const metadata_length = this.get_custom_metadata.length;
 

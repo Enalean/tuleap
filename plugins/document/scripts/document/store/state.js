@@ -18,28 +18,20 @@
  */
 
 const state = {
-    project_url: null,
     project_ugroups: null,
     is_loading_folder: true,
     folder_content: [],
-    date_time_format: null,
     current_folder: null,
     current_folder_ascendant_hierarchy: [],
     is_loading_ascendant_hierarchy: false,
     root_title: "",
     folded_items_ids: [],
     folded_by_map: {},
-    max_files_dragndrop: 1,
-    max_size_upload: 1,
-    warning_threshold: 50,
-    max_archive_size: 2000,
     files_uploads_list: [],
     is_loading_currently_previewed_item: false,
     currently_previewed_item: null,
     show_post_deletion_notification: false,
     toggle_quick_look: false,
-    privacy: null,
-    project_flags: [],
 };
 
 export default state;

@@ -25,7 +25,7 @@ import ModalSizeThresholdExceeded from "./ModalMaxArchiveSizeThresholdExceeded.v
 describe("ModalSizeThresholdExceeded", () => {
     function getWrapper() {
         const state = {
-            max_archive_size: 1,
+            configuration: { max_archive_size: 1 },
         };
         const store_options = { state };
         const store = createStoreMock(store_options);

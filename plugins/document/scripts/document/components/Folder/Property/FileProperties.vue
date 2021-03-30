@@ -58,7 +58,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["max_size_upload"]),
+        ...mapState("configuration", ["max_size_upload"]),
         is_displayed() {
             return this.item.type === TYPE_FILE;
         },
