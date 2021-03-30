@@ -39,6 +39,11 @@
     font-size: .625rem;
     font-weight: 600;
     line-height: .75rem;
+    text-transform: uppercase;
+
+    &::before {
+        text-transform: none;
+    }
 
     > .tlp-skeleton-text {
         width: 30%;

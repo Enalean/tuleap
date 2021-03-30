@@ -19,6 +19,8 @@
 
 import { getLeftForDate } from "./left-postion";
 import { TimePeriodMonth } from "./time-period-month";
+import { TimePeriodQuarter } from "./time-period-quarter";
+import { createVueGettextProviderPassthrough } from "./vue-gettext-provider-for-test";
 
 describe("getLeftForDate", () => {
     it("Gives a left position according to the time period", () => {
@@ -33,5 +35,16 @@ describe("getLeftForDate", () => {
                 )
             )
         ).toBe(247);
+        expect(
+            getLeftForDate(
+                new Date(2020, 3, 15),
+                new TimePeriodQuarter(
+                    new Date(2020, 1, 1),
+                    new Date(2020, 3, 1),
+                    new Date(2020, 4, 1),
+                    createVueGettextProviderPassthrough()
+                )
+            )
+        ).toBe(115);
     });
 });

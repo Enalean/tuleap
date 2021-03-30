@@ -54,3 +54,12 @@
         background: var(--tlp-theme-color);
     }
 }
+
+.roadmap-gantt-control {
+    display: flex;
+    align-items: baseline;
+}
+
+.roadmap-gantt-control-label {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+}
