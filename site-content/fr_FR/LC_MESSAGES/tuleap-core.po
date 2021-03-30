@@ -4284,6 +4284,9 @@ msgstr ""
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes d'utilisateurs."
 
+msgid "You enjoy Tuleap? Make a review"
+msgstr "Vous aimez Tuleap ? Partagez votre avis"
+
 msgid "You have a restricted user account."
 msgstr "Vous avez un compte utilisateur restreint."
 

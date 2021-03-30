@@ -28,6 +28,7 @@ use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\Event\Dispatchable;
+use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
@@ -62,6 +63,7 @@ final class GetWhitelistedKeys implements Dispatchable
         BackendLogger::class,
         LogToGraylog2::class,
         InviteBuddyConfiguration::class,
+        HelpDropdownPresenterBuilder::class,
         BrowserDeprecationMessage::class
     ];
 
