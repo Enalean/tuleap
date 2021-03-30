@@ -17,9 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const browserslist = require("browserslist");
+
 const browserlist_config =
     "last 2 Chrome versions,last 2 Firefox versions,Firefox ESR,last 2 Edge versions";
 
+const esbuild_target = browserslist(browserlist_config).map((target) => target.replace(" ", ""));
+
 module.exports = {
     browserlist_config,
+    esbuild_target,
 };

@@ -21,17 +21,7 @@ const BabelPresetEnv = require("@babel/preset-env").default;
 const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-const { browserlist_config } = require("./browserslist_config");
-
-const babel_preset_env_chrome_config = [
-    BabelPresetEnv,
-    {
-        targets: browserlist_config,
-        modules: false,
-        useBuiltIns: "usage",
-        corejs: "3",
-    },
-];
+const { esbuild_target } = require("./browserslist_config");
 
 const babel_options_jest = {
     presets: [
@@ -49,23 +39,6 @@ const babel_options_jest = {
     plugins: [BabelPluginDynamicImportNode],
 };
 
-function configureBabelRule() {
-    return {
-        test: /\.js$/,
-        exclude: [/node_modules/, /vendor/],
-        use: [
-            {
-                loader: "babel-loader",
-                options: {
-                    presets: [babel_preset_env_chrome_config],
-                    cacheDirectory: true,
-                    cacheCompression: false,
-                },
-            },
-        ],
-    };
-}
-
 function configureTypescriptRules() {
     return [
         {
@@ -73,18 +46,10 @@ function configureTypescriptRules() {
             exclude: /node_modules/,
             use: [
                 {
-                    loader: "babel-loader",
+                    loader: "esbuild-loader",
                     options: {
-                        presets: [babel_preset_env_chrome_config],
-                        cacheDirectory: true,
-                        cacheCompression: false,
-                    },
-                },
-                {
-                    loader: "ts-loader",
-                    options: {
-                        appendTsSuffixTo: ["\\.vue$"],
-                        transpileOnly: true,
+                        loader: "tsx",
+                        target: esbuild_target,
                     },
                 },
             ],
@@ -183,8 +148,6 @@ const rule_vue_images = {
 };
 
 module.exports = {
-    browserlist_config,
-    configureBabelRule,
     configureTypescriptRules,
     babel_options_jest,
     rule_po_files,

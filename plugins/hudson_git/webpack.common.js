@@ -41,8 +41,6 @@ const webpack_config_for_themes = {
         rules: [
             webpack_configurator.rule_scss_loader,
             ...webpack_configurator.configureTypescriptRules(),
-            // gettext-init.js needs Babel
-            webpack_configurator.configureBabelRule(),
             webpack_configurator.rule_po_files,
         ],
     },

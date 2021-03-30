@@ -25,13 +25,12 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
-
+const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const rule_configurations = require("./webpack-rule-configs.js");
+const { browserlist_config, esbuild_target } = require("./browserslist_config");
 
 function getManifestPlugin() {
     return new WebpackAssetsManifest({
@@ -97,27 +96,11 @@ function getCSSExtractionPlugins() {
     ];
 }
 
-function getJSOptimizerPlugin() {
-    return new TerserPlugin({
-        terserOptions: {
-            format: {
-                comments: false,
-            },
-        },
-        extractComments: false,
-    });
-}
-
-function getCSSOptimizerPlugin() {
-    return new CssMinimizerPlugin({
-        minimizerOptions: {
-            preset: [
-                "default",
-                {
-                    discardComments: { removeAll: true },
-                },
-            ],
-        },
+function getJSAndCSSOptimizerPlugin() {
+    return new ESBuildMinifyPlugin({
+        target: esbuild_target,
+        css: true,
+        exclude: [/including-prototypejs/], // Workaround for Prototype.js code depending on $super
     });
 }
 
@@ -133,7 +116,7 @@ function extendDevConfiguration(webpack_configs) {
     return webpack_configs.map((webpack_config) =>
         merge(webpack_config, {
             mode: "development",
-            target: "browserslist:" + rule_configurations.browserlist_config,
+            target: "browserslist:" + browserlist_config,
             devtool: "inline-source-map",
             plugins: [getIgnorePlugin()],
         })
@@ -144,11 +127,11 @@ function extendProdConfiguration(webpack_configs) {
     return webpack_configs.map((webpack_config) =>
         merge(webpack_config, {
             mode: "production",
-            target: "browserslist:" + rule_configurations.browserlist_config,
-            cache: {
-                type: "filesystem",
+            target: "browserslist:" + browserlist_config,
+            optimization: {
+                minimizer: [getJSAndCSSOptimizerPlugin()],
             },
-            plugins: [getJSOptimizerPlugin(), getCSSOptimizerPlugin(), getIgnorePlugin()],
+            plugins: [getIgnorePlugin()],
             stats: {
                 all: false,
                 assets: true,
