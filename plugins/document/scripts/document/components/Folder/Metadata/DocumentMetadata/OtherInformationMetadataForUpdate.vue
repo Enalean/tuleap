@@ -64,7 +64,7 @@ export default {
         },
     },
     computed: {
-        ...mapState(["is_obsolescence_date_metadata_used"]),
+        ...mapState("configuration", ["is_obsolescence_date_metadata_used"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
         should_display_other_information() {
             return this.is_obsolescence_date_metadata_used || this.metadataToUpdate.length > 0;

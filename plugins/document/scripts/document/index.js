@@ -87,6 +87,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_name,
         project_public_name,
         user_is_admin,
+        user_can_create_wiki,
+        embedded_are_allowed,
+        is_item_status_metadata_used,
+        is_obsolescence_date_metadata_used,
     };
 
     const AppComponent = Vue.extend(App);
@@ -98,16 +102,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         router,
         propsData: {
             project_url,
-            user_can_create_wiki,
             date_time_format,
             max_files_dragndrop,
             max_size_upload,
             warning_threshold,
             max_archive_size,
-            embedded_are_allowed,
             is_deletion_allowed,
-            is_item_status_metadata_used,
-            is_obsolescence_date_metadata_used,
             is_changelog_proposed_after_dnd,
             csrf_token_name,
             csrf_token,

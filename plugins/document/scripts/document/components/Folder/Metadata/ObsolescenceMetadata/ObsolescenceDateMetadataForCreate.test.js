@@ -28,7 +28,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
     let metadata_factory, state, store;
     beforeEach(() => {
         state = {
-            is_obsolescence_date_metadata_used: false,
+            configuration: { is_obsolescence_date_metadata_used: false },
         };
 
         const store_options = { state };
@@ -47,7 +47,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
         it(`Displays the component if the obsolescence date metadata is used`, async () => {
             const wrapper = metadata_factory({ value: "" });
 
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state.configuration.is_obsolescence_date_metadata_used = true;
             await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=obsolescence-date-metadata]").exists()).toBeTruthy();
@@ -55,7 +55,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
         it(`Does not display the component if the obsolescence date metadata is not used`, async () => {
             const wrapper = metadata_factory({ value: "" });
 
-            store.state.is_obsolescence_date_metadata_used = false;
+            store.state.configuration.is_obsolescence_date_metadata_used = false;
             await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=obsolescence-date-metadata]").exists()).toBeFalsy();
@@ -65,7 +65,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
     describe(`Should link flat picker and select helper`, () => {
         it(`Obsolescence date should be null if the option "permanent" is chosen by the user`, async () => {
             const wrapper = metadata_factory({ value: "" });
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state.configuration.is_obsolescence_date_metadata_used = true;
             await wrapper.vm.$nextTick();
 
             const select = wrapper.get("[data-test=document-obsolescence-date-select]");
@@ -76,7 +76,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
         });
         it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user`, async () => {
             const wrapper = metadata_factory({ value: "" });
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state.configuration.is_obsolescence_date_metadata_used = true;
             await wrapper.vm.$nextTick();
 
             wrapper.findAll("option").at(1).element.selected = true;
@@ -96,7 +96,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
     describe(`Binding between the select box and the date input`, () => {
         it(`When the user click on the date input then the value of the select should be 'Fixed date`, () => {
             const wrapper = metadata_factory({ value: "" });
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state.configuration.is_obsolescence_date_metadata_used = true;
 
             expect(wrapper.vm.selected_value).toEqual("permanent");
             wrapper.vm.obsolescence_date = "2019-09-07";
@@ -107,7 +107,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
     describe(`Obsolescence date validity`, () => {
         it(`date is invalid when it's is anterior the current date`, async () => {
             const wrapper = metadata_factory({ value: "" });
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state.configuration.is_obsolescence_date_metadata_used = true;
 
             expect(wrapper.vm.selected_value).toEqual("permanent");
             wrapper.vm.obsolescence_date = "2018-09-07";
@@ -123,7 +123,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
                 value: "",
             };
             const wrapper = metadata_factory(props);
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state.configuration.is_obsolescence_date_metadata_used = true;
 
             expect(wrapper.vm.selected_value).toEqual("permanent");
 
@@ -136,7 +136,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
         });
         it(`date is valid when it's in the future`, () => {
             const wrapper = metadata_factory({ value: "" });
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state.configuration.is_obsolescence_date_metadata_used = true;
 
             expect(wrapper.vm.selected_value).toEqual("permanent");
 

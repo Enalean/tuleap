@@ -84,7 +84,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["is_obsolescence_date_metadata_used"]),
+        ...mapState("configuration", ["is_obsolescence_date_metadata_used"]),
         obsolescence_date: {
             get() {
                 return this.date_value;

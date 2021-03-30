@@ -28,8 +28,11 @@ describe("FolderDefaultPropertiesForUpdate", () => {
     let default_property, store;
     beforeEach(() => {
         store = createStoreMock(
-            { is_item_status_metadata_used: true },
-            { metadata: { has_loaded_metadata: true } }
+            {},
+            {
+                metadata: { has_loaded_metadata: true },
+                configuration: { is_item_status_metadata_used: true },
+            }
         );
 
         default_property = (props = {}) => {
@@ -44,7 +47,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
     describe("Component loading -", () => {
         it("Load project metadata at first load", () => {
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: false,
                 },
@@ -76,7 +79,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             });
 
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: false,
                 },
@@ -95,7 +98,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
     describe("Component display -", () => {
         it(`Given project uses status, default properties are rendered`, () => {
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -133,7 +136,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
         it(`Given item has custom metadata, default properties are rendered`, () => {
             store.state = {
-                is_item_status_metadata_used: false,
+                configuration: { is_item_status_metadata_used: false },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -167,7 +170,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
         it(`Given item has no custom metadata and status is not available, default properties are not rendered`, () => {
             store.state = {
-                is_item_status_metadata_used: false,
+                configuration: { is_item_status_metadata_used: false },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -195,7 +198,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
     describe("Apply bindings -", () => {
         it(`Given recursion option is updated Then the props used for document creation is updated`, () => {
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -238,7 +241,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
         it(`Emit event on check recursion for item`, () => {
             store.state = {
-                is_item_status_metadata_used: false,
+                configuration: { is_item_status_metadata_used: false },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -273,7 +276,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 ],
             });
 
-            store.state.is_item_status_metadata_used = true;
+            store.state.configuration.is_item_status_metadata_used = true;
 
             expect(
                 wrapper.find("[data-test=document-folder-default-properties-container]").exists()
@@ -291,7 +294,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         it(`Given "all_items" recursion option
         then all metadata should be checked`, async () => {
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -368,7 +371,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         it(`Given "all_items" recursion option
         then the status metadata is not in the update list if the status is not enabled for the project`, async () => {
             store.state = {
-                is_item_status_metadata_used: false,
+                configuration: { is_item_status_metadata_used: false },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -440,7 +443,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         it(`Given "none" recursion option
         then the status metadata is not in the update list is empty, all the checkbox are unchecked`, async () => {
             store.state = {
-                is_item_status_metadata_used: true,
+                configuration: { is_item_status_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: true,
                 },

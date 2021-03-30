@@ -27,7 +27,7 @@ import TypeSelectorForEmptyModal from "./TypeSelectorForEmptyModal.vue";
 describe("TypeSelectorForEmptyModal", () => {
     let factory, state, store, store_options;
     beforeEach(() => {
-        state = {};
+        state = { configuration: { embedded_are_allowed: false } };
         store_options = {
             state,
         };
@@ -43,7 +43,7 @@ describe("TypeSelectorForEmptyModal", () => {
     });
     it(`Given embedded files are not enabled in project
         Then the type selector does not display embedded box to user`, () => {
-        store.state.embedded_are_allowed = false;
+        store.state.configuration.embedded_are_allowed = false;
         const wrapper = factory();
         expect(wrapper.find("[data-test=document-type-selector-file]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-link]").exists()).toBeTruthy();
@@ -52,7 +52,7 @@ describe("TypeSelectorForEmptyModal", () => {
 
     it(`Given embedded files are available in project
         Then the type selector display embedded box to user`, () => {
-        store.state.embedded_are_allowed = true;
+        store.state.configuration.embedded_are_allowed = true;
         const wrapper = factory();
         expect(wrapper.find("[data-test=document-type-selector-file]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-type-selector-link]").exists()).toBeTruthy();

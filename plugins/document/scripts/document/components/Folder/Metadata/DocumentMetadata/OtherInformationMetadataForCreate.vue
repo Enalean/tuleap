@@ -63,7 +63,7 @@ export default {
         },
     },
     computed: {
-        ...mapState(["is_obsolescence_date_metadata_used"]),
+        ...mapState("configuration", ["is_obsolescence_date_metadata_used"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
         has_metadata_to_create() {
             return (

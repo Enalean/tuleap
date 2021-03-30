@@ -41,7 +41,7 @@ export default {
         parent: Object,
     },
     computed: {
-        ...mapState(["is_item_status_metadata_used"]),
+        ...mapState("configuration", ["is_item_status_metadata_used"]),
         status_value: {
             get() {
                 transformItemMetadataForCreation(

@@ -28,8 +28,11 @@ describe("OtherInformationMetadataForUpdate", () => {
     let other_metadata, store;
     beforeEach(() => {
         store = createStoreMock(
-            { is_obsolescence_date_metadata_used: true },
-            { metadata: { has_loaded_metadata: true } }
+            {},
+            {
+                metadata: { has_loaded_metadata: true },
+                configuration: { is_obsolescence_date_metadata_used: true },
+            }
         );
 
         other_metadata = (props = {}) => {
@@ -55,7 +58,7 @@ describe("OtherInformationMetadataForUpdate", () => {
             });
 
             store.state = {
-                is_obsolescence_date_metadata_used: true,
+                configuration: { is_obsolescence_date_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: false,
                 },
@@ -113,7 +116,7 @@ describe("OtherInformationMetadataForUpdate", () => {
             });
 
             store.state = {
-                is_obsolescence_date_metadata_used: true,
+                configuration: { is_obsolescence_date_metadata_used: true },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -148,7 +151,7 @@ describe("OtherInformationMetadataForUpdate", () => {
             });
 
             store.state = {
-                is_obsolescence_date_metadata_used: false,
+                configuration: { is_obsolescence_date_metadata_used: false },
                 metadata: {
                     has_loaded_metadata: true,
                 },
@@ -158,7 +161,7 @@ describe("OtherInformationMetadataForUpdate", () => {
         });
 
         it(`Given obsolescence date is disabled for project and given no metadata are provided
-            Then other information section is not rendered`, () => {
+            Then other information section is not rendered`, async () => {
             const wrapper = other_metadata({
                 currentlyUpdatedItem: {
                     metadata: [],
@@ -171,11 +174,12 @@ describe("OtherInformationMetadataForUpdate", () => {
             });
 
             store.state = {
-                is_obsolescence_date_metadata_used: false,
+                configuration: { is_obsolescence_date_metadata_used: false },
                 metadata: {
                     has_loaded_metadata: true,
                 },
             };
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();
         });

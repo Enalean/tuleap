@@ -62,7 +62,7 @@ export default {
         value: String,
     },
     computed: {
-        ...mapState(["user_can_create_wiki", "embedded_are_allowed"]),
+        ...mapState("configuration", ["user_can_create_wiki", "embedded_are_allowed"]),
         supported_types() {
             let types = [
                 {

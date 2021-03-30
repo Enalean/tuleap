@@ -50,7 +50,7 @@ export default {
         value: String,
     },
     computed: {
-        ...mapState(["embedded_are_allowed"]),
+        ...mapState("configuration", ["embedded_are_allowed"]),
         supported_types() {
             let types = [
                 {
