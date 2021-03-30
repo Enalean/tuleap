@@ -21,25 +21,32 @@
 <template>
     <div class="taskboard-swimlane taskboard-swimlane-collapsed">
         <swimlane-header v-bind:swimlane="swimlane">
-            <i
-                class="fa fa-plus-square taskboard-swimlane-toggle"
-                v-bind:class="additional_classnames"
-                role="button"
-                v-bind:title="title"
-                v-on:click="expandSwimlane(swimlane)"
-            ></i>
-            <div
-                class="taskboard-card taskboard-card-collapsed"
-                v-bind:class="additional_card_classnames"
-            >
-                <div class="taskboard-card-content">
-                    <card-xref-label
-                        v-bind:card="swimlane.card"
-                        v-bind:label="swimlane.card.label"
-                        class="taskboard-card-xref-label-collapsed"
-                    />
+            <template v-slot:toggle>
+                <button
+                    class="taskboard-swimlane-toggle"
+                    v-bind:class="additional_classnames"
+                    type="button"
+                    v-bind:title="title"
+                    v-on:click="expandSwimlane(swimlane)"
+                    data-test="swimlane-toggle"
+                >
+                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                </button>
+            </template>
+            <template v-slot:default>
+                <div
+                    class="taskboard-card taskboard-card-collapsed"
+                    v-bind:class="additional_card_classnames"
+                >
+                    <div class="taskboard-card-content">
+                        <card-xref-label
+                            v-bind:card="swimlane.card"
+                            v-bind:label="swimlane.card.label"
+                            class="taskboard-card-xref-label-collapsed"
+                        />
+                    </div>
                 </div>
-            </div>
+            </template>
         </swimlane-header>
     </div>
 </template>

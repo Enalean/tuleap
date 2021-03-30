@@ -17,35 +17,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import CollapsedSwimlane from "./CollapsedSwimlane.vue";
+import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
 import type { RootState } from "../../../../store/type";
 
-describe("CollapsedSwimlane", () => {
-    it("displays a toggle icon and a card with minimal information", async () => {
-        const $store = createStoreMock({
+type UnknowObject = Record<string, unknown>;
+
+async function wrapperFactory(
+    $store?: unknown,
+    props?: UnknowObject
+): Promise<Wrapper<CollapsedSwimlane>> {
+    const defined_store =
+        $store ??
+        createStoreMock({
             state: {
                 swimlane: {},
-                column: {
-                    columns: [] as ColumnDefinition[],
-                },
+                column: { columns: [] as ColumnDefinition[] },
+                backlog_items_have_children: true,
             } as RootState,
+            getters: { "swimlane/taskboard_cell_swimlane_header_classes": "" },
         });
-        const wrapper = shallowMount(CollapsedSwimlane, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: { $store },
-            propsData: {
-                swimlane: {
-                    card: {
-                        color: "fiesta-red",
-                    },
-                } as Swimlane,
-            },
-        });
+    const defined_props = props ?? {
+        swimlane: {
+            card: { color: "fiesta-red" },
+        },
+    };
+    return mount(CollapsedSwimlane, {
+        localVue: await createTaskboardLocalVue(),
+        mocks: { $store: defined_store },
+        propsData: { ...defined_props },
+        stubs: { "card-xref-label": true },
+    });
+}
 
+describe("CollapsedSwimlane", () => {
+    it("displays a toggle icon and a card with minimal information", async () => {
+        const wrapper = await wrapperFactory();
         expect(wrapper.element).toMatchSnapshot();
     });
 
@@ -53,22 +65,17 @@ describe("CollapsedSwimlane", () => {
         const $store = createStoreMock({
             state: {
                 swimlane: {},
-                column: {
-                    columns: [] as ColumnDefinition[],
-                },
+                column: { columns: [] as ColumnDefinition[] },
+                backlog_items_have_children: true,
             } as RootState,
+            getters: { "swimlane/taskboard_cell_swimlane_header_classes": "" },
         });
         const swimlane: Swimlane = {
-            card: {
-                color: "fiesta-red",
-            },
+            card: { color: "fiesta-red" },
         } as Swimlane;
-        const wrapper = shallowMount(CollapsedSwimlane, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: { $store },
-            propsData: { swimlane },
-        });
-        wrapper.get(".taskboard-swimlane-toggle").trigger("click");
+        const wrapper = await wrapperFactory($store, { swimlane });
+
+        wrapper.findComponent(SwimlaneHeader).get("[data-test=swimlane-toggle]").trigger("click");
         expect($store.dispatch).toHaveBeenCalledWith("swimlane/expandSwimlane", swimlane);
     });
 });

@@ -50,13 +50,20 @@ $taskboard-header-height: 50px;
         border-right: 0;
     }
 
-    &:hover  > .taskboard-header-collapse-column {
-        opacity: 1;
+    &:hover,
+    &:focus-within {
+        > .taskboard-header-collapse-column {
+            opacity: 1;
+        }
     }
 
     > .taskboard-header-expand-column,
     > .taskboard-header-collapse-column {
+        padding: 0;
+        border: 0;
+        background: none;
         color: var(--primary-color);
+        cursor: pointer;
     }
 }
 
@@ -68,7 +75,8 @@ $taskboard-header-height: 50px;
 }
 
 .taskboard-header-collapsed-show-label,
-.taskboard-header-collapsed:hover {
+.taskboard-header-collapsed:hover,
+.taskboard-header-collapsed:focus-within {
     > .taskboard-header-collapsed-label {
         opacity: 1;
     }

@@ -27,6 +27,7 @@
         v-bind:aria-label="edit_assignees_label"
         v-bind:title="edit_assignees_label"
         v-on:click="editAssignees"
+        v-on:keyup.enter="editAssignees"
     >
         <people-picker
             v-bind:is_multiple="is_multiple"

@@ -41,7 +41,8 @@
     &.taskboard-card-assignees-editable {
         cursor: pointer;
 
-        &:hover {
+        &:hover,
+        &:focus {
             color: darken($tlp-theme-color, 5%);
         }
     }
@@ -100,8 +101,9 @@
         justify-content: center;
         width: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
         height: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
+        padding: 0;
         transition: opacity ease-in-out 100ms;
-        border-radius: 50%;
+        border: 0;
         opacity: 0;
         color: var(--text-color, var(--card-text-color, $tlp-ui-dimmed));
         font-size: 14px;
@@ -117,7 +119,8 @@
         right: $tlp-medium-spacing + $card-info-margin-right - $additional-size-to-hide-assignee;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         .taskboard-card-inital-effort {
             opacity: 0;
         }

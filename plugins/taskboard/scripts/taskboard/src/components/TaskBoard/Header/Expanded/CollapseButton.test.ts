@@ -47,17 +47,6 @@ describe("CollapseButton", () => {
         expect(wrapper.attributes("title")).toBe('Collapse "Done" column');
     });
 
-    it("Displays a focusable button", async () => {
-        const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = await getWrapper(column);
-
-        const button = wrapper.get("[data-test=button]");
-        expect(button.classes("fa-minus-square")).toBe(true);
-        expect(button.attributes("role")).toBe("button");
-        expect(button.attributes("tabindex")).toBe("0");
-        expect(button.attributes("aria-label")).toBe('Collapse "Done" column');
-    });
-
     it("When user clicks on the button, the column is collapsed", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
         const wrapper = await getWrapper(column);

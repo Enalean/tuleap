@@ -24,6 +24,7 @@
         class="taskboard-card-remaining-effort taskboard-no-text-selection"
         v-bind:class="additional_classes"
         v-on:click="editRemainingEffort"
+        v-on:keyup.enter="editRemainingEffort"
         v-bind:tabindex="tabindex"
         v-bind:role="role"
         v-bind:aria-label="$gettext('Remaining effort')"
