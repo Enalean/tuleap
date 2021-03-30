@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
 use DateTimeImmutable;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 /**
@@ -89,7 +90,7 @@ class Worklog
 
         $start_date = new DateTimeImmutable($worklog_response['started']);
         $seconds    = (int) $worklog_response['timeSpentSeconds'];
-        $author     = new JiraUser($worklog_response['author']);
+        $author     = new ActiveJiraUser($worklog_response['author']);
 
         $comment = '';
         if (isset($worklog_response['comment'])) {

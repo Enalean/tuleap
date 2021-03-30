@@ -280,6 +280,7 @@ class JiraXmlExporter
                 new DataChangesetXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),
                     new FieldChangeXMLExporter(
+                        $logger,
                         new FieldChangeDateBuilder(
                             new XML_SimpleXMLCDATAFactory()
                         ),

@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
@@ -47,6 +48,7 @@ use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
+use function PHPUnit\Framework\assertFalse;
 
 class FieldChangeXMLExporterTest extends TestCase
 {
@@ -68,6 +70,7 @@ class FieldChangeXMLExporterTest extends TestCase
 
         $this->user_manager = Mockery::mock(UserManager::class);
         $this->exporter     = new FieldChangeXMLExporter(
+            new NullLogger(),
             new FieldChangeDateBuilder(
                 new XML_SimpleXMLCDATAFactory()
             ),
@@ -93,7 +96,7 @@ class FieldChangeXMLExporterTest extends TestCase
             new FieldChangeFileBuilder(),
             new FieldChangeArtifactLinksBuilder(
                 new XML_SimpleXMLCDATAFactory(),
-            )
+            ),
         );
     }
 
@@ -180,6 +183,45 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertSame("list", (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
+    }
+
+    public function testItSkipsTheValueWhenTheMappingNoLongerContainsTheIDFoundInTheChangeLog(): void
+    {
+        $jira_value_id = 3;
+
+        $mapping = new ListFieldMapping(
+            'sb',
+            'Fsb',
+            'Select Box',
+            'sb',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    [
+                        'self' => 'URL/rest/api/2/priority/3',
+                        'iconUrl' => 'URL/images/icons/priorities/medium.svg',
+                        'name' => 'Medium',
+                        'id' => (string) $jira_value_id,
+                    ],
+                    null
+                )
+            ],
+            null
+        );
+        $this->exporter->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        assertFalse(isset($changeset_node->field_change));
     }
 
     public function testItExportsTheSelectedValueInARadioButtonField(): void

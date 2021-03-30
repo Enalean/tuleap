@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 /**
@@ -67,7 +68,7 @@ class Comment
         }
 
         return new self(
-            new JiraUser($comment_response['updateAuthor']),
+            new ActiveJiraUser($comment_response['updateAuthor']),
             new DateTimeImmutable($comment_response['updated']),
             (string) $comment_response['renderedBody']
         );

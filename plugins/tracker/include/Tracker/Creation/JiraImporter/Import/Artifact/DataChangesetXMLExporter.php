@@ -93,7 +93,9 @@ class DataChangesetXMLExporter
             $jira_base_url
         );
 
-        foreach ($snapshot_collection as $key => $snapshot) {
+        $i = 0;
+        foreach ($snapshot_collection as $snapshot) {
+            $this->logger->debug('Export changeset n°' . $i++);
             $changeset_node = $artifact_node->addChild('changeset');
             $this->exportSnapshotInXML($snapshot, $changeset_node);
         }

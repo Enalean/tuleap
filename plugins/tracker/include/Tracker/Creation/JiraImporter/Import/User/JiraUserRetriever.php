@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 
 class JiraUserRetriever
@@ -79,7 +80,7 @@ class JiraUserRetriever
         }
 
         return $this->retrieveUser(
-            new JiraUser($user_data)
+            new ActiveJiraUser($user_data)
         );
     }
 
@@ -122,6 +123,11 @@ class JiraUserRetriever
 
     public function retrieveJiraAuthor(JiraUser $update_author): PFUser
     {
+        if ($update_author instanceof AnonymousJiraUser) {
+            $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
+            assert($import_user !== null);
+            return $import_user;
+        }
         return $this->retrieveUser($update_author);
     }
 

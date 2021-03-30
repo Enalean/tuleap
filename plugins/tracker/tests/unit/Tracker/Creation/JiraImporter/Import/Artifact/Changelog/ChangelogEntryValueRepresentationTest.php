@@ -24,6 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\AnonymousJiraUser;
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertInstanceOf;
 
 class ChangelogEntryValueRepresentationTest extends TestCase
 {
@@ -101,5 +105,31 @@ class ChangelogEntryValueRepresentationTest extends TestCase
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
 
         ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
+    }
+
+    public function testItBuildsARepresentationFromAPIResponseWithChangeMadeByAnonymous(): void
+    {
+        $response = [
+            "id"      => "10057",
+            "created" => "2020-03-25T14:10:10.823+0100",
+            "items"   => [
+                [
+                    "fieldId"    => "field01",
+                    "from"       => null,
+                    "fromString" => "string01",
+                    "to"         => null,
+                    "toString"   => "string02"
+                ]
+            ]
+        ];
+
+        $representation = ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
+
+        assertInstanceOf(ChangelogEntryValueRepresentation::class, $representation);
+
+        assertEquals(10057, $representation->getId());
+        assertEquals(1585141810, $representation->getCreated()->getTimestamp());
+        assertCount(1, $representation->getItemRepresentations());
+        assertInstanceOf(AnonymousJiraUser::class, $representation->getChangelogOwner());
     }
 }

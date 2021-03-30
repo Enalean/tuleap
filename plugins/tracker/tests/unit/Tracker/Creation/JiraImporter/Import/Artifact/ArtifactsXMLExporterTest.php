@@ -125,6 +125,7 @@ class ArtifactsXMLExporterTest extends TestCase
             new DataChangesetXMLExporter(
                 new XML_SimpleXMLCDATAFactory(),
                 new FieldChangeXMLExporter(
+                    new NullLogger(),
                     new FieldChangeDateBuilder(
                         new XML_SimpleXMLCDATAFactory()
                     ),

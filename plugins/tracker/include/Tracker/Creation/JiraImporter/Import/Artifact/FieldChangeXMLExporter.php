@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use DateTimeImmutable;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InvalidMappingValueException;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
@@ -75,8 +77,13 @@ class FieldChangeXMLExporter
      * @var FieldChangeArtifactLinksBuilder
      */
     private $field_change_artifact_links_builder;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
+        LoggerInterface $logger,
         FieldChangeDateBuilder $field_change_date_builder,
         FieldChangeStringBuilder $field_change_string_builder,
         FieldChangeTextBuilder $field_change_text_builder,
@@ -85,6 +92,7 @@ class FieldChangeXMLExporter
         FieldChangeFileBuilder $field_change_file_builder,
         FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder
     ) {
+        $this->logger                              = $logger;
         $this->field_change_date_builder           = $field_change_date_builder;
         $this->field_change_string_builder         = $field_change_string_builder;
         $this->field_change_text_builder           = $field_change_text_builder;
@@ -99,12 +107,16 @@ class FieldChangeXMLExporter
         SimpleXMLElement $changeset_node
     ): void {
         foreach ($current_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
-            $this->exportFieldChange(
-                $field_snapshot->getFieldMapping(),
-                $changeset_node,
-                $field_snapshot->getValue(),
-                $field_snapshot->getRenderedValue()
-            );
+            try {
+                $this->exportFieldChange(
+                    $field_snapshot->getFieldMapping(),
+                    $changeset_node,
+                    $field_snapshot->getValue(),
+                    $field_snapshot->getRenderedValue()
+                );
+            } catch (InvalidMappingValueException $exception) {
+                $this->logger->warning($field_snapshot->getFieldMapping()->getJiraFieldId() . ' skipped: ' . $exception->getMessage());
+            }
         }
     }
 
@@ -169,7 +181,7 @@ class FieldChangeXMLExporter
             } else {
                 $mapped_value = $mapping->getValueForId((int) $value['id']);
                 if (! $mapped_value) {
-                    throw new \RuntimeException('Value ' . $value['id'] . ' doesnt exist in structure mapping');
+                    throw new InvalidMappingValueException($mapping, (string) $value['id']);
                 }
                 $value_ids = [
                     $mapped_value->getXMLIdValue(),
