@@ -19,6 +19,7 @@
 
 import type { TimePeriod } from "../type";
 import { toBCP47 } from "./locale-for-intl";
+import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
 
 export class TimePeriodMonth implements TimePeriod {
     private readonly months: Date[];
@@ -77,46 +78,6 @@ function getMonths(start: Date | null, end: Date | null, now: Date): Date[] {
     }
 
     return months;
-}
-
-function getBeginningOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
-    if (!start) {
-        if (!end) {
-            return now;
-        }
-
-        return now < end ? now : end;
-    }
-
-    if (!end) {
-        return now < start ? now : start;
-    }
-
-    if (start <= end) {
-        return now < start ? now : start;
-    }
-
-    return now < end ? now : end;
-}
-
-function getEndOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
-    if (!start) {
-        if (!end) {
-            return now;
-        }
-
-        return end < now ? now : end;
-    }
-
-    if (!end) {
-        return start < now ? now : start;
-    }
-
-    if (start <= end) {
-        return end < now ? now : end;
-    }
-
-    return start < now ? now : start;
 }
 
 function getAdditionalMonths(base_month: Date, nb_missing_months: number): Date[] {
