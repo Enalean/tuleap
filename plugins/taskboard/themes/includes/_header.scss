@@ -59,7 +59,7 @@ $taskboard-header-height: 50px;
 
     > .taskboard-header-expand-column,
     > .taskboard-header-collapse-column {
-        padding: 0;
+        padding: 0 2px;
         border: 0;
         background: none;
         color: var(--primary-color);
@@ -75,8 +75,7 @@ $taskboard-header-height: 50px;
 }
 
 .taskboard-header-collapsed-show-label,
-.taskboard-header-collapsed:hover,
-.taskboard-header-collapsed:focus-within {
+.taskboard-header-collapsed:hover {
     > .taskboard-header-collapsed-label {
         opacity: 1;
     }
@@ -87,6 +86,10 @@ $taskboard-header-height: 50px;
     font-size: 14px;
     text-transform: none;
     cursor: pointer;
+
+    &:focus {
+        box-shadow: var(--tlp-shadow-focus);
+    }
 }
 
 .taskboard-header-collapse-column {
