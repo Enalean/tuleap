@@ -101,7 +101,7 @@ class Step
 
     public function __toString(): string
     {
-        return (string) json_encode(
+        return json_encode(
             [
                 $this->id,
                 $this->description,

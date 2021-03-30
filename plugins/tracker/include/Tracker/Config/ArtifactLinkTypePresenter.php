@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Config;
 class ArtifactLinkTypePresenter extends SectionsPresenter
 {
     /**
-     * @var bool
+     * @var string
      */
     public $artifact_link_active = 'tlp-tab-active';
 }

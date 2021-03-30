@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Config;
 class ReportPresenter extends SectionsPresenter
 {
     /**
-     * @var bool
+     * @var string
      */
     public $report_active = 'tlp-tab-active';
 }

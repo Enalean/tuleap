@@ -22,10 +22,22 @@ namespace Tuleap\Tracker\Config;
 
 class SectionsPresenter
 {
-    public $artifact_link_active     = '';
+    /**
+     * @var string
+     */
+    public $artifact_link_active = '';
+    /**
+     * @var string
+     */
     public $artifact_deletion_active = '';
-    public $email_gateway_active     = '';
-    public $report_active            = '';
+    /**
+     * @var string
+     */
+    public $email_gateway_active = '';
+    /**
+     * @var string
+     */
+    public $report_active = '';
     public $emailgateway;
     public $natures;
     public $report_config_panel;
