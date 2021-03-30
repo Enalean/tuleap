@@ -19,6 +19,7 @@
 
 import type { TimePeriod } from "../type";
 import type { VueGettextProvider } from "./vue-gettext-provider";
+import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
 
 export class TimePeriodQuarter implements TimePeriod {
     private readonly quarters: Date[];
@@ -87,46 +88,6 @@ function getQuarters(start: Date | null, end: Date | null, now: Date): Date[] {
     }
 
     return quarters;
-}
-
-function getBeginningOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
-    if (!start) {
-        if (!end) {
-            return now;
-        }
-
-        return now < end ? now : end;
-    }
-
-    if (!end) {
-        return now < start ? now : start;
-    }
-
-    if (start <= end) {
-        return now < start ? now : start;
-    }
-
-    return now < end ? now : end;
-}
-
-function getEndOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
-    if (!start) {
-        if (!end) {
-            return now;
-        }
-
-        return end < now ? now : end;
-    }
-
-    if (!end) {
-        return start < now ? now : start;
-    }
-
-    if (start <= end) {
-        return end < now ? now : end;
-    }
-
-    return start < now ? now : start;
 }
 
 function getAdditionalQuarters(base_quarter: Date, nb_missing_quarters: number): Date[] {
