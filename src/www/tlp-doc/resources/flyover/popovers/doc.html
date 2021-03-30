@@ -1,8 +1,8 @@
-<p><code>tlp.createPopover(trigger, element, option = {});</code></p>
-<h4>Arguments:</h4>
+<p><code>tlp.createPopover(trigger: HTMLElement, element: Element, option = {}): Popover</code></p>
+<h4>Parameters:</h4>
 <ul>
-    <li>{ Element } trigger</li>
-    <li>{ Element } popover content</li>
+    <li><code>HTMLElement</code> trigger</li>
+    <li><code>Element</code> popover content</li>
     <li>(Optional) { Object } options.  Contains: <ul>
         <li>{ String } <code>placement</code>, defaults to <code>"bottom"</code>.
             See examples below for available placements.
@@ -17,3 +17,9 @@
         </li>
     </ul></li>
 </ul>
+
+<p><code>popover.hide(): void</code></p>
+<p>Hide the popover programmatically</p>
+
+<p><code>popover.destroy():void</code></p>
+<p>Destroys the popover and remove event listeners. The popover will not show up again.</p>

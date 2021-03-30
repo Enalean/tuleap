@@ -93,9 +93,6 @@ msgstr "Marquer pour suppression"
 msgid "Markdown"
 msgstr "Markdown"
 
-msgid "Markdown mostly used formatting"
-msgstr "Formattage markdown le plus souvent utilisé"
-
 msgid ""
 "Max allowed upload size: {{ quota_display.file_upload_rules.disk_quota | "
 "byteFmt: 2 }}"

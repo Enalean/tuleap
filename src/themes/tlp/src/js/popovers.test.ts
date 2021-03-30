@@ -122,6 +122,17 @@ describe(`Popovers`, () => {
         });
     });
 
+    describe(`hide()`, () => {
+        it(`when I programmatically hide the popover, it will hide it`, () => {
+            const popover = createPopover(doc, trigger_element, content_element);
+            content_element.classList.add(POPOVER_SHOWN_CLASS_NAME);
+
+            popover.hide();
+
+            expect(content_element.classList.contains(POPOVER_SHOWN_CLASS_NAME)).toBe(false);
+        });
+    });
+
     describe(`with hover trigger`, () => {
         let popover: Popover;
         beforeEach(() => {
