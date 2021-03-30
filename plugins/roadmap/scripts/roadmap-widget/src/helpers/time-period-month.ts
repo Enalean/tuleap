@@ -19,7 +19,6 @@
 
 import type { TimePeriod } from "../type";
 import { toBCP47 } from "./locale-for-intl";
-import { getBeginningOfNextNthMonth } from "./beginning-of-next-nth-month";
 
 export class TimePeriodMonth implements TimePeriod {
     private readonly months: Date[];
@@ -132,4 +131,12 @@ function getAdditionalMonths(base_month: Date, nb_missing_months: number): Date[
     }
 
     return additional_months;
+}
+
+function getBeginningOfNextNthMonth(base_month: Date, nth: number): Date {
+    const same_date_months_later = new Date(
+        new Date(base_month).setMonth(base_month.getMonth() + nth)
+    );
+
+    return new Date(same_date_months_later.setDate(1));
 }
