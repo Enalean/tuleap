@@ -69,12 +69,16 @@ class JiraConnectionException extends \Exception
         );
     }
 
-    public static function responseIsNotOk(RequestInterface $request, ResponseInterface $response): self
+    public static function responseIsNotOk(RequestInterface $request, ResponseInterface $response, ?string $debug_file): self
     {
         $jira_errors   = [];
         $jira_warnings = [];
         try {
-            $body = \json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            $text_body = (string) $response->getBody();
+            if ($debug_file) {
+                file_put_contents($debug_file, $text_body);
+            }
+            $body = \json_decode($text_body, true, 512, JSON_THROW_ON_ERROR);
             if (isset($body['errorMessages']) && count($body['errorMessages'])) {
                 $jira_errors = $body['errorMessages'];
             }

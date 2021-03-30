@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project;
 
+use Monolog\Handler\PsrHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,6 +55,7 @@ final class CreateProjectFromJiraCommand extends Command
     private const OPT_SHORTNAME            = 'shortname';
     private const OPT_FULLNAME             = 'fullname';
     private const OPT_OUTPUT               = 'output';
+    private const OPT_DEBUG                = 'debug';
 
     /**
      * @var UserManager
@@ -88,14 +92,28 @@ final class CreateProjectFromJiraCommand extends Command
             ->addOption(self::OPT_TULEAP_USER, '', InputOption::VALUE_REQUIRED, 'Login name of the user who will be admin of the project')
             ->addOption(self::OPT_SHORTNAME, '', InputOption::VALUE_REQUIRED, 'Short name of the Tuleap project to create')
             ->addOption(self::OPT_FULLNAME, '', InputOption::VALUE_REQUIRED, 'Full name of the Tuleap project to create')
-            ->addOption(self::OPT_OUTPUT, 'o', InputOption::VALUE_REQUIRED, 'Generate the project archive without actually importing it');
+            ->addOption(self::OPT_OUTPUT, 'o', InputOption::VALUE_REQUIRED, 'Generate the project archive without actually importing it')
+            ->addOption(self::OPT_DEBUG, 'd', InputOption::VALUE_REQUIRED, 'Turn on debug mode, will dump content in provided directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
-
         $logger          = new ConsoleLogger($output);
+        $debug_directory = $input->getOption(self::OPT_DEBUG);
+        if ($debug_directory !== null && is_string($debug_directory)) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
+            if (! is_dir($debug_directory) && ! mkdir($debug_directory, 0700, true) && ! is_dir($debug_directory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $debug_directory));
+            }
+            $log_file = $debug_directory . '/import.log';
+            if (file_exists($log_file)) {
+                unlink($log_file);
+            }
+            $logger = new Logger('jira');
+            $logger->pushHandler(new StreamHandler($log_file, Logger::DEBUG));
+            $logger->pushHandler(new PsrHandler(new ConsoleLogger($output)));
+        }
+
         $question_helper = $this->getHelper('question');
         assert($question_helper instanceof QuestionHelper);
 
@@ -129,6 +147,9 @@ final class CreateProjectFromJiraCommand extends Command
         $jira_credentials = new JiraCredentials($jira_host, $jira_username, $jira_token);
 
         $jira_client = ClientWrapper::build($jira_credentials);
+        if ($debug_directory !== null && is_string($debug_directory)) {
+            $jira_client->setDebugDirectory($debug_directory);
+        }
 
         if (! $input->getOption(self::OPT_JIRA_PROJECT)) {
             $jira_projects = $this->jira_project_builder->build($jira_client, $logger);

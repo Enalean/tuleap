@@ -54,6 +54,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
+use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Widget\ProjectHeartbeat;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -262,6 +263,7 @@ final class CreateProjectFromJira
         assert($import_user !== null);
         $jira_exporter = JiraXmlExporter::build(
             $jira_credentials,
+            $jira_client,
             $logger,
             new JiraUserOnTuleapCache(
                 new JiraTuleapUsersMapping(),
@@ -293,7 +295,7 @@ final class CreateProjectFromJira
             $logger->info(sprintf("Import tracker %s", $jira_issue_type->getName()));
 
             $tracker_fullname = $jira_issue_type->getName();
-            $tracker_itemname = str_replace('-', '_', $jira_issue_type->getName());
+            $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat($jira_issue_type->getName());
 
             $tracker     = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
             $tracker_xml = $tracker->export($trackers_xml);

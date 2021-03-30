@@ -230,8 +230,9 @@ class FromJiraTrackerCreator
     {
         return JiraXmlExporter::build(
             $jira_credentials,
+            ClientWrapper::build($jira_credentials),
             $this->logger,
-            $this->jira_user_on_tuleap_cache
+            $this->jira_user_on_tuleap_cache,
         );
     }
 }

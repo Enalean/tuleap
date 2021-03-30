@@ -67,6 +67,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "created" => "2020-03-25T14:10:10.823+0100",
                     "updated" => "2020-04-25T14:10:10.823+0100",
                     "customfield_10036" => "11",
+                    "customfield_10045" => "02/Feb/21",
                     "status" => "10001",
                     "customfield_10040" => [
                         "10009", "10010"
@@ -120,27 +121,28 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $jira_base_url
         );
 
-        $this->assertNull($initial_snapshot->getFieldInSnapshot("environment"));
-        $this->assertNull($initial_snapshot->getFieldInSnapshot("customfield_10036"));
+        self::assertNull($initial_snapshot->getFieldInSnapshot("environment"));
+        self::assertNull($initial_snapshot->getFieldInSnapshot("customfield_10036"));
 
-        $this->assertSame($user, $initial_snapshot->getUser());
-        $this->assertSame(1585141810, $initial_snapshot->getDate()->getTimestamp());
+        self::assertSame($user, $initial_snapshot->getUser());
+        self::assertSame(1585141810, $initial_snapshot->getDate()->getTimestamp());
 
-        $this->assertSame("URL/browse/key01", $initial_snapshot->getFieldInSnapshot('jira_issue_url')->getValue());
-        $this->assertSame(['id' => "10000"], $initial_snapshot->getFieldInSnapshot('status')->getValue());
-        $this->assertSame([['id' => "10009"]], $initial_snapshot->getFieldInSnapshot('customfield_10040')->getValue());
-        $this->assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $initial_snapshot->getFieldInSnapshot('description')->getValue());
-        $this->assertSame(['id' => '104'], $initial_snapshot->getFieldInSnapshot('assignee')->getValue());
-        $this->assertSame(
+        self::assertSame("URL/browse/key01", $initial_snapshot->getFieldInSnapshot('jira_issue_url')->getValue());
+        self::assertSame(['id' => "10000"], $initial_snapshot->getFieldInSnapshot('status')->getValue());
+        self::assertSame([['id' => "10009"]], $initial_snapshot->getFieldInSnapshot('customfield_10040')->getValue());
+        self::assertSame('2021-01-01', $initial_snapshot->getFieldInSnapshot('customfield_10045')->getValue());
+        self::assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $initial_snapshot->getFieldInSnapshot('description')->getValue());
+        self::assertSame(['id' => '104'], $initial_snapshot->getFieldInSnapshot('assignee')->getValue());
+        self::assertSame(
             [
                 ['id' => '105'],
             ],
             $initial_snapshot->getFieldInSnapshot('homies')->getValue()
         );
 
-        $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
+        self::assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
 
-        $this->assertSame(
+        self::assertSame(
             [10008],
             $initial_snapshot->getFieldInSnapshot('attachment')->getValue()
         );
@@ -167,6 +169,14 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 "msb",
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],
+            )
+        );
+        $collection->addMapping(
+            new ScalarFieldMapping(
+                "customfield_10041",
+                "Fcustomfield_10041",
+                "Start date",
+                "date",
             )
         );
         $collection->addMapping(
@@ -387,6 +397,26 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ]
             ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "102",
+                    "created" => "2020-03-25T14:15:12.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "customfield_10045",
+                            "from"       => "2021-01-01",
+                            "fromString" => "01/Jan/21",
+                            "to"         => "2021-02-02",
+                            "toString"   => "02/Feb/21"
+                        ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
+                    ]
+                ]
+            ),
         ];
     }
 
@@ -422,6 +452,16 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     [
                         ['id' => "10009"]
                     ],
+                    null
+                ),
+                new FieldSnapshot(
+                    new ScalarFieldMapping(
+                        "customfield_10045",
+                        "Fcustomfield_10045",
+                        "Start Date",
+                        "date",
+                    ),
+                    "2021-02-02",
                     null
                 ),
                 new FieldSnapshot(

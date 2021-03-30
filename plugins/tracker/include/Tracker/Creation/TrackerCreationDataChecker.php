@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
+use Cocur\Slugify\Slugify;
 use Tracker;
 use TrackerDao;
 use TrackerFactory;
@@ -76,7 +77,7 @@ class TrackerCreationDataChecker
         int $project_id
     ): bool {
         return $this->isRequiredInformationAvailable($tracker_name, $tracker_shortname)
-            && $this->isShortNameValid($tracker_shortname) && ! $this->doesNameExistsForProject(
+            && self::isShortNameValid($tracker_shortname) && ! $this->doesNameExistsForProject(
                 $tracker_name,
                 $project_id
             )
@@ -95,7 +96,7 @@ class TrackerCreationDataChecker
         }
 
         // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
-        if (! $this->isShortNameValid($shortname)) {
+        if (! self::isShortNameValid($shortname)) {
             throw TrackerIsInvalidException::shortnameIsInvalid($shortname);
         }
 
@@ -131,9 +132,14 @@ class TrackerCreationDataChecker
         return $template_tracker;
     }
 
-    private function isShortNameValid(string $shortname): bool
+    public static function isShortNameValid(string $shortname): bool
     {
         return preg_match('/^[a-zA-Z0-9_]+$/i', $shortname) === 1;
+    }
+
+    public static function getShortNameWithValidFormat(string $wished_name): string
+    {
+        return (new Slugify(['separator' => '_']))->slugify($wished_name);
     }
 
     private function isRequiredInformationAvailable($name, $itemname)
