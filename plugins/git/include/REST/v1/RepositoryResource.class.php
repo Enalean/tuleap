@@ -518,7 +518,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 404
      * @throws RestException 400
      */
-    protected function postCommitStatus($id_or_path, $commit_reference, $state, $token = null)
+    public function postCommitStatus($id_or_path, $commit_reference, $state, $token = null)
     {
         if (ctype_digit($id_or_path)) {
             $repository = $this->repository_factory->getRepositoryById((int) $id_or_path);
