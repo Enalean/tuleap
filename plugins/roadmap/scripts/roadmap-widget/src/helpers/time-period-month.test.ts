@@ -253,4 +253,28 @@ describe("TimePeriodMonth", () => {
             "Sat Aug 01 2020",
         ]);
     });
+
+    describe("getBeginningOfNextNthUnit", () => {
+        it("Returns the beginning of current month", () => {
+            start = new Date(2020, 2, 15);
+            end = new Date(2020, 3, 15);
+            now = new Date(2020, 2, 15);
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+
+            expect(
+                toDateString([period.getBeginningOfNextNthUnit(new Date(2020, 4, 23), 0)])
+            ).toStrictEqual(["Fri May 01 2020"]);
+        });
+
+        it("Returns the beginning of next month", () => {
+            start = new Date(2020, 2, 15);
+            end = new Date(2020, 3, 15);
+            now = new Date(2020, 2, 15);
+            const period = new TimePeriodMonth(start, end, now, "en_US");
+
+            expect(
+                toDateString([period.getBeginningOfNextNthUnit(new Date(2020, 4, 23), 1)])
+            ).toStrictEqual(["Mon Jun 01 2020"]);
+        });
+    });
 });
