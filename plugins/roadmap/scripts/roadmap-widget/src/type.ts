@@ -47,3 +47,5 @@ export class TaskDimensionMap extends WeakMap<Task, TaskDimension> {}
 
 export class TasksByNature extends Map<string, Task[]> {}
 export class TasksDependencies extends WeakMap<Task, TasksByNature> {}
+
+export class NaturesLabels extends Map<string, string> {}

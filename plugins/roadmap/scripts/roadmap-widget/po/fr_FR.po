@@ -12,8 +12,14 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Links"
+msgstr "Liens"
+
 msgid "Month"
 msgstr "Mois"
+
+msgid "None"
+msgstr "Aucun"
 
 msgid "Oops, something went wrong."
 msgstr "Oups, quelque chose ne va pas."

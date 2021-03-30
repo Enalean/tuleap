@@ -31,6 +31,7 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 final class RoadmapProjectWidget extends \Widget
 {
@@ -56,12 +57,17 @@ final class RoadmapProjectWidget extends \Widget
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var NaturePresenterFactory
+     */
+    private $nature_presenter_factory;
 
     public function __construct(
         Project $project,
         RoadmapWidgetDao $dao,
         DBTransactionExecutor $transaction_executor,
-        TemplateRenderer $renderer
+        TemplateRenderer $renderer,
+        NaturePresenterFactory $nature_presenter_factory
     ) {
         parent::__construct(self::ID);
         $this->setOwner(
@@ -69,9 +75,10 @@ final class RoadmapProjectWidget extends \Widget
             \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
 
-        $this->dao                  = $dao;
-        $this->transaction_executor = $transaction_executor;
-        $this->renderer             = $renderer;
+        $this->dao                      = $dao;
+        $this->transaction_executor     = $transaction_executor;
+        $this->renderer                 = $renderer;
+        $this->nature_presenter_factory = $nature_presenter_factory;
     }
 
     public function getContent(): string
@@ -81,8 +88,11 @@ final class RoadmapProjectWidget extends \Widget
             'Total number of display of roadmap project widget',
         );
 
+        $visible_natures = $this->nature_presenter_factory->getOnlyVisibleNatures();
+
         return $this->renderer->renderToString('widget-roadmap', [
             'roadmap_id' => $this->content_id,
+            'visible_natures' => \json_encode(array_values($visible_natures), JSON_THROW_ON_ERROR),
         ]);
     }
 

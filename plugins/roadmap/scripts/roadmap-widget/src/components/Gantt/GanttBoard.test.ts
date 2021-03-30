@@ -44,6 +44,7 @@ describe("GanttBoard", () => {
     it("Displays all tasks", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
+                visible_natures: [],
                 tasks: [
                     { id: 1, dependencies: {} },
                     { id: 2, dependencies: {} },
@@ -59,6 +60,7 @@ describe("GanttBoard", () => {
     it("Displays months according to tasks", async () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
+                visible_natures: [],
                 tasks: [
                     { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
                     { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
@@ -90,6 +92,7 @@ describe("GanttBoard", () => {
 
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
+                visible_natures: [],
                 tasks: [
                     { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
                     { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
@@ -113,6 +116,7 @@ describe("GanttBoard", () => {
 
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
+                visible_natures: [],
                 tasks: [
                     { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
                     { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
@@ -147,6 +151,7 @@ describe("GanttBoard", () => {
     it("Use a different time period if user chose a different timescale", async () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
+                visible_natures: [],
                 tasks: [
                     { id: 1, dependencies: {} },
                     { id: 2, dependencies: {} },
