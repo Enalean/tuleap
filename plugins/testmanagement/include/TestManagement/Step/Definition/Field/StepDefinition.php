@@ -247,6 +247,14 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
+    {
+        return null;
+    }
+
     protected function validate(Artifact $artifact, $value)
     {
         if ($this->doesUserWantToRemoveAllSteps($value)) {
@@ -299,6 +307,12 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         Tracker_Artifact_ChangesetValue $old_value,
         $new_value
     ) {
+        if ($new_value === null) {
+            return false;
+        }
+
+        assert(is_array($new_value));
+
         $existing_steps = $old_value->getValue();
         if ($this->doesUserWantToRemoveAllSteps($new_value)) {
             return ! empty($existing_steps);
