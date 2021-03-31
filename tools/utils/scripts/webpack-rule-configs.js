@@ -72,7 +72,7 @@ const rule_po_files = {
 const rule_mustache_files = {
     test: /\.mustache$/,
     exclude: /node_modules/,
-    type: "asset/resource",
+    type: "asset/source",
 };
 
 const rule_ng_cache_loader = {
