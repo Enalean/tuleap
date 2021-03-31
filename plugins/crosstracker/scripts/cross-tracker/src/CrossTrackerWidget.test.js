@@ -23,7 +23,7 @@ import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js
 import { createStoreMock } from "../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createStore } from "./store/index";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
+import BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import * as rest_querier from "./api/rest-querier";
