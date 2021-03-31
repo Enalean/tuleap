@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Report, TrackerAndProject, Project, Tracker } from "./type";
+import type { TrackerAndProject, Project, Tracker } from "./type";
+import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 
 export interface TrackerForInit extends Tracker {
+    uri: string;
     project: Project;
 }
 
@@ -33,13 +35,16 @@ export default class BackendCrossTrackerReport {
         this.expert_query = "";
     }
 
-    init(trackers: Array<TrackerForInit>, expert_query: string): void {
+    init(trackers: Map<number, TrackerForInit>, expert_query: string): void {
         if (trackers) {
             this.clearTrackers();
-            for (const { id, label, project } of trackers) {
-                const tracker = { id, label };
-                const light_project = { id: project.id, label: project.label };
-                this.trackers.set(id, {
+            for (const tracker_for_init of trackers.values()) {
+                const tracker = { id: tracker_for_init.id, label: tracker_for_init.label };
+                const light_project = {
+                    id: tracker_for_init.project.id,
+                    label: tracker_for_init.project.label,
+                };
+                this.trackers.set(tracker_for_init.id, {
                     project: light_project,
                     tracker: tracker,
                 });
@@ -53,7 +58,7 @@ export default class BackendCrossTrackerReport {
         this.trackers.clear();
     }
 
-    duplicateFromReport(report: Report): void {
+    duplicateFromReport(report: ReadingCrossTrackerReport): void {
         this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
     }

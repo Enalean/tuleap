@@ -18,10 +18,12 @@
  */
 
 import ExtendableError from "extendable-error";
-import type { Project, Report, Tracker } from "../type";
+import type { Project, Tracker } from "../type";
+import type { TrackerAndProject } from "../type";
+import type ReadingCrossTrackerReport from "../reading-mode/reading-cross-tracker-report";
 
 export default class WritingCrossTrackerReport {
-    trackers: Map<number, { project: Project; tracker: Tracker }>;
+    trackers: Map<number, TrackerAndProject>;
     expert_query: string;
 
     constructor() {
@@ -47,7 +49,7 @@ export default class WritingCrossTrackerReport {
         this.trackers.delete(tracker_id);
     }
 
-    duplicateFromReport(report: Report): void {
+    duplicateFromReport(report: ReadingCrossTrackerReport): void {
         this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
     }
@@ -56,7 +58,7 @@ export default class WritingCrossTrackerReport {
         return [...this.trackers.keys()];
     }
 
-    getTrackers(): IterableIterator<{ project: Project; tracker: Tracker }> {
+    getTrackers(): IterableIterator<TrackerAndProject> {
         return this.trackers.values();
     }
 }

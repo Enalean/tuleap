@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { TrackerForInit } from "./backend-cross-tracker-report";
+
 export interface State {
     error_message: string | null;
     success_message: string | null;
@@ -43,7 +45,7 @@ export interface Project {
 }
 
 export interface Report {
-    trackers: Map<number, TrackerAndProject>;
+    trackers: Map<number, TrackerForInit>;
     expert_query: string;
     invalid_trackers: Array<Tracker>;
 }
