@@ -25,7 +25,12 @@
             v-else-if="should_display_error_state"
             v-bind:message="error_message"
         />
-        <gantt-board v-else-if="tasks.length" v-bind:tasks="tasks" v-bind:locale="locale" />
+        <gantt-board
+            v-else-if="tasks.length"
+            v-bind:tasks="tasks"
+            v-bind:locale="locale"
+            v-bind:visible_natures="visible_natures"
+        />
         <loading-state v-else-if="is_loading" />
     </div>
 </template>
@@ -37,7 +42,7 @@ import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import type { FetchWrapperError } from "tlp";
 import GanttBoard from "./Gantt/GanttBoard.vue";
-import type { Task } from "../type";
+import type { Task, NaturesLabels } from "../type";
 import { retrieveAllTasks } from "../helpers/task-retriever";
 import LoadingState from "./LoadingState.vue";
 
@@ -50,6 +55,9 @@ export default class App extends Vue {
 
     @Prop({ required: true })
     private readonly locale!: string;
+
+    @Prop({ required: true })
+    private readonly visible_natures!: NaturesLabels;
 
     private tasks: Task[] = [];
     private error_message = "";

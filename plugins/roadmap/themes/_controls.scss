@@ -17,41 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'roadmap-variables';
-@use 'task';
-@use 'controls';
-
-.roadmap-gantt {
-    position: relative;
+.roadmap-gantt-controls {
+    display: flex;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
-.roadmap-gantt-today {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 7px;
-    transform: translateX(roadmap-variables.$task-header-width - 3);
+.roadmap-gantt-control {
+    display: flex;
+    align-items: baseline;
+    margin: 0 var(--tlp-large-spacing) 0 0;
 
-    &::before {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 3px;
-        width: 1px;
-        height: 100%;
-        background: var(--tlp-theme-color);
+    &:last-child {
+        margin: 0;
     }
+}
 
-    &::after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--tlp-theme-color);
-    }
+.roadmap-gantt-control-label {
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }

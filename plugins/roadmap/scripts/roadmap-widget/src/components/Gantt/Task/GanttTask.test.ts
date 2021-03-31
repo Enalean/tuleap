@@ -34,7 +34,8 @@ describe("GanttTask", () => {
     function mountGanttTask(
         start: Date | null,
         end: Date | null,
-        tasks_by_nature: TasksByNature | null = null
+        tasks_by_nature: TasksByNature | null = null,
+        dependencies_nature_to_display: string | null = null
     ): Wrapper<GanttTask> {
         const task: Task = {
             id: 123,
@@ -65,6 +66,7 @@ describe("GanttTask", () => {
                 nb_additional_units: 2,
                 dimensions_map: getDimensionsMap([task], time_period),
                 dependencies,
+                dependencies_nature_to_display,
             },
         });
     }
@@ -130,24 +132,31 @@ describe("GanttTask", () => {
         expect(wrapper.findComponent(DependencyArrow).exists()).toBe(false);
     });
 
-    it("Displays an arrow for each possible dependency", () => {
-        const dep_1 = { id: 124 } as Task;
-        const dep_2 = { id: 125 } as Task;
-        const dep_3 = { id: 126 } as Task;
+    describe("Displays an arrow for each possible dependency", () => {
+        const dep_1: Task = { id: 124 } as Task;
+        const dep_2: Task = { id: 125 } as Task;
+        const dep_3: Task = { id: 126 } as Task;
 
-        const wrapper = mountGanttTask(
-            new Date(2020, 3, 5),
-            new Date(2020, 3, 25),
-            new TasksByNature([
-                ["depends_on", [dep_1, dep_2]],
-                ["", [dep_3]],
-            ])
-        );
+        it.each([
+            ["depends_on", [dep_1, dep_2]],
+            ["", [dep_3]],
+        ])("when nature is '%s'", (nature: string, expected_displayed_dependencies: Task[]) => {
+            const wrapper = mountGanttTask(
+                new Date(2020, 3, 5),
+                new Date(2020, 3, 25),
+                new TasksByNature([
+                    ["depends_on", [dep_1, dep_2]],
+                    ["", [dep_3]],
+                ]),
+                nature
+            );
 
-        const arrows = wrapper.findAllComponents(DependencyArrow);
-        expect(arrows.length).toBe(3);
-        expect(arrows.at(0).props("dependency")).toBe(dep_1);
-        expect(arrows.at(1).props("dependency")).toBe(dep_2);
-        expect(arrows.at(2).props("dependency")).toBe(dep_3);
+            const arrows = wrapper.findAllComponents(DependencyArrow);
+            expect(arrows.length).toBe(expected_displayed_dependencies.length);
+
+            expected_displayed_dependencies.forEach((expected, index): void => {
+                expect(arrows.at(index).props("dependency")).toBe(expected);
+            });
+        });
     });
 });

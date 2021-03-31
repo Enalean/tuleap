@@ -36,6 +36,7 @@ describe("App", () => {
         const wrapper = shallowMount(App, {
             propsData: {
                 roadmap_id: 123,
+                visible_natures: [],
                 locale: "en_US",
             },
             localVue: await createRoadmapLocalVue(),

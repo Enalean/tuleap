@@ -75,22 +75,24 @@ export default class GanttTask extends Vue {
     @Prop({ required: true })
     readonly dependencies!: TasksDependencies;
 
+    @Prop({ required: true })
+    readonly dependencies_nature_to_display!: string | null;
+
     get dimensions(): TaskDimension {
         return getDimensions(this.task, this.dimensions_map);
     }
 
     get dependencies_to_display(): Task[] {
+        if (this.dependencies_nature_to_display === null) {
+            return [];
+        }
+
         const dependencies_for_current_task = this.dependencies.get(this.task);
         if (!dependencies_for_current_task) {
             return [];
         }
 
-        let flattened_deps: Task[] = [];
-        dependencies_for_current_task.forEach((dependencies_for_a_nature) => {
-            flattened_deps = [...flattened_deps, ...dependencies_for_a_nature];
-        });
-
-        return flattened_deps;
+        return dependencies_for_current_task.get(this.dependencies_nature_to_display) || [];
     }
 }
 </script>

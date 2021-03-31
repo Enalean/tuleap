@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 final class RoadmapProjectWidgetTest extends TestCase
 {
@@ -59,6 +60,7 @@ final class RoadmapProjectWidgetTest extends TestCase
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $template_render,
+            Mockery::mock(NaturePresenterFactory::class),
         );
     }
 

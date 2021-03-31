@@ -20,7 +20,13 @@
 
 <template>
     <div>
-        <time-period-control v-model="timescale" />
+        <div class="roadmap-gantt-controls">
+            <time-period-control v-model="timescale" />
+            <dependency-nature-control
+                v-model="dependencies_nature_to_display"
+                v-bind:available_natures="available_natures"
+            />
+        </div>
         <div class="roadmap-gantt">
             <time-period-header
                 v-bind:time_period="time_period"
@@ -37,6 +43,7 @@
                     v-bind:nb_additional_units="nb_additional_units"
                     v-bind:dependencies="dependencies"
                     v-bind:dimensions_map="dimensions_map"
+                    v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
                 />
             </div>
             <today-indicator
@@ -52,7 +59,14 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import GanttTask from "./Task/GanttTask.vue";
-import type { Task, TimePeriod, TasksDependencies, TaskDimensionMap, TimeScale } from "../../type";
+import type {
+    NaturesLabels,
+    Task,
+    TimePeriod,
+    TasksDependencies,
+    TaskDimensionMap,
+    TimeScale,
+} from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
 import { getLastDate } from "../../helpers/last-date";
@@ -63,9 +77,17 @@ import { getTasksDependencies } from "../../helpers/dependency-map-builder";
 import { getDimensionsMap } from "../../helpers/tasks-dimensions";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
+import DependencyNatureControl from "./DependencyNatureControl.vue";
+import { getNatureLabelsForTasks } from "../../helpers/natures-labels-for-tasks";
 
 @Component({
-    components: { TimePeriodControl, TodayIndicator, TimePeriodHeader, GanttTask },
+    components: {
+        DependencyNatureControl,
+        TimePeriodControl,
+        TodayIndicator,
+        TimePeriodHeader,
+        GanttTask,
+    },
 })
 export default class GanttBoard extends Vue {
     $refs!: {
@@ -78,6 +100,9 @@ export default class GanttBoard extends Vue {
     @Prop({ required: true })
     private readonly locale!: string;
 
+    @Prop({ required: true })
+    private readonly visible_natures!: NaturesLabels;
+
     private nb_additional_units = 0;
 
     private observer: ResizeObserver | null = null;
@@ -85,6 +110,8 @@ export default class GanttBoard extends Vue {
     private now = new Date();
 
     private timescale: TimeScale = "month";
+
+    private dependencies_nature_to_display: string | null = null;
 
     mounted(): void {
         this.observer = new ResizeObserver(this.adjustAdditionalUnits);
@@ -147,6 +174,10 @@ export default class GanttBoard extends Vue {
 
     get dimensions_map(): TaskDimensionMap {
         return getDimensionsMap(this.tasks, this.time_period);
+    }
+
+    get available_natures(): NaturesLabels {
+        return getNatureLabelsForTasks(this.tasks, this.dependencies, this.visible_natures);
     }
 }
 </script>

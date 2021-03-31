@@ -23,6 +23,7 @@ import {
     getPOFileFromLocale,
     initVueGettext,
 } from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const all_vue_mount_points = document.querySelectorAll(".roadmap");
@@ -50,9 +51,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             continue;
         }
 
+        const visible_natures = await parseNatureLabels(vue_mount_point);
+
         new AppComponent({
             propsData: {
                 roadmap_id,
+                visible_natures,
                 locale: document.body.dataset.userLocale,
             },
         }).$mount(vue_mount_point);
