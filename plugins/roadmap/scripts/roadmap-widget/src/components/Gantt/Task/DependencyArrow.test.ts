@@ -27,9 +27,9 @@ import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
 describe("DependencyArrow", () => {
     function mountComponent(task: Task, dependency: Task, tasks: Task[]): Wrapper<DependencyArrow> {
         const time_period = new TimePeriodMonth(
-            new Date(2020, 3, 10),
-            new Date(2020, 3, 25),
-            new Date(2020, 3, 7),
+            new Date("2020-04-09T22:00:00.000Z"),
+            new Date("2020-04-24T22:00:00.000Z"),
+            new Date("2020-04-06T22:00:00.000Z"),
             "en_US"
         );
 
@@ -45,24 +45,24 @@ describe("DependencyArrow", () => {
     it("Displays a down right arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date(2020, 3, 10),
-            end: new Date(2020, 3, 15),
+            start: new Date("2020-04-09T22:00:00.000Z"),
+            end: new Date("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date(2020, 3, 20),
-            end: new Date(2020, 3, 25),
+            start: new Date("2020-04-19T22:00:00.000Z"),
+            end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 23px; top: -4px; height: 88px; width: 64px;">
+            <svg class="roadmap-gantt-task-dependency" style="left: 22px; top: -4px; height: 88px; width: 65px;">
               <path d="M24 24 L32 24 Q40 24, 40 32 L40 36 Q40 44, 32 44 L16 44 Q8 44, 8 52 L8 56 Q8 64, 16 64
-                        L40 64
-                        L32 56
-                        M40 64
-                        L32 72" class="roadmap-gantt-task-dependency-line"></path>
+                        L41 64
+                        L33 56
+                        M41 64
+                        L33 72" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
@@ -70,13 +70,13 @@ describe("DependencyArrow", () => {
     it("Displays a down left arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date(2020, 3, 10),
-            end: new Date(2020, 3, 15),
+            start: new Date("2020-04-09T22:00:00.000Z"),
+            end: new Date("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date(2020, 3, 20),
-            end: new Date(2020, 3, 25),
+            start: new Date("2020-04-19T22:00:00.000Z"),
+            end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_2, task_1, [task_2, task_1]);
@@ -95,13 +95,13 @@ describe("DependencyArrow", () => {
     it("Displays an up left arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date(2020, 3, 10),
-            end: new Date(2020, 3, 15),
+            start: new Date("2020-04-09T22:00:00.000Z"),
+            end: new Date("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date(2020, 3, 20),
-            end: new Date(2020, 3, 25),
+            start: new Date("2020-04-19T22:00:00.000Z"),
+            end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_2, task_1, [task_1, task_2]);
@@ -120,24 +120,24 @@ describe("DependencyArrow", () => {
     it("Displays an up right arrow", () => {
         const task_1 = {
             id: 1,
-            start: new Date(2020, 3, 10),
-            end: new Date(2020, 3, 15),
+            start: new Date("2020-04-09T22:00:00.000Z"),
+            end: new Date("2020-04-14T22:00:00.000Z"),
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date(2020, 3, 20),
-            end: new Date(2020, 3, 25),
+            start: new Date("2020-04-19T22:00:00.000Z"),
+            end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_1, task_2, [task_2, task_1]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 23px; top: -44px; height: 88px; width: 64px;">
+            <svg class="roadmap-gantt-task-dependency" style="left: 22px; top: -44px; height: 88px; width: 65px;">
               <path d="M24 64 L32 64 Q40 64, 40 56 L40 52 Q40 44, 32 44 L16 44 Q8 44, 8 36 L8 32 Q8 24, 16 24
-                        L40 24
-                        L32 16
-                        M40 24
-                        L32 32" class="roadmap-gantt-task-dependency-line"></path>
+                        L41 24
+                        L33 16
+                        M41 24
+                        L33 32" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });

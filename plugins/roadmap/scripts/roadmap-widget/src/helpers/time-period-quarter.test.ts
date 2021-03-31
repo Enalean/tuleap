@@ -344,23 +344,4 @@ describe("TimePeriodQuarter", () => {
             "Thu Apr 01 2021",
         ]);
     });
-
-    it("Returns the beginning of current quarter", () => {
-        start = new Date(2020, 2, 15);
-        end = new Date(2020, 3, 15);
-        now = new Date(2020, 2, 15);
-        const period = new TimePeriodQuarter(
-            start,
-            end,
-            now,
-            createVueGettextProviderPassthrough()
-        );
-
-        expect(period.getBeginningOfNextNthUnit(new Date(2020, 2, 15), 0).toDateString()).toBe(
-            "Wed Jan 01 2020"
-        );
-        expect(period.getBeginningOfNextNthUnit(new Date(2020, 2, 15), 2).toDateString()).toBe(
-            "Wed Jul 01 2020"
-        );
-    });
 });

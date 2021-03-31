@@ -61,10 +61,6 @@ export class TimePeriodMonth implements TimePeriod {
     additionalUnits(nb: number): Date[] {
         return getAdditionalMonths(this.months[this.months.length - 1], nb);
     }
-
-    getBeginningOfNextNthUnit(unit: Date, nth: number): Date {
-        return getBeginningOfNextNthMonth(unit, nth);
-    }
 }
 
 function getMonths(start: Date | null, end: Date | null, now: Date): Date[] {

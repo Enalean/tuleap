@@ -26,25 +26,39 @@ describe("getLeftForDate", () => {
     it("Gives a left position according to the time period", () => {
         expect(
             getLeftForDate(
-                new Date(2020, 3, 15),
+                new Date("2020-04-14T22:00:00.000Z"),
                 new TimePeriodMonth(
-                    new Date(2020, 1, 1),
-                    new Date(2020, 3, 1),
-                    new Date(2020, 4, 1),
+                    new Date("2020-01-31T23:00:00.000Z"),
+                    new Date("2020-03-31T22:00:00.000Z"),
+                    new Date("2020-04-30T22:00:00.000Z"),
                     "en_US"
                 )
             )
-        ).toBe(247);
+        ).toBe(346);
         expect(
             getLeftForDate(
-                new Date(2020, 3, 15),
+                new Date("2020-04-14T22:00:00.000Z"),
                 new TimePeriodQuarter(
-                    new Date(2020, 1, 1),
-                    new Date(2020, 3, 1),
-                    new Date(2020, 4, 1),
+                    new Date("2020-01-31T23:00:00.000Z"),
+                    new Date("2020-03-31T22:00:00.000Z"),
+                    new Date("2020-04-30T22:00:00.000Z"),
                     createVueGettextProviderPassthrough()
                 )
             )
         ).toBe(115);
+    });
+
+    it("Gives a left position based on real user data", () => {
+        expect(
+            getLeftForDate(
+                new Date("2021-04-01T00:00:00.000Z"),
+                new TimePeriodMonth(
+                    new Date("2021-04-01T00:00:00.000Z"),
+                    new Date("2021-10-30T22:00:00.000Z"),
+                    new Date("2021-03-31T14:36:12.580Z"),
+                    "en_US"
+                )
+            )
+        ).toBe(100);
     });
 });

@@ -24,7 +24,7 @@ import { TimePeriodMonth } from "../../helpers/time-period-month";
 
 describe("TodayIndicator", () => {
     it("Displays a div with a left position depending on the time period", async () => {
-        const now = new Date(2020, 3, 15);
+        const now = new Date("2020-04-14T22:00:00.000Z");
         const locale = "en_US";
         const wrapper = shallowMount(TodayIndicator, {
             localVue: await createRoadmapLocalVue(),
@@ -32,16 +32,22 @@ describe("TodayIndicator", () => {
                 now,
                 locale,
                 time_period: new TimePeriodMonth(
-                    new Date(2020, 3, 1),
-                    new Date(2020, 4, 1),
+                    new Date("2020-03-31T22:00:00.000Z"),
+                    new Date("2020-04-31T22:00:00.000Z"),
                     now,
                     locale
                 ),
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(
-            `<div title="Today: April 15, 2020" class="roadmap-gantt-today" style="left: 47px;"></div>`
-        );
+        const expected_today_date = new Intl.DateTimeFormat("en-US", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        }).format(now);
+
+        expect(wrapper.classes()).toContain("roadmap-gantt-today");
+        expect(wrapper.element.title).toBe(`Today: ${expected_today_date}`);
+        expect(wrapper.element.style.left).toBe("146px");
     });
 });
