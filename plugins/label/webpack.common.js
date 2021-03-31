@@ -27,15 +27,8 @@ const output = webpack_configurator.configureOutput(
 const entry_points = {
     "widget-project-labeled-items": "./scripts/project-labeled-items/src/index.js",
     "configure-widget": "./scripts/configure-widget/index.js",
+    style: "./themes/label.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[
-        `style-${color}-condensed`
-    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
-}
 
 module.exports = [
     {

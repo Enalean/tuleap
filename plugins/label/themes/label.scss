@@ -1,0 +1,130 @@
+/**
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use 'labels-box';
+
+.dashboard-widget-content-projectlabeleditems {
+    margin: 0;
+}
+
+.labeled-items-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0 calc(-1 * var(--tlp-medium-spacing));
+
+    > .labeled-items-error {
+        margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    }
+}
+
+.labeled-items-loading {
+    width: 250px;
+    height: 200px;
+    margin: 0 auto;
+    background: url('../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.labeled-item {
+    display: flex;
+    flex: 1 0 auto;
+    padding: var(--tlp-medium-spacing);
+    border-bottom: 1px solid var(--tlp-ui-border-light);
+    color: var(--tlp-typo-default-text-color);
+    text-decoration: none;
+
+    &:hover {
+        background-color: var(--tlp-theme-color-hover-background);
+        text-decoration: none;
+        cursor: pointer;
+
+        .labeled-item-metadata {
+            display: flex;
+        }
+    }
+
+    &:last-child {
+        border: 0;
+    }
+}
+
+.labeled-item-icon {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+    fill: var(--tlp-theme-color-transparent-80);
+}
+
+.labeled-items-empty {
+    margin: 0 var(--tlp-medium-spacing) 60px;
+}
+
+.labeled-item-configuration-label {
+    margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
+    white-space: normal;
+    cursor: default;
+}
+
+.labeled-items-list-more {
+    display: flex;
+    justify-content: center;
+    padding: var(--tlp-medium-spacing);
+}
+
+.labeled-item-content {
+    flex: 1 1 auto;
+}
+
+.labeled-item-title {
+    margin: 0 0 10px;
+    line-height: 18px;
+}
+
+.labeled-item-metadata {
+    display: none;
+    margin: var(--tlp-small-spacing) 0 0;
+}
+
+.labeled-item-metadata-icon {
+    margin: 0 5px 0 0;
+}
+
+.labeled-item-repository {
+    font-size: 12px;
+}
+
+.labeled-item-author,
+.labeled-item-creation-date {
+    @extend %small-dimmed;
+
+    display: flex;
+    align-items: baseline;
+    line-height: 14px;
+}
+
+.labeled-item-author > a {
+    @extend %small-dimmed;
+}
+
+.labeled-item-creation-date {
+    flex: 0 0 auto;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
+}
+
+%small-dimmed {
+    color: var(--tlp-ui-dimmed);
+    font-size: 12px;
+}
