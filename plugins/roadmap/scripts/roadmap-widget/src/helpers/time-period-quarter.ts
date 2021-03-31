@@ -53,7 +53,7 @@ export class TimePeriodQuarter implements TimePeriod {
             this.gettext_provider.$gettext("Quarter %{ quarter } of %{ year }"),
             {
                 quarter: getQuarterNumber(unit),
-                year: unit.getFullYear(),
+                year: unit.getUTCFullYear(),
             }
         );
     }
@@ -68,18 +68,14 @@ export class TimePeriodQuarter implements TimePeriod {
 }
 
 function getQuarterNumber(unit: Date): number {
-    return Math.ceil((unit.getMonth() + 1) / 3);
+    return Math.ceil((unit.getUTCMonth() + 1) / 3);
 }
 
 function getQuarters(start: Date | null, end: Date | null, now: Date): Date[] {
     const beginning_of_period = getBeginningOfPeriod(start, end, now);
     const end_of_period = getEndOfPeriod(start, end, now);
 
-    const starting_quarter = new Date(
-        beginning_of_period.getFullYear(),
-        (getQuarterNumber(beginning_of_period) - 1) * 3,
-        1
-    );
+    const starting_quarter = getBeginningOfNextNthQuarter(beginning_of_period, 0);
     const quarters = [starting_quarter];
 
     let i = 1;
@@ -105,11 +101,10 @@ function getAdditionalQuarters(base_quarter: Date, nb_missing_quarters: number):
 }
 
 function getBeginningOfNextNthQuarter(base_date: Date, nth: number): Date {
-    const base_quarter = new Date(
-        base_date.getFullYear(),
-        (getQuarterNumber(base_date) - 1) * 3,
-        1
-    );
+    const quarter = new Date(base_date);
+    quarter.setUTCDate(1);
+    quarter.setUTCHours(0, 0, 0);
+    quarter.setUTCMonth(3 * (getQuarterNumber(base_date) + nth - 1));
 
-    return new Date(new Date(base_quarter).setMonth(base_quarter.getMonth() + nth * 3));
+    return quarter;
 }

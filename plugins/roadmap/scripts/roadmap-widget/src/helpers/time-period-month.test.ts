@@ -149,6 +149,26 @@ describe("TimePeriodMonth", () => {
                 "Wed Jul 01 2020",
             ]);
         });
+
+        it("does not mangle months with real user data", () => {
+            const period = new TimePeriodMonth(
+                new Date("2021-03-31T22:00:00.000Z"),
+                new Date("2021-10-30T22:00:00.000Z"),
+                new Date("2021-03-31T11:20:03.477Z"),
+                "en_US"
+            );
+            expect(toDateString(period.units)).toStrictEqual([
+                "Mon Mar 01 2021",
+                "Thu Apr 01 2021",
+                "Sat May 01 2021",
+                "Tue Jun 01 2021",
+                "Thu Jul 01 2021",
+                "Sun Aug 01 2021",
+                "Wed Sep 01 2021",
+                "Fri Oct 01 2021",
+                "Mon Nov 01 2021",
+            ]);
+        });
     });
 
     describe("when start is in the same month than end", () => {
@@ -261,9 +281,15 @@ describe("TimePeriodMonth", () => {
             now = new Date(2020, 2, 15);
             const period = new TimePeriodMonth(start, end, now, "en_US");
 
+            expect(period.getBeginningOfNextNthUnit(new Date(2020, 4, 23), 0).toDateString()).toBe(
+                "Fri May 01 2020"
+            );
+
             expect(
-                toDateString([period.getBeginningOfNextNthUnit(new Date(2020, 4, 23), 0)])
-            ).toStrictEqual(["Fri May 01 2020"]);
+                period
+                    .getBeginningOfNextNthUnit(new Date("2021-03-31T22:00:00.000Z"), 0)
+                    .toDateString()
+            ).toBe("Mon Mar 01 2021");
         });
 
         it("Returns the beginning of next month", () => {
@@ -272,9 +298,15 @@ describe("TimePeriodMonth", () => {
             now = new Date(2020, 2, 15);
             const period = new TimePeriodMonth(start, end, now, "en_US");
 
+            expect(period.getBeginningOfNextNthUnit(new Date(2020, 4, 23), 1).toDateString()).toBe(
+                "Mon Jun 01 2020"
+            );
+
             expect(
-                toDateString([period.getBeginningOfNextNthUnit(new Date(2020, 4, 23), 1)])
-            ).toStrictEqual(["Mon Jun 01 2020"]);
+                period
+                    .getBeginningOfNextNthUnit(new Date("2021-03-31T22:00:00.000Z"), 1)
+                    .toDateString()
+            ).toBe("Thu Apr 01 2021");
         });
     });
 });

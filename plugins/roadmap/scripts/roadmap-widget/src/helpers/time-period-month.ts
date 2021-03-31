@@ -71,10 +71,14 @@ function getMonths(start: Date | null, end: Date | null, now: Date): Date[] {
     const beginning_of_period = getBeginningOfPeriod(start, end, now);
     const end_of_period = getEndOfPeriod(start, end, now);
 
-    const months = [new Date(new Date(beginning_of_period).setDate(1))];
+    const base_month = new Date(beginning_of_period);
+    base_month.setUTCDate(1);
+    base_month.setUTCHours(0, 0, 0);
+
+    const months = [base_month];
     let i = 1;
     while (months[months.length - 1] < end_of_period) {
-        months.push(getBeginningOfNextNthMonth(beginning_of_period, i++));
+        months.push(getBeginningOfNextNthMonth(base_month, i++));
     }
 
     return months;
@@ -95,9 +99,10 @@ function getAdditionalMonths(base_month: Date, nb_missing_months: number): Date[
 }
 
 function getBeginningOfNextNthMonth(base_month: Date, nth: number): Date {
-    const same_date_months_later = new Date(
-        new Date(base_month).setMonth(base_month.getMonth() + nth)
-    );
+    const next_nth_month = new Date(base_month);
+    next_nth_month.setUTCDate(1);
+    next_nth_month.setUTCHours(0, 0, 0);
+    next_nth_month.setUTCMonth(base_month.getUTCMonth() + nth);
 
-    return new Date(same_date_months_later.setDate(1));
+    return next_nth_month;
 }
