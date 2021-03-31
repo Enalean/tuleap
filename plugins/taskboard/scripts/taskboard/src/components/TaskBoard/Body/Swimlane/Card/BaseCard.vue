@@ -23,7 +23,7 @@
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
             <card-info v-bind:card="card" v-bind:tracker="tracker" v-model="assignees">
-                <template v-slot:initial_effort>
+                <template #initial_effort>
                     <slot name="initial_effort" />
                 </template>
             </card-info>
@@ -34,8 +34,9 @@
             v-on:click="switchToEditMode"
             data-test="card-edit-button"
             type="button"
+            v-bind:title="$gettext('Edit card')"
         >
-            <i class="fas fa-pencil-alt"></i>
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
         </button>
         <label-editor v-model="label" v-if="card.is_in_edit_mode" v-on:save="save" />
         <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>

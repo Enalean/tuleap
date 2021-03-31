@@ -29,6 +29,7 @@ import type { SwimlaneState } from "../../../../../store/swimlane/type";
 const swimlane: Swimlane = {
     card: {
         color: "fiesta-red",
+        label: "taskboard-swimlane",
     },
 } as Swimlane;
 

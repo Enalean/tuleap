@@ -8,6 +8,7 @@ exports[`CellDisallowsDropOverlay displays div with an icon and an error message
     class="taskboard-drop-not-accepted-overlay-content"
   >
     <i
+      aria-hidden="true"
       class="fa fa-ban taskboard-drop-not-accepted-icon"
     />
      

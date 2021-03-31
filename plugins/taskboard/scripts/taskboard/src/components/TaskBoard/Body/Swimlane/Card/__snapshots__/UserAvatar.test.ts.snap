@@ -6,6 +6,7 @@ exports[`UserAvatar displays an empty list 1`] = `
   title="Steeve"
 >
   <img
+    aria-hidden="true"
     src="steeve.png"
   />
 </div>

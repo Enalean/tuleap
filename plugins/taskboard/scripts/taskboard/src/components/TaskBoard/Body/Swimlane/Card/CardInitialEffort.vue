@@ -25,7 +25,7 @@
         v-bind:class="color_classname"
         v-bind:title="initial_effort_label"
     >
-        <i class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon"></i>
+        <i class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon" aria-hidden="true"></i>
         {{ card.initial_effort }}
     </span>
 </template>

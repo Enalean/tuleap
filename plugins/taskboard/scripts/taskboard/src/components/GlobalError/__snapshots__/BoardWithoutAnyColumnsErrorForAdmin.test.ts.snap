@@ -35,6 +35,7 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
     href="/path/to/admin"
   >
     <i
+      aria-hidden="true"
       class="fas fa-long-arrow-alt-right tlp-button-icon"
     />
      

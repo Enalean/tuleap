@@ -20,7 +20,7 @@
 <template functional>
     <div class="taskboard-drop-not-accepted-overlay">
         <div class="taskboard-drop-not-accepted-overlay-content">
-            <i class="fa fa-ban taskboard-drop-not-accepted-icon"></i>
+            <i class="fa fa-ban taskboard-drop-not-accepted-icon" aria-hidden="true"></i>
             <p data-test="overlay-error-message" v-if="!props.isColumnCollapsed" v-translate>
                 This column does not allow to drop this card here.
             </p>

@@ -40,6 +40,7 @@
                 class="fa"
                 v-bind:class="user_edit_classes"
                 v-if="is_user_edit_displayed"
+                aria-hidden="true"
                 data-test="icon"
             ></i>
             <user-avatar

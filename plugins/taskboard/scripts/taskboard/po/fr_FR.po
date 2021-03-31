@@ -27,11 +27,11 @@ msgstr "Label de la carte…"
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Collapse"
-msgstr "Réduire"
-
 msgid "Collapse \"%{ label }\" column"
 msgstr "Réduire la colonne \"%{ label }\""
+
+msgid "Collapse \"%{ label }\" swimlane"
+msgstr "Réduire la ligne \"%{ label }\""
 
 msgid "Define columns"
 msgstr "Définir les colonnes"
@@ -40,6 +40,9 @@ msgid "Edit assignee"
 msgid_plural "Edit assignees"
 msgstr[0] "Éditer l'assigné"
 msgstr[1] "Éditer les assignés"
+
+msgid "Edit card"
+msgstr "Modifier la carte"
 
 msgid "Expand"
 msgstr "Étendre"
@@ -95,6 +98,9 @@ msgstr "Effort restant"
 
 msgid "Save"
 msgstr "Sauver"
+
+msgid "Set card label"
+msgstr "Assigner un label à la carte"
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"

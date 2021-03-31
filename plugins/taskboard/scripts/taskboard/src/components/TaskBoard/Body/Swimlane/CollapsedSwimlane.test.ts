@@ -44,7 +44,10 @@ async function wrapperFactory(
         });
     const defined_props = props ?? {
         swimlane: {
-            card: { color: "fiesta-red" },
+            card: {
+                color: "fiesta-red",
+                label: "taskboard-swimlane",
+            },
         },
     };
     return mount(CollapsedSwimlane, {
@@ -71,7 +74,10 @@ describe("CollapsedSwimlane", () => {
             getters: { "swimlane/taskboard_cell_swimlane_header_classes": "" },
         });
         const swimlane: Swimlane = {
-            card: { color: "fiesta-red" },
+            card: {
+                color: "fiesta-red",
+                label: "taskboard-swimlane",
+            },
         } as Swimlane;
         const wrapper = await wrapperFactory($store, { swimlane });
 

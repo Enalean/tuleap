@@ -27,15 +27,14 @@
         v-on:keyup.enter="editRemainingEffort"
         v-bind:tabindex="tabindex"
         v-bind:role="role"
-        v-bind:aria-label="$gettext('Remaining effort')"
         v-bind:title="$gettext('Remaining effort')"
         data-not-drag-handle="true"
         draggable="true"
     >
         <edit-remaining-effort v-if="is_in_edit_mode" v-bind:card="card" />
         <template v-else>{{ card.remaining_effort.value }}</template>
-        <i class="fas fa-long-arrow-alt-right"></i>
-        <i class="fa" v-bind:class="icon"></i>
+        <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
+        <i class="fa" aria-hidden="true" v-bind:class="icon"></i>
     </span>
 </template>
 
