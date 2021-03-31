@@ -61,6 +61,21 @@ describe(`PreviewArea`, () => {
         expect(mount_point.innerHTML).toContain(html_string);
     });
 
+    it.each([["tlp-mermaid-diagram"], ["tlp-syntax-highlighting"]])(
+        `when the promise is fulfilled, it will return a div with its contents that contain custom elements %s`,
+        async (custom_element) => {
+            const html_string = `<${custom_element}>Some content</${custom_element}>`;
+            const promise = Promise.resolve(html_string);
+            const template = createPreviewArea(promise, gettext_provider);
+            render(template, mount_point);
+            await promise;
+            // I don't really understand why, but I have to await twice
+            await promise;
+
+            expect(mount_point.innerHTML).toContain(html_string);
+        }
+    );
+
     it(`when the promise is rejected, it will return an alert with the error message`, () => {
         const promise = Promise.reject(new Error("Network Error"));
         const template = createPreviewArea(promise, gettext_provider);

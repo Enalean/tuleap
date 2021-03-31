@@ -43,7 +43,12 @@ export function createPreviewArea(
         <div>
             ${until(
                 promise_of_html.then(
-                    (html_string) => unsafeHTML(DOMPurify.sanitize(html_string)),
+                    (html_string) =>
+                        unsafeHTML(
+                            DOMPurify.sanitize(html_string, {
+                                ADD_TAGS: ["tlp-mermaid-diagram", "tlp-syntax-highlighting"],
+                            })
+                        ),
                     (error) => buildErrorMessage(error, gettext_provider)
                 )
             )}
