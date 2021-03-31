@@ -54,7 +54,7 @@ export default {
     },
     computed: {
         ...mapGetters(["current_folder_title"]),
-        ...mapState(["max_files_dragndrop", "max_size_upload"]),
+        ...mapState("configuration", ["max_files_dragndrop", "max_size_upload"]),
         message_success() {
             return sprintf(
                 this.$ngettext(

@@ -36,11 +36,6 @@ describe("App", () => {
         router = new VueRouter({});
 
         const default_prop = {
-            date_time_format: "Ymd",
-            max_files_dragndrop: 5,
-            max_size_upload: 10000,
-            is_deletion_allowed: true,
-            is_changelog_proposed_after_dnd: true,
             csrf_token: "challenge_value",
             csrf_token_name: "challenge_name",
         };

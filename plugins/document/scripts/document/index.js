@@ -91,6 +91,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         embedded_are_allowed,
         is_item_status_metadata_used,
         is_obsolescence_date_metadata_used,
+        project_url,
+        date_time_format,
+        max_files_dragndrop,
+        max_size_upload,
+        warning_threshold,
+        max_archive_size,
+        is_deletion_allowed,
+        is_changelog_proposed_after_dnd,
+        privacy,
+        project_flags,
+        relative_dates_display,
     };
 
     const AppComponent = Vue.extend(App);
@@ -101,20 +112,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         store,
         router,
         propsData: {
-            project_url,
-            date_time_format,
-            max_files_dragndrop,
-            max_size_upload,
-            warning_threshold,
-            max_archive_size,
-            is_deletion_allowed,
-            is_changelog_proposed_after_dnd,
             csrf_token_name,
             csrf_token,
-            user_locale,
-            relative_dates_display,
-            privacy,
-            project_flags,
         },
     }).$mount(vue_mount_point);
 

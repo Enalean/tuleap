@@ -26,8 +26,10 @@ describe("CurrentFolderDropZone", () => {
     let current_folder_drop_zone_factory, store;
     beforeEach(() => {
         const state = {
-            max_files_dragndrop: 10,
-            max_size_upload: 10000,
+            configuration: {
+                max_files_dragndrop: 10,
+                max_size_upload: 10000,
+            },
         };
 
         const store_options = {

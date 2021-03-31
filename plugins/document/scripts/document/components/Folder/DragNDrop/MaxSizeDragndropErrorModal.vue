@@ -32,7 +32,7 @@ import prettyKibibytes from "pretty-kibibytes";
 export default {
     components: { ErrorModal },
     computed: {
-        ...mapState(["max_size_upload"]),
+        ...mapState("configuration", ["max_size_upload"]),
         error_message() {
             return sprintf(
                 this.$gettext("You are not allowed to upload files bigger than %s."),

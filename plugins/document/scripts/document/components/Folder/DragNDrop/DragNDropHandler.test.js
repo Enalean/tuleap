@@ -47,9 +47,6 @@ describe("DragNDropHandler", () => {
         store_options = {
             state: {
                 folder_content: [],
-                max_files_dragndrop: 10,
-                max_size_upload: 1000000000,
-                is_changelog_proposed_after_dnd,
                 current_folder: {
                     id: 999,
                     title: "workdir",
@@ -58,6 +55,9 @@ describe("DragNDropHandler", () => {
                 },
                 configuration: {
                     user_id: 666,
+                    max_files_dragndrop: 10,
+                    max_size_upload: 1000000000,
+                    is_changelog_proposed_after_dnd,
                 },
             },
             getters: {
@@ -100,7 +100,7 @@ describe("DragNDropHandler", () => {
                 const wrapper = getWrapper();
                 drop_event.dataTransfer.files.push(file1, file2, file3);
 
-                store.state.max_files_dragndrop = 2;
+                store.state.configuration.max_files_dragndrop = 2;
 
                 await wrapper.vm.ondrop(drop_event);
 
@@ -112,7 +112,7 @@ describe("DragNDropHandler", () => {
                 const wrapper = getWrapper();
                 drop_event.dataTransfer.files.push(file1);
 
-                store.state.max_size_upload = 0;
+                store.state.configuration.max_size_upload = 0;
 
                 await wrapper.vm.ondrop(drop_event);
 
@@ -259,7 +259,7 @@ describe("DragNDropHandler", () => {
                     approval_table: null,
                 };
 
-                store.state.max_size_upload = 0;
+                store.state.configuration.max_size_upload = 0;
                 store.state.folder_content.push(target_file);
 
                 wrapper.setData({ highlighted_item_id: target_file.id });

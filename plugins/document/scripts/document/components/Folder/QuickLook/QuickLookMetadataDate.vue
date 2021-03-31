@@ -76,7 +76,7 @@ export default {
         metadata: Object,
     },
     computed: {
-        ...mapState(["date_time_format", "relative_dates_display", "user_locale"]),
+        ...mapState("configuration", ["date_time_format", "relative_dates_display", "user_locale"]),
         is_date_valid() {
             return isDateValid(this.metadata.value);
         },

@@ -60,20 +60,8 @@ export default {
         GlobalErrorModal,
     },
     props: {
-        project_url: String,
-        date_time_format: String,
-        max_files_dragndrop: Number,
-        max_size_upload: Number,
-        warning_threshold: Number,
-        max_archive_size: Number,
-        is_deletion_allowed: Boolean,
-        is_changelog_proposed_after_dnd: Boolean,
         csrf_token: String,
         csrf_token_name: String,
-        user_locale: String,
-        relative_dates_display: String,
-        privacy: Object,
-        project_flags: Array,
     },
     computed: {
         ...mapState("error", [
@@ -100,21 +88,7 @@ export default {
             }
         );
 
-        this.$store.commit("initApp", [
-            this.project_url,
-            this.date_time_format,
-            this.$gettext("Documents"),
-            this.max_files_dragndrop,
-            this.max_size_upload,
-            this.warning_threshold,
-            this.max_archive_size,
-            this.is_deletion_allowed,
-            this.is_changelog_proposed_after_dnd,
-            this.user_locale,
-            this.relative_dates_display,
-            this.privacy,
-            this.project_flags,
-        ]);
+        this.$store.commit("setRootTitle", this.$gettext("Documents"));
 
         window.addEventListener("beforeunload", (event) => {
             if (this.is_uploading) {

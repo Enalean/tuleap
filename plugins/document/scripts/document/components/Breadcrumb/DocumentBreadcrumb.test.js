@@ -26,11 +26,11 @@ describe("DocumentBreadcrumb", () => {
     let store_options, state, component_options, store;
     beforeEach(() => {
         state = {
-            privacy: {
-                are_restricted_users_allowed: false,
-            },
             configuration: {
                 user_is_admin: false,
+                privacy: {
+                    are_restricted_users_allowed: false,
+                },
             },
         };
         store_options = {

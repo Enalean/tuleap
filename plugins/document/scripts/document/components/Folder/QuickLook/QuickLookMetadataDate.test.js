@@ -30,7 +30,7 @@ describe("QuickLookMetadataDate", () => {
     let metadata_factory, state, store;
 
     beforeEach(() => {
-        state = {};
+        state = { configuration: {} };
 
         const store_options = { state };
 
@@ -58,7 +58,7 @@ describe("QuickLookMetadataDate", () => {
             value: "2019-07-02",
             post_processed_value: "2019-07-02",
         };
-        store.state.date_time_format = "d/m/Y H:i";
+        store.state.configuration.date_time_format = "d/m/Y H:i";
 
         const wrapper = metadata_factory(metadata_date);
         expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeTruthy();
@@ -78,7 +78,7 @@ describe("QuickLookMetadataDate", () => {
             post_processed_value: null,
         };
 
-        store.state.date_time_format = "d/m/Y H:i";
+        store.state.configuration.date_time_format = "d/m/Y H:i";
 
         const wrapper = metadata_factory(metadata_date);
         expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeFalsy();
@@ -97,7 +97,7 @@ describe("QuickLookMetadataDate", () => {
             value: "2019-07-02",
             post_processed_value: "2019-07-02",
         };
-        store.state.date_time_format = "d/m/Y H:i";
+        store.state.configuration.date_time_format = "d/m/Y H:i";
 
         const wrapper = metadata_factory(metadata_date);
 
@@ -118,7 +118,7 @@ describe("QuickLookMetadataDate", () => {
             post_processed_value: null,
         };
 
-        store.state.date_time_format = "d/m/Y H:i";
+        store.state.configuration.date_time_format = "d/m/Y H:i";
 
         const wrapper = metadata_factory(metadata_date);
 
@@ -139,7 +139,7 @@ describe("QuickLookMetadataDate", () => {
             post_processed_value: "2019-07-02",
         };
 
-        store.state.date_time_format = "d/m/Y H:i";
+        store.state.configuration.date_time_format = "d/m/Y H:i";
 
         jest.spyOn(date_formatter, "isToday").mockReturnValue(true);
 

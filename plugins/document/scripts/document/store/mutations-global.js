@@ -19,7 +19,7 @@
 
 export {
     beginLoading,
-    initApp,
+    setRootTitle,
     stopLoading,
     saveAscendantHierarchy,
     resetAscendantHierarchy,
@@ -36,37 +36,8 @@ export {
     stopLoadingCurrentlyPreviewedItem,
 };
 
-function initApp(
-    state,
-    [
-        project_url,
-        date_time_format,
-        root_title,
-        max_files_dragndrop,
-        max_size_upload,
-        warning_threshold,
-        max_archive_size,
-        is_deletion_allowed,
-        is_changelog_proposed_after_dnd,
-        user_locale,
-        relative_dates_display,
-        privacy,
-        project_flags,
-    ]
-) {
-    state.project_url = project_url;
-    state.date_time_format = date_time_format;
+function setRootTitle(state, root_title) {
     state.root_title = root_title;
-    state.max_files_dragndrop = max_files_dragndrop;
-    state.max_size_upload = max_size_upload;
-    state.warning_threshold = warning_threshold;
-    state.max_archive_size = max_archive_size;
-    state.is_deletion_allowed = is_deletion_allowed;
-    state.is_changelog_proposed_after_dnd = is_changelog_proposed_after_dnd;
-    state.user_locale = user_locale;
-    state.relative_dates_display = relative_dates_display;
-    state.privacy = privacy;
-    state.project_flags = project_flags;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {

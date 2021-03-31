@@ -142,12 +142,8 @@ export default {
         isQuickLookDisplayed: Boolean,
     },
     computed: {
-        ...mapState([
-            "date_time_format",
-            "folded_items_ids",
-            "relative_dates_display",
-            "user_locale",
-        ]),
+        ...mapState(["folded_items_ids"]),
+        ...mapState("configuration", ["date_time_format", "relative_dates_display", "user_locale"]),
         formatted_full_date() {
             return formatDateUsingPreferredUserFormat(
                 this.item.last_update_date,

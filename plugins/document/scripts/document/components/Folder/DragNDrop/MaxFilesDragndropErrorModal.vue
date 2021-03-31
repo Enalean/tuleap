@@ -38,7 +38,7 @@ import ErrorModal from "./ErrorModal.vue";
 export default {
     components: { ErrorModal },
     computed: {
-        ...mapState(["max_files_dragndrop"]),
+        ...mapState("configuration", ["max_files_dragndrop"]),
     },
     methods: {
         bubbleErrorModalHidden() {
