@@ -165,9 +165,6 @@ msgctxt "Keyboard input"
 msgid "Home,↖"
 msgstr "Début,↖"
 
-msgid "Id"
-msgstr "Id"
-
 msgid "Id, summary, category…"
 msgstr "Id, résumé, catégorie…"
 
@@ -300,9 +297,6 @@ msgstr "N'afficher que les tests restants"
 msgid "Show test campaign scores"
 msgstr "Afficher les scores pour la campagne"
 
-msgid "Summary"
-msgstr "Résumé"
-
 msgid "Test campaign"
 msgstr "Campagne de tests"
 
@@ -357,6 +351,9 @@ msgstr "Ceci est un test automatisé."
 
 msgid "This test has no description. Please edit it."
 msgstr "Ce test n'a pas de description. Veuillez l'éditer."
+
+msgid "Toggle all tests in category"
+msgstr "Sélectionner ou déselectionner tous les tests de la catégorie"
 
 msgid "Toggle automated tests"
 msgstr "Afficher ou cacher les tests automatisés"

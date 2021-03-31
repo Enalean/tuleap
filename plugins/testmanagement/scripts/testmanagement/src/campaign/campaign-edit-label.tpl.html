@@ -11,7 +11,7 @@
 
     <div class="tlp-modal-body">
         <div class="tlp-form-element"
-             ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid }">
+             ng-class="{ 'tlp-form-element-error': editCampaignLabelForm.campaign_label.$dirty && editCampaignLabelForm.campaign_label.$invalid }">
             <label class="tlp-label" for="campaign-label">
                 {{ 'Campaign label' | translate }} <i class="fas fa-asterisk" aria-hidden="true"></i>
             </label>
@@ -24,7 +24,7 @@
                    placeholder="{{ 'Campaign label' | translate }}"
                    required
                    ng-trim />
-            <p class="tlp-text-danger" ng-show="editCampaignNameLabelForm.campaign_label.$dirty && editCampaignLabelForm.campaign_label.$invalid">
+            <p class="tlp-text-danger" ng-show="editCampaignLabelForm.campaign_label.$dirty && editCampaignLabelForm.campaign_label.$invalid">
                 {{ 'A campaign label is required' | translate }}
                 <i class="far fa-frown" aria-hidden="true"></i>
             </p>

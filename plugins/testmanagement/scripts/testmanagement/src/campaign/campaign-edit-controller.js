@@ -69,12 +69,10 @@ function CampaignEditCtrl(
         selectReportTests,
         showAddTestModal,
         toggleCategory,
-        toggleTest,
         addedTests,
         removedTests,
         editCampaign,
         categoryCheckmark,
-        testCheckmark,
         diffState,
     });
 
@@ -141,10 +139,6 @@ function CampaignEditCtrl(
         }
     }
 
-    function toggleTest(test) {
-        test.selected = !test.selected;
-    }
-
     function categoryCheckmark(category) {
         switch (selectedTests(category).length) {
             case 0:
@@ -155,10 +149,6 @@ function CampaignEditCtrl(
             default:
                 return "fa-minus-square-o";
         }
-    }
-
-    function testCheckmark(test) {
-        return test.selected ? "fa-check-square-o" : "fa-square-o";
     }
 
     function diffState(test) {
