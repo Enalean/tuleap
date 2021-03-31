@@ -18,6 +18,9 @@
  */
 
 :root {
+    // Fonts
+    --tlp-font-family: #{$tlp-font-family};
+
     // colors
     --tlp-ui-info: #{$tlp-ui-info};
     --tlp-ui-success: #{$tlp-ui-success};
@@ -26,14 +29,23 @@
     --tlp-ui-dimmed: #{$tlp-ui-dimmed};
     --tlp-ui-white: #{$tlp-ui-white};
     --tlp-theme-color: #{$tlp-theme-color};
+    --tlp-theme-background-color: #{$tlp-theme-background-color};
     --tlp-theme-color-hover-background: #{$tlp-theme-color-hover-background};
     --tlp-theme-color-dimmed-background: #{$tlp-theme-color-dimmed-background};
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
 
     --tlp-theme-color-transparent-80: #{transparentize($tlp-theme-color, .8)};
 
+    // Dark
+    --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};
+    --tlp-ui-dimmed-on-dark-background: #{$tlp-ui-border-dark};
+    --tlp-theme-dark-background-color: #{$tlp-theme-sidebar-background-color};
+    --tlp-typo-default-text-color-on-dark-background: #{$tlp-ui-border-normal};
+
     // borders
+    --tlp-ui-border-light: #{$tlp-ui-border-light};
     --tlp-ui-border-normal: #{$tlp-ui-border-normal};
+    --tlp-ui-border-dark: #{$tlp-ui-border-dark};
 
     // density
     @if $tlp-density == $tlp-density-condensed {

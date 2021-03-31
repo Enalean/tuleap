@@ -17,43 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$dark-modal-background: $tlp-theme-sidebar-background-color;
-$dark-modal-default-text-color: $tlp-ui-border-normal;
-$dark-modal-dimmed-text-color: $tlp-ui-border-dark;
-$white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
-$approximate-width-of-project-icon: 15.5px;
-$switch-to-font-family: $tlp-font-family;
-
-@import '../../../common/css/utils/switch-to';
-
-.switch-to-modal-header {
-    background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), $dark-modal-background;
-}
-
-.switch-to-modal-body-title {
-    color: $tlp-ui-dimmed;
-}
-
-#switch-to-filter {
-    color: $tlp-ui-white;
-}
-
-.switch-to-projects-project-link {
-    &:hover,
-    &:focus {
-        > .switch-to-projects-project-label {
-            color: $tlp-ui-white;
-        }
-    }
-}
-
-.switch-to-projects-project-icon {
-    &.fa-lock,
-    &.fa-tlp-lock-plus-r {
-        color: $tlp-theme-color;
-    }
-}
-
-.switch-to-recent-items-error {
-    color: mix($tlp-ui-danger, $tlp-ui-white, 85%);
-}
+@use '../../../common/css/utils/switch-to';

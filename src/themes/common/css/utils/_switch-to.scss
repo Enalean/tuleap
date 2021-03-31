@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../tlp/src/scss/variables/colors/swatch-colors';
+
 $projects-container-width: 400px;
+$white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 #switch-to-modal {
     width: 75vw;
@@ -30,6 +33,7 @@ $projects-container-width: 400px;
 .switch-to-modal-header {
     padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
     border-bottom: 1px solid rgba(104, 122, 124, .2);
+    background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), var(--tlp-theme-dark-background-color);
     background-blend-mode: overlay;
 }
 
@@ -42,7 +46,7 @@ $projects-container-width: 400px;
 .switch-to-modal-header-icon {
     margin: 0 6px 0 0;
     opacity: .7;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .875rem;
     line-height: 1rem;
 }
@@ -53,13 +57,14 @@ $projects-container-width: 400px;
     border: 0;
     border-radius: 0;
     background: transparent;
-    font-family: $switch-to-font-family;
+    color: var(--tlp-ui-white);
+    font-family: var(--tlp-font-family);
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.1875rem;
 
     &::placeholder {
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 
     &::-ms-clear,
@@ -83,8 +88,8 @@ $projects-container-width: 400px;
     border-radius: 4px;
     opacity: .75;
     background: none;
-    color: $dark-modal-dimmed-text-color;
-    font-family: $switch-to-font-family;
+    color: var(--tlp-ui-dimmed-on-dark-background);
+    font-family: var(--tlp-font-family);
     font-size: .8125rem;
     font-weight: 500;
     line-height: 1rem;
@@ -104,11 +109,13 @@ $projects-container-width: 400px;
 .switch-to-modal-body {
     display: flex;
     padding: var(--tlp-large-spacing) var(--tlp-large-spacing) var(--tlp-large-spacing) calc(var(--tlp-large-spacing) - var(--tlp-small-spacing));
-    background: $dark-modal-background;
-    color: $dark-modal-default-text-color;
+    background: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-typo-default-text-color-on-dark-background);
 }
 
+
 .switch-to-modal-body-title {
+    color: var(--tlp-ui-dimmed);
     font-size: .8125rem;
     font-weight: 600;
     line-height: 1rem;
@@ -125,7 +132,7 @@ $projects-container-width: 400px;
 .switch-to-projects-project {
     display: flex;
     align-items: baseline;
-    color: $dark-modal-default-text-color;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
 
     &:hover,
     &:focus-within {
@@ -138,18 +145,27 @@ $projects-container-width: 400px;
 .switch-to-projects-project-link {
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     border-radius: 4px;
-    color: $dark-modal-default-text-color;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
 
     &:hover,
     &:focus {
         background: rgba(0, 0, 0, .2);
         text-decoration: none;
+
+        > .switch-to-projects-project-label {
+            color: var(--tlp-ui-white);
+        }
     }
 }
 
 .switch-to-projects-project-icon {
     margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: .8rem;
+
+    &.fa-lock,
+    &.fa-tlp-lock-plus-r {
+        color: var(--tlp-theme-color);
+    }
 }
 
 .switch-to-projects-project-admin-icon {
@@ -160,7 +176,7 @@ $projects-container-width: 400px;
     transition: opacity 100ms ease-in-out;
     border-radius: 4px;
     opacity: 0;
-    color: $dark-modal-dimmed-text-color;
+    color: var(--tlp-ui-dimmed-on-dark-background);
     font-size: .8125rem;
     cursor: pointer;
 
@@ -174,7 +190,7 @@ $projects-container-width: 400px;
 .switch-to-projects-softwaremap {
     padding: 6px 8px calc(var(--tlp-large-spacing) + 6px) 36px;
     opacity: .75;
-    color: $dark-modal-dimmed-text-color;
+    color: var(--tlp-ui-dimmed-on-dark-background);
     font-size: .8125rem;
     font-weight: 500;
     line-height: 1rem;
@@ -229,7 +245,7 @@ $projects-container-width: 400px;
 .switch-to-projects-empty-text {
     margin: var(--tlp-medium-spacing) 0 var(--tlp-large-spacing);
     opacity: .75;
-    color: $dark-modal-dimmed-text-color;
+    color: var(--tlp-ui-dimmed-on-dark-background);
     font-size: .8125rem;
     font-weight: 500;
     line-height: 1rem;
@@ -239,11 +255,11 @@ $projects-container-width: 400px;
     opacity: .5;
 
     .stroked {
-        stroke: $dark-modal-dimmed-text-color;
+        stroke: var(--tlp-ui-dimmed-on-dark-background);
     }
 
     .filled {
-        fill: $dark-modal-dimmed-text-color;
+        fill: var(--tlp-ui-dimmed-on-dark-background);
     }
 }
 
@@ -259,7 +275,7 @@ $projects-container-width: 400px;
 .switch-to-modal-no-matching-history,
 .switch-to-modal-no-matching-projects {
     opacity: .75;
-    color: $dark-modal-dimmed-text-color;
+    color: var(--tlp-ui-dimmed-on-dark-background);
     font-size: .875rem;
 }
 
@@ -274,10 +290,12 @@ $projects-container-width: 400px;
 
 .switch-to-recent-items-error {
     opacity: .75;
+    color: var(--tlp-ui-danger-on-dark-background);
     font-size: .8125rem;
     font-weight: 600;
     line-height: 1rem;
 }
+
 
 .switch-to-recent-items-error-icon {
     margin: 0 4px 0 0;
@@ -308,7 +326,7 @@ $projects-container-width: 400px;
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     overflow: hidden;
     border-radius: 4px;
-    color: $dark-modal-default-text-color;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
     text-overflow: ellipsis;
     white-space: nowrap;
 
@@ -345,7 +363,7 @@ $projects-container-width: 400px;
 .switch-to-recent-items-entry-quick-links-link {
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     border-radius: 4px;
-    color: $dark-modal-default-text-color;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
     font-size: .8125rem;
 
     &:focus,
@@ -355,7 +373,7 @@ $projects-container-width: 400px;
     }
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .switch-to-recent-items-entry-link.#{$color-name} > .switch-to-recent-items-entry-icon {
         color: map-get($colors, 'primary');
     }

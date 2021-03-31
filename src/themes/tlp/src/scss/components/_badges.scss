@@ -163,7 +163,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
         color: $tlp-ui-danger;
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid mix($tlp-ui-danger, $tlp-ui-white, 85%);
+            border: 1px solid var(--tlp-ui-danger-on-dark-background);
             background: transparentize($tlp-ui-danger, .85);
             color: mix($tlp-ui-danger, $tlp-ui-white, 60%);
         }

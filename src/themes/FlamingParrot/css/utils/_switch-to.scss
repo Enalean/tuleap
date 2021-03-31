@@ -17,19 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../tlp/src/scss/variables/colors/swatch-colors';
-
-$tlp-ui-dimmed: $ui-dimmed;
 @import '../../../tlp/src/scss/components/skeleton';
-
-$dark-modal-background: $sidebar-background;
-$dark-modal-default-text-color: $ui-border-normal;
-$dark-modal-dimmed-text-color: $ui-border-dark;
-$white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
-$approximate-width-of-project-icon: 15.5px;
-$switch-to-font-family: $base-font;
-
-
 @import '../../../common/css/utils/switch-to';
 
 #switch-to-modal {
@@ -51,11 +39,11 @@ $switch-to-font-family: $base-font;
 
 .switch-to-modal-header.modal-header {
     box-sizing: border-box;
-    padding: ($tlp-medium-spacing + 1px) $tlp-medium-spacing ($tlp-medium-spacing + 1px) $tlp-large-spacing;
+    padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
     border-bottom: 1px solid rgba(104, 122, 124, .2);
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), $dark-modal-background;
+    background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), var(--tlp-theme-dark-background-color);
     background-blend-mode: overlay;
 }
 
@@ -66,40 +54,22 @@ $switch-to-font-family: $base-font;
 #switch-to-filter {
     margin: 0;
     box-shadow: none;
-    color: $white;
 
     &::placeholder {
-        color: $ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 }
 
 .switch-to-modal-body-title {
     border: 0; // overrides phpwiki style
-    color: $ui-dimmed;
-}
-
-.switch-to-projects-project-link {
-    &:hover,
-    &:focus {
-        > .switch-to-projects-project-label {
-            color: $white;
-        }
-    }
-}
-
-.switch-to-projects-project-icon {
-    &.fa-lock,
-    &.fa-tlp-lock-plus-r {
-        color: $main;
-    }
 }
 
 .switch-to-projects-softwaremap-empty-state {
     height: auto;
-    padding: 0 $tlp-medium-spacing;
+    padding: 0 var(--tlp-medium-spacing);
     border-radius: 4px;
-    background: $main-background;
-    color: $sidebar-background;
+    background: var(--tlp-theme-background-color);
+    color: var(--tlp-theme-dark-background-color);
     font-size: .875rem;
     font-weight: 500;
     line-height: 38px;
@@ -107,11 +77,7 @@ $switch-to-font-family: $base-font;
 
     &:hover,
     &:focus {
-        background: $ui-border-light;
+        background: var(--tlp-ui-border-light);
         text-decoration: none;
     }
-}
-
-.switch-to-recent-items-error {
-    color: mix($tlp-ui-danger, $white, 85%);
 }
