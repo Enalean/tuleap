@@ -198,4 +198,16 @@ describe("StepController", () => {
             });
         });
     });
+
+    describe("sanitizedContentWithEnhancedCodeBlocks() -", () => {
+        it("should allow tlp-mermaid-block but still sanitizes the html", () => {
+            const trusted_as_html = StepController.sanitizedContentWithEnhancedCodeBlocks(
+                "<tlp-mermaid-diagram>23<a href='\u2028javascript:alert(1)'>I am a dolphin too!</a></tlp-mermaid-diagram>"
+            );
+
+            expect(trusted_as_html.$$unwrapTrustedValue()).toBe(
+                "<tlp-mermaid-diagram>23<a>I am a dolphin too!</a></tlp-mermaid-diagram>"
+            );
+        });
+    });
 });

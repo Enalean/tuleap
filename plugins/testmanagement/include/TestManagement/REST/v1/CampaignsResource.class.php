@@ -58,7 +58,9 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
+use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -212,8 +214,9 @@ class CampaignsResource
             $this->formelement_factory,
             new StepsResultsFilter()
         );
-        $purifier                             =  Codendi_HTMLPurifier::instance();
-        $commonmark_interpreter               = CommonMarkInterpreter::build($purifier);
+
+        $purifier               = Codendi_HTMLPurifier::instance();
+        $commonmark_interpreter = CommonMarkInterpreter::build($purifier, new EnhancedCodeBlockExtension(new CodeBlockFeatures()));
 
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,

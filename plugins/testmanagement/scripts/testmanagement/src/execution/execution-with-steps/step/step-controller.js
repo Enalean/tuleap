@@ -1,16 +1,17 @@
 import {
-    PASSED_STATUS,
-    FAILED_STATUS,
     BLOCKED_STATUS,
+    FAILED_STATUS,
     NOT_RUN_STATUS,
+    PASSED_STATUS,
 } from "../../execution-constants.js";
 import { createDropdown } from "tlp";
-import { setError, resetError } from "../../../feedback-state.js";
+import { resetError, setError } from "../../../feedback-state.js";
 import { updateStatusWithStepResults, updateStepResults } from "./execution-with-steps-updater.js";
+import { sanitize } from "dompurify";
 
-controller.$inject = ["$element", "gettextCatalog", "ExecutionRestService"];
+controller.$inject = ["$sce", "$element", "gettextCatalog", "ExecutionRestService"];
 
-export default function controller($element, gettextCatalog, ExecutionRestService) {
+export default function controller($sce, $element, gettextCatalog, ExecutionRestService) {
     const self = this;
     Object.assign(self, {
         saving: false,
@@ -32,6 +33,7 @@ export default function controller($element, gettextCatalog, ExecutionRestServic
         isNotRun: () => self.step_result.status === NOT_RUN_STATUS,
         openDropdown: () => self.dropdown.show(),
         $onInit: init,
+        sanitizedContentWithEnhancedCodeBlocks,
     });
 
     function init() {
@@ -79,5 +81,13 @@ export default function controller($element, gettextCatalog, ExecutionRestServic
             .finally(() => {
                 self.saving = false;
             });
+    }
+
+    function sanitizedContentWithEnhancedCodeBlocks(html_content) {
+        return $sce.trustAsHtml(
+            sanitize(html_content, {
+                ADD_TAGS: ["tlp-mermaid-diagram"],
+            })
+        );
     }
 }
