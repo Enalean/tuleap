@@ -94,7 +94,10 @@ let entry_points = {
 const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of tlp_colors) {
     entry_points[`tlp-${color}`] = `./themes/tlp/src/scss/tlp-${color}.scss`;
-    entry_points[`tlp-${color}-condensed`] = `./themes/tlp/src/scss/tlp-${color}-condensed.scss`;
+    entry_points[`tlp-vars-${color}`] = `./themes/tlp/src/scss/tlp-vars-${color}.scss`;
+    entry_points[
+        `tlp-vars-${color}-condensed`
+    ] = `./themes/tlp/src/scss/tlp-vars-${color}-condensed.scss`;
 }
 
 const webpack_config_for_tlp = {

@@ -22,10 +22,7 @@ $tlp-badge-color: #ffffff;
 $tlp-badge-font-size: .75rem;
 $tlp-badge-line-height: .75rem;
 $tlp-badge-font-weight: 600;
-$tlp-badge-padding: 5px $tlp-small-spacing;
-@if $tlp-density == $tlp-density-condensed {
-    $tlp-badge-padding: 4px $tlp-small-spacing;
-}
+$tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-spacing);
 
 $tlp-badge-secondary-background: $tlp-ui-border-normal;
 $tlp-badge-secondary-color: darken($tlp-ui-dimmed, 10%);

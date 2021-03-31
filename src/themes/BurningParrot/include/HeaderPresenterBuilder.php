@@ -30,6 +30,7 @@ use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutDensityVariants;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
@@ -60,12 +61,16 @@ class HeaderPresenterBuilder
     /** @var array */
     private $main_classes;
 
+    /**
+     * @var CssAssetCollection
+     */
+    private $css_assets;
+
     /** @var SidebarPresenter */
     private $sidebar;
 
     /** @var bool */
     private $is_in_siteadmin;
-
     /** @var ProjectContextPresenter|null */
     private $project_context;
 
@@ -162,7 +167,8 @@ class HeaderPresenterBuilder
     {
         $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
         $css_assets       = new CssAssetCollection([
-            new CssAsset($core_assets, 'tlp'),
+            new CssAssetWithoutDensityVariants($core_assets, 'tlp'),
+            new CssAsset($core_assets, 'tlp-vars'),
             new CssAsset($core_assets, 'BurningParrot/burning-parrot')
         ]);
         $this->css_assets = $css_assets->merge($this->css_assets);

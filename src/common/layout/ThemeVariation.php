@@ -49,7 +49,12 @@ class ThemeVariation
         if ($this->is_condensed_mode) {
             $condensed_suffix = '-condensed';
         }
-        return '-' . $this->color->getName() . $condensed_suffix;
+        return $this->getFileColorSuffix() . $condensed_suffix;
+    }
+
+    public function getFileColorSuffix(): string
+    {
+        return '-' . $this->color->getName();
     }
 
     public function isCondensed(): bool

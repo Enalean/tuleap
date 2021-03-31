@@ -35,6 +35,13 @@
     // borders
     --tlp-ui-border-normal: #{$tlp-ui-border-normal};
 
+    // density
+    @if $tlp-density == $tlp-density-condensed {
+        --tlp-is-condensed: 1;
+    } @else {
+        --tlp-is-condensed: 0;
+    }
+
     // margins
     --tlp-small-spacing: #{$tlp-small-spacing};
     --tlp-medium-spacing: #{$tlp-medium-spacing};

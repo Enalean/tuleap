@@ -20,8 +20,8 @@
 @use '../variables/radius';
 
 .tlp-card {
-    margin: 0 0 $tlp-medium-spacing;
-    padding: $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing);
     border: 1px solid $tlp-ui-border-normal;
     border-radius: radius.$tlp-card-radius;
     background: $tlp-ui-white;
@@ -60,7 +60,7 @@
 .tlp-pane-section-for-cards,
 .tlp-pane-section-for-cards-under-tabs {
     > .tlp-pane-subtitle {
-        margin: $tlp-medium-spacing $tlp-medium-spacing 0;
+        margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     }
 
     > .tlp-card-container {
@@ -117,5 +117,5 @@
 }
 
 .tlp-pane-section-for-cards-under-tabs {
-    padding: $tlp-medium-spacing 0 0;
+    padding: var(--tlp-medium-spacing) 0 0;
 }
