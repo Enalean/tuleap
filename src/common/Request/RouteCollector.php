@@ -94,8 +94,10 @@ use Tuleap\MailingList\MailingListHomepageController;
 use Tuleap\MailingList\MailingListPresenterBuilder;
 use Tuleap\MailingList\MailingListPresenterCollectionBuilder;
 use Tuleap\MailingList\MailingListUpdateController;
-use Tuleap\Markdown\CommonMarkInterpreterController;
+use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\CommonMarkInterpreterController;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
@@ -850,7 +852,10 @@ class RouteCollector
         return new CommonMarkInterpreterController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance()),
+            CommonMarkInterpreter::build(
+                Codendi_HTMLPurifier::instance(),
+                new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+            ),
             new SapiEmitter(),
             new ProjectRetrieverMiddleware(ProjectRetriever::buildSelf())
         );
