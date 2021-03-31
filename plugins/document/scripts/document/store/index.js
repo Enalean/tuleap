@@ -29,7 +29,7 @@ import * as mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import * as actions from "./actions.js";
 import state from "./state.js";
-import error from "./error/module.js";
+import error from "./error/module";
 import clipboard from "./clipboard/module.js";
 import metadata from "./metadata/module.js";
 import lock from "./lock/module.js";

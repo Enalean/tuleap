@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import initial_state from "./module.js";
-import * as getters from "./error-getters.js";
+import type { ErrorState } from "./module";
+import * as getters from "./error-getters";
 
 describe("error_getters", () => {
-    let state;
-    beforeEach(() => {
-        state = { ...initial_state };
-    });
+    const state: ErrorState = {
+        has_folder_permission_error: false,
+        has_folder_loading_error: false,
+        has_document_lock_error: false,
+        has_document_permission_error: false,
+        has_document_loading_error: false,
+    } as ErrorState;
 
     describe("does_folder_have_any_error", () => {
         it("folder has an error if user can't write", () => {

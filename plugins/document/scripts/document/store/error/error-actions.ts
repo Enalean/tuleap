@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export async function handleGlobalModalError(context, rest_error) {
+import type { ActionContext } from "vuex";
+import type { State } from "../../type";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+
+export async function handleGlobalModalError(
+    context: ActionContext<State, State>,
+    rest_error: FetchWrapperError
+): Promise<void> {
     try {
         const { error } = await rest_error.response.json();
         context.commit("setGlobalModalErrorMessage", error.code + " " + error.message);

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,7 @@
  */
 
 import type { ConfigurationState } from "./store/configuration";
+import type { ErrorState } from "./store/error/module";
 
 export interface State {
     is_loading_folder: boolean;
@@ -25,6 +26,7 @@ export interface State {
 
 export interface RootState extends State {
     readonly configuration: ConfigurationState;
+    error: ErrorState;
 }
 
 export enum Direction {

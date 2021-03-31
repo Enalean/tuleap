@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { ErrorState } from "./module";
 
-export const does_folder_have_any_error = (state) => {
+export const does_folder_have_any_error = (state: ErrorState): boolean => {
     return (
         state.has_folder_permission_error ||
         state.has_folder_loading_error ||
@@ -27,7 +28,7 @@ export const does_folder_have_any_error = (state) => {
     );
 };
 
-export const does_document_have_any_error = (state) => {
+export const does_document_have_any_error = (state: ErrorState): boolean => {
     return (
         state.has_folder_loading_error ||
         state.has_document_permission_error ||
@@ -36,7 +37,7 @@ export const does_document_have_any_error = (state) => {
     );
 };
 
-export const has_any_loading_error = (state) => {
+export const has_any_loading_error = (state: ErrorState): boolean => {
     return (
         state.has_folder_loading_error ||
         state.has_document_loading_error ||

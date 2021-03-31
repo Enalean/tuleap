@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./error-mutations.js";
+import * as mutations from "./error-mutations";
+import type { ErrorState } from "./module";
 
 describe("Store mutations", () => {
     describe("resetErrors()", () => {
         it("resets all errors", () => {
-            const state = {
+            const state: ErrorState = {
                 has_folder_permission_error: true,
                 has_folder_loading_error: true,
                 folder_loading_error: "Not found",
@@ -33,7 +34,7 @@ describe("Store mutations", () => {
                 document_lock_error: "Could not lock",
                 has_global_modal_error: true,
                 global_modal_error_message: "400 Bad Request",
-            };
+            } as ErrorState;
 
             mutations.resetErrors(state);
 
@@ -51,28 +52,28 @@ describe("Store mutations", () => {
     });
 
     it("switchFolderPermissionError", () => {
-        const state = {
+        const state: ErrorState = {
             has_folder_permission_error: false,
-        };
+        } as ErrorState;
 
         mutations.switchFolderPermissionError(state);
         expect(state.has_folder_permission_error).toBe(true);
     });
 
     it("switchItemPermissionError", () => {
-        const state = {
+        const state: ErrorState = {
             has_document_permission_error: false,
-        };
+        } as ErrorState;
 
         mutations.switchItemPermissionError(state);
         expect(state.has_document_permission_error).toBe(true);
     });
 
     it("setFolderLoadingError", () => {
-        const state = {
+        const state: ErrorState = {
             has_folder_loading_error: false,
             folder_loading_error: "",
-        };
+        } as ErrorState;
 
         mutations.setFolderLoadingError(state, "my error message");
         expect(state.has_folder_loading_error).toBe(true);
@@ -80,10 +81,10 @@ describe("Store mutations", () => {
     });
 
     it("setItemLoadingError", () => {
-        const state = {
+        const state: ErrorState = {
             has_document_loading_error: false,
             document_loading_error: "",
-        };
+        } as ErrorState;
 
         mutations.setItemLoadingError(state, "my error message");
         expect(state.has_document_loading_error).toBe(true);
@@ -91,10 +92,10 @@ describe("Store mutations", () => {
     });
 
     it("setModalError", () => {
-        const state = {
+        const state: ErrorState = {
             has_modal_error: false,
             modal_error: "",
-        };
+        } as ErrorState;
 
         mutations.setModalError(state, "my modal error message");
         expect(state.has_modal_error).toBe(true);
@@ -102,10 +103,10 @@ describe("Store mutations", () => {
     });
 
     it("resetModalError", () => {
-        const state = {
+        const state: ErrorState = {
             has_modal_error: true,
             modal_error: "previous error",
-        };
+        } as ErrorState;
 
         mutations.resetModalError(state);
         expect(state.has_modal_error).toBe(false);
@@ -113,10 +114,10 @@ describe("Store mutations", () => {
     });
 
     it("setLockError", () => {
-        const state = {
+        const state: ErrorState = {
             has_document_lock_error: false,
             document_lock_error: "",
-        };
+        } as ErrorState;
 
         mutations.setLockError(state, "error lock");
         expect(state.has_document_lock_error).toBe(true);
@@ -125,14 +126,20 @@ describe("Store mutations", () => {
 
     describe(`setGlobalModalErrorMessage`, () => {
         it(`stores the error message to be displayed in a dedicated modal`, () => {
-            const state = { global_modal_error_message: "", has_global_modal_error: false };
+            const state: ErrorState = {
+                global_modal_error_message: "",
+                has_global_modal_error: false,
+            } as ErrorState;
             mutations.setGlobalModalErrorMessage(state, "500 Internal Server Error");
             expect(state.global_modal_error_message).toBe("500 Internal Server Error");
             expect(state.has_global_modal_error).toBe(true);
         });
 
         it(`activates error state even if the error message is empty`, () => {
-            const state = { global_modal_error_message: "", has_global_modal_error: false };
+            const state: ErrorState = {
+                global_modal_error_message: "",
+                has_global_modal_error: false,
+            } as ErrorState;
             mutations.setGlobalModalErrorMessage(state, "");
             expect(state.global_modal_error_message).toBe("");
             expect(state.has_global_modal_error).toBe(true);

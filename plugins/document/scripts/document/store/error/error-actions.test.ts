@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,26 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./error-actions.js";
+import * as actions from "./error-actions";
+import type { State } from "../../type";
+import type { ActionContext } from "vuex";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe(`Error module actions`, () => {
-    let context;
+    let context: ActionContext<State, State>;
 
     beforeEach(() => {
-        context = {
+        context = ({
             commit: jest.fn(),
-        };
+        } as unknown) as ActionContext<State, State>;
     });
 
     describe(`handleGlobalModalError`, () => {
         it(`when a message can be extracted from the FetchWrapperError,
             it will set an error message that will show up in a dedicated modal window`, async () => {
-            const error = new Error();
-            error.response = {
-                json: () =>
-                    Promise.resolve({ error: { code: 500, message: "Internal Server Error" } }),
-            };
-
+            const error = {
+                response: {
+                    json: () =>
+                        Promise.resolve({
+                            error: { code: 500, message: "Internal Server Error" },
+                        }),
+                } as Response,
+            } as FetchWrapperError;
             await actions.handleGlobalModalError(context, error);
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -47,10 +52,12 @@ describe(`Error module actions`, () => {
 
         it(`when a message can't be extracted from the FetchWrapperError,
             it will leave the modal error message empty`, async () => {
-            const error = new Error();
-            error.response = {
-                json: () => Promise.reject("Could not decode JSON"),
-            };
+            const response = {
+                json(): Promise<unknown> {
+                    return Promise.reject("Oh snap");
+                },
+            } as Response;
+            const error = new FetchWrapperError("Internal Server Error", response);
 
             await actions.handleGlobalModalError(context, error);
 
