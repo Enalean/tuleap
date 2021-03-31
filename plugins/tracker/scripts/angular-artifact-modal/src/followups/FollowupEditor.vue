@@ -33,7 +33,7 @@
         <rich-text-editor
             id="followup_comment"
             v-bind:format="format"
-            v-bind:disabled="false"
+            v-bind:disabled="is_preview_loading"
             v-bind:required="false"
             rows="3"
             v-model="content"

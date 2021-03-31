@@ -21,11 +21,6 @@ import type { TemplateResult } from "lit-html";
 import { html, render } from "lit-html";
 import type { GettextProvider } from "@tuleap/gettext";
 
-export const wrapTextArea = (textarea: HTMLTextAreaElement): TemplateResult =>
-    html`
-        ${textarea}
-    `;
-
 export interface HTMLOrTextEditorArea {
     readonly mount_point: HTMLDivElement;
     readonly selectbox: TemplateResult;
