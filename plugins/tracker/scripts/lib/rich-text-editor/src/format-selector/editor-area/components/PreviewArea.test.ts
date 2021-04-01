@@ -55,7 +55,7 @@ describe(`PreviewArea`, () => {
         const template = createPreviewArea(promise, gettext_provider);
         render(template, mount_point);
         await promise;
-        // I don't really understand why, but I have to await twice
+        // // I don't really understand why, but I have to await twice
         await promise;
 
         expect(mount_point.innerHTML).toContain(html_string);

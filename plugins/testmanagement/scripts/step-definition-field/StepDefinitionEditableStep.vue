@@ -57,6 +57,7 @@
             rows="3"
             v-model="step.raw_description"
             v-show="!is_in_preview_mode && !is_preview_in_error"
+            v-bind:disabled="is_preview_loading"
         ></textarea>
         <div
             v-if="is_in_preview_mode && !is_preview_in_error"
@@ -94,6 +95,7 @@
                     v-model="step.raw_expected_results"
                     v-show="!is_in_preview_mode && !is_preview_in_error"
                     data-test="expected-results-textarea"
+                    v-bind:disabled="is_preview_loading"
                 ></textarea>
                 <div
                     v-if="is_in_preview_mode"

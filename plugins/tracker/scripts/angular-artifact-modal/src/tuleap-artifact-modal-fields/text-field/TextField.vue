@@ -79,7 +79,7 @@ export default {
     },
     computed: {
         disabled() {
-            return isDisabled(this.field);
+            return isDisabled(this.field) || this.is_preview_loading;
         },
         content: {
             get() {

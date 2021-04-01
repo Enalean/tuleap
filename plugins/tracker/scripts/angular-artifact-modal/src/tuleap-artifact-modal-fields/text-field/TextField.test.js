@@ -141,4 +141,24 @@ describe(`TextField`, () => {
             );
         });
     });
+    describe("disabling the text field", () => {
+        it.each([
+            ["field is disabled", true, false],
+            ["preview is loading", false, true],
+        ])(
+            `disables the text area if the %s`,
+            (disabled_entity, is_field_disabled, is_preview_loading) => {
+                jest.spyOn(disabled_field_detector, "isDisabled").mockReturnValue(
+                    is_field_disabled
+                );
+                const wrapper = getInstance({ field, value }, { is_preview_loading });
+                expect(wrapper.vm.disabled).toBe(true);
+            }
+        );
+        it(`enables the text field when the field is not disabled and when it is not loading`, () => {
+            jest.spyOn(disabled_field_detector, "isDisabled").mockReturnValue(false);
+            const wrapper = getInstance({ field, value }, { is_preview_loading: false });
+            expect(wrapper.vm.disabled).toBe(false);
+        });
+    });
 });

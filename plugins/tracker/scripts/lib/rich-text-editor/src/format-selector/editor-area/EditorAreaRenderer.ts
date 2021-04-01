@@ -26,16 +26,16 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "../../../../../constants/fields-constants";
-import { renderHTMLOrTextEditor, renderMarkdownEditor, wrapTextArea } from "./lit-html-adapter";
+import { renderHTMLOrTextEditor, renderMarkdownEditor } from "./lit-html-adapter";
 import { createSyntaxHelpButton } from "./components/SyntaxHelpButton";
 import { createPreviewEditButton } from "./components/PreviewEditButton";
 import { createPreviewArea } from "./components/PreviewArea";
 import { createSelect } from "./components/FormatSelect";
 import { createFormatHiddenInput } from "./components/FormatHiddenInput";
+import { wrapTextArea } from "./components/TextArea";
 
 const SELECTBOX_ID_PREFIX = "rte_format_selectbox";
 const SELECTBOX_NAME_PREFIX = "comment_format";
-const HIDDEN_TEXTAREA_CLASSNAME = "rte-hide-textarea";
 
 const getFormatSelectboxName = (state: EditorAreaStateInterface): string =>
     state.selectbox_name ? state.selectbox_name : SELECTBOX_NAME_PREFIX + state.selectbox_id;
@@ -49,7 +49,11 @@ export class EditorAreaRenderer {
             return;
         }
         const selectbox = this.createSelectbox(state);
-        const textarea = wrapTextArea(state.textarea);
+        const textarea = wrapTextArea({
+            promise_of_preview: Promise.resolve(state.rendered_html),
+            is_hidden: !state.isInEditMode(),
+            textarea: state.textarea,
+        });
 
         renderHTMLOrTextEditor(
             {
@@ -77,13 +81,12 @@ export class EditorAreaRenderer {
         const preview_area = createPreviewArea(state.rendered_html, this.gettext_provider);
         const selectbox = this.createSelectbox(state);
 
-        if (state.isInEditMode()) {
-            state.textarea.classList.remove(HIDDEN_TEXTAREA_CLASSNAME);
-        } else {
-            // Only hide the textarea in Preview mode, otherwise it won't be submitted in the <form>
-            state.textarea.classList.add(HIDDEN_TEXTAREA_CLASSNAME);
-        }
-        const textarea = wrapTextArea(state.textarea);
+        const textarea = wrapTextArea({
+            promise_of_preview: Promise.resolve(state.rendered_html),
+            is_hidden: !state.isInEditMode(),
+            textarea: state.textarea,
+        });
+
         let hidden_format_input;
         if (!state.isInEditMode()) {
             hidden_format_input = createFormatHiddenInput({

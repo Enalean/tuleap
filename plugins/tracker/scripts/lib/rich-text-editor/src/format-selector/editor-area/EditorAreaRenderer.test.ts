@@ -19,7 +19,6 @@
 
 import * as adapter from "./lit-html-adapter";
 import * as FormatSelect from "./components/FormatSelect";
-import * as PreviewArea from "./components/PreviewArea";
 import * as PreviewEditButton from "./components/PreviewEditButton";
 import * as FormatHiddenInput from "./components/FormatHiddenInput";
 import { EditorAreaRenderer } from "./EditorAreaRenderer";
@@ -125,15 +124,6 @@ describe(`EditorAreaRenderer`, () => {
                     state.switchToPreviewMode();
                 });
 
-                it(`will hide the textarea and show a preview area`, () => {
-                    const createPreview = jest.spyOn(PreviewArea, "createPreviewArea");
-
-                    renderer.render(state);
-
-                    expect(createPreview).toHaveBeenCalled();
-                    expect(state.textarea.classList.contains("rte-hide-textarea")).toBe(true);
-                });
-
                 it(`will create a hidden input with the same name and value as the format selectbox
                     so that users can submit the Artifact view form while previewing Markdown`, () => {
                     const createHidden = jest.spyOn(FormatHiddenInput, "createFormatHiddenInput");
@@ -161,14 +151,6 @@ describe(`EditorAreaRenderer`, () => {
             describe(`and the state is in Edit mode`, () => {
                 beforeEach(() => {
                     state.switchToEditMode();
-                });
-
-                it(`will show the textarea`, () => {
-                    state.textarea.classList.add("rte-hide-textarea");
-
-                    renderer.render(state);
-
-                    expect(state.textarea.classList.contains("rte-hide-textarea")).toBe(false);
                 });
 
                 it(`when I click on the Preview button, it will switch to Preview and re-render`, () => {

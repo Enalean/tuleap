@@ -18,8 +18,8 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import { render, html } from "lit-html";
-import { renderHTMLOrTextEditor, renderMarkdownEditor, wrapTextArea } from "./lit-html-adapter";
+import { html } from "lit-html";
+import { renderHTMLOrTextEditor, renderMarkdownEditor } from "./lit-html-adapter";
 
 describe(`lit-html-adapter`, () => {
     let gettext_provider: GettextProvider, doc: Document, mount_point: HTMLDivElement;
@@ -29,15 +29,6 @@ describe(`lit-html-adapter`, () => {
         gettext_provider = {
             gettext: (msgid): string => msgid,
         };
-    });
-
-    describe(`wrapTextArea()`, () => {
-        it(`will just wrap the existing textarea in a TemplateResult so that it can be displaced`, () => {
-            const textarea = doc.createElement("textarea");
-            const template = wrapTextArea(textarea);
-            render(template, mount_point);
-            expect(mount_point.firstElementChild).toBe(textarea);
-        });
     });
 
     describe(`renderMarkdownEditor()`, () => {
