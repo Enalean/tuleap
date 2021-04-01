@@ -18,14 +18,14 @@
  */
 
 .program-increment-display {
-    margin: 0 $tlp-small-spacing $tlp-large-spacing 0;
+    margin: 0 var(--tlp-small-spacing) var(--tlp-large-spacing) 0;
     border: 1px hidden;
     border-radius: 4px;
     box-shadow: 0 3px 4px rgba($tlp-ui-border-normal, .25);
 }
 
 .program-increment-title {
-    margin: 0 0 $tlp-medium-spacing 0;
+    margin: 0 0 var(--tlp-medium-spacing) 0;
     color: $tlp-typo-default-text-color;
     font-weight: 600;
 }
@@ -35,7 +35,7 @@
 }
 
 .program-increment-title-button {
-    margin: 0 0 0 $tlp-large-spacing;
+    margin: 0 0 0 var(--tlp-large-spacing);
 }
 
 .program-increment-header {
@@ -67,20 +67,20 @@
 }
 
 .program-increment-header-dates {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     color: $tlp-ui-dimmed;
     font-size: 12px;
 }
 
 .program-increment-header-spacer {
     flex: 1 1 auto;
-    min-width: $tlp-medium-spacing;
+    min-width: var(--tlp-medium-spacing);
 }
 
 .program-increment-info {
     display: flex;
     align-items: center;
-    padding: $tlp-small-spacing $tlp-medium-spacing;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 1px solid $tlp-ui-border-normal;
     border-top: 0;
     background: $tlp-ui-white;
@@ -108,7 +108,7 @@
 }
 
 #program-increment-error {
-    margin: 0 $tlp-large-spacing 0 0;
+    margin: 0 var(--tlp-large-spacing) 0 0;
 }
 
 .drop-not-accepted {
@@ -122,10 +122,10 @@
 .drop-not-accepted-overlay {
     align-items: baseline;
     justify-content: center;
-    margin: 0 0 $tlp-large-spacing 0;
+    margin: 0 0 var(--tlp-large-spacing) 0;
     color: $tlp-ui-danger;
 
     > .drop-not-accepted-icon {
-        margin: 0 $tlp-small-spacing 0 0;
+        margin: 0 var(--tlp-small-spacing) 0 0;
     }
 }

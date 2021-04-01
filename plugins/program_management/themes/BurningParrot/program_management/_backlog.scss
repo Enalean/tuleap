@@ -18,12 +18,12 @@
  */
 
 #to-be-planned-backlog-error {
-    margin: $tlp-large-spacing;
+    margin: var(--tlp-large-spacing);
 }
 
 .program-backlog {
     display: flex;
-    margin: $tlp-large-spacing 0 0 0;
+    margin: var(--tlp-large-spacing) 0 0 0;
 }
 
 .to-be-planned {
@@ -38,14 +38,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
     color: transparentize($tlp-theme-color, .7);
     font-size: 14px;
     text-align: center;
 }
 
 .program-to-be-planned-title {
-    margin: 0 0 $tlp-medium-spacing $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     color: $tlp-typo-default-text-color;
     font-weight: 600;
 }

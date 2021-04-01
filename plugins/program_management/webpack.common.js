@@ -30,9 +30,6 @@ for (const color of colors) {
     entry_points[
         `program_management-${color}`
     ] = `./themes/BurningParrot/program_management-${color}.scss`;
-    entry_points[
-        `program_management-${color}-condensed`
-    ] = `./themes/BurningParrot/program_management-${color}-condensed.scss`;
 }
 
 module.exports = [
