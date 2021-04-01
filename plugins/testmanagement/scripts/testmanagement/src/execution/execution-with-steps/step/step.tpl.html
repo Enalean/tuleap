@@ -33,7 +33,7 @@
     </div>
     <div class="tlp-dropdown steps-step-action">
         <div class="tlp-dropdown-split-button"
-            ng-hide="$ctrl.execution.userCanReloadTestBecauseDefinitionIsUpdated"
+            ng-hide="$ctrl.execution.userCanReloadTestBecauseDefinitionIsUpdated || ! $ctrl.campaign.is_open"
         >
             <button class="tlp-dropdown-split-button-main tlp-button-secondary tlp-button-outline tlp-button-small steps-step-action-pass"
                 type="button"
