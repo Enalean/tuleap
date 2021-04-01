@@ -32,19 +32,24 @@ export interface Tracker {
     label: string;
 }
 
+export interface TrackerAndProject {
+    project: Project;
+    tracker: Tracker;
+}
+
 export interface Project {
     id: number;
     label: string;
 }
 
 export interface Report {
-    trackers: Map<number, { project: Project; tracker: Tracker }>;
+    trackers: Map<number, TrackerAndProject>;
     expert_query: string;
     invalid_trackers: Array<Tracker>;
 }
 
 export interface ReadingReport {
-    trackers: Map<number, Tracker>;
+    trackers: Map<number, TrackerAndProject>;
     expert_query: string;
     invalid_trackers: Array<Tracker>;
 }

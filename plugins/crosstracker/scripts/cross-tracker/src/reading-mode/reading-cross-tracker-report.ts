@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { ReadingReport, Tracker } from "../type";
+import type { ReadingReport, TrackerAndProject } from "../type";
 
 export default class ReadingCrossTrackerReport {
-    trackers: Map<number, Tracker>;
+    trackers: Map<number, TrackerAndProject>;
     expert_query: string;
 
     constructor() {
@@ -27,7 +27,7 @@ export default class ReadingCrossTrackerReport {
         this.expert_query = "";
     }
 
-    getTrackers(): IterableIterator<Tracker> {
+    getTrackers(): IterableIterator<TrackerAndProject> {
         return this.trackers.values();
     }
 
