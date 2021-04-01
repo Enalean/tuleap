@@ -24,6 +24,8 @@ use Codendi_HTMLPurifier;
 use Project;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
+use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 
 class StepPresenter
 {
@@ -87,7 +89,11 @@ class StepPresenter
         if ($format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
             return $purifier->purifyHTMLWithReferences($text, $project->getID());
         } elseif ($format === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
-            $content_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+            $content_interpreter = CommonMarkInterpreter::build(
+                Codendi_HTMLPurifier::instance(),
+                new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance()),
+            );
+
             return $content_interpreter->getInterpretedContentWithReferences($text, (int) $project->getGroupId());
         }
 

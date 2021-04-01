@@ -8,7 +8,7 @@
         }">{{ $ctrl.step.rank }}</span>
     </div>
     <div class="steps-step-description">
-        <div ng-bind-html="$ctrl.step.description"
+        <div ng-bind-html="$ctrl.sanitizedContentWithEnhancedCodeBlocks($ctrl.step.description)"
             ng-if="$ctrl.step.description_format === 'html'"
         ></div>
         <div ng-if="$ctrl.step.description_format !== 'html'"
@@ -22,7 +22,7 @@
                     {{::'Expected results' | translate}}
                 </div>
                 <div class="steps-step-expected-content"
-                     ng-bind-html="$ctrl.step.expected_results"
+                     ng-bind-html="$ctrl.sanitizedContentWithEnhancedCodeBlocks($ctrl.step.expected_results)"
                      ng-if="$ctrl.step.expected_results_format === 'html'"
                 ></div>
                 <div class="steps-step-expected-content"
