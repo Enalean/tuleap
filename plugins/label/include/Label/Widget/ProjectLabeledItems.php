@@ -26,8 +26,8 @@ use DataAccessException;
 use Feedback;
 use HTTPRequest;
 use Project;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\MappingRegistry;
@@ -260,7 +260,7 @@ class ProjectLabeledItems extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAsset($this->getAssets(), 'style')]);
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'style')]);
     }
 
     private function getAssets(): IncludeAssets

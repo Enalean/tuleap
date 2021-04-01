@@ -130,8 +130,7 @@ class labelPlugin extends Plugin
     public function burningParrotGetStylesheets(array $params)
     {
         if ($this->isInProjectDashboard()) {
-            $variant                 = $params['variant'];
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('style.css');
         }
     }
 
