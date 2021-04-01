@@ -19,14 +19,14 @@
 
 /* stylelint-disable selector-no-qualifying-type */
 body.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
-    padding: $tlp-medium-spacing $tlp-medium-spacing ($tlp-medium-spacing + $extra-platform-banner-white-space-height);
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + #{$extra-platform-banner-white-space-height});
 
     + header > .header-container {
-        padding: $tlp-small-spacing $tlp-medium-spacing 0 0;
+        padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) 0 0;
     }
 
     + header.pinned > .header-container {
-        padding: 0 $tlp-medium-spacing 0 0;
+        padding: 0 var(--tlp-medium-spacing) 0 0;
     }
 }
 
@@ -51,7 +51,7 @@ header {
         box-shadow: 0 1px 2px transparentize($tlp-theme-sidebar-background-color, .9);
 
         > .header-container {
-            padding: 0 $tlp-medium-spacing 0 0;
+            padding: 0 var(--tlp-medium-spacing) 0 0;
         }
     }
 }
@@ -65,13 +65,13 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     transition: padding ease-in-out 100ms;
 
     a[class*='tlp-button'],
     button[class*='tlp-button'] {
         height: 40px;
-        margin: 0 0 0 $tlp-small-spacing;
+        margin: 0 0 0 var(--tlp-small-spacing);
         transition: padding ease-in-out 100ms, box-shadow ease-in-out 100ms;
         border-radius: 30px;
 

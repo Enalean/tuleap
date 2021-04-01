@@ -18,5 +18,5 @@
  */
 
 .dashboard-widget-content-projectpublicareas {
-    margin-right: $tlp-small-spacing / 2;
+    margin-right: calc(var(--tlp-small-spacing) / 2);
 }

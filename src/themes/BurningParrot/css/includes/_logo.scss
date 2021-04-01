@@ -38,7 +38,7 @@
 
 /* stylelint-disable selector-no-qualifying-type */
 header.pinned .logo-svg-link {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 /* stylelint-enable selector-no-qualifying-type */
 

@@ -20,8 +20,8 @@
 .help-dropdown {
     position: fixed;
     z-index: 1000;
-    right: $tlp-medium-spacing;
-    bottom: $tlp-medium-spacing;
+    right: var(--tlp-medium-spacing);
+    bottom: var(--tlp-medium-spacing);
 
     #help {
         display: flex;
@@ -134,7 +134,7 @@
 }
 
 .help-modal-shortcuts-group-head {
-    margin-bottom: $tlp-medium-spacing;
+    margin-bottom: var(--tlp-medium-spacing);
 }
 
 .help-modal-shortcuts-group-details {
@@ -142,12 +142,12 @@
 }
 
 .help-modal-shortcuts-table {
-    margin-bottom: $tlp-jumbo-spacing;
+    margin-bottom: var(--tlp-jumbo-spacing);
 }
 
 .help-modal-shortcuts-section {
     flex-grow: 1;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
 }
 
 .help-modal-shortcuts-kbds {

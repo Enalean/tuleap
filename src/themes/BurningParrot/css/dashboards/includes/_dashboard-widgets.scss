@@ -88,7 +88,7 @@
 
 .dashboard-add-widget-list {
     flex: 1;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
 }
 
 .empty-state-container {
@@ -100,15 +100,15 @@
 .empty-state-text {
     align-self: center;
     width: 40%;
-    margin: 0 0 $tlp-small-spacing 0;
+    margin: 0 0 var(--tlp-small-spacing) 0;
     color: $tlp-ui-dimmed;
     font-size: .875rem;
-    line-height: $tlp-large-spacing;
+    line-height: var(--tlp-large-spacing);
     text-align: center;
 }
 
 .empty-state-svg {
-    margin: 0 0 $tlp-medium-spacing 0;
+    margin: 0 0 var(--tlp-medium-spacing) 0;
 }
 
 .empty-state-svg-inside {
@@ -120,11 +120,11 @@
 }
 
 .empty-state-button {
-    margin: $tlp-medium-spacing 0 0 0;
+    margin: var(--tlp-medium-spacing) 0 0 0;
 }
 
 .empty-state-button-arrow-link {
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 
 .dashboard-add-widget-list-body {
@@ -135,7 +135,7 @@
 
 #dashboard-add-widget-settings {
     flex: 1;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     border-left: 1px solid $tlp-ui-border-light;
 }
 

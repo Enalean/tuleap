@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-final class CssAssetWithoutDensityVariants extends CssAsset
+class CssAssetWithoutDensityVariants extends CssAsset
 {
     public function getFileURL(ThemeVariation $variant): string
     {

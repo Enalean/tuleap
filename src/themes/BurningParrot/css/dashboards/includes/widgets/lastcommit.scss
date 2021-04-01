@@ -18,15 +18,15 @@
  */
 
 .project-last-commit-text {
-    margin: $tlp-small-spacing 0 0;
+    margin: var(--tlp-small-spacing) 0 0;
     text-align: justify;
 }
 
 .project-last-commit-project-title {
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
 .project-last-commit-text-more {
-    margin: $tlp-small-spacing 0 0;
+    margin: var(--tlp-small-spacing) 0 0;
     text-align: center;
 }

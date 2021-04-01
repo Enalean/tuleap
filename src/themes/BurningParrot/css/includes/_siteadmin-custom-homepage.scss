@@ -24,7 +24,7 @@
 }
 
 .headline-custom-logo-current {
-    margin: $tlp-small-spacing 0 $tlp-large-spacing;
+    margin: var(--tlp-small-spacing) 0 var(--tlp-large-spacing);
 }
 
 .headline-custom-logo-submit {
@@ -33,7 +33,7 @@
 }
 
 .headline-custom-logo-or {
-    margin: $tlp-small-spacing $tlp-medium-spacing 0;
+    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .headline-form-element {

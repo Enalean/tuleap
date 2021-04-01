@@ -81,6 +81,6 @@
     align-items: center;
 
     > .siteadmin-dates-display-preference-preview {
-        margin: 0 0 0 $tlp-x-large-spacing;
+        margin: 0 0 0 var(--tlp-x-large-spacing);
     }
 }

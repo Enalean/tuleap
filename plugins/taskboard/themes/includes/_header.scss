@@ -27,7 +27,7 @@ $taskboard-header-height: 50px;
 }
 
 .has-visible-platform-banner .taskboard-head {
-    top: $navbar-height + $platform-banner-base-height;
+    top: calc(#{$navbar-height} + #{$platform-banner-base-height});
 }
 
 .taskboard-header {

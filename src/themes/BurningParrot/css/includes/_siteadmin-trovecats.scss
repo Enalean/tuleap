@@ -1,22 +1,22 @@
 .trove-cats-general-properties {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .trove-cats-fullname-property {
-    width: calc(50% - #{$tlp-small-spacing});
-    margin: 0 $tlp-small-spacing $tlp-medium-spacing 0;
+    width: calc(50% - var(--tlp-small-spacing));
+    margin: 0 var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .trove-cats-shortname-property {
-    width: calc(50% - #{$tlp-small-spacing});
-    margin: 0 0 $tlp-medium-spacing $tlp-small-spacing;
+    width: calc(50% - var(--tlp-small-spacing));
+    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-small-spacing);
 }
 
 .trove-cats-parent-property {
-    width: calc(50% - #{$tlp-small-spacing});
-    margin: 0 $tlp-small-spacing $tlp-medium-spacing 0;
+    width: calc(50% - var(--tlp-small-spacing));
+    margin: 0 var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .trove-cats-description-property {

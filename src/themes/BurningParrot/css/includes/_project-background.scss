@@ -39,7 +39,7 @@ body {
     .project-administration-title {
         @include background.project-background-title-header-typography($tlp-ui-white);
         margin: 0;
-        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
     }
 
     .dashboard-project-title {
@@ -60,7 +60,7 @@ body {
         box-shadow: none;
 
         > .tlp-tab {
-            padding: ($tlp-medium-spacing - 2) $tlp-large-spacing $tlp-medium-spacing;
+            padding: calc(var(--tlp-medium-spacing) - 2px) var(--tlp-large-spacing) var(--tlp-medium-spacing);
             border: 0;
             border-top: 2px solid transparent;
             color: $tlp-ui-white;
@@ -139,7 +139,7 @@ body {
 
 #project-admin-background-error,
 #project-admin-background-success {
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .project-admin-background-feedback-hidden {
@@ -148,7 +148,7 @@ body {
 
 .project-admin-background-list {
     display: grid;
-    grid-gap: $tlp-medium-spacing $tlp-medium-spacing;
+    grid-gap: var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     grid-template-columns: 1fr 1fr;
 
     @media screen and (max-width: 900px) {
@@ -189,15 +189,15 @@ body {
 .project-admin-background-card {
     display: flex;
     flex-direction: column;
-    row-gap: $tlp-small-spacing;
+    row-gap: var(--tlp-small-spacing);
     height: 100%;
 }
 
 .project-admin-background-author {
     position: absolute;
-    bottom: $tlp-medium-spacing;
-    width: calc(100% - #{2 * $tlp-medium-spacing + 2px});
-    padding: $tlp-small-spacing;
+    bottom: var(--tlp-medium-spacing);
+    width: calc(100% - (2 * var(--tlp-medium-spacing) + 2px));
+    padding: var(--tlp-small-spacing);
     transition: opacity 300ms ease-in-out;
     opacity: 0;
     background: transparentize($tlp-theme-sidebar-background-color, .3);
@@ -228,7 +228,7 @@ body {
         bottom: 0;
         left: $sidebar-expanded-width;
         width: calc(100% - #{$sidebar-expanded-width});
-        padding: $tlp-large-spacing;
+        padding: var(--tlp-large-spacing);
         animation: footerAppear ease-out 150ms;
         border-top: 0;
         background: transparentize($tlp-ui-white, .1);

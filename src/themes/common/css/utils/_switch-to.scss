@@ -28,7 +28,7 @@ $projects-container-width: 400px;
 }
 
 .switch-to-modal-header {
-    padding: ($tlp-medium-spacing + 1px) $tlp-medium-spacing ($tlp-medium-spacing + 1px) $tlp-large-spacing;
+    padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
     border-bottom: 1px solid rgba(104, 122, 124, .2);
     background-blend-mode: overlay;
 }
@@ -49,7 +49,7 @@ $projects-container-width: 400px;
 
 #switch-to-filter {
     width: 100%;
-    padding: 0 $tlp-small-spacing;
+    padding: 0 var(--tlp-small-spacing);
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -77,7 +77,7 @@ $projects-container-width: 400px;
 
 .switch-to-modal-header-legacy-search-button {
     margin: -2px 0;
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     transition: opacity 100ms ease-in-out, background 100ms ease-in-out;
     border: 0;
     border-radius: 4px;
@@ -97,13 +97,13 @@ $projects-container-width: 400px;
     }
 
     > .fa-long-arrow-right {
-        margin: 0 0 0 $tlp-small-spacing;
+        margin: 0 0 0 var(--tlp-small-spacing);
     }
 }
 
 .switch-to-modal-body {
     display: flex;
-    padding: $tlp-large-spacing $tlp-large-spacing $tlp-large-spacing ($tlp-large-spacing - $tlp-small-spacing);
+    padding: var(--tlp-large-spacing) var(--tlp-large-spacing) var(--tlp-large-spacing) calc(var(--tlp-large-spacing) - var(--tlp-small-spacing));
     background: $dark-modal-background;
     color: $dark-modal-default-text-color;
 }
@@ -119,7 +119,7 @@ $projects-container-width: 400px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin: 0 0 ($tlp-large-spacing - $white-space-above-and-after-a-project-link);
+    margin: 0 0 calc(var(--tlp-large-spacing) - #{$white-space-above-and-after-a-project-link});
 }
 
 .switch-to-projects-project {
@@ -136,7 +136,7 @@ $projects-container-width: 400px;
 }
 
 .switch-to-projects-project-link {
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     border-radius: 4px;
     color: $dark-modal-default-text-color;
 
@@ -148,7 +148,7 @@ $projects-container-width: 400px;
 }
 
 .switch-to-projects-project-icon {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: .8rem;
 }
 
@@ -156,7 +156,7 @@ $projects-container-width: 400px;
     position: relative;
     top: -1px;
     margin: 0 0 0 4px;
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     transition: opacity 100ms ease-in-out;
     border-radius: 4px;
     opacity: 0;
@@ -172,7 +172,7 @@ $projects-container-width: 400px;
 }
 
 .switch-to-projects-softwaremap {
-    padding: 6px 8px ($tlp-large-spacing + 6px) 36px;
+    padding: 6px 8px calc(var(--tlp-large-spacing) + 6px) 36px;
     opacity: .75;
     color: $dark-modal-dimmed-text-color;
     font-size: .8125rem;
@@ -188,7 +188,7 @@ $projects-container-width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 0 $tlp-jumbo-spacing;
+    padding: 0 0 var(--tlp-jumbo-spacing);
 }
 
 
@@ -212,7 +212,7 @@ $projects-container-width: 400px;
     flex-direction: column;
     align-items: center;
     min-height: 200px;
-    padding: 0 0 $tlp-jumbo-spacing;
+    padding: 0 0 var(--tlp-jumbo-spacing);
 }
 
 .switch-to-projects-container {
@@ -220,14 +220,14 @@ $projects-container-width: 400px;
     width: $projects-container-width;
 
     > .switch-to-modal-body-title {
-        margin: 0 0 $tlp-medium-spacing 36px;
+        margin: 0 0 var(--tlp-medium-spacing) 36px;
     }
 }
 
 .switch-to-modal-body-global-empty-text,
 .switch-to-recent-items-empty-text,
 .switch-to-projects-empty-text {
-    margin: $tlp-medium-spacing 0 $tlp-large-spacing;
+    margin: var(--tlp-medium-spacing) 0 var(--tlp-large-spacing);
     opacity: .75;
     color: $dark-modal-dimmed-text-color;
     font-size: .8125rem;
@@ -248,12 +248,12 @@ $projects-container-width: 400px;
 }
 
 .switch-to-modal-no-matching-projects {
-    margin: $tlp-large-spacing 0 $tlp-large-spacing 36px;
+    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) 36px;
 }
 
 .switch-to-modal-no-matching-history,
 .switch-to-modal-no-matching-history:last-child {
-    margin: $tlp-large-spacing 0 $tlp-large-spacing $tlp-small-spacing;
+    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) var(--tlp-small-spacing);
 }
 
 .switch-to-modal-no-matching-history,
@@ -268,7 +268,7 @@ $projects-container-width: 400px;
     width: calc(100% - #{$projects-container-width});
 
     .switch-to-modal-body-title {
-        margin: 0 0 $tlp-medium-spacing $tlp-small-spacing;
+        margin: 0 0 var(--tlp-medium-spacing) var(--tlp-small-spacing);
     }
 }
 
@@ -291,7 +291,7 @@ $projects-container-width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 0 $tlp-jumbo-spacing;
+    margin: 0 0 var(--tlp-jumbo-spacing);
 }
 
 .switch-to-recent-items-entry {
@@ -299,13 +299,13 @@ $projects-container-width: 400px;
     align-items: center;
 
     &:last-child {
-        margin: 0 0 $tlp-large-spacing;
+        margin: 0 0 var(--tlp-large-spacing);
     }
 }
 
 .switch-to-recent-items-entry-link {
     min-width: 0;
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     overflow: hidden;
     border-radius: 4px;
     color: $dark-modal-default-text-color;
@@ -330,7 +330,7 @@ $projects-container-width: 400px;
 
 .switch-to-recent-items-entry-quick-links {
     display: flex;
-    padding: 0 0 0 $tlp-small-spacing;
+    padding: 0 0 0 var(--tlp-small-spacing);
     transition: opacity 100ms ease-in-out;
     opacity: 0;
 }
@@ -343,7 +343,7 @@ $projects-container-width: 400px;
 }
 
 .switch-to-recent-items-entry-quick-links-link {
-    padding: $white-space-above-and-after-a-project-link $tlp-small-spacing;
+    padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     border-radius: 4px;
     color: $dark-modal-default-text-color;
     font-size: .8125rem;

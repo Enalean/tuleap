@@ -24,7 +24,7 @@
 
 #systemevents-filter {
     min-width: 300px;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 #systemevents-results {
@@ -46,7 +46,7 @@
 }
 
 .systemevents-details-modal-row-entry {
-    margin: 0 $tlp-x-large-spacing $tlp-medium-spacing 0;
+    margin: 0 var(--tlp-x-large-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .systemevents-details-modal-log {
@@ -120,6 +120,6 @@
 
     #systemevents-filter {
         width: 100%;
-        margin: 0 0 $tlp-medium-spacing;
+        margin: 0 0 var(--tlp-medium-spacing);
     }
 }

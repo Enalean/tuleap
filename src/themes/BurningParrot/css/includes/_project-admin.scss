@@ -26,10 +26,10 @@
 @import 'project-admin/services';
 
 .project-administration-title {
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     word-break: break-all;
 }
 
 .project-administration-content {
-    padding: $tlp-medium-spacing 0 0;
+    padding: var(--tlp-medium-spacing) 0 0;
 }

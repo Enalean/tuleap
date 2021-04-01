@@ -20,17 +20,17 @@
 .dashboard-project-header {
     display: flex;
     flex-direction: column;
-    padding: $tlp-medium-spacing 400px $tlp-large-spacing $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing) 400px var(--tlp-large-spacing) var(--tlp-medium-spacing);
 }
 
 .dashboard-project-header-main {
     display: flex;
     align-items: flex-start;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .dashboard-project-header-access {
-    margin: 14px $tlp-small-spacing 0 0; // magix value
+    margin: 14px var(--tlp-medium-spacing) 0 0; // magix value
 }
 
 .dashboard-project-header-members {
@@ -59,7 +59,7 @@
 }
 
 .dashboard-project-title {
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
     color: $tlp-theme-sidebar-background-color;
     font-size: 2.75rem;
     font-weight: 500;

@@ -418,32 +418,17 @@ for (const color of colors) {
         `BurningParrot/burning-parrot-${color}`
     ] = `./themes/BurningParrot/css/burning-parrot-${color}.scss`;
     theme_entry_points[
-        `BurningParrot/burning-parrot-${color}-condensed`
-    ] = `./themes/BurningParrot/css/burning-parrot-${color}-condensed.scss`;
-    theme_entry_points[
         `account/account-${color}`
     ] = `./themes/BurningParrot/css/account/account-${color}.scss`;
-    theme_entry_points[
-        `account/account-${color}-condensed`
-    ] = `./themes/BurningParrot/css/account/account-${color}-condensed.scss`;
     theme_entry_points[
         `dashboards/dashboards-${color}`
     ] = `./themes/BurningParrot/css/dashboards/dashboards-${color}.scss`;
     theme_entry_points[
-        `dashboards/dashboards-${color}-condensed`
-    ] = `./themes/BurningParrot/css/dashboards/dashboards-${color}-condensed.scss`;
-    theme_entry_points[
         `project/project-registration-${color}`
     ] = `./themes/BurningParrot/css/project-registration/project-registration-${color}.scss`;
     theme_entry_points[
-        `project/project-registration-${color}-condensed`
-    ] = `./themes/BurningParrot/css/project-registration/project-registration-${color}-condensed.scss`;
-    theme_entry_points[
         `project/project-registration-creation-${color}`
     ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}.scss`;
-    theme_entry_points[
-        `project/project-registration-creation-${color}-condensed`
-    ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}-condensed.scss`;
 }
 
 const project_background_themes = [
