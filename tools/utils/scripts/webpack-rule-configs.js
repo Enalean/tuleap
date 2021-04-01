@@ -17,27 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const BabelPresetEnv = require("@babel/preset-env").default;
-const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 const { esbuild_target } = require("./browserslist_config");
-
-const babel_options_jest = {
-    presets: [
-        [
-            BabelPresetEnv,
-            {
-                targets: {
-                    node: "8",
-                },
-                corejs: "3",
-                useBuiltIns: "usage",
-            },
-        ],
-    ],
-    plugins: [BabelPluginDynamicImportNode],
-};
 
 function configureTypescriptRules() {
     return [
@@ -149,7 +131,6 @@ const rule_vue_images = {
 
 module.exports = {
     configureTypescriptRules,
-    babel_options_jest,
     rule_po_files,
     rule_mustache_files,
     rule_vue_loader,

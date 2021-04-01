@@ -17,4 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports = require("./../../tools/utils/scripts/webpack-rule-configs.js").babel_options_jest;
+const BabelPresetEnv = require("@babel/preset-env").default;
+
+module.exports = {
+    presets: [
+        [
+            BabelPresetEnv,
+            {
+                targets: {
+                    node: "current",
+                },
+            },
+        ],
+    ],
+};
