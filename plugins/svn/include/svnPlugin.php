@@ -1213,11 +1213,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         ) {
             $assets = $this->getIncludeAssets();
 
-            if ($params['theme_variation']->isCondensed()) {
-                $params['stylesheets'][] = $assets->getFileURL('style-bp-condensed.css');
-            } else {
-                $params['stylesheets'][] = $assets->getFileURL('style-bp.css');
-            }
+            $params['stylesheets'][] = $assets->getFileURL('style-bp.css');
         }
     }
 

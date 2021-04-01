@@ -36,7 +36,6 @@ final class ThemeVariationTest extends TestCase
         $theme_variation = new ThemeVariation($color, $user);
         self::assertEquals('-orange', $theme_variation->getFileColorSuffix());
         self::assertEquals('-orange-condensed', $theme_variation->getFileColorCondensedSuffix());
-        self::assertTrue($theme_variation->isCondensed());
     }
 
     public function testComfortableModeThemeVariation(): void
@@ -48,6 +47,5 @@ final class ThemeVariationTest extends TestCase
         $theme_variation = new ThemeVariation($color, $user);
         self::assertEquals('-orange', $theme_variation->getFileColorSuffix());
         self::assertEquals('-orange', $theme_variation->getFileColorCondensedSuffix());
-        self::assertFalse($theme_variation->isCondensed());
     }
 }
