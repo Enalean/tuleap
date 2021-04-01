@@ -25,15 +25,15 @@
     .tracker-administration-title {
         @include background.project-background-title-header-typography($tlp-ui-white);
         margin: 0;
-        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
     }
 
     .trackers-homepage {
-        margin: $tlp-medium-spacing;
+        margin: var(--tlp-medium-spacing);
     }
 
     .main-project-tabs + h2 {
-        margin: $tlp-medium-spacing 0 0;
+        margin: var(--tlp-medium-spacing) 0 0;
     }
 }
 

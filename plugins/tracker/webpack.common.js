@@ -191,20 +191,10 @@ let entry_points = {
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of colors_burning_parrot) {
     entry_points[`tracker-bp-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[
-        `tracker-bp-${color}-condensed`
-    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
     entry_points[`workflow-${color}`] = `./themes/BurningParrot/css/workflow-${color}.scss`;
-    entry_points[
-        `workflow-${color}-condensed`
-    ] = `./themes/BurningParrot/css/workflow-${color}-condensed.scss`;
-
     entry_points[
         `tracker-creation-${color}`
     ] = `./themes/BurningParrot/css/tracker-creation/tracker-creation-${color}.scss`;
-    entry_points[
-        `tracker-creation-${color}-condensed`
-    ] = `./themes/BurningParrot/css/tracker-creation/tracker-creation-${color}-condensed.scss`;
 }
 
 const config_for_themes = {

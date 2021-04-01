@@ -20,15 +20,15 @@
 .trackers-homepage-title {
     display: flex;
     align-items: center;
-    margin: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 
     > .tlp-button-primary {
-        margin: 0 0 0 $tlp-medium-spacing;
+        margin: 0 0 0 var(--tlp-medium-spacing);
     }
 }
 
 .trackers-homepage {
-    margin: 0 $tlp-medium-spacing $tlp-medium-spacing;
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 
 .trackers-homepage-tracker {
@@ -50,12 +50,12 @@
 .trackers-homepage-tracker-title-container {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .trackers-homepage-tracker-title {
     flex: 0 0 auto;
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: 1.125rem;
     font-weight: 500;
 }

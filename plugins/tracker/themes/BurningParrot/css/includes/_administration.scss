@@ -18,11 +18,11 @@
  */
 
 .tracker-administration-title {
-    margin: $tlp-medium-spacing 0 $tlp-title-spacing;
+    margin: var(--tlp-medium-spacing) 0 var(--tlp-title-spacing);
 }
 
 .tracker-administration-tabs {
-    padding: $tlp-medium-spacing 0 0;
+    padding: var(--tlp-medium-spacing) 0 0;
 }
 
 .trackers-admin-tracker-name {
