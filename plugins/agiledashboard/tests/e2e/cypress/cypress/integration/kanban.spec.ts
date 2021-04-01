@@ -293,15 +293,13 @@ describe("Kanban for the Agile Dashboard service", () => {
         });
 
         it(`I can change the display view`, function () {
-            cy.get("[data-test=kanban-header-detailed-toggler]").invoke(
-                "css",
-                "visibility",
-                "visible"
-            );
-            cy.get("[data-test=kanban-header-detailed-toggler]").check().should("be.checked");
+            cy.get("[data-test=kanban-item]").should("have.class", "compact-view");
+            cy.get("[data-test=kanban-header-detailed-toggler-label]").click();
+
+            cy.get("[data-test=kanban-item]").should("not.have.class", "compact-view");
             // The display of the cards should be persisted after reload
             cy.reload();
-            cy.get("[data-test=kanban-header-detailed-toggler]").should("be.checked");
+            cy.get("[data-test=kanban-item]").should("not.have.class", "compact-view");
         });
 
         it(`I can filter cards`, function () {
