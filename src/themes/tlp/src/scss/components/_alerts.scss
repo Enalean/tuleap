@@ -19,8 +19,8 @@
 
 %tlp-alert {
     position: relative;
-    margin: 0 0 $tlp-medium-spacing;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-medium-spacing 42px;
+    margin: 0 0 var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing) 42px;
     border-left: 5px solid transparent;
     border-radius: 4px;
     font-size: 1rem;
@@ -33,8 +33,8 @@
     &::before {
         display: inline-block;
         position: absolute;
-        top: $tlp-medium-spacing + 1px;
-        left: $tlp-medium-spacing;
+        top: calc(var(--tlp-medium-spacing) + 1px);
+        left: var(--tlp-medium-spacing);
         font-family: 'Font Awesome 5 Free';
         font-size: 1.125rem;
     }

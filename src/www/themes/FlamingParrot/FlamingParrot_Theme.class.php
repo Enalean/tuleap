@@ -169,8 +169,10 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         echo '<link rel="stylesheet" type="text/css" href="/scripts/select2/select2.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
 
-        $style_css_url = $this->getCSSThemeFileURL($core_assets);
-        echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
+        $style_css_urls = $this->getCSSThemeFileURLs($core_assets);
+        foreach ($style_css_urls as $style_css_url) {
+            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
+        }
         $print_css_url = $core_assets->getFileURL('FlamingParrot/print.css');
         echo '<link rel="stylesheet" type="text/css" href="' . $print_css_url . '" media="print" />';
 
@@ -180,14 +182,22 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    private function getCSSThemeFileURL(IncludeAssets $include_assets)
+    /**
+     * @return string[]
+     */
+    private function getCSSThemeFileURLs(IncludeAssets $include_assets): array
     {
         $current_user = UserManager::instance()->getCurrentUser();
 
         $theme_variant = new ThemeVariant();
         $variant_used  = $theme_variant->getVariantForUser($current_user);
 
-        return $include_assets->getFileURL('FlamingParrot/' . $variant_used . '.css');
+        $tlp_vars = new \Tuleap\Layout\CssAssetWithoutDensityVariants($include_assets, 'tlp-vars');
+
+        return [
+            $include_assets->getFileURL('FlamingParrot/' . $variant_used . '.css'),
+            $tlp_vars->getFileURL(new \Tuleap\Layout\ThemeVariation(ThemeVariantColor::buildFromVariant($variant_used), $current_user)),
+        ];
     }
 
     private function body($params)

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,35 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-pagination-margin: 2px;
+@import 'variables/variables-blue-condensed';
 
-.tlp-pagination {
-    text-align: center;
-}
-
-.tlp-pagination-button {
-    width: 40px;
-    min-height: 40px;
-    margin: 0 $tlp-pagination-margin;
-    border-radius: 50%;
-
-    > .fa {
-        font-size: 1.2rem;
-    }
-}
-
-.tlp-pagination-pages {
-    margin: 0 calc(var(--tlp-medium-spacing) - #{2 * $tlp-pagination-margin});
-    font-size: .875rem;
-}
-
-.tlp-pagination-number {
-    margin: 0 $tlp-pagination-margin;
-    color: #444444;
-    font-size: .875rem;
-    font-weight: 600;
-}
-
-.tlp-table + .tlp-pagination {
-    margin: var(--tlp-large-spacing) 0 0;
-}
+@import 'components/css-var-root';

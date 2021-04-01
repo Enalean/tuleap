@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,10 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-@import './reset';
-@import './variables/variables-green-condensed';
-@import './variables/colors/color-classes';
-@import './vendor';
-@import './components';
+declare(strict_types=1);
+
+namespace Tuleap\Layout;
+
+final class CssAssetWithoutDensityVariants extends CssAsset
+{
+    public function getFileURL(ThemeVariation $variant): string
+    {
+        return $this->include_assets->getFileURL($this->name . $variant->getFileColorSuffix() . '.css');
+    }
+}

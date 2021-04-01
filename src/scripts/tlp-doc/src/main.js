@@ -20,7 +20,8 @@
 (function colorSwitcher() {
     var color_switchers = document.querySelectorAll(".color-switcher > a"),
         background_color_switchers = document.querySelectorAll(".background-color-switcher > a"),
-        stylesheet = document.getElementById("tlp-stylesheet");
+        stylesheet = document.getElementById("tlp-stylesheet"),
+        stylesheet_vars = document.getElementById("tlp-stylesheet-vars");
 
     [].forEach.call(color_switchers, function (color_switcher) {
         color_switcher.addEventListener("click", function () {
@@ -68,8 +69,11 @@
         // Directly put in the global scope...
         var manifest = window.manifest_framework_file;
         var new_stylesheet = document.createElement("link");
+        const new_stylesheet_vars = document.createElement("link");
         new_stylesheet.rel = "stylesheet";
+        new_stylesheet_vars.rel = "stylesheet";
         new_stylesheet.href = "/assets/core/" + manifest["tlp-" + color + ".css"];
+        new_stylesheet_vars.href = "/assets/core/" + manifest["tlp-vars-" + color + ".css"];
         new_stylesheet.onload = function () {
             if (new_stylesheet.sheet.cssRules.length) {
                 stylesheet.remove();
@@ -77,7 +81,15 @@
                 updateAllHexaColors();
             }
         };
+        new_stylesheet_vars.onload = function () {
+            if (new_stylesheet_vars.sheet.cssRules.length) {
+                stylesheet_vars.remove();
+                stylesheet_vars = new_stylesheet_vars;
+                updateAllHexaColors();
+            }
+        };
         document.head.insertBefore(new_stylesheet, stylesheet.nextSibling);
+        document.head.insertBefore(new_stylesheet_vars, stylesheet_vars.nextSibling);
     }
 
     function updateAllHexaColors() {

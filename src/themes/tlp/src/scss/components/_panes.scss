@@ -19,7 +19,7 @@
 
 .tlp-pane {
     display: flex;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: $tlp-ui-white;
@@ -53,7 +53,7 @@
 }
 
 .tlp-pane-header {
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
 }
 
 %tlp-pane-title {
@@ -73,7 +73,7 @@
 .tlp-pane-subtitle {
     @extend %tlp-pane-title;
 
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
     color: $tlp-theme-color;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .tlp-pane-section {
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     border-bottom: 1px solid $tlp-ui-border-light;
 
     &:last-child {
@@ -101,10 +101,10 @@
     justify-content: center;
 
     &:not(.tlp-pane-section) {
-        margin: $tlp-large-spacing 0 0;
+        margin: var(--tlp-large-spacing) 0 0;
     }
 
     > [class*='tlp-button'] {
-        margin: 0 $tlp-small-spacing / 2;
+        margin: 0 var(--tlp-small-spacing) / 2;
     }
 }
