@@ -149,6 +149,7 @@ export default {
             is_preview_loading: false,
             is_preview_in_error: false,
             error_text: "",
+            editors: [],
         };
     },
     computed: {
@@ -203,13 +204,16 @@ export default {
             this.$emit("mark-as-deleted");
         },
         getEditorsContent() {
-            if (this.is_current_step_in_html_format) {
+            if (this.is_current_step_in_html_format && this.areRTEEditorsSet()) {
                 this.step.raw_description = this.editors[1].getContent();
                 this.step.raw_expected_results = this.editors[0].getContent();
             }
         },
         toggleRTE(event, value) {
             this.step.description_format = value;
+        },
+        areRTEEditorsSet() {
+            return this.editors[0] && this.editors[1];
         },
         loadRTE(field) {
             const text_area = this.$refs[field];
@@ -232,6 +236,7 @@ export default {
                     if (help_block) {
                         help_block.onFormatChange(new_format);
                     }
+                    this.getEditorsContent();
                 },
                 onEditorInit: (ckeditor, textarea) =>
                     image_upload_factory.initiateImageUpload(ckeditor, textarea),

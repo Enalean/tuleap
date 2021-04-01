@@ -24,12 +24,20 @@ import localVue from "./helpers/local-vue.js";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest.js";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import * as tuleap_api from "./api/tuleap-api.js";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+} from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
 
 let store;
-function getComponentInstance(data = {}) {
+function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMONMARK) {
     const editor_factory = {
         createRichTextEditor: () => {
-            return jest.fn();
+            return {
+                getContent: () => {
+                    return "some fabulous content";
+                },
+            };
         },
     };
     jest.spyOn(RichTextEditorFactory, "forFlamingParrotWithExistingFormatSelector").mockReturnValue(
@@ -51,6 +59,7 @@ function getComponentInstance(data = {}) {
             step: {
                 raw_description: "raw description",
                 raw_expected_results: "raw expected results",
+                description_format,
             },
         },
         data() {
@@ -156,7 +165,6 @@ describe("StepDefinitionEditableStep", () => {
                 is_preview_loading: false,
                 is_preview_in_error: false,
             });
-
             const promise = wrapper.vm.togglePreview();
 
             expect(tuleap_api.postInterpretCommonMark).toHaveBeenCalledWith("raw description");
@@ -167,6 +175,56 @@ describe("StepDefinitionEditableStep", () => {
             expect(wrapper.vm.$data.is_preview_in_error).toBe(true);
             expect(wrapper.vm.$data.error_text).toBe(expected_error_text);
             expect(wrapper.vm.$data.is_preview_loading).toBe(false);
+        });
+        describe("Get the content of the RTE editors", () => {
+            it("retrieves the content of the both editors if they are set and if the current step is in HTML format", () => {
+                const wrapper = getComponentInstance({}, TEXT_FORMAT_HTML);
+
+                expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
+                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
+                    "raw expected results"
+                );
+
+                wrapper.vm.getEditorsContent();
+
+                expect(wrapper.vm.$props.step.raw_description).toContain("some fabulous content");
+                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
+                    "some fabulous content"
+                );
+            });
+
+            it("does not retrieve the RTE content if the format is not HTML", () => {
+                const wrapper = getComponentInstance({});
+
+                expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
+                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
+                    "raw expected results"
+                );
+
+                wrapper.vm.getEditorsContent();
+
+                expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
+                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
+                    "raw expected results"
+                );
+            });
+
+            it("does not retrieve the RTE content if one RTE editor is not set", () => {
+                const wrapper = getComponentInstance({}, TEXT_FORMAT_HTML);
+
+                expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
+                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
+                    "raw expected results"
+                );
+
+                wrapper.setData({ editors: [] });
+                wrapper.vm.getEditorsContent();
+
+                expect(wrapper.vm.$props.step.raw_description).toContain("raw description");
+                expect(wrapper.vm.$props.step.raw_expected_results).toContain(
+                    "raw expected results"
+                );
+            });
         });
     });
 });
