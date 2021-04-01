@@ -126,7 +126,7 @@ msgid "Jenkins webhook successfully removed"
 msgstr "Le webhook Jenkins a été enlevé avec succès"
 
 msgid "Jenkins webhook successfully saved"
-msgstr "Le webhook Jenkins a été sauvergardée avec succès"
+msgstr "Le webhook Jenkins a été sauvegardé avec succès"
 
 msgid "Logs"
 msgstr "Historique"
