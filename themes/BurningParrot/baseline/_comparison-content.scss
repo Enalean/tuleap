@@ -18,19 +18,19 @@
  *
  */
 
-$artifact-body-padding: $tlp-medium-spacing;
+$artifact-body-padding: var(--tlp-medium-spacing);
 
 %comparison-removed {
-    padding-right: $tlp-medium-spacing;
-    padding-left: $tlp-medium-spacing;
+    padding-right: var(--tlp-medium-spacing);
+    padding-left: var(--tlp-medium-spacing);
     background-color: $tlp-ui-danger;
     color: $tlp-ui-white;
     text-decoration: line-through;
 }
 
 %comparison-added {
-    padding-right: $tlp-medium-spacing;
-    padding-left: $tlp-medium-spacing;
+    padding-right: var(--tlp-medium-spacing);
+    padding-left: var(--tlp-medium-spacing);
     background-color: $tlp-ui-success;
     color: $tlp-ui-white;
 }
@@ -42,7 +42,7 @@ $artifact-body-padding: $tlp-medium-spacing;
 }
 
 .comparison-content-artifact-li {
-    margin-top: $tlp-large-spacing;
+    margin-top: var(--tlp-large-spacing);
     counter-increment: artifact-counter;
 
     &::before {
@@ -111,8 +111,8 @@ $artifact-body-padding: $tlp-medium-spacing;
 }
 
 .comparison-content-artifact-body-field-label {
-    margin-top: $tlp-medium-spacing;
-    margin-bottom: $tlp-small-spacing;
+    margin-top: var(--tlp-medium-spacing);
+    margin-bottom: var(--tlp-small-spacing);
     color: $tlp-swatch-firemist-silver;
 }
 

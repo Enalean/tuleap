@@ -19,7 +19,7 @@
  */
 
 .baselines-count {
-    margin-left: $tlp-small-spacing;
+    margin-left: var(--tlp-small-spacing);
 }
 
 .baselines-table-column-header {

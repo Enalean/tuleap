@@ -30,9 +30,6 @@ const entry_points = {
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[`baseline-${color}`] = `./themes/BurningParrot/baseline-${color}.scss`;
-    entry_points[
-        `baseline-${color}-condensed`
-    ] = `./themes/BurningParrot/baseline-${color}-condensed.scss`;
 }
 
 module.exports = [

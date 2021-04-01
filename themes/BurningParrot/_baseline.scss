@@ -29,11 +29,11 @@
 
 .baseline-title-header {
     margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
 .baseline-tooltip-icon {
-    margin-left: $tlp-medium-spacing;
+    margin-left: var(--tlp-medium-spacing);
 }
 
 .baseline-tooltip-icon-optional {
@@ -66,7 +66,7 @@
 }
 
 .baseline-artifact-badge {
-    margin-right: $tlp-small-spacing / 2;
+    margin-right: calc(var(--tlp-small-spacing) / 2);
 }
 
 .baseline-badge-avatar {

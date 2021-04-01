@@ -27,7 +27,7 @@ use HTTPRequest;
 use Project;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutDensityVariants;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\ProjectPrivacyPresenter;
@@ -76,10 +76,10 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('baseline.js'));
     }
 
-    private function includeCssFiles(BaseLayout $layout)
+    private function includeCssFiles(BaseLayout $layout): void
     {
         $layout->addCssAsset(
-            new CssAsset(
+            new CssAssetWithoutDensityVariants(
                 $this->getAssets(),
                 'baseline'
             )
