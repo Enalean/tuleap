@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { ErrorState } from "./module";
 
-export function resetErrors(state) {
+export function resetErrors(state: ErrorState): void {
     state.has_folder_permission_error = false;
     state.has_folder_loading_error = false;
     state.folder_loading_error = null;
@@ -30,40 +31,40 @@ export function resetErrors(state) {
     state.global_modal_error_message = null;
 }
 
-export function switchFolderPermissionError(state) {
+export function switchFolderPermissionError(state: ErrorState): void {
     state.has_folder_permission_error = true;
 }
 
-export function switchItemPermissionError(state) {
+export function switchItemPermissionError(state: ErrorState): void {
     state.has_document_permission_error = true;
 }
 
-export function setFolderLoadingError(state, message) {
+export function setFolderLoadingError(state: ErrorState, message: string): void {
     state.has_folder_loading_error = true;
     state.folder_loading_error = message;
 }
 
-export function setItemLoadingError(state, message) {
+export function setItemLoadingError(state: ErrorState, message: string): void {
     state.has_document_loading_error = true;
     state.document_loading_error = message;
 }
 
-export function setModalError(state, error_message) {
+export function setModalError(state: ErrorState, error_message: string): void {
     state.has_modal_error = true;
     state.modal_error = error_message;
 }
 
-export function resetModalError(state) {
+export function resetModalError(state: ErrorState): void {
     state.has_modal_error = false;
     state.modal_error = null;
 }
 
-export function setLockError(state, error_message) {
+export function setLockError(state: ErrorState, error_message: string): void {
     state.has_document_lock_error = true;
     state.document_lock_error = error_message;
 }
 
-export function setGlobalModalErrorMessage(state, message) {
+export function setGlobalModalErrorMessage(state: ErrorState, message: string): void {
     state.has_global_modal_error = true;
     state.global_modal_error_message = message;
 }

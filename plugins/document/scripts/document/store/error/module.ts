@@ -17,9 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./error-mutations.js";
-import * as getters from "./error-getters.js";
-import * as actions from "./error-actions.js";
+import * as mutations from "./error-mutations";
+import * as getters from "./error-getters";
+import * as actions from "./error-actions";
+
+export interface ErrorState {
+    has_document_permission_error: boolean;
+    has_document_loading_error: boolean;
+    document_loading_error: string | null;
+    has_folder_permission_error: boolean;
+    has_folder_loading_error: boolean;
+    folder_loading_error: string | null;
+    has_modal_error: boolean;
+    modal_error: string | null;
+    has_document_lock_error: boolean;
+    document_lock_error: string | null;
+    has_global_modal_error: boolean;
+    global_modal_error_message: string | null;
+}
 
 export default {
     namespaced: true,
