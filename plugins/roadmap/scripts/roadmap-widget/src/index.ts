@@ -51,7 +51,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             continue;
         }
 
-        const visible_natures = await parseNatureLabels(vue_mount_point);
+        const visible_natures = await parseNatureLabels(vue_mount_point, {
+            $gettext: Vue.prototype.$gettext,
+            $gettextInterpolate: Vue.prototype.$gettextInterpolate,
+        });
 
         new AppComponent({
             propsData: {

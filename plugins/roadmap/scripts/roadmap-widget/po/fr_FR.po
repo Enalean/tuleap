@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Linked to"
+msgstr "Lié à"
+
 msgid "Links"
 msgstr "Liens"
 

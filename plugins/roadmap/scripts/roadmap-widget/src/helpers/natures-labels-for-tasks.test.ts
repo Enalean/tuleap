@@ -27,7 +27,7 @@ describe("getNatureLabelsForTasks", () => {
             [] as Task[],
             new TasksDependencies(),
             new NaturesLabels([
-                ["", ""],
+                ["", "Linked to"],
                 ["depends_on", "Depends on"],
             ])
         );
@@ -43,7 +43,7 @@ describe("getNatureLabelsForTasks", () => {
             [task_1, task_2],
             new TasksDependencies(),
             new NaturesLabels([
-                ["", ""],
+                ["", "Linked to"],
                 ["depends_on", "Depends on"],
             ])
         );
@@ -59,7 +59,7 @@ describe("getNatureLabelsForTasks", () => {
             [task_1, task_2],
             new TasksDependencies([[task_1, new TasksByNature([["hidden_one", [task_2]]])]]),
             new NaturesLabels([
-                ["", ""],
+                ["", "Linked to"],
                 ["depends_on", "Depends on"],
             ])
         );
@@ -75,7 +75,7 @@ describe("getNatureLabelsForTasks", () => {
             [task_1, task_2],
             new TasksDependencies([[task_1, new TasksByNature([["depends_on", [task_2]]])]]),
             new NaturesLabels([
-                ["", ""],
+                ["", "Linked to"],
                 ["depends_on", "Depends on"],
             ])
         );
