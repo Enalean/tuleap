@@ -164,25 +164,26 @@
 
     .tlp-table-cell-section {
         position: relative;
-    }
-
-    tbody > tr {
-        cursor: pointer;
+        padding: 0;
     }
 }
 
-.edit-campaign-tests-list-header {
-    &.check {
-        width: 2.25em;
-    }
+.edit-campaign-tests-list-section-toggle-button {
+    width: 100%;
+    padding: 9px;
+    border: 0;
+    background: inherit;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-align: left;
+    text-transform: inherit;
+    cursor: pointer;
 
-    &.id {
-        width: 3.5em;
+    &:hover,
+    &:focus {
+        background: mix($tlp-theme-color, $tlp-ui-white, 15%);
     }
-}
-
-.edit-campaign-tests-list-section-label {
-    margin: 0 0 0 2px;
 }
 
 .edit-campaign-tests-list-category-check {
@@ -197,6 +198,25 @@
     &.removed {
         color: $tlp-swatch-chrome-silver;
         text-decoration: line-through;
+    }
+
+    .tlp-table-cell-filterable {
+        padding: 0;
+    }
+
+    .tlp-checkbox {
+        display: block;
+        margin: 8px;
+        cursor: pointer;
+
+        > input {
+            margin-right: $tlp-medium-spacing;
+            cursor: pointer;
+        }
+
+        > .fa-spin {
+            margin-right: $tlp-small-spacing;
+        }
     }
 }
 
