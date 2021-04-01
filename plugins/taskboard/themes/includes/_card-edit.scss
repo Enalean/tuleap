@@ -23,7 +23,7 @@
 }
 
 .taskboard-card-label-editor {
-    margin: $tlp-small-spacing 0 0;
+    margin: var(--tlp-small-spacing) 0 0;
 }
 
 .taskboard-card-edit-mode-assignees {
@@ -52,7 +52,7 @@
         z-index: 11;
         bottom: calc(100% - 30px);
         left: 12px;
-        width: calc(100% - 2 * #{$tlp-small-spacing} - 2px);
+        width: calc(100% - 2 * var(--tlp-small-spacing) - 2px);
 
         .select2-search__field { /* stylelint-disable-line selector-class-pattern */
             width: 100% !important;
@@ -96,8 +96,8 @@
         display: flex;
         position: absolute;
         z-index: 10;
-        top: $tlp-small-spacing + $assignee-negative-margin - $additional-size-to-hide-assignee;
-        right: $tlp-small-spacing - $additional-size-to-hide-assignee;
+        top: calc(var(--tlp-small-spacing) + #{$assignee-negative-margin} - #{$additional-size-to-hide-assignee});
+        right: calc(var(--tlp-small-spacing) - #{$additional-size-to-hide-assignee});
         justify-content: center;
         width: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
         height: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
@@ -121,7 +121,7 @@
     }
 
     &.taskboard-card-with-accessibility > .taskboard-card-edit-trigger {
-        right: $tlp-medium-spacing + $card-info-margin-right - $additional-size-to-hide-assignee;
+        right: calc(var(--tlp-medium-spacing) + #{$card-info-margin-right} - #{$additional-size-to-hide-assignee});
     }
 
     &:hover,
@@ -152,7 +152,7 @@
     }
 
     &.taskboard-card-with-accessibility {
-        padding: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing ($tlp-small-spacing + 2);
+        padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
     }
 
     > .taskboard-card-content > .taskboard-card-xref-label {
@@ -205,16 +205,16 @@
 }
 
 .taskboard-card-cancel-save-buttons {
-    margin: ($tlp-small-spacing - 5px) 0 0;
+    margin: calc(var(--tlp-small-spacing) - 5px) 0 0;
     text-align: right;
 
     &.taskboard-card-cancel-save-buttons-for-child {
-        margin: ($tlp-small-spacing - 5px) 0 $tlp-medium-spacing;
+        margin: calc(var(--tlp-small-spacing) - 5px) 0 var(--tlp-medium-spacing);
     }
 }
 
 .taskboard-child:last-child > .taskboard-card-cancel-save-buttons-for-child {
-    margin: ($tlp-small-spacing - 5px) 0 0;
+    margin: calc(var(--tlp-small-spacing) - 5px) 0 0;
 }
 
 .taskboard-card-cancel-button {
@@ -233,7 +233,7 @@
         content: '\f303'; // fa-pencil-alt
         display: flex;
         position: absolute;
-        top: -2px;
+        top: calc(-2px - (1px * var(--tlp-is-condensed)));
         left: -18px;
         align-items: center;
         width: 20px;
@@ -243,10 +243,6 @@
         font-family: 'Font Awesome 5 Free';
         font-size: 14px;
         font-weight: 900;
-
-        @if $tlp-density == $tlp-density-condensed {
-            top: -3px;
-        }
     }
 
     &:not(.taskboard-card-remaining-effort-edit-mode) {
@@ -265,11 +261,7 @@
 
         &::after {
             right: -16px;
-            border-width: 14px 0 14px 15px;
-
-            @if $tlp-density == $tlp-density-condensed {
-                border-width: 13px 0 13px 15px;
-            }
+            border-width: calc(14px - (1px * var(--tlp-is-condensed))) 0 calc(14px - (1px * var(--tlp-is-condensed))) 15px;
         }
     }
 
