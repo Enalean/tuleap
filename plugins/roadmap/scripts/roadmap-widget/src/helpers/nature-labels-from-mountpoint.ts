@@ -18,14 +18,20 @@
  */
 
 import { NaturesLabels } from "../type";
+import type { VueGettextProvider } from "./vue-gettext-provider";
 
-export async function parseNatureLabels(mount_point: HTMLElement): Promise<NaturesLabels> {
+export async function parseNatureLabels(
+    mount_point: HTMLElement,
+    gettext_provider: VueGettextProvider
+): Promise<NaturesLabels> {
     const parsed_data_attribute: Array<{
         readonly shortname: string;
         readonly forward_label: string;
     }> = await JSON.parse(mount_point.dataset.visibleNatures || "[]");
 
-    const nature_labels_including_no_nature = new NaturesLabels([["", ""]]);
+    const nature_labels_including_no_nature = new NaturesLabels([
+        ["", gettext_provider.$gettext("Linked to")],
+    ]);
 
     return parsed_data_attribute.reduce(
         (visible_natures: NaturesLabels, { shortname, forward_label }): NaturesLabels => {

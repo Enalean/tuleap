@@ -39,7 +39,7 @@ describe("DependencyNatureControl", () => {
             propsData: {
                 value: null,
                 available_natures: new NaturesLabels([
-                    ["", ""],
+                    ["", "Linked to"],
                     ["depends_on", "Depends on"],
                 ]),
             },
@@ -56,7 +56,7 @@ describe("DependencyNatureControl", () => {
             propsData: {
                 value: null,
                 available_natures: new NaturesLabels([
-                    ["", ""],
+                    ["", "Linked to"],
                     ["depends_on", "Depends on"],
                 ]),
             },

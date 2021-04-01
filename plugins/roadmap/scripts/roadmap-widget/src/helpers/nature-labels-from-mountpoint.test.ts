@@ -18,26 +18,27 @@
  */
 
 import { parseNatureLabels } from "./nature-labels-from-mountpoint";
+import { createVueGettextProviderPassthrough } from "./vue-gettext-provider-for-test";
 
 describe("parseNatureLabels", () => {
     it("Returns only 'no nature' if no data attribute", async () => {
         const doc = document.implementation.createHTMLDocument();
         const div = doc.createElement("div");
 
-        const labels = await parseNatureLabels(div);
+        const labels = await parseNatureLabels(div, createVueGettextProviderPassthrough());
 
         expect(labels.size).toBe(1);
-        expect(labels.get("")).toBe("");
+        expect(labels.get("")).toBe("Linked to");
     });
 
     it("Adds a custom nature to the collection", async () => {
         const doc = document.implementation.createHTMLDocument();
         const div = doc.createElement("div");
         div.dataset.visibleNatures = '[{"shortname": "duck", "forward_label": "Coin"}]';
-        const labels = await parseNatureLabels(div);
+        const labels = await parseNatureLabels(div, createVueGettextProviderPassthrough());
 
         expect(labels.size).toBe(2);
-        expect(labels.get("")).toBe("");
+        expect(labels.get("")).toBe("Linked to");
         expect(labels.get("duck")).toBe("Coin");
     });
 });
