@@ -45,7 +45,7 @@ export default function controller($sce, $element, gettextCatalog, ExecutionRest
         const $trigger = $element.find(".steps-step-action-dropdown-trigger");
         const $dropdown_menu = $element.find(".steps-step-action-dropdown");
 
-        self.createDropdown = createDropdown($trigger[0], {
+        self.dropdown = createDropdown($trigger[0], {
             dropdown_menu: $dropdown_menu[0],
         });
     }
