@@ -18,7 +18,7 @@
  */
 
 .document-access-legacy-permissions-update-page {
-    margin: $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing);
 }
 
 .document-permissions-modal-loading-state {
@@ -28,7 +28,7 @@
 }
 
 .document-permissions-update-container {
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
 }
 
 .document-permissions-ugroups {
@@ -36,12 +36,12 @@
     justify-content: center;
 
     > .tlp-form-element {
-        margin: 0 $tlp-medium-spacing $tlp-medium-spacing 0;
+        margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     }
 }
 
 .document-permissions-creation-modal-section {
-    padding: 0 $tlp-medium-spacing $tlp-medium-spacing $tlp-medium-spacing;
+    padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 
 .document-permissions-creation-modal-title {
@@ -49,5 +49,5 @@
 }
 
 .document-permissions-creation-modal-title-spinner {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }

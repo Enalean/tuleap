@@ -23,11 +23,11 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 0 $tlp-medium-spacing $tlp-title-spacing;
+    padding: 0 var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
 .document-header-title {
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .document-header-actions {
@@ -38,14 +38,14 @@
 
 .document-header-spacer {
     flex: 1 1 auto;
-    min-width: $tlp-medium-spacing;
+    min-width: var(--tlp-medium-spacing);
 }
 
 .document-header-global-progress {
     display: flex;
     align-items: center;
     min-height: 30px;
-    margin: 0 $tlp-medium-spacing 0;
+    margin: 0 var(--tlp-medium-spacing) 0;
     cursor: pointer;
 }
 
@@ -56,7 +56,7 @@
 .document-advanced-link {
     position: absolute;
     top: 50%;
-    right: $tlp-medium-spacing;
+    right: var(--tlp-medium-spacing);
     max-width: 60px;
     overflow: hidden;
     transform: translateY(-50%);
@@ -78,7 +78,7 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
     background: $tlp-theme-sidebar-background-color;
     color: $tlp-ui-white;
@@ -96,5 +96,5 @@
 }
 
 .document-view-switcher {
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 }

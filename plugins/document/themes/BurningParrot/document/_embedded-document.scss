@@ -20,14 +20,14 @@
  */
 
 .document-breadcrumb {
-    padding-bottom: $tlp-large-spacing;
+    padding-bottom: var(--tlp-large-spacing);
 }
 
 .embedded-document-container {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    padding-bottom: $tlp-medium-spacing;
+    padding-bottom: var(--tlp-medium-spacing);
 
     > .document-header {
         flex: 0 0 auto;
@@ -52,7 +52,7 @@
         > .tlp-pane-container {
             flex: 0 1 auto;
             max-width: 800px;
-            padding: $tlp-jumbo-spacing;
+            padding: var(--tlp-jumbo-spacing);
             background: $tlp-ui-white;
         }
     }
