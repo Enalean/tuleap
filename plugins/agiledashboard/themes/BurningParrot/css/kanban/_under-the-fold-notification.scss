@@ -25,8 +25,8 @@
     visibility: hidden;
     position: fixed;
     z-index: 11000;
-    right: $tlp-small-spacing;
-    bottom: $tlp-small-spacing;
+    right: var(--tlp-small-spacing);
+    bottom: var(--tlp-small-spacing);
     margin: 0;
     transition: all 1s 2s ease-in-out;
     opacity: 0;

@@ -20,7 +20,7 @@
 $milestone-background: var(--project-color-background-gradient-light, $tlp-ui-white);
 
 .milestone {
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
     border: 1px solid var(--project-color-border, $tlp-ui-border-normal);
     background: $milestone-background;
 }
@@ -55,7 +55,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
 }
 
 .milestone-action-button {
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 
     &.ng-enter {
         animation: fadeIn .2s;
@@ -68,7 +68,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
 
 .milestone-header-spacer {
     flex: 1 1 auto;
-    min-width: $tlp-medium-spacing;
+    min-width: var(--tlp-medium-spacing);
 }
 
 .milestone-header-dates {
@@ -77,13 +77,13 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
 }
 
 .milestone-header-status {
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 
 .milestone-info {
     display: flex;
     align-items: center;
-    padding: $tlp-small-spacing $tlp-medium-spacing;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border-bottom: $border-element-separator;
     background: var(--project-color-background-gradient, darken($tlp-ui-white, 2%));
 }
@@ -128,7 +128,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
 
 .milestone-backlog-items {
     min-height: 70px;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: lighten($tlp-theme-background-color, 2%);
