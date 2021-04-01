@@ -61,10 +61,6 @@ export class TimePeriodQuarter implements TimePeriod {
     additionalUnits(nb: number): Date[] {
         return getAdditionalQuarters(this.quarters[this.quarters.length - 1], nb);
     }
-
-    getBeginningOfNextNthUnit(unit: Date, nth: number): Date {
-        return getBeginningOfNextNthQuarter(unit, nth);
-    }
 }
 
 function getQuarterNumber(unit: Date): number {

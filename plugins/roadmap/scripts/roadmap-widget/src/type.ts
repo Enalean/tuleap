@@ -35,7 +35,6 @@ export interface TimePeriod {
     formatShort(unit: Date): string;
     formatLong(unit: Date): string;
     additionalUnits(nb: number): Date[];
-    getBeginningOfNextNthUnit(unit: Date, nth: number): Date;
 }
 
 export interface TaskDimension {

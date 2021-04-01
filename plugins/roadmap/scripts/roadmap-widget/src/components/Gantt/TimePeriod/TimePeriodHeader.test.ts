@@ -26,9 +26,9 @@ describe("TimePeriodeHeader", () => {
         const wrapper = shallowMount(TimePeriodHeader, {
             propsData: {
                 time_period: new TimePeriodMonth(
-                    new Date(2020, 3, 1),
-                    new Date(2020, 4, 1),
-                    new Date(2020, 4, 1),
+                    new Date("2020-03-31T22:00:00.000Z"),
+                    new Date("2020-04-30T22:00:00.000Z"),
+                    new Date("2020-04-30T22:00:00.000Z"),
                     "en_US"
                 ),
                 nb_additional_units: 2,
@@ -37,6 +37,9 @@ describe("TimePeriodeHeader", () => {
 
         expect(wrapper).toMatchInlineSnapshot(`
             <div class="roadmap-gantt-timeperiod">
+              <div data-tlp-tooltip="March 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top">
+                Mar
+              </div>
               <div data-tlp-tooltip="April 2020" class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top">
                 Apr
               </div>
