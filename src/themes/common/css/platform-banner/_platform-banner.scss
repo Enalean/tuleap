@@ -29,7 +29,7 @@ $illustration-left: 9px;
     align-items: baseline;
     justify-content: space-between;
     width: 100%;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-medium-spacing ($illustration-width + $illustration-left + $tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(#{$illustration-width + $illustration-left} + var(--tlp-medium-spacing));
     overflow: hidden;
 }
 
@@ -104,7 +104,7 @@ $illustration-left: 9px;
 
 .platform-banner-navbar-button {
     flex: 0 0 auto;
-    margin: 0 $tlp-small-spacing;
+    margin: 0 var(--tlp-small-spacing);
     transition: opacity ease-in-out 100ms;
 
     &:hover {

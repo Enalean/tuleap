@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutDensityVariants;
 use Tuleap\Layout\IncludeAssets;
 
-class AccountCssAsset extends CssAsset
+class AccountCssAsset extends CssAssetWithoutDensityVariants
 {
     public function __construct()
     {

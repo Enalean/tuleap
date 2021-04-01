@@ -32,7 +32,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 .breadcrumb-container {
     display: flex;
     align-items: center;
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .breadcrumb {
@@ -157,7 +157,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
 .breadcrumb-dropdown-link {
     display: block;
-    padding: $tlp-small-spacing $tlp-medium-spacing;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     overflow: hidden;
     color: $switch-menu-item-color;
     font-size: .8125rem;
@@ -174,7 +174,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
 .breadcrumb-dropdown-separator {
     display: block;
-    margin: $tlp-small-spacing 0;
+    margin: var(--tlp-small-spacing) 0;
     border-top: 1px solid $tlp-ui-border-light;
 
     &:first-child {
@@ -183,8 +183,8 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 }
 
 .breadcrumb-dropdown-section-title {
-    margin: $tlp-small-spacing 0 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
+    margin: var(--tlp-small-spacing) 0 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     border-top: 1px solid $tlp-ui-border-light;
     color: $tlp-ui-dimmed;
     font-size: .65rem;
@@ -195,7 +195,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
     &:first-child {
         margin: 0;
-        padding: $tlp-small-spacing $tlp-medium-spacing;
+        padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
         border-top: 0;
     }
 }
@@ -226,7 +226,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 .breadcrumb-project-privacy-icon-with-flags {
     display: flex;
     align-items: center;
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     padding: 4px;
     border-radius: 4px;
     cursor: help;

@@ -169,7 +169,7 @@ class HeaderPresenterBuilder
         $css_assets       = new CssAssetCollection([
             new CssAssetWithoutDensityVariants($core_assets, 'tlp'),
             new CssAsset($core_assets, 'tlp-vars'),
-            new CssAsset($core_assets, 'BurningParrot/burning-parrot')
+            new CssAssetWithoutDensityVariants($core_assets, 'BurningParrot/burning-parrot')
         ]);
         $this->css_assets = $css_assets->merge($this->css_assets);
 

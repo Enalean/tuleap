@@ -46,7 +46,7 @@ main {
 }
 
 #feedback {
-    padding: 0 0 $tlp-medium-spacing;
+    padding: 0 0 var(--tlp-medium-spacing);
 
     &:empty {
         padding: 0;
@@ -54,7 +54,7 @@ main {
 }
 
 main[role=main]:not(.tlp-framed) > #feedback {
-    padding: ($top-floating-buttons-space + $tlp-medium-spacing) $tlp-medium-spacing 0;
+    padding: calc(#{$top-floating-buttons-space} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
 
     &:empty {
         padding: 0;
@@ -62,11 +62,11 @@ main[role=main]:not(.tlp-framed) > #feedback {
 }
 
 main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty) {
-    padding: ($top-floating-buttons-space - $breadcrumb-height + $tlp-medium-spacing) $tlp-medium-spacing 0;
+    padding: calc(#{$top-floating-buttons-space} - #{$breadcrumb-height} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
 }
 
 .full-width + #main-container > main[role=main]:not(.tlp-framed) > #feedback:not(:empty) {
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
 %empty-container {
@@ -77,7 +77,7 @@ main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty)
 
 .empty-page {
     @extend %empty-container;
-    margin: 100px auto $tlp-medium-spacing;
+    margin: 100px auto var(--tlp-medium-spacing);
 }
 
 .empty-pane {
@@ -94,19 +94,19 @@ main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty)
     text-align: center;
 
     > .empty-page-small-text {
-        margin: $tlp-small-spacing 0 0;
+        margin: var(--tlp-small-spacing) 0 0;
     }
 }
 
 .empty-page-small-text {
     color: transparentize($tlp-theme-color, .7);
-    font-size: $tlp-medium-spacing;
+    font-size: var(--tlp-medium-spacing);
     line-height: 20px;
     text-align: center;
 }
 
 .empty-page-text-with-small-text {
-    margin: 0 0 $tlp-x-large-spacing;
+    margin: 0 0 var(--tlp-x-large-spacing);
 }
 
 .empty-page-icon,
@@ -116,7 +116,7 @@ main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty)
 
 .empty-pane-illustration,
 .empty-page-illustration {
-    margin: 0 0 3 * $tlp-medium-spacing;
+    margin: 0 0 calc(3 * var(--tlp-medium-spacing));
 }
 
 @import 'header';

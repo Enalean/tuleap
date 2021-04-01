@@ -1,5 +1,5 @@
 .tlp-pane-project-pending {
-    padding: 0 $tlp-medium-spacing $tlp-medium-spacing;
+    padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 
 .table-details-pending-project-hidden {
@@ -15,7 +15,7 @@
 }
 
 .pending-project-avatar {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }
 
 .pending-project-name-and-avatar {
@@ -34,11 +34,11 @@
 }
 
 .pending-project-visibility {
-    margin: 0 0 0 $tlp-x-large-spacing;
+    margin: 0 0 0 var(--tlp-x-large-spacing);
 }
 
 .pending-project-trovecats {
-    padding: 0 0 0 $tlp-x-large-spacing;
+    padding: 0 0 0 var(--tlp-x-large-spacing);
 }
 
 .pending-project-properties {
@@ -46,7 +46,7 @@
 }
 
 .pending-project-user-details-infos {
-    margin: $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0;
 }
 
 .pending-project-user-details-button {
@@ -58,11 +58,11 @@
 }
 
 .validate-button {
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .pending-project-buttons-all {
-    margin: $tlp-jumbo-spacing 0 0;
+    margin: var(--tlp-jumbo-spacing) 0 0;
     text-align: center;
 }
 
@@ -71,7 +71,7 @@
 }
 
 .siteadmin-pending-project-title-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .siteadmin-pending-project-title {

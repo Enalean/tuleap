@@ -37,7 +37,7 @@
 }
 
 .user-preferences-title {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .user-preferences-nav {
@@ -47,7 +47,7 @@
 
 .user-preferences-section {
     width: 100%;
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .user-preferences-section-submit {
@@ -66,7 +66,7 @@
     display: none;
 }
 
-@media screen and (max-width: (1000px + $tlp-medium-spacing)) {
+@media screen and (max-width: calc(1000px + var(--tlp-medium-spacing))) {
     .user-preferences-frame {
         max-width: none;
         margin: 0;
@@ -81,10 +81,10 @@
     }
 
     .user-preferences-nav {
-        width: calc(100% + #{$tlp-medium-spacing} * 2);
+        width: calc(100% + var(--tlp-medium-spacing) * 2);
         min-width: auto;
         max-width: none;
-        margin: 0 (-$tlp-medium-spacing) $tlp-medium-spacing;
+        margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
     }
 
     .user-preferences-section {

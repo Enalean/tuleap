@@ -42,7 +42,7 @@
     flex: 0 0 auto;
     flex-direction: column;
     align-items: center;
-    margin: $tlp-medium-spacing 0 $tlp-small-spacing;
+    margin: var(--tlp-medium-spacing) 0 var(--tlp-small-spacing);
     cursor: pointer;
 
     &:hover {
@@ -60,7 +60,7 @@
     }
 
     &:last-child {
-        margin: $tlp-medium-spacing 0;
+        margin: var(--tlp-medium-spacing) 0;
     }
 
     > .sidebar-about-logo,

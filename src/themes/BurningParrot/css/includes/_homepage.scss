@@ -340,7 +340,7 @@ body.homepage > #main-container {
 .homepage-news-info {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
     color: $tlp-ui-border-dark;
     font-size: 13px;
 

@@ -20,14 +20,14 @@
 .toolbar {
     display: flex;
     flex-wrap: wrap;
-    padding: 15px $tlp-medium-spacing 0;
+    padding: 15px var(--tlp-medium-spacing) 0;
     border: 0;
     border-bottom: 1px solid darken($tlp-theme-background-color, 5%);
     background: $tlp-theme-background-color;
     font-size: 13px;
 
     > a {
-        margin: 0 $tlp-large-spacing 15px 0;
+        margin: 0 var(--tlp-large-spacing) 15px 0;
         color: $tlp-ui-dimmed;
         font-weight: normal;
         text-decoration: none;

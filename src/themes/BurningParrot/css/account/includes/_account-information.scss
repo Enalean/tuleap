@@ -32,7 +32,7 @@ $avatar-size: 100px;
     position: relative;
     width: $avatar-size;
     height: $avatar-size;
-    margin: 0 $tlp-large-spacing 0 $tlp-medium-spacing;
+    margin: 0 var(--tlp-large-spacing) 0 var(--tlp-medium-spacing);
 }
 
 .account-information-avatar-button {
@@ -49,7 +49,7 @@ $avatar-size: 100px;
 }
 
 .account-information-submit {
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-medium-spacing ($tlp-medium-spacing + $tlp-medium-spacing + $tlp-large-spacing + $avatar-size);
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + var(--tlp-medium-spacing) + var(--tlp-large-spacing) + #{$avatar-size});
 }
 
 .account-information-avatar-modal-body {
@@ -63,7 +63,7 @@ $avatar-size: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .account-information-avatar-modal-select-button {

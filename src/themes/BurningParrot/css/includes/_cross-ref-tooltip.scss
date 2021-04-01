@@ -22,8 +22,8 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
 .codendi-tooltip {
     position: absolute;
     z-index: 100051;
-    margin: $tlp-medium-spacing 0 0;
-    padding: $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing) 0 0;
+    padding: var(--tlp-medium-spacing);
     border-radius: 4px;
     background-color: $tlp-theme-sidebar-background-color;
     box-shadow: 0 20px 30px transparentize($tlp-theme-sidebar-background-color, .8), 0 5px 10px transparentize($tlp-theme-sidebar-background-color, .8);
@@ -36,7 +36,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
         content: '';
         position: absolute;
         top: -10px;
-        left: $tlp-small-spacing;
+        left: var(--tlp-small-spacing);
         width: 0;
         height: 0;
         border-width: 0 10px 10px;
@@ -47,7 +47,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
 
     > table > tbody > tr {
         > td {
-            padding: 0 0 $tlp-small-spacing;
+            padding: 0 0 var(--tlp-small-spacing);
             font-size: inherit;
             font-weight: inherit;
             line-height: inherit;
@@ -61,7 +61,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
 
     label {
         display: block;
-        margin: 0 $tlp-small-spacing 0 0;
+        margin: 0 var(--tlp-small-spacing) 0 0;
         color: $dimmed-white-over-dark-background;
         font-size: inherit;
         font-weight: inherit;
@@ -76,21 +76,21 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
     .cross-ref-tooltip-collection {
         display: flex;
         flex-wrap: wrap;
-        margin: 0 0 (-$tlp-small-spacing);
+        margin: 0 0 calc(-1 * var(--tlp-small-spacing));
 
         > img {
-            margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
+            margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
             object-fit: cover;
         }
 
         > .cross-ref-tooltip-collection-item {
             flex: 0 0 auto;
             width: 150px;
-            margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
+            margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
             text-align: center;
 
             > .fa {
-                margin: $tlp-small-spacing 0;
+                margin: var(--tlp-small-spacing) 0;
                 font-size: 26px;
             }
 
@@ -114,7 +114,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
 .crossref-tooltip-header {
     display: flex;
     align-items: center;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     background: darken($tlp-theme-sidebar-background-color, 8%);
@@ -128,18 +128,18 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
 
 .crossref-tooltip-header-prefix-icon {
     flex: 0 0 auto;
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }
 
 .crossref-tooltip-body {
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     font-size: 12px;
     font-weight: 600;
     line-height: 20px;
 
     > table > tbody > tr {
         > th {
-            padding: 0 $tlp-small-spacing 0 0;
+            padding: 0 var(--tlp-small-spacing) 0 0;
             color: $dimmed-white-over-dark-background;
             font-weight: 600;
             text-align: right;

@@ -37,7 +37,7 @@ $profile-max-width: 720px;
 
     .full-width + #main-container > main[role='main']:not(.tlp-framed) > #feedback:not(:empty) {
         margin: 0;
-        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-large-spacing;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-large-spacing);
         background: $profile-header-background;
     }
 
@@ -56,7 +56,7 @@ $profile-max-width: 720px;
 .user-profile {
     display: flex;
     justify-content: center;
-    padding: 0 $tlp-jumbo-spacing $tlp-jumbo-spacing;
+    padding: 0 var(--tlp-jumbo-spacing) var(--tlp-jumbo-spacing);
     border-bottom: 5px solid $tlp-theme-color;
     background: $profile-header-background;
     color: $tlp-ui-white;
@@ -71,14 +71,14 @@ $profile-max-width: 720px;
 
 .user-profile-avatar {
     flex: 0 0 auto;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .user-profile-identity {
     $avatar-jumbo-size: 96px;
 
     flex: 1 0 auto;
-    max-width: $profile-max-width - $avatar-jumbo-size - $tlp-medium-spacing;
+    max-width: $profile-max-width - $avatar-jumbo-size - var(--tlp-medium-spacing);
 }
 
 .user-profile-status-active {
@@ -94,7 +94,7 @@ $profile-max-width: 720px;
 }
 
 .user-profile-title {
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
     overflow: hidden;
     color: $theme-color-on-dark-background;
     font-size: 30px;
@@ -108,7 +108,7 @@ $profile-max-width: 720px;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
 
     &:last-child {
         margin: 0;
@@ -130,7 +130,7 @@ $profile-max-width: 720px;
 
 .user-profile-member-since,
 .user-profile-id {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
     white-space: nowrap;
 }
 
@@ -150,7 +150,7 @@ $profile-max-width: 720px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: $tlp-x-large-spacing;
+    padding: var(--tlp-x-large-spacing);
 }
 
 .user-profile-has-projects {
@@ -161,7 +161,7 @@ $profile-max-width: 720px;
 .user-profile-no-project,
 .user-profile-no-project:last-child {
     max-width: $profile-max-width;
-    margin: 0 $tlp-medium-spacing;
+    margin: 0 var(--tlp-medium-spacing);
 }
 
 .user-profile-project {
@@ -175,7 +175,7 @@ $profile-max-width: 720px;
 }
 
 .user-profile-project-title-description {
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .user-profile-project-description {
@@ -213,11 +213,11 @@ $profile-max-width: 720px;
     }
 
     .user-profile-title {
-        margin: 0 0 $tlp-small-spacing;
+        margin: 0 0 var(--tlp-small-spacing);
     }
 
     .user-profile-member-since,
     .user-profile-id {
-        margin: $tlp-small-spacing 0 0;
+        margin: var(--tlp-small-spacing) 0 0;
     }
 }

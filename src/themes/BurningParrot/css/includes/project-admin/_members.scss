@@ -25,11 +25,11 @@ $small-screen-size: 1200px;
 
 #project-admin-members-modal-buttons-section {
     > button:nth-child(2) {
-        margin-left: $tlp-large-spacing;
+        margin-left: var(--tlp-large-spacing);
     }
 
     > button:not(:nth-child(2)) {
-        margin-left: $tlp-small-spacing;
+        margin-left: var(--tlp-small-spacing);
     }
 }
 
@@ -38,7 +38,7 @@ $small-screen-size: 1200px;
 }
 
 #project-admin-members-modal-import-users-button {
-    margin-left: $tlp-large-spacing;
+    margin-left: var(--tlp-large-spacing);
 }
 
 #project-admin-members-input-file-helper {
@@ -86,7 +86,7 @@ $small-screen-size: 1200px;
 }
 
 #project-admin-members-upload-file-form-element {
-    margin-bottom: $tlp-medium-spacing;
+    margin-bottom: var(--tlp-medium-spacing);
 }
 
 .file-input-error {

@@ -20,7 +20,7 @@
 $dark-modal-background: $tlp-theme-sidebar-background-color;
 $dark-modal-default-text-color: $tlp-ui-border-normal;
 $dark-modal-dimmed-text-color: $tlp-ui-border-dark;
-$white-space-above-and-after-a-project-link: $tlp-small-spacing;
+$white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 $approximate-width-of-project-icon: 15.5px;
 $switch-to-font-family: $tlp-font-family;
 

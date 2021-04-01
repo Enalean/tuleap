@@ -55,7 +55,7 @@
 }
 
 .has-visible-project-banner.has-visible-platform-banner .document-app {
-    height: calc(100vh - #{$project-banner-base-height + $platform-banner-base-height + $extra-platform-banner-white-space-height});
+    height: calc(100vh - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$extra-platform-banner-white-space-height});
 }
 
 .document-error-modal-link {

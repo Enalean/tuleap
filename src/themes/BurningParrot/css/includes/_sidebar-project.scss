@@ -21,14 +21,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $tlp-medium-spacing $tlp-small-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-small-spacing);
 }
 
 .project-sidebar-title {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
-    padding: $tlp-small-spacing;
+    padding: var(--tlp-small-spacing);
     transition: background 100ms;
     border-radius: 4px;
     color: $tlp-ui-border-normal;
@@ -50,7 +50,7 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
     color: $tlp-ui-white;
     font-size: .6rem;
@@ -76,7 +76,7 @@
 
 .project-sidebar-banner-button {
     flex: 0 0 auto;
-    margin: 0 $tlp-small-spacing;
+    margin: 0 var(--tlp-small-spacing);
     transition: opacity ease-in-out 100ms;
 
     .fa-bullhorn {
@@ -98,7 +98,7 @@
 .project-sidebar-project-flags {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-medium-spacing $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     color: $tlp-ui-border-dark;
     cursor: help;
 
@@ -127,7 +127,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 
 .project-sidebar-project-flags-label {
@@ -149,7 +149,7 @@
     }
 
     .project-sidebar-banner-button {
-        margin: $tlp-medium-spacing 0 $tlp-small-spacing;
+        margin: var(--tlp-medium-spacing) 0 var(--tlp-small-spacing);
     }
 
     .project-sidebar-project-flags {
@@ -160,7 +160,7 @@
 .project-sidebar-nav {
     display: flex;
     flex-direction: column;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .project-sidebar-nav-item {
@@ -168,7 +168,7 @@
     position: relative;
     align-items: center;
     height: $navbar-height;
-    padding: 0 $tlp-medium-spacing;
+    padding: 0 var(--tlp-medium-spacing);
     border-left: 3px solid transparent;
     color: $tlp-ui-border-dark;
     font-size: .8125rem;
@@ -215,7 +215,7 @@
 }
 
 .project-sidebar-nav-item-icon {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: .875rem;
 }
 
@@ -234,7 +234,7 @@
     justify-content: center;
     width: 30px;
     height: 30px;
-    margin: 0 auto $tlp-medium-spacing;
+    margin: 0 auto var(--tlp-medium-spacing);
     transition: background 100ms;
     border-radius: 50px;
     background: darken($tlp-theme-sidebar-background-color, 2%);
