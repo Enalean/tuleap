@@ -17,6 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/tlp/src/scss/variables/margins';
-
-@import 'include/definitions';
+@use 'include/homepage';
+@use 'include/permissions';

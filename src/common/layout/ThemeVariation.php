@@ -56,9 +56,4 @@ class ThemeVariation
     {
         return '-' . $this->color->getName();
     }
-
-    public function isCondensed(): bool
-    {
-        return $this->is_condensed_mode;
-    }
 }

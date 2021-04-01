@@ -26,7 +26,7 @@
 
 .svn-homepage {
     width: 50%;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
 
     @media screen and (max-width: 1200px) {
         width: 100%;
@@ -35,7 +35,7 @@
 
 .svn-homepage-repository {
     position: relative;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 
     &:last-child {
         margin: 0;
@@ -49,7 +49,7 @@
 
 .svn-homepage-repository-date {
     display: block;
-    margin: $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0;
     font-size: .875rem;
 }
 
@@ -59,13 +59,13 @@
 
 .svn-homepage-repository-settings {
     position: absolute;
-    top: $tlp-medium-spacing;
-    right: $tlp-medium-spacing;
+    top: var(--tlp-medium-spacing);
+    right: var(--tlp-medium-spacing);
     transition: color ease-in-out 150ms;
 }
 
 .svn-homepage-create-repository-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 @mixin definitions-with-theme-colors($tlp-ui-dimmed, $tlp-theme-color) {
