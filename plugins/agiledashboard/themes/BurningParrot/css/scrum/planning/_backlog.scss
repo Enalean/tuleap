@@ -18,11 +18,11 @@
  */
 
 .agiledashboard-top-backlog {
-    margin: $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0;
 }
 
 .backlog-add-item-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .backlog-header-search {

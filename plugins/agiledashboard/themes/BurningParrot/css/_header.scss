@@ -19,7 +19,7 @@
 
 .agiledashboard-header-title {
     margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
 #agiledashboard-scrum-milestone-menu {

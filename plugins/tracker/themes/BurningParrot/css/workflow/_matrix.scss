@@ -38,7 +38,7 @@
 }
 
 .tracker-workflow-transition-column-button {
-    margin: $tlp-small-spacing 0;
+    margin: var(--tlp-small-spacing) 0;
 }
 
 .tracker-workflow-transition-tbody {
@@ -150,7 +150,7 @@
 }
 
 .tracker-workflow-advanced-transition-button {
-    margin: $tlp-small-spacing 0 0;
+    margin: var(--tlp-small-spacing) 0 0;
 }
 
 .sidebar-collapsed .tracker-workflow-transition-tbody > tr > .tracker-workflow-transition-row-label:first-child {
@@ -158,9 +158,9 @@
 }
 
 .tracker-workflow-transition-matrix-empty-state {
-    margin: $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing);
 }
 
 .tracker-workflow-transition-matrix-empty-state-field-empty {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }

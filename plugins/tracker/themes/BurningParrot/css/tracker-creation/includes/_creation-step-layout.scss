@@ -39,7 +39,7 @@
 
         @media screen and (max-width: $creation-small-screen-width) {
             width: 35%;
-            margin: 80px $tlp-large-spacing 0 0;
+            margin: 80px var(--tlp-large-spacing) 0 0;
         }
 
         @media screen and (max-width: $creation-tiny-screen-width) {
@@ -56,12 +56,12 @@
 
 
 .tracker-creation-step-number {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: 14px;
 }
 
 .tracker-creation-step-info {
-    margin: 0 0 $tlp-x-large-spacing;
+    margin: 0 0 var(--tlp-x-large-spacing);
 
     p {
         margin: 0;
@@ -71,7 +71,7 @@
 .tracker-creation-step-info-label {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-small-spacing 0;
+    margin: 0 0 var(--tlp-small-spacing) 0;
 }
 
 .tracker-creation-step-label {
@@ -81,7 +81,7 @@
 }
 
 .tracker-creation-step-interactive-content {
-    margin: 0 0 $tlp-medium-spacing 0;
+    margin: 0 0 var(--tlp-medium-spacing) 0;
     border-bottom: 1px solid $tlp-ui-border-dark;
 }
 
@@ -89,10 +89,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: $tlp-medium-spacing 0;
+    margin: var(--tlp-medium-spacing) 0;
 
     &:last-child {
-        margin: $tlp-medium-spacing 0 0;
+        margin: var(--tlp-medium-spacing) 0 0;
     }
 
     @media screen and (max-width: $creation-small-screen-width) {
@@ -104,10 +104,10 @@
     display: flex;
 
     .tlp-property {
-        margin: 0 0 $tlp-large-spacing $tlp-x-large-spacing;
+        margin: 0 0 var(--tlp-large-spacing) var(--tlp-x-large-spacing);
 
         &:first-child {
-            margin: 0 0 $tlp-large-spacing;
+            margin: 0 0 var(--tlp-large-spacing);
         }
     }
 
@@ -120,7 +120,7 @@
     width: 600px;
 
     .tlp-form-element {
-        margin: 0 0 $tlp-large-spacing;
+        margin: 0 0 var(--tlp-large-spacing);
     }
 
     #tracker-creation-xml-file-selector {
@@ -129,10 +129,10 @@
 
     > .tracker-creation-form-element-group {
         display: flex;
-        margin: 0 0 $tlp-large-spacing 0;
+        margin: 0 0 var(--tlp-large-spacing) 0;
 
         > .tlp-form-element {
-            margin: 0 0 0 $tlp-x-large-spacing;
+            margin: 0 0 0 var(--tlp-x-large-spacing);
 
             &:first-child {
                 margin: 0;
@@ -153,7 +153,7 @@
 
 #tracker-shortname-slugified-mode-label {
     display: flex;
-    margin: -$tlp-small-spacing 0 $tlp-small-spacing;
+    margin: calc(-1 * var(--tlp-small-spacing)) 0 var(--tlp-small-spacing);
     padding-left: 4px;
     color: $tlp-ui-dimmed;
     font-size: 13px;
@@ -186,7 +186,7 @@
 
     > .tracker-creation-next-step-button,
     > .tracker-creation-submit-button {
-        margin: 0 0 0 $tlp-medium-spacing;
+        margin: 0 0 0 var(--tlp-medium-spacing);
         overflow: visible;
     }
 

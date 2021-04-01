@@ -20,7 +20,6 @@
  */
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
@@ -250,7 +249,7 @@ class Tracker_Widget_MyArtifacts extends Widget
             __DIR__ . '/../../../../../src/www/assets/trackers',
             '/assets/trackers'
         );
-        return new CssAssetCollection([new CssAsset($include_assets, 'tracker-bp')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutDensityVariants($include_assets, 'tracker-bp')]);
     }
 
     public function getJavascriptDependencies(): array

@@ -34,11 +34,11 @@
 }
 
 .tracker-workflow-rules-enforcement-warning {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .tracker-workflow-transition-modal-empty-action {
-    margin: $tlp-medium-spacing 0;
+    margin: var(--tlp-medium-spacing) 0;
     color: transparentize($tlp-theme-color, .7);
     font-size: 20px;
     line-height: 26px;

@@ -22,7 +22,6 @@
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
@@ -2602,6 +2601,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             __DIR__ . '/../../../../../src/www/assets/trackers',
             '/assets/trackers'
         );
-        return new CssAssetCollection([new CssAsset($assets, 'tracker-bp')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutDensityVariants($assets, 'tracker-bp')]);
     }
 }

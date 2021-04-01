@@ -42,9 +42,6 @@ for (const color of colors_burning_parrot) {
         entry_points[
             entry_point_name + "-" + color
         ] = `./themes/BurningParrot/css/${entry_point_name}-${color}.scss`;
-        entry_points[
-            entry_point_name + "-" + color + "-condensed"
-        ] = `./themes/BurningParrot/css/${entry_point_name}-${color}-condensed.scss`;
     }
 }
 

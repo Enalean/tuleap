@@ -41,7 +41,7 @@ body {
 
 .agiledashboard-administration-title {
     margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
 .agiledashboard-administration-activated-service {
@@ -67,7 +67,7 @@ body {
 
 .agiledashboard-administration-scrum-main {
     flex: 1 1 auto;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .agiledashboard-administration-scrum-side-panes {

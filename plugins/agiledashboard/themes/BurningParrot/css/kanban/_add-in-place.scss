@@ -44,7 +44,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
 
     &.open {
-        width: calc(100% - #{$tlp-medium-spacing});
+        width: calc(100% - var(--tlp-medium-spacing));
         box-shadow: none;
 
         > .column-content-addinplace-icon {
@@ -67,7 +67,7 @@
 
 .kanban-add-in-place-element {
     display: block;
-    width: calc(100% - #{$tlp-medium-spacing});
+    width: calc(100% - var(--tlp-medium-spacing));
     margin: 0 5px;
 }
 

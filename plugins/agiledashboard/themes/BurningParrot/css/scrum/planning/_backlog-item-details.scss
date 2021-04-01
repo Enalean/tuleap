@@ -151,7 +151,7 @@
     flex: 1 0 auto;
     align-items: baseline;
     width: 100%;
-    padding: $tlp-small-spacing 0 $tlp-small-spacing 0;
+    padding: var(--tlp-small-spacing) 0 var(--tlp-small-spacing) 0;
 }
 
 .card-accessibility {
@@ -183,7 +183,7 @@
     display: flex;
     flex: 0 0 auto;
     margin: 0 7px 0 0;
-    padding: 0 $tlp-small-spacing 0 $tlp-small-spacing;
+    padding: 0 var(--tlp-small-spacing) 0 var(--tlp-small-spacing);
     color: $tlp-ui-dimmed;
     font-size: 12px;
     white-space: nowrap;
@@ -207,7 +207,7 @@
 .backlog-item-details-title {
     display: block;
     flex: 1 1 auto;
-    padding-right: $tlp-small-spacing;
+    padding-right: var(--tlp-small-spacing);
     font-size: 14px;
     line-height: 18px;
 }
