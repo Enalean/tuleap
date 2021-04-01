@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,32 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { buildItemPath } from "./build-parent-paths.js";
+import { buildItemPath } from "./build-parent-paths";
+import type { ItemForPath } from "./build-parent-paths";
 
 describe("buildItemPath", () => {
     it("Build item parent path", () => {
-        const item = {
+        const item: ItemForPath = {
             item_id: 10,
             item_name: "my item",
+            title: "my item",
         };
 
         const parents = [
             {
                 item_id: 1,
                 title: "folder A",
-            },
+            } as ItemForPath,
             {
                 item_id: 2,
                 title: "folder B",
-            },
+            } as ItemForPath,
             {
                 item_id: 3,
                 title: "folder C",
-            },
+            } as ItemForPath,
             {
                 item_id: 4,
                 title: "folder D",
-            },
+            } as ItemForPath,
         ];
 
         const item_path = buildItemPath(item, parents);

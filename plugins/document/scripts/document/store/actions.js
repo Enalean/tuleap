@@ -61,7 +61,7 @@ import {
 } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
 import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
-import { buildItemPath } from "./actions-helpers/build-parent-paths.js";
+import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,

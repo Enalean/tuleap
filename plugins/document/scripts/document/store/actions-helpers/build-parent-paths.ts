@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function buildItemPath(item, parents) {
+export interface ItemForPath {
+    item_id: number;
+    item_name: string;
+    title: string;
+}
+
+interface ItemPath {
+    id: number;
+    path: string;
+}
+export function buildItemPath(item: ItemForPath, parents: Array<ItemForPath>): ItemPath {
     const path = parents.reduce((path, parent) => {
         path += `/${parent.title}`;
 
