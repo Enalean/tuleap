@@ -40,8 +40,8 @@ class StatusValueRetriever
     }
 
     /**
-     * @throw SemanticStatusNotDefinedException
-     * @throw SemanticStatusNotOpenValueNotFoundException
+     * @throws SemanticStatusNotDefinedException
+     * @throws SemanticStatusNotOpenValueNotFoundException
      */
     public function getFirstNonOpenValueUserCanRead(Tracker $tracker, PFUser $user): Tracker_FormElement_Field_List_BindValue
     {
@@ -58,7 +58,7 @@ class StatusValueRetriever
     }
 
     /**
-     * @throw SemanticStatusNotDefinedException
+     * @throws SemanticStatusNotDefinedException
      */
     private function getStatusSemanticDefined(Tracker $tracker, PFUser $user): StatusSemanticDefined
     {

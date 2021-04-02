@@ -25,4 +25,10 @@ namespace Tuleap\Tracker\Semantic\Status;
  */
 class SemanticStatusNotDefinedException extends \RuntimeException
 {
+    public function __construct()
+    {
+        parent::__construct(
+            "No status semantic defined for the tracker."
+        );
+    }
 }
