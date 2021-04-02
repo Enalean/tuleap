@@ -324,8 +324,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
     }
     echo '</td></tr>';
     //}}}
-    echo '<tr><th>' . $GLOBALS['Language']->getText('global', 'status') . ':</th>  <td>' . frs_show_status_popup('package[status_id]', $package->getStatusID()) . '</td></tr>';
-
+    echo '<tr><th>' . $GLOBALS['Language']->getText('global', 'status') . ':</th>  <td data-test="status">' . frs_show_status_popup('package[status_id]', $package->getStatusID()) . '</td></tr>';
     echo $license_agreement_display->getPackageEditSelector($package, $project);
 
      //We cannot set permission on creation for now

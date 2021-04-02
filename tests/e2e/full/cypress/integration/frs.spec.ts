@@ -120,6 +120,22 @@ describe("Frs", function () {
                 cy.get('[data-test="release-name"]').should("not.exist");
             });
         });
+
+        context("Hidden packages", function () {
+            it("can create a new hidden package", function () {
+                cy.get("[data-test=create-new-package]").click();
+                cy.get("[data-test=frs-create-package]").type("My hidden package");
+                cy.get("[data-test=status]").within(() => {
+                    // the select is built with legacy `html_build_select_box_from_arrays` function
+                    // the best way to retrieve it, is having a selector on div, and then get the select element inside
+                    // eslint-disable-next-line cypress/require-data-selectors
+                    cy.get("select").select("Hidden");
+                });
+                cy.get("[data-test=frs-create-package-button]").click({
+                    timeout: 60000,
+                });
+            });
+        });
     });
 
     context("Project members", function () {
@@ -137,6 +153,14 @@ describe("Frs", function () {
             cy.get("[data-test=feedback]").contains(
                 "You are not granted sufficient permission to perform this operation."
             );
+        });
+
+        it("should not see hidden packages", function () {
+            cy.visitProjectService("frs-project", "Files");
+
+            cy.get("[data-test=main-content]").then(($body) => {
+                expect($body).not.to.contain("My hidden package");
+            });
         });
     });
 });
