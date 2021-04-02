@@ -23,6 +23,7 @@ import { generateMermaidElementId } from "./id-generator";
 export class MermaidDiagramElement extends HTMLElement {
     private source_code = "";
     private source_wrapper: HTMLElement | null = null;
+    private spinner: HTMLElement | null = null;
     private backdrop: HTMLElement | null = null;
     private container: HTMLElement | null = null;
     private svg: SVGElement | null = null;
@@ -48,10 +49,10 @@ export class MermaidDiagramElement extends HTMLElement {
         this.source_wrapper.classList.add("diagram-mermaid-source-computing");
         this.source_wrapper.appendChild(pre);
 
-        const spinner = document.createElement("i");
-        spinner.classList.add("fas", "fa-circle-notch", "fa-spin");
-        spinner.setAttribute("aria-hidden", "true");
-        this.source_wrapper.appendChild(spinner);
+        this.spinner = document.createElement("i");
+        this.spinner.classList.add("fas", "fa-circle-notch", "fa-spin");
+        this.spinner.setAttribute("aria-hidden", "true");
+        this.source_wrapper.appendChild(this.spinner);
 
         this.appendChild(this.source_wrapper);
 
@@ -81,33 +82,63 @@ export class MermaidDiagramElement extends HTMLElement {
         if (!this.container || !this.source_wrapper || !this.backdrop) {
             return;
         }
-
         const { render } = await import(
             /* webpackChunkName: "mermaid-render" */ "./mermaid-render"
         );
 
-        const svg_code = render(
-            generateMermaidElementId(),
-            this.source_code,
-            undefined,
-            this.container
-        );
+        try {
+            const svg_code = render(
+                generateMermaidElementId(),
+                this.source_code,
+                undefined,
+                this.container
+            );
 
-        // We have to trust mermaid code to not produce broken svg
-        // If we start using DOMPurify, then it will remove elements that
-        // can be used by mermaid / d3 to produce the graph.
-        // eslint-disable-next-line no-unsanitized/property
-        this.container.innerHTML = svg_code;
-        this.svg = this.container.querySelector("svg");
+            // We have to trust mermaid code to not produce broken svg
+            // If we start using DOMPurify, then it will remove elements that
+            // can be used by mermaid / d3 to produce the graph.
+            // eslint-disable-next-line no-unsanitized/property
+            this.container.innerHTML = svg_code;
+            this.svg = this.container.querySelector("svg");
 
-        // Replace the pre by the generated svg_element because we do not have
-        // anymore need for code block, the diagram should live on its own.
-        this.removeChild(this.source_wrapper);
+            // Replace the pre by the generated svg_element because we do not have
+            // anymore need for code block, the diagram should live on its own.
+            this.removeChild(this.source_wrapper);
 
-        this.container.classList.remove("diagram-mermaid-computing");
+            this.container.classList.remove("diagram-mermaid-computing");
 
-        this.toggle_magnified_listener = this.toggleMagnified.bind(this);
-        this.backdrop.addEventListener("click", this.toggle_magnified_listener);
+            this.toggle_magnified_listener = this.toggleMagnified.bind(this);
+            this.backdrop.addEventListener("click", this.toggle_magnified_listener);
+        } catch (error) {
+            if (this.spinner) {
+                this.spinner.remove();
+            }
+
+            this.source_wrapper.classList.add("diagram-mermaid-source-computing-error");
+
+            const is_mermaid_probably_failed_to_parse = Boolean(
+                this.container.querySelector(".error-icon, .error-text")
+            );
+            this.container.remove();
+
+            if (is_mermaid_probably_failed_to_parse) {
+                const alert = document.createElement("div");
+                alert.classList.add(
+                    "tlp-alert-danger",
+                    "alert",
+                    "alert-error",
+                    "diagram-mermaid-source-computing-explanation"
+                );
+                alert.innerText = String(error);
+
+                this.source_wrapper.appendChild(alert);
+                this.source_wrapper.classList.add(
+                    "diagram-mermaid-source-computing-error-with-details"
+                );
+            } else {
+                throw error;
+            }
+        }
     }
 
     public disconnectedCallback(): void {
