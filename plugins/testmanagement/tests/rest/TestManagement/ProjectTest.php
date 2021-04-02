@@ -81,15 +81,15 @@ final class ProjectTest extends BaseTest
         $this->assertEquals($third_campaign['status'], 'Closed');
     }
 
-    public function testGetDefinitions()
+    public function testGetDefinitions(): void
     {
         $response    = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_definitions"));
         $definitions = $response->json();
 
-        $this->assertEquals(sizeof($definitions), 3);
+        $this->assertCount(4, $definitions);
     }
 
-    public function testGetDefinitionsWithRESTReadOnlyUser()
+    public function testGetDefinitionsWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
             $this->client->get("projects/$this->project_id/testmanagement_definitions"),
@@ -98,6 +98,6 @@ final class ProjectTest extends BaseTest
 
         $definitions = $response->json();
 
-        $this->assertEquals(sizeof($definitions), 3);
+        $this->assertCount(4, $definitions);
     }
 }

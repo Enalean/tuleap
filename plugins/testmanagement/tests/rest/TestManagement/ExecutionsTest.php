@@ -173,6 +173,38 @@ final class ExecutionsTest extends BaseTest
         return $last_execution;
     }
 
+    public function testPatchExecutionInClosedCampaignMustThrowAnError(): void
+    {
+        $execution = $this->getLastExecutionForClosedCampaign(TestManagementDataBuilder::USER_TESTER_NAME);
+        $response  = $this->getResponse($this->client->patch(
+            'testmanagement_executions/' . $execution['id'] . '/issues',
+            null,
+            json_encode([
+                'steps_results'  => [
+                    'step_id'  => '1',
+                    'status'   => 'notrun'
+                ]
+            ])
+        ));
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    private function getLastExecutionForClosedCampaign(string $user_name): array
+    {
+        $campaign = $this->closed_71_campaign;
+
+        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
+        $all_executions_response = $this->getResponse($all_executions_request, $user_name);
+
+        $executions     = $all_executions_response->json();
+        $last_execution = end($executions);
+
+        $this->assertEquals('Test in closed campaign', $last_execution['definition']['summary']);
+
+        return $last_execution;
+    }
+
     private function getLastArtifactFromTracker($tracker_id)
     {
         $all_artifacts_request  = $this->client->get('trackers/' . $tracker_id . '/artifacts');

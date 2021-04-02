@@ -7,5 +7,6 @@ export default {
     controller,
     bindings: {
         execution: "<",
+        campaign: "<",
     },
 };

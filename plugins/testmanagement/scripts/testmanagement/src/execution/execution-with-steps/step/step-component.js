@@ -9,5 +9,6 @@ export default {
         step: "<",
         step_result: "<stepResult",
         execution: "<",
+        campaign: "<",
     },
 };

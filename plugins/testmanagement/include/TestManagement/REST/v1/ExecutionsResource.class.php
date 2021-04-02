@@ -44,6 +44,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
@@ -370,6 +371,11 @@ class ExecutionsResource
 
         if (! $execution_artifact->userCanUpdate($user)) {
             throw new RestException(403);
+        }
+
+        $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
+        if ($campaign && ! $campaign->isOpen()) {
+            throw new I18NRestException(400, dgettext('plugin-testmanagement', 'The campaign is closed.'));
         }
 
         $definition_artifact = $this->getDefinitionOfExecution($user, $execution_artifact);
