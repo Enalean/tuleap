@@ -16,25 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { GitlabState } from "./state";
+import type { GitLabRepository } from "../../type";
+import type { Modal } from "tlp";
 
-export function setAddGitlabRepositoryModal(state, modal) {
+export function setAddGitlabRepositoryModal(state: GitlabState, modal: Modal): void {
     state.add_gitlab_repository_modal = modal;
 }
-export function setUnlinkGitlabRepositoryModal(state, modal) {
+export function setUnlinkGitlabRepositoryModal(state: GitlabState, modal: Modal): void {
     state.unlink_gitlab_repository_modal = modal;
 }
-export function setUnlinkGitlabRepository(state, repository) {
+export function setUnlinkGitlabRepository(state: GitlabState, repository: GitLabRepository): void {
     state.unlink_gitlab_repository = repository;
 }
-export function setEditAccessTokenGitlabRepositoryModal(state, modal) {
+export function setEditAccessTokenGitlabRepositoryModal(state: GitlabState, modal: Modal): void {
     state.edit_access_token_gitlab_repository_modal = modal;
 }
-export function setEditAccessTokenGitlabRepository(state, repository) {
+export function setEditAccessTokenGitlabRepository(
+    state: GitlabState,
+    repository: GitLabRepository
+): void {
     state.edit_access_token_gitlab_repository = repository;
 }
-export function setRegenerateGitlabWebhookModal(state, modal) {
+export function setRegenerateGitlabWebhookModal(state: GitlabState, modal: Modal): void {
     state.regenerate_gitlab_webhook_modal = modal;
 }
-export function setRegenerateGitlabWebhookRepository(state, repository) {
+export function setRegenerateGitlabWebhookRepository(
+    state: GitlabState,
+    repository: GitLabRepository
+): void {
     state.regenerate_gitlab_webhook_repository = repository;
 }
