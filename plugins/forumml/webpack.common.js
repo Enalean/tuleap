@@ -28,9 +28,6 @@ const entry = {
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of colors_burning_parrot) {
     entry[`style-forumml-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry[
-        `style-forumml-${color}-condensed`
-    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
 module.exports = [
