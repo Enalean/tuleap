@@ -53,6 +53,6 @@ class ProjectMilestonesPreferencesPresenter
         if ($project) {
             $data = [["id" => (int) $project->getID(), "text" => $project->getPublicName(), "selected" => true, "disabled" => false]];
         }
-        $this->data = (string) json_encode($data, JSON_THROW_ON_ERROR);
+        $this->data = json_encode($data, JSON_THROW_ON_ERROR);
     }
 }

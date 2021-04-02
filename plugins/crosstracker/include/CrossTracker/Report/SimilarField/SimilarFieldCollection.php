@@ -23,6 +23,9 @@ namespace Tuleap\CrossTracker\Report\SimilarField;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 
+/**
+ * @template-implements \IteratorAggregate<int, SimilarFieldCandidate>
+ */
 class SimilarFieldCollection implements \IteratorAggregate
 {
     /**

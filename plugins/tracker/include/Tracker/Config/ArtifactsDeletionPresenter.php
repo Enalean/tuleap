@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Config;
 class ArtifactsDeletionPresenter extends SectionsPresenter
 {
     /**
-     * @var bool
+     * @var string
      */
     public $artifact_deletion_active = 'tlp-tab-active';
 }

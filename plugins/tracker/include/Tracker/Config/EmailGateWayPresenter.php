@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Config;
 class EmailGateWayPresenter extends SectionsPresenter
 {
     /**
-     * @var bool
+     * @var string
      */
     public $email_gateway_active = 'tlp-tab-active';
 }
