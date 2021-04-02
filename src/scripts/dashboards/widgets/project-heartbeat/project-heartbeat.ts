@@ -26,12 +26,21 @@ import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
 export default init;
 
-function init() {
+interface Group {
+    label: string;
+    entries: Entry[];
+}
+
+interface Entry {
+    updated_at: string;
+}
+
+function init(): void {
     const heartbeat_widgets = document.querySelectorAll(
         ".dashboard-widget-content-projectheartbeat-content"
     );
 
-    [].forEach.call(heartbeat_widgets, async (widget_content) => {
+    [].forEach.call(heartbeat_widgets, async (widget_content: HTMLElement) => {
         try {
             const response = await get(
                 "/api/v1/projects/" + widget_content.dataset.projectId + "/heartbeats"
@@ -48,14 +57,21 @@ function init() {
     });
 }
 
-function displayActivities(widget_content, entries) {
+function displayActivities(widget_content: HTMLElement, entries: Entry[]): void {
     hideEverything(widget_content);
     const activities = widget_content.querySelector(
         ".dashboard-widget-content-projectheartbeat-activities"
     );
+    if (!(activities instanceof Element)) {
+        throw new Error("No activies defined in projectheartbeat");
+    }
     const template = widget_content.querySelector(
         ".dashboard-widget-content-projectheartbeat-placeholder"
-    ).textContent;
+    )?.textContent;
+
+    if (!template) {
+        throw new Error("No template defined in projectheartbeat");
+    }
 
     const rendered_activities = render(template, getGroupedEntries(widget_content, entries));
     insertRenderedActivitiesInDOM(rendered_activities, activities);
@@ -64,18 +80,46 @@ function displayActivities(widget_content, entries) {
     activities.classList.add("shown");
 }
 
-function getGroupedEntries(widget_content, entries) {
+function getGroupedEntries(widget_content: HTMLElement, entries: Entry[]): { groups: Group[] } {
     moment.locale(widget_content.dataset.locale);
 
-    let today_entries = [],
-        yesterday_entries = [],
-        recently_entries = [];
+    const today_entries: Entry[] = [],
+        yesterday_entries: Entry[] = [],
+        recently_entries: Entry[] = [];
 
     const today = moment(),
         yesterday = moment().subtract(1, "day");
 
-    const datetime_format = formatFromPhpToMoment(widget_content.dataset.dateTimeFormat);
-    const date_format = formatFromPhpToMoment(widget_content.dataset.dateFormat);
+    const date_format_data = widget_content.dataset.dateFormat;
+    if (!date_format_data) {
+        throw new Error("No dateFormat dataset");
+    }
+
+    const date_time_format_data = widget_content.dataset.dateTimeFormat;
+    if (!date_time_format_data) {
+        throw new Error("No dateTimeFormat dataset");
+    }
+
+    const today_label = widget_content.dataset.today;
+
+    if (!today_label) {
+        throw new Error("No today dataset");
+    }
+
+    const yesterday_label = widget_content.dataset.yesterday;
+
+    if (!yesterday_label) {
+        throw new Error("No yesterday dataset");
+    }
+
+    const recently_label = widget_content.dataset.recently;
+
+    if (!recently_label) {
+        throw new Error("No recently dataset");
+    }
+
+    const datetime_format = formatFromPhpToMoment(date_time_format_data);
+    const date_format = formatFromPhpToMoment(date_format_data);
 
     entries.forEach((entry) => {
         const updated_at = moment(entry.updated_at);
@@ -95,35 +139,38 @@ function getGroupedEntries(widget_content, entries) {
     return {
         groups: [
             {
-                label: widget_content.dataset.today,
+                label: today_label,
                 entries: today_entries,
             },
             {
-                label: widget_content.dataset.yesterday,
+                label: yesterday_label,
                 entries: yesterday_entries,
             },
             {
-                label: widget_content.dataset.recently,
+                label: recently_label,
                 entries: recently_entries,
             },
         ],
     };
 }
 
-function insertRenderedActivitiesInDOM(rendered_activities, parent_element) {
+function insertRenderedActivitiesInDOM(rendered_activities: string, parent_element: Element): void {
     const purified_activities = sanitize(rendered_activities, { RETURN_DOM_FRAGMENT: true });
 
     parent_element.appendChild(purified_activities);
 }
 
-function displayError(widget_content) {
+function displayError(widget_content: HTMLElement): void {
     hideEverything(widget_content);
     widget_content
         .querySelector(".dashboard-widget-content-projectheartbeat-error")
-        .classList.add("shown");
+        ?.classList.add("shown");
 }
 
-function displayEmptyState(widget_content, json) {
+function displayEmptyState(
+    widget_content: HTMLElement,
+    json: { are_there_activities_user_cannot_see: boolean }
+): void {
     hideEverything(widget_content);
 
     const empty_no_activity = widget_content.querySelector(
@@ -134,15 +181,17 @@ function displayEmptyState(widget_content, json) {
     );
 
     if (json.are_there_activities_user_cannot_see) {
-        empty_no_perms.classList.add("shown");
+        empty_no_perms?.classList.add("shown");
     } else {
-        empty_no_activity.classList.add("shown");
+        empty_no_activity?.classList.add("shown");
     }
     widget_content
         .querySelector(".dashboard-widget-content-projectheartbeat-empty")
-        .classList.add("shown");
+        ?.classList.add("shown");
 }
 
-function hideEverything(widget_content) {
-    [].forEach.call(widget_content.children, (child) => child.classList.remove("shown"));
+function hideEverything(widget_content: HTMLElement): void {
+    [].forEach.call(widget_content.children, (child: HTMLElement) =>
+        child.classList.remove("shown")
+    );
 }
