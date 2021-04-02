@@ -24,7 +24,7 @@ use GitRepositoryFactory;
 use TemplateRenderer;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutDensityVariants;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
@@ -81,7 +81,7 @@ class PullrequestDisplayer
             );
 
             $layout->addCssAsset(
-                new CssAsset(
+                new CssAssetWithoutDensityVariants(
                     $assets,
                     'pull-requests'
                 )

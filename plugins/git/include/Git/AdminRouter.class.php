@@ -28,7 +28,6 @@ use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 
 /**
@@ -140,7 +139,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
 
         $controller->process($request);
 
-        $layout->addCssAsset(new CssAsset($this->include_assets, 'bp-style-siteadmin'));
+        $layout->addCssAsset(new \Tuleap\Layout\CssAssetWithoutDensityVariants($this->include_assets, 'bp-style-siteadmin'));
 
         $controller->display($request);
     }

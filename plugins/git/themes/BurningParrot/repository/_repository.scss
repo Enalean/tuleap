@@ -27,7 +27,7 @@
 @import '../gitphp-override';
 
 .git-repository-header {
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .git-repository-subheader {
@@ -38,16 +38,16 @@
 }
 
 .git-repository-subheader-spacer {
-    min-width: $tlp-medium-spacing;
+    min-width: var(--tlp-medium-spacing);
 }
 
 .git-repository-forked-name {
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
 .git-repository-parent {
     display: block;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
     color: $tlp-ui-dimmed;
     font-size: 14px;
 }
@@ -55,23 +55,23 @@
 .git-repository-actions {
     display: flex;
     flex: 1 1 auto;
-    margin: 5px 0 $tlp-medium-spacing;
+    margin: 5px 0 var(--tlp-medium-spacing);
 }
 
 .git-repository-actions-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .git-repository-clone-popover-separator {
-    margin: $tlp-small-spacing (-$tlp-medium-spacing);
+    margin: var(--tlp-small-spacing) calc(-1 * var(--tlp-medium-spacing));
 }
 
 .git-repository-gerrit-status:last-child {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .git-repository-branch-tag-selector {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .git-repository-branch-tag-selector-button-time {
@@ -99,11 +99,11 @@
 }
 
 .git-repository-branch-tag-selector-filter {
-    margin: $tlp-small-spacing $tlp-medium-spacing;
+    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
 }
 
 .git-repository-branch-tag-selector-empty {
-    margin: $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing);
     color: transparentize($tlp-theme-color, .7);
     font-size: 14px;
     font-style: italic;
@@ -112,7 +112,7 @@
 
 .git-repository-branch-tag-selector-is-loading {
     height: 40px;
-    margin: $tlp-medium-spacing 0;
+    margin: var(--tlp-medium-spacing) 0;
     background: url('../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
@@ -123,7 +123,7 @@
 }
 
 #readme {
-    margin: $tlp-medium-spacing 10px;
+    margin: var(--tlp-medium-spacing) 10px;
     border: 1px solid #e3e3e3;
     border-radius: 4px;
 }
