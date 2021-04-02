@@ -50,7 +50,6 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
@@ -181,7 +180,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             '/assets/pullrequest'
         );
 
-        $css_assets = new CssAsset(
+        $css_assets = new \Tuleap\Layout\CssAssetWithoutDensityVariants(
             $assets,
             'repository'
         );

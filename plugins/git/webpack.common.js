@@ -115,13 +115,7 @@ const entry_points = {
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[`bp-style-${color}`] = `./themes/BurningParrot/git-${color}.scss`;
-    entry_points[
-        `bp-style-${color}-condensed`
-    ] = `./themes/BurningParrot/git-${color}-condensed.scss`;
     entry_points[`bp-style-siteadmin-${color}`] = `./themes/BurningParrot/site-admin-${color}.scss`;
-    entry_points[
-        `bp-style-siteadmin-${color}-condensed`
-    ] = `./themes/BurningParrot/site-admin-${color}-condensed.scss`;
 }
 
 const webpack_config_for_themes = {

@@ -24,28 +24,28 @@
 
 .git-repository-shortlog-search {
     width: 300px;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .git-repository-shortlog-results {
     width: 100%;
 
     > .git-repository-shortlog-day {
-        margin: $tlp-large-spacing 0 $tlp-small-spacing;
+        margin: var(--tlp-large-spacing) 0 var(--tlp-small-spacing);
 
         &:first-child {
-            margin: 0 0 $tlp-small-spacing;
+            margin: 0 0 var(--tlp-small-spacing);
         }
     }
 
 }
 
 .git-repository-shortlog-pagination {
-    margin: $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing);
 }
 
 .git-repository-shortlog-day {
-    margin: $tlp-large-spacing $tlp-medium-spacing 0;
+    margin: var(--tlp-large-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .git-repository-commit-card {
@@ -79,11 +79,11 @@
 
 .git-repository-commit-card-avatar {
     flex: 0 0 auto;
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }
 
 .git-repository-commit-card-info-title {
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
 .git-repository-commit-card-info-description {
@@ -92,12 +92,12 @@
 }
 
 .git-repository-commit-card-hash {
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .git-repository-commit-card-info {
     flex: 1 1 auto;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .git-repository-commit-card-info-metadata {
@@ -108,7 +108,7 @@
 
 .git-repository-commit-card-info-metadata-username,
 .git-repository-commit-card-info-metadata-date {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }
 
 .git-repository-commit-card-info-metadata-date-icon {
@@ -122,6 +122,6 @@
 
     .git-repository-shortlog-search {
         width: 100%;
-        margin: 0 0 $tlp-medium-spacing;
+        margin: 0 0 var(--tlp-medium-spacing);
     }
 }

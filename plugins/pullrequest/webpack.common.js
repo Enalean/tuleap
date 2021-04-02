@@ -51,11 +51,7 @@ const entry_points = {
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[`pull-requests-${color}`] = `./themes/pull-requests-${color}.scss`;
-    entry_points[
-        `pull-requests-${color}-condensed`
-    ] = `./themes/pull-requests-${color}-condensed.scss`;
     entry_points[`repository-${color}`] = `./themes/repository-${color}.scss`;
-    entry_points[`repository-${color}-condensed`] = `./themes/repository-${color}-condensed.scss`;
 }
 
 module.exports = [
