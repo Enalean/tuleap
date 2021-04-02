@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export async function handleErrors(context, exception) {
+import type { ActionContext } from "vuex";
+import type { ErrorState } from "../error/module";
+import type { Item } from "../../type";
+
+interface DocumentException {
+    response: Response;
+}
+
+interface DocumentJsonError {
+    error: JsonError;
+}
+
+interface JsonError {
+    message: string;
+    i18n_error_message: string;
+}
+
+export async function handleErrors(
+    context: ActionContext<ErrorState, ErrorState>,
+    exception: DocumentException
+): Promise<void> {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setFolderLoadingError", message);
@@ -38,7 +58,10 @@ export async function handleErrors(context, exception) {
     }
 }
 
-export async function handleErrorsForLock(context, exception) {
+export async function handleErrorsForLock(
+    context: ActionContext<ErrorState, ErrorState>,
+    exception: DocumentException
+): Promise<void> {
     try {
         const json = await exception.response.json();
         context.commit("error/setLockError", getErrorMessage(json));
@@ -48,7 +71,10 @@ export async function handleErrorsForLock(context, exception) {
     }
 }
 
-export async function handleErrorsForDocument(context, exception) {
+export async function handleErrorsForDocument(
+    context: ActionContext<ErrorState, ErrorState>,
+    exception: DocumentException
+): Promise<void> {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setItemLoadingError", message);
@@ -69,7 +95,10 @@ export async function handleErrorsForDocument(context, exception) {
     }
 }
 
-export async function handleErrorsForModal(context, exception) {
+export async function handleErrorsForModal(
+    context: ActionContext<ErrorState, ErrorState>,
+    exception: DocumentException
+): Promise<void> {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setModalError", message);
@@ -83,7 +112,11 @@ export async function handleErrorsForModal(context, exception) {
     }
 }
 
-export async function handleErrorsForDeletionModal(context, exception, item) {
+export async function handleErrorsForDeletionModal(
+    context: ActionContext<ErrorState, ErrorState>,
+    exception: DocumentException,
+    item: Item
+): Promise<void> {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setModalError", message);
@@ -102,7 +135,7 @@ export async function handleErrorsForDeletionModal(context, exception, item) {
     }
 }
 
-export function getErrorMessage(error_json) {
+export function getErrorMessage(error_json: DocumentJsonError): string {
     if (Object.prototype.hasOwnProperty.call(error_json, "error")) {
         if (Object.prototype.hasOwnProperty.call(error_json.error, "i18n_error_message")) {
             return error_json.error.i18n_error_message;

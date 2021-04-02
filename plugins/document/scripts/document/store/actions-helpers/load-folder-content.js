@@ -18,7 +18,7 @@
  */
 
 import { getFolderContent } from "../../api/rest-querier.js";
-import { handleErrors } from "./handle-errors.js";
+import { handleErrors } from "./handle-errors";
 
 export async function loadFolderContent(context, folder_id, loading_current_folder_promise) {
     try {

@@ -51,7 +51,7 @@ import * as load_folder_content from "./actions-helpers/load-folder-content.js";
 import * as rest_querier from "../api/rest-querier.js";
 
 import * as upload_file from "./actions-helpers/upload-file.js";
-import * as error_handler from "./actions-helpers/handle-errors.js";
+import * as error_handler from "./actions-helpers/handle-errors";
 
 describe("Store actions", () => {
     let context;
