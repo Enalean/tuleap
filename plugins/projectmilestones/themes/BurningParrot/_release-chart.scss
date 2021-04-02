@@ -27,7 +27,7 @@
 }
 
 .release-chart-row-element {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 
     &:last-child {
         margin: 0;
@@ -150,7 +150,7 @@
 }
 
 .release-widget-pie-chart-ttm-legend {
-    padding: 0 0 0 $tlp-small-spacing;
+    padding: 0 0 0 var(--tlp-small-spacing);
     color: $tlp-ui-dimmed;
     font-size: 12px;
     line-height: 20px;
@@ -168,7 +168,7 @@
 }
 
 .release-widget-pie-chart-ttm {
-    transform: translate(0, calc(-28px + #{$tlp-small-spacing}));
+    transform: translate(0, calc(-28px + var(--tlp-small-spacing)));
 }
 
 
@@ -211,12 +211,12 @@
 }
 
 .release-chart-displayer {
-    width: 220px + $tlp-small-spacing;
+    width: calc(220px + var(--tlp-small-spacing));
     margin: 0;
 }
 
 .release-chart-displayer-burndown {
-    margin: 0 $tlp-medium-spacing $tlp-medium-spacing 0;
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .project-milestones-display-description.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart.project-milestones-display-ttm-chart {

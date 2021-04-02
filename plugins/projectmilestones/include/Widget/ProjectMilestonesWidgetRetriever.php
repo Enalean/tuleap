@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
+use Tuleap\Layout\CssAssetWithoutDensityVariants;
 use Tuleap\Project\ProjectAccessChecker;
 use Project;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use TemplateRenderer;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Codendi_Request;
 use ProjectManager;
@@ -120,7 +120,7 @@ class ProjectMilestonesWidgetRetriever
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAsset($this->getAssets(), 'style')]);
+        return new CssAssetCollection([new CssAssetWithoutDensityVariants($this->getAssets(), 'style')]);
     }
 
     private function getAssets(): IncludeAssets

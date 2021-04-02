@@ -17,14 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$border-width-px: 12px;
-$heigh-bar-px: 32px;
-$top-compress-icon-px: 6px;
-@if $tlp-density == $tlp-density-condensed {
-    $border-width-px: 11px;
-    $heigh-bar-px: 26px;
-    $top-compress-icon-px: 4px;
-}
+$border-width-px: calc(12px - 1px * var(--tlp-is-condensed));
+$heigh-bar-px: calc(32px - 6px * var(--tlp-is-condensed));
+$top-compress-icon-px: calc(6px - 2px * var(--tlp-is-condensed));
 
 $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 $width-bar-left-sprints: 16px;
@@ -103,7 +98,7 @@ $width-bar-left-sprints: 16px;
 .on-open-sprints-details .project-release-info-badge-open-sprint {
     display: flex;
     width: calc(100% - #{$width-bar-left-sprints});
-    margin: 0 0 $tlp-small-spacing 0;
+    margin: 0 0 var(--tlp-small-spacing) 0;
     border-radius: 15px 0 0 15px;
     cursor: default;
 
@@ -147,9 +142,9 @@ $width-bar-left-sprints: 16px;
 }
 
 .milestone-badges-sprints-separator {
-    width: calc(100% + #{$tlp-medium-spacing} + (#{$tlp-medium-spacing} + 6px));
+    width: calc(100% + var(--tlp-medium-spacing) + (var(--tlp-medium-spacing) + 6px));
     height: 1px;
-    margin: $tlp-small-spacing (-$tlp-medium-spacing) $tlp-medium-spacing (-$tlp-medium-spacing - 6px);
+    margin: var(--tlp-small-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing) - 6px);
     border: 0;
     background: linear-gradient(to right, $timeline-color, $tlp-ui-border-normal);
 }
@@ -195,7 +190,7 @@ $width-bar-left-sprints: 16px;
     left: -31px;
     width: 17px;
     height: 52px;
-    margin: -$tlp-medium-spacing 0;
+    margin: calc(-1 * var(--tlp-medium-spacing)) 0;
     padding-right: 35px;
 }
 
@@ -211,7 +206,7 @@ $width-bar-left-sprints: 16px;
     justify-content: center;
     width: 16px;
     height: 16px;
-    margin: -$tlp-medium-spacing 0;
+    margin: calc(-1 * var(--tlp-medium-spacing)) 0;
     background: transparent;
     color: $tlp-ui-white;
 
@@ -253,7 +248,7 @@ $width-bar-left-sprints: 16px;
 }
 
 .project-release-badge-open-sprint-buttons {
-    margin: calc(#{$tlp-small-spacing} / 2) 0 0 $tlp-large-spacing;
+    margin: calc(var(--tlp-small-spacing) / 2) 0 0 var(--tlp-large-spacing);
 }
 
 .project-release-infos-badges-all-sprint-badges {
@@ -277,16 +272,12 @@ $width-bar-left-sprints: 16px;
         content: '';
         position: absolute;
         z-index: 2;
-        top: calc(calc(100% - 25px) / 2);
+        top: calc(calc(100% - (25px - (6px * var(--tlp-is-condensed)))) / 2);
         left: 4px;
         width: 16px;
         height: 16px;
         border-radius: 50%;
         background: $tlp-theme-color;
-
-        @if $tlp-density == $tlp-density-condensed {
-            top: calc(calc(100% - 19px) / 2);
-        }
     }
 }
 
@@ -295,6 +286,6 @@ $width-bar-left-sprints: 16px;
     align-items: baseline;
 
     > .release-description-link {
-        margin: 0 0 0 $tlp-small-spacing;
+        margin: 0 0 0 var(--tlp-small-spacing);
     }
 }
