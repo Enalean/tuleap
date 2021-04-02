@@ -55,7 +55,7 @@
 
 .document-tree-item-toggle-quicklook-lock-icon,
 .document-tree-item-toggle-quicklook-approval-badge {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .document-preview-item-is-locked-icon {
@@ -127,7 +127,7 @@
 }
 
 .quick-look-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .document-badge-avatar {
@@ -197,7 +197,7 @@
 }
 
 .document-folder-error-link {
-    margin: $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0;
     font-size: 20px;
     line-height: 20px;
 }
@@ -211,7 +211,7 @@
 }
 
 .document-empty-folder-for-writers {
-    margin: $tlp-x-large-spacing auto;
+    margin: var(--tlp-x-large-spacing) auto;
 }
 
 .document-folder-with-error,
@@ -231,14 +231,14 @@
 
 .document-folder-right-container {
     position: sticky;
-    top: calc(#{$navbar-height} + #{$tlp-medium-spacing});
+    top: calc(#{$navbar-height} + var(--tlp-medium-spacing));
     min-width: 400px;
     max-width: 35%;
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .has-visible-platform-banner .document-folder-right-container {
-    top: calc(#{$navbar-height} + #{$tlp-medium-spacing} + #{$platform-banner-base-height});
+    top: calc(#{$navbar-height} + var(--tlp-medium-spacing) + #{$platform-banner-base-height});
 }
 
 .document-folder-content-quick-look-and-item-uploading {
@@ -256,5 +256,5 @@
 }
 
 .document-badge-corrupted {
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 }

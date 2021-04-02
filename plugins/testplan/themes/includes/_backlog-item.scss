@@ -24,7 +24,7 @@
 .test-plan-list-of-backlogitems-header {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .test-plan-list-of-backlogitems-title {
@@ -34,11 +34,11 @@
 }
 
 .test-plan-export-button {
-    margin-left: $tlp-medium-spacing;
+    margin-left: var(--tlp-medium-spacing);
 }
 
 .test-plan-backlog-item-container {
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
 .test-plan-backlog-item-card {
@@ -46,7 +46,7 @@
     align-items: baseline;
     justify-content: space-between;
     margin: 0;
-    padding: $tlp-medium-spacing ($tlp-medium-spacing - 1px) $tlp-medium-spacing $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) - 1px) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 
     &.test-plan-backlog-item-is-just-refreshed {
         animation: pulse-backlog-item-card 500ms ease-in-out;
@@ -82,7 +82,7 @@
 }
 
 .test-plan-backlog-item-coverage {
-    margin: 0 0 0 $tlp-large-spacing;
+    margin: 0 0 0 var(--tlp-large-spacing);
     white-space: nowrap;
 }
 
@@ -92,7 +92,7 @@
 
 .test-plan-backlog-item-coverage-icon-skeleton {
     width: 24px;
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .test-plan-backlog-item-coverage-text {
@@ -106,7 +106,7 @@
     justify-content: center;
     width: 26px;
     height: 26px;
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
     border-radius: 50%;
     font-size: 15px;
 }

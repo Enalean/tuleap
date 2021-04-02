@@ -24,11 +24,11 @@
 .test-plan-list-of-campaigns-header {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .test-plan-list-of-campaigns-new-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .test-plan-list-of-campaigns-title {
@@ -42,11 +42,11 @@
 }
 
 .test-plan-list-of-campaigns-error {
-    margin: 0 0 $tlp-large-spacing;
+    margin: 0 0 var(--tlp-large-spacing);
 }
 
 .test-plan-campaign {
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
     cursor: pointer;
 
@@ -78,7 +78,7 @@
     }
 
     > .tlp-pane-container > .tlp-pane-section:last-child {
-        padding: $tlp-small-spacing $tlp-medium-spacing $tlp-medium-spacing;
+        padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     }
 }
 
@@ -94,7 +94,7 @@
 }
 
 .test-plan-campaign-header-stats-info {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
     white-space: nowrap;
 
     > .fa {
@@ -122,7 +122,7 @@
 
 .test-plan-campaign-progression {
     min-width: 10px;
-    margin: -$tlp-small-spacing 1px 0;
+    margin: calc(-1 * var(--tlp-small-spacing)) 1px 0;
 
     &:first-child > .test-plan-campaign-progression-bar {
         border-radius: 5px 0 0 5px;

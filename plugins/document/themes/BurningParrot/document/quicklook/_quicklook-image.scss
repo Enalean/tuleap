@@ -61,7 +61,7 @@
 
 
     > .document-quick-look-dropzone-text {
-        margin: $tlp-medium-spacing 0 0;
+        margin: var(--tlp-medium-spacing) 0 0;
         opacity: 1;
     }
 
@@ -91,5 +91,5 @@
 .document-quick-look-image {
     display: block;
     max-width: 100%;
-    margin: 0 auto $tlp-medium-spacing;
+    margin: 0 auto var(--tlp-medium-spacing);
 }

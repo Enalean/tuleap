@@ -32,7 +32,6 @@ const entry = {
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of colors_burning_parrot) {
     entry[`testplan-style-${color}`] = `./themes/testplan-${color}.scss`;
-    entry[`testplan-style-${color}-condensed`] = `./themes/testplan-${color}-condensed.scss`;
 }
 
 module.exports = [

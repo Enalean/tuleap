@@ -27,7 +27,6 @@ const entry_points = {
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[`taskboard-${color}`] = `./themes/taskboard-${color}.scss`;
-    entry_points[`taskboard-${color}-condensed`] = `./themes/taskboard-${color}-condensed.scss`;
 }
 
 module.exports = [
