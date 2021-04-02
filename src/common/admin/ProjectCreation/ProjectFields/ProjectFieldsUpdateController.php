@@ -19,11 +19,12 @@
  *
  */
 
-namespace Tuleap\Admin\ProjectCreation;
+namespace Tuleap\Admin\ProjectCreation\ProjetFields;
 
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use Tuleap\admin\ProjectCreation\ProjectFields\ProjectFieldsDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -35,10 +36,17 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
      * @var ProjectsFieldDescriptionUpdater
      */
     private $description_updater;
+    /**
+     * @var ProjectFieldsDao
+     */
+    private $project_fields_dao;
 
-    public function __construct(ProjectsFieldDescriptionUpdater $description_updater)
-    {
+    public function __construct(
+        ProjectsFieldDescriptionUpdater $description_updater,
+        ProjectFieldsDao $project_fields_dao
+    ) {
         $this->description_updater = $description_updater;
+        $this->project_fields_dao  = $project_fields_dao;
     }
 
     /**
@@ -60,22 +68,9 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
 
         $delete_desc_id = $request->get('delete_group_desc_id');
         if ($delete_desc_id) {
-            $sql    = "DELETE FROM group_desc where group_desc_id='" . db_ei($delete_desc_id) . "'";
-            $result = db_query($sql);
+            $this->project_fields_dao->deleteProjectField((int) $delete_desc_id);
 
-            if (! $result) {
-                $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'del_desc_field_fail'));
-            }
-
-            $sql    = "DELETE FROM group_desc_value where group_desc_id='" . db_ei($delete_desc_id) . "'";
-            $result = db_query($sql);
-
-            if (! $result) {
-                $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'del_desc_field_fail'));
-            } else {
-                $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'remove_success'));
-            }
-
+            $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'remove_success'));
             $layout->redirect('/admin/project-creation/fields');
         }
 
@@ -106,33 +101,32 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
 
             if ($valid_data == 1) {
                 if ($add_desc) {
-                    $sql    = "INSERT INTO group_desc (desc_name, desc_description, desc_rank, desc_type, desc_required) ";
-                    $sql   .= "VALUES ('" . db_escape_string($desc_name) . "','" . db_escape_string($desc_description) . "','";
-                    $sql   .= db_escape_string($desc_rank) . "','" . db_es($desc_type) . "','" . db_ei($desc_required) . "')";
-                    $result = db_query($sql);
+                    $this->project_fields_dao->createProjectField(
+                        $desc_name,
+                        $desc_description,
+                        (int) $desc_rank,
+                        $desc_type,
+                        $desc_required
+                    );
 
-                    if (! $result) {
-                        list($host, $port) = explode(':', \ForgeConfig::get('sys_default_domain'));
-                        $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'ins_desc_field_fail', [$host, db_error()]));
-                    } else {
-                        $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'add_success'));
-                    }
-                } else {
-                    $sql  = "UPDATE group_desc SET ";
-                    $sql .= "desc_name='" . db_escape_string($desc_name) . "',";
-                    $sql .= "desc_description='" . db_escape_string($desc_description) . "',";
-                    $sql .= "desc_rank='" . db_escape_string($desc_rank) . "',";
-                    $sql .= "desc_type='" . db_escape_string($desc_type) . "',";
-                    $sql .= "desc_required='" . db_escape_string($desc_required) . "'";
-                    $sql .= " WHERE group_desc_id='" . db_ei($request->get('form_desc_id')) . "'";
-
-                    $result = db_query($sql);
-
-                    if (! $result || db_affected_rows($result) < 1) {
-                        $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'update_desc_field_fail', (db_error() ? db_error() : ' ')));
-                    } else {
-                        $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'update_success'));
-                    }
+                    $layout->addFeedback(
+                        Feedback::INFO,
+                        $GLOBALS['Language']->getText('admin_desc_fields', 'add_success')
+                    );
+                } elseif ($request->get('form_desc_id')) {
+                    $group_desc_id = (int) $request->get('form_desc_id');
+                    $this->project_fields_dao->updateProjectField(
+                        $group_desc_id,
+                        $desc_name,
+                        $desc_description,
+                        (int) $desc_rank,
+                        $desc_type,
+                        $desc_required
+                    );
+                    $layout->addFeedback(
+                        Feedback::INFO,
+                        $GLOBALS['Language']->getText('admin_desc_fields', 'update_success')
+                    );
                 }
             }
         }

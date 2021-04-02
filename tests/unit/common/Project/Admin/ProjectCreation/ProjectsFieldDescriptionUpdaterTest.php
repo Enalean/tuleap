@@ -27,6 +27,7 @@ use ConfigDao;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project_CustomDescription_CustomDescriptionDao;
+use Tuleap\Admin\ProjectCreation\ProjetFields\ProjectsFieldDescriptionUpdater;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder;

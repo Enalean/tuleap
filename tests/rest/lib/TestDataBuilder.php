@@ -19,6 +19,8 @@
  *
  */
 
+use Tuleap\admin\ProjectCreation\ProjectFields\ProjectFieldsDao;
+use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 
@@ -217,6 +219,14 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $project_manager->updateStatus($project, PROJECT::STATUS_DELETED);
 
         return $this;
+    }
+
+    public function createProjectField()
+    {
+        $project_fields_dao  = new ProjectFieldsDao();
+        $project_details_dao = new ProjectDetailsDAO();
+        $project_fields_dao->createProjectField("Test Rest", "Field for test rest", 2, "text", 0);
+        $project_details_dao->createGroupDescription(self::ADMIN_PROJECT_ID, 1, "Admin test");
     }
 
     public function suspendProject()

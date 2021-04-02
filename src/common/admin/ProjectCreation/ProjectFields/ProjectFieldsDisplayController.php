@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Admin\ProjectCreation;
+namespace Tuleap\Admin\ProjectCreation\ProjetFields;
 
 use CSRFSynchronizerToken;
 use HTTPRequest;
@@ -78,7 +78,7 @@ class ProjectFieldsDisplayController implements DispatchableWithRequest
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(
             $title,
-            __DIR__ . '/../../../templates/admin/projects',
+            __DIR__ . '/../../../../templates/admin/projects',
             FieldsListPresenter::TEMPLATE,
             $custom_project_fields_list_presenter
         );

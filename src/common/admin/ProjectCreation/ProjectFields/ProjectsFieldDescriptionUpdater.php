@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Admin\ProjectCreation;
+namespace Tuleap\Admin\ProjectCreation\ProjetFields;
 
 use Feedback;
 use Project_CustomDescription_CustomDescriptionDao;
