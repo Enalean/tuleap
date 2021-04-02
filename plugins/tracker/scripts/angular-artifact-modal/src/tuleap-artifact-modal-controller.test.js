@@ -28,6 +28,8 @@ import * as rest_service from "./rest/rest-service.js";
 import * as file_field_detector from "./tuleap-artifact-modal-fields/file-field/file-field-detector.js";
 import * as file_uploader from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
 import * as is_uploading_in_ckeditor_state from "./tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
+import * as field_dependencies_helper from "./field-dependencies-helper.js";
+import { getTargetFieldPossibleValues } from "./field-dependencies-helper.js";
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
@@ -37,7 +39,6 @@ describe("TuleapArtifactModalController", () => {
         ArtifactModalController,
         tlp_modal,
         TuleapArtifactModalValidateService,
-        TuleapArtifactModalFieldDependenciesService,
         TuleapArtifactModalLoading,
         mockCallback,
         isInCreationMode,
@@ -54,13 +55,6 @@ describe("TuleapArtifactModalController", () => {
 
                 return $delegate;
             });
-
-            $provide.decorator("TuleapArtifactModalFieldDependenciesService", function ($delegate) {
-                jest.spyOn($delegate, "getTargetFieldPossibleValues").mockImplementation(() => {});
-                jest.spyOn($delegate, "setUpFieldDependenciesActions");
-
-                return $delegate;
-            });
         });
 
         angular.mock.inject(function (
@@ -69,12 +63,10 @@ describe("TuleapArtifactModalController", () => {
             _$q_,
             _$timeout_,
             _TuleapArtifactModalValidateService_,
-            _TuleapArtifactModalFieldDependenciesService_,
             _TuleapArtifactModalLoading_
         ) {
             $q = _$q_;
             TuleapArtifactModalValidateService = _TuleapArtifactModalValidateService_;
-            TuleapArtifactModalFieldDependenciesService = _TuleapArtifactModalFieldDependenciesService_;
             TuleapArtifactModalLoading = _TuleapArtifactModalLoading_;
 
             tlp_modal = {
@@ -113,7 +105,6 @@ describe("TuleapArtifactModalController", () => {
                 },
                 TuleapArtifactModalValidateService,
                 TuleapArtifactModalLoading,
-                TuleapArtifactModalFieldDependenciesService,
                 displayItemCallback: mockCallback,
             };
         });
@@ -132,6 +123,7 @@ describe("TuleapArtifactModalController", () => {
         });
 
         it("when I load the controller, then field dependencies watchers will be set once for each different source field", function () {
+            jest.spyOn(field_dependencies_helper, "setUpFieldDependenciesActions");
             controller_params.modal_model.tracker = {
                 fields: [{ field_id: 22 }],
                 workflow: {
@@ -152,9 +144,10 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController.$onInit();
 
             expect($scope.$watch).toHaveBeenCalledTimes(1);
-            expect(
-                TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions
-            ).toHaveBeenCalledWith(controller_params.modal_model.tracker, expect.any(Function));
+            expect(field_dependencies_helper.setUpFieldDependenciesActions).toHaveBeenCalledWith(
+                controller_params.modal_model.tracker,
+                expect.any(Function)
+            );
         });
 
         it(`Given no title semantic, when I load the controller,
@@ -351,9 +344,9 @@ describe("TuleapArtifactModalController", () => {
                     target_value_id: 924,
                 },
             ];
-            TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues.mockReturnValue(
-                [{ id: 924 }]
-            );
+            jest.spyOn(field_dependencies_helper, "getTargetFieldPossibleValues").mockReturnValue([
+                { id: 924 },
+            ]);
             var modal_model = controller_params.modal_model;
             modal_model.tracker = {
                 fields: [target_field],
@@ -380,9 +373,11 @@ describe("TuleapArtifactModalController", () => {
             modal_model.values[65].bind_value_ids.push(478);
             $scope.$apply();
 
-            expect(
-                TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues
-            ).toHaveBeenCalledWith([478], target_field, field_dependencies_rules);
+            expect(field_dependencies_helper.getTargetFieldPossibleValues).toHaveBeenCalledWith(
+                [478],
+                target_field,
+                field_dependencies_rules
+            );
             expect(target_field.filtered_values).toEqual([{ id: 924 }]);
             expect(target_field_value).toEqual([924]);
         });
@@ -408,9 +403,11 @@ describe("TuleapArtifactModalController", () => {
                     target_value_id: 157,
                 },
             ];
-            TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues.mockReturnValue(
-                [{ id: 412 }, { id: 157 }]
-            );
+            jest.spyOn(field_dependencies_helper, "getTargetFieldPossibleValues").mockReturnValue([
+                { id: 412 },
+                { id: 157 },
+            ]);
+
             var modal_model = controller_params.modal_model;
             modal_model.tracker = {
                 fields: [target_field],
@@ -437,9 +434,11 @@ describe("TuleapArtifactModalController", () => {
             modal_model.values[51].bind_value_ids.push(780);
             $scope.$apply();
 
-            expect(
-                TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues
-            ).toHaveBeenCalledWith([780], target_field, field_dependencies_rules);
+            expect(getTargetFieldPossibleValues).toHaveBeenCalledWith(
+                [780],
+                target_field,
+                field_dependencies_rules
+            );
             expect(target_field.filtered_values).toEqual([{ id: 412 }, { id: 157 }]);
             expect(target_field_value).toEqual([]);
         });

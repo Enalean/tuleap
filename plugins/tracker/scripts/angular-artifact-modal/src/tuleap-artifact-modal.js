@@ -30,7 +30,6 @@ import Vue from "vue";
 
 import angular_tlp from "@tuleap/angular-tlp";
 
-import FieldDependenciesService from "./field-dependencies-service.js";
 import ValidateService from "./validate-service.js";
 import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
@@ -97,7 +96,6 @@ export default angular
     .directive("tuleapHighlightDirective", HighlightDirective)
     .directive("tuleapArtifactModalListPickerField", ListPickerDirective)
     .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)
-    .service("TuleapArtifactModalFieldDependenciesService", FieldDependenciesService)
     .service("TuleapArtifactModalValidateService", ValidateService)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
     .service("TuleapArtifactFieldValuesService", FieldValuesService)
