@@ -2,7 +2,7 @@
     display: flex;
     align-items: flex-end;
     margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
 .test-campaigns-header-title {
@@ -10,7 +10,7 @@
 }
 
 .new-campaign-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .test-campaigns-header-spacer {
@@ -40,7 +40,7 @@
     line-height: 20px;
 
     @media screen and (max-width: 900px) {
-        margin: 0 0 $tlp-medium-spacing;
+        margin: 0 0 var(--tlp-medium-spacing);
     }
 }
 
@@ -55,7 +55,7 @@
 
     > .test-campaign-progression {
         min-width: 10px;
-        margin: -$tlp-small-spacing 1px 0;
+        margin: calc(-1 * var(--tlp-small-spacing)) 1px 0;
 
         .test-campaign-progression-value {
             margin: 0 0 3px;
@@ -210,12 +210,12 @@
         cursor: pointer;
 
         > input {
-            margin-right: $tlp-medium-spacing;
+            margin-right: var(--tlp-medium-spacing);
             cursor: pointer;
         }
 
         > .fa-spin {
-            margin-right: $tlp-small-spacing;
+            margin-right: var(--tlp-small-spacing);
         }
     }
 }
@@ -236,5 +236,5 @@
 .feedback-info:last-child,
 .feedback-error:last-child,
 .feedback-success:last-child {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }

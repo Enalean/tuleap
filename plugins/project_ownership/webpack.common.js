@@ -27,9 +27,6 @@ for (const color of colors) {
     entry_points[
         `project-ownership-project-admin-${color}`
     ] = `./themes/BurningParrot/project-ownership-project-admin-${color}.scss`;
-    entry_points[
-        `project-ownership-project-admin-${color}-condensed`
-    ] = `./themes/BurningParrot/project-ownership-project-admin-${color}-condensed.scss`;
 }
 
 module.exports = [

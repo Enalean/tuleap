@@ -40,7 +40,7 @@
 .execution-details-modal-info {
     display: flex;
     align-items: center;
-    padding: $tlp-small-spacing $tlp-medium-spacing;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     font-size: 14px;
 }
 

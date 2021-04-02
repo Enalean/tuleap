@@ -24,7 +24,7 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -48,7 +48,7 @@ class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
 
         $assets = $this->getIncludeAsset();
         $layout->includeFooterJavascriptFile($assets->getFileURL('bugzilla-reference.js'));
-        $layout->addCssAsset(new CssAsset($assets, 'burningparrot-style'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'burningparrot-style'));
 
         $action = $request->get('action');
         switch ($action) {

@@ -19,14 +19,14 @@
 
 .test-administration-title {
     margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
 .first-testmanagament-administration {
     display: flex;
 
     > a {
-        margin-right: $tlp-medium-spacing;
+        margin-right: var(--tlp-medium-spacing);
     }
 }
 
@@ -34,7 +34,7 @@
     width: 25%;
 
     .list-picker-sb {
-        margin: $tlp-small-spacing 0 0;
+        margin: var(--tlp-small-spacing) 0 0;
     }
 
     .tlp-form-element-disabled {
@@ -42,7 +42,7 @@
     }
 
     .tlp-text-info {
-        margin: 0 0 $tlp-small-spacing 0;
+        margin: 0 0 var(--tlp-small-spacing) 0;
         font-size: .8125rem;
         line-height: 18px;
     }

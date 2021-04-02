@@ -22,21 +22,12 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 const assets_dir_path = path.resolve(__dirname, "../../src/www/assets/admindelegation");
 
-let entry_points = {
-    "admin-delegation": "./scripts/admindelegation.ts",
-};
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/style-${color}.scss`;
-    entry_points[
-        `style-${color}-condensed`
-    ] = `./themes/BurningParrot/style-${color}-condensed.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            "admin-delegation": "./scripts/admindelegation.ts",
+            style: "./themes/BurningParrot/admindelegation.scss",
+        },
         context: __dirname,
         output: webpack_configurator.configureOutput(assets_dir_path),
         externals: {

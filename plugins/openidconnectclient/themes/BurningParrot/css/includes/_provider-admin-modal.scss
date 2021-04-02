@@ -200,7 +200,7 @@
 .provider-admin-modal-icon,
 .provider-admin-modal-color,
 .provider-admin-modal-color:last-child {
-    margin: 0 0 $tlp-medium-spacing ($tlp-medium-spacing * 2);
+    margin: 0 0 var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) * 2);
 }
 
 
@@ -263,7 +263,7 @@
 }
 
 .provider-admin-modal-userinfo-endpoint-container {
-    margin: 0 0 ($tlp-medium-spacing * 2);
+    margin: 0 0 calc(var(--tlp-medium-spacing) * 2);
 }
 
 .provider-admin-modal-provider-button-preview {

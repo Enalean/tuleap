@@ -20,11 +20,11 @@
 @import 'writing-mode';
 
 .dashboard-widget-content-crosstrackersearch {
-    margin: 0 (-$tlp-medium-spacing);
+    margin: 0 calc(-1 * var(--tlp-medium-spacing));
 }
 
 .dashboard-widget-content-cross-tracker {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .cross-tracker-loader {
@@ -33,7 +33,7 @@
 }
 
 .cross-tracker-artifacts-table {
-    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
 .cross-tracker-last-update-date,
@@ -68,7 +68,7 @@
 
 .cross-tracker-report-error,
 .cross-tracker-report-success {
-    margin: $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing);
 }
 
 .cross-tracker-report-archive-icon {

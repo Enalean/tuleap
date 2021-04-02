@@ -18,11 +18,11 @@
  */
 
 #project-admin-ugroup-add-ldap-binding {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 #project-admin-ugroup-ldap-binding-modal-unlink-button {
-    margin: 0 $tlp-small-spacing 0 ($tlp-small-spacing * 3);
+    margin: 0 var(--tlp-small-spacing) 0 calc(var(--tlp-small-spacing) * 3);
 }
 
 #project-admin-ugroup-ldap-binding-modal-preview {
@@ -45,7 +45,7 @@
 }
 
 ul.project-admin-ugroup-ldap-binding-modal-preview-list { /* stylelint-disable-line selector-no-qualifying-type */
-    margin: $tlp-small-spacing 0 0;
+    margin: var(--tlp-small-spacing) 0 0;
     padding: 0;
     list-style: none;
 }

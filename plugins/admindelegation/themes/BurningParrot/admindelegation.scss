@@ -1,15 +1,15 @@
 .admindelegation-button-add-permissions {
     display: flex;
     align-items: flex-end;
-    margin: 0 0 $tlp-title-spacing;
+    margin: 0 0 var(--tlp-title-spacing);
 }
 
 .button-grant-permission {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .permission-delegation-avatar {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }
 
 .permission-delegation-name-td {

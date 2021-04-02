@@ -3,8 +3,8 @@
 }
 
 .steps-maindescription {
-    margin: $tlp-medium-spacing 0 0;
-    padding: 0 $tlp-medium-spacing $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing) 0 0;
+    padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     border-bottom: 1px solid $tlp-ui-border-light;
 }
 
@@ -75,12 +75,12 @@
 }
 
 .steps-step-number {
-    margin: $tlp-medium-spacing;
+    margin: var(--tlp-medium-spacing);
 }
 
 .steps-step-description {
     flex-grow: 1;
-    margin: $tlp-medium-spacing 0;
+    margin: var(--tlp-medium-spacing) 0;
 }
 
 .steps-step-description-text,
@@ -91,10 +91,10 @@
 .steps-step-expected {
     display: flex;
     align-items: baseline;
-    margin: $tlp-small-spacing 0 0 5px;
+    margin: var(--tlp-small-spacing) 0 0 5px;
 
     > .steps-step-expected-content {
-        margin: 0 0 0 $tlp-medium-spacing;
+        margin: 0 0 0 var(--tlp-medium-spacing);
     }
 }
 
@@ -110,7 +110,7 @@
 
 .steps-step-action {
     position: relative;
-    margin: 0 $tlp-medium-spacing;
+    margin: 0 var(--tlp-medium-spacing);
 }
 
 .steps-step-action-pass {

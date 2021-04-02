@@ -24,7 +24,7 @@
 }
 
 .frs-artifact-links-table {
-    margin: $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0;
 
     .edit-column {
         min-width: 15px;

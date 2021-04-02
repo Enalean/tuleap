@@ -20,21 +20,12 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-let entry_points = {
-    "bugzilla-reference": "./scripts/bugzilla-reference.js",
-};
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`burningparrot-style-${color}`] = `./themes/BurningParrot/style-${color}.scss`;
-    entry_points[
-        `burningparrot-style-${color}-condensed`
-    ] = `./themes/BurningParrot/style-${color}-condensed.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            "bugzilla-reference": "./scripts/bugzilla-reference.js",
+            "burningparrot-style": "./themes/BurningParrot/bugzilla_reference.scss",
+        },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/bugzilla_reference/")

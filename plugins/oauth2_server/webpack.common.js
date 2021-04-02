@@ -36,9 +36,6 @@ const entry_points = {
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[`authorization-form-${color}`] = `./themes/authorization-form-${color}.scss`;
-    entry_points[
-        `authorization-form-${color}-condensed`
-    ] = `./themes/authorization-form-${color}-condensed.scss`;
 }
 
 module.exports = [

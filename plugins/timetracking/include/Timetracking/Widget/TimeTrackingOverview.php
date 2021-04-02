@@ -23,8 +23,8 @@ namespace Tuleap\Timetracking\Widget;
 use Codendi_Request;
 use TemplateRenderer;
 use TemplateRendererFactory;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutDensityVariants;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Timetracking\Exceptions\TimetrackingOverviewWidgetNoTitle;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
@@ -132,7 +132,7 @@ class TimeTrackingOverview extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAsset($this->getAssets(), 'style-bp')]);
+        return new CssAssetCollection([new CssAssetWithoutDensityVariants($this->getAssets(), 'style-bp')]);
     }
 
     private function getAssets(): IncludeAssets

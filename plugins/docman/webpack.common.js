@@ -24,22 +24,13 @@ const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "../../src/www/assets/docman/")
 );
 
-let entry_points = {
-    notifications: "./scripts/notifications.js",
-    "default-style": "./themes/default/css/style.scss",
-};
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`burningparrot-style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[
-        `burningparrot-style-${color}-condensed`
-    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            notifications: "./scripts/notifications.js",
+            "default-style": "./themes/default/css/style.scss",
+            "burningparrot-style": "./themes/BurningParrot/css/docman.scss",
+        },
         context,
         output,
         externals: {
