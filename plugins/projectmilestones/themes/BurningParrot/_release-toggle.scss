@@ -26,7 +26,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .project-release-infos-badges {
     display: flex;
     flex-direction: row;
-    margin: 0 0 $tlp-small-spacing 0;
+    margin: 0 0 var(--tlp-small-spacing) 0;
 }
 
 .on-open-sprints-details {
@@ -34,18 +34,18 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .project-release-infos-badges .project-release-info-badge {
-    margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
+    margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
 }
 
 .release-content-description {
     display: grid;
     grid-auto-flow: row;
-    row-gap: $tlp-large-spacing;
+    row-gap: var(--tlp-large-spacing);
     height: inherit;
-    margin: 0 0 $tlp-small-spacing;
+    margin: 0 0 var(--tlp-small-spacing);
 
     .tlp-pane-subtitle {
-        margin: 0 0 $tlp-small-spacing;
+        margin: 0 0 var(--tlp-small-spacing);
         color: $tlp-ui-dimmed;
         font-size: 14px;
         font-weight: 600;
@@ -57,7 +57,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-description {
     width: initial;
-    margin: $tlp-medium-spacing 0 0 0;
+    margin: var(--tlp-medium-spacing) 0 0 0;
     font-size: 14px;
     line-height: 20px;
 }
@@ -76,7 +76,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-planning-link {
     align-self: baseline;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
     font-size: 14px;
 
     &:last-child {
@@ -92,6 +92,6 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     grid-column: 2;
     grid-row: 1;
     width: auto;
-    margin: $tlp-medium-spacing 0 0 $tlp-medium-spacing;
-    padding: 0 $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);
+    padding: 0 var(--tlp-medium-spacing) 0 0;
 }
