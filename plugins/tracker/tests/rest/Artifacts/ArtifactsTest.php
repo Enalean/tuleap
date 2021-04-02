@@ -95,4 +95,86 @@ final class ArtifactsTest extends TrackerBase
         $this->assertEquals($this->base_tracker_id, $json['tracker']['id']);
         $this->assertTrue(isset($json['tracker']['fields']));
     }
+    public function testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsCreated(): int
+    {
+        $description_field_id = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'description');
+        $title_field_id       = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'title');
+        $payload              = [
+            "tracker" => ["id" => $this->tracker_all_fields_tracker_id],
+            "values"  => [
+                [
+                    "field_id" => $title_field_id,
+                    "value"    => "Text field format test title"
+                ],
+                [
+                    "field_id" => $description_field_id,
+                    "value"    => [
+                        "content" => "Straight Outta Compton",
+                        "format"  => "gang",
+                    ],
+                ],
+            ]
+        ];
+
+        $response = $this->getResponse(
+            $this->client->post('artifacts', null, json_encode($payload))
+        );
+
+        self::assertEquals(201, $response->getStatusCode());
+
+        $created_artifact_id = $response->json()["id"];
+
+        $this->assertSavedTextFieldFormatIsUserDefaultFormat($created_artifact_id);
+
+        return $created_artifact_id;
+    }
+
+    /**
+     * @depends testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsCreated
+     */
+    public function testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsUpdated(
+        int $created_artifact_id
+    ): void {
+        $description_field_id = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'description');
+
+        $payload = [
+            "tracker" => ["id" => $this->tracker_all_fields_tracker_id],
+            "values"  => [
+                [
+                    "field_id" => $description_field_id,
+                    "value"    => [
+                        "content" => "100 Miles And Runnin'",
+                        "format"  => "whololo",
+                    ],
+                ],
+            ]
+        ];
+
+        $response = $this->getResponse(
+            $this->client->put('artifacts/' . $created_artifact_id, null, json_encode($payload))
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $this->assertSavedTextFieldFormatIsUserDefaultFormat($created_artifact_id);
+    }
+
+    private function assertSavedTextFieldFormatIsUserDefaultFormat(int $concerned_artifact_id): void
+    {
+        $artifact_request = $this->client->get('artifacts/' . $concerned_artifact_id);
+        $artifact         = $this->getResponse($artifact_request)->json();
+
+        $description_field = array_filter(
+            $artifact['values'],
+            static function (array $value): bool {
+                return $value['label'] === 'Description';
+            }
+        );
+
+        // Default user format = commonmark
+        $description_field_format  = array_column($description_field, "format");
+        $description_field_content = array_column($description_field, "commonmark");
+
+        self::assertEquals('html', $description_field_format[0]);
+        self::assertNotNull($description_field_content[0]);
+    }
 }

@@ -561,15 +561,33 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             return $value;
         }
 
-        $data            = $this->getDefaultValue();
-        $data['content'] = $value;
+        $data = $this->getDefaultValue();
+
+        if (is_array($value) && isset($value['content'])) {
+            $data['content'] = $value['content'];
+        } else {
+            $data['content'] = $value;
+        }
 
         return $data;
     }
 
-    private function isValueAlreadyWellFormatted($value)
+    private function isValueAlreadyWellFormatted($value): bool
     {
-        return is_array($value) && isset($value['content']) && isset($value['format']);
+        return is_array($value) && isset($value['content']) && $this->isFormatValid($value['format']);
+    }
+
+    private function isFormatValid(?string $format): bool
+    {
+        return isset($format)
+            && in_array(
+                $format,
+                [
+                    Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                    Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                ]
+            );
     }
 
     protected function saveValue(
