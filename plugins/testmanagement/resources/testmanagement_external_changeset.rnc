@@ -8,11 +8,11 @@ grammar {
 
      step_value =
      element description {
-          attribute format {"text" | "html"},
+          attribute format {"text" | "html"| "commonmark"},
           xsd:string
      },
      element expected_results {
-          attribute format {"text" | "html"},
+          attribute format {"text" | "html"| "commonmark"},
           xsd:string
      }
 }
