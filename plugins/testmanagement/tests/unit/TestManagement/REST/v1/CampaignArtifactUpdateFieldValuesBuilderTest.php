@@ -129,7 +129,7 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends TestCase
                 )
             );
 
-        $this->status_value_retriever->shouldReceive('getFirstNonOpenValueUserCanRead')
+        $this->status_value_retriever->shouldReceive('getFirstClosedValueUserCanRead')
             ->once()
             ->andReturn(
                 new Tracker_FormElement_Field_List_Bind_StaticValue(
@@ -171,6 +171,76 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends TestCase
         assertSame("new_label", $field_values[0]->value);
         assertSame(89, $field_values[0]->field_id);
         assertSame([5], $field_values[1]->bind_value_ids);
+        assertSame(98, $field_values[1]->field_id);
+    }
+
+    public function testItBuildsFieldValueForLabelAndStatusToBeOpen(): void
+    {
+        $tracker = Mockery::mock(Tracker::class);
+        $user    = UserTestBuilder::aUser()->build();
+
+        $tracker->shouldReceive('getId')->andReturn(47);
+        $tracker->shouldReceive('getStatusField')
+            ->once()
+            ->andReturn(
+                new Tracker_FormElement_Field_Selectbox(
+                    98,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            );
+
+        $this->status_value_retriever->shouldReceive('getFirstOpenValueUserCanRead')
+            ->once()
+            ->andReturn(
+                new Tracker_FormElement_Field_List_Bind_StaticValue(
+                    2,
+                    'on going',
+                    '',
+                    1,
+                    false
+                )
+            );
+
+        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')
+            ->once()
+            ->andReturn(
+                new Tracker_FormElement_Field_String(
+                    89,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            );
+
+        $field_values = $this->builder->getFieldValuesForCampaignArtifactUpdate(
+            $tracker,
+            $user,
+            'new_label',
+            'open'
+        );
+
+        assertCount(2, $field_values);
+        assertSame("new_label", $field_values[0]->value);
+        assertSame(89, $field_values[0]->field_id);
+        assertSame([2], $field_values[1]->bind_value_ids);
         assertSame(98, $field_values[1]->field_id);
     }
 

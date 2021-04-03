@@ -276,6 +276,47 @@ final class CampaignsTest extends BaseTest
         $this->assertEquals(400, $response->getStatusCode());
     }
 
+    public function testPatchCampaignCanReopenACampaign(): void
+    {
+        $campaign = $this->closed_71_campaign;
+        $this->assertFalse($campaign['is_open']);
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(["change_status" => "open"])
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $updated_campaign = $response->json();
+        $this->assertTrue($updated_campaign['is_open']);
+    }
+
+    /**
+     * @depends testPatchCampaignCanReopenACampaign
+     */
+    public function testPatchCampaignCanCloseACampaign(): void
+    {
+        $campaign = $this->closed_71_campaign;
+        $this->assertFalse($campaign['is_open']);
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(["change_status" => "closed"])
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $updated_campaign = $response->json();
+        $this->assertFalse($updated_campaign['is_open']);
+    }
+
     private function revertCampaign(array $campaign)
     {
         $response = $this->getResponse(

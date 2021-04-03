@@ -102,7 +102,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusNotOpenValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -648,7 +648,7 @@ class CampaignsResource
      * @param string                                  $label New label of the campaign {@from body}
      * @param JobConfigurationRepresentation          $job_configuration {@from body}
      * @param AutomatedTestsResultPATCHRepresentation $automated_tests_results {@from body}
-     * @param string | null                           $change_status {@from body} {@required false} {@choice closed}
+     * @param string | null                           $change_status {@from body} {@required false} {@choice closed,open}
      *
      * @return CampaignRepresentation
      *
@@ -705,7 +705,7 @@ class CampaignsResource
             throw new RestException(500, $exception->getMessage());
         } catch (
             SemanticStatusNotDefinedException |
-            SemanticStatusNotOpenValueNotFoundException |
+            SemanticStatusClosedValueNotFoundException |
             CampaignStatusChangeUnknownValueException $exception
         ) {
             throw new RestException(400, $exception->getMessage());

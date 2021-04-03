@@ -2,10 +2,8 @@
 /**
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
- *
  * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU GeLneral Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
@@ -18,12 +16,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement\REST\v1;
+declare(strict_types=1);
 
-class CampaignStatusChangeUnknownValueException extends \LogicException
+namespace Tuleap\Tracker\Semantic\Status;
+
+/**
+ * @psalm-immutable
+ */
+class SemanticStatusOpenValueNotFoundException extends \RuntimeException
 {
-    public function __construct(string $value)
+    public function __construct()
     {
-        parent::__construct("Unknown value $value, only accepted values are \"closed\" and \"open\"");
+        parent::__construct(
+            "There is no open values defined in status semantic for the tracker."
+        );
     }
 }

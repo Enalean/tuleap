@@ -28,7 +28,7 @@ use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusNotOpenValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 
 class CampaignUpdater
 {
@@ -54,7 +54,7 @@ class CampaignUpdater
     /**
      * @throws LabelFieldNotFoundException
      * @throws SemanticStatusNotDefinedException
-     * @throws SemanticStatusNotOpenValueNotFoundException
+     * @throws SemanticStatusClosedValueNotFoundException
      * @throws CampaignStatusChangeUnknownValueException
      * @throws \Luracast\Restler\RestException
      * @throws \Tracker_AfterSaveException

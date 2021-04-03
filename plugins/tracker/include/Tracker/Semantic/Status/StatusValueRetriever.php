@@ -41,9 +41,9 @@ class StatusValueRetriever
 
     /**
      * @throws SemanticStatusNotDefinedException
-     * @throws SemanticStatusNotOpenValueNotFoundException
+     * @throws SemanticStatusClosedValueNotFoundException
      */
-    public function getFirstNonOpenValueUserCanRead(Tracker $tracker, PFUser $user): Tracker_FormElement_Field_List_BindValue
+    public function getFirstClosedValueUserCanRead(Tracker $tracker, PFUser $user): Tracker_FormElement_Field_List_BindValue
     {
         $status_semantic_defined = $this->getStatusSemanticDefined($tracker, $user);
         $open_values             = $status_semantic_defined->getOpenValues();
@@ -54,7 +54,25 @@ class StatusValueRetriever
             }
         }
 
-        throw new SemanticStatusNotOpenValueNotFoundException();
+        throw new SemanticStatusClosedValueNotFoundException();
+    }
+
+    /**
+     * @throws SemanticStatusNotDefinedException
+     * @throws SemanticStatusClosedValueNotFoundException
+     */
+    public function getFirstOpenValueUserCanRead(Tracker $tracker, PFUser $user): Tracker_FormElement_Field_List_BindValue
+    {
+        $status_semantic_defined = $this->getStatusSemanticDefined($tracker, $user);
+        $open_values             = $status_semantic_defined->getOpenValues();
+        $status_field            = $status_semantic_defined->getField();
+        foreach ($status_field->getAllValues() as $value_id => $value) {
+            if (! $value->isHidden() && in_array($value_id, $open_values)) {
+                return $value;
+            }
+        }
+
+        throw new SemanticStatusOpenValueNotFoundException();
     }
 
     /**
