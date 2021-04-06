@@ -20,6 +20,7 @@
         <choice>
           <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">text</value>
           <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">html</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">commonmark</value>
         </choice>
       </attribute>
       <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
@@ -29,6 +30,7 @@
         <choice>
           <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">text</value>
           <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">html</value>
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">commonmark</value>
         </choice>
       </attribute>
       <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
