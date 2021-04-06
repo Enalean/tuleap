@@ -49,8 +49,29 @@ tlp-mermaid-diagram {
         position: absolute;
         top: calc(50% - #{$size} / 2);
         left: calc(50% - #{$size} / 2);
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         font-size: $size;
+    }
+
+    &.diagram-mermaid-source-computing-error {
+        > pre {
+            cursor: auto;
+        }
+    }
+
+    &.diagram-mermaid-source-computing-error-with-details {
+        > pre {
+            margin: 0;
+            border-bottom: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        > .diagram-mermaid-source-computing-explanation {
+            margin-top: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
     }
 }
 
@@ -83,7 +104,7 @@ tlp-mermaid-diagram {
         padding: var(--tlp-medium-spacing);
         overflow: hidden;
         border-radius: 4px;
-        background: $tlp-ui-white;
+        background: var(--tlp-ui-white);
         cursor: all-scroll;
     }
 
@@ -105,12 +126,12 @@ tlp-mermaid-diagram {
     transition: color ease-in-out 150ms;
     border: 0;
     background-color: unset;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 1.5rem;
     font-weight: 600;
     cursor: pointer;
 
     &:hover {
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 }
