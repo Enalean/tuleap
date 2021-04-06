@@ -34,6 +34,10 @@ import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter
 import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "../../constants/fields-constants.js";
 import { store } from "./vuex-store.js";
 import { setTextFieldDefaultFormat } from "./model/UserPreferencesStore";
+import {
+    getTargetFieldPossibleValues,
+    setUpFieldDependenciesActions,
+} from "./field-dependencies-helper.js";
 
 export default ArtifactModalService;
 
@@ -43,7 +47,6 @@ ArtifactModalService.$inject = [
     "TuleapArtifactModalLoading",
     "TuleapArtifactModalTrackerTransformerService",
     "TuleapArtifactFieldValuesService",
-    "TuleapArtifactModalFieldDependenciesService",
 ];
 
 function ArtifactModalService(
@@ -51,8 +54,7 @@ function ArtifactModalService(
     TlpModalService,
     TuleapArtifactModalLoading,
     TuleapArtifactModalTrackerTransformerService,
-    TuleapArtifactFieldValuesService,
-    TuleapArtifactModalFieldDependenciesService
+    TuleapArtifactFieldValuesService
 ) {
     const self = this;
     Object.assign(self, {
@@ -315,17 +317,14 @@ function ArtifactModalService(
         ) {
             var source_value_ids = [].concat(field_values[source_field_id].bind_value_ids);
 
-            target_field.filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+            target_field.filtered_values = getTargetFieldPossibleValues(
                 source_value_ids,
                 target_field,
                 field_dependencies_rules
             );
         };
 
-        TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(
-            tracker,
-            filterTargetFieldValues
-        );
+        setUpFieldDependenciesActions(tracker, filterTargetFieldValues);
     }
 
     function mapPrefillsToFieldValues(prefill_values, tracker_fields) {

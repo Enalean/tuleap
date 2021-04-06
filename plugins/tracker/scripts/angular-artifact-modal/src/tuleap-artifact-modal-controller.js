@@ -37,6 +37,10 @@ import {
 } from "../../../../../src/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
+import {
+    getTargetFieldPossibleValues,
+    setUpFieldDependenciesActions,
+} from "./field-dependencies-helper.js";
 
 export default ArtifactModalController;
 
@@ -50,7 +54,6 @@ ArtifactModalController.$inject = [
     "displayItemCallback",
     "TuleapArtifactModalValidateService",
     "TuleapArtifactModalLoading",
-    "TuleapArtifactModalFieldDependenciesService",
 ];
 
 function ArtifactModalController(
@@ -62,8 +65,7 @@ function ArtifactModalController(
     gettextCatalog,
     displayItemCallback,
     TuleapArtifactModalValidateService,
-    TuleapArtifactModalLoading,
-    TuleapArtifactModalFieldDependenciesService
+    TuleapArtifactModalLoading
 ) {
     const self = this,
         user_id = modal_model.user_id;
@@ -266,10 +268,7 @@ function ArtifactModalController(
     }
 
     function setFieldDependenciesWatchers() {
-        TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(
-            self.tracker,
-            setFieldDependenciesWatcher
-        );
+        setUpFieldDependenciesActions(self.tracker, setFieldDependenciesWatcher);
     }
 
     function setFieldDependenciesWatcher(source_field_id, target_field, field_dependencies_rules) {
@@ -301,7 +300,7 @@ function ArtifactModalController(
         target_field,
         field_dependencies_rules
     ) {
-        target_field.filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+        target_field.filtered_values = getTargetFieldPossibleValues(
             source_value_ids,
             target_field,
             field_dependencies_rules
