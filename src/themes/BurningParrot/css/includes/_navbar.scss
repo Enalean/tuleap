@@ -37,8 +37,8 @@ header.pinned > .header-container {
         }
     }
 
-    #nav-dropdown-user > .tlp-avatar {
-        box-shadow: none;
+    .tlp-avatar {
+        padding: 0;
     }
 }
 
@@ -149,16 +149,10 @@ header.pinned > .header-container {
     display: flex;
     margin: 0 0 0 var(--tlp-small-spacing);
     white-space: nowrap;
-}
 
-#nav-dropdown-user > .tlp-avatar {
-    transition: box-shadow 100ms ease-in-out;
-    border: 1px solid $tlp-ui-white;
-    box-shadow: $tlp-button-shadow;
-    cursor: pointer;
-
-    &:hover {
-        box-shadow: $tlp-button-shadow-hover;
+    .tlp-avatar {
+        margin: 0;
+        padding: 0;
     }
 }
 

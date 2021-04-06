@@ -2177,6 +2177,9 @@ msgstr "Seuls les membres du projet peuvent accéder à son contenu."
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
 
+msgid "Open user dropdown"
+msgstr "Ouvrir le menu utilisateur"
+
 msgid "Optional message…"
 msgstr "Message optionnel…"
 

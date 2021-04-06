@@ -1,14 +1,14 @@
 {{# new_dropdown }}
     {{# has_sections }}
         <div class="new-nav">
-            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" data-shortcut-create data-test="create-new">
+            <button type="button" id="nav-dropdown-new" class="btn" data-shortcut-create data-test="create-new">
                 <i class="fa fa-plus btn-icon" aria-hidden="true"></i>
                 {{# gettext }}New{{/gettext}}
             </button>
-            <div class="dropdown-menu pull-right">
-                <div class="dropdown-arrow"></div>
-                <div class="dropdown-header"></div>
-                <div class="dropdown-body">
+            <div id="nav-dropdown-new-content" class="tlp-popover nav-dropdown">
+                <div class="tlp-popover-arrow"></div>
+                <div class="tlp-popover-header"></div>
+                <div class="tlp-popover-body">
                     {{# sections }}
                         <div class="nav-dropdown-item-divider"></div>
                         <div class="nav-dropdown-item-title">{{ label }}</div>

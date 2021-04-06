@@ -1,18 +1,22 @@
-<div class="user-nav">
+<nav class="user-nav">
     {{# user_is_logged_in }}
-        <div class="user-avatar dropdown-toggle" data-toggle="dropdown" data-shortcut-mydashboard>
-            <img src="{{ user_avatar }}">
-        </div>
-        <div class="dropdown-menu pull-right">
-            <div class="dropdown-arrow"></div>
-            <div class="dropdown-header">
-                <img class="user-avatar" src="{{ user_avatar }}">
+        <button class="user-avatar"
+                id="nav-dropdown-user"
+                data-shortcut-mydashboard
+                title="{{# gettext }}Open user dropdown{{/ gettext }}"
+        >
+            <img src="{{ user_avatar }}" alt="">
+        </button>
+        <div id="nav-dropdown-user-content" class="tlp-popover nav-dropdown">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                <img class="user-avatar" src="{{ user_avatar }}" alt="">
                 <div class="user-infos-names">
                     <span class="user-infos-real-name">{{ user_real_name }}</span>
                     <span class="user-infos-login-name">{{ user_login_name }}</span>
                 </div>
             </div>
-            <div class="dropdown-body">
+            <div class="tlp-popover-body">
                 {{# has_no_dashboards }}
                     <a href="/my/"
                         class="nav-dropdown-item nav-dropdown-item-unique-dashboard"
@@ -85,4 +89,4 @@
             </a>
         {{/ display_new_user }}
     {{/ user_is_logged_in }}
-</div>
+</nav>

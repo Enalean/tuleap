@@ -1,19 +1,23 @@
 {{# user_nav_presenter }}
 <nav id="user-nav">
     {{# is_user_logged_in }}
-        <div id="nav-dropdown-user">
-            <div class="tlp-avatar" data-shortcut-mydashboard data-test="my-dashboard">
-                {{# user_has_avatar }}
-                    <img src="{{ user_avatar_url }}" alt="{{ user_avatar_alt }}">
-                {{/ user_has_avatar }}
-            </div>
+        <button id="nav-dropdown-user"
+                class="tlp-avatar tlp-button-secondary tlp-button-outline"
+                data-shortcut-mydashboard
+                data-test="my-dashboard"
+                title="{{# gettext }}Open user dropdown{{/ gettext }}"
+        >
+            {{# user_has_avatar }}
+                <img src="{{ user_avatar_url }}" alt="">
+            {{/ user_has_avatar }}
+        </button>
 
-            <div id="nav-dropdown-user-content" class="tlp-popover nav-dropdown">
+        <div id="nav-dropdown-user-content" class="tlp-popover nav-dropdown">
                 <div class="tlp-popover-arrow"></div>
                 <div class="tlp-popover-header">
-                    <div class="tlp-avatar">
+                    <div class="tlp-avatar" aria-hidden="true">
                         {{# user_has_avatar }}
-                            <img src="{{ user_avatar_url }}" alt="{{ user_avatar_alt }}">
+                            <img src="{{ user_avatar_url }}" alt="">
                         {{/ user_has_avatar }}
                     </div>
                     <div class="nav-dropdown-user-names">
@@ -75,7 +79,6 @@
                     {{/ logout_menu_item }}
                 </div>
             </div>
-        </div>
     {{/ is_user_logged_in }}
 
     {{^ is_user_logged_in }}

@@ -246,18 +246,12 @@
 
 body {
     @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
-    @import '../../src/themes/tlp/src/scss/variables/shadows'; // Used in tlp-popover
-    @import '../../src/themes/tlp/src/scss/variables/margins'; // Used in tlp-popover
-    @import '../../src/themes/tlp/src/scss/components/popovers';
     @import '../../src/themes/tlp/src/scss/components/tables';
     @import './includes/popovers';
     @include definitions($main, $white);
 
     &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @import '../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../src/themes/tlp/src/scss/variables/margins';
-        @import '../../src/themes/tlp/src/scss/components/popovers';
         @import '../../src/themes/tlp/src/scss/components/tables';
         @import './includes/popovers';
         @include definitions($main, $white);
@@ -265,9 +259,6 @@ body {
 
     &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-green';
-        @import '../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../src/themes/tlp/src/scss/variables/margins';
-        @import '../../src/themes/tlp/src/scss/components/popovers';
         @import '../../src/themes/tlp/src/scss/components/tables';
         @import './includes/popovers';
         @include definitions($main, $white);
@@ -275,9 +266,6 @@ body {
 
     &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @import '../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../src/themes/tlp/src/scss/variables/margins';
-        @import '../../src/themes/tlp/src/scss/components/popovers';
         @import '../../src/themes/tlp/src/scss/components/tables';
         @import './includes/popovers';
         @include definitions($main, $white);
@@ -285,9 +273,6 @@ body {
 
     &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @import '../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../src/themes/tlp/src/scss/variables/margins';
-        @import '../../src/themes/tlp/src/scss/components/popovers';
         @import '../../src/themes/tlp/src/scss/components/tables';
         @import './includes/popovers';
         @include definitions($main, $white);
@@ -295,9 +280,6 @@ body {
 
     &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-red';
-        @import '../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../src/themes/tlp/src/scss/variables/margins';
-        @import '../../src/themes/tlp/src/scss/components/popovers';
         @import '../../src/themes/tlp/src/scss/components/tables';
         @import './includes/popovers';
         @include definitions($main, $white);
