@@ -44,6 +44,7 @@
             v-bind:href="folder_href"
             class="document-folder-subitem-link"
             data-test="document-go-to-folder-link"
+            draggable="false"
         >
             {{ item.title }}
         </a>

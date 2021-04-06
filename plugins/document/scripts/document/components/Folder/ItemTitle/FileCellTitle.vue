@@ -23,7 +23,7 @@
     <div>
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        <a v-bind:href="file_url" class="document-folder-subitem-link">
+        <a v-bind:href="file_url" class="document-folder-subitem-link" draggable="false">
             {{ item.title }}
         </a>
         <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
