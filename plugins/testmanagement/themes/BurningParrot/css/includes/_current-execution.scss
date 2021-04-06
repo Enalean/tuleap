@@ -112,7 +112,7 @@
 }
 
 .current-test-status {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: 30px;
 }
 
@@ -125,7 +125,7 @@
 .current-test-title-icon-auto {
     position: relative;
     top: 1px;
-    margin: 0 $tlp-small-spacing 0;
+    margin: 0 var(--tlp-small-spacing) 0;
 }
 
 .current-test-requirement {
@@ -174,7 +174,7 @@
     .current-test-header-action {
         width: 40px;
         height: 40px;
-        margin: 0 0 0 $tlp-small-spacing;
+        margin: 0 0 0 var(--tlp-small-spacing);
         border: 0;
         border-radius: 50%;
         background-color: transparent;
@@ -296,14 +296,14 @@ execution-with-steps.current-test-content {
 .current-test-results {
     display: flex;
     justify-content: space-around;
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 
 .current-test-result {
     flex: 0 0 auto;
     width: 50px;
     height: 50px;
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
     padding: 0;
     border-radius: 50%;
     font-size: 25px;
@@ -320,7 +320,7 @@ execution-with-steps.current-test-content {
 }
 
 .tlp-alert-warning.current-test-should-be-reloaded-warning {
-    margin: $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0;
 
     &::before {
         top: 35%;
@@ -328,7 +328,7 @@ execution-with-steps.current-test-content {
 }
 
 .current-test-should-be-reloaded-button {
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
     vertical-align: baseline;
 }
 
@@ -349,5 +349,5 @@ execution-with-steps.current-test-content {
 }
 
 .svg-robot {
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }

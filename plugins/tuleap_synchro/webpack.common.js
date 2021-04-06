@@ -20,23 +20,12 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-const entry_points = {
-    tuleap_synchro: "./scripts/site-admin/src/index.js",
-};
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[
-        `tuleap-synchro-${color}`
-    ] = `./themes/BurningParrot/css/tuleap-synchro-${color}.scss`;
-    entry_points[
-        `tuleap-synchro-${color}-condensed`
-    ] = `./themes/BurningParrot/css/tuleap-synchro-${color}-condensed.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            tuleap_synchro: "./scripts/site-admin/src/index.js",
+            tuleap_synchro_style: "./themes/BurningParrot/css/tuleap-synchro.scss",
+        },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/tuleap_synchro/")

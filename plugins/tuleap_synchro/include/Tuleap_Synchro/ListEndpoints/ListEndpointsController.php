@@ -23,7 +23,7 @@ namespace Tuleap\TuleapSynchro\ListEndpoints;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -71,9 +71,9 @@ class ListEndpointsController implements DispatchableWithRequest, DispatchableWi
         );
 
         $layout->addCssAsset(
-            new CssAsset(
+            new CssAssetWithoutVariantDeclinaisons(
                 $include_assets,
-                'tuleap-synchro'
+                'tuleap_synchro_style'
             )
         );
 

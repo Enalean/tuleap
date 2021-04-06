@@ -30,7 +30,7 @@
 }
 
 .oauth2-server-authorization-form-action-authorize {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .oauth2-server-scope-label {

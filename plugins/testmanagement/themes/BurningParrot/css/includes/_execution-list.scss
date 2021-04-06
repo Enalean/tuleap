@@ -1,7 +1,7 @@
 @import 'link_issue_modal';
 @import 'current-execution';
 
-$height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
+$height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-spacing) + 40px);
 
 .test-campaign {
     display: flex;
@@ -45,14 +45,14 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
     flex: 0 0 auto;
     align-items: center;
     margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
 .test-campaign-header-status-badge {
     display: flex;
     align-items: center;
     height: 34px;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
     border-radius: 34px / 2;
     font-size: 1rem;
     line-height: 1.1875rem;
@@ -63,7 +63,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 }
 
 .execution-header-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .execution-header-button-edit.tlp-button-outline {
@@ -107,7 +107,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 }
 
 .test-campaign-header-trophy {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
     padding: 0;
     border: 0;
     background-color: unset;
@@ -124,7 +124,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 .test-campaign-current-progression-container {
     display: table;
     width: 100%;
-    margin: 0 0 $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 
 .test-campaign-current-progression {
@@ -186,7 +186,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 .tests-pane {
     width: 40%;
     min-width: 410px;
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
 .test-status-icon {
@@ -213,7 +213,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
     &.passed,
     &.failed,
     &.blocked {
-        margin: 0 $tlp-small-spacing 0 0;
+        margin: 0 var(--tlp-small-spacing) 0 0;
     }
 }
 
@@ -233,7 +233,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 }
 
 .scroll-to-current-test-button {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 
     > .scroll-to-current-test-button-icon {
         // icon is not symmetric, so we need to shift the icon a bit to the left
@@ -286,10 +286,10 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
     }
 
     > .test-status-icon {
-        margin: 0 $tlp-small-spacing 0 0;
+        margin: 0 var(--tlp-small-spacing) 0 0;
 
         &:first-child {
-            margin: 0 $tlp-small-spacing 0 11px;
+            margin: 0 var(--tlp-small-spacing) 0 11px;
         }
 
         &:last-child {
@@ -317,13 +317,13 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
     > .tests-filter-option {
         display: flex;
         justify-content: space-between;
-        margin: 0 0 $tlp-medium-spacing 0;
-        padding: 0 $tlp-medium-spacing;
+        margin: 0 0 var(--tlp-medium-spacing) 0;
+        padding: 0 var(--tlp-medium-spacing);
         white-space: nowrap;
 
         &:last-child {
             margin: 0;
-            padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing $tlp-medium-spacing;
+            padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) var(--tlp-medium-spacing);
             border-top: 1px solid $tlp-ui-border-light;
         }
 
@@ -425,7 +425,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 }
 
 .empty-execution-list {
-    margin: $tlp-medium-spacing 0 0;
+    margin: var(--tlp-medium-spacing) 0 0;
 }
 
 @keyframes test-is-back-in-viewport {

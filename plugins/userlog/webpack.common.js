@@ -20,19 +20,12 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-let entry_points = {
-    "user-logging-date-picker": "./scripts/user-logging-date-picker.ts",
-};
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry_points[`style-bp-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[`style-bp-${color}-condensed`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            "user-logging-date-picker": "./scripts/user-logging-date-picker.ts",
+            "style-bp": "./themes/BurningParrot/css/userlog.scss",
+        },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/userlog")

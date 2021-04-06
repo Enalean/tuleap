@@ -123,7 +123,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
             __DIR__ . '/../../../src/www/assets/userlog/',
             '/assets/userlog/'
         );
-        $layout->addCssAsset(new \Tuleap\Layout\CssAsset($assets, 'style-bp'));
+        $layout->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'style-bp'));
         $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'user-logging-date-picker.js'));
         $router = new UserLogRouter(
             new UserLogExporter(new UserLogBuilder(new UserLogDao(), UserManager::instance())),

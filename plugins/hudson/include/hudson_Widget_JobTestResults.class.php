@@ -24,7 +24,6 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Hudson\TestResultPieChart\TestResultsPieChartDisplayer;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 
@@ -152,7 +151,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAsset($this->getAssets(), 'bp-style')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutDensityVariants($this->getAssets(), 'bp-style')]);
     }
 
     private function getAssets(): IncludeAssets

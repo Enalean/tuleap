@@ -106,9 +106,6 @@ const entry_points = {
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of colors_burning_parrot) {
     entry_points[`burningparrot-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[
-        `burningparrot-${color}-condensed`
-    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
 const webpack_config_for_themes = {

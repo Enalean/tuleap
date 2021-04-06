@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 
@@ -208,6 +207,6 @@ class Docman_Widget_MyDocman extends Widget
             __DIR__ . '/../../../src/www/assets/docman/',
             '/assets/docman'
         );
-        return new CssAssetCollection([new CssAsset($theme_include_assets, 'burningparrot-style')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutDensityVariants($theme_include_assets, 'burningparrot-style')]);
     }
 }

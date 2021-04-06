@@ -1,9 +1,9 @@
 #bugzilla-references-header {
     display: flex;
     align-items: flex-end;
-    margin: 0 0 $tlp-title-spacing;
+    margin: 0 0 var(--tlp-title-spacing);
 }
 
 #bugzilla-references-header-title {
-    margin: 0 $tlp-medium-spacing 0 0;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
 }

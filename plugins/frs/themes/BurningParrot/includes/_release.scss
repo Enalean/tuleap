@@ -20,7 +20,7 @@
 @import './linked-artifacts';
 
 .frs-release-block {
-    margin-left: $tlp-medium-spacing;
+    margin-left: var(--tlp-medium-spacing);
 }
 
 .frs-package-name {

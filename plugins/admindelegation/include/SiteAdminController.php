@@ -29,7 +29,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -143,7 +143,7 @@ class SiteAdminController implements DispatchableWithRequest, DispatchableWithBu
             __DIR__ . '/../../../src/www/assets/admindelegation',
             '/assets/admindelegation'
         );
-        $layout->addCssAsset(new CssAsset($assets, 'style'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'style'));
         $layout->addJavascriptAsset(new JavascriptAsset($assets, 'admin-delegation.js'));
         $delegation_builder = new AdminDelegationBuilder($this->user_delegation_manager, $this->user_manager);
         $users              = $delegation_builder->buildUsers();

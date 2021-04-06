@@ -6,8 +6,8 @@
     display: flex;
     align-items: flex-end;
     height: 400px;
-    margin: 0 0 $tlp-medium-spacing;
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    margin: 0 0 var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     overflow: hidden;
     border-bottom: 1px solid $tlp-ui-border-light;
 }
@@ -84,7 +84,7 @@
         flex: 0 0 auto;
         flex-direction: column;
         align-items: center;
-        margin: 0 0 $tlp-medium-spacing;
+        margin: 0 0 var(--tlp-medium-spacing);
 
         > .tlp-avatar-large {
             margin: 0 0 10px;
@@ -105,7 +105,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     background: #ffffff;
     box-shadow: 0 10px 40px rgba(0, 0, 0, .07);
 }
@@ -117,7 +117,7 @@
 .score-list {
     width: 100%;
     margin: 0;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     list-style-type: none;
 }
 
@@ -133,7 +133,7 @@
 
     .position {
         width: 30px;
-        margin: 0 $tlp-medium-spacing 0 0;
+        margin: 0 var(--tlp-medium-spacing) 0 0;
         color: $tlp-theme-color;
         font-size: 14px;
         text-align: right;

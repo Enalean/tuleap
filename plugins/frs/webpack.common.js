@@ -32,7 +32,6 @@ const entry_points = {
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[`frs-${color}`] = `./themes/BurningParrot/frs-${color}.scss`;
-    entry_points[`frs-${color}-condensed`] = `./themes/BurningParrot/frs-${color}-condensed.scss`;
 }
 
 module.exports = [
