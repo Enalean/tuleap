@@ -933,7 +933,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $nature_presenter_factory = $this->getNaturePresenterFactory();
         foreach ($columns as $key => $column) {
             if ($column['width']) {
-                $width = 'width="' . $column['width'] . '%"';
+                $width = 'width="' . $purifier->purify($column['width'] . '%') . '"';
             } else {
                 $width = '';
             }
@@ -947,9 +947,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $data_nature_format = 'data-field-artlink-nature-format="' . $purifier->purify($column['artlink_nature_format']) . '"';
                 }
                 $html .= '<th class="tracker_report_table_column"
-                    id="tracker_report_table_column_' . $key . '"
-                    data-column-id="' . $key . '"
-                    data-field-id="' . $column['field']->id . '"
+                    id="tracker_report_table_column_' . $purifier->purify($key) . '"
+                    data-column-id="' . $purifier->purify($key) . '"
+                    data-field-id="' . $purifier->purify($column['field']->id) . '"
                     ' . $data_nature . '
                     ' . $data_nature_format . '
                     ' . $width . '>';
@@ -962,7 +962,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if (! $nature_label) {
                             $nature_label = dgettext('tuleap-tracker', 'No type');
                         }
-                        $field_label .= " ($nature_label)";
+                        $field_label .= $purifier->purify(" ($nature_label)");
                     }
                 }
                 $label = $purifier->purify($field_label);
@@ -978,7 +978,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
                     $html .= '<td class="tracker_report_table_column_title">';
                     if (! isset($column['artlink_nature']) && $column['field']->canBeUsedToSortReport()) {
-                        $html .= '<a href="' . $sort_url . '">';
+                        $html .= '<a href="' . $purifier->purify($sort_url) . '">';
                         $html .= $label;
                         $html .= '</a>';
                     } else {
@@ -989,7 +989,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if (! isset($column['artlink_nature']) && isset($sort_columns[$key])) {
                         $html .= '<td class="tracker_report_table_column_caret">';
                         if ($column['field']->canBeUsedToSortReport()) {
-                            $html .= '<a href="' . $sort_url . '">';
+                            $html .= '<a href="' . $purifier->purify($sort_url) . '">';
                             $html .= $this->getSortIcon($sort_columns[$column['field']->getId()]['is_desc']);
                             $html .= '</a>';
                         } else {
@@ -1129,6 +1129,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             // test if first result is valid (if yes, we consider that others are valid too)
             if (! empty($results[0])) {
                 $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+                $purifier = Codendi_HTMLPurifier::instance();
                 //extract the first results
                 $first_result = array_shift($results);
                 //loop through it
@@ -1166,8 +1167,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         }
 
                         if ($display_extracolumn) {
-                            $html .= '<td class="' . $classname . '" width="1">';
-                            $html .= '<span><input type="checkbox" name="' . $name . '[]" value="' . $row['id'] . '" ' . $checked . ' /></span>';
+                            $html .= '<td class="' . $purifier->purify($classname) . '" width="1">';
+                            $html .= '<span><input type="checkbox" name="' . $purifier->purify($name) . '[]" value="' . $purifier->purify($row['id']) . '" ' . $checked . ' /></span>';
                             $html .= '</td>';
                         }
                     }
@@ -1184,8 +1185,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $html .= '<a
                             class="direct-link-to-artifact"
                             data-test="direct-link-to-artifact"
-                            href="' . $url . '"
-                            title="' . dgettext('tuleap-tracker', 'Show') . ' artifact #' . $row['id'] . '">';
+                            href="' . $purifier->purify($url) . '"
+                            title="' . $purifier->purify(dgettext('tuleap-tracker', 'Show') . ' artifact #' . $row['id']) . '">';
                         $html .= '<i class="fa fa-edit"></i>';
                         $html .= '</td>';
                     }
@@ -1193,7 +1194,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if ($column['field']->isUsed()) {
                             $field_name = $column['field']->name;
                             $value      = isset($row[$field_name]) ? $row[$field_name] : null;
-                            $html      .= '<td data-column-id="' . $key . '">';
+                            $html      .= '<td data-column-id="' . $purifier->purify($key) . '">';
 
                             if (isset($column['artlink_nature'])) {
                                 $html .= $column['field']->fetchChangesetValueForNature(
@@ -1220,7 +1221,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $artifact_id = $row['id'];
                     if (isset($matching_ids['nature'][$artifact_id])) {
                         $nature        = $matching_ids['nature'][$artifact_id];
-                        $forward_label = Codendi_HTMLPurifier::instance()->purify($nature->forward_label);
+                        $forward_label = $purifier->purify($nature->forward_label);
                         $html         .= '<td class="tracker_formelement_read_and_edit_read_section">' . $forward_label . '</td>';
                         if (! $read_only) {
                             $project           = $this->report->getTracker()->getProject();
