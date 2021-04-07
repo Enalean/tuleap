@@ -27,7 +27,7 @@ use HTTPRequest;
 use Project;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutDensityVariants;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\ProjectPrivacyPresenter;
@@ -79,7 +79,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
     private function includeCssFiles(BaseLayout $layout): void
     {
         $layout->addCssAsset(
-            new CssAssetWithoutDensityVariants(
+            new CssAsset(
                 $this->getAssets(),
                 'baseline'
             )
