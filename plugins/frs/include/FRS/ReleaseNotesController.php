@@ -37,7 +37,7 @@ use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\REST\v1\ReleasePermissionsForGroupsBuilder;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutDensityVariants;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -132,7 +132,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         );
 
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('tuleap-frs.js'));
-        $layout->addCssAsset(new CssAssetWithoutDensityVariants($this->assets, 'frs'));
+        $layout->addCssAsset(new CssAsset($this->assets, 'frs'));
 
         $translated_title = sprintf(dgettext('tuleap-frs', 'Release %s - Release Notes'), $release->getName());
         $project          = $release->getProject();

@@ -25,7 +25,7 @@ namespace Tuleap\TestManagement;
 use Feedback;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutDensityVariants;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -61,7 +61,7 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
         $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('mermaid.js'));
         $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testmanagement.js'));
         $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testmanagement-admin.js'));
-        $layout->addCssAsset(new CssAssetWithoutDensityVariants($this->testmanagement_assets, 'burningparrot'));
+        $layout->addCssAsset(new CssAsset($this->testmanagement_assets, 'burningparrot'));
 
         try {
             $this->legacy_router->route($request);

@@ -2601,6 +2601,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             __DIR__ . '/../../../../../src/www/assets/trackers',
             '/assets/trackers'
         );
-        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutDensityVariants($assets, 'tracker-bp')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAsset($assets, 'tracker-bp')]);
     }
 }

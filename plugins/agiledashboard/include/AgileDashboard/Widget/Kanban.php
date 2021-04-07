@@ -36,7 +36,7 @@ use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutDensityVariants;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Widget;
@@ -265,7 +265,7 @@ abstract class Kanban extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutDensityVariants($this->getIncludeAssets(), 'kanban')]);
+        return new CssAssetCollection([new CssAsset($this->getIncludeAssets(), 'kanban')]);
     }
 
     public function hasPreferences($widget_id)

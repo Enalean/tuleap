@@ -192,7 +192,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $theme_variant = new ThemeVariant();
         $variant_used  = $theme_variant->getVariantForUser($current_user);
 
-        $tlp_vars = new \Tuleap\Layout\CssAssetWithoutDensityVariants($include_assets, 'tlp-vars');
+        $tlp_vars = new \Tuleap\Layout\CssAsset($include_assets, 'tlp-vars');
 
         return [
             $include_assets->getFileURL('FlamingParrot/' . $variant_used . '.css'),

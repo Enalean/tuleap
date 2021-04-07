@@ -180,7 +180,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             '/assets/pullrequest'
         );
 
-        $css_assets = new \Tuleap\Layout\CssAssetWithoutDensityVariants(
+        $css_assets = new \Tuleap\Layout\CssAsset(
             $assets,
             'repository'
         );
