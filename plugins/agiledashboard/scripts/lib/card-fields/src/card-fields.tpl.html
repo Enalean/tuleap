@@ -23,6 +23,13 @@
         </div>
         <div
                 class="extra-card-field-content"
+                ng-if="card_ctrl.cardFieldIsOpenList(card_field.type) && card_field.bind_value_objects.length > 0 && card_ctrl.isListBoundToAValueDifferentFromNone(card_field.bind_value_objects)"
+        >
+            <span class="extra-card-field-title">{{ card_field.label }}: </span>
+            <span ng-bind-html="card_ctrl.getCardFieldListValues(card_field.bind_value_objects, card_ctrl.filter_terms)"></span>
+        </div>
+        <div
+                class="extra-card-field-content"
                 ng-if="card_ctrl.cardFieldIsDate(card_field.type) && card_field.value"
         >
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
