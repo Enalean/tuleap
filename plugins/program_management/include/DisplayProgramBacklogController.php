@@ -27,7 +27,7 @@ use PFUser;
 use program_managementPlugin;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutDensityVariants;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -110,7 +110,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
         $assets = $this->getAssets();
-        $layout->addCssAsset(new CssAssetWithoutDensityVariants($assets, 'program_management'));
+        $layout->addCssAsset(new CssAsset($assets, 'program_management'));
 
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management.js'));

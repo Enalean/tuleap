@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,14 +19,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Layout;
 
-class CssAssetWithoutDensityVariants extends CssAsset
+final class CssAssetWithDensityVariants extends CssAsset
 {
     public function getFileURL(ThemeVariation $variant): string
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorSuffix() . '.css');
+        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
     }
 }

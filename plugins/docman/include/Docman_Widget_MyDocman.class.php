@@ -207,6 +207,6 @@ class Docman_Widget_MyDocman extends Widget
             __DIR__ . '/../../../src/www/assets/docman/',
             '/assets/docman'
         );
-        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutDensityVariants($theme_include_assets, 'burningparrot-style')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAsset($theme_include_assets, 'burningparrot-style')]);
     }
 }

@@ -21,9 +21,9 @@
 
 namespace Tuleap\Layout;
 
-class CssAssetWithoutVariantDeclinaisons extends CssAsset
+final class CssAssetWithoutVariantDeclinaisons extends CssAsset
 {
-    public function getFileURL(ThemeVariation $variant)
+    public function getFileURL(ThemeVariation $variant): string
     {
         return $this->include_assets->getFileURL($this->name . '.css');
     }

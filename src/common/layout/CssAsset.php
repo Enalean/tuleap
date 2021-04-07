@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,13 +19,21 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Layout;
 
 class CssAsset
 {
-    /** @var IncludeAssets */
+    /**
+     * @var IncludeAssets
+     * @psalm-readonly
+     */
     protected $include_assets;
-    /** @var string */
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     protected $name;
 
     public function __construct(IncludeAssets $include_assets, $name)
@@ -34,12 +42,12 @@ class CssAsset
         $this->name           = $name;
     }
 
-    public function getFileURL(ThemeVariation $variant)
+    public function getFileURL(ThemeVariation $variant): string
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
+        return $this->include_assets->getFileURL($this->name . $variant->getFileColorSuffix() . '.css');
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return $this->include_assets->getPath($this->name);
     }

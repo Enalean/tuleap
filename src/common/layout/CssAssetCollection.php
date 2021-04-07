@@ -35,17 +35,14 @@ class CssAssetCollection
         }
     }
 
-    private function addWithoutDuplicate(CssAsset $asset)
+    private function addWithoutDuplicate(CssAsset $asset): void
     {
         if (! isset($this->css_assets[$asset->getPath()])) {
             $this->css_assets[$asset->getPath()] = $asset;
         }
     }
 
-    /**
-     * @return CssAssetCollection
-     */
-    public function merge(CssAssetCollection $collection)
+    public function merge(CssAssetCollection $collection): CssAssetCollection
     {
         $all_assets = array_merge($this->css_assets, $collection->getDeduplicatedAssets());
         return new CssAssetCollection($all_assets);
@@ -54,7 +51,7 @@ class CssAssetCollection
     /**
      * @return CssAsset[]
      */
-    public function getDeduplicatedAssets()
+    public function getDeduplicatedAssets(): array
     {
         return array_values($this->css_assets);
     }
