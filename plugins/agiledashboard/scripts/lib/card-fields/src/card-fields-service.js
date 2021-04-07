@@ -10,6 +10,7 @@ function CardFieldsService($sce, $filter) {
     return {
         cardFieldIsSimpleValue,
         cardFieldIsList,
+        cardFieldIsOpenList,
         cardFieldIsText,
         cardFieldIsDate,
         cardFieldIsFile,
@@ -45,12 +46,15 @@ function CardFieldsService($sce, $filter) {
             case "msb":
             case "rb":
             case "cb":
-            case "tbl":
             case "shared":
                 return true;
             default:
                 return false;
         }
+    }
+
+    function cardFieldIsOpenList(type) {
+        return type === "tbl";
     }
 
     function cardFieldIsDate(type) {
