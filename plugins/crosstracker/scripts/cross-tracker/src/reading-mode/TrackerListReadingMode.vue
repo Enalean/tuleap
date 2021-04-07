@@ -36,31 +36,41 @@
             class="cross-tracker-reading-mode-trackers-empty"
             v-if="no_trackers_in_report"
             v-translate
+            data-test="empty-state"
         >
             No trackers selected
         </div>
     </div>
 </template>
-<script>
-export default {
-    name: "TrackerListReadingMode",
-    props: {
-        readingCrossTrackerReport: Object,
-    },
-    computed: {
-        no_trackers_in_report() {
-            return this.readingCrossTrackerReport.areTrackersEmpty();
-        },
-        trackers() {
-            const trackers = [...this.readingCrossTrackerReport.getTrackers()];
-            return trackers.map(({ tracker, project }) => {
-                return {
-                    id: tracker.id,
-                    tracker_label: tracker.label,
-                    project_label: project.label,
-                };
-            });
-        },
-    },
-};
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
+import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
+
+interface TrackerWithProject {
+    id: number;
+    tracker_label: string;
+    project_label: string;
+}
+
+@Component
+export default class TrackerListReadingMode extends Vue {
+    @Prop({ required: true })
+    readonly readingCrossTrackerReport!: ReadingCrossTrackerReport;
+
+    get no_trackers_in_report(): boolean {
+        return this.readingCrossTrackerReport.areTrackersEmpty();
+    }
+
+    get trackers(): TrackerWithProject[] {
+        const trackers = [...this.readingCrossTrackerReport.getTrackers()];
+        return trackers.map(({ tracker, project }) => {
+            return {
+                id: tracker.id,
+                tracker_label: tracker.label,
+                project_label: project.label,
+            };
+        });
+    }
+}
 </script>

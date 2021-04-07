@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { ReadingReport, TrackerAndProject } from "../type";
+import type { TrackerAndProject } from "../type";
+import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
 
 export default class ReadingCrossTrackerReport {
     trackers: Map<number, TrackerAndProject>;
@@ -39,7 +40,7 @@ export default class ReadingCrossTrackerReport {
         return this.trackers.size <= 0;
     }
 
-    duplicateFromReport(report: ReadingReport): void {
+    duplicateFromReport(report: BackendCrossTrackerReport): void {
         this.trackers = report.trackers;
         this.expert_query = report.expert_query;
     }

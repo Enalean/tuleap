@@ -27,6 +27,7 @@
         >
             <tracker-list-reading-mode
                 v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
+                data-test="tracker-list-reading-mode"
             />
             <div class="reading-mode-query" v-if="is_expert_query_not_empty">
                 {{ readingCrossTrackerReport.expert_query }}
@@ -36,6 +37,7 @@
             <button
                 class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
                 v-on:click="cancelReport()"
+                data-test="cross-tracker-cancel-report"
                 v-translate
             >
                 Cancel
@@ -53,73 +55,85 @@
         </div>
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { updateReport } from "../api/rest-querier";
+import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+import { State } from "vuex-class";
+import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
+import Vue from "vue";
 
-export default {
+@Component({
     components: { TrackerListReadingMode },
-    props: {
-        backendCrossTrackerReport: Object,
-        readingCrossTrackerReport: Object,
-    },
-    data() {
-        return {
-            is_loading: false,
-        };
-    },
-    computed: {
-        ...mapState(["is_report_saved", "report_id", "is_user_admin"]),
-        is_expert_query_not_empty() {
-            return this.readingCrossTrackerReport.expert_query !== "";
-        },
-        is_save_disabled() {
-            return this.is_loading || this.$store.getters.has_error_message;
-        },
-    },
-    methods: {
-        switchToWritingMode() {
-            if (!this.is_user_admin) {
-                return;
+})
+export default class ReadingMode extends Vue {
+    @Prop({ required: true })
+    readonly readingCrossTrackerReport!: ReadingCrossTrackerReport;
+
+    @Prop({ required: true })
+    readonly backendCrossTrackerReport!: BackendCrossTrackerReport;
+
+    @State
+    private readonly is_report_saved!: boolean;
+
+    @State
+    private readonly report_id!: number;
+
+    @State
+    private readonly is_user_admin!: boolean;
+
+    is_loading = false;
+
+    get is_save_disabled(): boolean {
+        return this.is_loading || this.$store.getters.has_error_message;
+    }
+
+    get is_expert_query_not_empty(): boolean {
+        return this.readingCrossTrackerReport.expert_query !== "";
+    }
+
+    switchToWritingMode(): void {
+        if (!this.is_user_admin) {
+            return;
+        }
+
+        this.$emit("switch-to-writing-mode");
+    }
+
+    async saveReport(): Promise<void> {
+        if (this.is_save_disabled) {
+            return;
+        }
+
+        this.is_loading = true;
+
+        this.backendCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
+        const tracker_ids = this.backendCrossTrackerReport.getTrackerIds();
+        const new_expert_query = this.backendCrossTrackerReport.getExpertQuery();
+        try {
+            const { trackers, expert_query } = await updateReport(
+                this.report_id,
+                tracker_ids,
+                new_expert_query
+            );
+            this.backendCrossTrackerReport.init(trackers, expert_query);
+
+            this.$emit("saved");
+        } catch (error) {
+            if (Object.prototype.hasOwnProperty.call(error, "response")) {
+                const error_json = await error.response.json();
+                this.$store.commit("setErrorMessage", error_json.error.message);
             }
+        } finally {
+            this.is_loading = false;
+        }
+    }
 
-            this.$emit("switch-to-writing-mode");
-        },
-
-        async saveReport() {
-            if (this.is_save_disabled) {
-                return;
-            }
-
-            this.is_loading = true;
-
-            this.backendCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-            const tracker_ids = this.backendCrossTrackerReport.getTrackerIds();
-            const new_expert_query = this.backendCrossTrackerReport.getExpertQuery();
-            try {
-                const { trackers, expert_query } = await updateReport(
-                    this.report_id,
-                    tracker_ids,
-                    new_expert_query
-                );
-                this.backendCrossTrackerReport.init(trackers, expert_query);
-
-                this.$emit("saved");
-            } catch (error) {
-                if (Object.prototype.hasOwnProperty.call(error, "response")) {
-                    const error_json = await error.response.json();
-                    this.$store.commit("setErrorMessage", error_json.error.message);
-                }
-            } finally {
-                this.is_loading = false;
-            }
-        },
-
-        cancelReport() {
-            this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
-            this.$store.commit("discardUnsavedReport");
-        },
-    },
-};
+    cancelReport(): void {
+        this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
+        this.$store.commit("discardUnsavedReport");
+    }
+}
 </script>
