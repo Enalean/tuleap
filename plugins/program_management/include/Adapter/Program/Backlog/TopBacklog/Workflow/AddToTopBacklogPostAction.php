@@ -104,7 +104,7 @@ class AddToTopBacklogPostAction extends Transition_PostAction
             return;
         }
 
-        $top_backlog_change = new TopBacklogChange([$artifact->getId()], []);
+        $top_backlog_change = new TopBacklogChange([$artifact->getId()], [], false);
         $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user);
     }
 }

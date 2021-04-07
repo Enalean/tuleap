@@ -19,7 +19,7 @@
 
 import { patch } from "tlp";
 
-export async function addElementToTopBackLog(
+export async function moveElementFromProgramIncrementToTopBackLog(
     project_id: number,
     element_id: number
 ): Promise<void> {
@@ -30,6 +30,7 @@ export async function addElementToTopBackLog(
         body: JSON.stringify({
             add: [{ id: element_id }],
             remove: [],
+            remove_from_program_increment_to_add_to_the_backlog: true,
         }),
     });
 }

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
@@ -31,6 +32,7 @@ use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class ProcessTopBacklogChangeTest extends TestCase
 {
@@ -52,18 +54,30 @@ final class ProcessTopBacklogChangeTest extends TestCase
      * @var ProcessTopBacklogChange
      */
     private $process_top_backlog_change;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinkUpdater
+     */
+    private $artifact_link_updater;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsDAO
+     */
+    private $program_increment_dao;
 
     protected function setUp(): void
     {
-        $this->artifact_factory     = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->permissions_verifier = \Mockery::mock(PrioritizeFeaturesPermissionVerifier::class);
-        $this->dao                  = \Mockery::mock(ArtifactsExplicitTopBacklogDAO::class);
+        $this->artifact_factory      = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->permissions_verifier  = \Mockery::mock(PrioritizeFeaturesPermissionVerifier::class);
+        $this->dao                   = \Mockery::mock(ArtifactsExplicitTopBacklogDAO::class);
+        $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
+        $this->program_increment_dao = \Mockery::mock(ProgramIncrementsDAO::class);
 
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
             $this->artifact_factory,
             $this->permissions_verifier,
             $this->dao,
-            new DBTransactionExecutorPassthrough()
+            new DBTransactionExecutorPassthrough(),
+            $this->artifact_link_updater,
+            $this->program_increment_dao
         );
     }
 
@@ -88,12 +102,12 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
-            new TopBacklogChange([742, 790], [741, 789]),
+            new TopBacklogChange([742, 790], [741, 789], false),
             $user
         );
     }
 
-    public function testAndAndRemoveOnlyArtifactThatArePartOfTheRequestedProgram(): void
+    public function testAddAndRemoveOnlyArtifactThatArePartOfTheRequestedProgram(): void
     {
         $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
@@ -108,7 +122,32 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
-            new TopBacklogChange([964], [963]),
+            new TopBacklogChange([964], [963], false),
+            $user
+        );
+    }
+
+    public function testAddFeatureInTopBacklogAndRemoveLinkToProgramIncrement(): void
+    {
+        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true)->once();
+        $user = UserTestBuilder::aUser()->build();
+
+        $feature = \Mockery::mock(Artifact::class);
+        $tracker = \Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturn(102)->once();
+        $feature->shouldReceive('getTracker')->andReturn($tracker)->once();
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 964)->andReturn($feature)->once();
+
+        $this->program_increment_dao->shouldReceive("getProgramIncrementsLinkToFeatureId")->with(964)->once()->andReturn([["id" => 63]]);
+        $program_increment = \Mockery::mock(Artifact::class);
+        $this->artifact_factory->shouldReceive('getArtifactById')->with(63)->andReturn($program_increment)->once();
+
+        $this->dao->shouldReceive('addArtifactsToTheExplicitTopBacklog')->once();
+        $this->artifact_link_updater->shouldReceive("updateArtifactLinks")->once()->with($user, $program_increment, [], [964], "");
+
+        $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
+            new Program(102),
+            new TopBacklogChange([964], [], true),
             $user
         );
     }
@@ -122,7 +161,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->expectException(CannotManipulateTopBacklog::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
-            new TopBacklogChange([], [403]),
+            new TopBacklogChange([], [403], false),
             UserTestBuilder::aUser()->build()
         );
     }

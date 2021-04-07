@@ -18,14 +18,14 @@
  */
 
 import * as tlp from "tlp";
-import { addElementToTopBackLog } from "./add-to-top-backlog";
+import { moveElementFromProgramIncrementToTopBackLog } from "./add-to-top-backlog";
 
 jest.mock("tlp");
 
 describe("Add to top backlog", () => {
-    it("Add element to top backlog", async () => {
+    it("Move element from program increment to top backlog", async () => {
         const tlpPatch = jest.spyOn(tlp, "patch");
-        await addElementToTopBackLog(101, 1);
+        await moveElementFromProgramIncrementToTopBackLog(101, 1);
 
         expect(tlpPatch).toHaveBeenCalledWith(`/api/projects/101/program_backlog`, {
             headers: {
@@ -34,6 +34,7 @@ describe("Add to top backlog", () => {
             body: JSON.stringify({
                 add: [{ id: 1 }],
                 remove: [],
+                remove_from_program_increment_to_add_to_the_backlog: true,
             }),
         });
     });
