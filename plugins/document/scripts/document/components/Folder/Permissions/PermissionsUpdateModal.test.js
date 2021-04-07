@@ -24,7 +24,7 @@ import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 import * as tlp from "tlp";
-import * as handle_errors from "../../../store/actions-helpers/handle-errors.js";
+import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import EventBus from "../../../helpers/event-bus.js";
 
 jest.mock("tlp");

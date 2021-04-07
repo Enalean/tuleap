@@ -63,7 +63,7 @@ import EventBus from "../../../helpers/event-bus.js";
 import FolderGlobalMetadataForCreate from "../Metadata/FolderMetadata/FolderGlobalMetadataForCreate.vue";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
-import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
+import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/creation-data-transformatter-helper";
 
 export default {

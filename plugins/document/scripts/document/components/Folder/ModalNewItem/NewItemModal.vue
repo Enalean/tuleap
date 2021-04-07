@@ -97,7 +97,7 @@ import FileProperties from "../Property/FileProperties.vue";
 import OtherInformationMetadataForCreate from "../Metadata/DocumentMetadata/OtherInformationMetadataForCreate.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper";
-import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
+import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/creation-data-transformatter-helper";
 

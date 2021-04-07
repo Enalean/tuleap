@@ -66,7 +66,7 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import PermissionsForGroupsSelector from "./PermissionsForGroupsSelector.vue";
-import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
+import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
 
 export default {

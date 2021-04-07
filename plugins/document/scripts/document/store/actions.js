@@ -51,7 +51,7 @@ import {
     handleErrorsForDeletionModal,
     handleErrorsForDocument,
     handleErrorsForModal,
-} from "./actions-helpers/handle-errors.js";
+} from "./actions-helpers/handle-errors";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import {
