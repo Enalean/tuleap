@@ -129,6 +129,10 @@ class Config
      */
     private function getProperty(Project $project, string $key)
     {
+        if ($project->isError()) {
+            return false;
+        }
+
         $project_id = $project->getID();
 
         if (! isset($this->properties[$project_id])) {
