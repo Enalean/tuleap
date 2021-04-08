@@ -36,7 +36,7 @@ if (isset($GLOBALS['TULEAP_MW_PROJECT'])) {
     $wiki_name = $GLOBALS['TULEAP_MW_PROJECT'];
 } else {
     $uri       = explode('/', $_SERVER['REQUEST_URI']);
-    $wiki_name = $uri[4];
+    $wiki_name = $uri[4] ?? '';
 }
 
 $mediawikipath = '/usr/share/mediawiki-tuleap-123';

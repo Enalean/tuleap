@@ -99,6 +99,11 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
     $group = $project_manager->getProjectByUnixName($fusionforgeproject);
 
+    if ($group === null || $group->isError()) {
+        http_response_code(404);
+        exit_error(dgettext('tuleap-mediawiki', 'Mediawiki service is not active in this project'));
+    }
+
     $IP = '/usr/share/mediawiki-tuleap-123';
 
     $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
