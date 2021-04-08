@@ -253,6 +253,29 @@ describe(`Popovers`, () => {
                     cleanup();
                 });
             });
+
+            describe("when I hit the `Escape` key", () => {
+                it("does not do anything when hitting the `Escape` key if the popover is already closed", () => {
+                    doc.body.dispatchEvent(
+                        new KeyboardEvent("keyup", { key: "Escape", bubbles: true })
+                    );
+                    expectThePopoverToBeHidden(content_element);
+                });
+
+                it("hides the popover when hitting the `Escape` key", () => {
+                    trigger_element.dispatchEvent(new MouseEvent("click"));
+                    doc.body.dispatchEvent(
+                        new KeyboardEvent("keyup", { key: "Escape", bubbles: true })
+                    );
+                    expectThePopoverToBeHidden(content_element);
+                });
+
+                it("will not hide the popover if hitting a key other than `Escape`", () => {
+                    trigger_element.dispatchEvent(new MouseEvent("click"));
+                    doc.body.dispatchEvent(new KeyboardEvent("keyup", { key: "a", bubbles: true }));
+                    expectThePopoverToBeShown(content_element);
+                });
+            });
         });
 
         it(`when I click on a [data-dismiss=popover] element,

@@ -106,7 +106,7 @@ function getPopperOptions(anchor: HTMLElement, options: PopoverOptions): PopperO
     };
 }
 
-type EventType = "click" | "mouseout" | "mouseover";
+type EventType = "click" | "mouseout" | "mouseover" | "keyup";
 
 interface EventListener {
     element: EventTarget;
@@ -133,6 +133,7 @@ function buildListeners(
         const listeners = [
             buildTriggerClickListener(doc, popover_trigger, popover_content, popper),
             buildDocumentClickListener(doc, popover_trigger, popover_content),
+            buildEscapeListener(doc, popover_content),
         ];
         for (const dismiss of dismiss_buttons) {
             listeners.push(buildDismissClickListener(doc, dismiss));
@@ -223,6 +224,21 @@ function buildDocumentClickListener(
                 findClosestElement(doc, event.target, popover_content) === null &&
                 findClosestElement(doc, event.target, popover_trigger) === null
             ) {
+                hideAllShownPopovers(doc);
+            }
+        },
+    };
+}
+
+function buildEscapeListener(doc: Document, popover_content: Element): EventListener {
+    return {
+        element: doc,
+        type: "keyup",
+        handler(event): void {
+            if (!(event instanceof KeyboardEvent) || event.key !== "Escape") {
+                return;
+            }
+            if (popover_content.classList.contains(POPOVER_SHOWN_CLASS_NAME)) {
                 hideAllShownPopovers(doc);
             }
         },

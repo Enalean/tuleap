@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import '../../../tlp/src/scss/components/popovers';
+
 $nav-dropdown-content-border-radius: 4px;
 $dropdown-width: 250px;
 
@@ -163,12 +165,6 @@ header {
 .user-nav {
     position: relative;
 
-    &.open > .dropdown-menu {
-        transform: translateY(10px);
-        opacity: 1;
-        pointer-events: auto;
-    }
-
     > .nav-link {
         margin: 0 0 0 $tlp-large-spacing;
         transition: opacity ease-in-out 75ms;
@@ -181,45 +177,23 @@ header {
         }
     }
 
-    > .dropdown-menu {
-        display: flex !important;
-        flex-direction: column;
+    > .nav-dropdown {
         width: $dropdown-width;
-        margin: 10px 0 0;
-        padding: 0;
-        transform: translateY(0);
-        transition: transform 75ms ease-out, opacity 75ms ease-out;
-        border: 0;
-        border-radius: 4px;
-        opacity: 0;
-        background-color: $white;
-        box-shadow: 0 0 0 1px transparentize($sidebar-background, .97),
-            0 6px 12px -5px transparentize($sidebar-background, .85);
-        pointer-events: none;
 
-        > .dropdown-arrow {
-            position: absolute;
-            top: -20px;
-            right: 10px;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
+        > .tlp-popover-arrow {
             border-bottom-color: $sidebar-background;
         }
 
-        > .dropdown-header {
-            display: flex;
-            align-items: center;
+        > .tlp-popover-header {
             min-height: 4px;
             padding: 0 $tlp-small-spacing;
-            border-radius: 4px 4px 0 0;
             background: $sidebar-background;
         }
-    }
-}
 
-.new-nav > .dropdown-menu > .dropdown-arrow {
-    right: 34px; // magic value to match TLP popover arrow placement
+        > .tlp-popover-body {
+            padding: 0;
+        }
+    }
 }
 
 .nav-dropdown-item {
@@ -292,6 +266,7 @@ header {
         width: 38px;
         height: 38px;
         margin: 0 0 0 $tlp-small-spacing;
+        padding: 0;
         overflow: hidden;
         border: 1px solid $white;
         border-radius: 50%;
@@ -300,14 +275,15 @@ header {
             0 -1px 0 rgba(0, 0, 0, .03);
         cursor: pointer;
 
-        &:hover {
+        &:hover,
+        &:focus {
             box-shadow: 0 1px 2px rgba(0, 0, 0, .08),
                 0 0 1px rgba(0, 0, 0, .08),
                 0 -1px 0 rgba(0, 0, 0, .03);
         }
     }
 
-    > .dropdown-menu > .dropdown-header > .user-avatar {
+    > .nav-dropdown > .tlp-popover-header > .user-avatar {
         flex: 0 0 auto;
         width: 40px;
         height: 40px;
