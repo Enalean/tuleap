@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement;
 
 use REST_TestDataBuilder;
-use TestManagementDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -39,22 +38,6 @@ final class DefinitionsTest extends BaseTest
         $definition         = $this->getResponse($definition_request)->json();
 
         $this->assertEquals($definition, $first_definition);
-    }
-
-    public function testGetArtifactDoesNotReturnsTheStepDefFieldBecauseWeHaveNoMeansToSetItProgrammaticallyYet(): void
-    {
-        $first_definition = $this->getFirstDefinition(TestManagementDataBuilder::USER_TESTER_NAME);
-
-        $artifact_request = $this->client->get('artifacts/' . $first_definition['id']);
-        $artifact         = $this->getResponse($artifact_request)->json();
-
-        $ttmstepdef = array_filter(
-            $artifact['values'],
-            static function (array $value): bool {
-                return $value['type'] === 'ttmstepdef';
-            }
-        );
-        self::assertEmpty($ttmstepdef);
     }
 
     public function testGetDefinitionWithRESTReadOnlyUser(): void

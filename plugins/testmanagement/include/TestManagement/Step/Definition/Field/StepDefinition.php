@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use Codendi_HTMLPurifier;
 use LogicException;
+use Luracast\Restler\RestException;
 use PFUser;
 use ReferenceManager;
 use TemplateRendererFactory;
@@ -32,6 +33,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Step\Definition\Field\XML\XMLStepDefinition;
 use Tuleap\TestManagement\Step\Step;
+use Tuleap\TestManagement\Step\StepChecker;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
@@ -248,11 +250,39 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     /**
-     * @return mixed
+     * @throws RestException
      */
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
-        return null;
+        if (
+            ! isset($value["value"]) || count(
+                $value["value"]
+            ) === 0 || $this->areWeTryingToUpdateAnExistingStepDefinition($artifact)
+        ) {
+            return null;
+        }
+        return StepDefinitionDataConverter::convertStepDefinitionFromRESTFormatToDBCompatibleFormat($value["value"]);
+    }
+
+    /**
+     * @throws RestException
+     */
+    public function getFieldDataFromRESTValueByField(array $value, ?Artifact $artifact = null)
+    {
+        if (
+            ! isset($value["value"]) || count(
+                $value["value"]
+            ) === 0 || $this->areWeTryingToUpdateAnExistingStepDefinition($artifact)
+        ) {
+            return null;
+        }
+
+        return StepDefinitionDataConverter::convertStepDefinitionFromRESTFormatToDBCompatibleFormat($value["value"]);
+    }
+
+    private function areWeTryingToUpdateAnExistingStepDefinition(?Artifact $artifact): bool
+    {
+        return isset($artifact);
     }
 
     protected function validate(Artifact $artifact, $value)
@@ -276,25 +306,19 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
                 return false;
             }
 
-            if (! $this->isSubmittedFormatValid($value, 'description_format', $key)) {
+            if (! isset($value['description_format'][$key]) || ! isset($value['expected_results_format'][$key])) {
                 return false;
             }
 
-            if (! $this->isSubmittedFormatValid($value, 'expected_results_format', $key)) {
+            if (
+                ! StepChecker::isSubmittedFormatValid($value['description_format'][$key])
+                || ! StepChecker::isSubmittedFormatValid($value['expected_results_format'][$key])
+            ) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    private function isSubmittedFormatValid(array $value, string $format_key, string $key): bool
-    {
-        return isset($value[$format_key][$key])
-            && in_array(
-                $value[$format_key][$key],
-                [Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT, Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT]
-            );
     }
 
     private function doesUserWantToRemoveAllSteps(array $value): bool

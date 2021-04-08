@@ -86,7 +86,7 @@ final class ProjectTest extends BaseTest
         $response    = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_definitions"));
         $definitions = $response->json();
 
-        $this->assertCount(4, $definitions);
+        $this->assertCount(6, $definitions);
     }
 
     public function testGetDefinitionsWithRESTReadOnlyUser(): void
@@ -98,6 +98,6 @@ final class ProjectTest extends BaseTest
 
         $definitions = $response->json();
 
-        $this->assertCount(4, $definitions);
+        $this->assertCount(6, $definitions);
     }
 }

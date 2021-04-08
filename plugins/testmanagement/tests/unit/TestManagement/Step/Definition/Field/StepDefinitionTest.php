@@ -26,88 +26,91 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class StepDefinitionTest extends TestCase
+final class StepDefinitionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testGetFieldDataFromRESTValueReturnsNullSinceFieldCannotBeUpdatedViaREST(): void
-    {
-        $field = new StepDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
+    /**
+     * @var StepDefinition
+     */
+    private $field;
 
-        self::assertNull($field->getFieldDataFromRESTValue([]));
+    protected function setUp(): void
+    {
+        $this->field = new StepDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
     }
 
     public function testHasChangesReturnsFalseIfNewValuesIsNull(): void
     {
-        $field = new StepDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
-
-        self::assertFalse($field->hasChanges(
-            Mockery::mock(Artifact::class),
-            new StepDefinitionChangesetValue(
-                1,
-                Mockery::mock(Tracker_Artifact_Changeset::class),
-                $field,
-                false,
-                []
-            ),
-            null
-        ));
+        self::assertFalse(
+            $this->field->hasChanges(
+                Mockery::mock(Artifact::class),
+                new StepDefinitionChangesetValue(
+                    1,
+                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->field,
+                    false,
+                    []
+                ),
+                null
+            )
+        );
     }
 
     public function testHasChangesReturnsTrueIfNewValuesClearTheContent(): void
     {
-        $field = new StepDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
-
-        self::assertTrue($field->hasChanges(
-            Mockery::mock(Artifact::class),
-            new StepDefinitionChangesetValue(
-                1,
-                Mockery::mock(Tracker_Artifact_Changeset::class),
-                $field,
-                true,
+        self::assertTrue(
+            $this->field->hasChanges(
+                Mockery::mock(Artifact::class),
+                new StepDefinitionChangesetValue(
+                    1,
+                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->field,
+                    true,
+                    [
+                        new Step(
+                            1,
+                            'step',
+                            'html',
+                            '',
+                            'text',
+                            1
+                        )
+                    ]
+                ),
                 [
-                    new Step(
-                        1,
-                        'step',
-                        'html',
-                        '',
-                        'text',
-                        1
-                    )
-                ]
-            ),
-            [
                 'no_steps' => true
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function testHasChangesReturnsTrueIfContentChanged(): void
     {
-        $field = new StepDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
-
-        self::assertTrue($field->hasChanges(
-            Mockery::mock(Artifact::class),
-            new StepDefinitionChangesetValue(
-                1,
-                Mockery::mock(Tracker_Artifact_Changeset::class),
-                $field,
-                true,
+        self::assertTrue(
+            $this->field->hasChanges(
+                Mockery::mock(Artifact::class),
+                new StepDefinitionChangesetValue(
+                    1,
+                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->field,
+                    true,
+                    [
+                        new Step(
+                            1,
+                            'step',
+                            'html',
+                            '',
+                            'text',
+                            1
+                        )
+                    ]
+                ),
                 [
-                    new Step(
-                        1,
-                        'step',
-                        'html',
-                        '',
-                        'text',
-                        1
-                    )
-                ]
-            ),
-            [
                 'description' => [
                     'step updated'
                 ],
@@ -123,49 +126,114 @@ class StepDefinitionTest extends TestCase
                 'id' => [
                     1
                 ]
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function testHasChangesReturnsFalseIfContentDidNotChange(): void
     {
-        $field = new StepDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
-
-        self::assertFalse($field->hasChanges(
-            Mockery::mock(Artifact::class),
-            new StepDefinitionChangesetValue(
-                1,
-                Mockery::mock(Tracker_Artifact_Changeset::class),
-                $field,
-                true,
+        self::assertFalse(
+            $this->field->hasChanges(
+                Mockery::mock(Artifact::class),
+                new StepDefinitionChangesetValue(
+                    1,
+                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->field,
+                    true,
+                    [
+                        new Step(
+                            1,
+                            'step',
+                            'html',
+                            '',
+                            'text',
+                            1
+                        )
+                    ]
+                ),
                 [
-                    new Step(
-                        1,
-                        'step',
-                        'html',
-                        '',
-                        'text',
+                    'description'             => [
+                        'step'
+                    ],
+                    'description_format'      => [
+                        'html'
+                    ],
+                    'expected_results'        => [
+                        ''
+                    ],
+                    'expected_results_format' => [
+                        'text'
+                    ],
+                    'id'                      => [
                         1
-                    )
+                    ]
                 ]
-            ),
-            [
-                'description' => [
-                    'step'
+            )
+        );
+    }
+
+    public function testItReturnsTheConvertedRESTFormatInDBCompatibleFormatBeforeInsertion(): void
+    {
+        $steps = [
+            "value" => [
+                [
+                    "description"             => "some description",
+                    "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    "expected_results"        => "somme results",
+                    "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
                 ],
-                'description_format' => [
-                    'html'
-                ],
-                'expected_results' => [
-                    ''
-                ],
-                'expected_results_format' => [
-                    'text'
-                ],
-                'id' => [
-                    1
-                ]
+            ],
+        ];
+
+        $expected_converted_step = [
+            "description"             => ["some description"],
+            "description_format"      => [
+                Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+            ],
+            "expected_results"        => ["somme results"],
+            "expected_results_format" => [
+                Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ]
-        ));
+        ];
+
+
+        self::assertEquals($expected_converted_step, $this->field->getFieldDataFromRESTValue($steps));
+        self::assertEquals($expected_converted_step, $this->field->getFieldDataFromRESTValueByField($steps));
+    }
+
+    public function testItReturnsNullIfTheRESTStepDefinitionValueIsNotSet(): void
+    {
+        $steps = ["value" => null];
+
+
+        self::assertNull($this->field->getFieldDataFromRESTValue($steps));
+        self::assertNull($this->field->getFieldDataFromRESTValueByField($steps));
+    }
+
+    public function testItReturnsNullIfTheRESTStepDefinitionValueIsEmpty(): void
+    {
+        $steps = ["value" => []];
+
+
+        self::assertNull($this->field->getFieldDataFromRESTValue($steps));
+        self::assertNull($this->field->getFieldDataFromRESTValueByField($steps));
+    }
+
+    public function testItDoesNotAllowUpdatingAnExistingStepDefinition(): void
+    {
+        $steps = [
+            "value" => [
+                "description"             => "some description",
+                "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                "expected_results"        => "somme results",
+                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+            ],
+        ];
+
+        $artifact = Mockery::mock(Artifact::class);
+
+        self::assertNull($this->field->getFieldDataFromRESTValue($steps, $artifact));
+        self::assertNull($this->field->getFieldDataFromRESTValueByField($steps, $artifact));
     }
 }
