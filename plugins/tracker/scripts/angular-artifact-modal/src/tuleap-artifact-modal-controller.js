@@ -41,6 +41,7 @@ import {
     getTargetFieldPossibleValues,
     setUpFieldDependenciesActions,
 } from "./field-dependencies-helper.js";
+import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 
 export default ArtifactModalController;
 
@@ -52,7 +53,6 @@ ArtifactModalController.$inject = [
     "modal_model",
     "gettextCatalog",
     "displayItemCallback",
-    "TuleapArtifactModalValidateService",
     "TuleapArtifactModalLoading",
 ];
 
@@ -64,7 +64,6 @@ function ArtifactModalController(
     modal_model,
     gettextCatalog,
     displayItemCallback,
-    TuleapArtifactModalValidateService,
     TuleapArtifactModalLoading
 ) {
     const self = this,
@@ -174,7 +173,7 @@ function ArtifactModalController(
 
         uploadAllFileFields()
             .then(function () {
-                var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(
+                const validated_values = validateArtifactFieldsValues(
                     self.values,
                     isInCreationMode(),
                     self.new_followup_comment

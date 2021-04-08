@@ -30,6 +30,8 @@ import * as file_uploader from "./tuleap-artifact-modal-fields/file-field/file-u
 import * as is_uploading_in_ckeditor_state from "./tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import * as field_dependencies_helper from "./field-dependencies-helper.js";
 import { getTargetFieldPossibleValues } from "./field-dependencies-helper.js";
+import * as validate_artifact_field_value from "./validate-artifact-field-value.js";
+import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
@@ -38,7 +40,6 @@ describe("TuleapArtifactModalController", () => {
         controller_params,
         ArtifactModalController,
         tlp_modal,
-        TuleapArtifactModalValidateService,
         TuleapArtifactModalLoading,
         mockCallback,
         isInCreationMode,
@@ -49,24 +50,16 @@ describe("TuleapArtifactModalController", () => {
         isUploadingInCKEditor;
 
     beforeEach(() => {
-        angular.mock.module(artifact_modal_module, function ($provide) {
-            $provide.decorator("TuleapArtifactModalValidateService", function ($delegate) {
-                jest.spyOn($delegate, "validateArtifactFieldsValues").mockImplementation(() => {});
-
-                return $delegate;
-            });
-        });
+        angular.mock.module(artifact_modal_module, function () {});
 
         angular.mock.inject(function (
             _$controller_,
             $rootScope,
             _$q_,
             _$timeout_,
-            _TuleapArtifactModalValidateService_,
             _TuleapArtifactModalLoading_
         ) {
             $q = _$q_;
-            TuleapArtifactModalValidateService = _TuleapArtifactModalValidateService_;
             TuleapArtifactModalLoading = _TuleapArtifactModalLoading_;
 
             tlp_modal = {
@@ -103,7 +96,6 @@ describe("TuleapArtifactModalController", () => {
                     ],
                     color: "inca_silver",
                 },
-                TuleapArtifactModalValidateService,
                 TuleapArtifactModalLoading,
                 displayItemCallback: mockCallback,
             };
@@ -180,9 +172,10 @@ describe("TuleapArtifactModalController", () => {
 
     describe("submit() - Given a tracker id, field values, a callback function", () => {
         beforeEach(() => {
-            TuleapArtifactModalValidateService.validateArtifactFieldsValues.mockImplementation(
-                (values) => values
-            );
+            jest.spyOn(
+                validate_artifact_field_value,
+                "validateArtifactFieldsValues"
+            ).mockImplementation((values) => values);
             isUploadingInCKEditor.mockReturnValue(false);
             getAllFileFields.mockReturnValue([]);
         });
@@ -221,9 +214,11 @@ describe("TuleapArtifactModalController", () => {
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
             $scope.$apply();
 
-            expect(
-                TuleapArtifactModalValidateService.validateArtifactFieldsValues
-            ).toHaveBeenCalledWith(values, true, followup_comment);
+            expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
+                values,
+                true,
+                followup_comment
+            );
             expect(createArtifact).toHaveBeenCalledWith(39, values);
             expect(editArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
@@ -256,9 +251,11 @@ describe("TuleapArtifactModalController", () => {
             edit_request.resolve({ id: 8155 });
             $scope.$apply();
 
-            expect(
-                TuleapArtifactModalValidateService.validateArtifactFieldsValues
-            ).toHaveBeenCalledWith(values, false, followup_comment);
+            expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
+                values,
+                false,
+                followup_comment
+            );
             expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
