@@ -31,6 +31,7 @@ use TrackerXmlImport;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Request\NotFoundException;
 use Tuleap\TestManagement\Administration\AdminController;
 use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
 use Tuleap\TestManagement\Administration\FieldUsageDetector;
@@ -52,7 +53,7 @@ class Router
     private $tracker_factory;
 
     /**
-     * @var \Service
+     * @var \Service|null
      */
     private $service;
 
@@ -268,20 +269,14 @@ class Router
         return $header_title[$action_name];
     }
 
-    /**
-     * Retrieves the Agile Dashboard Service instance matching the request group id.
-     *
-     *
-     * @return \Service
-     */
-    private function getService(Codendi_Request $request)
+    private function getService(Codendi_Request $request): \Service
     {
-        if ($this->service == null) {
+        if ($this->service === null) {
             $project       = $request->getProject();
             $this->service = $project->getService('plugin_testmanagement');
         }
         if ($this->service === null) {
-            throw new \RuntimeException('Could not find TestManagement service');
+            throw new NotFoundException(dgettext('tuleap-testmanagement', "Test Management service is not active in this project"));
         }
 
         return $this->service;
@@ -301,16 +296,6 @@ class Router
         bool $without_project_in_breadcrumb
     ): void {
         $service = $this->getService($request);
-        if (! $service) {
-            exit_error(
-                $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText(
-                    'project_service',
-                    'service_not_used',
-                    dgettext('tuleap-testmanagement', 'Test Management')
-                )
-            );
-        }
 
         $project     = $request->getProject();
         $toolbar     = [];

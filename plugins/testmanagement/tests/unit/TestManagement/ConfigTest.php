@@ -26,6 +26,7 @@ namespace Tuleap\TestManagement;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use TrackerFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ConfigTest extends TestCase
 {
@@ -53,8 +54,7 @@ final class ConfigTest extends TestCase
 
     public function testItReturnsFalseIfTrackerIdIsNotFoundInProperty(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn(\TestHelper::arrayToDar([]));
         $this->assertFalse($this->config->getCampaignTrackerId($project));
@@ -62,8 +62,7 @@ final class ConfigTest extends TestCase
 
     public function testItReturnsFalseIfTrackerIsDeleted(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $properties = [
             'project_id' => 101,
@@ -84,8 +83,7 @@ final class ConfigTest extends TestCase
 
     public function testItReturnsTheTrackerId(): void
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $properties = [
             'project_id' => 101,

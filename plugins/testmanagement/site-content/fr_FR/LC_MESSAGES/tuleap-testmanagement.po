@@ -128,6 +128,9 @@ msgstr "Outil de suivi des exécutions de tests"
 msgid "Test Management"
 msgstr "Test Management"
 
+msgid "Test Management service is not active in this project"
+msgstr "Le service Test Management n'est pas actif dans ce projet"
+
 msgid "Test management tool"
 msgstr "Gestion des tests"
 
