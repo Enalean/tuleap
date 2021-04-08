@@ -24,7 +24,6 @@ namespace Tuleap\Project\Registration\Template;
 
 use PFUser;
 use Project;
-use Project_OneStepCreation_OneStepCreationRequest;
 use ProjectManager;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 
@@ -68,23 +67,6 @@ class TemplateFromProjectForCreation
         }
 
         return new self($project);
-    }
-
-    /**
-     * @throws InsufficientPermissionToUseProjectAsTemplateException
-     * @throws ProjectIDTemplateNotProvidedException
-     * @throws ProjectTemplateIDInvalidException
-     * @throws ProjectTemplateNotActiveException
-     */
-    public static function fromRegisterCreationRequest(
-        Project_OneStepCreation_OneStepCreationRequest $request,
-        ProjectManager $project_manager
-    ): self {
-        $template_id = $request->getTemplateId();
-        if ($template_id !== null) {
-            $template_id = (int) $template_id;
-        }
-        return self::fromData($project_manager, $request->getCurrentUser(), $template_id);
     }
 
     /**

@@ -463,9 +463,6 @@ msgstr ""
 msgid "Allow for all projects"
 msgstr "Autoriser pour tous les projets"
 
-msgid "Allow restricted users to be added to the project"
-msgstr "Autoriser l'ajout d'utilisateurs restreints dans ce projet."
-
 msgid "Allow to write informations for users on your dashboards using Markdown"
 msgstr "Permet d'écrire des informations en markdown sur les dashboards"
 
@@ -2144,9 +2141,6 @@ msgstr ""
 msgid "Nobody"
 msgstr "Personne"
 
-msgid "Non active projects cannot be used to be project template"
-msgstr "Les projets non actifs ne peuvent être utilisés comme modèle de projet"
-
 msgid "Not Found"
 msgstr "Introuvable"
 
@@ -2418,9 +2412,6 @@ msgstr "Projet"
 
 msgid "Project (read only)"
 msgstr "Projet (lecture seule)"
-
-msgid "Project Creation request is disabled"
-msgstr "La création de projects est désactivé"
 
 msgid "Project Data Export"
 msgstr "Export des données"
@@ -3088,9 +3079,6 @@ msgstr "Résumé"
 msgid "Suspended"
 msgstr "Suspendu"
 
-msgid "Switch to new project creation flow"
-msgstr "Basculer sur la nouvelle interface de création de projet"
-
 msgid "Switching the project status back to \"pending\" is not possible."
 msgstr "Remettre le projet au statut \"en attente\" n'est pas possible."
 
@@ -3302,13 +3290,6 @@ msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
 
 msgid ""
-"There are too many projects being requested at the moment. Please try again "
-"later on."
-msgstr ""
-"Il y a trop de projets en attente de validation. Merci de re-tenter un peu "
-"plus tard."
-
-msgid ""
 "There is already an event scheduled to rename this project. Please check <a "
 "href=\"/admin/system_events/\">System Event Monitor</a>."
 msgstr ""
@@ -3446,13 +3427,6 @@ msgstr ""
 "l'Agiledashboard et sur les rapports de type cardwall dans les outils de "
 "suivi. Ceci permet de mieux différencier les couleurs ainsi que leurs "
 "variantes."
-
-msgid ""
-"This page is deprecated and will be removed soon. You should switch to the "
-"new project creation flow."
-msgstr ""
-"Cette page est dépréciée et sera bientôt supprimée. Vous devriez utiliser la "
-"nouvelle interface de création de projet."
 
 msgid ""
 "This permission grants the right to manage platform administration users. "

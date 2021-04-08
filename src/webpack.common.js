@@ -355,7 +355,6 @@ const fat_combined_files = [
         "./www/scripts/tuleap/get-style-class-property.js",
         "./scripts/tuleap/listFilter.js",
         "./www/scripts/codendi/feedback.js",
-        "./www/scripts/codendi/CreateProject.js",
         "./www/scripts/codendi/cross_references.js",
         "./node_modules/@tuleap/tooltip/dist/tooltip.umd.js",
         "./www/scripts/codendi/Tooltip-loader.js",
