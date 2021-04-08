@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '@tuleap/tlp-popovers';
+
 @import './components/layout';
 @import './components/typography';
 @import './components/avatars';
@@ -31,7 +33,6 @@
 @import './components/tabs';
 @import './components/forms';
 @import './components/dropdowns';
-@import './components/popovers';
 @import './components/tooltips';
 @import './components/modal';
 @import './components/switch';
