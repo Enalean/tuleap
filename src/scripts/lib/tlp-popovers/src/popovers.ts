@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,7 +19,7 @@
 
 import type { Placement, PopperOptions } from "popper.js";
 import Popper from "popper.js";
-import { findClosestElement } from "./dom-walker";
+import { findClosestElement } from "../../../../themes/tlp/src/js/dom-walker";
 
 export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
 

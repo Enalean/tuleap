@@ -21,10 +21,9 @@ import type { Modal, ModalOptions } from "./modal";
 import { createModal as createModalImplementation } from "./modal";
 import type { Dropdown, DropdownOptions } from "./dropdowns";
 import { createDropdown as createDropdownImplementation } from "./dropdowns";
-import type { Popover, PopoverOptions } from "./popovers";
-import { createPopover as createPopoverImplementation } from "./popovers";
 
 export * from "@tuleap/tlp-fetch";
+export * from "@tuleap/tlp-popovers";
 
 export { default as locale } from "./default_locale";
 
@@ -36,13 +35,6 @@ export * from "./dropdowns";
 // Apply partially the dropdowns creation function to pass document
 export const createDropdown = (trigger: Element, options?: DropdownOptions): Dropdown =>
     createDropdownImplementation(document, trigger, options);
-export * from "./popovers";
-// Apply partially the popover creation function to pass document
-export const createPopover = (
-    popover_trigger: HTMLElement,
-    popover_content: Element,
-    options?: PopoverOptions
-): Popover => createPopoverImplementation(document, popover_trigger, popover_content, options);
 
 import jQuery from "jquery";
 // Many scripts still depend on jQuery being on window

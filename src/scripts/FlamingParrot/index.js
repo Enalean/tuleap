@@ -22,7 +22,7 @@ import { initMainPosition } from "../tuleap/main-position.ts";
 import { initHeaderPosition } from "../tuleap/header-position.ts";
 import { init as initNavbarPinned } from "../tuleap/navbar-pinned.js";
 import { init as initInviteBuddies } from "./invite-buddies";
-import { createPopover } from "../../themes/tlp/src/js/index";
+import { createPopover } from "@tuleap/tlp-popovers";
 import { init as initNavbarDropdown } from "../navbar-dropdowns/navbar-dropdown.ts";
 
 import "./sidebar.js";
