@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
+use Tracker_NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
@@ -47,6 +48,7 @@ class TopBacklogUpdater
      * @throws CannotManipulateTopBacklog
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
+     * @throws Tracker_NoArtifactLinkFieldException
      */
     public function updateTopBacklog(int $potential_program_id, TopBacklogChange $top_backlog_change, \PFUser $user): void
     {

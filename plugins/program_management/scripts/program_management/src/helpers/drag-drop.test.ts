@@ -21,7 +21,6 @@ import * as drag_drop from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
 import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
 import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
-import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
 import * as tlp from "tlp";
 
 jest.mock("tlp");
@@ -162,7 +161,6 @@ describe(`drag-drop helper`, () => {
         const target_dropzone = createElement();
 
         const feature_planner = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
-        jest.spyOn(backlogAdder, "addElementToTopBackLog");
         jest.spyOn(tlp, "put");
 
         await drag_drop.unplanFeature(

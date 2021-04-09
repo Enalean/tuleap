@@ -254,10 +254,12 @@ describe("Actions", () => {
             const source_dropzone = createElement();
             const target_dropzone = createElement();
 
-            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
-            jest.spyOn(backlogAdder, "addElementToTopBackLog");
-            const put = jest.spyOn(tlp, "put");
-            mockFetchSuccess(put);
+            const move_element_from_program_increment_to_top_backlog = jest.spyOn(
+                backlogAdder,
+                "moveElementFromProgramIncrementToTopBackLog"
+            );
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(patch);
 
             const getProgramIncrementFromId = jest
                 .fn()
@@ -278,14 +280,8 @@ describe("Actions", () => {
                 id: 12,
             });
 
-            expect(unplan_feature).toHaveBeenCalledWith(
-                {
-                    dropped_element,
-                    program_id: 101,
-                    source_dropzone,
-                    target_dropzone,
-                },
-                1,
+            expect(move_element_from_program_increment_to_top_backlog).toHaveBeenCalledWith(
+                101,
                 12
             );
         });
@@ -299,10 +295,12 @@ describe("Actions", () => {
             const source_dropzone = createElement();
             const target_dropzone = createElement();
 
-            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
-            jest.spyOn(backlogAdder, "addElementToTopBackLog");
-            const put = jest.spyOn(tlp, "put");
-            mockFetchError(put, {
+            const move_element_from_program_increment_to_top_backlog = jest.spyOn(
+                backlogAdder,
+                "moveElementFromProgramIncrementToTopBackLog"
+            );
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },
             });
@@ -326,14 +324,8 @@ describe("Actions", () => {
                 id: 12,
             });
 
-            expect(unplan_feature).toHaveBeenCalledWith(
-                {
-                    dropped_element,
-                    program_id: 101,
-                    source_dropzone,
-                    target_dropzone,
-                },
-                1,
+            expect(move_element_from_program_increment_to_top_backlog).toHaveBeenCalledWith(
+                101,
                 12
             );
 

@@ -38,4 +38,9 @@ final class BacklogPatchRepresentation
      * @psalm-var TopBacklogElementInvolvedInChangeRepresentation[]
      */
     public $remove;
+
+    /**
+     * @var bool {@required false}
+     */
+    public $remove_from_program_increment_to_add_to_the_backlog = false;
 }

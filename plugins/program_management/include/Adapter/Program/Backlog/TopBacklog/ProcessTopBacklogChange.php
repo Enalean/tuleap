@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
+use PFUser;
+use Tracker_NoArtifactLinkFieldException;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
@@ -47,17 +51,29 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      * @var DBTransactionExecutor
      */
     private $db_transaction_executor;
+    /**
+     * @var ArtifactLinkUpdater
+     */
+    private $artifact_link_updater;
+    /**
+     * @var ProgramIncrementsDAO
+     */
+    private $program_increments_dao;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
         PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier,
         ArtifactsExplicitTopBacklogDAO $explicit_top_backlog_dao,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
+        ArtifactLinkUpdater $artifact_link_updater,
+        ProgramIncrementsDAO $program_increments_dao
     ) {
         $this->artifact_factory                        = $artifact_factory;
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
         $this->explicit_top_backlog_dao                = $explicit_top_backlog_dao;
         $this->db_transaction_executor                 = $db_transaction_executor;
+        $this->artifact_link_updater                   = $artifact_link_updater;
+        $this->program_increments_dao                  = $program_increments_dao;
     }
 
     public function processTopBacklogChangeForAProgram(
@@ -71,15 +87,45 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
             }
 
             $feature_ids_to_add = $this->filterFeaturesThatCanBeManipulated($top_backlog_change->potential_features_id_to_add, $user, $program);
+
             if (count($feature_ids_to_add) > 0) {
+                if ($top_backlog_change->remove_program_increments_link_to_feature_to_add) {
+                    $this->removeFeaturesFromProgramIncrement($user, $feature_ids_to_add);
+                }
                 $this->explicit_top_backlog_dao->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
             }
 
             $feature_ids_to_remove = $this->filterFeaturesThatCanBeManipulated($top_backlog_change->potential_features_id_to_remove, $user, $program);
+
             if (count($feature_ids_to_remove) > 0) {
                 $this->explicit_top_backlog_dao->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
             }
         });
+    }
+
+    /**
+     * @param int[] $feature_ids_to_add
+     * @throws Tracker_NoArtifactLinkFieldException
+     * @throws \Tracker_Exception
+     */
+    private function removeFeaturesFromProgramIncrement(PFUser $user, array $feature_ids_to_add): void
+    {
+        foreach ($feature_ids_to_add as $feature_id_to_add) {
+            $program_ids = $this->program_increments_dao->getProgramIncrementsLinkToFeatureId($feature_id_to_add);
+            foreach ($program_ids as $program_id) {
+                $program_increment_artifact = $this->artifact_factory->getArtifactById($program_id['id']);
+                if (! $program_increment_artifact) {
+                    continue;
+                }
+                $this->artifact_link_updater->updateArtifactLinks(
+                    $user,
+                    $program_increment_artifact,
+                    [],
+                    [$feature_id_to_add],
+                    \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                );
+            }
+        }
     }
 
     /**

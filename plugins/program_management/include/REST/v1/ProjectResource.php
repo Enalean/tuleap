@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use BackendLogger;
 use Luracast\Restler\RestException;
+use Tracker_NoArtifactLinkFieldException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
@@ -67,6 +68,8 @@ use Tuleap\ProgramManagement\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Program\Plan\PlanCreator;
 use Tuleap\ProgramManagement\Team\Creation\TeamCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -269,6 +272,26 @@ final class ProjectResource extends AuthenticatedResource
     /**
      * Manipulate the program backlog
      *
+     * Add or remove elements from program backlog
+     *
+     * <br>
+     * Add example:
+     * <pre>
+     * {
+     *   "add": [
+     *     {
+     *       "id": 34,
+     *     }
+     *   ],
+     *   "remove_from_program_increment_to_add_to_the_backlog": true
+     * }
+     * </pre>
+     * <br>
+     * The feature with id 34 is removed from Program Increments linked and is added in program backlog.
+     * <br>
+     * <code>remove_from_program_increment_to_add_to_the_backlog</code> is not mandatory.
+     * If it's not set and the feature is linked to program increments, then feature will not be added to program backlog.
+     *
      * @url PATCH {id}/program_backlog
      *
      * @param int $id ID of the program
@@ -306,16 +329,24 @@ final class ProjectResource extends AuthenticatedResource
                     new CanPrioritizeFeaturesDAO()
                 ),
                 new ArtifactsExplicitTopBacklogDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
+                new ProgramIncrementsDAO()
             )
         );
 
         try {
-            $top_backlog_updater->updateTopBacklog($id, new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove), $user);
+            $top_backlog_updater->updateTopBacklog(
+                $id,
+                new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove, $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog),
+                $user
+            );
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
-            throw new RestException(404);
+            throw new RestException(404, $e->getMessage());
         } catch (ProjectIsNotAProgramException $e) {
             throw new RestException(403, $e->getMessage());
+        } catch (Tracker_NoArtifactLinkFieldException $e) {
+            throw new RestException(400, dgettext("tuleap-program_management", "Cannot add the feature to the top backlog because you cannot manipulate all the impacted program increments"));
         }
     }
 

@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
+use Tracker_NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Program\Program;
 
 interface TopBacklogChangeProcessor
 {
     /**
      * @throws CannotManipulateTopBacklog
+     * @throws Tracker_NoArtifactLinkFieldException
      */
     public function processTopBacklogChangeForAProgram(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void;
 }

@@ -25,7 +25,7 @@ import type {
     HandleDropContextWithProgramId,
 } from "../helpers/drag-drop";
 import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extractor";
-import { addElementToTopBackLog } from "../helpers/ProgramIncrement/add-to-top-backlog";
+import { moveElementFromProgramIncrementToTopBackLog } from "../helpers/ProgramIncrement/add-to-top-backlog";
 import { unplanFeature, planFeatureInProgramIncrement as planFeature } from "../helpers/drag-drop";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
@@ -129,13 +129,7 @@ export async function handleDrop(
 
         try {
             context.commit("startMoveElementInAProgramIncrement", element_id);
-            await unplanFeature(
-                handle_drop,
-                parseInt(remove_from_program_increment_id, 10),
-                element_id
-            );
-
-            await addElementToTopBackLog(handle_drop.program_id, element_id);
+            await moveElementFromProgramIncrementToTopBackLog(handle_drop.program_id, element_id);
         } catch (error) {
             await handleModalError(context, error);
         } finally {
