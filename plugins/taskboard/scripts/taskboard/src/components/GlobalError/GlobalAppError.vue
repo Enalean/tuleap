@@ -47,7 +47,7 @@
         </div>
 
         <button type="button" class="tlp-button-primary tlp-button-large" v-on:click="reloadPage">
-            <i class="fas fa-sync tlp-button-icon"></i>
+            <i class="fas fa-sync tlp-button-icon" aria-hidden="true"></i>
             <translate>Reload the page</translate>
         </button>
     </div>

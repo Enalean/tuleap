@@ -24,7 +24,7 @@
         v-bind:title="button_title"
         v-on:click="toggleFullscreenMode()"
     >
-        <i class="fa" v-bind:class="button_icon_class"></i>
+        <i class="fa" v-bind:class="button_icon_class" aria-hidden="true"></i>
     </button>
 </template>
 <script lang="ts">

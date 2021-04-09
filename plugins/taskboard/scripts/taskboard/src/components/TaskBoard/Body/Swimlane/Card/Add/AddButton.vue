@@ -23,8 +23,7 @@
         type="button"
         class="taskboard-add-in-place-button tlp-button-primary tlp-button-outline"
         v-bind:class="button_class"
-        v-bind:data-tlp-tooltip="title"
-        v-bind:aria-label="title"
+        v-bind:title="title"
         v-on:click="$emit('click')"
         data-test="add-in-place-button"
     >
@@ -51,9 +50,7 @@ export default class AddButton extends Vue {
     }
 
     get button_class(): string {
-        return this.label !== ""
-            ? "tlp-button-small taskboard-add-in-place-button-with-label"
-            : "tlp-tooltip tlp-tooltip-top";
+        return this.label === "" ? "" : "tlp-button-small taskboard-add-in-place-button-with-label";
     }
 }
 </script>

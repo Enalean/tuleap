@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import AddButton from "./AddButton.vue";
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 
-describe("AddButon", () => {
+describe("AddButton", () => {
     it("propagates the click event", async () => {
         const wrapper = shallowMount(AddButton, {
             localVue: await createTaskboardLocalVue(),
@@ -34,20 +34,6 @@ describe("AddButon", () => {
         expect(wrapper.emitted().click).toBeTruthy();
     });
 
-    it("can have no label, therefore display a tlp-tooltip instead", async () => {
-        const wrapper = shallowMount(AddButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
-                label: "",
-            },
-        });
-
-        expect(wrapper.text()).toBe("");
-        expect(wrapper.classes("tlp-tooltip")).toBe(true);
-        expect(wrapper.classes("tlp-tooltip-top")).toBe(true);
-        expect(wrapper.classes("taskboard-add-in-place-button-with-label")).toBe(false);
-    });
-
     it("displays the given label in the button", async () => {
         const wrapper = shallowMount(AddButton, {
             localVue: await createTaskboardLocalVue(),
@@ -57,8 +43,6 @@ describe("AddButon", () => {
         });
 
         expect(wrapper.text()).toBe("Lorem");
-        expect(wrapper.classes("tlp-tooltip")).toBe(false);
-        expect(wrapper.classes("tlp-tooltip-top")).toBe(false);
         expect(wrapper.classes("taskboard-add-in-place-button-with-label")).toBe(true);
     });
 });

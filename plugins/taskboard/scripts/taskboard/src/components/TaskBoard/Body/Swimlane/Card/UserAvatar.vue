@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-avatar-small" v-bind:title="user.display_name">
-        <img v-bind:src="user.avatar_url" />
+        <img v-bind:src="user.avatar_url" aria-hidden="true" />
     </div>
 </template>
 

@@ -3,7 +3,7 @@
         <div class="tlp-dropdown">
             <div id="agiledashboard-scrum-milestone-menu">
                 {{ milestoneTitle }}
-                <i class="fa fa-fw fa-caret-down" id="agiledashboard-scrum-milestone-menu-caret"></i>
+                <i class="fa fa-fw fa-caret-down" id="agiledashboard-scrum-milestone-menu-caret" aria-hidden="true"></i>
             </div>
             <div class="tlp-dropdown-menu" role="menu">
                 <a href="{{ editArtifactUrl }}"
@@ -28,13 +28,13 @@
                 <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">
                     {{ getTitle }}
                     {{# isExternalLink }}
-                        <i class="fas fa-external-link-alt tlp-tab-icon"></i>
+                        <i class="fas fa-external-link-alt tlp-tab-icon" aria-hidden="true"></i>
                     {{/ isExternalLink }}
                 </a>
             {{/ getPaneInfoList }}
             <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
             {{ artifact }}
-            <i class="fas fa-external-link-alt tlp-tab-icon"></i>
+            <i class="fas fa-external-link-alt tlp-tab-icon" aria-hidden="true"></i>
             </a>
         </nav>
     </div>

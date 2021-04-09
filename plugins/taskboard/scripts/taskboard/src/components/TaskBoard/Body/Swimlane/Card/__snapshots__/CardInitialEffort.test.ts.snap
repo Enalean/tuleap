@@ -6,6 +6,7 @@ exports[`CardInitialEffort displays the initial effort of the card in a badge 1`
   title="Initial effort"
 >
   <i
+    aria-hidden="true"
     class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon"
   />
   

@@ -34,6 +34,7 @@
             v-on:keyup="keyup"
             v-bind:rows="rows"
             v-bind:placeholder="$gettext('Card label…')"
+            v-bind:aria-label="$gettext('Set card label')"
             v-bind:readonly="readonly"
             ref="textarea"
             data-test="label-editor"

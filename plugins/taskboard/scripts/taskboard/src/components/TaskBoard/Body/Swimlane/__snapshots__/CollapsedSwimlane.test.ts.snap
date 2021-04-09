@@ -28,6 +28,7 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
         <card-xref-label-stub
           card="[object Object]"
           class="taskboard-card-xref-label-collapsed"
+          label="taskboard-swimlane"
         />
       </div>
     </div>

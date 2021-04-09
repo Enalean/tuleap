@@ -27,7 +27,7 @@
             v-on:click="cancel"
             data-test="cancel"
         >
-            <i class="fa fa-tlp-esc-key tlp-button-icon"></i>
+            <i class="fa fa-tlp-esc-key tlp-button-icon" aria-hidden="true"></i>
             <translate>Cancel</translate>
         </button>
         <button
@@ -37,7 +37,12 @@
             v-on:click="save"
             data-test="save"
         >
-            <i class="fa tlp-button-icon" v-bind:class="save_icon" data-test="save-icon"></i>
+            <i
+                class="fa tlp-button-icon"
+                v-bind:class="save_icon"
+                aria-hidden="true"
+                data-test="save-icon"
+            ></i>
             <translate>Save</translate>
         </button>
     </div>

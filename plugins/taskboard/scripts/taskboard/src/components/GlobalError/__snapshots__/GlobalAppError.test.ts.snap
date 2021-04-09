@@ -55,6 +55,7 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
     type="button"
   >
     <i
+      aria-hidden="true"
       class="fas fa-sync tlp-button-icon"
     />
      

@@ -70,7 +70,9 @@ export default class SwimlaneHeader extends Vue {
     }
 
     get title(): string {
-        return this.$gettext("Collapse");
+        return this.$gettextInterpolate(this.$gettext('Collapse "%{ label }" swimlane'), {
+            label: this.swimlane.card.label,
+        });
     }
 }
 </script>
