@@ -33,6 +33,11 @@ class FooterPresenter
     public $browser_deprecation_message;
     public $is_footer_shown;
     public $footer;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $csp_nonce;
 
     /**
      * @param JavascriptAsset[] $javascript_assets
@@ -42,7 +47,8 @@ class FooterPresenter
         array $javascript_assets,
         ?BrowserDeprecationMessage $browser_deprecation_message,
         $is_footer_shown,
-        $tuleap_version
+        $tuleap_version,
+        string $csp_nonce
     ) {
         $is_file_already_included    = [];
         $is_snippet_already_included = [];
@@ -72,6 +78,7 @@ class FooterPresenter
         $this->browser_deprecation_message = $browser_deprecation_message;
         $this->is_footer_shown             = $is_footer_shown;
         $this->footer                      = $this->getFooter();
+        $this->csp_nonce                   = $csp_nonce;
     }
 
     private function getFooter()

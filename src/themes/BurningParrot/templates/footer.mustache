@@ -10,12 +10,12 @@
         {{/ is_footer_shown }}
         {{# javascript_in_footer }}
             {{# is_snippet }}
-                <script type="text/javascript">
+                <script type="text/javascript" nonce="{{ csp_nonce }}">
                         {{{ javascript }}}
                 </script>
             {{/ is_snippet }}
             {{^ is_snippet }}
-                <script type="text/javascript" src="{{ javascript }}"></script>
+                <script type="text/javascript" src="{{ javascript }}" nonce="{{ csp_nonce }}"></script>
             {{/ is_snippet }}
         {{/ javascript_in_footer }}
     </body>
