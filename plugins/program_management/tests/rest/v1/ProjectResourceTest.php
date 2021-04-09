@@ -124,7 +124,7 @@ class ProjectResourceTest extends \RestBase
      */
     public function testGetProgramIncrementContent(int $id): void
     {
-        $this->checkGetProgramIncrementContent($id, 'title', 'My artifact');
+        $this->checkGetProgramIncrementContent($id, 'title', 'My other artifact for top backlog manipulation');
     }
 
     /**
@@ -161,6 +161,66 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals($bug_id, $backlog_content[0]);
 
         $this->patchTopBacklog($project_id, [], [$bug_id]);
+        self::assertEmpty($this->getTopBacklogContent($project_id));
+    }
+
+    /**
+     * @depends testGetProgramIncrements
+     */
+    public function testPatchBacklogWithFeatureRemovedFromProgramAndOrderInBacklog(int $program_increment_id): void
+    {
+        $project_id        = $this->getProgramProjectId();
+        $program_increment = $this->getArtifactWithArtifactLink('release_number', 'PI', $project_id, 'pi');
+        $bug_id_1          = $this->getBugIDWithSpecificSummary('My artifact for top backlog manipulation', $project_id);
+        $bug_id_2          = $this->getBugIDWithSpecificSummary('My other artifact for top backlog manipulation', $project_id);
+
+        $this->updateArtifactLinks($program_increment_id, [], $program_increment['artifact_link_id']);
+        $this->patchTopBacklog($project_id, [$bug_id_1], []);
+
+        // Check backlog has one item and program increment element is empty
+        self::assertCount(1, $this->getTopBacklogContent($project_id));
+        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+
+        // Add bug_2 in program increment
+        $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id_2]], $program_increment['artifact_link_id']);
+
+        $this->checkGetProgramIncrementContent($program_increment_id, "title", 'My other artifact for top backlog manipulation');
+        $this->checkGetProgramIncrementContent($program_increment_id, "id", (string) $bug_id_2);
+
+        // Remove bug from program increment and add it in program backlog after bug_1
+        $this->patchTopBacklog(
+            $project_id,
+            [$bug_id_2],
+            [],
+            true,
+            ['ids' => [$bug_id_2], 'direction' => "after", 'compared_to' => $bug_id_1]
+        );
+
+        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+
+        $backlog_content = $this->getTopBacklogContent($project_id);
+
+        self::assertCount(2, $backlog_content);
+        self::assertEquals($bug_id_1, $backlog_content[0]);
+        self::assertEquals($bug_id_2, $backlog_content[1]);
+
+        // Move bug_2 before bug_1
+        $this->patchTopBacklog(
+            $project_id,
+            [],
+            [],
+            false,
+            ["ids" => [$bug_id_1], "direction" => "after", "compared_to" => $bug_id_2]
+        );
+
+        $backlog_content = $this->getTopBacklogContent($project_id);
+
+        self::assertCount(2, $backlog_content);
+        self::assertEquals($bug_id_2, $backlog_content[0]);
+        self::assertEquals($bug_id_1, $backlog_content[1]);
+
+        // Clear program backlog
+        $this->patchTopBacklog($project_id, [], [$bug_id_1, $bug_id_2]);
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
@@ -329,25 +389,51 @@ class ProjectResourceTest extends \RestBase
     /**
      * @param int[] $to_add
      * @param int[] $to_remove
+     * @psalm-param null|array{ids: int[], direction: string, compared_to: int} $order
      * @throws \JsonException
      */
-    private function patchTopBacklog(int $program_id, array $to_add, array $to_remove, bool $remove_program_increment_link = false): void
-    {
+    private function patchTopBacklog(
+        int $program_id,
+        array $to_add,
+        array $to_remove,
+        bool $remove_program_increment_link = false,
+        ?array $order = null
+    ): void {
         $response = $this->getResponse(
             $this->client->patch(
                 'projects/' . urlencode((string) $program_id) . '/program_backlog',
                 null,
                 json_encode(
-                    [
-                        'add'    => self::formatTopBacklogElementChange($to_add),
-                        'remove' => self::formatTopBacklogElementChange($to_remove),
-                        "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link
-                    ],
+                    $this->formatPatchTopBacklogParameters($to_add, $to_remove, $remove_program_increment_link, $order),
                     JSON_THROW_ON_ERROR
                 )
             )
         );
         self::assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @param int[] $to_add
+     * @param int[] $to_remove
+     * @psalm-param null|array{ids: int[], direction: string, compared_to: int} $order
+     * @return array<{add: {id: int, from_remove: ?int}[], remove: {id: int}[], order: ?{ids: int[], direction: string, compared_to: int}}>
+     */
+    private function formatPatchTopBacklogParameters(array $to_add, array $to_remove, bool $remove_program_increment_link, ?array $order): array
+    {
+        if ($order) {
+            return [
+                'add'    => self::formatTopBacklogElementChange($to_add),
+                'remove' => self::formatTopBacklogElementChange($to_remove),
+                "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link,
+                'order'  => $order
+            ];
+        }
+
+        return [
+            'add'    => self::formatTopBacklogElementChange($to_add),
+            'remove' => self::formatTopBacklogElementChange($to_remove),
+            "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link
+        ];
     }
 
     private function updateArtifactLinks(int $artifact_id, array $links, int $artifact_field_id): void

@@ -55,7 +55,9 @@ final class FeaturesDao extends DataAccessObject implements FeaturesStore
                                 INNER JOIN tracker_changeset_value_text AS title_value on title_changeset.id = title_value.changeset_value_id
                         ) ON (tracker.id = title.tracker_id AND tracker_changeset.id = title_changeset.changeset_id)
                         INNER JOIN plugin_program_management_explicit_top_backlog ON (plugin_program_management_explicit_top_backlog.artifact_id = artifact.id)
-                    WHERE project.group_id = ?';
+                        INNER JOIN tracker_artifact_priority_rank ON plugin_program_management_explicit_top_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
+                WHERE project.group_id = ?
+                ORDER BY tracker_artifact_priority_rank.rank';
 
         return $this->getDB()->run($sql, $program->getId());
     }

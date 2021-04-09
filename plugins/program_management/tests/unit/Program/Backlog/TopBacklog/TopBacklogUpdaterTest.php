@@ -23,35 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TopBacklogUpdaterTest extends TestCase
 {
     public function testTopBacklogCanBeUpdated(): void
     {
-        $build_program = new class implements BuildProgram
-        {
-            public function buildExistingProgramProject(int $id, \PFUser $user): Program
-            {
-                return new Program(102);
-                throw new \LogicException("Not needed");
-            }
-
-            public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
-            {
-                throw new \LogicException("Not needed");
-            }
-
-            public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
-            {
-                throw new \LogicException("Not needed");
-            }
-        };
-
         $top_backlog_change_processor = new class implements TopBacklogChangeProcessor {
             public $has_been_called = false;
 
@@ -64,8 +42,8 @@ final class TopBacklogUpdaterTest extends TestCase
             }
         };
 
-        $update = new TopBacklogUpdater($build_program, $top_backlog_change_processor);
-        $update->updateTopBacklog(102, new TopBacklogChange([], [10000], false), UserTestBuilder::aUser()->build());
+        $update = new TopBacklogUpdater($top_backlog_change_processor);
+        $update->updateTopBacklog(new Program(102), new TopBacklogChange([], [10000], false), UserTestBuilder::aUser()->build());
 
         self::assertTrue($top_backlog_change_processor->has_been_called);
     }

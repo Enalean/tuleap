@@ -20,29 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
+namespace Tuleap\ProgramManagement\REST\v1;
 
-use Tracker_NoArtifactLinkFieldException;
-use Tuleap\ProgramManagement\Program\Program;
 
-class TopBacklogUpdater
+/**
+ * @psalm-immutable
+ */
+final class TopBacklogElementToOrderInvolvedInChangeRepresentation
 {
+    public const AFTER  = "after";
+    public const BEFORE = "before";
     /**
-     * @var TopBacklogChangeProcessor
+     * @var int[] {@required true} {@min 1}{@max 10}
      */
-    private $top_backlog_change_processor;
-
-    public function __construct(TopBacklogChangeProcessor $top_backlog_change_processor)
-    {
-        $this->top_backlog_change_processor = $top_backlog_change_processor;
-    }
+    public $ids;
 
     /**
-     * @throws CannotManipulateTopBacklog
-     * @throws Tracker_NoArtifactLinkFieldException
+     * @var string {@required true} {@choice after,before}
      */
-    public function updateTopBacklog(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void
-    {
-        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user);
-    }
+    public $direction;
+
+    /**
+     * @var int {@required true}
+     */
+    public $compared_to;
 }
