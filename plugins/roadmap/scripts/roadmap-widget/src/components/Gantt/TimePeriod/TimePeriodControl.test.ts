@@ -31,6 +31,7 @@ describe("TimePeriodControl", () => {
         });
 
         const options = wrapper.find("[data-test=select-timescale]").findAll("option");
+        options.at(2).setSelected();
         options.at(1).setSelected();
         options.at(0).setSelected();
 
@@ -41,5 +42,6 @@ describe("TimePeriodControl", () => {
 
         expect(input_event[0][0]).toBe("quarter");
         expect(input_event[1][0]).toBe("month");
+        expect(input_event[2][0]).toBe("week");
     });
 });

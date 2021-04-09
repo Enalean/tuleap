@@ -79,6 +79,7 @@ import { TimePeriodMonth } from "../../helpers/time-period-month";
 import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 import DependencyNatureControl from "./DependencyNatureControl.vue";
 import { getNatureLabelsForTasks } from "../../helpers/natures-labels-for-tasks";
+import { TimePeriodWeek } from "../../helpers/time-period-week";
 
 @Component({
     components: {
@@ -151,6 +152,15 @@ export default class GanttBoard extends Vue {
     }
 
     get time_period(): TimePeriod {
+        if (this.timescale === "week") {
+            return new TimePeriodWeek(
+                getFirstDate(this.tasks),
+                getLastDate(this.tasks),
+                this.now,
+                this
+            );
+        }
+
         if (this.timescale === "quarter") {
             return new TimePeriodQuarter(
                 getFirstDate(this.tasks),
