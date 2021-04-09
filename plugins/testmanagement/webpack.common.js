@@ -18,8 +18,6 @@
  */
 
 const path = require("path");
-// eslint-disable-next-line import/no-extraneous-dependencies
-const webpack = require("webpack");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
@@ -42,7 +40,7 @@ const webpack_config_for_angular = {
     },
     resolve: {
         alias: {
-            // Aliases for the artifact modal
+            // angular alias for the artifact modal (otherwise it is included twice)
             angular$: path.resolve(__dirname, "./node_modules/angular"),
             "angular-sanitize$": path.resolve(__dirname, "./node_modules/angular-sanitize"),
         },
@@ -53,9 +51,7 @@ const webpack_config_for_angular = {
     },
     module: {
         rules: [
-            webpack_configurator.rule_vue_images,
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_angular_gettext_loader,
         ],
@@ -64,16 +60,7 @@ const webpack_config_for_angular = {
         manifest_plugin,
         webpack_configurator.getTypescriptCheckerPlugin(false),
         webpack_configurator.getMomentLocalePlugin(),
-        webpack_configurator.getVueLoaderPlugin(),
-        // Needed for the artifact modal
-        new webpack.ProvidePlugin({
-            Buffer: ["buffer", "Buffer"],
-            process: "process/browser",
-        }),
     ],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
 };
 
 const webpack_config_for_vue_components = {

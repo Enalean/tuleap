@@ -20,7 +20,7 @@
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
-import angular_artifact_modal from "../../../../../tracker/scripts/angular-artifact-modal/index.js";
+import angular_artifact_modal from "@tuleap/plugin-tracker-artifact-modal";
 import angular_moment from "angular-moment";
 
 import angular_tlp from "@tuleap/angular-tlp";

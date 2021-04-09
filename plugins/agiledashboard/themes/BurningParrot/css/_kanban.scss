@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../tracker/scripts/angular-artifact-modal/index';
+@import '../../../scripts/kanban/node_modules/@tuleap/plugin-tracker-artifact-modal';
 @import '../../../scripts/kanban/node_modules/ng-scrollbar/dist/ng-scrollbar';
 @import '../../../scripts/kanban/node_modules/dragular/dist/dragular';
 

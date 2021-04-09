@@ -23,7 +23,7 @@ import angular from "angular";
 import ngAnimate from "angular-animate";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
-import angular_artifact_modal_module from "../../../../../tracker/scripts/angular-artifact-modal/index.js";
+import angular_artifact_modal from "@tuleap/plugin-tracker-artifact-modal";
 
 import "angular-moment";
 import "moment/locale/fr.js";
@@ -68,7 +68,7 @@ export default angular
     .module("planning", [
         "angularMoment",
         "gettext",
-        angular_artifact_modal_module,
+        angular_artifact_modal,
         ngAnimate,
         ngSanitize,
         dragular,
