@@ -26,7 +26,6 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Project_OneStepCreation_OneStepCreationRequest;
 use ProjectManager;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 
@@ -65,22 +64,6 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $this->assertEquals($expected_project, $template_from_project_for_creation->getProject());
     }
 
-    public function testGetTemplateFromProjectForCreationFromRegisterCreationRequest(): void
-    {
-        $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->andReturn('123');
-        $request->shouldReceive('getCurrentUser')->andReturn($this->user);
-
-        $expected_project = $this->mockForSuccessfulValidation(123);
-
-        $template_from_project_for_creation = TemplateFromProjectForCreation::fromRegisterCreationRequest(
-            $request,
-            $this->project_manager
-        );
-
-        $this->assertSame($expected_project, $template_from_project_for_creation->getProject());
-    }
-
     public function testGetTemplateFromProjectForCreationFromSOAPServer(): void
     {
         $expected_project = $this->mockForSuccessfulValidation(123);
@@ -110,19 +93,6 @@ final class TemplateFromProjectForCreationTest extends TestCase
     public function testGetTemplateFromProjectForCreationFromGlobalProjectTemplate(): void
     {
         $this->assertEquals(Project::ADMIN_PROJECT_ID, TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate()->getProject()->getID());
-    }
-
-    public function testGetTemplateFromProjectForCreationIsNotValidWhenTemplateIDIsNotPresent(): void
-    {
-        $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->andReturn(null);
-        $request->shouldReceive('getCurrentUser')->andReturn($this->user);
-
-        $this->expectException(ProjectIDTemplateNotProvidedException::class);
-        TemplateFromProjectForCreation::fromRegisterCreationRequest(
-            $request,
-            $this->project_manager
-        );
     }
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateDoesNotExist(): void
