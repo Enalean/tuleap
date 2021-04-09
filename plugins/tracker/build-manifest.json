@@ -40,8 +40,8 @@
     },
     "gettext-angularjs": {
         "artifact-modal": {
-            "src": "scripts/angular-artifact-modal/src",
-            "po": "scripts/angular-artifact-modal/po"
+            "src": "scripts/lib/artifact-modal/src",
+            "po": "scripts/lib/artifact-modal/po"
         }
     }
 }

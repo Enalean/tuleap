@@ -1,0 +1,119 @@
+/**
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.tuleap-artifact-modal-field-file {
+    display: flex;
+    margin: 0 0 var(--tlp-medium-spacing);
+
+    &:hover {
+        .tuleap-artifact-modal-field-file-preview-link,
+        .tuleap-artifact-modal-field-file-preview-toggle {
+            opacity: 1;
+        }
+    }
+
+    &.marked-for-removal {
+        > .tuleap-artifact-modal-field-file-details {
+            opacity: .5;
+            text-decoration: line-through;
+        }
+    }
+}
+
+.tuleap-artifact-modal-field-file-preview {
+    display: flex;
+    flex: 0 0 auto;
+    width: 90px;
+    height: 90px;
+    margin: 0 var(--tlp-medium-spacing) 0 0;
+    border-radius: 3px;
+    background-image: url('./assets/artifact_attachment_default.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.tuleap-artifact-modal-field-file-preview-link {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 100ms;
+    border: 1px solid var(--tlp-theme-color);
+    border-radius: 3px;
+    opacity: 0;
+    background: var(--tlp-theme-color-transparent-80);
+    font-size: 30px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tuleap-artifact-modal-field-file-details {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+
+    > a {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.tuleap-artifact-modal-field-file-details-info {
+    flex: 1 1 auto;
+    margin: 5px 0 0;
+
+    > .tlp-text,
+    > .tlp-text-muted {
+        margin: 0 0 5px;
+        font-size: 14px;
+    }
+}
+
+.tuleap-artifact-modal-field-file-preview-toggle {
+    flex: 0 0 auto;
+    transition: opacity 100ms;
+    opacity: 0;
+}
+
+.tuleap-artifact-modal-field-file-new-file {
+    margin: 0 0 var(--tlp-medium-spacing);
+
+    > input[type='file'] {
+        display: block;
+        margin: 0 0 5px;
+    }
+}
+
+.tuleap-artifact-modal-field-file-new-file-description {
+    display: flex;
+
+    > .tlp-input {
+        flex: 1 1 auto;
+        margin: 0 5px 0 0;
+    }
+
+    > button {
+        flex: 0 0 auto;
+    }
+}

@@ -18,7 +18,6 @@
  */
 
 const base_config = require("../../tests/jest/jest.base.config.js");
-const path = require("path");
 
 module.exports = {
     ...base_config,
@@ -27,10 +26,7 @@ module.exports = {
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
+        // The artifact modal module causes lots of WARNING: Tried to load AngularJS more than once.
         "^angular$": "<rootDir>/node_modules/angular/index.js",
-        "^@tuleap/ckeditor-image-upload$": path.resolve(
-            __dirname,
-            "./scripts/testmanagement/tests/ckeditor-image-upload-mock.js"
-        ),
     },
 };

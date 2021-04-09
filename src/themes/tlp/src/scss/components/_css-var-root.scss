@@ -34,6 +34,7 @@
     --tlp-theme-color-dimmed-background: #{$tlp-theme-color-dimmed-background};
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
 
+    --tlp-theme-color-transparent-70: #{transparentize($tlp-theme-color, .7)};
     --tlp-theme-color-transparent-80: #{transparentize($tlp-theme-color, .8)};
 
     // Dark

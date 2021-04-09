@@ -19,7 +19,7 @@
 
 import type { BuildOptions, UserConfig, UserConfigExport } from "vite";
 import { defineConfig as viteDefineConfig } from "vite";
-import { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
+export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 import { esbuild_target } from "./browserslist_config";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
@@ -37,5 +37,3 @@ export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
         },
     });
 }
-
-export { createPOGettextPlugin };

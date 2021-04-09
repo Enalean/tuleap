@@ -18,7 +18,7 @@
  */
 
 @use 'project-colors';
-@import '../../../../../tracker/scripts/angular-artifact-modal/index';
+@import '../../../../scripts/planning-v2/node_modules/@tuleap/plugin-tracker-artifact-modal';
 @import '../../../../scripts/planning-v2/node_modules/dragular/dist/dragular';
 @import '../../../../scripts/planning-v2/node_modules/animate.css/animate';
 @import '../../../../../../src/themes/BurningParrot/css/includes/global-variables';

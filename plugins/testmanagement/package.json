@@ -13,6 +13,7 @@
     "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
     "@tuleap/plugin-tracker": "file://../tracker",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "file:../tracker/scripts/lib/artifact-ckeditor-image-upload",
+    "@tuleap/plugin-tracker-artifact-modal": "file:../tracker/scripts/lib/artifact-modal",
     "@tuleap/plugin-tracker-rich-text-editor": "file:../tracker/scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@types/unist": "^2.0.3",
@@ -26,7 +27,6 @@
     "angular-sanitize": "^1.8.2",
     "angular-socket-io": "^0.7.0",
     "angular-ui-router": "^0.4.3",
-    "buffer": "^6.0.3",
     "d3-drag": "^2.0.0",
     "d3-force": "^2.1.1",
     "d3-selection": "^2.0.0",
@@ -40,7 +40,6 @@
     "moment": "^2.29.1",
     "path-browserify": "^1.0.1",
     "pretty-kibibytes": "^4.0.4",
-    "process": "^0.11.10",
     "rehype-parse": "^6.0.2",
     "socket.io-client": "^2.0.3",
     "unified": "^9.0.0",
@@ -64,7 +63,7 @@
   "scripts": {
     "build": "rm -rf ../../src/www/assets/testmanagement && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "BABEL_ENV=test $npm_package_config_bin/jest",
+    "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

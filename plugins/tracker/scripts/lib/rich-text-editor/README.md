@@ -1,5 +1,7 @@
 # @tuleap/plugin-tracker-rich-text-editor
 
+## Dependencies
+
 Depends on `ckeditor4` and `jquery`. Provide them as `externals` in webpack configuration:
 
 ```javascript
