@@ -45,7 +45,7 @@ export class RichTextEditorFactory {
         private readonly default_format: TextFieldFormat,
         private readonly locale: string
     ) {
-        const turndown_service = new TurndownService();
+        const turndown_service = new TurndownService({ emDelimiter: "*" });
         this.markdown_converter = {
             convert: (html: string): string => turndown_service.turndown(html),
         };
