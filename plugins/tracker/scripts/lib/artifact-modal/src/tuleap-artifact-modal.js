@@ -49,7 +49,6 @@ import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-lis
 import PermissionFieldDirective from "./fields/permission-field/permission-field-directive.js";
 import focusOnClickDirective from "./tuleap-focus/focus-on-click-directive.js";
 import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
-import FieldValuesService from "./model/field-values-service.js";
 import TrackerTransformerService from "./model/tracker-transformer-service.js";
 import QuotaDisplayDirective from "./quota-display/quota-display-directive.js";
 import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
@@ -95,7 +94,6 @@ export default angular
     .directive("tuleapArtifactModalListPickerField", ListPickerDirective)
     .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
-    .service("TuleapArtifactFieldValuesService", FieldValuesService)
     .service("TuleapArtifactModalTrackerTransformerService", TrackerTransformerService)
     .value("TuleapArtifactModalLoading", {
         loading: false,
