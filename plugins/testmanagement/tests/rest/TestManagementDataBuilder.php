@@ -18,15 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\TestManagement;
+
+use REST_TestDataBuilder;
 
 class TestManagementDataBuilder extends REST_TestDataBuilder
 {
     public const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
     public const ISSUE_TRACKER_SHORTNAME     = 'bugs';
+    public const TEST_DEF_TRACKER_SHORTNAME  = 'test_def';
 
-    public const USER_TESTER_NAME   = 'rest_api_ttm_1';
-    public const USER_TESTER_PASS   = 'welcome0';
-    public const USER_TESTER_STATUS = 'A';
+    public const USER_TESTER_NAME = 'rest_api_ttm_1';
+    public const USER_TESTER_PASS = 'welcome0';
 
     public function __construct()
     {
