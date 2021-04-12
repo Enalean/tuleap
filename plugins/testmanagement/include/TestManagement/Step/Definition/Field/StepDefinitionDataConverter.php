@@ -32,12 +32,12 @@ final class StepDefinitionDataConverter
     /**
      * @throws RestException
      */
-    public static function convertStepDefinitionFromRESTFormatToDBCompatibleFormat(array $steps): array
+    public static function convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat(array $steps): array
     {
         $converted_steps = [];
 
         foreach ($steps as $step) {
-            StepChecker::checkStepDataFromREST($step);
+            StepChecker::checkStepDataFromRESTPost($step);
             $converted_steps["description"][]             = $step["description"];
             $converted_steps["description_format"][]      = $step["description_format"];
             $converted_steps["expected_results"][]        = $step["expected_results"];

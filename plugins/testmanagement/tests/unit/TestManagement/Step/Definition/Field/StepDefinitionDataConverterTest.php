@@ -60,7 +60,7 @@ final class StepDefinitionDataConverterTest extends TestCase
 
         self::assertEquals(
             $expected_converted_step,
-            StepDefinitionDataConverter::convertStepDefinitionFromRESTFormatToDBCompatibleFormat($steps)
+            StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($steps)
         );
     }
 }
