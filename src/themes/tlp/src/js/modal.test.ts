@@ -302,36 +302,6 @@ describe(`Modal`, () => {
             expectTheModalToBeShown(modal_element);
         });
 
-        it(`and I hit the Escape key inside an input element, nothing happens`, () => {
-            const input = doc.createElement("input");
-            doc.body.append(input);
-            simulateEscapeKey(input);
-
-            expectTheModalToBeShown(modal_element);
-
-            input.remove();
-        });
-
-        it(`and I hit the Escape key inside a select element, nothing happens`, () => {
-            const select = doc.createElement("select");
-            doc.body.append(select);
-            simulateEscapeKey(select);
-
-            expectTheModalToBeShown(modal_element);
-
-            select.remove();
-        });
-
-        it(`and I hit the Escape key inside a textarea element, nothing happens`, () => {
-            const textarea = doc.createElement("textarea");
-            doc.body.append(textarea);
-            simulateEscapeKey(textarea);
-
-            expectTheModalToBeShown(modal_element);
-
-            textarea.remove();
-        });
-
         it(`and given the modal was hidden, when I hit the Escape key, nothing happens`, () => {
             modal.hide();
             simulateEscapeKey(doc.body);
@@ -350,6 +320,32 @@ describe(`Modal`, () => {
             modal.destroy();
 
             expect(removeEventListener).toHaveBeenCalledWith("keyup", expect.anything());
+        });
+
+        describe(`hitting the Escape key in a form field`, () => {
+            beforeEach(() => {
+                document.body.innerHTML = ""; //We need to use document here so we can use focus()
+                modal = createModal(document, modal_element, { keyboard: true });
+                modal.show();
+            });
+            afterEach(() => {
+                modal.destroy();
+            });
+
+            it.each(["input", "textarea", "select"])(
+                `will 'unfocus' it if it is an %p element without closing the modal.`,
+                (form_element) => {
+                    const element = document.createElement(form_element);
+                    document.body.append(element);
+                    element.focus();
+                    simulateEscapeKey(element);
+
+                    expectTheModalToBeShown(modal_element);
+                    expect(element).not.toBe(document.activeElement);
+
+                    element.remove();
+                }
+            );
         });
     });
 });
