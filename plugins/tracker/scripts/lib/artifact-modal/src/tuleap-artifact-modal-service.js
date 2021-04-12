@@ -38,6 +38,7 @@ import {
     getTargetFieldPossibleValues,
     setUpFieldDependenciesActions,
 } from "./field-dependencies-helper.js";
+import { getSelectedValues } from "./model/field-values-formatter.js";
 
 export default ArtifactModalService;
 
@@ -46,15 +47,13 @@ ArtifactModalService.$inject = [
     "TlpModalService",
     "TuleapArtifactModalLoading",
     "TuleapArtifactModalTrackerTransformerService",
-    "TuleapArtifactFieldValuesService",
 ];
 
 function ArtifactModalService(
     $q,
     TlpModalService,
     TuleapArtifactModalLoading,
-    TuleapArtifactModalTrackerTransformerService,
-    TuleapArtifactFieldValuesService
+    TuleapArtifactModalTrackerTransformerService
 ) {
     const self = this;
     Object.assign(self, {
@@ -170,10 +169,7 @@ function ArtifactModalService(
                     modal_model.tracker.fields
                 );
                 applyWorkflowTransitions(transformed_tracker, {});
-                modal_model.values = TuleapArtifactFieldValuesService.getSelectedValues(
-                    initial_values,
-                    transformed_tracker
-                );
+                modal_model.values = getSelectedValues(initial_values, transformed_tracker);
                 applyFieldDependencies(transformed_tracker, modal_model.values);
                 modal_model.ordered_fields = buildFormTree(transformed_tracker);
 
@@ -226,10 +222,7 @@ function ArtifactModalService(
                 );
 
                 applyWorkflowTransitions(tracker_with_field_values, artifact_values);
-                modal_model.values = TuleapArtifactFieldValuesService.getSelectedValues(
-                    artifact_values,
-                    transformed_tracker
-                );
+                modal_model.values = getSelectedValues(artifact_values, transformed_tracker);
                 modal_model.title = artifact_values.title;
                 applyFieldDependencies(tracker_with_field_values, modal_model.values);
 

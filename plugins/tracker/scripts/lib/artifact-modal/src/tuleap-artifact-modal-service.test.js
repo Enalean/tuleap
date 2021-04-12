@@ -27,11 +27,11 @@ import * as form_tree_builder from "./model/form-tree-builder.js";
 import * as workflow_field_values_filter from "./model/workflow-field-values-filter.js";
 import * as file_upload_rules_state from "./fields/file-field/file-upload-rules-state.js";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
+import * as field_values_formatter from "./model/field-values-formatter.js";
 
 describe("NewTuleapArtifactModalService", () => {
     let NewTuleapArtifactModalService,
         $q,
-        TuleapArtifactFieldValuesService,
         TuleapArtifactModalTrackerTransformerService,
         buildFormTree,
         enforceWorkflowTransitions,
@@ -42,7 +42,8 @@ describe("NewTuleapArtifactModalService", () => {
         getArtifactWithCompleteTrackerStructure,
         updateFileUploadRulesWhenNeeded,
         tracker,
-        wrapPromise;
+        wrapPromise,
+        getSelectedValues;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function ($provide) {
@@ -62,14 +63,6 @@ describe("NewTuleapArtifactModalService", () => {
                     return $delegate;
                 }
             );
-
-            $provide.decorator("TuleapArtifactFieldValuesService", function ($delegate) {
-                jest.spyOn($delegate, "getSelectedValues").mockImplementation(function () {
-                    return {};
-                });
-
-                return $delegate;
-            });
         });
 
         let $rootScope;
@@ -77,13 +70,11 @@ describe("NewTuleapArtifactModalService", () => {
             _$rootScope_,
             _$q_,
             _TuleapArtifactModalTrackerTransformerService_,
-            _TuleapArtifactFieldValuesService_,
             _NewTuleapArtifactModalService_
         ) {
             $rootScope = _$rootScope_;
             $q = _$q_;
             TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
-            TuleapArtifactFieldValuesService = _TuleapArtifactFieldValuesService_;
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
         });
 
@@ -104,6 +95,9 @@ describe("NewTuleapArtifactModalService", () => {
             workflow_field_values_filter,
             "enforceWorkflowTransitions"
         );
+        getSelectedValues = jest
+            .spyOn(field_values_formatter, "getSelectedValues")
+            .mockReturnValue({});
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
@@ -134,10 +128,7 @@ describe("NewTuleapArtifactModalService", () => {
             expect(await wrapPromise(promise)).toBeDefined();
             expect(getTracker).toHaveBeenCalledWith(tracker_id);
             expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
-            expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith(
-                {},
-                tracker
-            );
+            expect(getSelectedValues).toHaveBeenCalledWith({}, tracker);
             expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(
                 tracker,
                 true
@@ -270,23 +261,21 @@ describe("NewTuleapArtifactModalService", () => {
     });
 
     describe("initEditionModalModel() -", () => {
-        var user_id, tracker_id, artifact_id;
+        let user_id, tracker_id, artifact_id;
 
         beforeEach(() => {
-            TuleapArtifactFieldValuesService.getSelectedValues.mockImplementation(() => {
-                return {
-                    113: {
-                        value: "onomatomania",
-                    },
-                };
+            getSelectedValues.mockReturnValue({
+                113: {
+                    value: "onomatomania",
+                },
             });
 
-            var comment_order_preference = {
+            const comment_order_preference = {
                 key: "tracker_comment_invertorder_93",
                 value: "1",
             };
 
-            var text_format_preference = {
+            const text_format_preference = {
                 key: "user_edition_default_format",
                 value: "html",
             };
@@ -355,10 +344,7 @@ describe("NewTuleapArtifactModalService", () => {
                 );
 
                 expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
-                expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith(
-                    expect.any(Object),
-                    tracker
-                );
+                expect(getSelectedValues).toHaveBeenCalledWith(expect.any(Object), tracker);
                 expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(
                     tracker,
                     false

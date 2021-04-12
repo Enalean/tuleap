@@ -17,24 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import tuleap_artifact_modal_module from "../tuleap-artifact-modal.js";
-import angular from "angular";
 import moment from "moment";
-import "angular-mocks";
-import * as text_field_formatter from "../fields/text-field/text-field-value-formatter.js";
+import { getSelectedValues } from "./field-values-formatter.js";
 
-describe("TuleapArtifactFieldValuesService", () => {
-    let FieldValuesService;
-    beforeEach(() => {
-        angular.mock.module(tuleap_artifact_modal_module);
-
-        angular.mock.inject(function (_TuleapArtifactFieldValuesService_) {
-            FieldValuesService = _TuleapArtifactFieldValuesService_;
-
-            jest.spyOn(moment.fn, "format").mockImplementation(() => {});
-        });
-    });
-
+describe("TuleapArtifactFieldValues", () => {
     describe("getSelectedValues() -", () => {
         describe("Given a map of artifact field values", () => {
             it("and given a tracker containing those fields, when I get the fields' selected values, then a map containing all the fields provided and also containing default values for all the other fields of the tracker will be returned", () => {
@@ -82,7 +68,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     ],
                 };
 
-                const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
 
                 expect(output).toEqual({
                     655: {
@@ -114,7 +100,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("containing read-only fields such as aid, atid, lud, burndown, priority, subby, luby, subon, cross or tbl and given a tracker, when I get the fields' selected values, then those fields won't have a value in the returned map", function () {
-                var artifact_values = {
+                const artifact_values = {
                     280: { field_id: 280, value: 271 },
                     973: { field_id: 973, value: 436 },
                     9: { field_id: 9, value: "2015-06-10T13:38:57+02:00" },
@@ -141,7 +127,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         ],
                     },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         { field_id: 280, type: "aid" },
                         { field_id: 973, type: "atid" },
@@ -154,7 +140,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         { field_id: 906, type: "cross" },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     280: { field_id: 280, type: "aid" },
                     973: { field_id: 973, type: "atid" },
@@ -171,7 +157,7 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing a string field,", function () {
             it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a null value will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 870,
@@ -182,7 +168,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     870: {
                         field_id: 870,
@@ -194,7 +180,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and its default value will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 175,
@@ -206,7 +192,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues([], tracker);
+                const output = getSelectedValues([], tracker);
                 expect(output).toEqual({
                     175: {
                         field_id: 175,
@@ -220,7 +206,7 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing a text field,", function () {
             it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
-                var artifact_values = {
+                const artifact_values = {
                     901: {
                         field_id: 901,
                         format: "html",
@@ -228,7 +214,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
                     },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 901,
@@ -239,11 +225,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                jest.spyOn(text_field_formatter, "formatExistingValue").mockReturnValue({
-                    content: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
-                    format: "html",
-                });
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
 
                 expect(output).toEqual({
                     901: {
@@ -259,7 +241,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id, the 'text' format and a null value", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 336,
@@ -270,7 +252,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     336: {
                         field_id: 336,
@@ -285,7 +267,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id, the default format and the default value", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 349,
@@ -300,7 +282,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     349: {
                         field_id: 349,
@@ -317,7 +299,7 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing an int field and a float field,", function () {
             it("and that those fields didn't have a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and a null value will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 685,
@@ -335,7 +317,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     685: {
                         field_id: 685,
@@ -353,7 +335,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that those fields had a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and their default value will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 163,
@@ -373,7 +355,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     163: {
                         field_id: 163,
@@ -395,10 +377,11 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing a date field", function () {
             it("without the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
-                var artifact_values = {
+                jest.spyOn(moment.fn, "format").mockImplementation(() => {});
+                const artifact_values = {
                     824: { field_id: 824, value: "2015-05-29T00:00:00+02:00" },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 824,
@@ -409,17 +392,18 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
                 expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD");
                 expect(output[824].field_id).toEqual(824);
                 expect(output[824].permissions).toEqual(["read", "update", "create"]);
             });
 
             it("with the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
-                var artifact_values = {
+                jest.spyOn(moment.fn, "format").mockImplementation(() => {});
+                const artifact_values = {
                     609: { field_id: 609, value: "2015-06-02T18:09:43+03:00" },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 609,
@@ -431,7 +415,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
                 expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm");
                 expect(output[609].field_id).toEqual(609);
                 expect(output[609].permissions).toEqual(["read", "update", "create"]);
@@ -440,13 +424,13 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing a selectbox field", function () {
             it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact values will be returned", function () {
-                var artifact_values = {
+                const artifact_values = {
                     613: {
                         field_id: 613,
                         bind_value_ids: [557],
                     },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 613,
@@ -457,7 +441,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     613: {
                         field_id: 613,
@@ -469,7 +453,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and bind_value_ids array [100] will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 87,
@@ -480,7 +464,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     87: {
                         field_id: 87,
@@ -492,7 +476,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array containing its default value will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 622,
@@ -504,7 +488,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     622: {
                         field_id: 622,
@@ -516,7 +500,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it had a default value that wasn't in the available transitions values, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array containing the first available transition value will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 90,
@@ -533,7 +517,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     90: {
                         field_id: 90,
@@ -547,13 +531,13 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing a multiselectbox field", function () {
             it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact value will be returned", function () {
-                var artifact_values = {
+                const artifact_values = {
                     383: {
                         field_id: 383,
                         bind_value_ids: [971, 679],
                     },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 383,
@@ -564,7 +548,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     383: {
                         field_id: 383,
@@ -576,7 +560,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 860,
@@ -587,7 +571,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     860: {
                         field_id: 860,
@@ -599,7 +583,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 698,
@@ -614,7 +598,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     698: {
                         field_id: 698,
@@ -628,10 +612,10 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing a checkbox field with 3 possible values,", function () {
             it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing an array of 3 elements including the values in the artifact field value will be returned", function () {
-                var artifact_values = {
+                const artifact_values = {
                     137: { field_id: 137, type: "cb", bind_value_ids: [498, 443] },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 137,
@@ -647,7 +631,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     137: {
                         field_id: 137,
@@ -659,7 +643,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing only the field's id and a bind_value_ids array filled with 3 nulls will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 607,
@@ -675,7 +659,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     607: {
                         field_id: 607,
@@ -687,7 +671,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it had 2 default values, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values and a null will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 910,
@@ -707,7 +691,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     910: {
                         field_id: 910,
@@ -721,10 +705,10 @@ describe("TuleapArtifactFieldValuesService", () => {
 
         describe("Given a tracker containing a radiobutton field,", function () {
             it("and given a map of artifact field values containing that field and that field's bind_value_ids array was empty, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function () {
-                var artifact_values = {
+                const artifact_values = {
                     430: { field_id: 430, type: "rb", bind_value_ids: [] },
                 };
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 430,
@@ -735,7 +719,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                const output = getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     430: {
                         field_id: 430,
@@ -747,7 +731,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 242,
@@ -758,7 +742,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     242: {
                         field_id: 242,
@@ -770,7 +754,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
 
             it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and an array of its default values will be returned", function () {
-                var tracker = {
+                const tracker = {
                     fields: [
                         {
                             field_id: 897,
@@ -785,7 +769,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
-                var output = FieldValuesService.getSelectedValues({}, tracker);
+                const output = getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     897: {
                         field_id: 897,
@@ -798,7 +782,7 @@ describe("TuleapArtifactFieldValuesService", () => {
         });
 
         it("Given a tracker containing an artifact links field, when I get the fields' selected values, then a map of objects containing the fields' id, an empty string that will contain the list of ids to link to and an empty links array will be returned", function () {
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 803,
@@ -809,7 +793,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            var output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 803: {
                     field_id: 803,
@@ -824,13 +808,13 @@ describe("TuleapArtifactFieldValuesService", () => {
 
     describe("Given a tracker containing a permissions field,", function () {
         it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's granted groups and is_used_by_default will be returned", function () {
-            var artifact_values = {
+            const artifact_values = {
                 904: {
                     field_id: 904,
                     granted_groups_ids: ["2", "101_3", "103"],
                 },
             };
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 904,
@@ -844,7 +828,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+            const output = getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 904: {
                     field_id: 904,
@@ -859,7 +843,7 @@ describe("TuleapArtifactFieldValuesService", () => {
         });
 
         it("when I get the fields' selected values, then a map of objects containing the field's id and value with an empty granted_groups array and is_used_by_default will be returned", function () {
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 662,
@@ -873,7 +857,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            var output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 662: {
                     field_id: 662,
@@ -910,7 +894,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+            const output = getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 103: {
                     field_id: 103,
@@ -943,7 +927,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 542: {
                     field_id: 542,
@@ -984,7 +968,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+            const output = getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 665: {
                     field_id: 665,
@@ -1009,7 +993,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 304: {
                     field_id: 304,
@@ -1037,7 +1021,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 304: {
                     field_id: 304,
@@ -1062,7 +1046,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 304: {
                     field_id: 304,
@@ -1113,7 +1097,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+            const output = getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 319: {
                     field_id: 319,
@@ -1157,7 +1141,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 378: {
                     field_id: 378,
@@ -1194,7 +1178,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     },
                 ],
             };
-            const output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = getSelectedValues({}, tracker);
             expect(output).toEqual({
                 667: {
                     field_id: 667,
