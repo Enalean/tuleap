@@ -18,12 +18,13 @@
  */
 
 import { patch } from "tlp";
+import type { FeatureReorderPosition } from "../feature-reordering";
 
 export async function moveElementFromProgramIncrementToTopBackLog(
     project_id: number,
     element_id: number
 ): Promise<void> {
-    await patch(`/api/projects/${project_id}/program_backlog`, {
+    await patch(`/api/projects/${encodeURIComponent(project_id)}/program_backlog`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -31,6 +32,26 @@ export async function moveElementFromProgramIncrementToTopBackLog(
             add: [{ id: element_id }],
             remove: [],
             remove_from_program_increment_to_add_to_the_backlog: true,
+        }),
+    });
+}
+
+export async function reorderElementInTopBacklog(
+    project_id: number,
+    feature_position: FeatureReorderPosition
+): Promise<void> {
+    await patch(`/api/projects/${encodeURIComponent(project_id)}/program_backlog`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            add: [],
+            remove: [],
+            order: {
+                ids: feature_position.ids,
+                direction: feature_position.direction,
+                compared_to: feature_position.compared_to,
+            },
         }),
     });
 }

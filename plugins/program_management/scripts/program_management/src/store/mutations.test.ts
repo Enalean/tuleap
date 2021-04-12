@@ -19,9 +19,10 @@
 
 import type { Feature, State } from "../type";
 import type { LinkUserStoryToFeature, LinkUserStoryToPlannedElement } from "./mutations";
-import mutations from "./mutations";
+import * as mutations from "./mutations";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
+import { Direction } from "../helpers/feature-reordering";
 
 describe("Mutations", () => {
     describe("addProgramIncrement", () => {
@@ -247,6 +248,68 @@ describe("Mutations", () => {
 
             mutations.linkUserStoriesToBePlannedElement(state, link);
             expect(state.to_be_planned_elements[0].user_stories).toEqual([{ id: 18 }]);
+        });
+    });
+
+    describe("changeFeaturePositionInProgramBacklog", () => {
+        it("When sibling does not exist, Then nothing happens", () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 101,
+                    } as Feature,
+                ] as Feature[],
+            } as State;
+
+            mutations.changeFeaturePositionInProgramBacklog(state, {
+                compared_to: 666,
+                direction: Direction.AFTER,
+                ids: [101],
+            });
+
+            expect(state.to_be_planned_elements).toEqual([{ id: 101 }]);
+        });
+
+        it("When direction is after, Then feature is moving after sibling", () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 101,
+                    } as Feature,
+                    {
+                        id: 102,
+                    } as Feature,
+                ] as Feature[],
+            } as State;
+
+            mutations.changeFeaturePositionInProgramBacklog(state, {
+                compared_to: 102,
+                direction: Direction.AFTER,
+                ids: [101],
+            });
+
+            expect(state.to_be_planned_elements).toEqual([{ id: 102 }, { id: 101 }]);
+        });
+
+        it("When direction is before, Then feature is moving before sibling", () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 101,
+                    } as Feature,
+                    {
+                        id: 102,
+                    } as Feature,
+                ] as Feature[],
+            } as State;
+
+            mutations.changeFeaturePositionInProgramBacklog(state, {
+                compared_to: 101,
+                direction: Direction.BEFORE,
+                ids: [102],
+            });
+
+            expect(state.to_be_planned_elements).toEqual([{ id: 102 }, { id: 101 }]);
         });
     });
 });
