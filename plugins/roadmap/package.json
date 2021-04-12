@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "current-week-number": "^1.0.7",
     "vue": "^2.6.12",
     "vue-gettext": "^2.1.12"
   },

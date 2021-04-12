@@ -29,6 +29,7 @@
             v-on:change="$emit('input', $event.target.value)"
             data-test="select-timescale"
         >
+            <option value="week" v-bind:selected="this.value === 'week'" v-translate>Week</option>
             <option value="month" v-bind:selected="this.value === 'month'" v-translate>
                 Month
             </option>

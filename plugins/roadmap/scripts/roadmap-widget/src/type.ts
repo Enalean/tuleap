@@ -28,7 +28,7 @@ export interface Task {
     readonly dependencies: Record<string, number[]>;
 }
 
-export type TimeScale = "month" | "quarter";
+export type TimeScale = "month" | "quarter" | "week";
 
 export interface TimePeriod {
     readonly units: Date[];
