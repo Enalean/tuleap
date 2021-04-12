@@ -98,6 +98,12 @@ abstract class BaseLayout extends Response
      */
     protected $javascript_assets = [];
 
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    private $csp_nonce;
+
     public function __construct($root)
     {
         parent::__construct();
@@ -112,6 +118,8 @@ abstract class BaseLayout extends Response
         $this->url_verification = new \URLVerification();
 
         $this->css_assets = new CssAssetCollection([]);
+
+        $this->csp_nonce = sodium_bin2base64(random_bytes(32), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
     }
 
     abstract public function header(array $params);
@@ -215,13 +223,14 @@ abstract class BaseLayout extends Response
         $is_anon      = UserManager::instance()->getCurrentUser()->isAnonymous();
         $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
         if (($is_anon && (headers_sent() || $has_feedback)) || (! $is_anon && headers_sent())) {
+            $html_purifier = Codendi_HTMLPurifier::instance();
             $this->header(['title' => 'Redirection']);
             echo '<p>' . $GLOBALS['Language']->getText('global', 'return_to', [$url]) . '</p>';
-            echo '<script type="text/javascript">';
+            echo '<script type="text/javascript" nonce="' . $html_purifier->purify($this->getCSPNonce()) . '">';
             if ($has_feedback) {
                 echo 'setTimeout(function() {';
             }
-            echo " location.href = '" . Codendi_HTMLPurifier::instance()->purify($url, Codendi_HTMLPurifier::CONFIG_JS_QUOTE) . "';";
+            echo " location.href = '" . $html_purifier->purify($url, Codendi_HTMLPurifier::CONFIG_JS_QUOTE) . "';";
             if ($has_feedback) {
                 echo '}, 5000);';
             }
@@ -418,5 +427,10 @@ abstract class BaseLayout extends Response
                 "project-background/" . $background->getIdentifier()
             )
         );
+    }
+
+    final protected function getCSPNonce(): string
+    {
+        return $this->csp_nonce;
     }
 }

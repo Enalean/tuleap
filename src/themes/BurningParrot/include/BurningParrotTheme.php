@@ -314,7 +314,8 @@ class BurningParrotTheme extends BaseLayout
             $this->javascript_assets,
             $browser_deprecation_message,
             $this->canShowFooter($params),
-            $this->version->getFullDescriptiveVersion()
+            $this->version->getFullDescriptiveVersion(),
+            $this->getCSPNonce()
         );
         $this->renderer->renderToPage('footer', $footer);
     }

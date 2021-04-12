@@ -402,7 +402,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->includeJavascriptFile($this->include_asset->getFileURL('switch-to-fp.js'));
 
         //Javascript i18n
-        echo '<script type="text/javascript">' . "\n";
+        echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";
         include $GLOBALS['Language']->getContent('scripts/locale');
         echo '
         codendi.imgroot = \'' . $this->imgroot . '\';
@@ -415,10 +415,10 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         foreach ($this->javascript as $js) {
             if (isset($js['file'])) {
-                echo '<script type="text/javascript" src="' . $js['file'] . '"></script>' . "\n";
+                echo '<script type="text/javascript" src="' . $js['file'] . '" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '"></script>' . "\n";
             } else {
                 if (isset($js['snippet'])) {
-                    echo '<script type="text/javascript">' . "\n";
+                    echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";
                     echo '//<!--' . "\n";
                     echo $js['snippet'] . "\n";
                     echo '//-->' . "\n";
@@ -426,7 +426,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                 }
             }
         }
-        echo '<script type="text/javascript">' . "\n";
+        echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";
         $em->processEvent(Event::JAVASCRIPT, null);
         echo '
         </script>';
@@ -449,9 +449,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     {
         foreach ($this->javascript_in_footer as $js) {
             if (isset($js['file'])) {
-                echo '<script type="text/javascript" src="' . $js['file'] . '"></script>' . "\n";
+                echo '<script type="text/javascript" src="' . $js['file'] . '" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '"></script>' . "\n";
             } else {
-                echo '<script type="text/javascript">' . "\n";
+                echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";
                 echo '//<!--' . "\n";
                 echo $js['snippet'] . "\n";
                 echo '//-->' . "\n";
@@ -459,9 +459,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             }
         }
         foreach ($this->javascript_assets as $javascript_asset) {
-            echo sprintf('<script type="text/javascript" src="%s"></script>%s', $javascript_asset->getFileURL(), PHP_EOL);
+            echo sprintf('<script type="text/javascript" src="%s" nonce="%s"></script>%s', $javascript_asset->getFileURL(), $this->purifier->purify($this->getCSPNonce()), PHP_EOL);
         }
-        echo '<script type="text/javascript">' . "\n";
+        echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";
         echo $this->getFooterSiteJs();
         echo '
         </script>';
