@@ -137,7 +137,11 @@ export async function handleDrop(
         }
     }
 
-    if (plan_in_program_increment_id && remove_from_program_increment_id) {
+    if (
+        plan_in_program_increment_id &&
+        remove_from_program_increment_id &&
+        plan_in_program_increment_id !== remove_from_program_increment_id
+    ) {
         const payload: FeatureIdToMoveFromProgramIncrementToAnother = {
             feature_id: element_id,
             from_program_increment: context.getters.getProgramIncrementFromId(
