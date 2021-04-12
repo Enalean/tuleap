@@ -40,7 +40,7 @@ final class StepCheckerTest extends TestCase
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
         self::expectExceptionMessage("Description or Expected Result text field missing");
-        StepChecker::checkStepDataFromREST($step);
+        StepChecker::checkStepDataFromRESTPost($step);
     }
 
     public function testItThrowsAnExceptionWhenTheStepDoesNotHaveExpectedResult(): void
@@ -55,7 +55,7 @@ final class StepCheckerTest extends TestCase
         self::expectExceptionCode(400);
         self::expectExceptionMessage("Description or Expected Result text field missing");
 
-        StepChecker::checkStepDataFromREST($step);
+        StepChecker::checkStepDataFromRESTPost($step);
     }
 
     public function testItThrowsAnExceptionWhenDescriptionOfTheStepHasAnInvalidFormat(): void
@@ -70,9 +70,9 @@ final class StepCheckerTest extends TestCase
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported");
+        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
 
-        StepChecker::checkStepDataFromREST($step);
+        StepChecker::checkStepDataFromRESTPost($step);
     }
 
     public function testItThrowsAnExceptionWhenExpectedResultOfTheStepHasAnInvalidFormat(): void
@@ -87,9 +87,41 @@ final class StepCheckerTest extends TestCase
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported");
+        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
 
-        StepChecker::checkStepDataFromREST($step);
+        StepChecker::checkStepDataFromRESTPost($step);
+    }
+    public function testItThrowsAnExceptionWhenDescriptionOfTheStepIsTheTextFormat(): void
+    {
+        $step =
+            [
+                "description"             => "some description",
+                "description_format"      =>  Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                "expected_results"        => "some results",
+                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
+            ];
+
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
+        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
+
+        StepChecker::checkStepDataFromRESTPost($step);
+    }
+    public function testItThrowsAnExceptionWhenExpectedResultOfTheStepIsTheTextFormat(): void
+    {
+        $step =
+            [
+                "description"             => "some description",
+                "description_format"      =>  Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                "expected_results"        => "some results",
+                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+            ];
+
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
+        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
+
+        StepChecker::checkStepDataFromRESTPost($step);
     }
 
     public function testItThrowsAnExceptionWhenExpectedResultFormatIsNotSet(): void
@@ -105,7 +137,7 @@ final class StepCheckerTest extends TestCase
         self::expectExceptionCode(400);
         self::expectExceptionMessage("Description format or Expected Result format is missing");
 
-        StepChecker::checkStepDataFromREST($step);
+        StepChecker::checkStepDataFromRESTPost($step);
     }
 
     public function testItThrowsAnExceptionWhenDescriptionFormatIsNotSet(): void
@@ -122,7 +154,7 @@ final class StepCheckerTest extends TestCase
         self::expectExceptionCode(400);
         self::expectExceptionMessage("Description format or Expected Result format is missing");
 
-        StepChecker::checkStepDataFromREST($step);
+        StepChecker::checkStepDataFromRESTPost($step);
     }
 
     public function testItReturnsTrueWhenTheProvidedFormatIsValid(): void

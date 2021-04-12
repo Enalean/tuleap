@@ -261,7 +261,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         ) {
             return null;
         }
-        return StepDefinitionDataConverter::convertStepDefinitionFromRESTFormatToDBCompatibleFormat($value["value"]);
+        return StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($value["value"]);
     }
 
     /**
@@ -277,7 +277,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             return null;
         }
 
-        return StepDefinitionDataConverter::convertStepDefinitionFromRESTFormatToDBCompatibleFormat($value["value"]);
+        return StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($value["value"]);
     }
 
     private function areWeTryingToUpdateAnExistingStepDefinition(?Artifact $artifact): bool

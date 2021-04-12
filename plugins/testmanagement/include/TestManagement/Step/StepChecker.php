@@ -31,7 +31,7 @@ final class StepChecker
     /**
      * @throws RestException
      */
-    public static function checkStepDataFromREST(array $step): void
+    public static function checkStepDataFromRESTPost(array $step): void
     {
         if (! isset($step["description"]) || ! isset($step["expected_results"])) {
             throw new RestException(400, 'Description or Expected Result text field missing');
@@ -42,10 +42,10 @@ final class StepChecker
         }
 
         if (
-            ! self::isSubmittedFormatValid($step['description_format']) ||
-            ! self::isSubmittedFormatValid($step['expected_results_format'])
+            ! self::isSubmittedFormatFromPostRESTValid($step['description_format']) ||
+            ! self::isSubmittedFormatFromPostRESTValid($step['expected_results_format'])
         ) {
-            throw new RestException(400, "Invalid format given, only 'html', 'text' or 'commonmark' are supported");
+            throw new RestException(400, "Invalid format given, only 'html' or 'commonmark' are supported for step");
         }
     }
 
@@ -55,6 +55,18 @@ final class StepChecker
             $format,
             [
                     Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                    Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                ],
+            true
+        );
+    }
+
+    private static function isSubmittedFormatFromPostRESTValid(string $format): bool
+    {
+        return in_array(
+            $format,
+            [
                     Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
                     Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
                 ],
