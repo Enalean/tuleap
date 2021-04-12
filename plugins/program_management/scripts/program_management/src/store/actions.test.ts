@@ -387,6 +387,39 @@ describe("Actions", () => {
                 12
             );
         });
+
+        it(`When feature are moving in the same program increment, Then nothing happen`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "12");
+            dropped_element.setAttribute("data-program-increment-id", "1");
+            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
+            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+            target_dropzone.setAttribute("data-program-increment-id", "1");
+            target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
+            target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
+
+            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
+            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
+
+            const getProgramIncrementFromId = jest.fn();
+
+            context.getters = { getProgramIncrementFromId };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+            } as HandleDropContextWithProgramId);
+
+            expect(getProgramIncrementFromId).not.toHaveBeenCalled();
+            expect(getProgramIncrementFromId).not.toHaveBeenCalled();
+
+            expect(unplan_feature).not.toHaveBeenCalled();
+            expect(plan_feature).not.toHaveBeenCalled();
+        });
     });
 
     describe(`handleModalError`, () => {
