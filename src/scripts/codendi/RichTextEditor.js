@@ -28,7 +28,7 @@ import marked from "marked";
 
 var codendi = window.codendi || {};
 
-const turndown_service = new TurndownService();
+const turndown_service = new TurndownService({ emDelimiter: "*" });
 
 codendi.RTE = Class.create({
     initialize: function (element, options) {
