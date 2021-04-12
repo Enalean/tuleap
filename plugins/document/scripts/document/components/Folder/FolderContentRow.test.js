@@ -22,12 +22,16 @@ import localVue from "../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FolderContentRow from "./FolderContentRow.vue";
 import { TYPE_FILE } from "../../constants";
+import EventBus from "../../helpers/event-bus";
 
-function getFolderContentRowInstance(store, props) {
+function getFolderContentRowInstance(store, props, data = {}) {
     return shallowMount(FolderContentRow, {
         localVue,
         propsData: props,
         mocks: { $store: store },
+        data() {
+            return { ...data };
+        },
         stubs: {
             "tlp-relative-date": true,
         },
@@ -198,6 +202,44 @@ describe("FolderContentRow", () => {
 
             expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
             expect(wrapper.find(".document-tree-cell-updatedate").exists()).toBeFalsy();
+        });
+    });
+
+    describe("test toggle-quick-look event emission", () => {
+        it("Should emit toggle-quick-look event if no dropdown is displayed", () => {
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            wrapper = getFolderContentRowInstance(
+                store,
+                {
+                    item,
+                },
+                { is_dropdown_displayed: false }
+            );
+
+            wrapper.find("[data-test=document-folder-content-row]").trigger("click");
+
+            expect(event_bus_emit).toHaveBeenCalledWith("toggle-quick-look", {
+                details: { item },
+            });
+        });
+
+        it("Should not emit toggle-quick-look event if a dropdown is displayed", () => {
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            wrapper = getFolderContentRowInstance(
+                store,
+                {
+                    item,
+                },
+                { is_dropdown_displayed: true }
+            );
+
+            wrapper.find("[data-test=document-folder-content-row]").trigger("click");
+
+            expect(event_bus_emit).not.toHaveBeenCalledWith("toggle-quick-look", {
+                details: { item },
+            });
         });
     });
 });
