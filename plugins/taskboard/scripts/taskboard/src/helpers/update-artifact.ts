@@ -29,7 +29,7 @@ import type {
     TextValue,
     Values,
 } from "../store/swimlane/card/api-artifact-type";
-import { TextFormat } from "../store/swimlane/card/api-artifact-type";
+import { TEXT } from "../store/swimlane/card/api-artifact-type";
 import type { AddInPlace, AssignedToField, Card, TitleField, Tracker, User } from "../type";
 
 export function getPutArtifactBody(payload: UpdateCardPayload): PutBody {
@@ -179,6 +179,6 @@ function removeNewlines(label: string): string {
 function forceTextFormatForTextField(label: string): TextValue {
     return {
         content: label,
-        format: TextFormat.TEXT,
+        format: TEXT,
     };
 }

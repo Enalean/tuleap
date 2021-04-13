@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Direction } from "../type";
+import type { Direction } from "../type";
+import { BOTTOM, NEXT, PREVIOUS, TOP } from "../type";
 import { callNavigationShortcut } from "./handle-navigation-shortcut";
 import * as getter_focused_row from "./get-focused-row";
 import * as getter_target_row from "./get-target-row";
@@ -56,9 +57,9 @@ describe("callNavigationShortcut", () => {
         });
     });
 
-    describe("`Direction.bottom` is passed, we want the table last row", () => {
+    describe("`BOTTOM` is passed, we want the table last row", () => {
         it("focuses the row link returned by getTableLastChild()", () => {
-            direction = Direction.bottom;
+            direction = BOTTOM;
             jest.spyOn(getter_target_row, "getTableLastChild").mockReturnValue(row);
 
             callNavigationShortcut(doc, direction);
@@ -66,7 +67,7 @@ describe("callNavigationShortcut", () => {
         });
 
         it("does not focus row link if getTableLastChild() returns null", () => {
-            direction = Direction.bottom;
+            direction = BOTTOM;
             jest.spyOn(getter_target_row, "getTableLastChild").mockReturnValue(null);
 
             callNavigationShortcut(doc, direction);
@@ -74,9 +75,9 @@ describe("callNavigationShortcut", () => {
         });
     });
 
-    describe("`Direction.top` is passed, we want the table first row", () => {
+    describe("`TOP` is passed, we want the table first row", () => {
         it("focuses the row link returned by getTableFirstChild()", () => {
-            direction = Direction.top;
+            direction = TOP;
             jest.spyOn(getter_target_row, "getTableFirstChild").mockReturnValue(row);
 
             callNavigationShortcut(doc, direction);
@@ -84,7 +85,7 @@ describe("callNavigationShortcut", () => {
         });
 
         it("does not focus row link if getTableFirstChild() returns null", () => {
-            direction = Direction.top;
+            direction = TOP;
             jest.spyOn(getter_target_row, "getTableFirstChild").mockReturnValue(null);
 
             callNavigationShortcut(doc, direction);
@@ -92,9 +93,9 @@ describe("callNavigationShortcut", () => {
         });
     });
 
-    describe("`Direction.previous` is passed, we want the focused row previous one", () => {
+    describe("`PREVIOUS` is passed, we want the focused row previous one", () => {
         it("focuses the row link returned by getPreviousSibling()", () => {
-            direction = Direction.previous;
+            direction = PREVIOUS;
             jest.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(row);
             jest.spyOn(getter_target_row, "getPreviousSibling").mockReturnValue(row);
 
@@ -103,7 +104,7 @@ describe("callNavigationShortcut", () => {
         });
 
         it("does not focus row link if getPreviousSibling() returns null", () => {
-            direction = Direction.previous;
+            direction = PREVIOUS;
             jest.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(row);
             jest.spyOn(getter_target_row, "getPreviousSibling").mockReturnValue(null);
 
@@ -112,7 +113,7 @@ describe("callNavigationShortcut", () => {
         });
 
         it("does not focus row link if no row is focused in the first place", () => {
-            direction = Direction.previous;
+            direction = PREVIOUS;
             jest.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(null);
 
             callNavigationShortcut(doc, direction);
@@ -120,9 +121,9 @@ describe("callNavigationShortcut", () => {
         });
     });
 
-    describe("`Direction.next` is passed, we want the focused row next one", () => {
+    describe("`NEXT` is passed, we want the focused row next one", () => {
         it("focuses the row link returned by getNextSibling()", () => {
-            direction = Direction.next;
+            direction = NEXT;
             jest.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(row);
             jest.spyOn(getter_target_row, "getNextSibling").mockReturnValue(row);
 
@@ -131,7 +132,7 @@ describe("callNavigationShortcut", () => {
         });
 
         it("does not focus row link if getNextSibling() returns null", () => {
-            direction = Direction.next;
+            direction = NEXT;
             jest.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(row);
             jest.spyOn(getter_target_row, "getNextSibling").mockReturnValue(null);
 
@@ -140,7 +141,7 @@ describe("callNavigationShortcut", () => {
         });
 
         it("does not focus row link if no row is focused in the first place", () => {
-            direction = Direction.next;
+            direction = NEXT;
             jest.spyOn(getter_focused_row, "getFocusedRow").mockReturnValue(null);
 
             callNavigationShortcut(doc, direction);

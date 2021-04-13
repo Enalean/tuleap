@@ -28,7 +28,7 @@ import type {
     FeaturePlanningChangeInProgramIncrement,
     FeatureReorderPosition,
 } from "../helpers/feature-reordering";
-import { Direction } from "../helpers/feature-reordering";
+import { AFTER } from "../helpers/feature-reordering";
 import { getProgramIncrementFromId, getFeaturesInProgramIncrement } from "./getters";
 
 export interface LinkUserStoryToPlannedElement {
@@ -176,7 +176,7 @@ function orderFeatureInProgramBacklog(
 
     removeToBePlannedElement(state, feature);
 
-    const offset = reorder_position.direction === Direction.AFTER ? 1 : 0;
+    const offset = reorder_position.direction === AFTER ? 1 : 0;
     state.to_be_planned_elements.splice(sibling_index + offset, 0, feature);
 }
 
@@ -216,7 +216,7 @@ function orderFeatureInProgramIncrement(
         removeFeatureFromProgramIncrement(state, { program_increment_id, feature_id: feature.id });
     }
 
-    const offset = reorder_position.direction === Direction.AFTER ? 1 : 0;
+    const offset = reorder_position.direction === AFTER ? 1 : 0;
     getFeaturesInProgramIncrement(state)(program_increment_id).splice(
         sibling_index + offset,
         0,

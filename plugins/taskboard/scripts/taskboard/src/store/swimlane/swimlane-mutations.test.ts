@@ -18,7 +18,7 @@
  */
 
 import type { Card, ColumnDefinition, Mapping, Swimlane } from "../../type";
-import { Direction } from "../../type";
+import { BEFORE } from "../../type";
 import * as mutations from "./swimlane-mutations";
 import type { SwimlaneState } from "./type";
 import { findSwimlane, findSwimlaneIndex } from "./swimlane-helpers";
@@ -438,7 +438,7 @@ describe(`Swimlane state mutations`, () => {
                 column: { id: 10 } as ColumnDefinition,
                 position: {
                     ids: [card_to_move.id],
-                    direction: Direction.BEFORE, // Card is moved to the top
+                    direction: BEFORE, // Card is moved to the top
                     compared_to: 100,
                 },
             });
@@ -503,7 +503,7 @@ describe(`Swimlane state mutations`, () => {
 
             const position = {
                 ids: [card_to_move.id],
-                direction: Direction.BEFORE, // Card is moved to the top
+                direction: BEFORE, // Card is moved to the top
                 compared_to: 103,
             };
 

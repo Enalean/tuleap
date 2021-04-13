@@ -27,13 +27,20 @@ import type {
     TrackerList,
     TrackerToBeCreatedMandatoryData,
 } from "./type";
-import { CreationOptions } from "./type";
+import {
+    FROM_JIRA,
+    NONE_YET,
+    TRACKER_ANOTHER_PROJECT,
+    TRACKER_EMPTY,
+    TRACKER_TEMPLATE,
+    TRACKER_XML_FILE,
+} from "./type";
 
 describe("getters", () => {
     describe("is_ready_for_step_2", () => {
         it("Is not ready if no option is selected", () => {
             const state: State = {
-                active_option: CreationOptions.NONE_YET,
+                active_option: NONE_YET,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: false,
             } as State;
@@ -43,7 +50,7 @@ describe("getters", () => {
 
         it("Is not ready if no tracker template is selected", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_TEMPLATE,
+                active_option: TRACKER_TEMPLATE,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: false,
             } as State;
@@ -53,7 +60,7 @@ describe("getters", () => {
 
         it("Is ready if TRACKER_TEMPLATE option is selected along with a tracker", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_TEMPLATE,
+                active_option: TRACKER_TEMPLATE,
                 selected_tracker_template: {
                     id: "101",
                     name: "Bugs",
@@ -67,7 +74,7 @@ describe("getters", () => {
 
         it("Is not ready if TRACKER_XML_FILE option is selected along with an invalid xml file", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_XML_FILE,
+                active_option: TRACKER_XML_FILE,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: true,
@@ -79,7 +86,7 @@ describe("getters", () => {
 
         it("Is not ready if TRACKER_XML_FILE option is selected but the selected XML file is being parsed", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_XML_FILE,
+                active_option: TRACKER_XML_FILE,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: true,
@@ -91,7 +98,7 @@ describe("getters", () => {
 
         it("Is ready if TRACKER_XML_FILE option is selected along with a xml file", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_XML_FILE,
+                active_option: TRACKER_XML_FILE,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
@@ -103,7 +110,7 @@ describe("getters", () => {
 
         it("Is ready if TRACKER_EMPTY option is selected", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_EMPTY,
+                active_option: TRACKER_EMPTY,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
@@ -115,7 +122,7 @@ describe("getters", () => {
 
         it("Is not ready if TRACKER_ANOTHER_PROJECT option is selected with no tracker template", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_ANOTHER_PROJECT,
+                active_option: TRACKER_ANOTHER_PROJECT,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
@@ -128,7 +135,7 @@ describe("getters", () => {
 
         it("Is ready if TRACKER_ANOTHER_PROJECT option is selected along with a tracker template", () => {
             const state: State = {
-                active_option: CreationOptions.TRACKER_ANOTHER_PROJECT,
+                active_option: TRACKER_ANOTHER_PROJECT,
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
@@ -154,7 +161,7 @@ describe("getters", () => {
 
         it("Is ready if when a jira project and a jira tracker are selected", () => {
             const state: State = {
-                active_option: CreationOptions.FROM_JIRA,
+                active_option: FROM_JIRA,
                 from_jira_data: {
                     project: {
                         id: "IE",
@@ -256,7 +263,7 @@ describe("getters", () => {
         it("can't be displayed when the user has toggled the shortname input", () => {
             const state = {
                 is_in_slugify_mode: false,
-                active_option: CreationOptions.TRACKER_TEMPLATE,
+                active_option: TRACKER_TEMPLATE,
             } as State;
 
             expect(getters.can_display_slugify_mode(state)).toBe(false);
@@ -265,7 +272,7 @@ describe("getters", () => {
         it("can't be displayed when the user has selected the XML import option (shortname extracted from XML)", () => {
             const state = {
                 is_in_slugify_mode: true,
-                active_option: CreationOptions.TRACKER_XML_FILE,
+                active_option: TRACKER_XML_FILE,
             } as State;
 
             expect(getters.can_display_slugify_mode(state)).toBe(false);
@@ -274,7 +281,7 @@ describe("getters", () => {
         it("can be displayed otherwise", () => {
             const state = {
                 is_in_slugify_mode: true,
-                active_option: CreationOptions.TRACKER_TEMPLATE,
+                active_option: TRACKER_TEMPLATE,
             } as State;
 
             expect(getters.can_display_slugify_mode(state)).toBe(true);

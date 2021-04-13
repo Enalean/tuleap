@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Card, CardPosition } from "../type";
-import { Direction } from "../type";
+import type { Card, CardPosition, Direction } from "../type";
+import { AFTER, BEFORE } from "../type";
 
 export function getCardPosition(
     card: Card,
@@ -28,7 +28,7 @@ export function getCardPosition(
     const ids = [card.id];
 
     if (!sibling) {
-        const direction = Direction.AFTER;
+        const direction = AFTER;
         const last_card_in_column = cards_in_cell[cards_in_cell.length - 1];
         const compared_to = last_card_in_column.id;
 
@@ -48,13 +48,13 @@ function getCardToCompareWith(
 
     if (index === 0) {
         return {
-            direction: Direction.BEFORE,
+            direction: BEFORE,
             compared_to: cards_in_cell[0].id,
         };
     }
 
     return {
-        direction: Direction.AFTER,
+        direction: AFTER,
         compared_to: cards_in_cell[index - 1].id,
     };
 }

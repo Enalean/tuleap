@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum BurnupMode {
-    COUNT = "count",
-    EFFORT = "effort",
-}
+export type BurnupMode = "count" | "effort";
+export const COUNT: BurnupMode = "count";
+export const EFFORT: BurnupMode = "effort";
 
 export interface MilestoneData {
     label: string;

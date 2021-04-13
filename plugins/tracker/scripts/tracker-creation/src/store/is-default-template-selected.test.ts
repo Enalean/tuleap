@@ -19,7 +19,14 @@
 
 import { isDefaultTemplateSelected } from "./is-default-template-selected";
 import type { State } from "./type";
-import { CreationOptions } from "./type";
+import {
+    FROM_JIRA,
+    NONE_YET,
+    TRACKER_ANOTHER_PROJECT,
+    TRACKER_EMPTY,
+    TRACKER_TEMPLATE,
+    TRACKER_XML_FILE,
+} from "./type";
 
 describe("isDefaultTemplateSelected", () => {
     it("returns true if default template is selected", () => {
@@ -29,7 +36,14 @@ describe("isDefaultTemplateSelected", () => {
         );
     });
     it("returns false if default template is not selected", () => {
-        Object.values(CreationOptions).forEach((active_option: string) => {
+        [
+            NONE_YET,
+            TRACKER_TEMPLATE,
+            TRACKER_XML_FILE,
+            TRACKER_EMPTY,
+            TRACKER_ANOTHER_PROJECT,
+            FROM_JIRA,
+        ].forEach((active_option: string) => {
             expect(isDefaultTemplateSelected({ active_option } as State)).toBe(false);
         });
     });

@@ -23,8 +23,7 @@ export interface BannerState {
     activated: boolean;
 }
 
-export enum Importance {
-    Standard = "standard",
-    Warning = "warning",
-    Critical = "critical",
-}
+export type Importance = "standard" | "warning" | "critical";
+export const STANDARD: Importance = "standard";
+export const WARNING: Importance = "warning";
+export const CRITICAL: Importance = "critical";

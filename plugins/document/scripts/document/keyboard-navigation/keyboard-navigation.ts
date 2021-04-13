@@ -21,7 +21,7 @@ import type { Shortcut, ShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 import { addShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 
 import type { GettextProvider } from "../type";
-import { Direction } from "../type";
+import { BOTTOM, NEXT, PREVIOUS, TOP } from "../type";
 import { callNavigationShortcut } from "./handle-navigation-shortcut";
 import { clickOnDatashortcutElement } from "./click-on-datashortcut-element";
 
@@ -31,7 +31,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
         displayed_inputs: "Ctrl+k,Ctrl+↓",
         description: gettext_provider.$gettext("Select bottom item"),
         handle: () => {
-            callNavigationShortcut(document, Direction.bottom);
+            callNavigationShortcut(document, BOTTOM);
         },
     };
 
@@ -40,7 +40,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
         displayed_inputs: "Ctrl+j,Ctrl+↑",
         description: gettext_provider.$gettext("Select top item"),
         handle: () => {
-            callNavigationShortcut(document, Direction.top);
+            callNavigationShortcut(document, TOP);
         },
     };
 
@@ -49,7 +49,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
         displayed_inputs: "j,↑",
         description: gettext_provider.$gettext("Select previous item"),
         handle: () => {
-            callNavigationShortcut(document, Direction.previous);
+            callNavigationShortcut(document, PREVIOUS);
         },
     };
 
@@ -58,7 +58,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
         displayed_inputs: "k,↓",
         description: gettext_provider.$gettext("Select next item"),
         handle: () => {
-            callNavigationShortcut(document, Direction.next);
+            callNavigationShortcut(document, NEXT);
         },
     };
 

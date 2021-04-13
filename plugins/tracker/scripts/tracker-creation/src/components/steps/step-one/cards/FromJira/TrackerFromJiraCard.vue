@@ -29,7 +29,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { CreationOptions } from "../../../../../store/type";
+import { FROM_JIRA } from "../../../../../store/type";
 import SvgFromJira from "./SvgFromJira.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerFromJiraDescription from "./TrackerFromJiraDescription.vue";
@@ -44,6 +44,6 @@ import TrackerFromJira from "./TrackerFromJira.vue";
     },
 })
 export default class TrackerFromJiraCard extends Vue {
-    private option_name: CreationOptions = CreationOptions.FROM_JIRA;
+    private option_name = FROM_JIRA;
 }
 </script>

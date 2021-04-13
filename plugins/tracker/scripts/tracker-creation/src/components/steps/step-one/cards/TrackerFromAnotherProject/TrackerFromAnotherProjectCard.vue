@@ -31,7 +31,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { CreationOptions } from "../../../../../store/type";
+import { TRACKER_ANOTHER_PROJECT } from "../../../../../store/type";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import SvgTrackerFromAnotherProject from "./SvgTrackerFromAnotherProject.vue";
 import TrackerFromAnotherProjectDescription from "./TrackerFromAnotherProjectDescription.vue";
@@ -46,6 +46,6 @@ import TrackerFromAnotherProjectSelector from "./TrackerFromAnotherProjectSelect
     },
 })
 export default class TrackerFromAnotherProjectCard extends Vue {
-    private option_name: CreationOptions = CreationOptions.TRACKER_ANOTHER_PROJECT;
+    private option_name = TRACKER_ANOTHER_PROJECT;
 }
 </script>

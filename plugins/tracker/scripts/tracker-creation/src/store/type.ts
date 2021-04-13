@@ -112,11 +112,16 @@ export interface ProjectTrackerPayload {
     project_key: string;
 }
 
-export enum CreationOptions {
-    NONE_YET = "none_yet",
-    TRACKER_TEMPLATE = "tracker_template",
-    TRACKER_XML_FILE = "tracker_xml_file",
-    TRACKER_EMPTY = "tracker_empty",
-    TRACKER_ANOTHER_PROJECT = "tracker_another_project",
-    FROM_JIRA = "from_jira",
-}
+export type CreationOptions =
+    | "none_yet"
+    | "tracker_template"
+    | "tracker_xml_file"
+    | "tracker_empty"
+    | "tracker_another_project"
+    | "from_jira";
+export const NONE_YET: CreationOptions = "none_yet";
+export const TRACKER_TEMPLATE: CreationOptions = "tracker_template";
+export const TRACKER_XML_FILE: CreationOptions = "tracker_xml_file";
+export const TRACKER_EMPTY: CreationOptions = "tracker_empty";
+export const TRACKER_ANOTHER_PROJECT: CreationOptions = "tracker_another_project";
+export const FROM_JIRA: CreationOptions = "from_jira";

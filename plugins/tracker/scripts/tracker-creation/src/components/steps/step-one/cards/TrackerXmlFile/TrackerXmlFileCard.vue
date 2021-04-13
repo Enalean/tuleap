@@ -29,7 +29,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { CreationOptions } from "../../../../../store/type";
+import { TRACKER_XML_FILE } from "../../../../../store/type";
 import SvgTrackerXmlFile from "./SvgTrackerXmlFile.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerXmlFileCardDescription from "./TrackerXmlFileCardDescription.vue";
@@ -44,6 +44,6 @@ import TrackerXmlFileSelector from "./TrackerXmlFileSelector.vue";
     },
 })
 export default class TrackerXmlFileCard extends Vue {
-    private option_name: CreationOptions = CreationOptions.TRACKER_XML_FILE;
+    private option_name = TRACKER_XML_FILE;
 }
 </script>

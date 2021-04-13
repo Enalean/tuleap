@@ -31,7 +31,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { CreationOptions } from "../../../../../store/type";
+import { TRACKER_TEMPLATE } from "../../../../../store/type";
 import SvgTrackerTemplate from "./SvgTrackerTemplate.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerTemplateSelector from "./TrackerTemplateSelector.vue";
@@ -46,6 +46,6 @@ import TrackerTemplateCardDescription from "./TrackerTemplateCardDescription.vue
     },
 })
 export default class TrackerTemplateCard extends Vue {
-    private option_name: CreationOptions = CreationOptions.TRACKER_TEMPLATE;
+    private option_name = TRACKER_TEMPLATE;
 }
 </script>

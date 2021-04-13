@@ -27,8 +27,8 @@ import type {
     SwimlaneState,
 } from "./type";
 import type { RootState } from "../type";
-import type { Card, ColumnDefinition, Swimlane, CardPosition } from "../../type";
-import { Direction } from "../../type";
+import type { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
+import { AFTER, BEFORE } from "../../type";
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
@@ -145,7 +145,7 @@ describe(`drag-drop-actions`, () => {
 
             const position = {
                 ids: [667],
-                direction: Direction.AFTER,
+                direction: AFTER,
                 compared_to: 778,
             };
             jest.spyOn(card_positioner, "getCardPosition").mockReturnValue(position);
@@ -176,7 +176,7 @@ describe(`drag-drop-actions`, () => {
 
             const position = {
                 ids: [667],
-                direction: Direction.BEFORE,
+                direction: BEFORE,
                 compared_to: 778,
             };
             jest.spyOn(card_positioner, "getCardPosition").mockReturnValue(position);
@@ -242,7 +242,7 @@ describe(`drag-drop-actions`, () => {
 
             const position = {
                 ids: [667],
-                direction: Direction.BEFORE,
+                direction: BEFORE,
                 compared_to: 778,
             };
 
@@ -361,7 +361,7 @@ describe(`drag-drop-actions`, () => {
 
         const position: CardPosition = {
             ids: [card_to_move.id],
-            direction: Direction.BEFORE,
+            direction: BEFORE,
             compared_to: 100,
         };
 
@@ -493,7 +493,7 @@ describe(`drag-drop-actions`, () => {
             const swimlane = { card: { id: 86 }, children_cards: [card_to_move] } as Swimlane;
             const position: CardPosition = {
                 ids: [card_to_move.id],
-                direction: Direction.BEFORE,
+                direction: BEFORE,
                 compared_to: 100,
             };
             const payload: MoveCardsPayload = { swimlane, column, card: card_to_move, position };

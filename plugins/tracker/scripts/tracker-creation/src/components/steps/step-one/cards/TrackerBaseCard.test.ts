@@ -21,14 +21,14 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { State } from "../../../../store/type";
-import { CreationOptions } from "../../../../store/type";
+import { NONE_YET, TRACKER_TEMPLATE } from "../../../../store/type";
 import TrackerBaseCard from "./TrackerBaseCard.vue";
 
 describe("TrackerBaseCard", () => {
     function getWrapper(state: State = {} as State): Wrapper<TrackerBaseCard> {
         return shallowMount(TrackerBaseCard, {
             propsData: {
-                optionName: CreationOptions.TRACKER_TEMPLATE,
+                optionName: TRACKER_TEMPLATE,
             },
             mocks: {
                 $store: createStoreMock({
@@ -40,16 +40,13 @@ describe("TrackerBaseCard", () => {
 
     it("Should tell the store it has been selected", () => {
         const state: State = {
-            active_option: CreationOptions.NONE_YET,
+            active_option: NONE_YET,
         } as State;
 
         const wrapper: Wrapper<TrackerBaseCard> = getWrapper(state);
 
         wrapper.find("[data-test=selected-option-tracker_template]").trigger("click");
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setActiveOption",
-            CreationOptions.TRACKER_TEMPLATE
-        );
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setActiveOption", TRACKER_TEMPLATE);
     });
 });

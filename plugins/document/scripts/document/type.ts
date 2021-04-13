@@ -29,12 +29,11 @@ export interface RootState extends State {
     error: ErrorState;
 }
 
-export enum Direction {
-    bottom = "BOTTOM",
-    top = "TOP",
-    next = "NEXT",
-    previous = "PREVIOUS",
-}
+export type Direction = "BOTTOM" | "TOP" | "NEXT" | "PREVIOUS";
+export const BOTTOM: Direction = "BOTTOM";
+export const TOP: Direction = "TOP";
+export const NEXT: Direction = "NEXT";
+export const PREVIOUS: Direction = "PREVIOUS";
 
 export interface GettextProvider {
     $gettext: (msgid: string) => string;

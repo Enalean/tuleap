@@ -119,13 +119,12 @@ export interface CardPosition {
     compared_to: number;
 }
 
-export enum Direction {
-    BEFORE = "before",
-    AFTER = "after",
-}
+export type Direction = "before" | "after";
+export const BEFORE: Direction = "before";
+export const AFTER: Direction = "after";
 
-export enum TaskboardEvent {
-    CANCEL_CARD_EDITION = "cancel-card-edition",
-    SAVE_CARD_EDITION = "save-card-edition",
-    ESC_KEY_PRESSED = "esc-key-pressed",
-}
+export const TaskboardEvent = {
+    CANCEL_CARD_EDITION: "cancel-card-edition",
+    SAVE_CARD_EDITION: "save-card-edition",
+    ESC_KEY_PRESSED: "esc-key-pressed",
+};
