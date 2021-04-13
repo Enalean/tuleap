@@ -220,7 +220,12 @@ class ModalEventHandler implements EventListenerObject {
             return;
         }
 
-        if (isInputElement(event.target)) {
+        if (
+            event.target instanceof HTMLInputElement ||
+            event.target instanceof HTMLSelectElement ||
+            event.target instanceof HTMLTextAreaElement
+        ) {
+            event.target.blur();
             return;
         }
 
@@ -228,12 +233,4 @@ class ModalEventHandler implements EventListenerObject {
             this.modal.hide();
         }
     }
-}
-
-function isInputElement(eventTarget: EventTarget | null): boolean {
-    if (!(eventTarget instanceof Element)) {
-        return false;
-    }
-    const tag_name = eventTarget.tagName.toUpperCase();
-    return tag_name === "INPUT" || tag_name === "SELECT" || tag_name === "TEXTAREA";
 }
