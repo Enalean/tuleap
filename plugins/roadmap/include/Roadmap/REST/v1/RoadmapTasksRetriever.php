@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
@@ -71,6 +72,10 @@ final class RoadmapTasksRetriever
      * @var IRetrieveDependencies
      */
     private $dependencies_retriever;
+    /**
+     * @var RoadmapTasksOutOfDateFilter
+     */
+    private $tasks_filter;
 
     public function __construct(
         RoadmapWidgetDao $dao,
@@ -81,7 +86,8 @@ final class RoadmapTasksRetriever
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         TimeframeBuilder $timeframe_builder,
         \Tracker_ArtifactFactory $artifact_factory,
-        IRetrieveDependencies $dependencies_retriever
+        IRetrieveDependencies $dependencies_retriever,
+        RoadmapTasksOutOfDateFilter $tasks_filter
     ) {
         $this->dao                        = $dao;
         $this->project_manager            = $project_manager;
@@ -92,6 +98,7 @@ final class RoadmapTasksRetriever
         $this->artifact_factory           = $artifact_factory;
         $this->timeframe_builder          = $timeframe_builder;
         $this->dependencies_retriever     = $dependencies_retriever;
+        $this->tasks_filter               = $tasks_filter;
     }
 
     /**
@@ -126,8 +133,14 @@ final class RoadmapTasksRetriever
             false
         );
 
+        $filtered_artifacts = $this->tasks_filter->filterOutOfDateArtifacts(
+            $paginated_artifacts->getArtifacts(),
+            $tracker,
+            new DateTimeImmutable()
+        );
+
         $representations = [];
-        foreach ($paginated_artifacts->getArtifacts() as $artifact) {
+        foreach ($filtered_artifacts as $artifact) {
             if (! $artifact->userCanView($user)) {
                 continue;
             }

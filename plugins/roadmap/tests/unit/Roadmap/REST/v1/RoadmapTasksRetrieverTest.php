@@ -85,6 +85,10 @@ class RoadmapTasksRetrieverTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RoadmapTasksOutOfDateFilter
+     */
+    private $tasks_filter;
 
     protected function setUp(): void
     {
@@ -95,6 +99,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->tracker_factory            = Mockery::mock(TrackerFactory::class);
         $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $this->artifact_factory           = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->tasks_filter               = Mockery::mock(RoadmapTasksOutOfDateFilter::class);
 
         $this->user = UserTestBuilder::anActiveUser()->build();
     }
@@ -110,7 +115,8 @@ class RoadmapTasksRetrieverTest extends TestCase
             $this->semantic_timeframe_builder,
             new TimeframeBuilder($this->semantic_timeframe_builder, new NullLogger()),
             $this->artifact_factory,
-            $dependencies_retriever
+            $dependencies_retriever,
+            $this->tasks_filter
         );
     }
 
@@ -773,19 +779,40 @@ class RoadmapTasksRetrieverTest extends TestCase
                 'getTracker'  => $tracker,
             ]
         );
+        $task_204 = Mockery::mock(
+            Artifact::class,
+            [
+                'userCanView' => true,
+                'getId'       => 204,
+                'getXRef'     => 'task #204',
+                'getUri'      => '/plugins/tracker?aid=204',
+                'getTitle'    => 'Done more than 1 year ago',
+                'getTracker'  => $tracker,
+            ]
+        );
 
         $this->mockDate($task_201, $start_date_field, 1234567890);
         $this->mockDate($task_201, $end_date_field, 1234567890);
         $this->mockDate($task_203, $start_date_field, null);
         $this->mockDate($task_203, $end_date_field, 1234567890);
 
+        $artifacts = [$task_201, $task_202, $task_203, $task_204];
         $this->artifact_factory
             ->shouldReceive('getPaginatedArtifactsByTrackerId')
             ->with(self::TRACKER_ID, 0, 10, false)
             ->once()
             ->andReturn(
-                new \Tracker_Artifact_PaginatedArtifacts([$task_201, $task_202, $task_203,], 3)
+                new \Tracker_Artifact_PaginatedArtifacts($artifacts, 4)
             );
+
+        $this->tasks_filter->shouldReceive('filterOutOfDateArtifacts')
+            ->with(
+                $artifacts,
+                $tracker,
+                Mockery::type(\DateTimeImmutable::class)
+            )
+            ->once()
+            ->andReturn([$task_201, $task_202, $task_203]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
             public function getDependencies(Artifact $artifact): array
@@ -799,7 +826,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         };
 
         $collection = $this->getRetriever($dependency_retriever)->getTasks(self::ROADMAP_ID, 0, 10);
-        self::assertEquals(3, $collection->getTotalSize());
+        self::assertEquals(4, $collection->getTotalSize());
         self::assertCount(2, $collection->getRepresentations());
         self::assertEquals(
             [

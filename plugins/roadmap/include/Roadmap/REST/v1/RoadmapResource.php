@@ -23,9 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Luracast\Restler\RestException;
+use Psr\Log\LoggerInterface;
 use Tuleap\REST\Header;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -86,6 +88,10 @@ final class RoadmapResource
             new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger()),
             \Tracker_ArtifactFactory::instance(),
             new DependenciesRetriever(new NatureDao()),
+            new RoadmapTasksOutOfDateFilter(
+                new SemanticStatusRetriever(),
+                $this->getLogger()
+            )
         );
 
         $tasks = $retriever->getTasks($id, $limit, $offset);
@@ -93,5 +99,10 @@ final class RoadmapResource
         Header::sendPaginationHeaders($limit, $offset, $tasks->getTotalSize(), self::MAX_LIMIT);
 
         return $tasks->getRepresentations();
+    }
+
+    private function getLogger(): LoggerInterface
+    {
+        return \BackendLogger::getDefaultLogger();
     }
 }
