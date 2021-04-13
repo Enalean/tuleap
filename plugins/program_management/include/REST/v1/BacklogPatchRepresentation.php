@@ -43,4 +43,9 @@ final class BacklogPatchRepresentation
      * @var bool {@required false}
      */
     public $remove_from_program_increment_to_add_to_the_backlog = false;
+
+    /**
+     * @var TopBacklogElementToOrderInvolvedInChangeRepresentation | null $order {@type \Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation} {@required false}
+     */
+    public $order;
 }

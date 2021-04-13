@@ -67,6 +67,7 @@ use Tuleap\ProgramManagement\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\REST\v1\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Team\Creation\TeamCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
@@ -292,6 +293,22 @@ final class ProjectResource extends AuthenticatedResource
      * <code>remove_from_program_increment_to_add_to_the_backlog</code> is not mandatory.
      * If it's not set and the feature is linked to program increments, then feature will not be added to program backlog.
      *
+     * <br><br>
+     *
+     * Reorder example:
+     *
+     * <pre>
+     * "order":{
+     *   "ids":[
+     *     123
+     *   ],
+     *   "direction":"before",
+     *   "compared_to":456
+     * },
+     * </pre>
+     * The feature with id 123 is moved before feature with id 456. <code>direction</code> can be "after" or "before".
+     * <code>"order"</code> is not mandatory.
+     *
      * @url PATCH {id}/program_backlog
      *
      * @param int $id ID of the program
@@ -319,8 +336,8 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $project_manager     = \ProjectManager::instance();
+        $program             = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao());
         $top_backlog_updater = new TopBacklogUpdater(
-            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
             new ProcessTopBacklogChange(
                 \Tracker_ArtifactFactory::instance(),
                 new PrioritizeFeaturesPermissionVerifier(
@@ -336,11 +353,16 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         try {
+            $program = $program->buildExistingProgramProject($id, $user);
             $top_backlog_updater->updateTopBacklog(
-                $id,
+                $program,
                 new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove, $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog),
                 $user
             );
+            if ($backlog_patch_representation->order) {
+                $features_rank_orderer = new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build());
+                $features_rank_orderer->reorder($backlog_patch_representation->order, (string) $id, $program);
+            }
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
             throw new RestException(404, $e->getMessage());
         } catch (ProjectIsNotAProgramException $e) {

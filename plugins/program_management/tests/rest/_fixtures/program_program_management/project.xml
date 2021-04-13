@@ -296,7 +296,7 @@
             <submitted_on format="ISO8601">2021-01-14T10:44:23+01:00</submitted_on>
             <comments/>
             <field_change type="string" field_name="summary">
-              <value><![CDATA[My artifact]]></value>
+              <value><![CDATA[My other artifact for top backlog manipulation]]></value>
             </field_change>
             <field_change type="text" field_name="details">
               <value format="text">
