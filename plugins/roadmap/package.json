@@ -10,6 +10,7 @@
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
+    "@tuleap/tlp-popovers": "file://../../src/scripts/lib/tlp-popovers",
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
     "@types/dompurify": "^2.2.1",
     "@vue/test-utils": "^1.1.2",

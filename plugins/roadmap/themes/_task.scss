@@ -22,6 +22,7 @@
 @use 'grid';
 @use 'sass:math';
 @use 'dependencies';
+@use 'popover';
 
 .roadmap-gantt-task {
     $radius: 4px;

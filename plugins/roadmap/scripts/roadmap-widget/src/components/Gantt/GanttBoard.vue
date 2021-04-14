@@ -44,6 +44,7 @@
                     v-bind:dependencies="dependencies"
                     v-bind:dimensions_map="dimensions_map"
                     v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
+                    v-bind:locale="locale"
                 />
             </div>
             <today-indicator

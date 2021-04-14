@@ -1,0 +1,93 @@
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
+.roadmap-gantt-task-popover {
+    &.tlp-popover {
+        margin: -5px;
+    }
+
+    > .roadmap-gantt-task-popover-arrow {
+        border-color: var(--tlp-theme-dark-background-color-darker);
+    }
+}
+
+.roadmap-gantt-task-popover-header {
+    border-top: 4px solid transparent;
+    background: var(--tlp-theme-dark-background-color-darker);
+
+
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+        &.roadmap-gantt-task-popover-header-#{$color-name} {
+            border-top-color: map-get($colors, 'primary');
+
+            > .roadmap-gantt-task-popover-title > .roadmap-gantt-task-popover-xref {
+                color: map-get($colors, 'text-on-dark');
+            }
+        }
+    }
+}
+
+.roadmap-gantt-task-popover-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.roadmap-gantt-task-popover-xref {
+    margin: 0 0 2px;
+    font-size: .625rem;
+    line-height: .75rem;
+}
+
+.roadmap-gantt-task-popover-task {
+    font-size: .875rem;
+    line-height: 1.125rem;
+}
+
+.roadmap-gantt-task-popover-body {
+    background: var(--tlp-theme-dark-background-color);
+
+    &.tlp-popover-body {
+        padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    }
+}
+
+.roadmap-gantt-task-popover-label,
+.roadmap-gantt-task-popover-value,
+.roadmap-gantt-task-popover-value-undefined {
+    font-size: .75rem;
+    line-height: 1.25rem;
+}
+
+.roadmap-gantt-task-popover-label,
+.roadmap-gantt-task-popover-label:last-child {
+    margin: 0 var(--tlp-medium-spacing) 0 0;
+    color: var(--tlp-ui-dimmed-on-dark-background);
+    font-weight: 600;
+}
+
+.roadmap-gantt-task-popover-value {
+    color: var(--tlp-ui-white);
+    font-weight: 600;
+}
+
+.roadmap-gantt-task-popover-value-undefined {
+    color: var(--tlp-ui-dimmed-on-dark-background);
+}
