@@ -34,7 +34,6 @@ describe("TodayIndicator", () => {
                 time_period: new TimePeriodMonth(
                     new Date("2020-03-31T22:00:00.000Z"),
                     new Date("2020-04-31T22:00:00.000Z"),
-                    now,
                     locale
                 ),
             },

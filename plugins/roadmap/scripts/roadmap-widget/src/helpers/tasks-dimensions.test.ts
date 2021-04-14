@@ -30,7 +30,6 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                new Date(2020, 3, 15),
                 "en_US"
             );
 
@@ -46,7 +45,6 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                new Date(2020, 3, 15),
                 "en_US"
             );
 
@@ -62,7 +60,6 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                new Date(2020, 3, 15),
                 "en_US"
             );
 
@@ -78,7 +75,6 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                new Date(2020, 3, 15),
                 "en_US"
             );
 
@@ -94,7 +90,6 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                new Date(2020, 3, 15),
                 "en_US"
             );
 
@@ -110,7 +105,6 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                new Date(2020, 3, 15),
                 "en_US"
             );
 
@@ -127,7 +121,6 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                new Date(2020, 3, 15),
                 "en_US"
             );
 

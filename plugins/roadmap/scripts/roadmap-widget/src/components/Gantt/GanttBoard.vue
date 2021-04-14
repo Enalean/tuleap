@@ -155,26 +155,23 @@ export default class GanttBoard extends Vue {
     get time_period(): TimePeriod {
         if (this.timescale === "week") {
             return new TimePeriodWeek(
-                getFirstDate(this.tasks),
-                getLastDate(this.tasks),
-                this.now,
+                getFirstDate(this.tasks, this.now),
+                getLastDate(this.tasks, this.now),
                 this
             );
         }
 
         if (this.timescale === "quarter") {
             return new TimePeriodQuarter(
-                getFirstDate(this.tasks),
-                getLastDate(this.tasks),
-                this.now,
+                getFirstDate(this.tasks, this.now),
+                getLastDate(this.tasks, this.now),
                 this
             );
         }
 
         return new TimePeriodMonth(
-            getFirstDate(this.tasks),
-            getLastDate(this.tasks),
-            this.now,
+            getFirstDate(this.tasks, this.now),
+            getLastDate(this.tasks, this.now),
             this.locale
         );
     }

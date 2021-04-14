@@ -17,42 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getBeginningOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
-    if (!start) {
-        if (!end) {
-            return now;
-        }
-
-        return now < end ? now : end;
-    }
-
-    if (!end) {
-        return now < start ? now : start;
-    }
-
-    if (start <= end) {
-        return now < start ? now : start;
-    }
-
-    return now < end ? now : end;
+export function getBeginningOfPeriod(start: Date, end: Date): Date {
+    return start <= end ? start : end;
 }
 
-export function getEndOfPeriod(start: Date | null, end: Date | null, now: Date): Date {
-    if (!start) {
-        if (!end) {
-            return now;
-        }
-
-        return end < now ? now : end;
-    }
-
-    if (!end) {
-        return start < now ? now : start;
-    }
-
-    if (start <= end) {
-        return end < now ? now : end;
-    }
-
-    return start < now ? now : start;
+export function getEndOfPeriod(start: Date, end: Date): Date {
+    return start <= end ? end : start;
 }

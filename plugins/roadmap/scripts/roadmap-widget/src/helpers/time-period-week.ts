@@ -26,14 +26,9 @@ export class TimePeriodWeek implements TimePeriod {
     readonly weeks: Date[];
     private readonly gettext_provider: VueGettextProvider;
 
-    constructor(
-        readonly from: Date | null,
-        readonly to: Date | null,
-        readonly now: Date,
-        gettext_provider: VueGettextProvider
-    ) {
+    constructor(readonly from: Date, readonly to: Date, gettext_provider: VueGettextProvider) {
         this.gettext_provider = gettext_provider;
-        this.weeks = getWeeks(from, to, now);
+        this.weeks = getWeeks(from, to);
     }
 
     get units(): Date[] {
@@ -70,9 +65,9 @@ export class TimePeriodWeek implements TimePeriod {
     }
 }
 
-function getWeeks(start: Date | null, end: Date | null, now: Date): Date[] {
-    const beginning_of_period = getBeginningOfPeriod(start, end, now);
-    const end_of_period = getEndOfPeriod(start, end, now);
+function getWeeks(start: Date, end: Date): Date[] {
+    const beginning_of_period = getBeginningOfPeriod(start, end);
+    const end_of_period = getEndOfPeriod(start, end);
 
     const start_of_first_week = getBeginningOfCurrentWeek(beginning_of_period);
     const start_of_last_week = getBeginningOfNextWeek(end_of_period);

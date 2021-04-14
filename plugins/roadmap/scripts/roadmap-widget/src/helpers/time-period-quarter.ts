@@ -25,14 +25,9 @@ export class TimePeriodQuarter implements TimePeriod {
     private readonly quarters: Date[];
     private gettext_provider: VueGettextProvider;
 
-    constructor(
-        readonly from: Date | null,
-        readonly to: Date | null,
-        readonly now: Date,
-        gettext_provider: VueGettextProvider
-    ) {
+    constructor(readonly from: Date, readonly to: Date, gettext_provider: VueGettextProvider) {
         this.gettext_provider = gettext_provider;
-        this.quarters = getQuarters(from, to, now);
+        this.quarters = getQuarters(from, to);
     }
 
     get units(): Date[] {
@@ -67,9 +62,9 @@ function getQuarterNumber(unit: Date): number {
     return Math.ceil((unit.getUTCMonth() + 1) / 3);
 }
 
-function getQuarters(start: Date | null, end: Date | null, now: Date): Date[] {
-    const beginning_of_period = getBeginningOfPeriod(start, end, now);
-    const end_of_period = getEndOfPeriod(start, end, now);
+function getQuarters(start: Date, end: Date): Date[] {
+    const beginning_of_period = getBeginningOfPeriod(start, end);
+    const end_of_period = getEndOfPeriod(start, end);
 
     const starting_quarter = getBeginningOfNextNthQuarter(beginning_of_period, 0);
     const quarters = [starting_quarter];
