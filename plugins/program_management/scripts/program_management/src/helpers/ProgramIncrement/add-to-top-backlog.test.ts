@@ -18,7 +18,11 @@
  */
 
 import * as tlp from "tlp";
-import { moveElementFromProgramIncrementToTopBackLog } from "./add-to-top-backlog";
+import {
+    moveElementFromProgramIncrementToTopBackLog,
+    reorderElementInTopBacklog,
+} from "./add-to-top-backlog";
+import { Direction } from "../feature-reordering";
 
 jest.mock("tlp");
 
@@ -35,6 +39,30 @@ describe("Add to top backlog", () => {
                 add: [{ id: 1 }],
                 remove: [],
                 remove_from_program_increment_to_add_to_the_backlog: true,
+            }),
+        });
+    });
+
+    it("Reorder elements in top backlog", async () => {
+        const tlpPatch = jest.spyOn(tlp, "patch");
+        await reorderElementInTopBacklog(101, {
+            ids: [415],
+            direction: Direction.BEFORE,
+            compared_to: 56,
+        });
+
+        expect(tlpPatch).toHaveBeenCalledWith(`/api/projects/101/program_backlog`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                add: [],
+                remove: [],
+                order: {
+                    ids: [415],
+                    direction: "before",
+                    compared_to: 56,
+                },
             }),
         });
     });

@@ -25,7 +25,10 @@ import type {
     HandleDropContextWithProgramId,
 } from "../helpers/drag-drop";
 import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extractor";
-import { moveElementFromProgramIncrementToTopBackLog } from "../helpers/ProgramIncrement/add-to-top-backlog";
+import {
+    moveElementFromProgramIncrementToTopBackLog,
+    reorderElementInTopBacklog,
+} from "../helpers/ProgramIncrement/add-to-top-backlog";
 import { unplanFeature, planFeatureInProgramIncrement as planFeature } from "../helpers/drag-drop";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
@@ -33,6 +36,7 @@ import { getToBePlannedElements } from "../helpers/ToBePlanned/element-to-plan-r
 import { getFeatures } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 import { getLinkedUserStoriesToFeature } from "../helpers/UserStories/user-stories-retriever";
+import { getFeatureReorderPosition } from "../helpers/feature-reordering";
 
 export interface LinkUserStoriesToFeature {
     artifact_id: number;
@@ -115,6 +119,8 @@ export async function handleDrop(
         } finally {
             context.commit("finishMoveElement", element_id);
         }
+
+        return;
     }
 
     if (!plan_in_program_increment_id && remove_from_program_increment_id) {
@@ -135,6 +141,8 @@ export async function handleDrop(
         } finally {
             context.commit("finishMoveElement", element_id);
         }
+
+        return;
     }
 
     if (
@@ -165,6 +173,38 @@ export async function handleDrop(
                 ),
                 planFeature(handle_drop, parseInt(plan_in_program_increment_id, 10), element_id),
             ]);
+        } catch (error) {
+            await handleModalError(context, error);
+        } finally {
+            context.commit("finishMoveElement", element_id);
+        }
+
+        return;
+    }
+
+    if (!plan_in_program_increment_id && !remove_from_program_increment_id) {
+        let sibling_element = null;
+        if (handle_drop.next_sibling instanceof HTMLElement) {
+            const sibling_id = handle_drop.next_sibling.dataset.elementId;
+            if (!sibling_id) {
+                throw Error("'element-id' data attribute does not exist on sibling feature");
+            }
+
+            sibling_element = context.getters.getToBePlannedElementFromId(parseInt(sibling_id, 10));
+        }
+
+        const card_position = getFeatureReorderPosition(
+            context.getters.getToBePlannedElementFromId(element_id),
+            sibling_element,
+            context.state.to_be_planned_elements
+        );
+
+        context.commit("changeFeaturePositionInProgramBacklog", card_position);
+
+        try {
+            context.commit("startMoveElementInAProgramIncrement", element_id);
+
+            await reorderElementInTopBacklog(handle_drop.program_id, card_position);
         } catch (error) {
             await handleModalError(context, error);
         } finally {

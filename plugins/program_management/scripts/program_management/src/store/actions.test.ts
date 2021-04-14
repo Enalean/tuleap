@@ -34,6 +34,7 @@ import * as backlogAdder from "../helpers/ProgramIncrement/add-to-top-backlog";
 import type { FetchWrapperError } from "tlp";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
+import { getToBePlannedElementFromId } from "./getters";
 
 jest.mock("tlp");
 jest.mock("@tuleap/tlp-fetch");
@@ -403,10 +404,6 @@ describe("Actions", () => {
             const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
             const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
 
-            const getProgramIncrementFromId = jest.fn();
-
-            context.getters = { getProgramIncrementFromId };
-
             await actions.handleDrop(context, {
                 dropped_element,
                 source_dropzone,
@@ -414,11 +411,114 @@ describe("Actions", () => {
                 program_id: 101,
             } as HandleDropContextWithProgramId);
 
-            expect(getProgramIncrementFromId).not.toHaveBeenCalled();
-            expect(getProgramIncrementFromId).not.toHaveBeenCalled();
-
             expect(unplan_feature).not.toHaveBeenCalled();
             expect(plan_feature).not.toHaveBeenCalled();
+        });
+
+        it(`When reordering elements in top backlog and sibling is null, Then element is moving to the bottom`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "56");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+
+            const reorder_element_in_backlog = jest.spyOn(
+                backlogAdder,
+                "reorderElementInTopBacklog"
+            );
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(patch);
+
+            context.state = {
+                to_be_planned_elements: [{ id: 56 }, { id: 57 }, { id: 58 }] as Feature[],
+            } as State;
+            context.getters = {
+                getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
+            };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+                next_sibling: null,
+            } as HandleDropContextWithProgramId);
+
+            expect(context.commit).toHaveBeenCalledWith("changeFeaturePositionInProgramBacklog", {
+                ids: [56],
+                direction: "after",
+                compared_to: 58,
+            });
+
+            expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, {
+                compared_to: 58,
+                direction: "after",
+                ids: [56],
+            });
+        });
+
+        it(`When reordering elements in top backlog and sibling is not null, Then element is moving to before the sibling`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "57");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+
+            const sibling_element = createElement();
+            sibling_element.setAttribute("data-element-id", "56");
+
+            const reorder_element_in_backlog = jest.spyOn(
+                backlogAdder,
+                "reorderElementInTopBacklog"
+            );
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(patch);
+
+            context.state = {
+                to_be_planned_elements: [{ id: 56 }, { id: 57 }, { id: 58 }] as Feature[],
+            } as State;
+
+            context.getters = {
+                getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
+            };
+
+            await actions.handleDrop(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+                next_sibling: sibling_element,
+            } as HandleDropContextWithProgramId);
+
+            expect(context.commit).toHaveBeenCalledWith("changeFeaturePositionInProgramBacklog", {
+                ids: [57],
+                direction: "before",
+                compared_to: 56,
+            });
+
+            expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, {
+                ids: [57],
+                direction: "before",
+                compared_to: 56,
+            });
+        });
+
+        it(`When reordering elements in top backlog and sibling has not element-id data attribute, Then error is thrown`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "57");
+            const source_dropzone = createElement();
+            const target_dropzone = createElement();
+            const sibling_element = createElement();
+
+            await expect(
+                actions.handleDrop(context, {
+                    dropped_element,
+                    source_dropzone,
+                    target_dropzone,
+                    program_id: 101,
+                    next_sibling: sibling_element,
+                } as HandleDropContextWithProgramId)
+            ).rejects.toEqual(
+                Error("'element-id' data attribute does not exist on sibling feature")
+            );
         });
     });
 

@@ -22,7 +22,7 @@ import type { State } from "../type";
 import Vue from "vue";
 import Vuex from "vuex";
 import state from "./state";
-import mutations from "./mutations";
+import * as mutations from "./mutations";
 import * as getters from "./getters";
 import * as actions from "./actions";
 import type { ConfigurationState } from "./configuration";
