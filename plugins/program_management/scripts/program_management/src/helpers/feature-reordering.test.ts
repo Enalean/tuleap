@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { getFeatureReorderPosition, reorderFeatureInProgramBacklog } from "./feature-reordering";
+import { getFeaturePlanningChange, reorderFeatureInProgramBacklog } from "./feature-reordering";
 import type { Feature } from "../type";
 import type { ActionContext } from "vuex";
 import type { State } from "../type";
@@ -26,43 +26,69 @@ import { createElement } from "./jest/create-dom-element";
 import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
 import * as tlp from "tlp";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { getToBePlannedElementFromId } from "../store/getters";
+import { getSiblingFeatureFromProgramBacklog, getToBePlannedElementFromId } from "../store/getters";
 
 describe("Feature Reordering", () => {
     describe("getFeatureReorderPosition", () => {
         it("When sibling is null, Then we get a position after the last feature of the list", () => {
             const feature: Feature = { id: 115 } as Feature;
             const backlog = [feature, { id: 116 }, { id: 117 }] as Feature[];
-            const position = getFeatureReorderPosition(feature, null, backlog);
+            const position = getFeaturePlanningChange(feature, null, backlog);
 
-            expect(position).toEqual({ ids: [115], direction: "after", compared_to: 117 });
+            expect(position).toEqual({
+                feature: { id: 115 },
+                order: {
+                    direction: "after",
+                    compared_to: 117,
+                },
+            });
         });
 
         it("When feature is moving between 2 features, Then we get a position after the first feature", () => {
             const feature: Feature = { id: 115 } as Feature;
             const sibling: Feature = { id: 117 } as Feature;
             const backlog = [feature, { id: 116 }, sibling] as Feature[];
-            const position = getFeatureReorderPosition(feature, sibling, backlog);
+            const position = getFeaturePlanningChange(feature, sibling, backlog);
 
-            expect(position).toEqual({ ids: [115], direction: "after", compared_to: 116 });
+            expect(position).toEqual({
+                feature: { id: 115 },
+                order: {
+                    direction: "after",
+                    compared_to: 116,
+                },
+            });
         });
 
         it("When feature is moving at the first place, Then we get a position before the first feature", () => {
             const feature: Feature = { id: 115 } as Feature;
             const sibling: Feature = { id: 116 } as Feature;
             const backlog = [sibling, { id: 111 }, feature] as Feature[];
-            const position = getFeatureReorderPosition(feature, sibling, backlog);
+            const position = getFeaturePlanningChange(feature, sibling, backlog);
 
-            expect(position).toEqual({ ids: [115], direction: "before", compared_to: 116 });
+            expect(position).toEqual({
+                feature: { id: 115 },
+                order: {
+                    direction: "before",
+                    compared_to: 116,
+                },
+            });
         });
 
         it("When sibling does not exist in the backlog, Then error is thrown", () => {
             const feature: Feature = { id: 115 } as Feature;
             const sibling: Feature = { id: 666 } as Feature;
             const backlog = [feature] as Feature[];
-            expect(() => getFeatureReorderPosition(feature, sibling, backlog)).toThrowError(
+            expect(() => getFeaturePlanningChange(feature, sibling, backlog)).toThrowError(
                 "Cannot find feature with id #666 in program backlog."
             );
+        });
+
+        it("When backlog is empty, Then FeatureReorder is null", () => {
+            const feature: Feature = { id: 115 } as Feature;
+            expect(getFeaturePlanningChange(feature, null, [])).toEqual({
+                feature: { id: 115 },
+                order: null,
+            });
         });
     });
 
@@ -78,6 +104,9 @@ describe("Feature Reordering", () => {
             } as unknown) as ActionContext<State, State>;
             context.getters = {
                 getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
+                getSiblingFeatureFromProgramBacklog: getSiblingFeatureFromProgramBacklog(
+                    context.state
+                ),
             };
         });
 
@@ -117,9 +146,11 @@ describe("Feature Reordering", () => {
             } as HandleDropContextWithProgramId);
 
             const reorder_payload = {
-                ids: [56],
-                direction: "after",
-                compared_to: 58,
+                feature: { id: 56 },
+                order: {
+                    direction: "after",
+                    compared_to: 58,
+                },
             };
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -155,9 +186,11 @@ describe("Feature Reordering", () => {
             } as HandleDropContextWithProgramId);
 
             const reorder_payload = {
-                ids: [57],
-                direction: "before",
-                compared_to: 56,
+                feature: { id: 57 },
+                order: {
+                    direction: "before",
+                    compared_to: 56,
+                },
             };
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -168,24 +201,40 @@ describe("Feature Reordering", () => {
             expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, reorder_payload);
         });
 
-        it(`When sibling has not element-id data attribute, Then error is thrown`, async () => {
+        it(`When sibling has not element-id data attribute, Then element is moving to the bottom`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "57");
             const source_dropzone = createElement();
             const target_dropzone = createElement();
             const sibling_element = createElement();
 
-            await expect(
-                reorderFeatureInProgramBacklog(context, {
-                    dropped_element,
-                    source_dropzone,
-                    target_dropzone,
-                    program_id: 101,
-                    next_sibling: sibling_element,
-                } as HandleDropContextWithProgramId)
-            ).rejects.toEqual(
-                Error("'element-id' data attribute does not exist on sibling feature")
+            const reorder_element_in_backlog = jest.spyOn(
+                backlogAdder,
+                "reorderElementInTopBacklog"
             );
+
+            await reorderFeatureInProgramBacklog(context, {
+                dropped_element,
+                source_dropzone,
+                target_dropzone,
+                program_id: 101,
+                next_sibling: sibling_element,
+            } as HandleDropContextWithProgramId);
+
+            const reorder_payload = {
+                feature: { id: 57 },
+                order: {
+                    direction: "after",
+                    compared_to: 58,
+                },
+            };
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "changeFeaturePositionInProgramBacklog",
+                reorder_payload
+            );
+
+            expect(reorder_element_in_backlog).toHaveBeenCalledWith(101, reorder_payload);
         });
 
         it(`When error is thrown reordering elements, Then error is stored`, async () => {
@@ -216,9 +265,11 @@ describe("Feature Reordering", () => {
             } as HandleDropContextWithProgramId);
 
             const reorder_payload = {
-                ids: [57],
-                direction: "before",
-                compared_to: 56,
+                feature: { id: 57 },
+                order: {
+                    direction: "before",
+                    compared_to: 56,
+                },
             };
 
             expect(context.commit).toHaveBeenCalledWith(

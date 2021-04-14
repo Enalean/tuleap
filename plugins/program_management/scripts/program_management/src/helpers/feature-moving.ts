@@ -23,6 +23,7 @@ import type { HandleDropContextWithProgramId } from "./drag-drop";
 import { planFeatureInProgramIncrement as planFeature, unplanFeature } from "./drag-drop";
 import { moveElementFromProgramIncrementToTopBackLog } from "./ProgramIncrement/add-to-top-backlog";
 import { handleModalError } from "./error-handler";
+import { getFeaturePlanningChange } from "./feature-reordering";
 
 export async function moveFeatureFromBacklogToProgramIncrement(
     context: ActionContext<State, State>,
@@ -60,15 +61,37 @@ export async function moveFeatureFromProgramIncrementToBacklog(
         return;
     }
     const element_id = parseInt(data_element_id, 10);
+    let sibling_feature = null;
+    if (handle_drop.next_sibling instanceof HTMLElement) {
+        sibling_feature = context.getters.getSiblingFeatureFromProgramBacklog(
+            handle_drop.next_sibling
+        );
+    }
 
-    context.commit("moveFeatureFromProgramIncrementToBacklog", {
+    const feature_to_unplan = context.getters.getFeatureInProgramIncrement({
         feature_id: element_id,
         program_increment_id: remove_from_program_increment_id,
     });
 
+    context.commit("removeFeatureFromProgramIncrement", {
+        feature_id: element_id,
+        program_increment_id: remove_from_program_increment_id,
+    });
+
+    const feature_planning_change = getFeaturePlanningChange(
+        feature_to_unplan,
+        sibling_feature,
+        context.state.to_be_planned_elements
+    );
+
+    context.commit("addToBePlannedElement", feature_planning_change);
+
     try {
         context.commit("startMoveElementInAProgramIncrement", element_id);
-        await moveElementFromProgramIncrementToTopBackLog(handle_drop.program_id, element_id);
+        await moveElementFromProgramIncrementToTopBackLog(
+            handle_drop.program_id,
+            feature_planning_change
+        );
     } catch (error) {
         await handleModalError(context, error);
     } finally {

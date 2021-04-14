@@ -20,6 +20,7 @@
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import type { Feature, State } from "../type";
 import * as getters from "./getters";
+import { createElement } from "../helpers/jest/create-dom-element";
 
 describe("Getters", () => {
     describe("isProgramIncrementAlreadyAdded", () => {
@@ -107,6 +108,58 @@ describe("Getters", () => {
             } as State;
 
             expect(getters.hasAnElementMovedInsideIncrement(state)).toEqual(true);
+        });
+    });
+
+    describe("getFeatureInProgramIncrement", () => {
+        it("When feature does not exist, Then error is thrown", () => {
+            const state = {
+                program_increments: [{ id: 1, features: [] as Feature[] } as ProgramIncrement],
+            } as State;
+
+            expect(() =>
+                getters.getFeatureInProgramIncrement(state)({
+                    program_increment_id: 1,
+                    feature_id: 14,
+                })
+            ).toThrowError("Could not find feature with id #14 in program increment #1");
+        });
+        it("When feature exists, Then it's returned", () => {
+            const state = {
+                program_increments: [
+                    { id: 1, features: [{ id: 14 }] as Feature[] } as ProgramIncrement,
+                ],
+            } as State;
+
+            expect(
+                getters.getFeatureInProgramIncrement(state)({
+                    program_increment_id: 1,
+                    feature_id: 14,
+                })
+            ).toEqual({ id: 14 });
+        });
+    });
+
+    describe("getSiblingFeatureFromProgramBacklog", () => {
+        it("When sibling has no data element id, Then null is returned", () => {
+            const state = {
+                to_be_planned_elements: [] as Feature[],
+            } as State;
+
+            const sibling = getters.getSiblingFeatureFromProgramBacklog(state)(createElement());
+            expect(sibling).toBeNull();
+        });
+        it("When sibling exists, Then return Feature", () => {
+            const next_sibling = createElement() as HTMLDivElement;
+            next_sibling.setAttribute("data-element-id", "14");
+
+            const state = {
+                to_be_planned_elements: [{ id: 14 } as Feature] as Feature[],
+            } as State;
+
+            const sibling = getters.getSiblingFeatureFromProgramBacklog(state)(next_sibling);
+
+            expect(sibling).toEqual({ id: 14 });
         });
     });
 });

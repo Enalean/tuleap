@@ -18,28 +18,58 @@
  */
 
 import { patch } from "tlp";
-import type { FeatureReorderPosition } from "../feature-reordering";
+import type { FeaturePlanningChange } from "../feature-reordering";
+import type { Direction } from "../feature-reordering";
+
+interface OrderPositionForPatch {
+    readonly ids: number[];
+    readonly direction: Direction;
+    readonly compared_to: number;
+}
 
 export async function moveElementFromProgramIncrementToTopBackLog(
     project_id: number,
-    element_id: number
+    feature_moving: FeaturePlanningChange
 ): Promise<void> {
     await patch(`/api/projects/${encodeURIComponent(project_id)}/program_backlog`, {
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            add: [{ id: element_id }],
+            add: [{ id: feature_moving.feature.id }],
             remove: [],
             remove_from_program_increment_to_add_to_the_backlog: true,
+            order: formatOrderPositionForPatch(feature_moving),
         }),
     });
 }
 
+function formatOrderPositionForPatch(
+    reorder_position: FeaturePlanningChange
+): OrderPositionForPatch | null {
+    if (!reorder_position.order) {
+        return null;
+    }
+
+    return {
+        ids: [reorder_position.feature.id],
+        direction: reorder_position.order.direction,
+        compared_to: reorder_position.order.compared_to,
+    };
+}
+
 export async function reorderElementInTopBacklog(
     project_id: number,
-    feature_position: FeatureReorderPosition
+    feature_position: FeaturePlanningChange
 ): Promise<void> {
+    const order_format = formatOrderPositionForPatch(feature_position);
+
+    if (!order_format) {
+        throw new Error(
+            "Cannot reorder element #" + feature_position.feature.id + " because order is null"
+        );
+    }
+
     await patch(`/api/projects/${encodeURIComponent(project_id)}/program_backlog`, {
         headers: {
             "Content-Type": "application/json",
@@ -47,11 +77,7 @@ export async function reorderElementInTopBacklog(
         body: JSON.stringify({
             add: [],
             remove: [],
-            order: {
-                ids: feature_position.ids,
-                direction: feature_position.direction,
-                compared_to: feature_position.compared_to,
-            },
+            order: order_format,
         }),
     });
 }

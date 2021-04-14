@@ -23,13 +23,17 @@ import {
     reorderElementInTopBacklog,
 } from "./add-to-top-backlog";
 import { Direction } from "../feature-reordering";
+import type { Feature } from "../../type";
 
 jest.mock("tlp");
 
 describe("Add to top backlog", () => {
-    it("Move element from program increment to top backlog", async () => {
+    it("Move element from program increment to top backlog without order", async () => {
         const tlpPatch = jest.spyOn(tlp, "patch");
-        await moveElementFromProgramIncrementToTopBackLog(101, 1);
+        await moveElementFromProgramIncrementToTopBackLog(101, {
+            order: null,
+            feature: { id: 1 } as Feature,
+        });
 
         expect(tlpPatch).toHaveBeenCalledWith(`/api/projects/101/program_backlog`, {
             headers: {
@@ -39,6 +43,30 @@ describe("Add to top backlog", () => {
                 add: [{ id: 1 }],
                 remove: [],
                 remove_from_program_increment_to_add_to_the_backlog: true,
+                order: null,
+            }),
+        });
+    });
+
+    it("Move element from program increment to top backlog with order", async () => {
+        const tlpPatch = jest.spyOn(tlp, "patch");
+        await moveElementFromProgramIncrementToTopBackLog(101, {
+            order: {
+                direction: Direction.BEFORE,
+                compared_to: 14,
+            },
+            feature: { id: 1 } as Feature,
+        });
+
+        expect(tlpPatch).toHaveBeenCalledWith(`/api/projects/101/program_backlog`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                add: [{ id: 1 }],
+                remove: [],
+                remove_from_program_increment_to_add_to_the_backlog: true,
+                order: { ids: [1], direction: "before", compared_to: 14 },
             }),
         });
     });
@@ -46,9 +74,11 @@ describe("Add to top backlog", () => {
     it("Reorder elements in top backlog", async () => {
         const tlpPatch = jest.spyOn(tlp, "patch");
         await reorderElementInTopBacklog(101, {
-            ids: [415],
-            direction: Direction.BEFORE,
-            compared_to: 56,
+            feature: { id: 415 } as Feature,
+            order: {
+                direction: Direction.BEFORE,
+                compared_to: 56,
+            },
         });
 
         expect(tlpPatch).toHaveBeenCalledWith(`/api/projects/101/program_backlog`, {
@@ -65,5 +95,14 @@ describe("Add to top backlog", () => {
                 },
             }),
         });
+    });
+
+    it("If order is null, Then error is thrown during reorder backlog", async () => {
+        await expect(
+            reorderElementInTopBacklog(101, {
+                feature: { id: 415 } as Feature,
+                order: null,
+            })
+        ).rejects.toThrowError("Cannot reorder element #415 because order is null");
     });
 });
