@@ -9,8 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "End date"
+msgstr "Date de fin"
 
 msgid "Linked to"
 msgstr "Lié à"
@@ -36,6 +39,9 @@ msgstr "Trimestre"
 msgid "Quarter %{ quarter } of %{ year }"
 msgstr "Trimestre %{ quarter } de %{ year }"
 
+msgid "Start date"
+msgstr "Date de début"
+
 msgid "There is no data to show. Please come back later."
 msgstr "Il n'y a pas de données à afficher. Veuillez revenir plus tard."
 
@@ -44,6 +50,9 @@ msgstr "Échelle"
 
 msgid "Today: %{ date }"
 msgstr "Aujourd'hui : %{ date }"
+
+msgid "Undefined"
+msgstr "Non définie"
 
 msgid "W%{ week }"
 msgstr "S%{ week }"

@@ -67,6 +67,7 @@ describe("GanttTask", () => {
                 dimensions_map: getDimensionsMap([task], time_period),
                 dependencies,
                 dependencies_nature_to_display,
+                locale: "en_US",
             },
         });
     }

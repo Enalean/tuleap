@@ -36,7 +36,9 @@
             v-bind:task="task"
             v-bind:left="dimensions.left"
             v-bind:width="dimensions.width"
+            ref="bar"
         />
+        <bar-popover ref="popover" v-bind:task="task" v-bind:locale="locale" />
     </div>
 </template>
 
@@ -55,11 +57,19 @@ import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
 import DependencyArrow from "./DependencyArrow.vue";
 import { getDimensions } from "../../../helpers/tasks-dimensions";
+import { createPopover } from "@tuleap/tlp-popovers";
+import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
+import BarPopover from "./BarPopover.vue";
 
 @Component({
-    components: { DependencyArrow, TaskBar, BackgroundGrid, TaskHeader },
+    components: { BarPopover, DependencyArrow, TaskBar, BackgroundGrid, TaskHeader },
 })
 export default class GanttTask extends Vue {
+    $refs!: {
+        bar: TaskBar;
+        popover: BarPopover;
+    };
+
     @Prop({ required: true })
     readonly task!: Task;
 
@@ -77,6 +87,28 @@ export default class GanttTask extends Vue {
 
     @Prop({ required: true })
     readonly dependencies_nature_to_display!: string | null;
+
+    @Prop({ required: true })
+    private readonly locale!: string;
+
+    private popover: Popover | undefined;
+
+    mounted(): void {
+        if (
+            this.$refs.bar.$el instanceof HTMLElement &&
+            this.$refs.popover.$el instanceof HTMLElement
+        ) {
+            this.popover = createPopover(this.$refs.bar.$el, this.$refs.popover.$el, {
+                placement: "right-start",
+            });
+        }
+    }
+
+    beforeDestroy(): void {
+        if (this.popover) {
+            this.popover.destroy();
+        }
+    }
 
     get dimensions(): TaskDimension {
         return getDimensions(this.task, this.dimensions_map);

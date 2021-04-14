@@ -192,6 +192,12 @@
                 color: map-get($colors, 'text');
             }
 
+            .doc-color-code-#{$color-name}-text-on-dark {
+                @extend %size;
+                background-color: var(--tlp-theme-dark-background-color);
+                color: map-get($colors, 'text-on-dark');
+            }
+
             .doc-color-#{$color-name}-pattern {
                 width: 30px;
                 height: 30px;
