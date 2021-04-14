@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { handleError } from "./error-handler";
+import { handleError, handleModalError } from "./error-handler";
 import type { VueGettextProvider } from "./vue-gettext-provider";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { ActionContext } from "vuex";
+import type { State } from "../type";
 
 describe("Error Handler", () => {
     describe("handleError", () => {
@@ -83,6 +85,46 @@ describe("Error Handler", () => {
                 gettext_provider
             );
             expect(message).toEqual("404 not found");
+        });
+    });
+
+    describe(`handleModalError`, () => {
+        let context: ActionContext<State, State>;
+        beforeEach(() => {
+            context = ({
+                commit: jest.fn(),
+            } as unknown) as ActionContext<State, State>;
+        });
+        it(`When a message can be extracted from the FetchWrapperError,
+            it will set an error message that will show up in a modal window`, async () => {
+            const error = {
+                response: {
+                    json: () =>
+                        Promise.resolve({
+                            error: { code: 500, message: "Internal Server Error" },
+                        }),
+                } as Response,
+            } as FetchWrapperError;
+
+            await handleModalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "setModalErrorMessage",
+                "500 Internal Server Error"
+            );
+        });
+
+        it(`When a message can not be extracted from the FetchWrapperError,
+            it will leave the modal error message empty`, async () => {
+            const error = {
+                response: {
+                    json: () => Promise.reject(),
+                } as Response,
+            } as FetchWrapperError;
+
+            await handleModalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "");
         });
     });
 });
