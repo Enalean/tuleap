@@ -50,7 +50,6 @@ describe("GanttTask", () => {
         const time_period = new TimePeriodMonth(
             new Date(2020, 3, 3),
             new Date(2020, 4, 3),
-            new Date(2020, 4, 3),
             "en_US"
         );
 

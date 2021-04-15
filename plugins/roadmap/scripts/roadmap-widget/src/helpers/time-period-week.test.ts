@@ -29,7 +29,6 @@ describe("time-period-week", () => {
         it("should format the time in a long format", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-04-07"),
-                new Date("2021-04-10"),
                 new Date("2021-04-08"),
                 createVueGettextProviderPassthrough()
             );
@@ -40,7 +39,6 @@ describe("time-period-week", () => {
         it("should format the time in a short format", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-04-07"),
-                new Date("2021-04-10"),
                 new Date("2021-04-08"),
                 createVueGettextProviderPassthrough()
             );
@@ -54,7 +52,6 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-04-01"),
                 new Date("2021-04-30"),
-                new Date("2021-04-08"),
                 createVueGettextProviderPassthrough()
             );
 
@@ -72,7 +69,6 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-12-15"),
                 new Date("2022-01-15"),
-                new Date("2022-01-01"),
                 createVueGettextProviderPassthrough()
             );
 
@@ -90,7 +86,6 @@ describe("time-period-week", () => {
             const period = new TimePeriodWeek(
                 new Date("2021-12-15"),
                 new Date("2022-01-15"),
-                new Date("2022-01-01"),
                 createVueGettextProviderPassthrough()
             );
 
@@ -111,55 +106,11 @@ describe("time-period-week", () => {
                 const period = new TimePeriodWeek(
                     new Date("2021-01-01"),
                     new Date("2021-01-31"),
-                    new Date("2021-01-15"),
                     createVueGettextProviderPassthrough()
                 );
 
                 expect(period.additionalUnits(nb_missing_weeks)).toStrictEqual([]);
             }
         );
-
-        it("returns the current week if no start and no end", () => {
-            const period = new TimePeriodWeek(
-                null,
-                null,
-                new Date("2021-04-09"),
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Mon Apr 05 2021",
-                "Mon Apr 12 2021",
-            ]);
-        });
-
-        it("returns weeks between now and end when there is no start", () => {
-            const period = new TimePeriodWeek(
-                null,
-                new Date("2021-04-30"),
-                new Date("2021-04-09"),
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Mon Apr 05 2021",
-                "Mon Apr 12 2021",
-                "Mon Apr 19 2021",
-                "Mon Apr 26 2021",
-                "Mon May 03 2021",
-            ]);
-        });
-
-        it("returns weeks between start and now when there is no end", () => {
-            const period = new TimePeriodWeek(
-                new Date("2021-04-01"),
-                null,
-                new Date("2021-04-09"),
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Mon Mar 29 2021",
-                "Mon Apr 05 2021",
-                "Mon Apr 12 2021",
-            ]);
-        });
     });
 });

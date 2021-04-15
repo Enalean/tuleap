@@ -19,8 +19,8 @@
 
 import type { Task } from "../type";
 
-export function getLastDate(tasks: Task[]): Date | null {
-    return tasks.reduce((last: Date | null, current: Task): Date | null => {
+export function getLastDate(tasks: Task[], now: Date): Date {
+    const last_date_in_tasks = tasks.reduce((last: Date | null, current: Task): Date | null => {
         if (!last) {
             if (current.end) {
                 if (!current.start) {
@@ -51,4 +51,10 @@ export function getLastDate(tasks: Task[]): Date | null {
 
         return last;
     }, null);
+
+    if (!last_date_in_tasks) {
+        return now;
+    }
+
+    return last_date_in_tasks < now ? now : last_date_in_tasks;
 }

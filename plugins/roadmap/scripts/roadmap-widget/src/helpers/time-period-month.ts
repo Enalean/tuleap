@@ -26,13 +26,8 @@ export class TimePeriodMonth implements TimePeriod {
     private readonly formatter_short: Intl.DateTimeFormat;
     private readonly formatter_long: Intl.DateTimeFormat;
 
-    constructor(
-        readonly from: Date | null,
-        readonly to: Date | null,
-        readonly now: Date,
-        readonly locale: string
-    ) {
-        this.months = getMonths(from, to, now);
+    constructor(readonly from: Date, readonly to: Date, readonly locale: string) {
+        this.months = getMonths(from, to);
         this.formatter_short = new Intl.DateTimeFormat(toBCP47(locale), {
             month: "short",
         });
@@ -43,7 +38,7 @@ export class TimePeriodMonth implements TimePeriod {
     }
 
     static getDummyTimePeriod(now: Date): TimePeriod {
-        return new TimePeriodMonth(now, now, now, "en_US");
+        return new TimePeriodMonth(now, now, "en_US");
     }
 
     get units(): Date[] {
@@ -63,9 +58,9 @@ export class TimePeriodMonth implements TimePeriod {
     }
 }
 
-function getMonths(start: Date | null, end: Date | null, now: Date): Date[] {
-    const beginning_of_period = getBeginningOfPeriod(start, end, now);
-    const end_of_period = getEndOfPeriod(start, end, now);
+function getMonths(start: Date, end: Date): Date[] {
+    const beginning_of_period = getBeginningOfPeriod(start, end);
+    const end_of_period = getEndOfPeriod(start, end);
 
     const base_month = new Date(beginning_of_period);
     base_month.setUTCDate(1);

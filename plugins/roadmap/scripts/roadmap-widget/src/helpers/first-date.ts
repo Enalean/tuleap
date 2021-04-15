@@ -19,8 +19,8 @@
 
 import type { Task } from "../type";
 
-export function getFirstDate(tasks: Task[]): Date | null {
-    return tasks.reduce((first: Date | null, current: Task): Date | null => {
+export function getFirstDate(tasks: Task[], now: Date): Date {
+    const first_date_in_tasks = tasks.reduce((first: Date | null, current: Task): Date | null => {
         if (!first) {
             return current.start || current.end;
         }
@@ -35,4 +35,10 @@ export function getFirstDate(tasks: Task[]): Date | null {
 
         return first;
     }, null);
+
+    if (!first_date_in_tasks) {
+        return now;
+    }
+
+    return first_date_in_tasks < now ? first_date_in_tasks : now;
 }

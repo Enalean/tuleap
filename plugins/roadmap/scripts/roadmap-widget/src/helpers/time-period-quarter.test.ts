@@ -25,263 +25,45 @@ function toDateString(collection: Date[]): string[] {
 }
 
 describe("TimePeriodQuarter", () => {
-    let start: Date | null;
-    let end: Date | null;
-    let now: Date;
+    let start!: Date;
+    let end!: Date;
 
-    it("Returns current quarter if no start and no end", () => {
-        start = null;
-        end = null;
-        now = new Date(2020, 3, 15);
+    it("returns quarters when start is lesser than end", () => {
+        const start = new Date(2020, 1, 15);
+        const end = new Date(2020, 4, 15);
 
-        const period = new TimePeriodQuarter(
-            start,
-            end,
-            now,
-            createVueGettextProviderPassthrough()
-        );
-        expect(toDateString(period.units)).toStrictEqual(["Wed Apr 01 2020", "Wed Jul 01 2020"]);
+        const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
+        expect(toDateString(period.units)).toStrictEqual([
+            "Wed Jan 01 2020",
+            "Wed Apr 01 2020",
+            "Wed Jul 01 2020",
+        ]);
     });
 
-    describe("when there is no start", () => {
-        beforeEach(() => {
-            start = null;
-        });
+    it("returns quarters when start is in the same quarter than end", () => {
+        const start = new Date(2020, 2, 15);
+        const end = new Date(2020, 2, 15);
 
-        it("returns quarters between now and end", () => {
-            now = new Date(2020, 2, 15);
-            end = new Date(2020, 3, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-            ]);
-        });
-
-        it("returns quarters between end and now", () => {
-            now = new Date(2020, 3, 15);
-            end = new Date(2020, 2, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-            ]);
-        });
-
-        it("returns one quarter when end and now are in the same quarter", () => {
-            now = new Date(2020, 2, 15);
-            end = new Date(2020, 2, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-            ]);
-        });
+        const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
+        expect(toDateString(period.units)).toStrictEqual(["Wed Jan 01 2020", "Wed Apr 01 2020"]);
     });
 
-    describe("when there is no end", () => {
-        beforeEach(() => {
-            end = null;
-        });
+    it("returns quarters when start is greater than end", () => {
+        const start = new Date(2020, 3, 15);
+        const end = new Date(2020, 1, 15);
 
-        it("returns quarters between now and start", () => {
-            now = new Date(2020, 2, 15);
-            start = new Date(2020, 3, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-            ]);
-        });
-
-        it("returns quarters between start and now", () => {
-            now = new Date(2020, 3, 15);
-            start = new Date(2020, 2, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-            ]);
-        });
-
-        it("returns one quarter when start and now are in the same quarter", () => {
-            now = new Date(2020, 2, 15);
-            start = new Date(2020, 2, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-            ]);
-        });
-    });
-
-    describe("when start is lesser than end", () => {
-        beforeEach(() => {
-            start = new Date(2020, 3, 15);
-            end = new Date(2020, 4, 15);
-        });
-
-        it("returns quarters when now is lesser than start", () => {
-            now = new Date(2020, 1, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-            ]);
-        });
-
-        it("returns quarters when now is greater than end", () => {
-            now = new Date(2020, 6, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-                "Thu Oct 01 2020",
-            ]);
-        });
-    });
-
-    describe("when start is in the same quarter than end", () => {
-        beforeEach(() => {
-            start = new Date(2020, 2, 15);
-            end = new Date(2020, 2, 15);
-        });
-
-        it("returns quarters when now is lesser than start", () => {
-            now = new Date(2020, 1, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-            ]);
-        });
-
-        it("returns quarters when now is greater than end", () => {
-            now = new Date(2020, 5, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-            ]);
-        });
-    });
-
-    describe("when start is greater than end", () => {
-        beforeEach(() => {
-            start = new Date(2020, 3, 15);
-            end = new Date(2020, 2, 15);
-        });
-
-        it("returns quarters when now is lesser than start", () => {
-            now = new Date(2020, 1, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-            ]);
-        });
-
-        it("returns quarters when now is greater than end", () => {
-            now = new Date(2020, 6, 15);
-
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
-            expect(toDateString(period.units)).toStrictEqual([
-                "Wed Jan 01 2020",
-                "Wed Apr 01 2020",
-                "Wed Jul 01 2020",
-                "Thu Oct 01 2020",
-            ]);
-        });
+        const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
+        expect(toDateString(period.units)).toStrictEqual([
+            "Wed Jan 01 2020",
+            "Wed Apr 01 2020",
+            "Wed Jul 01 2020",
+        ]);
     });
 
     it("Format a unit", () => {
         start = new Date(2020, 2, 15);
         end = new Date(2020, 7, 15);
-        now = new Date(2020, 5, 15);
-        const period = new TimePeriodQuarter(
-            start,
-            end,
-            now,
-            createVueGettextProviderPassthrough()
-        );
+        const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
         expect(period.formatShort(new Date(2020, 0, 15))).toStrictEqual("Q1");
         expect(period.formatShort(new Date(2020, 1, 15))).toStrictEqual("Q1");
@@ -315,13 +97,7 @@ describe("TimePeriodQuarter", () => {
         (nb_missing_quarters) => {
             start = new Date(2020, 2, 15);
             end = new Date(2020, 7, 15);
-            now = new Date(2020, 5, 15);
-            const period = new TimePeriodQuarter(
-                start,
-                end,
-                now,
-                createVueGettextProviderPassthrough()
-            );
+            const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
             expect(period.additionalUnits(nb_missing_quarters)).toStrictEqual([]);
         }
@@ -330,13 +106,7 @@ describe("TimePeriodQuarter", () => {
     it("Returns an array of additional quarters", () => {
         start = new Date(2020, 2, 15);
         end = new Date(2020, 3, 15);
-        now = new Date(2020, 2, 15);
-        const period = new TimePeriodQuarter(
-            start,
-            end,
-            now,
-            createVueGettextProviderPassthrough()
-        );
+        const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
         expect(toDateString(period.additionalUnits(3))).toStrictEqual([
             "Thu Oct 01 2020",

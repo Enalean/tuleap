@@ -21,13 +21,12 @@ import { shallowMount } from "@vue/test-utils";
 import TimePeriodHeader from "./TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
 
-describe("TimePeriodeHeader", () => {
+describe("TimePeriodHeader", () => {
     it("Headers formatted months", () => {
         const wrapper = shallowMount(TimePeriodHeader, {
             propsData: {
                 time_period: new TimePeriodMonth(
                     new Date("2020-03-31T22:00:00.000Z"),
-                    new Date("2020-04-30T22:00:00.000Z"),
                     new Date("2020-04-30T22:00:00.000Z"),
                     "en_US"
                 ),
