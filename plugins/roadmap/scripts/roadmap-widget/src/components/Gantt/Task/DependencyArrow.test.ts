@@ -56,12 +56,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 22px; top: -4px; height: 88px; width: 65px;">
+            <svg class="roadmap-gantt-task-dependency" style="left: 26px; top: -4px; height: 88px; width: 61px;">
               <path d="M24 24 L32 24 Q40 24, 40 32 L40 36 Q40 44, 32 44 L16 44 Q8 44, 8 52 L8 56 Q8 64, 16 64
-                        L41 64
-                        L33 56
-                        M41 64
-                        L33 72" class="roadmap-gantt-task-dependency-line"></path>
+                        L37 64
+                        L29 56
+                        M37 64
+                        L29 72" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
@@ -81,8 +81,8 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_2, task_1, [task_2, task_1]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 6px; top: -4px; height: 88px; width: 98px;">
-              <path d="M74 24 L82 24 Q90 24, 90 32 L90 36 Q90 44, 82 44 L16 44 Q8 44, 8 52 L8 56 Q8 64, 16 64
+            <svg class="roadmap-gantt-task-dependency" style="left: 6px; top: -4px; height: 88px; width: 101px;">
+              <path d="M77 24 L85 24 Q93 24, 93 32 L93 36 Q93 44, 85 44 L16 44 Q8 44, 8 52 L8 56 Q8 64, 16 64
                         L24 64
                         L16 56
                         M24 64
@@ -106,8 +106,8 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_2, task_1, [task_1, task_2]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 6px; top: -44px; height: 88px; width: 98px;">
-              <path d="M74 64 L82 64 Q90 64, 90 56 L90 52 Q90 44, 82 44 L16 44 Q8 44, 8 36 L8 32 Q8 24, 16 24
+            <svg class="roadmap-gantt-task-dependency" style="left: 6px; top: -44px; height: 88px; width: 101px;">
+              <path d="M77 64 L85 64 Q93 64, 93 56 L93 52 Q93 44, 85 44 L16 44 Q8 44, 8 36 L8 32 Q8 24, 16 24
                         L24 24
                         L16 16
                         M24 24
@@ -131,12 +131,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_1, task_2, [task_2, task_1]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 22px; top: -44px; height: 88px; width: 65px;">
+            <svg class="roadmap-gantt-task-dependency" style="left: 26px; top: -44px; height: 88px; width: 61px;">
               <path d="M24 64 L32 64 Q40 64, 40 56 L40 52 Q40 44, 32 44 L16 44 Q8 44, 8 36 L8 32 Q8 24, 16 24
-                        L41 24
-                        L33 16
-                        M41 24
-                        L33 32" class="roadmap-gantt-task-dependency-line"></path>
+                        L37 24
+                        L29 16
+                        M37 24
+                        L29 32" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
