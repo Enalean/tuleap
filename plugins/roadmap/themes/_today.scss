@@ -17,5 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'empty-state';
-@use 'gantt-board';
+.roadmap-gantt-today {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 7px;
+    transform: translateX(-3px);
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 3px;
+        width: 1px;
+        height: 100%;
+        background: var(--tlp-theme-color);
+    }
+
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--tlp-theme-color);
+    }
+}

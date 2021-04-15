@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+@use 'roadmap-variables';
+
+.roadmap-gantt-header {
+    padding: roadmap-variables.$time-unit-height 0 0;
+}
+
+.roadmap-gantt-task-header {
+    $radius: 4px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: roadmap-variables.$task-header-width;
+    min-width: roadmap-variables.$task-header-width;
+    height: 100%;
+    padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-large-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
+    border-right: 2px solid var(--tlp-ui-border-normal);
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    color: var(--tlp-typo-default-text-color);
+    white-space: nowrap;
+
+    &:first-child {
+        border-top-left-radius: $radius;
+    }
+
+    &:last-child {
+        border-bottom: 0;
+        border-bottom-left-radius: $radius;
+    }
+}
+
+.roadmap-gantt-task-header-xref {
+    font-size: .625rem;
+    line-height: .75rem;
+}
+
+.roadmap-gantt-task-header-title {
+    overflow: hidden;
+    font-size: .8125rem;
+    line-height: .9375rem;
+    text-overflow: ellipsis;
+
+    > .tlp-skeleton-text {
+        width: 100%;
+    }
+}
+
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    .roadmap-gantt-task-header-#{$color-name} {
+        border-left: 4px solid map-get($colors, 'border');
+
+        > .roadmap-gantt-task-header-xref {
+            color: map-get($colors, 'text');
+        }
+    }
+}
