@@ -18,6 +18,11 @@
  */
 
 import type { Feature } from "../type";
+import type { ActionContext } from "vuex";
+import type { State } from "../type";
+import type { HandleDropContextWithProgramId } from "./drag-drop";
+import { reorderElementInTopBacklog } from "./ProgramIncrement/add-to-top-backlog";
+import { handleModalError } from "./error-handler";
 
 export interface FeatureReorderPosition {
     ids: number[];
@@ -77,4 +82,43 @@ function getFeatureToCompareWith(
         direction: Direction.AFTER,
         compared_to: features_in_program_backlog[index - 1].id,
     };
+}
+
+export async function reorderFeatureInProgramBacklog(
+    context: ActionContext<State, State>,
+    handle_drop: HandleDropContextWithProgramId
+): Promise<void> {
+    const data_element_id = handle_drop.dropped_element.dataset.elementId;
+    if (!data_element_id) {
+        return;
+    }
+    const element_id = parseInt(data_element_id, 10);
+
+    let sibling_element = null;
+    if (handle_drop.next_sibling instanceof HTMLElement) {
+        const sibling_id = handle_drop.next_sibling.dataset.elementId;
+        if (!sibling_id) {
+            throw Error("'element-id' data attribute does not exist on sibling feature");
+        }
+
+        sibling_element = context.getters.getToBePlannedElementFromId(parseInt(sibling_id, 10));
+    }
+
+    const card_position = getFeatureReorderPosition(
+        context.getters.getToBePlannedElementFromId(element_id),
+        sibling_element,
+        context.state.to_be_planned_elements
+    );
+
+    context.commit("changeFeaturePositionInProgramBacklog", card_position);
+
+    try {
+        context.commit("startMoveElementInAProgramIncrement", element_id);
+
+        await reorderElementInTopBacklog(handle_drop.program_id, card_position);
+    } catch (error) {
+        await handleModalError(context, error);
+    } finally {
+        context.commit("finishMoveElement", element_id);
+    }
 }

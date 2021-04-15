@@ -19,129 +19,46 @@
 
 import type { ActionContext } from "vuex";
 import type { Feature, State } from "../type";
-import type {
-    FeatureIdToMoveFromProgramIncrementToAnother,
-    FeatureIdWithProgramIncrement,
-    HandleDropContextWithProgramId,
-} from "../helpers/drag-drop";
-import { extractFeatureIndexFromProgramIncrement } from "../helpers/feature-extractor";
-import {
-    moveElementFromProgramIncrementToTopBackLog,
-    reorderElementInTopBacklog,
-} from "../helpers/ProgramIncrement/add-to-top-backlog";
-import { unplanFeature, planFeatureInProgramIncrement as planFeature } from "../helpers/drag-drop";
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { HandleDropContextWithProgramId } from "../helpers/drag-drop";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import { getToBePlannedElements } from "../helpers/ToBePlanned/element-to-plan-retriever";
 import { getFeatures } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 import { getLinkedUserStoriesToFeature } from "../helpers/UserStories/user-stories-retriever";
-import { getFeatureReorderPosition } from "../helpers/feature-reordering";
+import { reorderFeatureInProgramBacklog } from "../helpers/feature-reordering";
+import {
+    moveFeatureFromBacklogToProgramIncrement,
+    moveFeatureFromProgramIncrementToAnotherProgramIncrement,
+    moveFeatureFromProgramIncrementToBacklog,
+} from "../helpers/feature-moving";
 
 export interface LinkUserStoriesToFeature {
     artifact_id: number;
     program_increment: ProgramIncrement;
 }
 
-export function planFeatureInProgramIncrement(
-    context: ActionContext<State, State>,
-    feature_id_with_increment: FeatureIdWithProgramIncrement
-): void {
-    const to_be_planned_element = context.getters.getToBePlannedElementFromId(
-        feature_id_with_increment.feature_id
-    );
-
-    context.commit("removeToBePlannedElement", to_be_planned_element);
-
-    feature_id_with_increment.program_increment.features.push(to_be_planned_element);
-}
-
-export function unplanFeatureFromProgramIncrement(
-    context: ActionContext<State, State>,
-    feature_id_with_increment: FeatureIdWithProgramIncrement
-): void {
-    const feature_to_unplan_index = extractFeatureIndexFromProgramIncrement(
-        feature_id_with_increment
-    );
-
-    const feature_to_unplan =
-        feature_id_with_increment.program_increment.features[feature_to_unplan_index];
-
-    feature_id_with_increment.program_increment.features.splice(feature_to_unplan_index, 1);
-
-    context.commit("addToBePlannedElement", feature_to_unplan);
-}
-
-export function moveFeatureFromProgramIncrementToAnother(
-    context: ActionContext<State, State>,
-    feature_to_move_id: FeatureIdToMoveFromProgramIncrementToAnother
-): void {
-    const feature_to_move_index = extractFeatureIndexFromProgramIncrement({
-        feature_id: feature_to_move_id.feature_id,
-        program_increment: feature_to_move_id.from_program_increment,
-    });
-
-    const feature_to_move =
-        feature_to_move_id.from_program_increment.features[feature_to_move_index];
-
-    feature_to_move_id.from_program_increment.features.splice(feature_to_move_index, 1);
-    feature_to_move_id.to_program_increment.features.push(feature_to_move);
-}
-
 export async function handleDrop(
     context: ActionContext<State, State>,
     handle_drop: HandleDropContextWithProgramId
 ): Promise<void> {
-    const data_element_id = handle_drop.dropped_element.dataset.elementId;
-    if (!data_element_id) {
-        return;
-    }
-    const element_id = parseInt(data_element_id, 10);
-
     const plan_in_program_increment_id = handle_drop.target_dropzone.dataset.programIncrementId;
     const remove_from_program_increment_id = handle_drop.dropped_element.dataset.programIncrementId;
 
     if (plan_in_program_increment_id && !remove_from_program_increment_id) {
-        const payload: FeatureIdWithProgramIncrement = {
-            feature_id: element_id,
-            program_increment: context.getters.getProgramIncrementFromId(
-                parseInt(plan_in_program_increment_id, 10)
-            ),
-        };
-
-        planFeatureInProgramIncrement(context, payload);
-
-        try {
-            context.commit("startMoveElementInAProgramIncrement", element_id);
-            await planFeature(handle_drop, parseInt(plan_in_program_increment_id, 10), element_id);
-        } catch (error) {
-            await handleModalError(context, error);
-        } finally {
-            context.commit("finishMoveElement", element_id);
-        }
-
+        await moveFeatureFromBacklogToProgramIncrement(
+            context,
+            handle_drop,
+            parseInt(plan_in_program_increment_id, 10)
+        );
         return;
     }
 
     if (!plan_in_program_increment_id && remove_from_program_increment_id) {
-        const payload: FeatureIdWithProgramIncrement = {
-            feature_id: element_id,
-            program_increment: context.getters.getProgramIncrementFromId(
-                parseInt(remove_from_program_increment_id, 10)
-            ),
-        };
-
-        unplanFeatureFromProgramIncrement(context, payload);
-
-        try {
-            context.commit("startMoveElementInAProgramIncrement", element_id);
-            await moveElementFromProgramIncrementToTopBackLog(handle_drop.program_id, element_id);
-        } catch (error) {
-            await handleModalError(context, error);
-        } finally {
-            context.commit("finishMoveElement", element_id);
-        }
-
+        await moveFeatureFromProgramIncrementToBacklog(
+            context,
+            handle_drop,
+            parseInt(remove_from_program_increment_id, 10)
+        );
         return;
     }
 
@@ -150,78 +67,17 @@ export async function handleDrop(
         remove_from_program_increment_id &&
         plan_in_program_increment_id !== remove_from_program_increment_id
     ) {
-        const payload: FeatureIdToMoveFromProgramIncrementToAnother = {
-            feature_id: element_id,
-            from_program_increment: context.getters.getProgramIncrementFromId(
-                parseInt(remove_from_program_increment_id, 10)
-            ),
-            to_program_increment: context.getters.getProgramIncrementFromId(
-                parseInt(plan_in_program_increment_id, 10)
-            ),
-        };
-
-        moveFeatureFromProgramIncrementToAnother(context, payload);
-
-        try {
-            context.commit("startMoveElementInAProgramIncrement", element_id);
-
-            await Promise.all([
-                unplanFeature(
-                    handle_drop,
-                    parseInt(remove_from_program_increment_id, 10),
-                    element_id
-                ),
-                planFeature(handle_drop, parseInt(plan_in_program_increment_id, 10), element_id),
-            ]);
-        } catch (error) {
-            await handleModalError(context, error);
-        } finally {
-            context.commit("finishMoveElement", element_id);
-        }
-
+        await moveFeatureFromProgramIncrementToAnotherProgramIncrement(
+            context,
+            handle_drop,
+            parseInt(plan_in_program_increment_id, 10),
+            parseInt(remove_from_program_increment_id, 10)
+        );
         return;
     }
 
     if (!plan_in_program_increment_id && !remove_from_program_increment_id) {
-        let sibling_element = null;
-        if (handle_drop.next_sibling instanceof HTMLElement) {
-            const sibling_id = handle_drop.next_sibling.dataset.elementId;
-            if (!sibling_id) {
-                throw Error("'element-id' data attribute does not exist on sibling feature");
-            }
-
-            sibling_element = context.getters.getToBePlannedElementFromId(parseInt(sibling_id, 10));
-        }
-
-        const card_position = getFeatureReorderPosition(
-            context.getters.getToBePlannedElementFromId(element_id),
-            sibling_element,
-            context.state.to_be_planned_elements
-        );
-
-        context.commit("changeFeaturePositionInProgramBacklog", card_position);
-
-        try {
-            context.commit("startMoveElementInAProgramIncrement", element_id);
-
-            await reorderElementInTopBacklog(handle_drop.program_id, card_position);
-        } catch (error) {
-            await handleModalError(context, error);
-        } finally {
-            context.commit("finishMoveElement", element_id);
-        }
-    }
-}
-
-export async function handleModalError(
-    context: ActionContext<State, State>,
-    rest_error: FetchWrapperError
-): Promise<void> {
-    try {
-        const { error } = await rest_error.response.json();
-        context.commit("setModalErrorMessage", error.code + " " + error.message);
-    } catch (e) {
-        context.commit("setModalErrorMessage", "");
+        await reorderFeatureInProgramBacklog(context, handle_drop);
     }
 }
 

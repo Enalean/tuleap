@@ -19,6 +19,8 @@
 
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { VueGettextProvider } from "./vue-gettext-provider";
+import type { ActionContext } from "vuex";
+import type { State } from "../type";
 
 export async function handleError(
     rest_error: FetchWrapperError,
@@ -39,4 +41,16 @@ export async function handleError(
     }
 
     return json.error.code + " " + json.error.message;
+}
+
+export async function handleModalError(
+    context: ActionContext<State, State>,
+    rest_error: FetchWrapperError
+): Promise<void> {
+    try {
+        const { error } = await rest_error.response.json();
+        context.commit("setModalErrorMessage", error.code + " " + error.message);
+    } catch (e) {
+        context.commit("setModalErrorMessage", "");
+    }
 }

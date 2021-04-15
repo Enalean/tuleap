@@ -312,4 +312,124 @@ describe("Mutations", () => {
             expect(state.to_be_planned_elements).toEqual([{ id: 102 }, { id: 101 }]);
         });
     });
+
+    describe("moveFeatureFromBacklogToProgramIncrement", () => {
+        it(`When feature is moving from backlog to Program Increment, Then feature is added to program increment`, () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 101,
+                    } as Feature,
+                    {
+                        id: 102,
+                    } as Feature,
+                ] as Feature[],
+                program_increments: [{ id: 1, features: [] as Feature[] }] as ProgramIncrement[],
+            } as State;
+
+            mutations.moveFeatureFromBacklogToProgramIncrement(state, {
+                feature_id: 101,
+                program_increment_id: 1,
+            });
+
+            expect(state).toEqual({
+                to_be_planned_elements: [
+                    {
+                        id: 102,
+                    } as Feature,
+                ] as Feature[],
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            });
+        });
+    });
+    describe("moveFeatureFromProgramIncrementToBacklog", () => {
+        it(`When feature is moving from Program Increment to backlog, Then feature is added to backlog`, () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 102,
+                    } as Feature,
+                ] as Feature[],
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.moveFeatureFromProgramIncrementToBacklog(state, {
+                feature_id: 101,
+                program_increment_id: 1,
+            });
+
+            expect(state).toEqual({
+                to_be_planned_elements: [
+                    {
+                        id: 102,
+                    } as Feature,
+                    {
+                        id: 101,
+                    } as Feature,
+                ] as Feature[],
+                program_increments: [{ id: 1, features: [] as Feature[] }] as ProgramIncrement[],
+            });
+        });
+    });
+    describe("moveFeatureFromProgramIncrementToAnotherProgramIncrement", () => {
+        it(`When feature is moving from increment to another increment, Then feature is unplanned and planned`, () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [] as Feature[],
+                    },
+                    {
+                        id: 666,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.moveFeatureFromProgramIncrementToAnotherProgramIncrement(state, {
+                feature_id: 101,
+                from_program_increment_id: 666,
+                to_program_increment_id: 1,
+            });
+
+            expect(state).toEqual({
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                    {
+                        id: 666,
+                        features: [] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            });
+        });
+    });
 });
