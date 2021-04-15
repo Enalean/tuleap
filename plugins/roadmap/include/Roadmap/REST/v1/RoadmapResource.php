@@ -78,18 +78,20 @@ final class RoadmapResource
             \Tracker_FormElementFactory::instance()
         );
 
-        $retriever = new RoadmapTasksRetriever(
+        $timeframe_builder = new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger());
+        $retriever         = new RoadmapTasksRetriever(
             new RoadmapWidgetDao(),
             \ProjectManager::instance(),
             \UserManager::instance(),
             new \URLVerification(),
             \TrackerFactory::instance(),
             $semantic_timeframe_builder,
-            new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger()),
+            $timeframe_builder,
             \Tracker_ArtifactFactory::instance(),
             new DependenciesRetriever(new NatureDao()),
             new RoadmapTasksOutOfDateFilter(
                 new SemanticStatusRetriever(),
+                $timeframe_builder,
                 $this->getLogger()
             )
         );

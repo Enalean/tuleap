@@ -24,9 +24,11 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
+use Tracker;
 use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class RoadmapTasksOutOfDateFilter
 {
@@ -38,10 +40,18 @@ class RoadmapTasksOutOfDateFilter
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var TimeframeBuilder
+     */
+    private $timeframe_builder;
 
-    public function __construct(SemanticStatusRetriever $semantic_status_retriever, LoggerInterface $logger)
-    {
+    public function __construct(
+        SemanticStatusRetriever $semantic_status_retriever,
+        TimeframeBuilder $timeframe_builder,
+        LoggerInterface $logger
+    ) {
         $this->semantic_status_retriever = $semantic_status_retriever;
+        $this->timeframe_builder         = $timeframe_builder;
         $this->logger                    = $logger;
     }
 
@@ -49,25 +59,30 @@ class RoadmapTasksOutOfDateFilter
      * @param Artifact[] $artifacts
      * @return Artifact[]
      */
-    public function filterOutOfDateArtifacts(array $artifacts, \Tracker $tracker, DateTimeImmutable $now): array
-    {
+    public function filterOutOfDateArtifacts(
+        array $artifacts,
+        Tracker $tracker,
+        DateTimeImmutable $now,
+        \PFUser $user
+    ): array {
         $semantic_status = $this->semantic_status_retriever->retrieveSemantic($tracker);
-        return array_filter($artifacts, function ($artifact) use ($semantic_status, $now) {
-            return ! $this->hasBeenClosedMoreThanOneYearAgo($artifact, $semantic_status, $now);
+        return array_filter($artifacts, function ($artifact) use ($semantic_status, $user, $now) {
+            $status_field = $semantic_status->getField();
+            if ($status_field === null || $semantic_status->isOpen($artifact)) {
+                return true;
+            }
+
+            return ! $this->hasBeenClosedMoreThanOneYearAgo($artifact, $semantic_status, $status_field, $now) &&
+                ! $this->isEndDateMoreThanOneYearAgo($artifact, $user, $now);
         });
     }
 
-    private function hasBeenClosedMoreThanOneYearAgo(Artifact $artifact, \Tracker_Semantic_Status $semantic_status, DateTimeImmutable $now): bool
-    {
-        $status_field = $semantic_status->getField();
-        if ($status_field === null) {
-            return false;
-        }
-
-        if ($semantic_status->isOpen($artifact)) {
-            return false;
-        }
-
+    private function hasBeenClosedMoreThanOneYearAgo(
+        Artifact $artifact,
+        \Tracker_Semantic_Status $semantic_status,
+        \Tracker_FormElement_Field_List $status_field,
+        DateTimeImmutable $now
+    ): bool {
         $changesets = array_reverse($artifact->getChangesets());
         foreach ($changesets as $changeset) {
             if (! $changeset->canHoldValue()) {
@@ -92,7 +107,7 @@ class RoadmapTasksOutOfDateFilter
                 continue;
             }
 
-            $close_date   = (new DateTimeImmutable())->setTimestamp((int) $changeset->getSubmittedOn());
+            $close_date   = new DateTimeImmutable('@' . $changeset->getSubmittedOn());
             $closed_since = $now->diff($close_date);
             if ($closed_since->days > 365) {
                 return true;
@@ -110,8 +125,38 @@ class RoadmapTasksOutOfDateFilter
         return true;
     }
 
+    private function isEndDateMoreThanOneYearAgo(Artifact $artifact, \PFUser $user, DateTimeImmutable $now): bool
+    {
+        $time_period   = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
+        $task_end_date = $this->getDateTheTaskEnds($time_period);
+
+        if ($task_end_date === null) {
+            return false;
+        }
+
+        $diff_from_now = $now->diff($task_end_date);
+
+        return $diff_from_now->days > 365;
+    }
+
     private function isAnOpenValue(int $value_id, Tracker_Semantic_Status $semantic_status): bool
     {
         return in_array($value_id, $semantic_status->getOpenValues());
+    }
+
+    private function getDateTheTaskEnds(\TimePeriodWithoutWeekEnd $time_period): ?DateTimeImmutable
+    {
+        $start_date = $time_period->getStartDate();
+        $end_date   = $time_period->getEndDate();
+
+        if ($start_date === null && $end_date === null) {
+            return null;
+        }
+
+        if ($end_date === null) {
+            return new DateTimeImmutable('@' . $start_date);
+        }
+
+        return new DateTimeImmutable('@' . $end_date);
     }
 }

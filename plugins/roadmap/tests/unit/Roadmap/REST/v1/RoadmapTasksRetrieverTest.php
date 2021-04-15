@@ -809,7 +809,8 @@ class RoadmapTasksRetrieverTest extends TestCase
             ->with(
                 $artifacts,
                 $tracker,
-                Mockery::type(\DateTimeImmutable::class)
+                Mockery::type(\DateTimeImmutable::class),
+                $this->user
             )
             ->once()
             ->andReturn([$task_201, $task_202, $task_203]);

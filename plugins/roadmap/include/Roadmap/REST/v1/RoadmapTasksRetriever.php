@@ -136,7 +136,8 @@ final class RoadmapTasksRetriever
         $filtered_artifacts = $this->tasks_filter->filterOutOfDateArtifacts(
             $paginated_artifacts->getArtifacts(),
             $tracker,
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            $user
         );
 
         $representations = [];

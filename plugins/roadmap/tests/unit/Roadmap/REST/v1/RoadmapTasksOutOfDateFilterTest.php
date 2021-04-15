@@ -25,11 +25,14 @@ namespace Tuleap\Roadmap\REST\v1;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class RoadmapTasksOutOfDateFilterTest extends TestCase
 {
@@ -63,6 +66,14 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
      */
     private $logger;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TimeframeBuilder
+     */
+    private $timeframe_builder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
+     */
+    private $user;
 
     private const TODO_VALUE_ID     = 128;
     private const ON_GOING_VALUE_ID = 129;
@@ -76,8 +87,11 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
         $this->status_field              = \Mockery::mock(\Tracker_FormElement_Field_List::class);
         $this->tracker                   = \Mockery::mock(\Tracker::class);
         $this->logger                    = \Mockery::mock(LoggerInterface::class);
+        $this->timeframe_builder         = \Mockery::mock(TimeframeBuilder::class);
+        $this->user                      = \Mockery::mock(\PFUser::class);
         $this->filter                    = new RoadmapTasksOutOfDateFilter(
             $this->semantic_status_retriever,
+            $this->timeframe_builder,
             $this->logger
         );
 
@@ -97,7 +111,8 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
             $this->filter->filterOutOfDateArtifacts(
                 [$this->artifact],
                 $this->tracker,
-                new \DateTimeImmutable()
+                new \DateTimeImmutable(),
+                $this->user
             )
         );
     }
@@ -112,15 +127,21 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
             $this->filter->filterOutOfDateArtifacts(
                 [$this->artifact],
                 $this->tracker,
-                new \DateTimeImmutable()
+                new \DateTimeImmutable(),
+                $this->user
             )
         );
     }
 
-    public function testItDoesNotFilterTasksClosedEarlierThanOneYearAgo(): void
+    public function testItDoesNotFilterTasksClosedEarlierThanOneYearAgoWithNoEndDate(): void
     {
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user)
+            ->andReturn(
+                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+            );
 
         $this->artifact->shouldReceive('getChangesets')->once()->andReturn([
             $this->buildChangeset(1, "2021-04-13 15:30", true, self::TODO_VALUE_ID),
@@ -136,7 +157,8 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
             $this->filter->filterOutOfDateArtifacts(
                 [$this->artifact],
                 $this->tracker,
-                new \DateTimeImmutable("2021-04-14 08:30")
+                new \DateTimeImmutable("2021-04-14 08:30"),
+                $this->user
             )
         );
     }
@@ -159,7 +181,8 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
             $this->filter->filterOutOfDateArtifacts(
                 [$this->artifact],
                 $this->tracker,
-                new \DateTimeImmutable("2021-04-14 08:30")
+                new \DateTimeImmutable("2021-04-14 08:30"),
+                $this->user
             )
         );
     }
@@ -168,6 +191,11 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
     {
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user)
+            ->andReturn(
+                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+            );
 
         $this->artifact->shouldReceive('getChangesets')->once()->andReturn([
             $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
@@ -184,7 +212,8 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
             $this->filter->filterOutOfDateArtifacts(
                 [$this->artifact],
                 $this->tracker,
-                new \DateTimeImmutable("2021-04-14 08:30")
+                new \DateTimeImmutable("2021-04-14 08:30"),
+                $this->user
             )
         );
     }
@@ -205,7 +234,42 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
             $this->filter->filterOutOfDateArtifacts(
                 [$this->artifact],
                 $this->tracker,
-                new \DateTimeImmutable("2021-04-14 08:30")
+                new \DateTimeImmutable("2021-04-14 08:30"),
+                $this->user
+            )
+        );
+    }
+
+    /**
+     * @testWith ["2020-01-15", 0]
+     *           ["2021-01-15", 1]
+     */
+    public function testItFilterArtifactsThatAreClosedWhoseEndDateIsLaterThanOneYearAgo($end_string_date, $expected_number_of_artifacts): void
+    {
+        $now_string_date = "2021-04-14";
+
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user)
+            ->andReturn(
+                $this->getTimePeriodWithoutWeekend("2020-01-01", $end_string_date)
+            );
+
+        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
+        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+
+        $this->artifact->shouldReceive('getChangesets')->once()->andReturn([
+            $this->buildChangeset(1, "2021-04-13 15:30", true, self::TODO_VALUE_ID),
+            $this->buildChangeset(2, "2021-04-13 16:30", true, self::ON_GOING_VALUE_ID),
+            $this->buildChangeset(3, "2021-04-13 17:30", true, self::DONE_VALUE_ID) // Closed in this changeset
+        ]);
+
+        $this->assertCount(
+            $expected_number_of_artifacts,
+            $this->filter->filterOutOfDateArtifacts(
+                [$this->artifact],
+                $this->tracker,
+                new \DateTimeImmutable($now_string_date),
+                $this->user,
             )
         );
     }
@@ -245,5 +309,15 @@ class RoadmapTasksOutOfDateFilterTest extends TestCase
         );
 
         return $changeset;
+    }
+
+    private function getTimePeriodWithoutWeekend(string $start_date_string, ?string $end_date_string): TimePeriodWithoutWeekEnd
+    {
+        $end = $end_date_string !== null ? (new \DateTimeImmutable($end_date_string))->getTimestamp() : null;
+        return TimePeriodWithoutWeekEnd::buildFromEndDate(
+            (new \DateTimeImmutable($start_date_string))->getTimestamp(),
+            $end,
+            new NullLogger()
+        );
     }
 }
