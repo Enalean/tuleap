@@ -28,16 +28,26 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramInc
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
+use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentChange;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentModifier;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
+use Tuleap\ProgramManagement\Program\ProgramSearcher;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -106,12 +116,69 @@ final class ProgramIncrementResource extends AuthenticatedResource
     }
 
     /**
+     * Change the program increment's contents
+     *
+     * Plan elements in the program increment.
+     *
+     * <pre>⚠ This route is under construction ⚠</pre>
+     *
+     * <br>
+     * Add example
+     * <pre>
+     * {
+     *   "add": [
+     *     { "id": 34 }
+     *   ]
+     * }
+     * </pre>
+     * <br>
+     * The feature with id 34 is planned (added to the contents) of the Program Increment.
+     *
+     * @url    PATCH {id}/content
+     * @access protected
+     *
+     * @param int                                        $id                   ID of the program increment
+     * @param ProgramIncrementContentPatchRepresentation $patch_representation {@from body}
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function patchContent(int $id, ProgramIncrementContentPatchRepresentation $patch_representation): void
+    {
+        $user     = $this->user_manager->getCurrentUser();
+        $modifier = new ContentModifier(
+            new PrioritizeFeaturesPermissionVerifier(
+                \ProjectManager::instance(),
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
+                new CanPrioritizeFeaturesDAO()
+            ),
+            new ProgramIncrementRetriever(\Tracker_ArtifactFactory::instance(), new ProgramIncrementsDAO()),
+            new ProgramSearcher(new ProgramDao()),
+        );
+        try {
+            $potential_feature_ids_to_add = [];
+            foreach ($patch_representation->add as $feature_involved) {
+                $potential_feature_ids_to_add[] = $feature_involved->id;
+            }
+            $modifier->modifyContent($user, $id, new ContentChange($potential_feature_ids_to_add));
+        } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
+            throw new RestException(404, $e->getMessage());
+        } catch (NotAllowedToPrioritizeException $e) {
+            throw new RestException(403, $e->getMessage());
+        }
+
+        throw new RestException(501, 'This route is still under implementation');
+    }
+
+    /**
      * @url OPTIONS {id}/content
      *
      * @param int $id Id of the project
      */
     public function optionsContent(int $id): void
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 }

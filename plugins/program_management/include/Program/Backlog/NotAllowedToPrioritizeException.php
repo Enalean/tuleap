@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
-
-interface ContentStore
+final class NotAllowedToPrioritizeException extends \Exception
 {
-    /**
-     * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
-     */
-    public function searchContent(PlannedProgramIncrement $program_increment): array;
+    public function __construct(int $user_id, int $program_increment_id)
+    {
+        parent::__construct(
+            sprintf(
+                'User #%d does not have permission to prioritize features in the program increment #%d',
+                $user_id,
+                $program_increment_id
+            )
+        );
+    }
 }

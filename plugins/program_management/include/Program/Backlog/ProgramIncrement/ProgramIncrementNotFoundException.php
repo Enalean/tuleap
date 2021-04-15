@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement;
 
 final class ProgramIncrementNotFoundException extends \Exception
 {
-    public function __construct()
+    public function __construct(int $id)
     {
-        parent::__construct('Program increment artifact have not been found');
+        parent::__construct("Program increment artifact #$id could not be found");
     }
 }

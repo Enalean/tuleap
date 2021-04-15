@@ -35,9 +35,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMi
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
