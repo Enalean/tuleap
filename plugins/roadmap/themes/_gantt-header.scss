@@ -21,7 +21,21 @@
 @use 'roadmap-variables';
 
 .roadmap-gantt-header {
+    position: relative;
     padding: roadmap-variables.$time-unit-height 0 0;
+    border-right: 2px solid var(--tlp-ui-border-normal);
+
+    &.roadmap-gantt-header-is-scrolling::before {
+        content: '';
+        display: block;
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        right: -8px;
+        width: 8px;
+        height: 100%;
+        background: linear-gradient(to right, var(--tlp-ui-border-normal), transparent);
+    }
 }
 
 .roadmap-gantt-task-header {
@@ -34,7 +48,6 @@
     min-width: roadmap-variables.$task-header-width;
     height: 100%;
     padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-large-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
-    border-right: 2px solid var(--tlp-ui-border-normal);
     border-bottom: 1px solid var(--tlp-ui-border-normal);
     color: var(--tlp-typo-default-text-color);
     white-space: nowrap;

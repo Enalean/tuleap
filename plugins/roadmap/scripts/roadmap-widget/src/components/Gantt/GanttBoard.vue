@@ -28,10 +28,15 @@
             />
         </div>
         <div class="roadmap-gantt">
-            <div class="roadmap-gantt-header">
+            <div class="roadmap-gantt-header" v-bind:class="header_class" data-test="gantt-header">
                 <task-header v-for="task of tasks" v-bind:key="task.id" v-bind:task="task" />
             </div>
-            <div class="roadmap-gantt-scrolling-area" ref="scrolling_area">
+            <scrolling-area
+                v-bind:locale="locale"
+                v-bind:time_period="time_period"
+                v-bind:now="now"
+                v-on:is_scrolling="isScrolling"
+            >
                 <time-period-header
                     v-bind:time_period="time_period"
                     v-bind:nb_additional_units="nb_additional_units"
@@ -49,13 +54,7 @@
                     v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
                     v-bind:locale="locale"
                 />
-                <today-indicator
-                    v-bind:locale="locale"
-                    v-bind:time_period="time_period"
-                    v-bind:now="now"
-                    ref="today"
-                />
-            </div>
+            </scrolling-area>
         </div>
     </div>
 </template>
@@ -86,9 +85,11 @@ import DependencyNatureControl from "./DependencyNatureControl.vue";
 import { getNatureLabelsForTasks } from "../../helpers/natures-labels-for-tasks";
 import { TimePeriodWeek } from "../../helpers/time-period-week";
 import TaskHeader from "./Task/TaskHeader.vue";
+import ScrollingArea from "./ScrollingArea.vue";
 
 @Component({
     components: {
+        ScrollingArea,
         TaskHeader,
         DependencyNatureControl,
         TimePeriodControl,
@@ -100,8 +101,6 @@ import TaskHeader from "./Task/TaskHeader.vue";
 export default class GanttBoard extends Vue {
     $refs!: {
         time_period: TimePeriodHeader;
-        scrolling_area: HTMLElement;
-        today: TodayIndicator;
     };
 
     @Prop({ required: true })
@@ -123,23 +122,21 @@ export default class GanttBoard extends Vue {
 
     private dependencies_nature_to_display: string | null = null;
 
+    private is_scrolling = false;
+
     mounted(): void {
         this.observer = new ResizeObserver(this.adjustAdditionalUnits);
         this.observer.observe(this.$refs.time_period.$el);
-
-        if (this.$refs.scrolling_area.scrollTo && this.$refs.today.$el instanceof HTMLElement) {
-            this.$refs.scrolling_area.scrollTo({
-                top: 0,
-                left: this.$refs.today.$el.offsetLeft,
-                behavior: "smooth",
-            });
-        }
     }
 
     beforeDestroy(): void {
         if (this.observer) {
             this.observer.disconnect();
         }
+    }
+
+    isScrolling(is_scrolling: boolean): void {
+        this.is_scrolling = is_scrolling;
     }
 
     adjustAdditionalUnits(entries: ResizeObserverEntry[]): void {
@@ -202,6 +199,10 @@ export default class GanttBoard extends Vue {
 
     get available_natures(): NaturesLabels {
         return getNatureLabelsForTasks(this.tasks, this.dependencies, this.visible_natures);
+    }
+
+    get header_class(): string {
+        return this.is_scrolling ? "roadmap-gantt-header-is-scrolling" : "";
     }
 }
 </script>
