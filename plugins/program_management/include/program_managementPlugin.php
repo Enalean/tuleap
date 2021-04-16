@@ -68,6 +68,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPl
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\TrackerShouldPlanFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -587,7 +588,8 @@ final class program_managementPlugin extends Plugin
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
             new ProgramIncrementsDAO(),
-            new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build())
+            new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
+            new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), Tracker_ArtifactFactory::instance())
         );
     }
 

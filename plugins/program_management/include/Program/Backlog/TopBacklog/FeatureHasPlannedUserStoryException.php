@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-use Tracker_NoArtifactLinkFieldException;
-use Tuleap\ProgramManagement\Program\Program;
-
-interface TopBacklogChangeProcessor
+final class FeatureHasPlannedUserStoryException extends \Exception
 {
-    /**
-     * @throws CannotManipulateTopBacklog
-     * @throws Tracker_NoArtifactLinkFieldException
-     * @throws FeatureHasPlannedUserStoryException
-     */
-    public function processTopBacklogChangeForAProgram(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void;
+    public function __construct(int $feature_id)
+    {
+        parent::__construct("The feature with id#$feature_id cannot be unplanned because some linked user stories are planned in Teams program.");
+    }
 }

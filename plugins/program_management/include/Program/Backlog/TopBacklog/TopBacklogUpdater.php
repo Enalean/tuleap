@@ -39,6 +39,7 @@ class TopBacklogUpdater
 
     /**
      * @throws CannotManipulateTopBacklog
+     * @throws FeatureHasPlannedUserStoryException
      * @throws Tracker_NoArtifactLinkFieldException
      */
     public function updateTopBacklog(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void

@@ -27,8 +27,10 @@ use Tracker_NoArtifactLinkFieldException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Program\Program;
@@ -64,6 +66,10 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      * @var FeaturesRankOrderer
      */
     private $features_rank_orderer;
+    /**
+     * @var UserStoryLinkedToFeatureChecker
+     */
+    private $user_story_linked_to_feature_checker;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
@@ -72,7 +78,8 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         DBTransactionExecutor $db_transaction_executor,
         ArtifactLinkUpdater $artifact_link_updater,
         ProgramIncrementsDAO $program_increments_dao,
-        FeaturesRankOrderer $features_rank_orderer
+        FeaturesRankOrderer $features_rank_orderer,
+        UserStoryLinkedToFeatureChecker $user_story_linked_to_feature_checker
     ) {
         $this->artifact_factory                        = $artifact_factory;
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
@@ -81,8 +88,14 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $this->artifact_link_updater                   = $artifact_link_updater;
         $this->program_increments_dao                  = $program_increments_dao;
         $this->features_rank_orderer                   = $features_rank_orderer;
+        $this->user_story_linked_to_feature_checker    = $user_story_linked_to_feature_checker;
     }
 
+    /**
+     * @throws CannotManipulateTopBacklog
+     * @throws Tracker_NoArtifactLinkFieldException
+     * @throws FeatureHasPlannedUserStoryException
+     */
     public function processTopBacklogChangeForAProgram(
         Program $program,
         TopBacklogChange $top_backlog_change,
@@ -154,6 +167,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     /**
      * @param int[] $features_id
      * @return int[]
+     * @throws FeatureHasPlannedUserStoryException
      */
     private function filterFeaturesThatCanBeManipulated(array $features_id, \PFUser $user, Program $program): array
     {
@@ -161,9 +175,13 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 
         foreach ($features_id as $feature_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
-            if ($artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId()) {
-                $filtered_features[] = $feature_id;
+            if ($artifact === null || (int) $artifact->getTracker()->getGroupId() !== $program->getId()) {
+                continue;
             }
+            if ($this->user_story_linked_to_feature_checker->hasAPlannedUserStoryLinkedToFeature($user, $feature_id)) {
+                throw new FeatureHasPlannedUserStoryException($feature_id);
+            }
+            $filtered_features[] = $feature_id;
         }
 
         return $filtered_features;

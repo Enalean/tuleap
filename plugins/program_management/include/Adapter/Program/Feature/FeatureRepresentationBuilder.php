@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use PFUser;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -43,26 +42,20 @@ class FeatureRepresentationBuilder
      */
     private $artifact_factory;
     /**
-     * @var ArtifactsLinkedToParentDao
+     * @var UserStoryLinkedToFeatureChecker
      */
-    private $stories_linked_to_feature_dao;
-    /**
-     * @var BuildPlanning
-     */
-    private $planning_adapter;
+    private $user_story_checker;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
         \Tracker_FormElementFactory $form_element_factory,
         BackgroundColorRetriever $retrieve_background_color,
-        ArtifactsLinkedToParentDao $stories_linked_to_feature_dao,
-        BuildPlanning $planning_adapter
+        UserStoryLinkedToFeatureChecker $user_story_checker
     ) {
-        $this->artifact_factory              = $artifact_factory;
-        $this->form_element_factory          = $form_element_factory;
-        $this->retrieve_background_color     = $retrieve_background_color;
-        $this->stories_linked_to_feature_dao = $stories_linked_to_feature_dao;
-        $this->planning_adapter              = $planning_adapter;
+        $this->artifact_factory          = $artifact_factory;
+        $this->form_element_factory      = $form_element_factory;
+        $this->retrieve_background_color = $retrieve_background_color;
+        $this->user_story_checker        = $user_story_checker;
     }
 
     public function buildFeatureRepresentation(
@@ -89,40 +82,8 @@ class FeatureRepresentationBuilder
             $full_artifact->getUri(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
             $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user),
-            $this->hasAPlannedStory($user, $artifact_id),
-            $this->hasStoryLinked($user, $artifact_id)
+            $this->user_story_checker->hasAPlannedUserStoryLinkedToFeature($user, $artifact_id),
+            $this->user_story_checker->hasStoryLinked($user, $artifact_id)
         );
-    }
-
-    private function hasAPlannedStory(PFUser $user, int $artifact_id): bool
-    {
-        $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($artifact_id);
-        foreach ($planned_user_stories as $user_story) {
-            $planning = $this->planning_adapter->buildRootPlanning($user, $user_story['project_id']);
-
-            $is_linked_to_a_sprint_in_mirrored_milestones = $this->stories_linked_to_feature_dao->isLinkedToASprintInMirroredMilestones(
-                $user_story['user_story_id'],
-                $planning->getPlanningTracker()->getTrackerId(),
-                $user_story['project_id']
-            );
-            if ($is_linked_to_a_sprint_in_mirrored_milestones) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function hasStoryLinked(PFUser $user, int $artifact_id): bool
-    {
-        $linked_children = $this->stories_linked_to_feature_dao->getChildrenOfFeatureInTeamProjects($artifact_id);
-        foreach ($linked_children as $linked_child) {
-            $child = $this->artifact_factory->getArtifactByIdUserCanView($user, $linked_child['children_id']);
-            if ($child) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
