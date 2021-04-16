@@ -21,7 +21,6 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GanttTask from "./GanttTask.vue";
 import type { Task } from "../../../type";
-import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
 import { Styles } from "../../../helpers/styles";
@@ -71,10 +70,9 @@ describe("GanttTask", () => {
         });
     }
 
-    it("Displays the header, the grid, and the bar of the task", () => {
+    it("Displays the grid and the bar of the task", () => {
         const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 25));
 
-        expect(wrapper.findComponent(TaskHeader).exists()).toBe(true);
         expect(wrapper.findComponent(BackgroundGrid).exists()).toBe(true);
 
         const task_bar = wrapper.findComponent(TaskBar);

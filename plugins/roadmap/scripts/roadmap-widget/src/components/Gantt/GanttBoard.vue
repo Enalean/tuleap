@@ -28,13 +28,16 @@
             />
         </div>
         <div class="roadmap-gantt">
-            <time-period-header
-                v-bind:time_period="time_period"
-                v-bind:nb_additional_units="nb_additional_units"
-                v-bind:locale="locale"
-                ref="time_period"
-            />
-            <div>
+            <div class="roadmap-gantt-header">
+                <task-header v-for="task of tasks" v-bind:key="task.id" v-bind:task="task" />
+            </div>
+            <div class="roadmap-gantt-scrolling-area" ref="scrolling_area">
+                <time-period-header
+                    v-bind:time_period="time_period"
+                    v-bind:nb_additional_units="nb_additional_units"
+                    v-bind:locale="locale"
+                    ref="time_period"
+                />
                 <gantt-task
                     v-for="task of tasks"
                     v-bind:key="task.id"
@@ -46,12 +49,13 @@
                     v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
                     v-bind:locale="locale"
                 />
+                <today-indicator
+                    v-bind:locale="locale"
+                    v-bind:time_period="time_period"
+                    v-bind:now="now"
+                    ref="today"
+                />
             </div>
-            <today-indicator
-                v-bind:locale="locale"
-                v-bind:time_period="time_period"
-                v-bind:now="now"
-            />
         </div>
     </div>
 </template>
@@ -81,9 +85,11 @@ import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 import DependencyNatureControl from "./DependencyNatureControl.vue";
 import { getNatureLabelsForTasks } from "../../helpers/natures-labels-for-tasks";
 import { TimePeriodWeek } from "../../helpers/time-period-week";
+import TaskHeader from "./Task/TaskHeader.vue";
 
 @Component({
     components: {
+        TaskHeader,
         DependencyNatureControl,
         TimePeriodControl,
         TodayIndicator,
@@ -94,6 +100,8 @@ import { TimePeriodWeek } from "../../helpers/time-period-week";
 export default class GanttBoard extends Vue {
     $refs!: {
         time_period: TimePeriodHeader;
+        scrolling_area: HTMLElement;
+        today: TodayIndicator;
     };
 
     @Prop({ required: true })
@@ -118,6 +126,14 @@ export default class GanttBoard extends Vue {
     mounted(): void {
         this.observer = new ResizeObserver(this.adjustAdditionalUnits);
         this.observer.observe(this.$refs.time_period.$el);
+
+        if (this.$refs.scrolling_area.scrollTo && this.$refs.today.$el instanceof HTMLElement) {
+            this.$refs.scrolling_area.scrollTo({
+                top: 0,
+                left: this.$refs.today.$el.offsetLeft,
+                behavior: "smooth",
+            });
+        }
     }
 
     beforeDestroy(): void {

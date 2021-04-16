@@ -25,63 +25,12 @@
 @use 'popover';
 
 .roadmap-gantt-task {
-    $radius: 4px;
-
     display: flex;
     position: relative;
     height: roadmap-variables.$task-height;
 
-    &:first-child > .roadmap-gantt-task-header {
-        border-top-left-radius: $radius;
-    }
-
-    &:last-child > .roadmap-gantt-task-header {
-        border-bottom: 0;
-        border-bottom-left-radius: $radius;
-    }
-
     &:last-child > .roadmap-gantt-task-background-grid > .roadmap-gantt-task-background-grid-unit {
         border-bottom: 0;
-    }
-}
-
-.roadmap-gantt-task-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: roadmap-variables.$task-header-width;
-    min-width: roadmap-variables.$task-header-width;
-    height: 100%;
-    padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-large-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
-    border-right: 2px solid var(--tlp-ui-border-normal);
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
-    color: var(--tlp-typo-default-text-color);
-    white-space: nowrap;
-}
-
-.roadmap-gantt-task-header-xref {
-    font-size: .625rem;
-    line-height: .75rem;
-}
-
-.roadmap-gantt-task-header-title {
-    overflow: hidden;
-    font-size: .8125rem;
-    line-height: .9375rem;
-    text-overflow: ellipsis;
-
-    > .tlp-skeleton-text {
-        width: 100%;
-    }
-}
-
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-    .roadmap-gantt-task-header-#{$color-name} {
-        border-left: 4px solid map-get($colors, 'border');
-
-        > .roadmap-gantt-task-header-xref {
-            color: map-get($colors, 'text');
-        }
     }
 }
 
@@ -104,7 +53,6 @@
     height: roadmap-variables.$task-bar-height;
     padding: 1px;
     overflow: hidden;
-    transform: translateX(roadmap-variables.$task-header-width);
     border: 1px solid var(--tlp-ui-dimmed);
     border-radius: 3px;
     background: var(--tlp-ui-dimmed);
@@ -142,7 +90,7 @@
 
 .roadmap-gantt-task-bar-milestone {
     $width-of-square-once-rotated: roadmap-variables.$task-milestone-width / math.sqrt(2);
-    $new-horizontal-offset: roadmap-variables.$task-header-width + (roadmap-variables.$task-milestone-width - $width-of-square-once-rotated) / 2;
+    $new-horizontal-offset: (roadmap-variables.$task-milestone-width - $width-of-square-once-rotated) / 2;
 
     top: math.floor((roadmap-variables.$task-height - $width-of-square-once-rotated) / 2);
     width: $width-of-square-once-rotated;

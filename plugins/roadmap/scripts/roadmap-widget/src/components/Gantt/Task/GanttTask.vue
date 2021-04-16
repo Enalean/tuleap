@@ -20,7 +20,6 @@
 
 <template>
     <div class="roadmap-gantt-task">
-        <task-header v-bind:task="task" />
         <background-grid
             v-bind:time_period="time_period"
             v-bind:nb_additional_units="nb_additional_units"
@@ -52,7 +51,6 @@ import type {
     TaskDimension,
     TaskDimensionMap,
 } from "../../../type";
-import TaskHeader from "./TaskHeader.vue";
 import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
 import DependencyArrow from "./DependencyArrow.vue";
@@ -62,7 +60,7 @@ import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popover
 import BarPopover from "./BarPopover.vue";
 
 @Component({
-    components: { BarPopover, DependencyArrow, TaskBar, BackgroundGrid, TaskHeader },
+    components: { BarPopover, DependencyArrow, TaskBar, BackgroundGrid },
 })
 export default class GanttTask extends Vue {
     $refs!: {

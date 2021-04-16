@@ -17,5 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'empty-state';
-@use 'gantt-board';
+@use 'timeperiod';
+@use 'task';
+@use 'today';
+
+.roadmap-gantt-scrolling-area {
+    position: relative;
+    flex: 1 1 auto;
+    overflow-x: auto;
+}

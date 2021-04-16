@@ -22,7 +22,6 @@
 .roadmap-gantt-task-dependency {
     position: absolute;
     z-index: roadmap-variables.$z-index-dependencies;
-    transform: translateX(roadmap-variables.$task-header-width);
 }
 
 .roadmap-gantt-task-dependency-line {
