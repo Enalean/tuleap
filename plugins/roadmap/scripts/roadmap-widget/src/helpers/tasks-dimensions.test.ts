@@ -85,18 +85,21 @@ describe("tasks-dimensions", () => {
             });
         });
 
-        it("Returns task dimensions, positioned at start date", () => {
-            const task = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 20) } as Task;
+        it("Returns task dimensions, positioned at start date and ending at end date + 1 so that the end date is included in the bar", () => {
+            const task = {
+                start: new Date("2020-03-10T11:00:00.000Z"),
+                end: new Date("2020-03-20T11:00:00.000Z"),
+            } as Task;
             const time_period = new TimePeriodMonth(
-                new Date(2020, 3, 10),
-                new Date(2020, 3, 20),
+                new Date("2020-03-10T00:00:00.000Z"),
+                new Date("2020-03-30T00:00:00.000Z"),
                 "en_US"
             );
 
             expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
                 index: 0,
-                left: 30,
-                width: 33,
+                left: 31,
+                width: 35,
             });
         });
 

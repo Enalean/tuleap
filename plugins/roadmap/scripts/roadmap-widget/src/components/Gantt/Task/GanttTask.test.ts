@@ -79,7 +79,7 @@ describe("GanttTask", () => {
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
-        expect(task_bar.props("width")).toBe(67);
+        expect(task_bar.props("width")).toBe(70);
         expect(task_bar.props("left")).toBe(13);
     });
 
