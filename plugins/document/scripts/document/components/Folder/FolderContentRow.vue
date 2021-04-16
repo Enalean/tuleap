@@ -22,7 +22,6 @@
         class="document-tree-item-toggle-quicklook document-tree-item"
         v-bind:class="row_classes"
         v-bind:data-item-id="item.id"
-        v-on:mouseleave="closeActionMenu"
         v-on:click="toggleQuickLookOnRow"
     >
         <td v-bind:colspan="colspan" v-bind:id="`document-folder-content-row-${item.id}`">
@@ -32,6 +31,7 @@
                     'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode,
                 }"
                 v-bind:id="`document-folder-content-row-div-${item.id}`"
+                data-test="document-folder-content-row"
             >
                 <component
                     v-bind:is="cell_title_component_name"
@@ -141,6 +141,9 @@ export default {
         item: Object,
         isQuickLookDisplayed: Boolean,
     },
+    data() {
+        return { is_dropdown_displayed: false };
+    },
     computed: {
         ...mapState(["folded_items_ids"]),
         ...mapState("configuration", ["date_time_format", "relative_dates_display", "user_locale"]),
@@ -237,6 +240,7 @@ export default {
         },
     },
     mounted() {
+        EventBus.$on("set-dropdown-shown", this.setIsDropdownDisplayed);
         if (!(this.item.created || this.item.is_uploading)) {
             return;
         }
@@ -255,16 +259,17 @@ export default {
         }
     },
     methods: {
-        closeActionMenu() {
-            EventBus.$emit("hide-action-menu");
-        },
         toggleQuickLookOnRow(event) {
             if (
-                event.target.id === `document-folder-content-row-${this.item.id}` ||
-                event.target.id === `document-folder-content-row-div-${this.item.id}`
+                !this.is_dropdown_displayed &&
+                (event.target.id === `document-folder-content-row-${this.item.id}` ||
+                    event.target.id === `document-folder-content-row-div-${this.item.id}`)
             ) {
                 EventBus.$emit("toggle-quick-look", { details: { item: this.item } });
             }
+        },
+        setIsDropdownDisplayed(event) {
+            this.is_dropdown_displayed = event.is_dropdown_shown;
         },
     },
 };

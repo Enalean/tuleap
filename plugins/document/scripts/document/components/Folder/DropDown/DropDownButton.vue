@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import { createDropdown } from "tlp";
+import { createDropdown, EVENT_TLP_DROPDOWN_SHOWN, EVENT_TLP_DROPDOWN_HIDDEN } from "tlp";
+import { EVENT_TLP_MODAL_SHOWN } from "../../../../../../../src/themes/tlp/src/js/modal";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
@@ -59,9 +60,17 @@ export default {
     mounted() {
         this.dropdown = createDropdown(this.$refs.dropdownButton);
 
+        this.dropdown.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, this.showDropdownEvent);
+        this.dropdown.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, this.hideDropdownEvent);
+        document.addEventListener(EVENT_TLP_MODAL_SHOWN, this.hideActionMenu);
+
         EventBus.$on("hide-action-menu", this.hideActionMenu);
     },
     beforeDestroy() {
+        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_SHOWN);
+        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_HIDDEN);
+        document.removeEventListener(EVENT_TLP_MODAL_SHOWN, this.hideActionMenu);
+
         EventBus.$off("hide-action-menu", this.hideActionMenu);
     },
     methods: {
@@ -69,6 +78,12 @@ export default {
             if (this.dropdown && this.dropdown.is_shown) {
                 this.dropdown.hide();
             }
+        },
+        showDropdownEvent() {
+            EventBus.$emit("set-dropdown-shown", { is_dropdown_shown: true });
+        },
+        hideDropdownEvent() {
+            EventBus.$emit("set-dropdown-shown", { is_dropdown_shown: false });
         },
     },
 };

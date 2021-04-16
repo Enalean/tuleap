@@ -26,9 +26,16 @@ import * as tlp from "tlp";
 jest.mock("tlp");
 
 describe("DropDownButton", () => {
-    let dropdown_factory;
+    let dropdown_factory, fake_dropdown_object;
     beforeEach(() => {
-        jest.spyOn(tlp, "createDropdown");
+        fake_dropdown_object = {
+            addEventListener: jest.fn(),
+            removeEventListener: jest.fn(),
+        };
+
+        jest.spyOn(document, "addEventListener");
+        jest.spyOn(document, "removeEventListener");
+        jest.spyOn(tlp, "createDropdown").mockReturnValue(fake_dropdown_object);
         dropdown_factory = (props = {}) => {
             return shallowMount(DropDownButton, {
                 localVue,
@@ -42,6 +49,9 @@ describe("DropDownButton", () => {
         Then it should display the button action and the dropdown option ( | update | v |)`, () => {
         const wrapper = dropdown_factory({ isAppended: true, isInQuickLookMode: false });
 
+        expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
+        expect(document.addEventListener).toHaveBeenCalledTimes(1);
+
         expect(wrapper.find(".tlp-append").exists()).toBeTruthy();
         expect(wrapper.find(".tlp-button-icon-right").exists()).toBeFalsy();
         expect(wrapper.find(".fa-ellipsis-h").exists()).toBeFalsy();
@@ -52,6 +62,9 @@ describe("DropDownButton", () => {
         Then it should display an ellipsis and the dropdown option (|... v|)`, () => {
         const wrapper = dropdown_factory({ isAppended: false, isInQuickLookMode: false });
 
+        expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
+        expect(document.addEventListener).toHaveBeenCalledTimes(1);
+
         expect(wrapper.find(".tlp-append").exists()).toBeFalsy();
         expect(wrapper.find(".fa-ellipsis-h").exists()).toBeTruthy();
         expect(wrapper.find(".tlp-button-icon-right").exists()).toBeTruthy();
@@ -61,6 +74,9 @@ describe("DropDownButton", () => {
         When we display the button
         Then it should be displayed outlined`, () => {
         const wrapper = dropdown_factory({ isAppended: true, isInQuickLookMode: true });
+
+        expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
+        expect(document.addEventListener).toHaveBeenCalledTimes(1);
 
         expect(wrapper.find(".tlp-button-outline").exists()).toBeTruthy();
     });
@@ -73,6 +89,9 @@ describe("DropDownButton", () => {
             isInQuickLookMode: true,
             isInLargeMode: true,
         });
+
+        expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
+        expect(document.addEventListener).toHaveBeenCalledTimes(1);
 
         expect(wrapper.find(".tlp-button-large").exists()).toBeTruthy();
     });
@@ -88,6 +107,12 @@ describe("DropDownButton", () => {
         const event_bus_off = jest.spyOn(EventBus, "$off");
 
         wrapper.destroy();
+
+        expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
+        expect(document.addEventListener).toHaveBeenCalledTimes(1);
+
+        expect(fake_dropdown_object.removeEventListener).toHaveBeenCalledTimes(2);
+        expect(document.removeEventListener).toHaveBeenCalledTimes(1);
 
         expect(event_bus_off).toHaveBeenCalledWith("hide-action-menu", expect.any(Function));
     });
