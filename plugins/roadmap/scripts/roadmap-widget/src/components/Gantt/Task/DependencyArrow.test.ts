@@ -56,12 +56,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 26px; top: -4px; height: 88px; width: 61px;">
-              <path d="M24 24 L32 24 Q40 24, 40 32 L40 36 Q40 44, 32 44 L16 44 Q8 44, 8 52 L8 56 Q8 64, 16 64
-                        L37 64
-                        L29 56
-                        M37 64
-                        L29 72" class="roadmap-gantt-task-dependency-line"></path>
+            <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: 3px; height: 74px; width: 47px;">
+              <path d="M17 17 L25 17 Q33 17, 33 25 L33 29 Q33 37, 25 37 L9 37 Q1 37, 1 45 L1 49 Q1 57, 9 57
+                        L30 57
+                        L22 49
+                        M30 57
+                        L22 65" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
@@ -81,12 +81,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_2, task_1, [task_2, task_1]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 6px; top: -4px; height: 88px; width: 101px;">
-              <path d="M77 24 L85 24 Q93 24, 93 32 L93 36 Q93 44, 85 44 L16 44 Q8 44, 8 52 L8 56 Q8 64, 16 64
-                        L24 64
-                        L16 56
-                        M24 64
-                        L16 72" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
+            <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: 3px; height: 74px; width: 87px;">
+              <path d="M70 17 L78 17 Q86 17, 86 25 L86 29 Q86 37, 78 37 L9 37 Q1 37, 1 45 L1 49 Q1 57, 9 57
+                        L17 57
+                        L9 49
+                        M17 57
+                        L9 65" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });
@@ -106,12 +106,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_2, task_1, [task_1, task_2]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 6px; top: -44px; height: 88px; width: 101px;">
-              <path d="M77 64 L85 64 Q93 64, 93 56 L93 52 Q93 44, 85 44 L16 44 Q8 44, 8 36 L8 32 Q8 24, 16 24
-                        L24 24
-                        L16 16
-                        M24 24
-                        L16 32" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
+            <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: -37px; height: 74px; width: 87px;">
+              <path d="M70 57 L78 57 Q86 57, 86 49 L86 45 Q86 37, 78 37 L9 37 Q1 37, 1 29 L1 25 Q1 17, 9 17
+                        L17 17
+                        L9 9
+                        M17 17
+                        L9 25" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });
@@ -131,12 +131,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_1, task_2, [task_2, task_1]);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 26px; top: -44px; height: 88px; width: 61px;">
-              <path d="M24 64 L32 64 Q40 64, 40 56 L40 52 Q40 44, 32 44 L16 44 Q8 44, 8 36 L8 32 Q8 24, 16 24
-                        L37 24
-                        L29 16
-                        M37 24
-                        L29 32" class="roadmap-gantt-task-dependency-line"></path>
+            <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: -37px; height: 74px; width: 47px;">
+              <path d="M17 57 L25 57 Q33 57, 33 49 L33 45 Q33 37, 25 37 L9 37 Q1 37, 1 29 L1 25 Q1 17, 9 17
+                        L30 17
+                        L22 9
+                        M30 17
+                        L22 25" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
