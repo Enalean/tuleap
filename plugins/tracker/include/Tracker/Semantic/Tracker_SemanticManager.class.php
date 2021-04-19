@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -124,8 +126,10 @@ class Tracker_SemanticManager
         );
 
         $semantic_timeframe = $semantic_timeframe_builder->getSemantic($this->tracker);
+        $semantic_progress  = (new SemanticProgressBuilder())->getSemantic($this->tracker);
 
         $semantics->add($semantic_timeframe);
+        $semantics->add($semantic_progress);
         $semantics->add($this->tracker->getTooltip());
 
         $this->addOtherSemantics($semantics);
@@ -181,7 +185,7 @@ class Tracker_SemanticManager
 
     protected function getSemanticOrder()
     {
-        $order = ['title', 'description', 'status', 'contributor', SemanticTimeframe::NAME];
+        $order = ['title', 'description', 'status', 'contributor', SemanticTimeframe::NAME, SemanticProgress::NAME];
         EventManager::instance()->processEvent(
             TRACKER_EVENT_GET_SEMANTICS_NAMES,
             [
