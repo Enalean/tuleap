@@ -45,9 +45,13 @@
     width: roadmap-variables.$time-unit-width;
 }
 
+.roadmap-gantt-task-bar-milestone,
 .roadmap-gantt-task-bar {
     position: absolute;
     z-index: roadmap-variables.$z-index-bars;
+}
+
+.roadmap-gantt-task-bar {
     top: math.floor((roadmap-variables.$task-height - roadmap-variables.$task-bar-height) / 2);
     min-width: roadmap-variables.$task-bar-min-width;
     height: roadmap-variables.$task-bar-height;
@@ -89,12 +93,19 @@
 }
 
 .roadmap-gantt-task-bar-milestone {
-    $width-of-square-once-rotated: roadmap-variables.$task-milestone-width / math.sqrt(2);
-    $new-horizontal-offset: (roadmap-variables.$task-milestone-width - $width-of-square-once-rotated) / 2;
+    top: math.round((roadmap-variables.$task-height - roadmap-variables.$task-milestone-height) / 2);
 
-    top: math.floor((roadmap-variables.$task-height - $width-of-square-once-rotated) / 2);
-    width: $width-of-square-once-rotated;
-    min-width: $width-of-square-once-rotated;
-    height: $width-of-square-once-rotated;
-    transform: translateX($new-horizontal-offset) rotate(45deg);
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+        &.roadmap-gantt-task-bar-#{$color-name} {
+            > .roadmap-gantt-task-bar-milestone-border {
+                stroke: map-get($colors, 'primary');
+                fill: map-get($colors, 'secondary');
+            }
+
+            > .roadmap-gantt-task-bar-milestone-progress {
+                stroke: map-get($colors, 'primary');
+                fill: map-get($colors, 'primary');
+            }
+        }
+    }
 }

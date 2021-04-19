@@ -50,6 +50,10 @@ final class TaskRepresentation
      */
     public $color_name;
     /**
+     * @var float
+     */
+    public $progress;
+    /**
      * @var string|null
      */
     public $start;
@@ -71,6 +75,7 @@ final class TaskRepresentation
         string $html_url,
         string $title,
         string $color_name,
+        float $progress,
         ?\DateTimeImmutable $start,
         ?\DateTimeImmutable $end,
         array $dependencies
@@ -80,6 +85,7 @@ final class TaskRepresentation
         $this->html_url   = $html_url;
         $this->title      = $title;
         $this->color_name = $color_name;
+        $this->progress   = $progress;
         $this->start      = JsonCast::fromDateTimeToDate($start);
         $this->end        = JsonCast::fromDateTimeToDate($end);
 

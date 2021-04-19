@@ -28,6 +28,7 @@ describe("TaskHeader", () => {
             title: "Do this",
             xref: "task #123",
             color_name: "fiesta-red",
+            progress: 1,
             html_url: "/plugins/tracker?aid=123",
             start: null,
             end: null,
