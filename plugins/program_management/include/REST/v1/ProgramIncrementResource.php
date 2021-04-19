@@ -24,15 +24,19 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -57,7 +61,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $this->user_manager                        = \UserManager::instance();
         $artifact_factory                          = \Tracker_ArtifactFactory::instance();
         $this->program_increment_content_retriever = new FeatureContentRetriever(
-            new ProgramIncrementRetriever($artifact_factory, new ProgramTrackerAdapter(\TrackerFactory::instance())),
+            new ProgramIncrementRetriever($artifact_factory, new ProgramIncrementsDAO()),
             new ContentDao(),
             new FeatureRepresentationBuilder(
                 $artifact_factory,
@@ -94,10 +98,10 @@ final class ProgramIncrementResource extends AuthenticatedResource
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
             return array_slice($elements, $offset, $limit);
-        } catch (\Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException $e) {
+        } catch (ProgramIncrementNotFoundException | ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());
-        } catch (\Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException $e) {
-            throw new RestException(400, $e->getMessage());
+        } catch (PlanTrackerException | ProgramTrackerException $e) {
+            throw new RestException(404, $e->getMessage());
         }
     }
 

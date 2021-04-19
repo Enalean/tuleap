@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\PlannedProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveProgramIncrement;
-use Tuleap\ProgramManagement\Program\Plan\BuildTracker;
 
 class ProgramIncrementRetriever implements RetrieveProgramIncrement
 {
@@ -34,34 +33,32 @@ class ProgramIncrementRetriever implements RetrieveProgramIncrement
      */
     private $artifact_factory;
     /**
-     * @var BuildTracker
+     * @var ProgramIncrementsDAO
      */
-    private $build_tracker;
+    private $program_increments_dao;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
-        BuildTracker $build_tracker
+        ProgramIncrementsDAO $program_increments_dao
     ) {
-        $this->artifact_factory = $artifact_factory;
-        $this->build_tracker    = $build_tracker;
+        $this->artifact_factory       = $artifact_factory;
+        $this->program_increments_dao = $program_increments_dao;
     }
 
     /**
      * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
      */
     public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement
     {
         $program_increment = $this->artifact_factory->getArtifactById($program_increment_id);
 
-        if (! $program_increment || ! $program_increment->userCanView($user)) {
+        if (
+            ! $program_increment ||
+            ! $program_increment->userCanView($user) ||
+            ! $this->program_increments_dao->isProgramIncrementTracker($program_increment->getTrackerId())
+        ) {
             throw new ProgramIncrementNotFoundException();
         }
-
-        $this->build_tracker->buildProgramIncrementTracker(
-            $program_increment->getTrackerId(),
-            (int) $program_increment->getTracker()->getGroupId()
-        );
 
         return new PlannedProgramIncrement($program_increment->getId());
     }
