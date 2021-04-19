@@ -25,6 +25,7 @@ import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
+import ScrollingArea from "./ScrollingArea.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -168,5 +169,28 @@ describe("GanttBoard", () => {
         expect(wrapper.findComponent(TimePeriodHeader).props("time_period")).toBeInstanceOf(
             TimePeriodQuarter
         );
+    });
+
+    it("switch is-scrolling class on header so that user is knowing that some data is hidden behind the header", async () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+                tasks: [
+                    { id: 1, dependencies: {} },
+                    { id: 2, dependencies: {} },
+                    { id: 3, dependencies: {} },
+                ] as Task[],
+                locale: "en_US",
+            },
+        });
+
+        const header = wrapper.find("[data-test=gantt-header]");
+        expect(header.classes()).not.toContain("roadmap-gantt-header-is-scrolling");
+
+        await wrapper.findComponent(ScrollingArea).vm.$emit("is_scrolling", true);
+        expect(header.classes()).toContain("roadmap-gantt-header-is-scrolling");
+
+        await wrapper.findComponent(ScrollingArea).vm.$emit("is_scrolling", false);
+        expect(header.classes()).not.toContain("roadmap-gantt-header-is-scrolling");
     });
 });
