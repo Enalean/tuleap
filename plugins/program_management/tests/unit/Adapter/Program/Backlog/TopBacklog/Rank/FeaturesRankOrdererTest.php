@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\REST\v1\Rank;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank;
 
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -29,7 +29,7 @@ use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation;
 
-class FeaturesRankOrdererTest extends TestCase
+final class FeaturesRankOrdererTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

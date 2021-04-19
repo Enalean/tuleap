@@ -71,7 +71,7 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
         $source_information = new MassChangeTopBacklogSourceInformation(102, [400, 401], UserTestBuilder::aUser()->build(), 'add');
 
-        $expected_top_backlog_change = new TopBacklogChange([400, 401], [], false);
+        $expected_top_backlog_change = new TopBacklogChange([400, 401], [], false, null);
 
         $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')
             ->withArgs(function (
@@ -93,7 +93,7 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
         $source_information = new MassChangeTopBacklogSourceInformation(102, [402, 403], UserTestBuilder::aUser()->build(), 'remove');
 
-        $expected_top_backlog_change = new TopBacklogChange([], [402, 403], false);
+        $expected_top_backlog_change = new TopBacklogChange([], [402, 403], false, null);
 
         $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')
             ->withArgs(function (

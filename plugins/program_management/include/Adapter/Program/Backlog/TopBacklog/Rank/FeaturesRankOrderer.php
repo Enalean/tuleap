@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\REST\v1\Rank;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank;
 
 use Luracast\Restler\RestException;
 use Tuleap\ProgramManagement\Program\Program;
