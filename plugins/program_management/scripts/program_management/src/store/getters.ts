@@ -18,6 +18,7 @@
  */
 import type { Feature, State } from "../type";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
+import type { FeatureIdWithProgramIncrementId } from "./mutations";
 
 export const isProgramIncrementAlreadyAdded = (state: State) => (increment_id: number): boolean => {
     return (
@@ -45,6 +46,29 @@ export const getFeaturesInProgramIncrement = (state: State) => (
     return getProgramIncrementFromId(state)(increment_id).features;
 };
 
+export const getFeatureInProgramIncrement = (state: State) => (
+    feature_id_with_program_increment_id: FeatureIdWithProgramIncrementId
+): Feature => {
+    const program_increment = getProgramIncrementFromId(state)(
+        feature_id_with_program_increment_id.program_increment_id
+    );
+
+    const feature = program_increment.features.find(
+        (feature) => feature.id === feature_id_with_program_increment_id.feature_id
+    );
+
+    if (!feature) {
+        throw new Error(
+            "Could not find feature with id #" +
+                feature_id_with_program_increment_id.feature_id +
+                " in program increment #" +
+                program_increment.id
+        );
+    }
+
+    return feature;
+};
+
 export const getToBePlannedElementFromId = (state: State) => (
     to_be_planned_element_id: number
 ): Feature => {
@@ -61,3 +85,15 @@ export const getToBePlannedElementFromId = (state: State) => (
 
 export const hasAnElementMovedInsideIncrement = (state: State): boolean =>
     state.ongoing_move_elements_id.length > 0;
+
+export const getSiblingFeatureFromProgramBacklog = (state: State) => (
+    next_sibling: HTMLElement
+): Feature | null => {
+    const sibling_id = next_sibling.dataset.elementId;
+
+    if (!sibling_id) {
+        return null;
+    }
+
+    return getToBePlannedElementFromId(state)(parseInt(sibling_id, 10));
+};

@@ -24,10 +24,14 @@ import type { HandleDropContextWithProgramId } from "./drag-drop";
 import { reorderElementInTopBacklog } from "./ProgramIncrement/add-to-top-backlog";
 import { handleModalError } from "./error-handler";
 
+export interface FeaturePlanningChange {
+    readonly feature: Feature;
+    readonly order: FeatureReorderPosition | null;
+}
+
 export interface FeatureReorderPosition {
-    ids: number[];
-    direction: Direction;
-    compared_to: number;
+    readonly direction: Direction;
+    readonly compared_to: number;
 }
 
 export enum Direction {
@@ -35,28 +39,35 @@ export enum Direction {
     AFTER = "after",
 }
 
-export function getFeatureReorderPosition(
-    feature: Feature,
+function getFeatureReorderPosition(
     sibling: Feature | null,
     features_in_program_backlog: Feature[]
-): FeatureReorderPosition {
-    const ids = [feature.id];
-
+): FeatureReorderPosition | null {
     if (!sibling) {
+        if (features_in_program_backlog.length === 0) {
+            return null;
+        }
+
         const direction = Direction.AFTER;
         const last_feature_in_column =
             features_in_program_backlog[features_in_program_backlog.length - 1];
         const compared_to = last_feature_in_column.id;
 
-        return { ids, direction, compared_to };
+        return { direction, compared_to };
     }
 
-    const { direction, compared_to } = getFeatureToCompareWith(
-        features_in_program_backlog,
-        sibling
-    );
+    return getFeatureToCompareWith(features_in_program_backlog, sibling);
+}
 
-    return { ids, direction, compared_to };
+export function getFeaturePlanningChange(
+    feature: Feature,
+    sibling: Feature | null,
+    features_in_program_backlog: Feature[]
+): FeaturePlanningChange {
+    return {
+        feature,
+        order: getFeatureReorderPosition(sibling, features_in_program_backlog),
+    };
 }
 
 function getFeatureToCompareWith(
@@ -92,30 +103,25 @@ export async function reorderFeatureInProgramBacklog(
     if (!data_element_id) {
         return;
     }
-    const element_id = parseInt(data_element_id, 10);
-
-    let sibling_element = null;
+    let sibling_feature = null;
     if (handle_drop.next_sibling instanceof HTMLElement) {
-        const sibling_id = handle_drop.next_sibling.dataset.elementId;
-        if (!sibling_id) {
-            throw Error("'element-id' data attribute does not exist on sibling feature");
-        }
-
-        sibling_element = context.getters.getToBePlannedElementFromId(parseInt(sibling_id, 10));
+        sibling_feature = context.getters.getSiblingFeatureFromProgramBacklog(
+            handle_drop.next_sibling
+        );
     }
-
-    const card_position = getFeatureReorderPosition(
+    const element_id = parseInt(data_element_id, 10);
+    const feature_planning_change = getFeaturePlanningChange(
         context.getters.getToBePlannedElementFromId(element_id),
-        sibling_element,
+        sibling_feature,
         context.state.to_be_planned_elements
     );
 
-    context.commit("changeFeaturePositionInProgramBacklog", card_position);
+    context.commit("changeFeaturePositionInProgramBacklog", feature_planning_change);
 
     try {
         context.commit("startMoveElementInAProgramIncrement", element_id);
 
-        await reorderElementInTopBacklog(handle_drop.program_id, card_position);
+        await reorderElementInTopBacklog(handle_drop.program_id, feature_planning_change);
     } catch (error) {
         await handleModalError(context, error);
     } finally {

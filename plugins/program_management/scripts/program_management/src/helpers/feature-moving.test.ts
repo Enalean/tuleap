@@ -25,7 +25,12 @@ import type { HandleDropContextWithProgramId } from "./drag-drop";
 import type { ActionContext } from "vuex";
 import type { Feature, State } from "../type";
 import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
-import { getProgramIncrementFromId, getToBePlannedElementFromId } from "../store/getters";
+import {
+    getFeatureInProgramIncrement,
+    getProgramIncrementFromId,
+    getSiblingFeatureFromProgramBacklog,
+    getToBePlannedElementFromId,
+} from "../store/getters";
 import {
     moveFeatureFromBacklogToProgramIncrement,
     moveFeatureFromProgramIncrementToAnotherProgramIncrement,
@@ -44,13 +49,15 @@ describe("FeatureMoving", () => {
                     { id: 1, features: [{ id: 12 }] as Feature[] } as ProgramIncrement,
                     { id: 2, features: [] as Feature[] } as ProgramIncrement,
                 ],
-                to_be_planned_elements: [{ id: 125 } as Feature],
+                to_be_planned_elements: [{ id: 125 } as Feature, { id: 99 } as Feature],
             } as State,
             getters: {},
         } as unknown) as ActionContext<State, State>;
         context.getters = {
             getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
             getProgramIncrementFromId: getProgramIncrementFromId(context.state),
+            getFeatureInProgramIncrement: getFeatureInProgramIncrement(context.state),
+            getSiblingFeatureFromProgramBacklog: getSiblingFeatureFromProgramBacklog(context.state),
         };
     });
     describe("moveFeatureFromBacklogToProgramIncrement", () => {
@@ -171,6 +178,8 @@ describe("FeatureMoving", () => {
         it(`When feature is moving from Program Increment to backlog, Then feature is added to backlog`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
+            const next_sibling: Element = createElement();
+            next_sibling.setAttribute("data-element-id", "99");
 
             const move_element_from_program_increment_to_top_backlog = jest.spyOn(
                 backlogAdder,
@@ -183,23 +192,62 @@ describe("FeatureMoving", () => {
                 context,
                 {
                     dropped_element,
+                    next_sibling,
                     program_id: 101,
                 } as HandleDropContextWithProgramId,
                 101
             );
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "moveFeatureFromProgramIncrementToBacklog",
+            expect(context.commit).toHaveBeenCalledWith("removeFeatureFromProgramIncrement", {
+                feature_id: 12,
+                program_increment_id: 101,
+            });
+            expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
+                feature: { id: 12 },
+                order: { compared_to: 125, direction: "after" },
+            });
+
+            expect(move_element_from_program_increment_to_top_backlog).toHaveBeenCalledWith(101, {
+                feature: { id: 12 },
+                order: { compared_to: 125, direction: "after" },
+            });
+        });
+
+        it(`When sibling feature does not exist and no element in backlog, Then FeatureReorderPosition is null`, async () => {
+            const dropped_element = createElement();
+            dropped_element.setAttribute("data-element-id", "12");
+
+            const move_element_from_program_increment_to_top_backlog = jest.spyOn(
+                backlogAdder,
+                "moveElementFromProgramIncrementToTopBackLog"
+            );
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(patch);
+
+            context.state.to_be_planned_elements = [];
+            await moveFeatureFromProgramIncrementToBacklog(
+                context,
                 {
-                    feature_id: 12,
-                    program_increment_id: 101,
-                }
+                    dropped_element,
+                    next_sibling: null,
+                    program_id: 101,
+                } as HandleDropContextWithProgramId,
+                101
             );
 
-            expect(move_element_from_program_increment_to_top_backlog).toHaveBeenCalledWith(
-                101,
-                12
-            );
+            expect(context.commit).toHaveBeenCalledWith("removeFeatureFromProgramIncrement", {
+                feature_id: 12,
+                program_increment_id: 101,
+            });
+            expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
+                feature: { id: 12 },
+                order: null,
+            });
+
+            expect(move_element_from_program_increment_to_top_backlog).toHaveBeenCalledWith(101, {
+                feature: { id: 12 },
+                order: null,
+            });
         });
 
         it(`When an error is thrown during remove elements from program increment, Then error is stored`, async () => {
@@ -225,18 +273,19 @@ describe("FeatureMoving", () => {
                 101
             );
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "moveFeatureFromProgramIncrementToBacklog",
-                {
-                    feature_id: 12,
-                    program_increment_id: 101,
-                }
-            );
+            expect(context.commit).toHaveBeenCalledWith("removeFeatureFromProgramIncrement", {
+                feature_id: 12,
+                program_increment_id: 101,
+            });
+            expect(context.commit).toHaveBeenCalledWith("addToBePlannedElement", {
+                feature: { id: 12 },
+                order: { compared_to: 99, direction: "after" },
+            });
 
-            expect(move_element_from_program_increment_to_top_backlog).toHaveBeenCalledWith(
-                101,
-                12
-            );
+            expect(move_element_from_program_increment_to_top_backlog).toHaveBeenCalledWith(101, {
+                feature: { id: 12 },
+                order: { compared_to: 99, direction: "after" },
+            });
 
             expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "404 Error");
         });

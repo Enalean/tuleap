@@ -22,6 +22,7 @@ import type { LinkUserStoryToFeature, LinkUserStoryToPlannedElement } from "./mu
 import * as mutations from "./mutations";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
+import type { FeaturePlanningChange } from "../helpers/feature-reordering";
 import { Direction } from "../helpers/feature-reordering";
 
 describe("Mutations", () => {
@@ -70,33 +71,73 @@ describe("Mutations", () => {
     });
 
     describe("addToBePlannedElement", () => {
-        it("When element already exists, Then error is thrown", () => {
+        it("When element already exists, Then nothing happens", () => {
             const state = {
                 to_be_planned_elements: [{ id: 14 }] as Feature[],
             } as State;
 
             const to_be_planned_element = {
-                id: 14,
-            } as Feature;
+                feature: { id: 14 } as Feature,
+            } as FeaturePlanningChange;
 
-            expect(() =>
-                mutations.addToBePlannedElement(state, to_be_planned_element)
-            ).toThrowError("To be planned element with id #14 already exist");
+            mutations.addToBePlannedElement(state, to_be_planned_element);
+            expect(state.to_be_planned_elements.length).toEqual(1);
+            expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
         });
 
-        it("When element does not exist in state, Then it is added", () => {
+        it("When element does not exist in state, Then it is added after sibling", () => {
             const state = {
                 to_be_planned_elements: [{ id: 14 }] as Feature[],
             } as State;
 
             const to_be_planned_element = {
-                id: 125,
-            } as Feature;
+                feature: { id: 125 } as Feature,
+                order: {
+                    feature: { id: 125 } as Feature,
+                    direction: Direction.AFTER,
+                    compared_to: 14,
+                },
+            } as FeaturePlanningChange;
 
             mutations.addToBePlannedElement(state, to_be_planned_element);
             expect(state.to_be_planned_elements.length).toEqual(2);
             expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
             expect(state.to_be_planned_elements[1]).toEqual({ id: 125 });
+        });
+
+        it("When element does not exist in state, Then it is added before sibling", () => {
+            const state = {
+                to_be_planned_elements: [{ id: 14 }] as Feature[],
+            } as State;
+
+            const to_be_planned_element = {
+                feature: { id: 125 } as Feature,
+                order: {
+                    feature: { id: 125 } as Feature,
+                    direction: Direction.BEFORE,
+                    compared_to: 14,
+                },
+            } as FeaturePlanningChange;
+
+            mutations.addToBePlannedElement(state, to_be_planned_element);
+            expect(state.to_be_planned_elements.length).toEqual(2);
+            expect(state.to_be_planned_elements[0]).toEqual({ id: 125 });
+            expect(state.to_be_planned_elements[1]).toEqual({ id: 14 });
+        });
+
+        it("When element does not exist in state and no elements are planned, Then it is added", () => {
+            const state = {
+                to_be_planned_elements: [] as Feature[],
+            } as State;
+
+            const to_be_planned_element = {
+                feature: { id: 125 } as Feature,
+                order: null,
+            } as FeaturePlanningChange;
+
+            mutations.addToBePlannedElement(state, to_be_planned_element);
+            expect(state.to_be_planned_elements.length).toEqual(1);
+            expect(state.to_be_planned_elements[0]).toEqual({ id: 125 });
         });
     });
 
@@ -262,9 +303,11 @@ describe("Mutations", () => {
             } as State;
 
             mutations.changeFeaturePositionInProgramBacklog(state, {
-                compared_to: 666,
-                direction: Direction.AFTER,
-                ids: [101],
+                order: {
+                    compared_to: 666,
+                    direction: Direction.AFTER,
+                },
+                feature: { id: 101 } as Feature,
             });
 
             expect(state.to_be_planned_elements).toEqual([{ id: 101 }]);
@@ -283,9 +326,11 @@ describe("Mutations", () => {
             } as State;
 
             mutations.changeFeaturePositionInProgramBacklog(state, {
-                compared_to: 102,
-                direction: Direction.AFTER,
-                ids: [101],
+                order: {
+                    compared_to: 102,
+                    direction: Direction.AFTER,
+                },
+                feature: { id: 101 } as Feature,
             });
 
             expect(state.to_be_planned_elements).toEqual([{ id: 102 }, { id: 101 }]);
@@ -304,12 +349,34 @@ describe("Mutations", () => {
             } as State;
 
             mutations.changeFeaturePositionInProgramBacklog(state, {
-                compared_to: 101,
-                direction: Direction.BEFORE,
-                ids: [102],
+                order: {
+                    compared_to: 101,
+                    direction: Direction.BEFORE,
+                },
+                feature: { id: 102 } as Feature,
             });
 
             expect(state.to_be_planned_elements).toEqual([{ id: 102 }, { id: 101 }]);
+        });
+
+        it("When order is null, Then error is thrown", () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 101,
+                    } as Feature,
+                    {
+                        id: 102,
+                    } as Feature,
+                ] as Feature[],
+            } as State;
+
+            expect(() =>
+                mutations.changeFeaturePositionInProgramBacklog(state, {
+                    order: null,
+                    feature: { id: 102 } as Feature,
+                })
+            ).toThrowError("No order exists in feature position");
         });
     });
 
@@ -348,44 +415,6 @@ describe("Mutations", () => {
                         ] as Feature[],
                     },
                 ] as ProgramIncrement[],
-            });
-        });
-    });
-    describe("moveFeatureFromProgramIncrementToBacklog", () => {
-        it(`When feature is moving from Program Increment to backlog, Then feature is added to backlog`, () => {
-            const state = {
-                to_be_planned_elements: [
-                    {
-                        id: 102,
-                    } as Feature,
-                ] as Feature[],
-                program_increments: [
-                    {
-                        id: 1,
-                        features: [
-                            {
-                                id: 101,
-                            },
-                        ] as Feature[],
-                    },
-                ] as ProgramIncrement[],
-            } as State;
-
-            mutations.moveFeatureFromProgramIncrementToBacklog(state, {
-                feature_id: 101,
-                program_increment_id: 1,
-            });
-
-            expect(state).toEqual({
-                to_be_planned_elements: [
-                    {
-                        id: 102,
-                    } as Feature,
-                    {
-                        id: 101,
-                    } as Feature,
-                ] as Feature[],
-                program_increments: [{ id: 1, features: [] as Feature[] }] as ProgramIncrement[],
             });
         });
     });
@@ -430,6 +459,29 @@ describe("Mutations", () => {
                     },
                 ] as ProgramIncrement[],
             });
+        });
+    });
+    describe("removeFeatureFromProgramIncrement", () => {
+        it("When feature exists, Then it is removed from program increment", () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.removeFeatureFromProgramIncrement(state, {
+                program_increment_id: 1,
+                feature_id: 101,
+            });
+
+            expect(state.program_increments[0].features).toEqual([]);
         });
     });
 });
