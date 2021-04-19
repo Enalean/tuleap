@@ -112,11 +112,13 @@ class ProjectResourceTest extends \RestBase
 
         self::assertEquals(200, $response->getStatusCode());
         $program_increments = $response->json();
-        self::assertCount(1, $program_increments);
-        self::assertEquals('PI', $program_increments[0]['title']);
-        self::assertEquals('In development', $program_increments[0]['status']);
+        self::assertCount(2, $program_increments);
+        self::assertEquals('Program Increment at the top', $program_increments[0]['title']);
+        self::assertEquals('Planned', $program_increments[0]['status']);
+        self::assertEquals('PI', $program_increments[1]['title']);
+        self::assertEquals('In development', $program_increments[1]['status']);
 
-        return $program_increments[0]['id'];
+        return $program_increments[1]['id'];
     }
 
     /**

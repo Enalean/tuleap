@@ -77,6 +77,8 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
             }
         }
 
+        $this->sortProgramIncrementByStartDate($program_increments);
+
         return $program_increments;
     }
 
@@ -120,5 +122,24 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         }
 
         return $artifact_link->userCanUpdate($user);
+    }
+
+    /**
+     * @param ProgramIncrement[] $program_increments
+     */
+    private function sortProgramIncrementByStartDate(array &$program_increments): void
+    {
+        usort($program_increments, function (ProgramIncrement $a, ProgramIncrement $b) {
+            if ($a->start_date === $b->start_date) {
+                return 0;
+            }
+            if ($a->start_date === null) {
+                return -1;
+            }
+            if ($b->start_date === null) {
+                return 1;
+            }
+            return $a->start_date > $b->start_date ? -1 : 1;
+        });
     }
 }
