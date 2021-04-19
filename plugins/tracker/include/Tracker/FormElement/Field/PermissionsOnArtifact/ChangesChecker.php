@@ -47,7 +47,11 @@ class ChangesChecker
             return true;
         }
 
-        $ugroups_diff = array_diff($old_value->getPerms(), $new_value['u_groups']);
+        $ugroups_diff = array_merge(
+            array_diff($new_value['u_groups'], $old_value->getPerms()),
+            array_diff($old_value->getPerms(), $new_value['u_groups'])
+        );
+
         return count($ugroups_diff) > 0;
     }
 }
