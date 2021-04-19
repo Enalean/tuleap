@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Progress;
+namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
 class SemanticProgressAdminPresenter
 {
@@ -28,10 +28,15 @@ class SemanticProgressAdminPresenter
      * @var string
      */
     public $tracker_semantic_admin_url;
+    /**
+     * @var string
+     */
+    public $semantic_usages_description;
 
-    public function __construct(\Tracker $tracker)
+    public function __construct(\Tracker $tracker, string $semantic_usages_description)
     {
-        $this->tracker_semantic_admin_url = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->semantic_usages_description = $semantic_usages_description;
+        $this->tracker_semantic_admin_url  = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func'    => 'admin-semantic'

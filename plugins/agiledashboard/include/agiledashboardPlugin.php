@@ -138,6 +138,7 @@ use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
+use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -282,6 +283,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(DefaultTemplatesXMLFileCollection::NAME);
             $this->addHook(GetWhitelistedKeys::NAME);
             $this->addHook(JiraImporterExternalPluginsEvent::NAME);
+            $this->addHook(GetSemanticProgressUsageEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2191,6 +2193,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $event->getJiraPlatformConfiguration(),
             $event->getFieldMappingCollection(),
             $event->getStatusValuesCollection(),
+        );
+    }
+
+    public function getSemanticProgressUsageEvent(GetSemanticProgressUsageEvent $event): void
+    {
+        $event->addFutureUsageLocation(
+            dgettext('tuleap-agiledashboard', 'the Agile Dashboard')
         );
     }
 }
