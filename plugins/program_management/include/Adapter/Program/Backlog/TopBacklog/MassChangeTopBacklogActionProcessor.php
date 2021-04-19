@@ -51,10 +51,10 @@ class MassChangeTopBacklogActionProcessor
     ): void {
         switch ($source_information->action) {
             case 'add':
-                $top_backlog_change = new TopBacklogChange($source_information->masschange_aids, [], false);
+                $top_backlog_change = new TopBacklogChange($source_information->masschange_aids, [], false, null);
                 break;
             case 'remove':
-                $top_backlog_change = new TopBacklogChange([], $source_information->masschange_aids, false);
+                $top_backlog_change = new TopBacklogChange([], $source_information->masschange_aids, false, null);
                 break;
             default:
                 return;

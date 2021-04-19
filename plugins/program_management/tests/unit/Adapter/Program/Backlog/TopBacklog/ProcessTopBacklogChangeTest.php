@@ -25,10 +25,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -37,6 +39,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 final class ProcessTopBacklogChangeTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FeaturesRankOrderer
+     */
+    private $feature_orderer;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_ArtifactFactory
@@ -70,6 +77,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->dao                   = \Mockery::mock(ArtifactsExplicitTopBacklogDAO::class);
         $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
         $this->program_increment_dao = \Mockery::mock(ProgramIncrementsDAO::class);
+        $this->feature_orderer       = \Mockery::mock(FeaturesRankOrderer::class);
 
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
             $this->artifact_factory,
@@ -77,7 +85,8 @@ final class ProcessTopBacklogChangeTest extends TestCase
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->artifact_link_updater,
-            $this->program_increment_dao
+            $this->program_increment_dao,
+            $this->feature_orderer
         );
     }
 
@@ -102,7 +111,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
-            new TopBacklogChange([742, 790], [741, 789], false),
+            new TopBacklogChange([742, 790], [741, 789], false, null),
             $user
         );
     }
@@ -122,7 +131,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
-            new TopBacklogChange([964], [963], false),
+            new TopBacklogChange([964], [963], false, null),
             $user
         );
     }
@@ -147,7 +156,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
-            new TopBacklogChange([964], [], true),
+            new TopBacklogChange([964], [], true, null),
             $user
         );
     }
@@ -161,8 +170,42 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->expectException(CannotManipulateTopBacklog::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
-            new TopBacklogChange([], [403], false),
+            new TopBacklogChange([], [403], false, null),
             UserTestBuilder::aUser()->build()
+        );
+    }
+
+    public function testUserCanReorderTheBacklog(): void
+    {
+        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
+        $user = UserTestBuilder::aUser()->build();
+
+        $artifact = \Mockery::mock(Artifact::class);
+        $tracker  = \Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturn(666);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($artifact);
+
+        $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
+
+        $element_to_order              =  new TopBacklogElementToOrderInvolvedInChangeRepresentation();
+        $element_to_order->ids         = [964];
+        $element_to_order->direction   = "before";
+        $element_to_order->compared_to = 900;
+
+        $program = new Program(102);
+
+        $this->feature_orderer->shouldReceive('reorder')->with($element_to_order, $program->getId(), $program)->once();
+
+        $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
+            $program,
+            new TopBacklogChange(
+                [964],
+                [963],
+                false,
+                $element_to_order
+            ),
+            $user
         );
     }
 }

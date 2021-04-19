@@ -26,6 +26,7 @@ use PFUser;
 use Tracker_NoArtifactLinkFieldException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
@@ -59,6 +60,10 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      * @var ProgramIncrementsDAO
      */
     private $program_increments_dao;
+    /**
+     * @var FeaturesRankOrderer
+     */
+    private $features_rank_orderer;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
@@ -66,7 +71,8 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         ArtifactsExplicitTopBacklogDAO $explicit_top_backlog_dao,
         DBTransactionExecutor $db_transaction_executor,
         ArtifactLinkUpdater $artifact_link_updater,
-        ProgramIncrementsDAO $program_increments_dao
+        ProgramIncrementsDAO $program_increments_dao,
+        FeaturesRankOrderer $features_rank_orderer
     ) {
         $this->artifact_factory                        = $artifact_factory;
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
@@ -74,6 +80,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $this->db_transaction_executor                 = $db_transaction_executor;
         $this->artifact_link_updater                   = $artifact_link_updater;
         $this->program_increments_dao                  = $program_increments_dao;
+        $this->features_rank_orderer                   = $features_rank_orderer;
     }
 
     public function processTopBacklogChangeForAProgram(
@@ -86,7 +93,11 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 throw new CannotManipulateTopBacklog($program, $user);
             }
 
-            $feature_ids_to_add = $this->filterFeaturesThatCanBeManipulated($top_backlog_change->potential_features_id_to_add, $user, $program);
+            $feature_ids_to_add = $this->filterFeaturesThatCanBeManipulated(
+                $top_backlog_change->potential_features_id_to_add,
+                $user,
+                $program
+            );
 
             if (count($feature_ids_to_add) > 0) {
                 if ($top_backlog_change->remove_program_increments_link_to_feature_to_add) {
@@ -95,10 +106,22 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 $this->explicit_top_backlog_dao->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
             }
 
-            $feature_ids_to_remove = $this->filterFeaturesThatCanBeManipulated($top_backlog_change->potential_features_id_to_remove, $user, $program);
+            $feature_ids_to_remove = $this->filterFeaturesThatCanBeManipulated(
+                $top_backlog_change->potential_features_id_to_remove,
+                $user,
+                $program
+            );
 
             if (count($feature_ids_to_remove) > 0) {
                 $this->explicit_top_backlog_dao->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
+            }
+
+            if ($top_backlog_change->elements_to_order) {
+                $this->features_rank_orderer->reorder(
+                    $top_backlog_change->elements_to_order,
+                    (string) $program->getId(),
+                    $program
+                );
             }
         });
     }

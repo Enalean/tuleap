@@ -31,6 +31,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -67,7 +68,6 @@ use Tuleap\ProgramManagement\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Program\Plan\PlanCreator;
-use Tuleap\ProgramManagement\REST\v1\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Team\Creation\TeamCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
@@ -348,7 +348,8 @@ final class ProjectResource extends AuthenticatedResource
                 new ArtifactsExplicitTopBacklogDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
-                new ProgramIncrementsDAO()
+                new ProgramIncrementsDAO(),
+                new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build())
             )
         );
 
@@ -356,13 +357,9 @@ final class ProjectResource extends AuthenticatedResource
             $program = $program->buildExistingProgramProject($id, $user);
             $top_backlog_updater->updateTopBacklog(
                 $program,
-                new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove, $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog),
+                new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove, $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog, $backlog_patch_representation->order),
                 $user
             );
-            if ($backlog_patch_representation->order) {
-                $features_rank_orderer = new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build());
-                $features_rank_orderer->reorder($backlog_patch_representation->order, (string) $id, $program);
-            }
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
             throw new RestException(404, $e->getMessage());
         } catch (ProjectIsNotAProgramException $e) {
