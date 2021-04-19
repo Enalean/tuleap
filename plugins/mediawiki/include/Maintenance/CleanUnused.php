@@ -102,8 +102,9 @@ class CleanUnused
             $this->purgeUsedServicesEmptyWikiForAllProjectsExceptTemplate($dry_run, $limit);
         } else {
             $this->purgeDeletedProjects($dry_run);
-            $this->purgeUnusedService($dry_run, $projects_forced);
         }
+
+        $this->purgeUnusedService($dry_run, $projects_forced);
         $this->purgeOrphanDatabases($dry_run);
         $this->logger->info("Purge completed");
         $this->logger->info("{$this->dao->getDeletedDatabasesCount()} database(s) deleted");

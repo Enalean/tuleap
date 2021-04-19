@@ -132,9 +132,10 @@ class CleanUnusedTest extends TestCase
     private function initLogger(): void
     {
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge", []])->once();
-        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of orphan bases", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End purge of orphan bases", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of unused services", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Purge of unused services completed", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Purge completed", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] x database(s) deleted", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] x table(s) deleted in central DB", []])->once();
@@ -151,6 +152,7 @@ class CleanUnusedTest extends TestCase
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateTwoPurgeWhenEmpty(): void
     {
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_102", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_103", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->twice();
@@ -173,6 +175,7 @@ class CleanUnusedTest extends TestCase
                       ]
                   );
 
+        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
         $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
 
         $this->project_2->shouldReceive("isTemplate")->once()->andReturnFalse();
@@ -211,6 +214,7 @@ class CleanUnusedTest extends TestCase
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateOnePurgeWhenEmptyWithOneTemplate(): void
     {
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of used but empty mediawiki on projects which are not defined as template", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_103", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, "[MW Purge] Project project_2 (102) is a template. Skipped.", []])->once();
@@ -234,6 +238,7 @@ class CleanUnusedTest extends TestCase
                       ]
                   );
 
+        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
         $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
 
         $this->project_2->shouldReceive("isTemplate")->once()->andReturn(true);
@@ -263,9 +268,41 @@ class CleanUnusedTest extends TestCase
         $this->clean_unused->purge(false, [], true, null);
     }
 
+    public function testPurgeUnusedServicesWithAGivenProjectShouldForceIt(): void
+    {
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_103", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of used but empty mediawiki", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End of purge of used but empty mediawiki", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->once();
+
+        $this->dao->shouldReceive('getMediawikiDatabasesInUsedServices')->once()->andReturn([]);
+        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()
+            ->andReturn(
+                [
+                    [
+                        'project_id' => 103,
+                        'database_name' => 'mediawiki_103'
+                    ],
+                ]
+            );
+        $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
+
+        $path = "path/to/mediawiki_103";
+
+        $this->data_dir->shouldReceive('getMediawikiDir')->withArgs([$this->project_3])->once()->andReturn($path);
+        $this->backend->shouldReceive('recurseDeleteInDir')->with($path);
+
+        $this->media_wiki_dao->shouldReceive('getMediawikiPagesNumberOfAProject')->with($this->project_3)->once()->andReturn(['result' => 0]);
+
+        $this->dao->shouldReceive('purge')->once();
+
+        $this->clean_unused->purge(false, [103], false, null);
+    }
+
     public function testPurgeUsedServicesEmptyWikiForAllProjectsExceptTemplateOnePurgeWhenEmptyWithOneTemplateWithLimit(): void
     {
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Start purge of 3 used but empty mediawiki on projects which are not defined as template", []])->once();
+        $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] End of purge of used but empty mediawiki on projects which are not defined as template", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Found candidate mediawiki_103", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::INFO, "[MW Purge] Delete data dir", []])->once();
         $this->logger->shouldReceive('log')->withArgs([LogLevel::WARNING, "[MW Purge] Project project_2 (102) is a template. Skipped.", []])->once();
@@ -289,6 +326,7 @@ class CleanUnusedTest extends TestCase
                      ]
                  );
 
+        $this->dao->shouldReceive('getMediawikiDatabaseInUnusedServices')->once()->andReturn([]);
         $this->dao->shouldReceive('getAllMediawikiBasesNotReferenced')->once()->andReturn([]);
 
         $this->project_2->shouldReceive("isTemplate")->once()->andReturn(true);
