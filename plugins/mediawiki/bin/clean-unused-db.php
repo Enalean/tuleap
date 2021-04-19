@@ -77,9 +77,11 @@ $limit        = null;
 if ($is_go_option && ! isset($argv[2])) {
     $dry_run = false;
 } elseif ($is_go_option && $argv[2] === "force") {
-    $dry_run   = false;
-    $force_all = true;
-    if (isset($argv[3]) && is_numeric($argv[3])) {
+    $dry_run = false;
+
+    if (! isset($argv[3])) {
+        $force_all = true;
+    } elseif (is_numeric($argv[3])) {
         $limit = (int) $argv[3];
         if ($limit < 0) {
             echo "limit can't be negative" . PHP_EOL;
