@@ -19,6 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TaskBar from "./TaskBar.vue";
+import MilestoneBar from "./MilestoneBar.vue";
 
 describe("TaskBar", () => {
     it("Displays a task bar", () => {
@@ -26,6 +27,7 @@ describe("TaskBar", () => {
             propsData: {
                 task: {
                     color_name: "acid-green",
+                    progress: 1,
                     start: new Date(2020, 3, 15),
                     end: new Date(2020, 3, 20),
                 },
@@ -36,9 +38,33 @@ describe("TaskBar", () => {
 
         expect(wrapper).toMatchInlineSnapshot(`
             <div class="roadmap-gantt-task-bar roadmap-gantt-task-bar-acid-green" style="left: 42px; width: 66px;">
-              <div class="roadmap-gantt-task-bar-progress"></div>
+              <div data-test="progress" class="roadmap-gantt-task-bar-progress" style="width: 100%;"></div>
             </div>
         `);
+        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(false);
+    });
+
+    it("should adapt the width of the progress bar", async () => {
+        const task = {
+            color_name: "acid-green",
+            progress: 0.4,
+            start: new Date(2020, 3, 15),
+            end: new Date(2020, 3, 20),
+        };
+
+        const wrapper = shallowMount(TaskBar, {
+            propsData: {
+                task,
+                left: 42,
+                width: 66,
+            },
+        });
+
+        const progress_bar = wrapper.find("[data-test=progress]");
+        expect(progress_bar.element.style.width).toBe("40%");
+
+        await wrapper.setProps({ task: { ...task, progress: 0.7 } });
+        expect(progress_bar.element.style.width).toBe("70%");
     });
 
     it("Displays a milestone when there is no start", () => {
@@ -54,11 +80,7 @@ describe("TaskBar", () => {
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-task-bar roadmap-gantt-task-bar-acid-green roadmap-gantt-task-bar-milestone" style="left: 42px;">
-              <div class="roadmap-gantt-task-bar-progress"></div>
-            </div>
-        `);
+        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(true);
     });
 
     it("Displays a milestone when there is no end", () => {
@@ -74,11 +96,7 @@ describe("TaskBar", () => {
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-task-bar roadmap-gantt-task-bar-acid-green roadmap-gantt-task-bar-milestone" style="left: 42px;">
-              <div class="roadmap-gantt-task-bar-progress"></div>
-            </div>
-        `);
+        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(true);
     });
 
     it("Displays a milestone when start = end", () => {
@@ -94,10 +112,6 @@ describe("TaskBar", () => {
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-task-bar roadmap-gantt-task-bar-acid-green roadmap-gantt-task-bar-milestone" style="left: 42px;">
-              <div class="roadmap-gantt-task-bar-progress"></div>
-            </div>
-        `);
+        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(true);
     });
 });

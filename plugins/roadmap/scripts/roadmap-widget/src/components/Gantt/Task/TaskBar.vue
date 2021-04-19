@@ -19,8 +19,18 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-task-bar" v-bind:class="classes" v-bind:style="style">
-        <div class="roadmap-gantt-task-bar-progress"></div>
+    <milestone-bar
+        v-if="is_milestone"
+        v-bind:task="task"
+        v-bind:left="left"
+        v-bind:class="classes"
+    />
+    <div class="roadmap-gantt-task-bar" v-bind:class="classes" v-bind:style="style" v-else>
+        <div
+            class="roadmap-gantt-task-bar-progress"
+            data-test="progress"
+            v-bind:style="progress_style"
+        ></div>
     </div>
 </template>
 
@@ -28,8 +38,10 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
-
-@Component
+import MilestoneBar from "./MilestoneBar.vue";
+@Component({
+    components: { MilestoneBar },
+})
 export default class TaskBar extends Vue {
     @Prop({ required: true })
     readonly left!: number;
@@ -43,17 +55,11 @@ export default class TaskBar extends Vue {
     get classes(): string[] {
         const classes = ["roadmap-gantt-task-bar-" + this.task.color_name];
 
-        if (this.is_milestone) {
-            classes.push("roadmap-gantt-task-bar-milestone");
-        }
-
         return classes;
     }
 
     get style(): string {
-        return this.is_milestone
-            ? `left: ${this.left}px;`
-            : `left: ${this.left}px; width: ${this.width}px;`;
+        return `left: ${this.left}px; width: ${this.width}px;`;
     }
 
     get is_milestone(): boolean {
@@ -62,6 +68,12 @@ export default class TaskBar extends Vue {
             !this.task.end ||
             this.task.end.toISOString() === this.task.start.toISOString()
         );
+    }
+
+    get progress_style(): string {
+        const width_in_percent = Math.max(0, Math.min(100, this.task.progress * 100));
+
+        return `width: ${width_in_percent}%;`;
     }
 }
 </script>
