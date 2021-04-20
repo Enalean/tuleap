@@ -21,10 +21,10 @@
 <template>
     <div class="roadmap-gantt-timeperiod">
         <div
-            class="roadmap-gantt-timeperiod-unit tlp-tooltip tlp-tooltip-top"
+            class="roadmap-gantt-timeperiod-unit"
             v-for="unit in time_units"
             v-bind:key="unit.toISOString()"
-            v-bind:data-tlp-tooltip="time_period.formatLong(unit)"
+            v-bind:title="time_period.formatLong(unit)"
         >
             {{ time_period.formatShort(unit) }}
         </div>
