@@ -18,12 +18,16 @@
  */
 
 import Vue from "vue";
+import Vuex from "vuex";
 import App from "./components/App.vue";
 import {
     getPOFileFromLocale,
     initVueGettext,
 } from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
+import { createStore } from "./store";
+import type { State } from "./store/type";
+import { toBCP47 } from "./helpers/locale-for-intl";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const all_vue_mount_points = document.querySelectorAll(".roadmap");
@@ -38,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 /* webpackChunkName: "roadmap-widget-po-" */ "../po/" + getPOFileFromLocale(locale)
             )
     );
+    Vue.use(Vuex);
 
     const AppComponent = Vue.extend(App);
 
@@ -56,11 +61,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             $gettextInterpolate: Vue.prototype.$gettextInterpolate,
         });
 
+        const initial_root_state: State = {
+            locale_bcp47: toBCP47(document.body.dataset.userLocale || "en_US"),
+        };
+
         new AppComponent({
+            store: createStore(initial_root_state),
             propsData: {
                 roadmap_id,
                 visible_natures,
-                locale: document.body.dataset.userLocale,
             },
         }).$mount(vue_mount_point);
     }

@@ -22,12 +22,7 @@
     <div class="roadmap-gantt-scrolling-area">
         <div class="roadmap-gantt-scrolling-area-empty-pixel" ref="empty_pixel" />
         <slot></slot>
-        <today-indicator
-            v-bind:locale="locale"
-            v-bind:time_period="time_period"
-            v-bind:now="now"
-            ref="today"
-        />
+        <today-indicator v-bind:time_period="time_period" v-bind:now="now" ref="today" />
     </div>
 </template>
 
@@ -51,9 +46,6 @@ export default class ScrollingArea extends Vue {
 
     @Prop({ required: true })
     readonly now!: Date;
-
-    @Prop({ required: true })
-    readonly locale!: string;
 
     private observer: IntersectionObserver | null = null;
 

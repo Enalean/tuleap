@@ -30,7 +30,7 @@ describe("getLeftForDate", () => {
                 new TimePeriodMonth(
                     new Date("2020-01-31T23:00:00.000Z"),
                     new Date("2020-04-30T22:00:00.000Z"),
-                    "en_US"
+                    "en-US"
                 )
             )
         ).toBe(346);
@@ -53,7 +53,7 @@ describe("getLeftForDate", () => {
                 new TimePeriodMonth(
                     new Date("2021-03-31T14:36:12.580Z"),
                     new Date("2021-10-30T22:00:00.000Z"),
-                    "en_US"
+                    "en-US"
                 )
             )
         ).toBe(100);

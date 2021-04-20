@@ -86,9 +86,6 @@ export default class GanttTask extends Vue {
     readonly dependencies_nature_to_display!: string | null;
 
     @Prop({ required: true })
-    private readonly locale!: string;
-
-    @Prop({ required: true })
     private readonly popover_element_id!: string;
 
     private popover: Popover | undefined;

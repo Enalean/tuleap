@@ -28,7 +28,7 @@ describe("TimePeriodHeader", () => {
                 time_period: new TimePeriodMonth(
                     new Date("2020-03-31T22:00:00.000Z"),
                     new Date("2020-04-30T22:00:00.000Z"),
-                    "en_US"
+                    "en-US"
                 ),
                 nb_additional_units: 2,
             },

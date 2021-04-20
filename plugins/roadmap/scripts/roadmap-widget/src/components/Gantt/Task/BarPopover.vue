@@ -69,20 +69,20 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
-import { toBCP47 } from "../../../helpers/locale-for-intl";
+import { State } from "vuex-class";
 
 @Component
 export default class BarPopover extends Vue {
     @Prop({ required: true })
     readonly task!: Task;
 
-    @Prop({ required: true })
-    private readonly locale!: string;
+    @State
+    private readonly locale_bcp47!: string;
 
     private formatter!: Intl.DateTimeFormat;
 
     created(): void {
-        this.formatter = new Intl.DateTimeFormat(toBCP47(this.locale), {
+        this.formatter = new Intl.DateTimeFormat(this.locale_bcp47, {
             dateStyle: "long",
         });
     }

@@ -32,17 +32,14 @@ describe("ScrollingArea", () => {
     });
 
     function aScrollingArea(): Wrapper<ScrollingArea> {
-        const locale = "en_US";
-
         return shallowMount(ScrollingArea, {
             propsData: {
                 time_period: new TimePeriodMonth(
                     new Date("2020-03-31T22:00:00.000Z"),
                     new Date("2020-04-31T22:00:00.000Z"),
-                    locale
+                    "en-US"
                 ),
                 now: new Date(),
-                locale,
             },
         });
     }

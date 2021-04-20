@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import BarPopover from "./BarPopover.vue";
 import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Task } from "../../../type";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("BarPopover", () => {
     it("should display the info of the task", async () => {
@@ -33,7 +34,13 @@ describe("BarPopover", () => {
                     start: new Date("2020-01-12T15:00:00.000Z"),
                     end: new Date("2020-01-30T15:00:00.000Z"),
                 } as Task,
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
@@ -53,7 +60,13 @@ describe("BarPopover", () => {
                     start: null,
                     end: new Date("2020-01-30T15:00:00.000Z"),
                 } as Task,
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
@@ -71,7 +84,13 @@ describe("BarPopover", () => {
                     start: new Date("2020-01-12T15:00:00.000Z"),
                     end: null,
                 } as Task,
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
