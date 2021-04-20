@@ -85,15 +85,19 @@ final class ProgramIncrementsRetrieverTest extends TestCase
 
         $artifact_14->shouldReceive('getTitle')->andReturn('Artifact 14');
         $artifact_15->shouldReceive('getTitle')->andReturn('Artifact 15');
-        $tracker     = Mockery::mock(\Tracker::class);
-        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1611067637, 10);
+        $tracker        = Mockery::mock(\Tracker::class);
+        $time_period_14 = \TimePeriodWithoutWeekEnd::buildFromDuration(1611067637, 10);
+        $time_period_15 = \TimePeriodWithoutWeekEnd::buildFromDuration(1631067637, 10);
         foreach ([$artifact_14, $artifact_15] as $mock_artifact) {
             $mock_artifact->shouldReceive('getTracker')->andReturn($tracker);
             $mock_artifact->shouldReceive('getStatus')->andReturn('Open');
-            $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-                ->with($mock_artifact, $user)
-                ->andReturn($time_period);
         }
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($artifact_14, $user)
+            ->andReturn($time_period_14);
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($artifact_15, $user)
+            ->andReturn($time_period_15);
         $status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $status_field->shouldReceive('userCanRead')->andReturn(true);
         $tracker->shouldReceive('getStatusField')->andReturn($status_field);
@@ -102,8 +106,8 @@ final class ProgramIncrementsRetrieverTest extends TestCase
 
         self::assertEquals(
             [
-                new ProgramIncrement($artifact_14->getId(), 'Artifact 14', $artifact_14->getUri(), $artifact_14->getXRef(), true, false, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
-                new ProgramIncrement($artifact_15->getId(), 'Artifact 15', $artifact_15->getUri(), $artifact_15->getXRef(), false, false, 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
+                new ProgramIncrement($artifact_15->getId(), 'Artifact 15', $artifact_15->getUri(), $artifact_15->getXRef(), false, false, 'Open', $time_period_15->getStartDate(), $time_period_15->getEndDate()),
+                new ProgramIncrement($artifact_14->getId(), 'Artifact 14', $artifact_14->getUri(), $artifact_14->getXRef(), true, false, 'Open', $time_period_14->getStartDate(), $time_period_14->getEndDate()),
             ],
             $program_increments
         );
