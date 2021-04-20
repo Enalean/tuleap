@@ -1,14 +1,16 @@
 # Architectural Decision Log
 
-This log lists the architectural decisions for `@tuleap/plugin-tracker`.
+This log lists the architectural decisions for Tuleap. You will find bellow the ADRs that applies to both Core and Plugins.
 
 <!-- adrlog -- Regenerate the content by using "adr-log -e template.md -i". You can install it via "npm install -g adr-log" -->
 
-* [ADR-0001](0001-implementation-of-markdown-preview.md) - Triple implementation of Markdown Preview
+* [ADR-0001](0001-supported-browser-versions.md) - Supported browser list
 
 <!-- adrlogstop -->
 
-ADRs that applies to plugins and core can be found [at the root of the project](../../../adr/index.md)
+Plugins can also have their own ADRs:
+* [Roadmap](../plugins/roadmap/adr/index.md)
+* [Tracker](../plugins/tracker/adr/index.md)
 
 For new ADRs, please use [template.md](template.md) as basis.
 More information on MADR is available at <https://adr.github.io/madr/>.
