@@ -531,6 +531,8 @@ class Tracker_RulesManager
         echo '<p>' . sprintf(dgettext('tuleap-tracker', 'Define dependencies between <b>%1$s</b> as source and <b>%2$s</b> as target:'), $hp->purify($source_field_label), $hp->purify($target_field_label)) . '</p>';
 
         $this->displayDependenciesMatrix($source_field, $target_field);
+
+        $this->tracker->displayFooter($engine);
     }
 
 
