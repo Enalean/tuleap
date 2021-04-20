@@ -124,18 +124,19 @@ class ProjectResourceTest extends \RestBase
      */
     public function testGetProgramIncrementContent(int $id): void
     {
-        $this->checkGetProgramIncrementContent($id, 'title', 'My other artifact for top backlog manipulation');
+        $this->checkGetFirstElementOfProgramIncrement($id, 'title', 'My other artifact for top backlog manipulation');
     }
 
     /**
      * @depends testGetProgramIncrements
      */
-    public function testPatchBacklogWithFeatureRemovedFromProgram(int $program_increment_id): void
+    public function testPatchBacklogWithFeatureRemovedFromProgramIncrementWithBooleanParameterSetToTrue(int $program_increment_id): void
     {
         $project_id        = $this->getProgramProjectId();
         $program_increment = $this->getArtifactWithArtifactLink('release_number', 'PI', $project_id, 'pi');
         $bug_id            = $this->getBugIDWithSpecificSummary('My artifact for top backlog manipulation', $project_id);
 
+        // Remove elements from backlog
         $this->updateArtifactLinks($program_increment_id, [], $program_increment['artifact_link_id']);
 
         // Check backlog and program increment are empty
@@ -144,24 +145,91 @@ class ProjectResourceTest extends \RestBase
 
         // Add bug in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id]], $program_increment['artifact_link_id']);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id);
 
-        $this->checkGetProgramIncrementContent($program_increment_id, "title", 'My artifact for top backlog manipulation');
-        $this->checkGetProgramIncrementContent($program_increment_id, "id", (string) $bug_id);
-
-        // Bug is not removed from program increment
-        $this->patchTopBacklog($project_id, [$bug_id], [], false);
-        $this->checkGetProgramIncrementContent($program_increment_id, "id", (string) $bug_id);
-
-        // Remove bug from program increment and add it in program backlog
+        // Remove bug from program increment and add it in program backlog because
+        // parameter `remove_from_program_increment_to_add_to_the_backlog` is true
         $this->patchTopBacklog($project_id, [$bug_id], [], true);
         $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
 
+        // Check bug is moved to backlog
         $backlog_content = $this->getTopBacklogContent($project_id);
         self::assertCount(1, $backlog_content);
         self::assertEquals($bug_id, $backlog_content[0]);
 
+        // Remove elements from backlog
         $this->patchTopBacklog($project_id, [], [$bug_id]);
         self::assertEmpty($this->getTopBacklogContent($project_id));
+    }
+
+    /**
+     * @depends testGetProgramIncrements
+     */
+    public function testPatchBacklogCannotMoveFeatureFromProgramIncrementToBacklogBecauseBooleanParameterIsNotSetToTrue(int $program_increment_id): void
+    {
+        $project_id        = $this->getProgramProjectId();
+        $program_increment = $this->getArtifactWithArtifactLink('release_number', 'PI', $project_id, 'pi');
+        $bug_id            = $this->getBugIDWithSpecificSummary('My artifact for top backlog manipulation', $project_id);
+
+        // Remove elements from backlog
+        $this->updateArtifactLinks($program_increment_id, [], $program_increment['artifact_link_id']);
+
+        // Check backlog and program increment are empty
+        self::assertEmpty($this->getTopBacklogContent($project_id));
+        $this->checkGetEmptyProgramIncrementBacklog($program_increment_id);
+
+        // Add bug in program increment
+        $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id]], $program_increment['artifact_link_id']);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id);
+
+        // Bug is not removed from program increment because
+        // parameter `remove_from_program_increment_to_add_to_the_backlog` is false
+        $this->patchTopBacklog($project_id, [$bug_id], [], false);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id);
+        self::assertEmpty($this->getTopBacklogContent($project_id));
+    }
+
+    /**
+     * @depends testPUTTeam
+     */
+    public function testCannotUnplannedFeatureWithLinkedPlannedStoryInTeam(): void
+    {
+        $project_id        = $this->getProgramProjectId();
+        $program_increment = $this->getArtifactWithArtifactLink('release_number', 'PI', $project_id, 'pi');
+        $featureA          = $this->getArtifactWithArtifactLink('description', 'FeatureA', $project_id, 'features');
+
+        $team_id     = $this->getTeamProjectId();
+        $user_story1 = $this->getArtifactWithArtifactLink('i_want_to', 'US1', $team_id, 'story');
+        $sprint      = $this->getArtifactWithArtifactLink('sprint_name', 'S1', $team_id, 'sprint');
+
+        // Plan US in sprint
+        $this->updateArtifactLinks($sprint['id'], [['id' => $user_story1['id']]], $sprint['artifact_link_id']);
+
+        // Plan features in program increment
+        $this->updateArtifactLinks(
+            $program_increment['id'],
+            [['id' => $featureA['id']]],
+            $program_increment['artifact_link_id']
+        );
+
+        // Check program increment has features
+        $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'projects/' . urlencode((string) $project_id) . '/program_backlog',
+                null,
+                json_encode(
+                    $this->formatPatchTopBacklogParameters([$featureA['id']], [], true, null),
+                    JSON_THROW_ON_ERROR
+                )
+            )
+        );
+        self::assertEquals(400, $response->getStatusCode());
+        self::assertStringContainsString("The feature with id#" . $featureA['id'] . " cannot be unplanned because some linked user stories are planned in Teams program.", $response->getMessage());
+
+        // Check program increment has still feature with planned US
+        $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);
     }
 
     /**
@@ -184,8 +252,8 @@ class ProjectResourceTest extends \RestBase
         // Add bug_2 in program increment
         $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id_2]], $program_increment['artifact_link_id']);
 
-        $this->checkGetProgramIncrementContent($program_increment_id, "title", 'My other artifact for top backlog manipulation');
-        $this->checkGetProgramIncrementContent($program_increment_id, "id", (string) $bug_id_2);
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "title", 'My other artifact for top backlog manipulation');
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, "id", (string) $bug_id_2);
 
         // Remove bug from program increment and add it in program backlog after bug_1
         $this->patchTopBacklog(
@@ -310,7 +378,7 @@ class ProjectResourceTest extends \RestBase
         self::assertEmpty($content);
     }
 
-    private function checkGetProgramIncrementContent(int $program_id, string $key, string $artifact_title): void
+    private function checkGetFirstElementOfProgramIncrement(int $program_id, string $key, string $artifact_title): void
     {
         $response = $this->getResponse(
             $this->client->get('program_increment/' . urlencode((string) $program_id) . '/content')
@@ -319,7 +387,7 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
         $content = $response->json();
 
-        self::assertGreaterThan(1, $content);
+        self::assertCount(1, $content);
         self::assertEquals($artifact_title, $content[0][$key]);
     }
 

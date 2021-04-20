@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
@@ -81,8 +82,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
             $this->artifact_factory,
             $this->form_element_factory,
             $this->retrieve_background,
-            $this->parent_dao,
-            $this->build_planning
+            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory)
         );
     }
 

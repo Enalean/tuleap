@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetri
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
@@ -62,8 +63,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $artifact_factory,
                 \Tracker_FormElementFactory::instance(),
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
-                new ArtifactsLinkedToParentDao(),
-                new PlanningAdapter(\PlanningFactory::build())
+                new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), $artifact_factory)
             )
         );
     }

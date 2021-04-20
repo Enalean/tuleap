@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use BackendLogger;
 use Luracast\Restler\RestException;
+use Tracker_ArtifactFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -33,10 +34,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplici
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogUpdater;
 use Tuleap\Project\ProjectAccessChecker;
@@ -137,8 +140,7 @@ final class ProjectResource extends AuthenticatedResource
                 $artifact_factory,
                 $form_element_factory,
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
-                new ArtifactsLinkedToParentDao(),
-                new PlanningAdapter(\PlanningFactory::build())
+                new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), $artifact_factory)
             )
         );
         $this->program_increments_builder = new ProgramIncrementBuilder(
@@ -349,7 +351,8 @@ final class ProjectResource extends AuthenticatedResource
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
                 new ProgramIncrementsDAO(),
-                new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build())
+                new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
+                new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), Tracker_ArtifactFactory::instance())
             )
         );
 
@@ -366,6 +369,8 @@ final class ProjectResource extends AuthenticatedResource
             throw new RestException(403, $e->getMessage());
         } catch (Tracker_NoArtifactLinkFieldException $e) {
             throw new RestException(400, dgettext("tuleap-program_management", "Cannot add the feature to the top backlog because you cannot manipulate all the impacted program increments"));
+        } catch (FeatureHasPlannedUserStoryException $e) {
+            throw new RestException(400, $e->getMessage());
         }
     }
 
