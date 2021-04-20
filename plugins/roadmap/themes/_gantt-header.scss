@@ -22,7 +22,8 @@
 
 .roadmap-gantt-header {
     position: relative;
-    padding: roadmap-variables.$time-unit-height 0 0;
+    margin: (roadmap-variables.$today-pin-head-size + 2px) 0 0;
+    padding: 2 * roadmap-variables.$time-unit-height 0 0;
     border-right: 2px solid var(--tlp-ui-border-normal);
 
     &.roadmap-gantt-header-is-scrolling::before {

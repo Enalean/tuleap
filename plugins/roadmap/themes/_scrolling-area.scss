@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'roadmap-variables';
 @use 'timeperiod';
 @use 'task';
 @use 'today';
@@ -24,6 +25,7 @@
 .roadmap-gantt-scrolling-area {
     position: relative;
     flex: 1 1 auto;
+    padding: (roadmap-variables.$today-pin-head-size + 2px) 0 0;
     overflow-x: auto;
 }
 

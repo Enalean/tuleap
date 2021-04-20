@@ -26,9 +26,7 @@
     margin: 0;
 }
 
-.roadmap-gantt-timeperiod-unit {
-    @include grid.alternate-background;
-
+@mixin timeperiod-style {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -40,10 +38,23 @@
     font-weight: 600;
     line-height: .75rem;
     text-transform: uppercase;
+}
 
-    &::before {
-        text-transform: none;
+.roadmap-gantt-timeperiod-year {
+    @include timeperiod-style;
+    background: var(--tlp-theme-color-dimmed-background);
+}
+
+@for $i from 1 through 53 {
+    .roadmap-gantt-timeperiod-year-span-#{$i} {
+        width: $i * roadmap-variables.$time-unit-width;
+        min-width: $i * roadmap-variables.$time-unit-width;
     }
+}
+
+.roadmap-gantt-timeperiod-unit {
+    @include grid.alternate-background;
+    @include timeperiod-style;
 
     > .tlp-skeleton-text {
         width: 30%;

@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'roadmap-variables';
+
 .roadmap-gantt-today {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 7px;
+    width: roadmap-variables.$today-pin-head-size;
     transform: translateX(-3px);
 
     &::before {
@@ -29,8 +31,8 @@
         display: block;
         position: absolute;
         top: 0;
-        left: 3px;
-        width: 1px;
+        left: (roadmap-variables.$today-pin-head-size - roadmap-variables.$today-pin-shaft-size) / 2;
+        width: roadmap-variables.$today-pin-shaft-size;
         height: 100%;
         background: var(--tlp-theme-color);
     }
@@ -41,8 +43,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 7px;
-        height: 7px;
+        width: roadmap-variables.$today-pin-head-size;
+        height: roadmap-variables.$today-pin-head-size;
         border-radius: 50%;
         background: var(--tlp-theme-color);
     }
