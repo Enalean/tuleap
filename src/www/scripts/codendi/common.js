@@ -39,7 +39,7 @@ codendi.getText = function (key1, key2) {
 };
 
 document.observe("dom:loaded", function () {
-    $$("td.matrix_cell").each(function (cell) {
+    $$("td.matrix-cell").each(function (cell) {
         var idx = cell.previousSiblings().length;
         var col = cell
             .up("table")
