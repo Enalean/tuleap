@@ -66,6 +66,7 @@ describe("GanttTask", () => {
                 dependencies,
                 dependencies_nature_to_display,
                 locale: "en_US",
+                popover_element_id: "roadmap-gantt-bar-popover-1-123",
             },
         });
     }

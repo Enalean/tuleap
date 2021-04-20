@@ -53,8 +53,16 @@
                     v-bind:dimensions_map="dimensions_map"
                     v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
                     v-bind:locale="locale"
+                    v-bind:popover_element_id="getIdForPopover(task)"
                 />
             </scrolling-area>
+            <bar-popover
+                v-for="task of tasks"
+                v-bind:key="task.id"
+                v-bind:task="task"
+                v-bind:locale="locale"
+                v-bind:id="getIdForPopover(task)"
+            />
         </div>
     </div>
 </template>
@@ -86,9 +94,12 @@ import { getNatureLabelsForTasks } from "../../helpers/natures-labels-for-tasks"
 import { TimePeriodWeek } from "../../helpers/time-period-week";
 import TaskHeader from "./Task/TaskHeader.vue";
 import ScrollingArea from "./ScrollingArea.vue";
+import BarPopover from "./Task/BarPopover.vue";
+import { getUniqueId } from "../../helpers/uniq-id-generator";
 
 @Component({
     components: {
+        BarPopover,
         ScrollingArea,
         TaskHeader,
         DependencyNatureControl,
@@ -124,6 +135,8 @@ export default class GanttBoard extends Vue {
 
     private is_scrolling = false;
 
+    private id_prefix_for_bar_popover = getUniqueId("roadmap-gantt-bar-popover");
+
     mounted(): void {
         this.observer = new ResizeObserver(this.adjustAdditionalUnits);
         this.observer.observe(this.$refs.time_period.$el);
@@ -133,6 +146,10 @@ export default class GanttBoard extends Vue {
         if (this.observer) {
             this.observer.disconnect();
         }
+    }
+
+    getIdForPopover(task: Task): string {
+        return this.id_prefix_for_bar_popover + "-" + task.id;
     }
 
     isScrolling(is_scrolling: boolean): void {
