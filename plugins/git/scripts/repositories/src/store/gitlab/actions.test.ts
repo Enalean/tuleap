@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,14 +24,19 @@ import {
     updateBotApiTokenGitlab,
     showEditAccessTokenGitlabRepositoryModal,
 } from "./actions";
+import type { ActionContext } from "plugins/document/node_modules/vuex/types";
+import type { GitlabState } from "./state";
+import type { GitLabCredentials, GitLabRepository } from "../../type";
+import type { GitLabDataWithToken } from "../../type";
+import type { Modal } from "tlp";
 
 describe("action", () => {
     describe("getGitlabProjectList", () => {
-        let context;
+        let context: ActionContext<GitlabState, GitlabState>;
         beforeEach(() => {
-            context = {
+            context = ({
                 commit: jest.fn(),
-            };
+            } as unknown) as ActionContext<GitlabState, GitlabState>;
         });
 
         it("When api is called, Then url is formatted", async () => {
@@ -39,18 +44,19 @@ describe("action", () => {
                 gitlab_querier,
                 "getAsyncGitlabRepositoryList"
             );
+
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve({
+                    resolve(({
                         headers: {
-                            get: () => 1,
+                            get: () => "1",
                         },
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
-                    });
+                    } as unknown) as Response);
                 })
             );
-            const credentials = {
+            const credentials: GitLabCredentials = {
                 server_url: "https://example/",
                 token: "azerty1234",
             };
@@ -70,16 +76,16 @@ describe("action", () => {
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve({
+                    resolve(({
                         headers: {
-                            get: () => 2,
+                            get: () => "2",
                         },
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
-                    });
+                    } as unknown) as Response);
                 })
             );
-            const credentials = {
+            const credentials: GitLabCredentials = {
                 server_url: "https://example/",
                 token: "azerty1234",
             };
@@ -100,10 +106,10 @@ describe("action", () => {
                 new Promise((resolve) => {
                     resolve({
                         status: 401,
-                    });
+                    } as Response);
                 })
             );
-            const credentials = {
+            const credentials: GitLabCredentials = {
                 server_url: "https://example/",
                 token: "azerty1234",
             };
@@ -118,11 +124,11 @@ describe("action", () => {
     });
 
     describe("getGitlabRepositoryFromId", () => {
-        let context;
+        let context: ActionContext<GitlabState, GitlabState>;
         beforeEach(() => {
-            context = {
+            context = ({
                 commit: jest.fn(),
-            };
+            } as unknown) as ActionContext<GitlabState, GitlabState>;
         });
 
         it("When api is called, Then url is formatted", async () => {
@@ -132,16 +138,14 @@ describe("action", () => {
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve({
-                        headers: {
-                            get: () => 1,
-                        },
+                    resolve(({
+                        get: () => "1",
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
-                    });
+                    } as unknown) as Response);
                 })
             );
-            const credentials = {
+            const credentials: GitLabCredentials = {
                 server_url: "https://example/",
                 token: "azerty1234",
             };
@@ -162,12 +166,12 @@ describe("action", () => {
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve({
+                    resolve(({
                         status: 401,
-                    });
+                    } as unknown) as Response);
                 })
             );
-            const credentials = {
+            const credentials: GitLabCredentials = {
                 server_url: "https://example/",
                 token: "azerty1234",
             };
@@ -183,23 +187,24 @@ describe("action", () => {
     });
 
     describe("updateBotApiTokenGitlab", () => {
-        const context = {};
+        const context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
+            GitlabState,
+            GitlabState
+        >;
 
         it("When api is called, Then url is formatted", async () => {
             const patchGitlabRepository = jest.spyOn(gitlab_querier, "patchGitlabRepository");
 
             patchGitlabRepository.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve({
-                        headers: {
-                            get: () => 1,
-                        },
+                    resolve(({
+                        get: () => "1",
                         status: 200,
-                    });
+                    } as unknown) as Response);
                 })
             );
 
-            const credentials = {
+            const credentials: GitLabDataWithToken = {
                 gitlab_bot_api_token: "AZERTY1234",
                 gitlab_repository_id: 10,
                 gitlab_repository_url: "https://example.com",
@@ -223,7 +228,7 @@ describe("action", () => {
                 })
             );
 
-            const credentials = {
+            const credentials: GitLabDataWithToken = {
                 gitlab_bot_api_token: "AZERTY1234",
                 gitlab_repository_id: 10,
                 gitlab_repository_url: "https://example.com",
@@ -240,17 +245,21 @@ describe("action", () => {
     });
 
     describe("showEditAccessTokenGitlabRepositoryModal", () => {
-        let context;
+        let context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
+            GitlabState,
+            GitlabState
+        >;
         beforeEach(() => {
-            context = {
+            const modal: Modal = ({ toggle: jest.fn() } as unknown) as Modal;
+            context = ({
                 commit: jest.fn(),
                 state: {
-                    edit_access_token_gitlab_repository_modal: { toggle: jest.fn() },
-                },
-            };
+                    edit_access_token_gitlab_repository_modal: modal,
+                } as GitlabState,
+            } as unknown) as ActionContext<GitlabState, GitlabState>;
         });
 
-        const repository = { id: 5 };
+        const repository = { id: 5 } as GitLabRepository;
 
         it("When modal should be open, Then repository is set and modal is opened", () => {
             showEditAccessTokenGitlabRepositoryModal(context, repository);
@@ -258,6 +267,9 @@ describe("action", () => {
                 "setEditAccessTokenGitlabRepository",
                 repository
             );
+            if (!context.state.edit_access_token_gitlab_repository_modal) {
+                throw new Error("Modal is null");
+            }
             expect(
                 context.state.edit_access_token_gitlab_repository_modal.toggle
             ).toHaveBeenCalled();

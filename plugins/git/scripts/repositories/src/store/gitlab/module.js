@@ -18,12 +18,12 @@
  */
 
 import * as actions from "./actions";
-import * as mutations from "./mutations.js";
-import defaultState from "./state.js";
+import * as mutations from "./mutations";
+import defaultState from "./state";
 
 export default {
     namespaced: true,
-    state: defaultState(),
+    state: defaultState,
     actions,
     mutations,
 };
