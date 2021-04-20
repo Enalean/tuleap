@@ -19,7 +19,7 @@
 
 const offset = 8;
 const radius = offset;
-export const gap = 2 * offset + radius;
+export const gap = offset + radius + 1;
 export const threshold = 2 * offset + 2 * radius + 2 * gap;
 const half_turn_offset = 20;
 const arrow = offset;

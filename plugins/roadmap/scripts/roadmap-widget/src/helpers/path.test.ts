@@ -17,11 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { startAt } from "./path";
+import { gap, startAt } from "./path";
 import type { Path } from "./path";
 import removeExtraWhitespaces from "./remove-extra-whitespaces";
+import { Styles } from "./styles";
 
 describe("Path", () => {
+    it("should have a not too big gap to not produce scroll overflow when the arrow points to the last task", () => {
+        expect(gap).toBeLessThanOrEqual(Styles.TASK_HEIGHT_IN_PX / 2);
+    });
+
     it("Starts at the given position and automatically move forward to the right", () => {
         expect(removeExtraWhitespaces(startAt(50, 50, 100, 100).toString())).toMatchInlineSnapshot(
             `"M50 50 L58 50"`
@@ -31,13 +36,13 @@ describe("Path", () => {
     it("Displays an arrow on the left", () => {
         expect(
             removeExtraWhitespaces(startAt(0, 50, 100, 100).arrowOnTheLeftGap())
-        ).toMatchInlineSnapshot(`"M0 50 L8 50 L24 50 L16 42 M24 50 L16 58"`);
+        ).toMatchInlineSnapshot(`"M0 50 L8 50 L17 50 L9 42 M17 50 L9 58"`);
     });
 
     it("Displays an arrow on the right", () => {
         expect(
             removeExtraWhitespaces(startAt(0, 50, 100, 100).arrowOnTheRightGap())
-        ).toMatchInlineSnapshot(`"M0 50 L8 50 L76 50 L68 42 M76 50 L68 58"`);
+        ).toMatchInlineSnapshot(`"M0 50 L8 50 L83 50 L75 42 M83 50 L75 58"`);
     });
 
     describe("Going top", () => {
@@ -62,13 +67,13 @@ describe("Path", () => {
         it("Forwards but stop before the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 42 L66 32"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 42 L66 25"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 42 L66 16"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 42 L66 9"`);
         });
 
         it("Half turns to the left", () => {
@@ -106,13 +111,13 @@ describe("Path", () => {
         it("Forwards but stop before the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 L68 50"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 L75 50"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 L84 50"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 L91 50"`);
         });
 
         it("Half turns to the left", () => {
@@ -150,13 +155,13 @@ describe("Path", () => {
         it("Forwards but stop before the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 L66 68"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 L66 75"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 L66 84"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 L66 91"`);
         });
 
         it("Half turns to the left", () => {
@@ -194,13 +199,13 @@ describe("Path", () => {
         it("Forwards but stop before the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopBeforeGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L32 66"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L25 66"`);
         });
 
         it("Forwards but stop inside the gap", () => {
             expect(
                 removeExtraWhitespaces(path.forwardAndStopIntoGap().toString())
-            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L16 66"`);
+            ).toMatchInlineSnapshot(`"M50 50 L58 50 Q66 50, 66 58 Q66 66, 58 66 L9 66"`);
         });
 
         it("Half turns to the left", () => {

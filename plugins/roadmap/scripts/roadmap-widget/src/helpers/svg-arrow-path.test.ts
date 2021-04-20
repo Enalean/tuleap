@@ -30,7 +30,7 @@ describe("svg-arrow-path", () => {
     describe("getDownRightArrow", () => {
         it("Computes a down right path", () => {
             expect(removeExtraWhitespaces(getDownRightArrow(100, 100))).toMatchInlineSnapshot(
-                `"M24 24 L32 24 Q40 24, 40 32 L40 68 Q40 76, 48 76 L76 76 L68 68 M76 76 L68 84"`
+                `"M17 17 L25 17 Q33 17, 33 25 L33 75 Q33 83, 41 83 L83 83 L75 75 M83 83 L75 91"`
             );
         });
 
@@ -38,7 +38,7 @@ describe("svg-arrow-path", () => {
             expect(
                 removeExtraWhitespaces(getDownRightArrow(threshold - 10, 100))
             ).toMatchInlineSnapshot(
-                `"M24 24 L32 24 Q40 24, 40 32 L40 36 Q40 44, 32 44 L16 44 Q8 44, 8 52 L8 68 Q8 76, 16 76 L46 76 L38 68 M46 76 L38 84"`
+                `"M17 17 L25 17 Q33 17, 33 25 L33 29 Q33 37, 25 37 L9 37 Q1 37, 1 45 L1 75 Q1 83, 9 83 L39 83 L31 75 M39 83 L31 91"`
             );
         });
     });
@@ -46,7 +46,7 @@ describe("svg-arrow-path", () => {
     describe("getDownLeftArrow", () => {
         it("Computes a down right path", () => {
             expect(removeExtraWhitespaces(getDownLeftArrow(100, 100))).toMatchInlineSnapshot(
-                `"M76 24 L84 24 Q92 24, 92 32 L92 36 Q92 44, 84 44 L16 44 Q8 44, 8 52 L8 68 Q8 76, 16 76 L24 76 L16 68 M24 76 L16 84"`
+                `"M83 17 L91 17 Q99 17, 99 25 L99 29 Q99 37, 91 37 L9 37 Q1 37, 1 45 L1 75 Q1 83, 9 83 L17 83 L9 75 M17 83 L9 91"`
             );
         });
     });
@@ -54,7 +54,7 @@ describe("svg-arrow-path", () => {
     describe("getUpRightArrow", () => {
         it("Computes a down right path", () => {
             expect(removeExtraWhitespaces(getUpRightArrow(100, 100))).toMatchInlineSnapshot(
-                `"M24 76 L32 76 Q40 76, 40 68 L40 32 Q40 24, 48 24 L76 24 L68 16 M76 24 L68 32"`
+                `"M17 83 L25 83 Q33 83, 33 75 L33 25 Q33 17, 41 17 L83 17 L75 9 M83 17 L75 25"`
             );
         });
 
@@ -62,7 +62,7 @@ describe("svg-arrow-path", () => {
             expect(
                 removeExtraWhitespaces(getUpRightArrow(threshold - 10, 100))
             ).toMatchInlineSnapshot(
-                `"M24 76 L32 76 Q40 76, 40 68 L40 64 Q40 56, 32 56 L16 56 Q8 56, 8 48 L8 32 Q8 24, 16 24 L46 24 L38 16 M46 24 L38 32"`
+                `"M17 83 L25 83 Q33 83, 33 75 L33 71 Q33 63, 25 63 L9 63 Q1 63, 1 55 L1 25 Q1 17, 9 17 L39 17 L31 9 M39 17 L31 25"`
             );
         });
     });
@@ -70,7 +70,7 @@ describe("svg-arrow-path", () => {
     describe("getUpLeftArrow", () => {
         it("Computes a down right path", () => {
             expect(removeExtraWhitespaces(getUpLeftArrow(100, 100))).toMatchInlineSnapshot(
-                `"M76 76 L84 76 Q92 76, 92 68 L92 64 Q92 56, 84 56 L16 56 Q8 56, 8 48 L8 32 Q8 24, 16 24 L24 24 L16 16 M24 24 L16 32"`
+                `"M83 83 L91 83 Q99 83, 99 75 L99 71 Q99 63, 91 63 L9 63 Q1 63, 1 55 L1 25 Q1 17, 9 17 L17 17 L9 9 M17 17 L9 25"`
             );
         });
     });
