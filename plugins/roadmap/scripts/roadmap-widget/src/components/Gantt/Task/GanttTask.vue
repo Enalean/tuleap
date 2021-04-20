@@ -37,7 +37,6 @@
             v-bind:width="dimensions.width"
             ref="bar"
         />
-        <bar-popover ref="popover" v-bind:task="task" v-bind:locale="locale" />
     </div>
 </template>
 
@@ -89,14 +88,15 @@ export default class GanttTask extends Vue {
     @Prop({ required: true })
     private readonly locale!: string;
 
+    @Prop({ required: true })
+    private readonly popover_element_id!: string;
+
     private popover: Popover | undefined;
 
     mounted(): void {
-        if (
-            this.$refs.bar.$el instanceof HTMLElement &&
-            this.$refs.popover.$el instanceof HTMLElement
-        ) {
-            this.popover = createPopover(this.$refs.bar.$el, this.$refs.popover.$el, {
+        const popover_element = document.getElementById(this.popover_element_id);
+        if (this.$refs.bar.$el instanceof HTMLElement && popover_element instanceof HTMLElement) {
+            this.popover = createPopover(this.$refs.bar.$el, popover_element, {
                 placement: "right-start",
             });
         }
