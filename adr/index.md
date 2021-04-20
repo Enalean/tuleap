@@ -9,6 +9,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 <!-- adrlogstop -->
 
 Plugins can also have their own ADRs:
+* [Program Management](../plugins/program_management/adr/index.md)
 * [Roadmap](../plugins/roadmap/adr/index.md)
 * [Tracker](../plugins/tracker/adr/index.md)
 
