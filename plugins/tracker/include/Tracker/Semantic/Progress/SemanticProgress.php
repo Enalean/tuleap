@@ -29,6 +29,9 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenter;
+use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
+use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 
 class SemanticProgress extends \Tracker_Semantic
 {
@@ -59,7 +62,17 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function display(): void
     {
-        echo dgettext('tuleap-tracker', 'This semantic is not defined yet.');
+        $is_semantic_defined = false;
+        $renderer            = $this->getTemplateRenderer();
+        $presenter           = new SemanticProgressIntroductionPresenter(
+            $this->getSemanticUsage(),
+            $is_semantic_defined
+        );
+
+        $renderer->renderToPage(
+            'semantic-progress-introduction',
+            $presenter
+        );
     }
 
     public function displayAdmin(
@@ -69,13 +82,14 @@ class SemanticProgress extends \Tracker_Semantic
         PFUser $current_user
     ): void {
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
-        $renderer = \TemplateRendererFactory::build()->getRenderer(
-            __DIR__ . '/../../../../templates/semantic-progress'
-        );
 
+        $renderer = $this->getTemplateRenderer();
         $renderer->renderToPage(
             'semantic-progress-admin',
-            new SemanticProgressAdminPresenter($this->tracker)
+            new SemanticProgressAdminPresenter(
+                $this->tracker,
+                $this->getSemanticUsage()
+            )
         );
 
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
@@ -107,5 +121,23 @@ class SemanticProgress extends \Tracker_Semantic
     public function save(): bool
     {
         return false;
+    }
+
+    private function getSemanticUsage(): string
+    {
+        $event         = new GetSemanticProgressUsageEvent();
+        $event_manager = \EventManager::instance();
+
+        $event_manager->processEvent($event);
+
+        return $event->getSemanticUsage();
+    }
+
+    private function getTemplateRenderer(): \TemplateRenderer
+    {
+        $renderer = \TemplateRendererFactory::build()->getRenderer(
+            __DIR__ . '/../../../../templates/semantic-progress'
+        );
+        return $renderer;
     }
 }

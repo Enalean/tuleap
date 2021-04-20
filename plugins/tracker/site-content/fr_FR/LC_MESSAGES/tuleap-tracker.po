@@ -3532,11 +3532,34 @@ msgstr "Ce rapport n'existe pas."
 msgid "This semantic is not defined yet."
 msgstr "Cette sémantique n'est pas encore définie."
 
+#, php-format
+msgid "This semantic is only used in %s at the moment."
+msgstr "Cette sémantique est uniquement utilisée dans %s pour le moment."
+
+#, php-format
+msgid ""
+"This semantic is only used in %s at the moment. In longer-term, we plan to "
+"use it in %s as well."
+msgstr ""
+"Cette sémantique est seulement utilisée dans %s pour le moment. À plus long "
+"terme, nous prévoyons de l'utiliser dans %s."
+
 msgid ""
 "This semantic is under construction, it is not possible to define it yet."
 msgstr ""
 "Cette sémantique est en cours de construction, il n'est pas encore possible "
 "de la définir."
+
+msgid "This semantic is unused at the moment."
+msgstr "Cette sémantique est inutilisée pour le moment."
+
+#, php-format
+msgid ""
+"This semantic is unused at the moment. In longer-term, we plan to use it in "
+"%s."
+msgstr ""
+"Cette sémantique est inutilisée pour le moment. À plus long terme, nous "
+"prévoyons de l'utiliser dans %s."
 
 msgid "This template does not use trackers"
 msgstr "Ce modèle n'utilise pas les trackers"
