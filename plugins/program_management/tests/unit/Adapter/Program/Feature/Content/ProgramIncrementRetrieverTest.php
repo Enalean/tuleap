@@ -25,9 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\PlannedProgramIncrement;
-use Tuleap\ProgramManagement\Program\Plan\BuildTracker;
-use Tuleap\ProgramManagement\Program\Plan\ProgramIncrementTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -37,10 +36,6 @@ final class ProgramIncrementRetrieverTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildTracker
-     */
-    private $build_tracker;
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
      */
     private $tracker_artifact_factory;
@@ -48,14 +43,18 @@ final class ProgramIncrementRetrieverTest extends TestCase
      * @var ProgramIncrementRetriever
      */
     private $retriever;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsDAO
+     */
+    private $dao;
 
     protected function setUp(): void
     {
         $this->tracker_artifact_factory = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->build_tracker            = \Mockery::mock(BuildTracker::class);
+        $this->dao                      = \Mockery::mock(ProgramIncrementsDAO::class);
         $this->retriever                = new ProgramIncrementRetriever(
             $this->tracker_artifact_factory,
-            $this->build_tracker
+            $this->dao
         );
     }
 
@@ -97,14 +96,30 @@ final class ProgramIncrementRetrieverTest extends TestCase
 
         $program_increment->shouldReceive('userCanView')->once()->andReturnTrue();
 
-        $this->build_tracker->shouldReceive('buildProgramIncrementTracker')->once()->andReturn(
-            new ProgramIncrementTracker(1)
-        );
+        $this->dao->shouldReceive("isProgramIncrementTracker")->once()->with(1)->andReturnTrue();
 
         $expected = new PlannedProgramIncrement($program_increment->getId());
 
         $user = UserTestBuilder::aUser()->build();
 
         self::assertEquals($expected, $this->retriever->retrieveProgramIncrement(300, $user));
+    }
+
+    public function testItDoesNotBuildProgramIncrementIfIsNotProgramIncrementTracker(): void
+    {
+        $program_increment = \Mockery::mock(Artifact::class);
+        $program_increment->shouldReceive('getTrackerId')->andReturn(1);
+
+        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->andReturn($program_increment);
+
+        $program_increment->shouldReceive('userCanView')->once()->andReturnTrue();
+
+        $this->dao->shouldReceive("isProgramIncrementTracker")->once()->with(1)->andReturnFalse();
+
+        $this->expectException(ProgramIncrementNotFoundException::class);
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->retriever->retrieveProgramIncrement(300, $user);
     }
 }

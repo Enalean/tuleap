@@ -69,4 +69,12 @@ class ProgramIncrementsDAO extends DataAccessObject
 
         return $this->getDB()->run($sql, $artifact_id);
     }
+
+    public function isProgramIncrementTracker(int $tracker_id): bool
+    {
+        $sql  = 'SELECT NULL FROM plugin_program_management_plan WHERE program_increment_tracker_id = ?';
+        $rows = $this->getDB()->run($sql, $tracker_id);
+
+        return count($rows) > 0;
+    }
 }
