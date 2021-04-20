@@ -19,7 +19,7 @@
     "build:vite": "$npm_package_config_bin/vite build",
     "build:types": "rm -rf types/ && $npm_package_config_bin/tsc",
     "watch": "$npm_package_config_bin/run-p watch:*",
-    "watch:vite": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.ts\" --ext ts --exec '$npm_package_config_bin/vite build --mode development --minify false'",
+    "watch:vite": "$npm_package_config_bin/vite build --watch --mode development --minify false",
     "watch:types": "rm -rf types/ && $npm_package_config_bin/tsc -w --preserveWatchOutput",
     "test": "$npm_package_config_bin/jest"
   }
