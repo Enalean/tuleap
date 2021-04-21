@@ -22,6 +22,7 @@ namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use ForgeConfig;
 use PFUser;
+use User_UserStatusManager;
 use UserManager;
 
 class AutomaticUserRegistration
@@ -128,7 +129,7 @@ class AutomaticUserRegistration
 
     private function getUserStatus(): string
     {
-        if (ForgeConfig::get('sys_user_approval')) {
+        if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
             return PFUser::STATUS_PENDING;
         }
 

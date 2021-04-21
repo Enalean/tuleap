@@ -23,6 +23,7 @@ namespace Tuleap\User\Admin;
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use ForgeConfig;
+use User_UserStatusManager;
 
 class PendingUsersCollectionPresenter
 {
@@ -60,7 +61,7 @@ class PendingUsersCollectionPresenter
         $this->more_than_one_to_validate = count($users) > 1;
 
         $this->can_be_restricted = ForgeConfig::areRestrictedUsersAllowed();
-        $this->can_be_validated  = ForgeConfig::get('sys_user_approval') == 1 && ADMIN_APPROVE_PENDING_PAGE_PENDING == $page;
+        $this->can_be_validated  = ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1 && ADMIN_APPROVE_PENDING_PAGE_PENDING == $page;
 
         $this->validate_notice = $GLOBALS['Language']->getText('admin_approve_pending_users', 'validate_notice');
         $this->activate_notice = $GLOBALS['Language']->getText('admin_approve_pending_users', 'activate_notice');

@@ -38,6 +38,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\System\ServiceControl;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
+use User_UserStatusManager;
 
 final class GetWhitelistedKeys implements Dispatchable
 {
@@ -51,6 +52,7 @@ final class GetWhitelistedKeys implements Dispatchable
      */
     private $annotated_classes = [
         ProjectManager::class,
+        User_UserStatusManager::class,
         ForgeAccess::class,
         ProjectVisibilityConfigManager::class,
         Prometheus::class,

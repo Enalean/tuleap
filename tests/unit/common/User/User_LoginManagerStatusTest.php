@@ -69,7 +69,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
     public function testItSucceedsIfAllowPendingAndStatusIsPendingAndNoUserApproval(): void
     {
         $this->expectNotToPerformAssertions();
-        ForgeConfig::set('sys_user_approval', 0);
+        ForgeConfig::set(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 0);
         $this->user_status_manager->checkStatusOnVerifyPage(
             $this->buildUser(PFUser::STATUS_PENDING)
         );
@@ -110,7 +110,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
     public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsPending(): void
     {
         $this->expectException(\User_StatusPendingException::class);
-        ForgeConfig::set('sys_user_approval', 1);
+        ForgeConfig::set(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 1);
         $this->user_status_manager->checkStatus(
             $this->buildUser(PFUser::STATUS_PENDING)
         );
@@ -119,7 +119,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
     public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidated(): void
     {
         $this->expectException(\User_StatusPendingException::class);
-        ForgeConfig::set('sys_user_approval', 1);
+        ForgeConfig::set(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 1);
         $this->user_status_manager->checkStatus(
             $this->buildUser(PFUser::STATUS_VALIDATED)
         );
@@ -128,7 +128,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
     public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidated(): void
     {
         $this->expectException(\User_StatusPendingException::class);
-        ForgeConfig::set('sys_user_approval', 0);
+        ForgeConfig::set(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 0);
         $this->user_status_manager->checkStatus(
             $this->buildUser(PFUser::STATUS_VALIDATED)
         );
@@ -137,7 +137,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
     public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidatedRestricted(): void
     {
         $this->expectException(\User_StatusPendingException::class);
-        ForgeConfig::set('sys_user_approval', 1);
+        ForgeConfig::set(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 1);
         $this->user_status_manager->checkStatus(
             $this->buildUser(PFUser::STATUS_VALIDATED_RESTRICTED)
         );
@@ -146,7 +146,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
     public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidatedRestricted(): void
     {
         $this->expectException(\User_StatusPendingException::class);
-        ForgeConfig::set('sys_user_approval', 0);
+        ForgeConfig::set(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 0);
         $this->user_status_manager->checkStatus(
             $this->buildUser(PFUser::STATUS_VALIDATED_RESTRICTED)
         );
@@ -155,7 +155,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
     public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsPending(): void
     {
         $this->expectException(\User_StatusPendingException::class);
-        ForgeConfig::set('sys_user_approval', 0);
+        ForgeConfig::set(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 0);
         $this->user_status_manager->checkStatus(
             $this->buildUser(PFUser::STATUS_PENDING)
         );

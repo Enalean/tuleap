@@ -72,7 +72,7 @@ class Widget_MyAdmin extends Widget
         $html_my_admin = '';
         // Get the number of pending users and projects
 
-        if (ForgeConfig::get('sys_user_approval') == 1) {
+        if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
             db_query("SELECT count(*) AS count FROM user WHERE status='P'");
             $row           = db_fetch_array();
             $pending_users = $row['count'];
@@ -108,7 +108,7 @@ class Widget_MyAdmin extends Widget
             $this->_get_color($pending_users)
         );
 
-        if (ForgeConfig::get('sys_user_approval') == 1) {
+        if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
             $html_my_admin .= $this->_get_admin_row(
                 $i++,
                 sprintf(_('Validated users <a href="%1$s"><B>pending email activation</B></a>'), "/admin/approve_pending_users.php?page=validated"),

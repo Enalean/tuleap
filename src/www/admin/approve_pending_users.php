@@ -213,7 +213,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
 if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING) {
     $res = db_query("SELECT * FROM user WHERE status='P'");
     $msg = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
-    if (ForgeConfig::get('sys_user_approval') == 0) {
+    if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0) {
         $res = db_query("SELECT * FROM user WHERE status='P' OR status='V' OR status='W'");
         $msg = $Language->getText('admin_approve_pending_users', 'no_pending');
     }
