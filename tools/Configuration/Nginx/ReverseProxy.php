@@ -23,6 +23,7 @@ namespace Tuleap\Configuration\Nginx;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Logger\Wrapper;
+use TuleapCfg\Command\SiteDeploy\Nginx\NginxCommon;
 
 class ReverseProxy
 {
@@ -35,7 +36,7 @@ class ReverseProxy
     private $nginx_base_dir;
     private $server_name;
     /**
-     * @var Common
+     * @var NginxCommon
      */
     private $common;
 
@@ -45,7 +46,7 @@ class ReverseProxy
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
-        $this->common          = new Common($logger, $tuleap_base_dir, $nginx_base_dir);
+        $this->common          = new NginxCommon($logger, $tuleap_base_dir, $nginx_base_dir);
     }
 
     public function configure()

@@ -18,12 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Configuration\Nginx;
+namespace TuleapCfg\Command\SiteDeploy\Nginx;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Configuration\Logger\Wrapper;
 
-class TuleapWeb
+class SiteDeployNginx
 {
     public const SSL_CERT_KEY_PATH  = '/etc/pki/tls/private/localhost.key.pem';
     public const SSL_CERT_CERT_PATH = '/etc/pki/tls/certs/localhost.cert.pem';
@@ -32,24 +31,39 @@ class TuleapWeb
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var string
+     */
     private $tuleap_base_dir;
+    /**
+     * @var string
+     */
     private $nginx_base_dir;
+    /**
+     * @var string
+     */
     private $server_name;
+    /**
+     * @var NginxCommon
+     */
     private $common;
+    /**
+     * @var bool
+     */
     private $for_development;
 
-    public function __construct(LoggerInterface $logger, $tuleap_base_dir, $nginx_base_dir, $server_name, $for_development)
+    public function __construct(LoggerInterface $logger, string $tuleap_base_dir, string $nginx_base_dir, string $server_name, bool $for_development)
     {
-        $this->logger          = new Wrapper($logger, 'nginx');
+        $this->logger          = $logger;
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
         $this->for_development = $for_development;
 
-        $this->common = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir);
+        $this->common = new NginxCommon($this->logger, $tuleap_base_dir, $nginx_base_dir);
     }
 
-    public function configure()
+    public function configure(): void
     {
         $should_tls_certificate_be_generated = false;
 

@@ -21,6 +21,7 @@
 namespace Tuleap\Configuration\Nginx;
 
 use Psr\Log\LoggerInterface;
+use TuleapCfg\Command\SiteDeploy\Nginx\NginxCommon;
 
 class BackendWeb
 {
@@ -39,7 +40,7 @@ class BackendWeb
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
-        $this->common          = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir);
+        $this->common          = new NginxCommon($this->logger, $tuleap_base_dir, $nginx_base_dir);
     }
 
     public function configure()

@@ -18,34 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Configuration\Nginx;
+namespace TuleapCfg\Command\SiteDeploy\Nginx;
 
 use DirectoryIterator;
 use Psr\Log\LoggerInterface;
-use Tuleap\Configuration\Common\Exec;
+use Symfony\Component\Process\Process;
 
-class Common
+class NginxCommon
 {
+    /**
+     * @var string
+     */
     private $tuleap_base_dir;
+    /**
+     * @var string
+     */
     private $nginx_base_dir;
     /**
      * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger, $tuleap_base_dir, $nginx_base_dir)
+    public function __construct(LoggerInterface $logger, string $tuleap_base_dir, string $nginx_base_dir)
     {
         $this->logger          = $logger;
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
     }
 
-    public function generateSSLCertificate($server_name, $cert_filepath, $key_filepath): void
+    public function generateSSLCertificate(string $server_name, string $cert_filepath, string $key_filepath): void
     {
         if (! file_exists($cert_filepath)) {
             $this->logger->info("Generate self-signed certificate in $cert_filepath");
-            $exec = new Exec();
-            $exec->command('( cat /etc/pki/tls/openssl.cnf; echo "[SAN]" ; echo "subjectAltName=DNS:' . $server_name . '" ) | openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout ' . $key_filepath . ' -out ' . $cert_filepath . ' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN=' . $server_name . '" -extensions SAN -config /dev/stdin 2> /dev/null');
+            Process::fromShellCommandline('( cat /etc/pki/tls/openssl.cnf; echo "[SAN]" ; echo "subjectAltName=DNS:' . $server_name . '" ) | openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout ' . $key_filepath . ' -out ' . $cert_filepath . ' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN=' . $server_name . '" -extensions SAN -config /dev/stdin 2> /dev/null')
+                ->setTimeout(0)
+                ->mustRun();
         }
     }
 
@@ -125,7 +132,7 @@ class Common
         return strpos(file_get_contents($this->nginx_base_dir . '/nginx.conf'), '# Replaced for Tuleap usage') !== false;
     }
 
-    public function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values): void
+    public function replacePlaceHolderInto(string $template_path, string $target_path, array $variables, array $values): void
     {
         file_put_contents(
             $target_path,
