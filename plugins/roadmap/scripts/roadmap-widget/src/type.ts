@@ -22,7 +22,7 @@ export interface Task {
     readonly title: string;
     readonly xref: string;
     readonly color_name: string;
-    readonly progress: number;
+    readonly progress: number | null;
     readonly html_url: string;
     readonly start: Date | null;
     readonly end: Date | null;

@@ -152,7 +152,7 @@ final class RoadmapTasksRetriever
             $end_date    = $time_period->getEndDate();
             $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
-            $progress = 1;
+            $progress = null;
 
             $representations[] = new TaskRepresentation(
                 $artifact->getId(),

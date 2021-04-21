@@ -71,6 +71,10 @@ export default class TaskBar extends Vue {
     }
 
     get progress_style(): string {
+        if (this.task.progress === null) {
+            return "";
+        }
+
         const width_in_percent = Math.max(0, Math.min(100, this.task.progress * 100));
 
         return `width: ${width_in_percent}%;`;

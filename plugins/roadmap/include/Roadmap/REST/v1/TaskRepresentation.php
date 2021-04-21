@@ -50,7 +50,7 @@ final class TaskRepresentation
      */
     public $color_name;
     /**
-     * @var float
+     * @var float|null
      */
     public $progress;
     /**
@@ -75,7 +75,7 @@ final class TaskRepresentation
         string $html_url,
         string $title,
         string $color_name,
-        float $progress,
+        ?float $progress,
         ?\DateTimeImmutable $start,
         ?\DateTimeImmutable $end,
         array $dependencies
