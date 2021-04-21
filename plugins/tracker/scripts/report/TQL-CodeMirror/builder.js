@@ -29,7 +29,7 @@ function initializeTQLMode(tql_mode_definition) {
     CodeMirror.defineSimpleMode("tql", tql_mode_definition);
 }
 
-function codeMirrorify({ textarea_element, autocomplete_keywords, submitFormCallback }) {
+function codeMirrorify(textarea_element, autocomplete_keywords, submitFormCallback) {
     CodeMirror.commands.autocomplete = autocomplete;
 
     return CodeMirror.fromTextArea(textarea_element, {

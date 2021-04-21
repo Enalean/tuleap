@@ -114,11 +114,7 @@ function codeMirrorifyQueryArea() {
     } else {
         const autocomplete_keywords = TQL_autocomplete_keywords.concat(allowed_fields);
 
-        query_rich_editor = codeMirrorify({
-            textarea_element: tracker_query,
-            autocomplete_keywords,
-            submitFormCallback,
-        });
+        query_rich_editor = codeMirrorify(tracker_query, autocomplete_keywords, submitFormCallback);
     }
 }
 

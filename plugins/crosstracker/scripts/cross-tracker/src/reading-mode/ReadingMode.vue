@@ -29,7 +29,11 @@
                 v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
                 data-test="tracker-list-reading-mode"
             />
-            <div class="reading-mode-query" v-if="is_expert_query_not_empty">
+            <div
+                class="reading-mode-query"
+                v-if="is_expert_query_not_empty"
+                data-test="tql-reading-mode-query"
+            >
                 {{ readingCrossTrackerReport.expert_query }}
             </div>
         </div>

@@ -17,7 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="cross-tracker-expert-content">
         <div class="cross-tracker-expert-content-query tlp-form-element">
@@ -29,7 +28,7 @@
                 name="expert_query"
                 id="expert-query-textarea"
                 v-bind:placeholder="placeholder"
-                v-model="writingCrossTrackerReport.expert_query"
+                v-model="value"
                 data-test="expert-query-textarea"
             ></textarea>
             <p class="tlp-text-info">
@@ -62,82 +61,98 @@
         </div>
     </div>
 </template>
-<!-- eslint-disable vue/no-mutating-props -->
-<script>
+
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 import {
     TQL_cross_tracker_autocomplete_keywords,
     TQL_cross_tracker_mode_definition,
-} from "./tql-configuration.js";
-import { insertAllowedFieldInCodeMirror } from "../../../../../tracker/scripts/report/TQL-CodeMirror/allowed-field-inserter.js";
+} from "./tql-configuration";
+import { insertAllowedFieldInCodeMirror } from "../../../../../tracker/scripts/report/TQL-CodeMirror/allowed-field-inserter";
 import {
     initializeTQLMode,
     codeMirrorify,
-} from "../../../../../tracker/scripts/report/TQL-CodeMirror/builder.js";
+} from "../../../../../tracker/scripts/report/TQL-CodeMirror/builder";
+import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
+import type CodeMirror from "codemirror";
 
-export default {
-    name: "QueryEditor",
-    props: {
-        writingCrossTrackerReport: Object,
-    },
-    data() {
-        return {
-            code_mirror_instance: null,
-        };
-    },
-    computed: {
-        title_semantic_label() {
-            return this.$gettext("Title");
-        },
-        description_semantic_label() {
-            return this.$gettext("Description");
-        },
-        status_semantic_label() {
-            return this.$gettext("Status");
-        },
-        submitted_on_label() {
-            return this.$gettext("Submitted on");
-        },
-        lud_label() {
-            return this.$gettext("Last update date");
-        },
-        submitted_by_label() {
-            return this.$gettext("Submitted by");
-        },
-        luby_label() {
-            return this.$gettext("Last update by");
-        },
-        assigned_to_label() {
-            return this.$gettext("Assigned to");
-        },
-        placeholder() {
-            return this.$gettext("Example: @title = 'value'");
-        },
-    },
-    created() {
+@Component({})
+export default class QueryEditor extends Vue {
+    @Prop({ required: true })
+    readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
+
+    private code_mirror_instance: null | CodeMirror.Editor = null;
+    private value: string = this.writingCrossTrackerReport.expert_query;
+
+    created(): void {
         initializeTQLMode(TQL_cross_tracker_mode_definition);
-    },
+    }
     mounted() {
         const submitFormCallback = () => {
             this.search();
         };
 
-        this.code_mirror_instance = codeMirrorify({
-            textarea_element: this.$refs.query_textarea,
-            autocomplete_keywords: TQL_cross_tracker_autocomplete_keywords,
-            submitFormCallback,
-        });
+        const textarea_element = this.$refs.query_textarea;
+        if (!(textarea_element instanceof HTMLTextAreaElement)) {
+            throw new Error("Textarea not found in DOM");
+        }
 
+        this.code_mirror_instance = codeMirrorify(
+            textarea_element,
+            TQL_cross_tracker_autocomplete_keywords,
+            submitFormCallback
+        );
+
+        if (!this.code_mirror_instance) {
+            throw new Error("Code mirror is not accessible");
+        }
         this.code_mirror_instance.on("change", () => {
+            if (!this.code_mirror_instance) {
+                throw new Error("Code mirror is not accessible");
+            }
             this.writingCrossTrackerReport.expert_query = this.code_mirror_instance.getValue();
         });
-    },
-    methods: {
-        insertSelectedField(event) {
-            insertAllowedFieldInCodeMirror(event, this.code_mirror_instance);
-        },
-        search() {
-            this.$emit("trigger-search");
-        },
-    },
-};
+    }
+
+    get title_semantic_label(): string {
+        return this.$gettext("Title");
+    }
+    get description_semantic_label(): string {
+        return this.$gettext("Description");
+    }
+    get status_semantic_label(): string {
+        return this.$gettext("Status");
+    }
+    get submitted_on_label(): string {
+        return this.$gettext("Submitted on");
+    }
+    get lud_label(): string {
+        return this.$gettext("Last update date");
+    }
+    get submitted_by_label(): string {
+        return this.$gettext("Submitted by");
+    }
+    get luby_label(): string {
+        return this.$gettext("Last update by");
+    }
+    get assigned_to_label(): string {
+        return this.$gettext("Assigned to");
+    }
+    get placeholder(): string {
+        return this.$gettext("Example: @title = 'value'");
+    }
+
+    insertSelectedField(event: Event): void {
+        if (!this.code_mirror_instance) {
+            throw new Error("Code mirror is not accessible for adding field");
+        }
+        insertAllowedFieldInCodeMirror(event, this.code_mirror_instance);
+    }
+
+    search(): void {
+        this.$emit("trigger-search");
+    }
+}
 </script>

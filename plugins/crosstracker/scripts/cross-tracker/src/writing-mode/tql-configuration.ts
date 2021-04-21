@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { buildModeDefinition } from "../../../../../tracker/scripts/report/TQL-CodeMirror/configuration.js";
+import { buildModeDefinition } from "../../../../../tracker/scripts/report/TQL-CodeMirror/configuration";
 
 const TQL_cross_tracker_autocomplete_keywords = [
     "AND",
