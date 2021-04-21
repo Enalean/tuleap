@@ -28,7 +28,6 @@
         <gantt-board
             v-else-if="tasks.length"
             v-bind:tasks="tasks"
-            v-bind:locale="locale"
             v-bind:visible_natures="visible_natures"
         />
         <loading-state v-else-if="is_loading" />
@@ -52,9 +51,6 @@ import LoadingState from "./LoadingState.vue";
 export default class App extends Vue {
     @Prop({ required: true })
     readonly roadmap_id!: number;
-
-    @Prop({ required: true })
-    private readonly locale!: string;
 
     @Prop({ required: true })
     private readonly visible_natures!: NaturesLabels;

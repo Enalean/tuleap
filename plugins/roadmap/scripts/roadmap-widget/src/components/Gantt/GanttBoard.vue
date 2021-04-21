@@ -32,7 +32,6 @@
                 <task-header v-for="task of tasks" v-bind:key="task.id" v-bind:task="task" />
             </div>
             <scrolling-area
-                v-bind:locale="locale"
                 v-bind:time_period="time_period"
                 v-bind:now="now"
                 v-on:is_scrolling="isScrolling"
@@ -40,7 +39,6 @@
                 <time-period-header
                     v-bind:time_period="time_period"
                     v-bind:nb_additional_units="nb_additional_units"
-                    v-bind:locale="locale"
                     ref="time_period"
                 />
                 <gantt-task
@@ -52,7 +50,6 @@
                     v-bind:dependencies="dependencies"
                     v-bind:dimensions_map="dimensions_map"
                     v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
-                    v-bind:locale="locale"
                     v-bind:popover_element_id="getIdForPopover(task)"
                 />
             </scrolling-area>
@@ -60,7 +57,6 @@
                 v-for="task of tasks"
                 v-bind:key="task.id"
                 v-bind:task="task"
-                v-bind:locale="locale"
                 v-bind:id="getIdForPopover(task)"
             />
         </div>
@@ -96,6 +92,7 @@ import TaskHeader from "./Task/TaskHeader.vue";
 import ScrollingArea from "./ScrollingArea.vue";
 import BarPopover from "./Task/BarPopover.vue";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
+import { State } from "vuex-class";
 
 @Component({
     components: {
@@ -117,8 +114,8 @@ export default class GanttBoard extends Vue {
     @Prop({ required: true })
     readonly tasks!: Task[];
 
-    @Prop({ required: true })
-    private readonly locale!: string;
+    @State
+    private readonly locale_bcp47!: string;
 
     @Prop({ required: true })
     private readonly visible_natures!: NaturesLabels;
@@ -202,7 +199,7 @@ export default class GanttBoard extends Vue {
         return new TimePeriodMonth(
             getFirstDate(this.tasks, this.now),
             getLastDate(this.tasks, this.now),
-            this.locale
+            this.locale_bcp47
         );
     }
 

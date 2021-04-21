@@ -27,7 +27,7 @@ describe("TimePeriodMonth", () => {
     it("returns months when start is lesser than end", () => {
         const start = new Date(2020, 1, 15);
         const end = new Date(2020, 3, 15);
-        const period = new TimePeriodMonth(start, end, "en_US");
+        const period = new TimePeriodMonth(start, end, "en-US");
 
         expect(toDateString(period.units)).toStrictEqual([
             "Sat Feb 01 2020",
@@ -40,14 +40,14 @@ describe("TimePeriodMonth", () => {
     it("returns months when start is in the same month than end", () => {
         const start = new Date(2020, 3, 10);
         const end = new Date(2020, 3, 15);
-        const period = new TimePeriodMonth(start, end, "en_US");
+        const period = new TimePeriodMonth(start, end, "en-US");
         expect(toDateString(period.units)).toStrictEqual(["Wed Apr 01 2020", "Fri May 01 2020"]);
     });
 
     it("returns months when start is greater than end", () => {
         const start = new Date(2020, 3, 15);
         const end = new Date(2020, 1, 15);
-        const period = new TimePeriodMonth(start, end, "en_US");
+        const period = new TimePeriodMonth(start, end, "en-US");
         expect(toDateString(period.units)).toStrictEqual([
             "Sat Feb 01 2020",
             "Sun Mar 01 2020",
@@ -60,7 +60,7 @@ describe("TimePeriodMonth", () => {
         const period = new TimePeriodMonth(
             new Date("2021-03-31T22:00:00.000Z"),
             new Date("2021-10-30T22:00:00.000Z"),
-            "en_US"
+            "en-US"
         );
         expect(toDateString(period.units)).toStrictEqual([
             "Mon Mar 01 2021",
@@ -83,7 +83,7 @@ describe("TimePeriodMonth", () => {
     it("Format a unit", () => {
         const start = new Date(2020, 2, 15);
         const end = new Date(2020, 7, 15);
-        const period = new TimePeriodMonth(start, end, "en_US");
+        const period = new TimePeriodMonth(start, end, "en-US");
 
         const a_date = new Date(2020, 5, 15);
         expect(period.formatShort(a_date)).toStrictEqual("Jun");
@@ -95,7 +95,7 @@ describe("TimePeriodMonth", () => {
         (nb_missing_months) => {
             const start = new Date(2020, 2, 15);
             const end = new Date(2020, 7, 15);
-            const period = new TimePeriodMonth(start, end, "en_US");
+            const period = new TimePeriodMonth(start, end, "en-US");
 
             expect(period.additionalUnits(nb_missing_months)).toStrictEqual([]);
         }
@@ -104,7 +104,7 @@ describe("TimePeriodMonth", () => {
     it("Returns an array of additional months", () => {
         const start = new Date(2020, 2, 15);
         const end = new Date(2020, 3, 15);
-        const period = new TimePeriodMonth(start, end, "en_US");
+        const period = new TimePeriodMonth(start, end, "en-US");
 
         expect(toDateString(period.additionalUnits(3))).toStrictEqual([
             "Mon Jun 01 2020",

@@ -26,6 +26,7 @@ import { TimePeriodMonth } from "../../helpers/time-period-month";
 import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import ScrollingArea from "./ScrollingArea.vue";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -51,7 +52,13 @@ describe("GanttBoard", () => {
                     { id: 2, dependencies: {} },
                     { id: 3, dependencies: {} },
                 ] as Task[],
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
@@ -66,7 +73,13 @@ describe("GanttBoard", () => {
                     { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
                     { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
                 ] as Task[],
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
@@ -98,7 +111,13 @@ describe("GanttBoard", () => {
                     { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
                     { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
                 ] as Task[],
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
@@ -122,7 +141,13 @@ describe("GanttBoard", () => {
                     { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
                     { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
                 ] as Task[],
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
@@ -158,7 +183,13 @@ describe("GanttBoard", () => {
                     { id: 2, dependencies: {} },
                     { id: 3, dependencies: {} },
                 ] as Task[],
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 
@@ -180,7 +211,13 @@ describe("GanttBoard", () => {
                     { id: 2, dependencies: {} },
                     { id: 3, dependencies: {} },
                 ] as Task[],
-                locale: "en_US",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
             },
         });
 

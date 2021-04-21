@@ -18,7 +18,6 @@
  */
 
 import type { TimePeriod } from "../type";
-import { toBCP47 } from "./locale-for-intl";
 import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
 
 export class TimePeriodMonth implements TimePeriod {
@@ -26,19 +25,19 @@ export class TimePeriodMonth implements TimePeriod {
     private readonly formatter_short: Intl.DateTimeFormat;
     private readonly formatter_long: Intl.DateTimeFormat;
 
-    constructor(readonly from: Date, readonly to: Date, readonly locale: string) {
+    constructor(readonly from: Date, readonly to: Date, readonly locale_bcp47: string) {
         this.months = getMonths(from, to);
-        this.formatter_short = new Intl.DateTimeFormat(toBCP47(locale), {
+        this.formatter_short = new Intl.DateTimeFormat(locale_bcp47, {
             month: "short",
         });
-        this.formatter_long = new Intl.DateTimeFormat(toBCP47(locale), {
+        this.formatter_long = new Intl.DateTimeFormat(locale_bcp47, {
             month: "long",
             year: "numeric",
         });
     }
 
     static getDummyTimePeriod(now: Date): TimePeriod {
-        return new TimePeriodMonth(now, now, "en_US");
+        return new TimePeriodMonth(now, now, "en-US");
     }
 
     get units(): Date[] {

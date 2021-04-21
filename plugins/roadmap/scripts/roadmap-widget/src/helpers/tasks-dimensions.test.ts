@@ -30,7 +30,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en_US"
+                "en-US"
             );
 
             expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
@@ -45,7 +45,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en_US"
+                "en-US"
             );
 
             expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
@@ -60,7 +60,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en_US"
+                "en-US"
             );
 
             expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
@@ -75,7 +75,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en_US"
+                "en-US"
             );
 
             expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
@@ -93,7 +93,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date("2020-03-10T00:00:00.000Z"),
                 new Date("2020-03-30T00:00:00.000Z"),
-                "en_US"
+                "en-US"
             );
 
             expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
@@ -108,7 +108,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en_US"
+                "en-US"
             );
 
             expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
@@ -124,7 +124,7 @@ describe("tasks-dimensions", () => {
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
-                "en_US"
+                "en-US"
             );
 
             const dimensions_map = getDimensionsMap([task_1, task_2], time_period);

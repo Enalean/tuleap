@@ -29,7 +29,7 @@ describe("DependencyArrow", () => {
         const time_period = new TimePeriodMonth(
             new Date("2020-04-09T22:00:00.000Z"),
             new Date("2020-04-24T22:00:00.000Z"),
-            "en_US"
+            "en-US"
         );
 
         return shallowMount(DependencyArrow, {

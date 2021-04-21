@@ -27,6 +27,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { getLeftForDate } from "../../helpers/left-postion";
 import type { TimePeriod } from "../../type";
+import { State } from "vuex-class";
 
 @Component
 export default class TodayIndicator extends Vue {
@@ -36,8 +37,8 @@ export default class TodayIndicator extends Vue {
     @Prop({ required: true })
     readonly now!: Date;
 
-    @Prop({ required: true })
-    readonly locale!: string;
+    @State
+    readonly locale_bcp47!: string;
 
     get style(): string {
         const left = getLeftForDate(this.now, this.time_period);
@@ -45,7 +46,7 @@ export default class TodayIndicator extends Vue {
     }
 
     get title(): string {
-        const f = new Intl.DateTimeFormat(this.locale.replace("_", "-"), {
+        const f = new Intl.DateTimeFormat(this.locale_bcp47, {
             day: "numeric",
             month: "long",
             year: "numeric",
