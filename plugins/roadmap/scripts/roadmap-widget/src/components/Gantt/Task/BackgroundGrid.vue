@@ -24,6 +24,7 @@
             class="roadmap-gantt-task-background-grid-unit"
             v-for="unit in time_units"
             v-bind:key="'grid-month-' + unit.toISOString()"
+            v-bind:class="time_period.getEvenOddClass(unit)"
         />
     </div>
 </template>

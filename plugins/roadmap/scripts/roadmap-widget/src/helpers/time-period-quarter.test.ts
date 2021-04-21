@@ -114,4 +114,12 @@ describe("TimePeriodQuarter", () => {
             "Thu Apr 01 2021",
         ]);
     });
+
+    it("should return empty string for getEvenOddClass since we don't need special background alternance", () => {
+        const start = new Date(2020, 2, 15);
+        const end = new Date(2020, 3, 15);
+        const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
+
+        expect(period.getEvenOddClass()).toBe("");
+    });
 });

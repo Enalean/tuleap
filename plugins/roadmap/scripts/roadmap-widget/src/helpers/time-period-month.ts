@@ -55,6 +55,10 @@ export class TimePeriodMonth implements TimePeriod {
     additionalUnits(nb: number): Date[] {
         return getAdditionalMonths(this.months[this.months.length - 1], nb);
     }
+
+    getEvenOddClass(): string {
+        return "";
+    }
 }
 
 function getMonths(start: Date, end: Date): Date[] {

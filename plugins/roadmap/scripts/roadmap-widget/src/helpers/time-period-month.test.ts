@@ -112,4 +112,12 @@ describe("TimePeriodMonth", () => {
             "Sat Aug 01 2020",
         ]);
     });
+
+    it("should return empty string for getEvenOddClass since we don't need special background alternance", () => {
+        const start = new Date(2020, 2, 15);
+        const end = new Date(2020, 3, 15);
+        const period = new TimePeriodMonth(start, end, "en-US");
+
+        expect(period.getEvenOddClass()).toBe("");
+    });
 });
