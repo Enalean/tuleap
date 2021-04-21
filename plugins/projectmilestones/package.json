@@ -6,7 +6,8 @@
   "private": true,
   "dependencies": {
     "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
-    "d3-array": "^2.12.0",
+    "d3-array": "^2.12.1",
+    "d3-scale": "^3.3.0",
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.1.0",
     "sprintf-js": "^1.1.2",
