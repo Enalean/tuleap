@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 
 class FeatureContentRetriever implements RetrieveFeatureContent
 {

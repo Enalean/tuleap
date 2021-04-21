@@ -32,8 +32,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\PlannedProgramIncrement;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;

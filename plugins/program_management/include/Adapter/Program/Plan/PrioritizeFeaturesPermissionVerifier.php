@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
+use Tuleap\ProgramManagement\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\Project\ProjectAccessChecker;
 
-class PrioritizeFeaturesPermissionVerifier
+class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
 {
     /**
      * @var CanPrioritizeFeaturesDAO

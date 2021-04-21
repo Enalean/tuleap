@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\REST\v1;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
-
-interface RetrieveProgramIncrement
+/**
+ * @psalm-immutable
+ */
+final class ProgramIncrementContentPatchRepresentation
 {
     /**
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
+     * @var array {@type \Tuleap\ProgramManagement\REST\v1\FeatureInvolvedInChangeRepresentation}
+     * @psalm-var FeatureInvolvedInChangeRepresentation[]
      */
-    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
+    public $add;
 }

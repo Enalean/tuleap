@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
-
-interface ContentStore
+/**
+ * @psalm-immutable
+ */
+final class ContentChange
 {
     /**
-     * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
+     * @var int[]
      */
-    public function searchContent(PlannedProgramIncrement $program_increment): array;
+    public $potential_feature_ids_to_add;
+
+    /**
+     * @param int[] $potential_feature_ids_to_add
+     */
+    public function __construct(array $potential_feature_ids_to_add)
+    {
+        $this->potential_feature_ids_to_add = $potential_feature_ids_to_add;
+    }
 }

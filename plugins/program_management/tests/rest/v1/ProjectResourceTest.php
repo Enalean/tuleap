@@ -369,6 +369,17 @@ class ProjectResourceTest extends \RestBase
         $this->checkLinksArePresentInReleaseTopBacklog($team_id, [$user_story1['id']]);
     }
 
+    /**
+     * @depends testGetProgramIncrements
+     */
+    public function testManipulatePIContent(int $program_increment_id): void
+    {
+        $program_id = $this->getProgramProjectId();
+        $featureA   = $this->getArtifactWithArtifactLink('description', 'FeatureA', $program_id, 'features');
+
+        $this->patchProgramIncrementContent($program_increment_id, $featureA['id']);
+    }
+
     private function checkGetEmptyProgramIncrementBacklog(int $program_id): void
     {
         $response = $this->getResponse(
@@ -482,14 +493,31 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
+    private function patchProgramIncrementContent(int $program_increment_id, int $to_add): void
+    {
+        $feature_to_add = ['id' => $to_add];
+        $response       = $this->getResponse(
+            $this->client->patch(
+                'program_increment/' . urlencode((string) $program_increment_id) . '/content',
+                null,
+                json_encode(['add' => [$feature_to_add]], JSON_THROW_ON_ERROR)
+            )
+        );
+        self::assertEquals(501, $response->getStatusCode());
+    }
+
     /**
      * @param int[] $to_add
      * @param int[] $to_remove
      * @psalm-param null|array{ids: int[], direction: string, compared_to: int} $order
      * @return array<{add: {id: int, from_remove: ?int}[], remove: {id: int}[], order: ?{ids: int[], direction: string, compared_to: int}}>
      */
-    private function formatPatchTopBacklogParameters(array $to_add, array $to_remove, bool $remove_program_increment_link, ?array $order): array
-    {
+    private function formatPatchTopBacklogParameters(
+        array $to_add,
+        array $to_remove,
+        bool $remove_program_increment_link,
+        ?array $order
+    ): array {
         if ($order) {
             return [
                 'add'    => self::formatTopBacklogElementChange($to_add),

@@ -20,25 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement;
 
-/**
- * @psalm-immutable
- */
-final class PlannedProgramIncrement
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+
+interface RetrieveProgramIncrement
 {
     /**
-     * @var int
+     * @throws ProgramIncrementNotFoundException
+     * @throws ProgramTrackerException
      */
-    private $id;
-
-    public function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
+    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement;
 }

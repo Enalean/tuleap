@@ -20,14 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
-
-interface ContentStore
+/**
+ * @psalm-immutable
+ */
+final class PlannedProgramIncrement
 {
     /**
-     * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
+     * @var int
      */
-    public function searchContent(PlannedProgramIncrement $program_increment): array;
+    private $id;
+
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

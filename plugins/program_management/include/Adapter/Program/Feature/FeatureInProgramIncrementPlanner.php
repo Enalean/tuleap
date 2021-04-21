@@ -29,10 +29,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\PlannedProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\PlanFeatureInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 
 class FeatureInProgramIncrementPlanner implements PlanFeatureInProgramIncrement
 {

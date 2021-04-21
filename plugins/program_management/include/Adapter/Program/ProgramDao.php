@@ -24,8 +24,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Program\ProgramStore;
+use Tuleap\ProgramManagement\Program\SearchProgram;
 
-final class ProgramDao extends DataAccessObject implements ProgramStore
+final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram
 {
     public function isProjectAProgramProject(int $project_id): bool
     {
@@ -52,5 +53,20 @@ final class ProgramDao extends DataAccessObject implements ProgramStore
     {
         $sql = ['program_project_id' => $program_project_id, 'team_project_id' => $team_project_id];
         $this->getDB()->insert('plugin_program_management_team_projects', $sql);
+    }
+
+    public function searchProgramOfProgramIncrement(int $program_increment_id): ?int
+    {
+        $sql = 'SELECT teams.program_project_id
+                FROM plugin_program_management_team_projects AS teams
+                    INNER JOIN plugin_program_management_plan AS plan
+                    INNER JOIN tracker
+                        ON tracker.id = plan.program_increment_tracker_id AND tracker.group_id = teams.program_project_id
+                    INNER JOIN tracker_artifact AS program_increment ON tracker.id = program_increment.tracker_id
+                WHERE program_increment.id = ?
+                GROUP BY teams.program_project_id';
+
+        $result = $this->getDB()->cell($sql, $program_increment_id);
+        return ($result !== false) ? $result : null;
     }
 }
