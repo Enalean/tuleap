@@ -750,6 +750,13 @@ CREATE TABLE tracker_semantic_timeframe (
   end_date_field_id int(11) NULL
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_semantic_progress;
+CREATE TABLE tracker_semantic_progress (
+    tracker_id int(11) NOT NULL PRIMARY KEY,
+    total_effort_field_id int(11) NULL,
+    remaining_effort_field_id int(11) NULL
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_rule;
 CREATE TABLE IF NOT EXISTS tracker_rule(
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,

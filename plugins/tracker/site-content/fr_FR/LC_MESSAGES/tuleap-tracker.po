@@ -1335,6 +1335,9 @@ msgstr "Editer le champ"
 msgid "Editing system types is disallowed."
 msgstr "L'édition des natures de liens systèmes n'est pas autorisée."
 
+msgid "Effort based"
+msgstr "Basé sur l'effort"
+
 msgid "Email Gateway"
 msgstr "Passerelle Courriel"
 
@@ -1686,6 +1689,11 @@ msgstr "Instancier dans les nouveaux projets"
 
 msgid "Integer"
 msgstr "Entier"
+
+#, php-format
+msgid "Invalid Progress Semantic configuration for tracker %u"
+msgstr ""
+"Configuration de la sémantique Progression invalide pour l'outil de suivi %u"
 
 msgid "Invalid color tracker name"
 msgstr "Nom de couleur pour l'outil de suivi non valide"
@@ -3188,6 +3196,16 @@ msgstr "La notification n’a pas pu être enregistrée."
 
 msgid "The priority has been"
 msgstr "La priorité de cet artéfact a été"
+
+#, php-format
+msgid ""
+"The progress of artifacts is based on effort and will be computed by "
+"dividing the current value of the \"%s\" field by the current value of the "
+"\"%s\" field."
+msgstr ""
+"La progression des artéfacts est basée sur l'effort et sera calculée en "
+"divisant la valeur actuelle du champ \"%s\" par la valeur actuelle du champ "
+"\"%s\"."
 
 msgid ""
 "The provided field can't be shared with this tracker because the project it "
