@@ -36,6 +36,7 @@ export interface TimePeriod {
     formatShort(unit: Date): string;
     formatLong(unit: Date): string;
     additionalUnits(nb: number): Date[];
+    getEvenOddClass(unit: Date): string;
 }
 
 export interface TaskDimension {

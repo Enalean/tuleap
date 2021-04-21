@@ -25,6 +25,7 @@
             v-for="unit in time_units"
             v-bind:key="unit.toISOString()"
             v-bind:title="time_period.formatLong(unit)"
+            v-bind:class="time_period.getEvenOddClass(unit)"
         >
             {{ time_period.formatShort(unit) }}
         </div>

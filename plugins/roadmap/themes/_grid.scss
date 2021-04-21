@@ -21,7 +21,17 @@
     border-bottom: 1px solid var(--tlp-ui-border-normal);
     background: var(--tlp-ui-white);
 
+    &.even,
     &:nth-child(even) {
         background: var(--tlp-theme-color-dimmed-background);
+    }
+
+    &.odd,
+    &.odd:nth-child(even) {
+        background: var(--tlp-ui-white);
+    }
+
+    &.even + .even {
+        border-left: 1px solid var(--tlp-ui-white);
     }
 }

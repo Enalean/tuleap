@@ -63,6 +63,10 @@ export class TimePeriodWeek implements TimePeriod {
             }
         );
     }
+
+    getEvenOddClass(unit: Date): string {
+        return unit.getUTCMonth() % 2 === 0 ? "even" : "odd";
+    }
 }
 
 function getWeeks(start: Date, end: Date): Date[] {

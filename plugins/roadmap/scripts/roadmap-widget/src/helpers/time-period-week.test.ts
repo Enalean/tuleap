@@ -113,4 +113,20 @@ describe("time-period-week", () => {
             }
         );
     });
+
+    it("should return even/odd according to the week's month so that background alternance offers a visual grouping of weeks", () => {
+        const period = new TimePeriodWeek(
+            new Date("2020-01-01"),
+            new Date("2021-01-31"),
+            createVueGettextProviderPassthrough()
+        );
+
+        expect(period.getEvenOddClass(new Date("2020-01-01"))).toBe("even");
+        expect(period.getEvenOddClass(new Date("2020-01-08"))).toBe("even");
+        expect(period.getEvenOddClass(new Date("2020-01-15"))).toBe("even");
+        expect(period.getEvenOddClass(new Date("2020-01-22"))).toBe("even");
+        expect(period.getEvenOddClass(new Date("2020-01-29"))).toBe("even");
+        expect(period.getEvenOddClass(new Date("2020-02-05"))).toBe("odd");
+        expect(period.getEvenOddClass(new Date("2020-02-13"))).toBe("odd");
+    });
 });
