@@ -47,7 +47,6 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
     protected $nbSteps;
     protected $labels;
     protected $observed_field_id;
-    protected $observed_field;
 
     /**
      * build cumulative_flow chart properties
@@ -58,22 +57,22 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
     {
         parent::buildProperties($engine);
 
-        $form_element_factory    = Tracker_FormElementFactory::instance();
-        $this->observed_field    = $form_element_factory->getFormElementById($this->chart->getFieldId());
-        $type                    = $form_element_factory->getType($this->observed_field);
-        $this->observed_field_id = $this->observed_field->getId();
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $observed_field       = $form_element_factory->getFormElementById($this->chart->getFieldId());
+        if (! $this->isValidObservedField($observed_field) || ! $this->isValidType($form_element_factory->getType($observed_field))) {
+            throw new \Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException($this->chart->getTitle());
+        }
+        $this->observed_field_id = $observed_field->getId();
         $this->timeFiller        = [GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600 * 24,
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600 * 24 * 7,
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600 * 24 * 30.45
         ];
         $this->startDate         = $this->chart->getStartDate();
         $this->stopDate          = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
-        $this->scale             = $this->chart->getScale();
+        $this->scale             = $this->chart->getScale() ?? GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY;
         $this->nbSteps           = (int) ceil(($this->stopDate - $this->startDate) / $this->timeFiller[$this->scale]);
 
-        if ($this->isValidObservedField($this->observed_field, $type) && $this->isValidType($type)) {
-            $engine->data = $this->getCumulativeFlowData($engine);
-        }
+        $engine->data = $this->getCumulativeFlowData($engine);
 
         $engine->legend     = null;
         $engine->start_date = $this->chart->getStartDate();
@@ -182,7 +181,10 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         return array_sum($counts) === 0;
     }
 
-    protected function isValidObservedField($observed_field, $type)
+    /**
+     * @psalm-assert-if-true !null $observed_field
+     */
+    private function isValidObservedField($observed_field): bool
     {
         return $observed_field && $observed_field->userCanRead(UserManager::instance()->getCurrentUser());
     }

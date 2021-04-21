@@ -164,7 +164,7 @@ msgstr "Titre"
 #, php-format
 msgid ""
 "Unable to find the needed field to build the chart \"%1$s\". Please edit the "
-"chart and ajust settings."
+"chart and adjust settings."
 msgstr ""
 "Impossible de trouver le champ qui sert à construire le graphique \"%1$s\". "
 "Merci de corriger le problème en éditant la configuration du graphique."

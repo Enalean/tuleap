@@ -52,6 +52,23 @@ async function buildGraph(graph_node) {
         const graph_data = await getChartData(reportId, rendererId, graphId);
         graphFactory(graphId, graph_data);
     } catch (e) {
+        if (!Object.prototype.hasOwnProperty.call(e, "response")) {
+            showError(graph_node, e.message);
+            throw e;
+        }
+
+        try {
+            const json_error = await e.response.json();
+
+            if (Object.prototype.hasOwnProperty.call(json_error, "error_message")) {
+                showError(graph_node, json_error.error_message);
+                return;
+            }
+        } catch (e) {
+            showError(graph_node, e.message);
+            throw e;
+        }
+
         showError(graph_node, e.message);
         throw e;
     } finally {

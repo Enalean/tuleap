@@ -59,10 +59,4 @@ abstract class ChartDataBuilderV5
     {
         return TrackerFactory::instance()->getTrackerById($this->chart->renderer->report->tracker_id);
     }
-
-    protected function displayNoFieldError()
-    {
-        $error_message = sprintf(dgettext('tuleap-graphontrackersv5', 'Unable to find the needed field to build the chart "%1$s". Please edit the chart and ajust settings.'), $this->chart->getTitle());
-        echo "<p class='feedback_error'>$error_message</p>";
-    }
 }

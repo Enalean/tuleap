@@ -336,7 +336,11 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         return new ChartDataController(
             Tracker_ReportFactory::instance(),
             Tracker_Report_RendererFactory::instance(),
-            GraphOnTrackersV5_ChartFactory::instance()
+            GraphOnTrackersV5_ChartFactory::instance(),
+            UserManager::instance(),
+            new \Tuleap\Http\Response\JSONResponseBuilder(\Tuleap\Http\HTTPFactoryBuilder::responseFactory(), \Tuleap\Http\HTTPFactoryBuilder::streamFactory()),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new \Tuleap\Http\Server\SessionWriteCloseMiddleware()
         );
     }
 
