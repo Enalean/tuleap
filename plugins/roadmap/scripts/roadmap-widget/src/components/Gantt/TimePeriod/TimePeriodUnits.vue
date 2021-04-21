@@ -19,44 +19,29 @@
   -->
 
 <template>
-    <div>
-        <time-period-years v-bind:years="years" />
-        <time-period-units v-bind:time_period="time_period" v-bind:time_units="time_units" />
+    <div class="roadmap-gantt-timeperiod">
+        <div
+            class="roadmap-gantt-timeperiod-unit"
+            v-for="unit in time_units"
+            v-bind:key="unit.toISOString()"
+            v-bind:title="time_period.formatLong(unit)"
+        >
+            {{ time_period.formatShort(unit) }}
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { NbUnitsPerYear } from "../../../type";
 import type { TimePeriod } from "../../../type";
-import TimePeriodUnits from "./TimePeriodUnits.vue";
-import TimePeriodYears from "./TimePeriodYears.vue";
 
-@Component({
-    components: { TimePeriodYears, TimePeriodUnits },
-})
-export default class TimePeriodHeader extends Vue {
+@Component
+export default class TimePeriodUnits extends Vue {
     @Prop({ required: true })
     private readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
-    readonly nb_additional_units!: number;
-
-    get time_units(): Date[] {
-        return [
-            ...this.time_period.units,
-            ...this.time_period.additionalUnits(this.nb_additional_units),
-        ];
-    }
-
-    get years(): NbUnitsPerYear {
-        return this.time_units.reduce((nb_units_per_year, unit): NbUnitsPerYear => {
-            const year = unit.getUTCFullYear();
-            nb_units_per_year.set(year, (nb_units_per_year.get(year) || 0) + 1);
-
-            return nb_units_per_year;
-        }, new NbUnitsPerYear());
-    }
+    readonly time_units!: Date[];
 }
 </script>

@@ -20,9 +20,12 @@
 import { shallowMount } from "@vue/test-utils";
 import TimePeriodHeader from "./TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
+import TimePeriodYears from "./TimePeriodYears.vue";
+import { NbUnitsPerYear } from "../../../type";
+import TimePeriodUnits from "./TimePeriodUnits.vue";
 
 describe("TimePeriodHeader", () => {
-    it("Headers formatted months", () => {
+    it("should display years and units", () => {
         const wrapper = shallowMount(TimePeriodHeader, {
             propsData: {
                 time_period: new TimePeriodMonth(
@@ -34,24 +37,36 @@ describe("TimePeriodHeader", () => {
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-timeperiod">
-              <div title="March 2020" class="roadmap-gantt-timeperiod-unit">
-                Mar
-              </div>
-              <div title="April 2020" class="roadmap-gantt-timeperiod-unit">
-                Apr
-              </div>
-              <div title="May 2020" class="roadmap-gantt-timeperiod-unit">
-                May
-              </div>
-              <div title="June 2020" class="roadmap-gantt-timeperiod-unit">
-                Jun
-              </div>
-              <div title="July 2020" class="roadmap-gantt-timeperiod-unit">
-                Jul
-              </div>
-            </div>
-        `);
+        expect(wrapper.findComponent(TimePeriodYears).props().years).toEqual(
+            new NbUnitsPerYear([[2020, 5]])
+        );
+        expect(wrapper.findComponent(TimePeriodUnits).props().time_units).toEqual([
+            new Date("2020-03-01T00:00:00.000Z"),
+            new Date("2020-04-01T00:00:00.000Z"),
+            new Date("2020-05-01T00:00:00.000Z"),
+            new Date("2020-06-01T00:00:00.000Z"),
+            new Date("2020-07-01T00:00:00.000Z"),
+        ]);
+    });
+
+    it("should count how much units the years are spanning on", () => {
+        const wrapper = shallowMount(TimePeriodHeader, {
+            propsData: {
+                time_period: new TimePeriodMonth(
+                    new Date("2019-12-15T22:00:00.000Z"),
+                    new Date("2021-05-15T22:00:00.000Z"),
+                    "en-US"
+                ),
+                nb_additional_units: 0,
+            },
+        });
+
+        expect(wrapper.findComponent(TimePeriodYears).props().years).toEqual(
+            new NbUnitsPerYear([
+                [2019, 1],
+                [2020, 12],
+                [2021, 6],
+            ])
+        );
     });
 });
