@@ -39,22 +39,13 @@ import {
     setUpFieldDependenciesActions,
 } from "./field-dependencies-helper.js";
 import { getSelectedValues } from "./model/field-values-formatter.js";
+import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
 
 export default ArtifactModalService;
 
-ArtifactModalService.$inject = [
-    "$q",
-    "TlpModalService",
-    "TuleapArtifactModalLoading",
-    "TuleapArtifactModalTrackerTransformerService",
-];
+ArtifactModalService.$inject = ["$q", "TlpModalService", "TuleapArtifactModalLoading"];
 
-function ArtifactModalService(
-    $q,
-    TlpModalService,
-    TuleapArtifactModalLoading,
-    TuleapArtifactModalTrackerTransformerService
-) {
+function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
     const self = this;
     Object.assign(self, {
         initCreationModalModel,
@@ -156,15 +147,12 @@ function ArtifactModalService(
         var promise = $q
             .when(getTracker(tracker_id))
             .then(function (tracker) {
-                var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(
-                    tracker,
-                    creation_mode
-                );
+                const transformed_tracker = transform(tracker, creation_mode);
                 modal_model.tracker = transformed_tracker;
                 modal_model.color = transformed_tracker.color_name;
                 modal_model.title = transformed_tracker.item_name;
 
-                var initial_values = mapPrefillsToFieldValues(
+                const initial_values = mapPrefillsToFieldValues(
                     prefill_values || [],
                     modal_model.tracker.fields
                 );
@@ -207,16 +195,13 @@ function ArtifactModalService(
             ])
             .then(function (promises) {
                 const tracker = promises[0].tracker;
-                transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(
-                    tracker,
-                    creation_mode
-                );
+                transformed_tracker = transform(tracker, creation_mode);
 
                 modal_model.ordered_fields = transformed_tracker.ordered_fields;
                 modal_model.color = transformed_tracker.color_name;
 
                 const artifact_values = getArtifactFieldValues(promises[0]);
-                let tracker_with_field_values = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(
+                let tracker_with_field_values = addFieldValuesToTracker(
                     artifact_values,
                     transformed_tracker
                 );

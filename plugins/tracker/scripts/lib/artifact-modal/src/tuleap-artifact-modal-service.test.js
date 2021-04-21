@@ -28,11 +28,11 @@ import * as workflow_field_values_filter from "./model/workflow-field-values-fil
 import * as file_upload_rules_state from "./fields/file-field/file-upload-rules-state.js";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 import * as field_values_formatter from "./model/field-values-formatter.js";
+import * as tracker_transformer from "./model/tracker-transformer.js";
 
 describe("NewTuleapArtifactModalService", () => {
     let NewTuleapArtifactModalService,
         $q,
-        TuleapArtifactModalTrackerTransformerService,
         buildFormTree,
         enforceWorkflowTransitions,
         setCreationMode,
@@ -46,38 +46,23 @@ describe("NewTuleapArtifactModalService", () => {
         getSelectedValues;
 
     beforeEach(() => {
-        angular.mock.module(artifact_modal_module, function ($provide) {
-            $provide.decorator(
-                "TuleapArtifactModalTrackerTransformerService",
-                function ($delegate) {
-                    jest.spyOn($delegate, "addFieldValuesToTracker").mockImplementation(function (
-                        artifact_values,
-                        tracker
-                    ) {
-                        return tracker;
-                    });
-                    jest.spyOn($delegate, "transform").mockImplementation(function (tracker) {
-                        return tracker;
-                    });
-
-                    return $delegate;
-                }
-            );
-        });
+        angular.mock.module(artifact_modal_module);
 
         let $rootScope;
-        angular.mock.inject(function (
-            _$rootScope_,
-            _$q_,
-            _TuleapArtifactModalTrackerTransformerService_,
-            _NewTuleapArtifactModalService_
-        ) {
+        angular.mock.inject((_$rootScope_, _$q_, _NewTuleapArtifactModalService_) => {
             $rootScope = _$rootScope_;
             $q = _$q_;
-            TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
         });
 
+        jest.spyOn(tracker_transformer, "addFieldValuesToTracker").mockImplementation(
+            (artifact_values, tracker) => {
+                return tracker;
+            }
+        );
+        jest.spyOn(tracker_transformer, "transform").mockImplementation((tracker) => {
+            return tracker;
+        });
         setCreationMode = jest.spyOn(modal_creation_mode_state, "setCreationMode");
         isInCreationMode = jest.spyOn(modal_creation_mode_state, "isInCreationMode");
         getTracker = jest.spyOn(rest_service, "getTracker");
@@ -129,10 +114,7 @@ describe("NewTuleapArtifactModalService", () => {
             expect(getTracker).toHaveBeenCalledWith(tracker_id);
             expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
             expect(getSelectedValues).toHaveBeenCalledWith({}, tracker);
-            expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(
-                tracker,
-                true
-            );
+            expect(tracker_transformer.transform).toHaveBeenCalledWith(tracker, true);
             expect(buildFormTree).toHaveBeenCalledWith(tracker);
             const model = promise.$$state.value;
             expect(setCreationMode).toHaveBeenCalledWith(true);
@@ -345,13 +327,11 @@ describe("NewTuleapArtifactModalService", () => {
 
                 expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
                 expect(getSelectedValues).toHaveBeenCalledWith(expect.any(Object), tracker);
-                expect(TuleapArtifactModalTrackerTransformerService.transform).toHaveBeenCalledWith(
-                    tracker,
-                    false
+                expect(tracker_transformer.transform).toHaveBeenCalledWith(tracker, false);
+                expect(tracker_transformer.addFieldValuesToTracker).toHaveBeenCalledWith(
+                    expect.any(Object),
+                    tracker
                 );
-                expect(
-                    TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker
-                ).toHaveBeenCalledWith(expect.any(Object), tracker);
                 expect(buildFormTree).toHaveBeenCalledWith(tracker);
                 var model = promise.$$state.value;
                 expect(model.invert_followups_comments_order).toBeTruthy();
