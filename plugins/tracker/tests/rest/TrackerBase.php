@@ -40,6 +40,7 @@ class TrackerBase extends RestBase
     private const REST_XML_API_PROJECT_NAME         = 'rest-xml-api';
     private const COMPUTED_VALUE_PROJECT_NAME       = 'computed-fields-default-value';
     public const PRIVATE_COMMENT_PROJECT_NAME       = 'tracker-private-comment';
+    private const TRACKER_ALL_FIELDS_PROJECT_NAME   = 'tracker-all-fields';
 
     public const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
     public const BASE_TRACKER_SHORTNAME                           = 'base';
@@ -58,6 +59,7 @@ class TrackerBase extends RestBase
     private const REST_XML_API_TRACKER_SHORTNAME                  = 'epic';
     private const COMPUTED_VALUE_TRACKER_SHORTNAME                = 'ComputedFieldsDefaultValues';
     private const PRIVATE_COMMENT_TRACKER_SHORTNAME               = 'bug';
+    private const TRACKER_ALL_FIELDS_TRACKER_SHORTNAME            = 'all_fields';
 
     protected $tracker_administrator_project_id;
     protected $tracker_workflows_project_id;
@@ -76,10 +78,12 @@ class TrackerBase extends RestBase
     protected $tracker_workflow_transitions_tracker_id;
     protected $computed_value_tracker_id;
     protected $tracker_artifacts_tracker_id;
+    protected $tracker_all_fields_tracker_id;
 
-    protected $base_artifact_ids          = [];
-    protected $delete_artifact_ids        = [];
-    private $private_comment_artifact_ids = [];
+    protected $base_artifact_ids            = [];
+    protected $delete_artifact_ids          = [];
+    private $private_comment_artifact_ids   = [];
+    private $tracker_all_field_artifact_ids = [];
 
     /**
      * @var int
@@ -97,6 +101,10 @@ class TrackerBase extends RestBase
      * @var int
      */
     protected $private_comment_and_private_field_artifact_id;
+    /**
+     * @var int
+     */
+    protected $tracker_all_fields_artifact_id;
 
     public function setUp(): void
     {
@@ -113,6 +121,7 @@ class TrackerBase extends RestBase
         $this->rest_xml_api_project_id          = $this->getProjectId(self::REST_XML_API_PROJECT_NAME);
         $computed_value_project_id              = $this->getProjectId(self::COMPUTED_VALUE_PROJECT_NAME);
         $private_comment_project_id             = $this->getProjectId(self::PRIVATE_COMMENT_PROJECT_NAME);
+        $tracker_all_fields_project_id          = $this->getProjectId(self::TRACKER_ALL_FIELDS_PROJECT_NAME);
 
         $this->move_tracker_id                           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
         $this->base_tracker_id                           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
@@ -129,12 +138,15 @@ class TrackerBase extends RestBase
         $this->computed_value_tracker_id                 = $this->tracker_ids[$computed_value_project_id][self::COMPUTED_VALUE_TRACKER_SHORTNAME];
         $this->tracker_artifacts_tracker_id              = $this->tracker_ids[$tracker_artifacts_project_id][self::TRACKER_ARTIFACTS_TRACKER_SHORTNAME];
         $this->private_comment_tracker_id                = $this->tracker_ids[$private_comment_project_id][self::PRIVATE_COMMENT_TRACKER_SHORTNAME];
+        $this->tracker_all_fields_tracker_id             = $this->tracker_ids[$tracker_all_fields_project_id][self::TRACKER_ALL_FIELDS_TRACKER_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
         $this->getPrivateCommentArtifactIds();
+        $this->getTrackerAllFieldsArtifactIds();
         $this->private_comment_artifact_id                   = $this->private_comment_artifact_ids[1];
         $this->private_comment_and_private_field_artifact_id = $this->private_comment_artifact_ids[2];
+        $this->tracker_all_fields_artifact_id                = current($this->tracker_all_field_artifact_ids);
 
         $this->initUserId(DataBuilder::USER_TESTER_NAME);
     }
@@ -160,6 +172,14 @@ class TrackerBase extends RestBase
         $this->getArtifactIds(
             $this->delete_tracker_id,
             $this->delete_artifact_ids
+        );
+    }
+
+    private function getTrackerAllFieldsArtifactIds(): void
+    {
+        $this->getArtifactIds(
+            $this->tracker_all_fields_tracker_id,
+            $this->tracker_all_field_artifact_ids
         );
     }
 

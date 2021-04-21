@@ -431,4 +431,43 @@ final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCa
             $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
         );
     }
+    public function testItReturnsValueItSelfIfItWellFormatted(): void
+    {
+        $value = [
+            'content' => 'I am happy because I am well formatted',
+            'format' => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+        ];
+
+        self::assertEquals($value, $this->text_field->getRestFieldData($value));
+    }
+
+    public function testItReturnsTheContentAndTheUserDefaultFormatIfTheGivenFormatIsInvalid(): void
+    {
+        $content = 'I am sad because I am not well formatted :( ';
+        $value   = [
+            'content' => $content,
+            'format' => 'indignity_format',
+        ];
+
+        $this->user->shouldReceive('getPreference')->andReturn('commonmark');
+        $this->text_field->shouldReceive('getProperty')->with('default_value')->andReturn('wololo');
+
+        $rest_field_data = $this->text_field->getRestFieldData($value);
+
+        self::assertEquals(Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT, $rest_field_data["format"]);
+        self::assertEquals($content, $rest_field_data["content"]);
+    }
+
+    public function testItReturnsTheContentAndTheUserDefaultFormatIffValueIsNotAnArray(): void
+    {
+        $value =  'I am sad because :(';
+
+        $this->user->shouldReceive('getPreference')->andReturn('commonmark');
+        $this->text_field->shouldReceive('getProperty')->with('default_value')->andReturn('wololo');
+
+        $rest_field_data = $this->text_field->getRestFieldData($value);
+
+        self::assertEquals(Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT, $rest_field_data["format"]);
+        self::assertEquals($value, $rest_field_data["content"]);
+    }
 }
