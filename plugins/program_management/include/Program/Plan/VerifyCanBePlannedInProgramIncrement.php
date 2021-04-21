@@ -20,16 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\REST\v1;
+namespace Tuleap\ProgramManagement\Program\Plan;
 
-/**
- * @psalm-immutable
- */
-final class ProgramIncrementContentPatchRepresentation
+interface VerifyCanBePlannedInProgramIncrement
 {
-    /**
-     * @var array {@type \Tuleap\ProgramManagement\REST\v1\FeatureInvolvedInChangeRepresentation}{@max 1}
-     * @psalm-var FeatureInvolvedInChangeRepresentation[]
-     */
-    public $add;
+    public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool;
 }

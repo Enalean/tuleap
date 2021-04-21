@@ -25,9 +25,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Program\Plan\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\ProgramTracker;
 
-final class PlanDao extends DataAccessObject implements PlanStore
+final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement
 {
     /**
      * @throws \Throwable
@@ -156,5 +157,20 @@ final class PlanDao extends DataAccessObject implements PlanStore
     {
         $sql = "SELECT label, sub_label FROM plugin_program_management_label_program_increment WHERE program_increment_tracker_id = ?";
         return $this->getDB()->row($sql, $program_increment_tracker_id);
+    }
+
+    public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool
+    {
+        $sql  = 'SELECT NULL
+                FROM tracker_artifact AS program_increment
+                     INNER JOIN tracker AS program_increment_tracker ON program_increment_tracker.id = program_increment.tracker_id
+                     INNER JOIN tracker_artifact AS feature
+                     INNER JOIN tracker AS feature_tracker ON feature_tracker.id = feature.tracker_id
+                     INNER JOIN plugin_program_management_plan AS plan
+                ON (plan.program_increment_tracker_id = program_increment_tracker.id AND plan.plannable_tracker_id = feature_tracker.id)
+                WHERE program_increment.id = :program_increment_id AND feature.id = :feature_id';
+        $rows = $this->getDB()->run($sql, $program_increment_id, $feature_id);
+
+        return count($rows) > 0;
     }
 }

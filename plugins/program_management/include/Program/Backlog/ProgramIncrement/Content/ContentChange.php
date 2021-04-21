@@ -28,15 +28,12 @@ namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 final class ContentChange
 {
     /**
-     * @var int[]
+     * @var ?int
      */
-    public $potential_feature_ids_to_add;
+    public $potential_feature_id_to_add;
 
-    /**
-     * @param int[] $potential_feature_ids_to_add
-     */
-    public function __construct(array $potential_feature_ids_to_add)
+    public function __construct(?int $potential_feature_id_to_add)
     {
-        $this->potential_feature_ids_to_add = $potential_feature_ids_to_add;
+        $this->potential_feature_id_to_add = $potential_feature_id_to_add;
     }
 }

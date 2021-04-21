@@ -20,16 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\REST\v1;
+namespace Tuleap\ProgramManagement\Program\Plan;
 
-/**
- * @psalm-immutable
- */
-final class ProgramIncrementContentPatchRepresentation
+final class FeatureCannotBePlannedInProgramIncrementException extends \Exception
 {
-    /**
-     * @var array {@type \Tuleap\ProgramManagement\REST\v1\FeatureInvolvedInChangeRepresentation}{@max 1}
-     * @psalm-var FeatureInvolvedInChangeRepresentation[]
-     */
-    public $add;
+    public function __construct(int $feature_id, int $program_increment_id)
+    {
+        parent::__construct(
+            sprintf('Feature #%d cannot be planned in program increment #%d', $feature_id, $program_increment_id)
+        );
+    }
 }

@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilde
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
@@ -44,6 +45,7 @@ use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentChange;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentModifier;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 use Tuleap\Project\ProjectAccessChecker;
@@ -156,17 +158,17 @@ final class ProgramIncrementResource extends AuthenticatedResource
             ),
             new ProgramIncrementRetriever(\Tracker_ArtifactFactory::instance(), new ProgramIncrementsDAO()),
             new ProgramSearcher(new ProgramDao()),
+            new PlanDao(),
         );
         try {
-            $potential_feature_ids_to_add = [];
-            foreach ($patch_representation->add as $feature_involved) {
-                $potential_feature_ids_to_add[] = $feature_involved->id;
-            }
-            $modifier->modifyContent($user, $id, new ContentChange($potential_feature_ids_to_add));
+            $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
+            $modifier->modifyContent($user, $id, new ContentChange($potential_feature_id_to_add));
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (NotAllowedToPrioritizeException $e) {
             throw new RestException(403, $e->getMessage());
+        } catch (FeatureCannotBePlannedInProgramIncrementException $e) {
+            throw new RestException(400, $e->getMessage());
         }
 
         throw new RestException(501, 'This route is still under implementation');
