@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ResizeObserver } from "@juggle/resize-observer";
+import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observer";
 
 export function observePlatformBanner(platform_banner: HTMLElement, callback: () => void): void {
     const mutation_observer = new MutationObserver(callback);
     mutation_observer.observe(platform_banner, { attributes: true, attributeFilter: ["class"] });
 
-    const resize_observer = new ResizeObserver(callback);
+    const ResizeObserverImplementation = window.ResizeObserver || ResizeObserverPolyfill;
+    const resize_observer = new ResizeObserverImplementation(callback);
     resize_observer.observe(platform_banner, {
         box: "border-box",
     });

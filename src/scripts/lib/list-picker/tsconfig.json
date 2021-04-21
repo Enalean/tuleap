@@ -3,7 +3,7 @@
     "compilerOptions": {
         "lib": ["ES2016", "DOM", "DOM.Iterable"],
         "outDir": "types/",
-        "types": ["jest", "resize-observer-browser"]
+        "types": ["jest"]
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]

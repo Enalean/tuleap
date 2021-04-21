@@ -65,6 +65,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observer";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import GanttTask from "./Task/GanttTask.vue";
 import type {
@@ -135,7 +136,8 @@ export default class GanttBoard extends Vue {
     private id_prefix_for_bar_popover = getUniqueId("roadmap-gantt-bar-popover");
 
     mounted(): void {
-        this.observer = new ResizeObserver(this.adjustAdditionalUnits);
+        const ResizeObserverImplementation = window.ResizeObserver || ResizeObserverPolyfill;
+        this.observer = new ResizeObserverImplementation(this.adjustAdditionalUnits);
         this.observer.observe(this.$refs.time_period.$el);
     }
 
