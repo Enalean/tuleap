@@ -1,26 +1,12 @@
-import tuleap_artifact_modal_module from "../tuleap-artifact-modal.js";
-import angular from "angular";
-import "angular-mocks";
+import { transform, addFieldValuesToTracker } from "./tracker-transformer.js";
+import { setCatalog } from "../gettext-catalog.js";
 
-describe("TuleapArtifactModalTrackerTransformerService", function () {
-    var TrackerTransformerService;
-    beforeEach(function () {
-        angular.mock.module(tuleap_artifact_modal_module, function ($provide) {
-            $provide.value("translateFilter", function (value) {
-                return value;
-            });
-        });
+describe("TuleapArtifactModalTrackerTransformerService", () => {
+    describe("transform() -", () => {
+        describe("Given a tracker object with no create permissions fields", () => {
+            let tracker, creation_mode;
 
-        angular.mock.inject(function (_TuleapArtifactModalTrackerTransformerService_) {
-            TrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
-        });
-    });
-
-    describe("transform() -", function () {
-        describe("Given a tracker object with no create permissions fields", function () {
-            var tracker, creation_mode;
-
-            beforeEach(function () {
+            beforeEach(() => {
                 tracker = {
                     fields: [
                         { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
@@ -33,13 +19,10 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 };
             });
 
-            it("and given the modal was opened in creation mode, when I transform the tracker, then the fields with no creation perms will be omitted but the structural ones not from the transformed tracker's fields", function () {
+            it("and given the modal was opened in creation mode, when I transform the tracker, then the fields with no creation perms will be omitted but the structural ones not from the transformed tracker's fields", () => {
                 creation_mode = true;
 
-                var transformed_tracker = TrackerTransformerService.transform(
-                    tracker,
-                    creation_mode
-                );
+                const transformed_tracker = transform(tracker, creation_mode);
 
                 expect(transformed_tracker.fields).toEqual([
                     { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
@@ -49,10 +32,10 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
             });
         });
 
-        describe("Given a tracker object", function () {
-            var tracker, creation_mode;
+        describe("Given a tracker object", () => {
+            let tracker, creation_mode;
 
-            beforeEach(function () {
+            beforeEach(() => {
                 tracker = {
                     fields: [
                         { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
@@ -84,13 +67,10 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 };
             });
 
-            it("and given the modal was opened in creation mode, when I transform the tracker, then the awkward fields for creation mode (e.g. burndown, subby, subon) will be omitted from the transformed tracker's fields", function () {
+            it("and given the modal was opened in creation mode, when I transform the tracker, then the awkward fields for creation mode (e.g. burndown, subby, subon) will be omitted from the transformed tracker's fields", () => {
                 creation_mode = true;
 
-                var transformed_tracker = TrackerTransformerService.transform(
-                    tracker,
-                    creation_mode
-                );
+                const transformed_tracker = transform(tracker, creation_mode);
 
                 expect(transformed_tracker.fields).toEqual([
                     { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
@@ -109,13 +89,10 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 ]);
             });
 
-            it("and given the modal was opened in edition mode, when I transform the tracker, then the awkward fields for creation mode WILL NOT be omitted from the transformed tracker's fields", function () {
+            it("and given the modal was opened in edition mode, when I transform the tracker, then the awkward fields for creation mode WILL NOT be omitted from the transformed tracker's fields", () => {
                 creation_mode = false;
 
-                var transformed_tracker = TrackerTransformerService.transform(
-                    tracker,
-                    creation_mode
-                );
+                const transformed_tracker = transform(tracker, creation_mode);
 
                 expect(transformed_tracker.fields).toEqual([
                     { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
@@ -143,9 +120,9 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 ]);
             });
 
-            describe("containing a computed field", function () {
-                it("when I transform the tracker, then its value will be set to null by default", function () {
-                    var tracker = {
+            describe("containing a computed field", () => {
+                it("when I transform the tracker, then its value will be set to null by default", () => {
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 18,
@@ -155,15 +132,16 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         ],
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.fields[0].value).toBe(null);
                 });
             });
 
-            describe("containing a selectbox field", function () {
-                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values", function () {
-                    var tracker = {
+            describe("containing a selectbox field", () => {
+                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 41,
@@ -177,7 +155,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         ],
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.fields[0].values).toEqual([
                         { id: 100, label: "None" },
@@ -187,9 +165,10 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 });
             });
 
-            describe("containing a multiselectbox field", function () {
-                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values", function () {
-                    var tracker = {
+            describe("containing a multiselectbox field", () => {
+                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 22,
@@ -203,7 +182,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         ],
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.fields[0].values).toEqual([
                         { id: 100, label: "None" },
@@ -213,9 +192,10 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 });
             });
 
-            describe("containing list fields", function () {
-                it(", when I transform the tracker, then the field's selectable values will NOT contain any hidden value", function () {
-                    var tracker = {
+            describe("containing list fields", () => {
+                it(", when I transform the tracker, then the field's selectable values will NOT contain any hidden value", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 3,
@@ -260,7 +240,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         ],
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.fields[0].values).toEqual([
                         { id: 100, label: "None" },
@@ -281,8 +261,9 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                     ]);
                 });
 
-                it("bound to user groups, when I transform the tracker, then the values labels will be internationalized", function () {
-                    var tracker = {
+                it("bound to user groups, when I transform the tracker, then the values labels will be internationalized", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 2,
@@ -358,7 +339,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         ],
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.fields[0].values[0]).toEqual({
                         id: 100,
@@ -401,9 +382,9 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 });
             });
 
-            describe("containing an openlist field", function () {
-                it("bound to users, when I transform the tracker, then the field's values will be empty and a loading attribute will be added to the field", function () {
-                    var tracker = {
+            describe("containing an openlist field", () => {
+                it("bound to users, when I transform the tracker, then the field's values will be empty and a loading attribute will be added to the field", () => {
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 769,
@@ -424,7 +405,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         ],
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.fields).toEqual([
                         {
@@ -443,9 +424,10 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 });
             });
 
-            describe("with field dependencies", function () {
-                it("and given that a dependency existed between lists bound to user groups, when I transform the tracker, then the field dependency rules will have their source and target value ids replaced with the corresponding ugroup ids except when the value id is 100 ('none' value)", function () {
-                    var tracker = {
+            describe("with field dependencies", () => {
+                it("and given that a dependency existed between lists bound to user groups, when I transform the tracker, then the field dependency rules will have their source and target value ids replaced with the corresponding ugroup ids except when the value id is 100 ('none' value)", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 86,
@@ -522,7 +504,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         },
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    var transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.workflow.rules.lists).toEqual([
                         {
@@ -552,8 +534,9 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                     ]);
                 });
 
-                it("and given that a dependency existed between lists NOT bound to user groups, when I transform the tracker, then the field dependency rules won't be changed", function () {
-                    var tracker = {
+                it("and given that a dependency existed between lists NOT bound to user groups, when I transform the tracker, then the field dependency rules won't be changed", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
                         fields: [
                             {
                                 field_id: 67,
@@ -624,7 +607,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                         },
                     };
 
-                    var transformed_tracker = TrackerTransformerService.transform(tracker);
+                    const transformed_tracker = transform(tracker);
 
                     expect(transformed_tracker.workflow.rules.lists).toEqual(
                         tracker.workflow.rules.lists
@@ -634,9 +617,9 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
         });
     });
 
-    describe("addFieldValuesToTracker() - Given an artifact's values and given a tracker", function () {
-        it("containing a file field, and given said artifact had two attached files including an image, when I add the field's values to the tracker, then the file field will have a file_descriptions attribute containing two objects and the attached image object's display_as_image attribute will be true", function () {
-            var artifact_values = {
+    describe("addFieldValuesToTracker() - Given an artifact's values and given a tracker", () => {
+        it("containing a file field, and given said artifact had two attached files including an image, when I add the field's values to the tracker, then the file field will have a file_descriptions attribute containing two objects and the attached image object's display_as_image attribute will be true", () => {
+            const artifact_values = {
                 719: {
                     field_id: 719,
                     file_descriptions: [
@@ -651,14 +634,11 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                     ],
                 },
             };
-            var tracker = {
+            const tracker = {
                 fields: [{ field_id: 719, type: "file" }],
             };
 
-            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(
-                artifact_values,
-                tracker
-            );
+            const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [
@@ -682,14 +662,14 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
             });
         });
 
-        it("containing a perm field, and given said artifact had one granted group, when I add the field's values to the tracker, then the perm field will have an attribute is_used_by_default set to true in its values", function () {
-            var artifact_values = {
+        it("containing a perm field, and given said artifact had one granted group, when I add the field's values to the tracker, then the perm field will have an attribute is_used_by_default set to true in its values", () => {
+            const artifact_values = {
                 18: {
                     field_id: 18,
                     granted_groups: ["101_3"],
                 },
             };
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 18,
@@ -699,10 +679,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 ],
             };
 
-            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(
-                artifact_values,
-                tracker
-            );
+            const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [
@@ -717,8 +694,8 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
             });
         });
 
-        it("containing a computed field, when I add the field's values to the tracker, then the computed field will have a value attribute", function () {
-            var artifact_values = {
+        it("containing a computed field, when I add the field's values to the tracker, then the computed field will have a value attribute", () => {
+            const artifact_values = {
                 146: {
                     field_id: 146,
                     is_autocomputed: false,
@@ -726,14 +703,11 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                     value: null,
                 },
             };
-            var tracker = {
+            const tracker = {
                 fields: [{ field_id: 146, type: "computed" }],
             };
 
-            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(
-                artifact_values,
-                tracker
-            );
+            const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [
@@ -746,8 +720,8 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
             });
         });
 
-        it("when I add the field's values to the tracker, then the awkward fields for creation mode (e.g. burndown, subby, subon) will have a value attribute containing their artifact value so that these values are not submitted", function () {
-            var artifact_values = {
+        it("when I add the field's values to the tracker, then the awkward fields for creation mode (e.g. burndown, subby, subon) will have a value attribute containing their artifact value so that these values are not submitted", () => {
+            const artifact_values = {
                 1: {
                     field_id: 1,
                     value: "beliefful",
@@ -804,7 +778,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                     },
                 },
             };
-            var tracker = {
+            const tracker = {
                 fields: [
                     { field_id: 1, type: "string" },
                     { field_id: 2, type: "sb" },
@@ -820,10 +794,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function () {
                 ],
             };
 
-            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(
-                artifact_values,
-                tracker
-            );
+            const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [
