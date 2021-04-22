@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
@@ -64,9 +64,9 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      */
     private $pending_artifact_creation_store;
     /**
-     * @var FeatureInProgramIncrementPlanner
+     * @var UserStoriesInMirroredMilestonesPlanner
      */
-    private $feature_planner;
+    private $user_stories_planner;
 
     public function __construct(
         BuildFieldValues $changeset_collection_adapter,
@@ -75,7 +75,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        FeatureInProgramIncrementPlanner $feature_planner
+        UserStoriesInMirroredMilestonesPlanner $user_stories_planner
     ) {
         $this->changeset_collection_adapter    = $changeset_collection_adapter;
         $this->projects_collection_builder     = $projects_collection_builder;
@@ -83,7 +83,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $this->program_increment_creator       = $program_increment_creator;
         $this->logger                          = $logger;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
-        $this->feature_planner                 = $feature_planner;
+        $this->user_stories_planner            = $user_stories_planner;
     }
 
     public function createProgramIncrements(ReplicationData $replication_data): void
@@ -129,6 +129,6 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
             $replication_data->getUser()
         );
 
-        $this->feature_planner->plan($program_increment_changed);
+        $this->user_stories_planner->plan($program_increment_changed);
     }
 }

@@ -15,18 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-interface PlanFeatureInProgramIncrement
+final class FeatureHasPlannedUserStoryException extends \Exception
 {
-    /**
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
-     */
-    public function plan(ProgramIncrementChanged $feature_to_plan): void;
+    public function __construct(int $feature_id)
+    {
+        parent::__construct("The feature with id#$feature_id cannot be unplanned because some linked user stories are planned in Teams program.");
+    }
 }

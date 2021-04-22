@@ -29,7 +29,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
@@ -59,9 +59,9 @@ final class CreateProgramIncrementsTaskTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FeatureInProgramIncrementPlanner
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserStoriesInMirroredMilestonesPlanner
      */
-    private $feature_planner;
+    private $user_stories_planner;
 
     /**
      * @var Project
@@ -123,7 +123,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);
         $this->logger                          = \Mockery::mock(LoggerInterface::class);
         $this->pending_artifact_creation_store = \Mockery::mock(PendingArtifactCreationStore::class);
-        $this->feature_planner                 = Mockery::mock(FeatureInProgramIncrementPlanner::class);
+        $this->user_stories_planner            = Mockery::mock(UserStoriesInMirroredMilestonesPlanner::class);
 
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,
@@ -132,7 +132,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
             $this->mirror_creator,
             $this->logger,
             $this->pending_artifact_creation_store,
-            $this->feature_planner
+            $this->user_stories_planner
         );
 
         $this->project = new Project(['group_id' => 101, 'unix_group_name' => 'test', 'group_name' => 'My project']);
@@ -160,7 +160,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
                 [(int) $replication_data->getArtifact()->getId(), (int) $replication_data->getUser()->getId()]
             );
 
-        $this->feature_planner->shouldReceive('plan')->once();
+        $this->user_stories_planner->shouldReceive('plan')->once();
 
         $this->task->createProgramIncrements($replication_data);
     }
@@ -174,7 +174,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
         $this->logger->shouldReceive('error')->once();
 
-        $this->feature_planner->shouldReceive('plan')->never();
+        $this->user_stories_planner->shouldReceive('plan')->never();
 
         $this->task->createProgramIncrements($replication_data);
     }

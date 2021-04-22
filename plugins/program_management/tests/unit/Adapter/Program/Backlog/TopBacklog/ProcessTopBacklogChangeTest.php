@@ -29,9 +29,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramInc
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
@@ -58,7 +59,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
      */
     private $permissions_verifier;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsExplicitTopBacklogDAO
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TopBacklogStore
      */
     private $dao;
     /**
@@ -78,7 +79,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
     {
         $this->artifact_factory      = \Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->permissions_verifier  = \Mockery::mock(PrioritizeFeaturesPermissionVerifier::class);
-        $this->dao                   = \Mockery::mock(ArtifactsExplicitTopBacklogDAO::class);
+        $this->dao                   = \Mockery::mock(TopBacklogStore::class);
         $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
         $this->program_increment_dao = \Mockery::mock(ProgramIncrementsDAO::class);
         $this->feature_orderer       = \Mockery::mock(FeaturesRankOrderer::class);

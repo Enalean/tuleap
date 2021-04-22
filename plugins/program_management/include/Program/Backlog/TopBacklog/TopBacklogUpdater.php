@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
 use Tracker_NoArtifactLinkFieldException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Program;
 
 class TopBacklogUpdater

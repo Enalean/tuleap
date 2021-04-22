@@ -30,11 +30,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FieldData;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\PlanFeatureInProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\PlanUserStoriesInMirroredMilestones;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 
-class FeatureInProgramIncrementPlanner implements PlanFeatureInProgramIncrement
+class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirroredMilestones
 {
     /**
      * @var DBTransactionExecutor
@@ -87,12 +87,12 @@ class FeatureInProgramIncrementPlanner implements PlanFeatureInProgramIncrement
      * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException
      * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
      */
-    public function plan(ProgramIncrementChanged $feature_to_plan): void
+    public function plan(ProgramIncrementChanged $program_increment_changed): void
     {
         $this->logger->debug("Check if we need to plan/unplan items in mirrored releases.");
-        $program_increment_id         = $feature_to_plan->program_increment_id;
-        $user                         = $feature_to_plan->user;
-        $program_increment_tracker_id = $feature_to_plan->tracker_id;
+        $program_increment_id         = $program_increment_changed->program_increment_id;
+        $user                         = $program_increment_changed->user;
+        $program_increment_tracker_id = $program_increment_changed->tracker_id;
 
         $potential_feature_to_link = $this->content_dao->searchContent(
             new PlannedProgramIncrement($program_increment_id)

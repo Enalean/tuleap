@@ -28,7 +28,7 @@ use Psr\Log\Test\TestLogger;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
@@ -43,7 +43,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class FeatureInProgramIncrementPlannerTest extends TestCase
+final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -58,7 +58,7 @@ final class FeatureInProgramIncrementPlannerTest extends TestCase
     private $content_dao;
 
     /**
-     * @var FeatureInProgramIncrementPlanner
+     * @var UserStoriesInMirroredMilestonesPlanner
      */
     private $planner;
 
@@ -96,7 +96,7 @@ final class FeatureInProgramIncrementPlannerTest extends TestCase
         $this->content_dao                          = \Mockery::mock(ContentDao::class);
         $this->features_linked_to_milestone_builder = \Mockery::mock(UserStoriesLinkedToMilestoneBuilder::class);
 
-        $this->planner = new FeatureInProgramIncrementPlanner(
+        $this->planner = new UserStoriesInMirroredMilestonesPlanner(
             $db_transaction_executor,
             $this->feature_to_plan_builder,
             $this->tracker_artifact_factory,
