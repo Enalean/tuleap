@@ -29,6 +29,7 @@
         v-bind:data-swimlane-id="swimlane.card.id"
         v-bind:data-column-id="column.id"
         v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
+        data-navigation="cell"
     >
         <slot class="content" v-if="!column.is_collapsed"></slot>
         <add-card

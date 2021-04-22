@@ -38,6 +38,7 @@
             v-bind:readonly="readonly"
             ref="textarea"
             data-test="label-editor"
+            data-navigation="add-form"
         ></textarea>
     </div>
 </template>

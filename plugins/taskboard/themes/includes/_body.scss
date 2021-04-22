@@ -36,6 +36,11 @@
     &:last-child > .taskboard-cell {
         border-bottom: 0;
     }
+
+    &:focus {
+        z-index: 10;
+        box-shadow: var(--tlp-shadow-focus);
+    }
 }
 
 .taskboard-swimlane-collapsed {

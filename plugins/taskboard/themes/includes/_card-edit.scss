@@ -217,6 +217,10 @@
     margin: calc(var(--tlp-small-spacing) - 5px) 0 0;
 }
 
+.taskboard-child:focus > .taskboard-card {
+    outline: solid var(--tlp-theme-color) 2px;
+}
+
 .taskboard-card-cancel-button {
     margin: 5px 0 0;
 }

@@ -23,6 +23,7 @@
         class="taskboard-cell taskboard-cell-swimlane-header"
         v-bind:class="taskboard_cell_swimlane_header_classes"
         v-if="backlog_items_have_children"
+        data-navigation="cell"
     >
         <slot name="toggle">
             <button

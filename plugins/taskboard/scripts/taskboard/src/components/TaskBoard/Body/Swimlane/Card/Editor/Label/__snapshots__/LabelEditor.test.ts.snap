@@ -12,6 +12,7 @@ exports[`LabelEditor Displays a texteara with its mirror to edit the label 1`] =
   <textarea
     aria-label="Set card label"
     class="tlp-textarea taskboard-card-label-input"
+    data-navigation="add-form"
     data-test="label-editor"
     placeholder="Card label…"
     rows="1"

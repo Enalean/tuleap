@@ -28,6 +28,8 @@
             v-bind:data-card-id="swimlane.card.id"
             v-bind:data-tracker-id="swimlane.card.tracker_id"
             v-bind:draggable="!swimlane.card.is_in_edit_mode"
+            tabindex="0"
+            data-navigation="card"
         />
     </drop-container-cell>
 </template>

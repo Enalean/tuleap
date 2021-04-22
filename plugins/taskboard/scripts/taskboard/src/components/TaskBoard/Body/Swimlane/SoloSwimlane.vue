@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <div class="taskboard-swimlane" v-if="should_solo_card_be_displayed">
+    <div
+        class="taskboard-swimlane"
+        data-navigation="swimlane"
+        tabindex="0"
+        v-if="should_solo_card_be_displayed"
+    >
         <swimlane-header v-bind:swimlane="swimlane" />
         <solo-swimlane-cell
             v-for="col of columns"

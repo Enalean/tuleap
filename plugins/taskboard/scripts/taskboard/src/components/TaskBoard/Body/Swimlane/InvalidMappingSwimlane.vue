@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="taskboard-swimlane">
+    <div class="taskboard-swimlane" data-navigation="swimlane" tabindex="0">
         <parent-cell v-bind:swimlane="swimlane" />
         <invalid-mapping-cell
             v-for="col of columns"

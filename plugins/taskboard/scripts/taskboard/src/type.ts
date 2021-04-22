@@ -128,3 +128,20 @@ export const TaskboardEvent = {
     SAVE_CARD_EDITION: "save-card-edition",
     ESC_KEY_PRESSED: "esc-key-pressed",
 };
+
+export type ArrowKey = typeof DOWN | typeof UP | typeof RIGHT | typeof LEFT;
+export const DOWN = "DOWN";
+export const UP = "UP";
+export const RIGHT = "RIGHT";
+export const LEFT = "LEFT";
+
+export interface GettextProvider {
+    $gettext: (msgid: string) => string;
+    $pgettext: (context: string, msgid: string) => string;
+}
+
+export type NavigationElement = typeof SWIMLANE | typeof CARD | typeof ADDFORM | typeof CELL;
+export const SWIMLANE = "swimlane";
+export const CARD = "card";
+export const ADDFORM = "add-form";
+export const CELL = "cell";
