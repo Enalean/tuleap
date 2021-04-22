@@ -23,11 +23,86 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tracker;
+use Tracker_FormElement_Field_Numeric;
+use Tuleap\Tracker\Semantic\Progress\Exceptions\SemanticProgressBrokenConfigurationException;
 
 class SemanticProgressBuilder
 {
+    /**
+     * @var SemanticProgressDao
+     */
+    private $dao;
+    /**
+     * @var \Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
+    public function __construct(
+        SemanticProgressDao $dao,
+        \Tracker_FormElementFactory $form_element_factory
+    ) {
+        $this->dao                  = $dao;
+        $this->form_element_factory = $form_element_factory;
+    }
+
+    /**
+     * @throws SemanticProgressBrokenConfigurationException
+     */
     public function getSemantic(Tracker $tracker): SemanticProgress
     {
-        return new SemanticProgress($tracker);
+        $row = $this->dao->searchByTrackerId($tracker->getId());
+        if ($row === null) {
+            return new SemanticProgress($tracker, null);
+        }
+
+        $total_effort_field_id     = $row['total_effort_field_id'];
+        $remaining_effort_field_id = $row['remaining_effort_field_id'];
+
+        if ($total_effort_field_id !== null && $remaining_effort_field_id !== null) {
+            return $this->buildEffortBasedSemanticProgress(
+                $tracker,
+                $total_effort_field_id,
+                $remaining_effort_field_id
+            );
+        }
+
+        return new SemanticProgress($tracker, null);
+    }
+
+    private function buildEffortBasedSemanticProgress(
+        Tracker $tracker,
+        int $total_effort_field_id,
+        int $remaining_effort_field_id
+    ): SemanticProgress {
+        $total_effort_field = $this->form_element_factory->getUsedFieldByIdAndType(
+            $tracker,
+            $total_effort_field_id,
+            ['int', 'float', 'computed']
+        );
+
+        $remaining_effort_field = $this->form_element_factory->getUsedFieldByIdAndType(
+            $tracker,
+            $remaining_effort_field_id,
+            ['int', 'float', 'computed']
+        );
+
+        if ($total_effort_field === null || $remaining_effort_field === null) {
+            throw new SemanticProgressBrokenConfigurationException($tracker);
+        }
+
+        if (
+            $total_effort_field instanceof Tracker_FormElement_Field_Numeric &&
+            $remaining_effort_field instanceof Tracker_FormElement_Field_Numeric
+        ) {
+            return new SemanticProgress(
+                $tracker,
+                new MethodBasedOnEffort(
+                    $total_effort_field,
+                    $remaining_effort_field
+                )
+            );
+        }
+
+        throw new SemanticProgressBrokenConfigurationException($tracker);
     }
 }

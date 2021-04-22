@@ -36,10 +36,17 @@ use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 class SemanticProgress extends \Tracker_Semantic
 {
     public const NAME = 'progress';
+    /**
+     * @var IComputeProgression | null
+     */
+    private $method;
 
-    public function __construct(Tracker $tracker)
-    {
+    public function __construct(
+        Tracker $tracker,
+        ?IComputeProgression $method
+    ) {
         parent::__construct($tracker);
+        $this->method = $method;
     }
 
     public function getShortName(): string
@@ -62,11 +69,12 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function display(): void
     {
-        $is_semantic_defined = false;
+        $is_semantic_defined = $this->isDefined();
         $renderer            = $this->getTemplateRenderer();
         $presenter           = new SemanticProgressIntroductionPresenter(
             $this->getSemanticUsage(),
-            $is_semantic_defined
+            $is_semantic_defined,
+            $this->isDefined() ? $this->method->getCurrentConfigurationDescription() : ''
         );
 
         $renderer->renderToPage(
@@ -115,12 +123,29 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
     {
-        return false;
+        if (! $this->isDefined()) {
+            return false;
+        }
+
+        return $this->method->isFieldUsedInComputation($field);
     }
 
     public function save(): bool
     {
         return false;
+    }
+
+    /**
+     * @psalm-assert-if-true !null $this->method
+     */
+    public function isDefined(): bool
+    {
+        return $this->method !== null;
+    }
+
+    public function getComputationMethod(): ?IComputeProgression
+    {
+        return $this->method;
     }
 
     private function getSemanticUsage(): string

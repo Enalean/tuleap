@@ -20,31 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Progress\Administration;
+namespace Tuleap\Tracker\Semantic\Progress\Exceptions;
 
-
-class SemanticProgressIntroductionPresenter
+class SemanticProgressBrokenConfigurationException extends \LogicException
 {
-    /**
-     * @var string
-     */
-    public $semantic_usages_description;
-    /**
-     * @var bool
-     */
-    public $is_semantic_defined;
-    /**
-     * @var string
-     */
-    public $current_configuration_description;
-
-    public function __construct(
-        string $semantic_usages_description,
-        bool $is_semantic_defined,
-        string $current_configuration_description
-    ) {
-        $this->semantic_usages_description       = $semantic_usages_description;
-        $this->is_semantic_defined               = $is_semantic_defined;
-        $this->current_configuration_description = $current_configuration_description;
+    public function __construct(\Tracker $tracker)
+    {
+        parent::__construct(
+            sprintf(
+                dgettext('tuleap-tracker', 'Invalid Progress Semantic configuration for tracker %u'),
+                $tracker->getId()
+            )
+        );
     }
 }
