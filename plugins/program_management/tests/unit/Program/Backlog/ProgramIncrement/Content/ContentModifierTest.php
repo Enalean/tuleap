@@ -26,6 +26,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
+use Tuleap\ProgramManagement\Program\Plan\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
@@ -39,13 +41,29 @@ final class ContentModifierTest extends TestCase
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(false),
             $this->getStubProgramIncrementRetriever(),
-            $this->getStubProgramSearcher()
+            $this->getStubProgramSearcher(),
+            $this->getStubPlanVerifier()
         );
 
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectException(NotAllowedToPrioritizeException::class);
-        $modifier->modifyContent($user, 12, new ContentChange([201]));
+        $modifier->modifyContent($user, 12, new ContentChange(201));
+    }
+
+    public function testItThrowsWhenFeatureToAddCannotBePlanned(): void
+    {
+        $modifier = new ContentModifier(
+            $this->getStubPermissionVerifier(),
+            $this->getStubProgramIncrementRetriever(),
+            $this->getStubProgramSearcher(),
+            $this->getStubPlanVerifier(false)
+        );
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
+        $modifier->modifyContent($user, 12, new ContentChange(404));
     }
 
     public function testItSucceeds(): void
@@ -53,13 +71,29 @@ final class ContentModifierTest extends TestCase
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
             $this->getStubProgramIncrementRetriever(),
-            $this->getStubProgramSearcher()
+            $this->getStubProgramSearcher(),
+            $this->getStubPlanVerifier()
         );
 
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectNotToPerformAssertions();
-        $modifier->modifyContent($user, 12, new ContentChange([201]));
+        $modifier->modifyContent($user, 12, new ContentChange(201));
+    }
+
+    public function testItSucceedsWhenThereIsNoFeatureToAdd(): void
+    {
+        $modifier = new ContentModifier(
+            $this->getStubPermissionVerifier(),
+            $this->getStubProgramIncrementRetriever(),
+            $this->getStubProgramSearcher(),
+            $this->getStubPlanVerifier()
+        );
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->expectNotToPerformAssertions();
+        $modifier->modifyContent($user, 12, new ContentChange(null));
     }
 
     private function getStubPermissionVerifier($is_authorized = true): VerifyPrioritizeFeaturesPermission
@@ -98,6 +132,24 @@ final class ContentModifierTest extends TestCase
             public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement
             {
                 return new PlannedProgramIncrement($program_increment_id);
+            }
+        };
+    }
+
+    private function getStubPlanVerifier($can_plan = true): VerifyCanBePlannedInProgramIncrement
+    {
+        return new class ($can_plan) implements VerifyCanBePlannedInProgramIncrement {
+            /** @var bool */
+            private $can_plan;
+
+            public function __construct(bool $can_plan)
+            {
+                $this->can_plan = $can_plan;
+            }
+
+            public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool
+            {
+                return $this->can_plan;
             }
         };
     }

@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
+use Tuleap\ProgramManagement\Program\Plan\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 
@@ -41,15 +44,21 @@ final class ContentModifier implements ModifyContent
      * @var ProgramSearcher
      */
     private $program_searcher;
+    /**
+     * @var VerifyCanBePlannedInProgramIncrement
+     */
+    private $can_be_planned_verifier;
 
     public function __construct(
         VerifyPrioritizeFeaturesPermission $permission_verifier,
         RetrieveProgramIncrement $program_increment_retriever,
-        ProgramSearcher $program_searcher
+        ProgramSearcher $program_searcher,
+        VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier
     ) {
         $this->permission_verifier         = $permission_verifier;
         $this->program_increment_retriever = $program_increment_retriever;
         $this->program_searcher            = $program_searcher;
+        $this->can_be_planned_verifier     = $can_be_planned_verifier;
     }
 
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void
@@ -59,6 +68,28 @@ final class ContentModifier implements ModifyContent
         $has_permission    = $this->permission_verifier->canUserPrioritizeFeatures($program, $user);
         if (! $has_permission) {
             throw new NotAllowedToPrioritizeException((int) $user->getId(), $program_increment->getId());
+        }
+        if ($content_change->potential_feature_id_to_add !== null) {
+            $this->planFeature($content_change->potential_feature_id_to_add, $program_increment);
+        }
+    }
+
+    /**
+     * @throws FeatureCannotBePlannedInProgramIncrementException
+     */
+    private function planFeature(
+        int $potential_feature_id_to_add,
+        PlannedProgramIncrement $program_increment
+    ): void {
+        $can_be_planned = $this->can_be_planned_verifier->canBePlannedInProgramIncrement(
+            $potential_feature_id_to_add,
+            $program_increment->getId()
+        );
+        if (! $can_be_planned) {
+            throw new FeatureCannotBePlannedInProgramIncrementException(
+                $potential_feature_id_to_add,
+                $program_increment->getId()
+            );
         }
     }
 }

@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 
 /**
@@ -37,6 +38,7 @@ interface ModifyContent
      * @throws ProgramIncrementNotFoundException
      * @throws ProgramNotFoundException
      * @throws NotAllowedToPrioritizeException
+     * @throws FeatureCannotBePlannedInProgramIncrementException
      */
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void;
 }
