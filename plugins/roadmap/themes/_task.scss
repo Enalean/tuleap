@@ -45,14 +45,22 @@
     width: roadmap-variables.$time-unit-width;
 }
 
-.roadmap-gantt-task-bar-milestone,
-.roadmap-gantt-task-bar {
+.roadmap-gantt-task-bar-milestone-container,
+.roadmap-gantt-task-bar-container {
     position: absolute;
     z-index: roadmap-variables.$z-index-bars;
 }
 
-.roadmap-gantt-task-bar {
+.roadmap-gantt-task-bar-container {
+    display: flex;
     top: math.floor((roadmap-variables.$task-height - roadmap-variables.$task-bar-height) / 2);
+    align-items: center;
+    height: roadmap-variables.$task-bar-height;
+}
+
+.roadmap-gantt-task-bar {
+    display: flex;
+    align-items: center;
     min-width: roadmap-variables.$task-bar-min-width;
     height: roadmap-variables.$task-bar-height;
     padding: 1px;
@@ -60,17 +68,6 @@
     border: 1px solid var(--tlp-ui-dimmed);
     border-radius: 3px;
     background: var(--tlp-ui-dimmed);
-
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-        &.roadmap-gantt-task-bar-#{$color-name} {
-            border-color: map-get($colors, 'primary');
-            background: map-get($colors, 'secondary');
-
-            > .roadmap-gantt-task-bar-progress {
-                background: map-get($colors, 'primary');
-            }
-        }
-    }
 
     &.tlp-skeleton-text {
         border: 0;
@@ -87,18 +84,52 @@
 }
 
 .roadmap-gantt-task-bar-progress {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     width: 100%;
     height: 100%;
     border-radius: 2px;
 }
 
-.roadmap-gantt-task-bar-milestone {
-    top: math.round((roadmap-variables.$task-height - roadmap-variables.$task-milestone-height) / 2);
+.roadmap-gantt-task-bar-progress-text-outside-bar,
+.roadmap-gantt-task-bar-progress-text-inside-progress-bar,
+.roadmap-gantt-task-bar-progress-text-outside-progress-bar {
+    margin: 0 2px;
+    font-size: .625rem;
+    font-weight: 600;
+    line-height: .75rem;
+    font-variant-numeric: tabular-nums;
+}
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-        &.roadmap-gantt-task-bar-#{$color-name} {
+.roadmap-gantt-task-bar-progress-text-inside-progress-bar {
+    color: var(--tlp-ui-white);
+}
+
+.roadmap-gantt-task-bar-milestone-container {
+    display: flex;
+    top: math.round((roadmap-variables.$task-height - roadmap-variables.$task-milestone-height) / 2);
+    align-items: center;
+}
+
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    .roadmap-gantt-task-bar-container-#{$color-name} {
+        > .roadmap-gantt-task-bar {
+            border-color: map-get($colors, 'border');
+            background: map-get($colors, 'secondary');
+
+            > .roadmap-gantt-task-bar-progress {
+                background: map-get($colors, 'primary');
+            }
+
+            > .roadmap-gantt-task-bar-progress-text-outside-progress-bar {
+                color: map-get($colors, 'text');
+            }
+        }
+
+        > .roadmap-gantt-task-bar-milestone {
             > .roadmap-gantt-task-bar-milestone-border {
-                stroke: map-get($colors, 'primary');
+                stroke: map-get($colors, 'border');
                 fill: map-get($colors, 'secondary');
             }
 
@@ -106,6 +137,10 @@
                 stroke: map-get($colors, 'primary');
                 fill: map-get($colors, 'primary');
             }
+        }
+
+        > .roadmap-gantt-task-bar-progress-text-outside-bar {
+            color: map-get($colors, 'text');
         }
     }
 }

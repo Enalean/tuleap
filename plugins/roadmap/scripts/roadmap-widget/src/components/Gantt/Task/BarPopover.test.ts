@@ -33,6 +33,7 @@ describe("BarPopover", () => {
                     title: "Create button",
                     start: new Date("2020-01-12T15:00:00.000Z"),
                     end: new Date("2020-01-30T15:00:00.000Z"),
+                    progress: null,
                 } as Task,
             },
             mocks: {
@@ -48,6 +49,31 @@ describe("BarPopover", () => {
         expect(wrapper.text()).toContain("Create button");
         expect(wrapper.text()).toContain("January 12, 2020");
         expect(wrapper.text()).toContain("January 30, 2020");
+        expect(wrapper.find("[data-test=progress]").exists()).toBeFalsy();
+    });
+
+    it("should display the progress", async () => {
+        const wrapper = shallowMount(BarPopover, {
+            localVue: await createRoadmapLocalVue(),
+            propsData: {
+                task: {
+                    xref: "art #123",
+                    title: "Create button",
+                    start: new Date("2020-01-12T15:00:00.000Z"),
+                    end: new Date("2020-01-30T15:00:00.000Z"),
+                    progress: 0.42123,
+                } as Task,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.find("[data-test=progress]").text()).toContain("42%");
     });
 
     it("should display undefined if no start date", async () => {
@@ -59,6 +85,7 @@ describe("BarPopover", () => {
                     title: "Create button",
                     start: null,
                     end: new Date("2020-01-30T15:00:00.000Z"),
+                    progress: null,
                 } as Task,
             },
             mocks: {
@@ -83,6 +110,7 @@ describe("BarPopover", () => {
                     title: "Create button",
                     start: new Date("2020-01-12T15:00:00.000Z"),
                     end: null,
+                    progress: null,
                 } as Task,
             },
             mocks: {

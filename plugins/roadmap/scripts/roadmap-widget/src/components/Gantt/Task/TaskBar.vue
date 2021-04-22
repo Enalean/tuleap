@@ -23,14 +23,45 @@
         v-if="is_milestone"
         v-bind:task="task"
         v-bind:left="left"
+        v-bind:percentage="percentage"
         v-bind:class="classes"
     />
-    <div class="roadmap-gantt-task-bar" v-bind:class="classes" v-bind:style="style" v-else>
-        <div
-            class="roadmap-gantt-task-bar-progress"
-            data-test="progress"
-            v-bind:style="progress_style"
-        ></div>
+    <div
+        class="roadmap-gantt-task-bar-container"
+        v-bind:class="classes"
+        v-bind:style="style_container"
+        data-test="container"
+        v-else
+    >
+        <div class="roadmap-gantt-task-bar" v-bind:style="style_bar" data-test="bar">
+            <div
+                class="roadmap-gantt-task-bar-progress"
+                data-test="progress"
+                v-bind:style="progress_style"
+            >
+                <span
+                    class="roadmap-gantt-task-bar-progress-text-inside-progress-bar"
+                    v-if="is_text_displayed_inside_progress_bar"
+                    data-test="percentage"
+                >
+                    {{ percentage }}
+                </span>
+            </div>
+            <span
+                class="roadmap-gantt-task-bar-progress-text-outside-progress-bar"
+                v-if="is_text_displayed_outside_progress_bar"
+                data-test="percentage"
+            >
+                {{ percentage }}
+            </span>
+        </div>
+        <span
+            class="roadmap-gantt-task-bar-progress-text-outside-bar"
+            v-if="is_text_displayed_outside_bar"
+            data-test="percentage"
+        >
+            {{ percentage }}
+        </span>
     </div>
 </template>
 
@@ -39,6 +70,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
 import MilestoneBar from "./MilestoneBar.vue";
+
 @Component({
     components: { MilestoneBar },
 })
@@ -52,14 +84,28 @@ export default class TaskBar extends Vue {
     @Prop({ required: true })
     readonly task!: Task;
 
-    get classes(): string[] {
-        const classes = ["roadmap-gantt-task-bar-" + this.task.color_name];
+    @Prop({ required: true })
+    readonly percentage!: string;
 
-        return classes;
+    @Prop({ required: true })
+    readonly is_text_displayed_inside_progress_bar!: boolean;
+
+    @Prop({ required: true })
+    readonly is_text_displayed_outside_progress_bar!: boolean;
+
+    @Prop({ required: true })
+    readonly is_text_displayed_outside_bar!: boolean;
+
+    get classes(): string {
+        return "roadmap-gantt-task-bar-container-" + this.task.color_name;
     }
 
-    get style(): string {
-        return `left: ${this.left}px; width: ${this.width}px;`;
+    get style_container(): string {
+        return `left: ${this.left}px;`;
+    }
+
+    get style_bar(): string {
+        return `width: ${this.width}px;`;
     }
 
     get is_milestone(): boolean {

@@ -25,7 +25,13 @@ import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
 
 describe("DependencyArrow", () => {
-    function mountComponent(task: Task, dependency: Task, tasks: Task[]): Wrapper<DependencyArrow> {
+    function mountComponent(
+        task: Task,
+        dependency: Task,
+        tasks: Task[],
+        percentage: string,
+        is_text_displayed_outside_bar: boolean
+    ): Wrapper<DependencyArrow> {
         const time_period = new TimePeriodMonth(
             new Date("2020-04-09T22:00:00.000Z"),
             new Date("2020-04-24T22:00:00.000Z"),
@@ -37,6 +43,8 @@ describe("DependencyArrow", () => {
                 task,
                 dependency,
                 dimensions_map: getDimensionsMap(tasks, time_period),
+                percentage,
+                is_text_displayed_outside_bar,
             },
         });
     }
@@ -53,7 +61,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_1, task_2, [task_1, task_2]);
+        const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "", false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: 3px; height: 74px; width: 47px;">
@@ -78,7 +86,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_2, task_1, [task_2, task_1]);
+        const wrapper = mountComponent(task_2, task_1, [task_2, task_1], "", false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: 3px; height: 74px; width: 87px;">
@@ -103,7 +111,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_2, task_1, [task_1, task_2]);
+        const wrapper = mountComponent(task_2, task_1, [task_1, task_2], "", false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: -37px; height: 74px; width: 87px;">
@@ -128,7 +136,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_1, task_2, [task_2, task_1]);
+        const wrapper = mountComponent(task_1, task_2, [task_2, task_1], "", false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: -37px; height: 74px; width: 47px;">
@@ -139,5 +147,25 @@ describe("DependencyArrow", () => {
                         L22 25" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
+    });
+
+    it("Starts after the progress percentage text if it is displayed outside of the bar", async () => {
+        const task_1 = {
+            id: 1,
+            start: new Date("2020-04-09T22:00:00.000Z"),
+            end: new Date("2020-04-14T22:00:00.000Z"),
+        } as Task;
+        const task_2 = {
+            id: 2,
+            start: new Date("2020-04-19T22:00:00.000Z"),
+            end: new Date("2020-04-24T22:00:00.000Z"),
+        } as Task;
+
+        const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false);
+
+        expect(wrapper.element.style.left).toBe("33px");
+
+        await wrapper.setProps({ is_text_displayed_outside_bar: true });
+        expect(wrapper.element.style.left).toBe("46px");
     });
 });

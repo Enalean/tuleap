@@ -30,11 +30,17 @@
             v-bind:task="task"
             v-bind:dependency="dependency"
             v-bind:dimensions_map="dimensions_map"
+            v-bind:percentage="percentage"
+            v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
         />
         <task-bar
             v-bind:task="task"
             v-bind:left="dimensions.left"
             v-bind:width="dimensions.width"
+            v-bind:percentage="percentage"
+            v-bind:is_text_displayed_inside_progress_bar="is_text_displayed_inside_progress_bar"
+            v-bind:is_text_displayed_outside_progress_bar="is_text_displayed_outside_progress_bar"
+            v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
             ref="bar"
         />
     </div>
@@ -57,6 +63,7 @@ import { getDimensions } from "../../../helpers/tasks-dimensions";
 import { createPopover } from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
 import BarPopover from "./BarPopover.vue";
+import { Styles } from "../../../helpers/styles";
 
 @Component({
     components: { BarPopover, DependencyArrow, TaskBar, BackgroundGrid },
@@ -120,6 +127,69 @@ export default class GanttTask extends Vue {
         }
 
         return dependencies_for_current_task.get(this.dependencies_nature_to_display) || [];
+    }
+
+    get percentage(): string {
+        if (this.task.progress === null) {
+            return "";
+        }
+
+        return Math.round(this.task.progress * 100) + "%";
+    }
+
+    get normalized_progress(): number {
+        return Math.max(0, Math.min(1, this.task.progress || 0));
+    }
+
+    get space_inside_progress_bar_in_px(): number {
+        return this.dimensions.width * this.normalized_progress;
+    }
+
+    get remaining_space_at_the_right_of_the_progress_bar_in_px(): number {
+        return this.dimensions.width * (1 - this.normalized_progress);
+    }
+
+    get is_text_displayed_inside_progress_bar(): boolean {
+        if (this.task.progress === null) {
+            return false;
+        }
+
+        if (this.is_text_displayed_outside_progress_bar) {
+            return false;
+        }
+
+        return this.does_text_fit_in_space_inside_progress;
+    }
+
+    get is_text_displayed_outside_progress_bar(): boolean {
+        if (this.task.progress === null) {
+            return false;
+        }
+
+        return this.does_text_fit_in_remaining_space_at_the_right_of_the_progress_bar;
+    }
+
+    get is_text_displayed_outside_bar(): boolean {
+        if (this.task.progress === null) {
+            return false;
+        }
+
+        return (
+            !this.does_text_fit_in_space_inside_progress &&
+            !this.is_text_displayed_outside_progress_bar
+        );
+    }
+
+    get does_text_fit_in_space_inside_progress(): boolean {
+        return this.doesTextFitsIn(this.space_inside_progress_bar_in_px);
+    }
+
+    get does_text_fit_in_remaining_space_at_the_right_of_the_progress_bar(): boolean {
+        return this.doesTextFitsIn(this.remaining_space_at_the_right_of_the_progress_bar_in_px);
+    }
+
+    doesTextFitsIn(width: number): boolean {
+        return width > Styles.TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX;
     }
 }
 </script>

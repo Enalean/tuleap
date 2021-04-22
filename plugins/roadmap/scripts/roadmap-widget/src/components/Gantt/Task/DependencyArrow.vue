@@ -53,6 +53,12 @@ export default class DependencyArrow extends Vue {
     @Prop({ required: true })
     readonly dependency!: Task;
 
+    @Prop({ required: true })
+    readonly percentage!: string;
+
+    @Prop({ required: true })
+    readonly is_text_displayed_outside_bar!: boolean;
+
     get style(): string {
         let top = Styles.TASK_HEIGHT_IN_PX / 2;
         const left = Math.min(this.right_of_task, this.left_of_dependency);
@@ -119,7 +125,18 @@ export default class DependencyArrow extends Vue {
     }
 
     get right_of_task(): number {
-        return this.task_dimensions.left + this.task_dimensions.width;
+        const right_of_bar = this.task_dimensions.left + this.task_dimensions.width;
+        if (this.is_text_displayed_outside_bar && this.percentage.length > 0) {
+            const width_of_text =
+                Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_PERCENT_SIGN_IN_PX +
+                Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_DIGIT_IN_PX *
+                    (this.percentage.length - 1) +
+                2 * Styles.TEXT_PERCENTAGE_MARGIN_IN_PX;
+
+            return right_of_bar + width_of_text;
+        }
+
+        return right_of_bar;
     }
 
     get left_of_dependency(): number {

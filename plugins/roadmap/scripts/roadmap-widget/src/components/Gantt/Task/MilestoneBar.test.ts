@@ -32,6 +32,7 @@ describe("MilestoneBar", () => {
             propsData: {
                 task,
                 left: 0,
+                percentage: "",
             },
         });
 
@@ -64,10 +65,30 @@ describe("MilestoneBar", () => {
                     progress: null,
                 } as Task,
                 left: 0,
+                percentage: "",
             },
         });
 
         const progress_bar = wrapper.find("[data-test=progress]");
         expect(progress_bar.attributes("clip-path")).toBe("");
+    });
+
+    it("should display the percentage if it is given", async () => {
+        const task = {
+            color_name: "fiesta-red",
+            progress: 0.42,
+        } as Task;
+        const wrapper = shallowMount(MilestoneBar, {
+            propsData: {
+                task,
+                left: 0,
+                percentage: "42%",
+            },
+        });
+
+        expect(wrapper.find("[data-test=percentage]").text()).toBe("42%");
+
+        await wrapper.setProps({ task: { ...task, progress: null }, percentage: "" });
+        expect(wrapper.find("[data-test=percentage]").exists()).toBeFalsy();
     });
 });

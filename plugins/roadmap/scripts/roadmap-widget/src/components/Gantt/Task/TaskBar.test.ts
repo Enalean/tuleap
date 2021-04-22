@@ -22,28 +22,6 @@ import TaskBar from "./TaskBar.vue";
 import MilestoneBar from "./MilestoneBar.vue";
 
 describe("TaskBar", () => {
-    it("Displays a task bar", () => {
-        const wrapper = shallowMount(TaskBar, {
-            propsData: {
-                task: {
-                    color_name: "acid-green",
-                    progress: 1,
-                    start: new Date(2020, 3, 15),
-                    end: new Date(2020, 3, 20),
-                },
-                left: 42,
-                width: 66,
-            },
-        });
-
-        expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-task-bar roadmap-gantt-task-bar-acid-green" style="left: 42px; width: 66px;">
-              <div data-test="progress" class="roadmap-gantt-task-bar-progress" style="width: 100%;"></div>
-            </div>
-        `);
-        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(false);
-    });
-
     it("should adapt the width of the progress bar", async () => {
         const task = {
             color_name: "acid-green",
@@ -57,6 +35,10 @@ describe("TaskBar", () => {
                 task,
                 left: 42,
                 width: 66,
+                percentage: "40%",
+                is_text_displayed_inside_progress_bar: true,
+                is_text_displayed_outside_progress_bar: false,
+                is_text_displayed_outside_bar: false,
             },
         });
 
@@ -78,6 +60,10 @@ describe("TaskBar", () => {
                 },
                 left: 42,
                 width: 66,
+                percentage: "",
+                is_text_displayed_inside_progress_bar: false,
+                is_text_displayed_outside_progress_bar: false,
+                is_text_displayed_outside_bar: false,
             },
         });
 
@@ -95,6 +81,10 @@ describe("TaskBar", () => {
                 },
                 left: 42,
                 width: 21,
+                percentage: "",
+                is_text_displayed_inside_progress_bar: false,
+                is_text_displayed_outside_progress_bar: false,
+                is_text_displayed_outside_bar: false,
             },
         });
 
@@ -111,6 +101,10 @@ describe("TaskBar", () => {
                 },
                 left: 42,
                 width: 21,
+                percentage: "",
+                is_text_displayed_inside_progress_bar: false,
+                is_text_displayed_outside_progress_bar: false,
+                is_text_displayed_outside_bar: false,
             },
         });
 
@@ -127,9 +121,90 @@ describe("TaskBar", () => {
                 },
                 left: 42,
                 width: 21,
+                percentage: "",
+                is_text_displayed_inside_progress_bar: false,
+                is_text_displayed_outside_progress_bar: false,
+                is_text_displayed_outside_bar: false,
             },
         });
 
         expect(wrapper.findComponent(MilestoneBar).exists()).toBe(true);
+    });
+
+    describe("percentage", () => {
+        it("should be displayed next to the progress bar if there are enough room", () => {
+            const wrapper = shallowMount(TaskBar, {
+                propsData: {
+                    task: {
+                        color_name: "acid-green",
+                        start: new Date(2020, 2, 20),
+                        end: new Date(2020, 3, 20),
+                        progress: 0.42,
+                    },
+                    left: 42,
+                    width: 100,
+                    percentage: "42%",
+                    is_text_displayed_inside_progress_bar: false,
+                    is_text_displayed_outside_progress_bar: true,
+                    is_text_displayed_outside_bar: false,
+                },
+            });
+
+            expect(
+                wrapper
+                    .find("[data-test=container] > [data-test=bar] > [data-test=percentage]")
+                    .text()
+            ).toBe("42%");
+        });
+
+        it("should be displayed inside the progress bar if there are not anymore enough room", () => {
+            const wrapper = shallowMount(TaskBar, {
+                propsData: {
+                    task: {
+                        color_name: "acid-green",
+                        start: new Date(2020, 2, 20),
+                        end: new Date(2020, 3, 20),
+                        progress: 0.98,
+                    },
+                    left: 42,
+                    width: 100,
+                    percentage: "98%",
+                    is_text_displayed_inside_progress_bar: true,
+                    is_text_displayed_outside_progress_bar: false,
+                    is_text_displayed_outside_bar: false,
+                },
+            });
+
+            expect(
+                wrapper
+                    .find(
+                        "[data-test=container] > [data-test=bar] > [data-test=progress] > [data-test=percentage]"
+                    )
+                    .text()
+            ).toBe("98%");
+        });
+
+        it("should be displayed outside of the task bar if the latter is too small", () => {
+            const wrapper = shallowMount(TaskBar, {
+                propsData: {
+                    task: {
+                        color_name: "acid-green",
+                        start: new Date(2020, 2, 20),
+                        end: new Date(2020, 3, 20),
+                        progress: 0.5,
+                    },
+                    left: 42,
+                    width: 10,
+                    percentage: "50%",
+                    is_text_displayed_inside_progress_bar: false,
+                    is_text_displayed_outside_progress_bar: false,
+                    is_text_displayed_outside_bar: true,
+                },
+            });
+
+            expect(wrapper.find("[data-test=container] > [data-test=percentage]").text()).toBe(
+                "50%"
+            );
+        });
     });
 });

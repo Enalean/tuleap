@@ -31,20 +31,22 @@ import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
 
 describe("GanttTask", () => {
     function mountGanttTask(
-        start: Date | null,
-        end: Date | null,
+        task: Task,
         tasks_by_nature: TasksByNature | null = null,
         dependencies_nature_to_display: string | null = null
     ): Wrapper<GanttTask> {
-        const task: Task = {
+        const defaults: Task = {
             id: 123,
             title: "Do this",
             xref: "task #123",
             color_name: "fiesta-red",
             html_url: "/plugins/tracker?aid=123",
-            start,
-            end,
         } as Task;
+
+        const my_task: Task = {
+            ...defaults,
+            ...task,
+        };
 
         const time_period = new TimePeriodMonth(
             new Date(2020, 3, 3),
@@ -54,15 +56,15 @@ describe("GanttTask", () => {
 
         const dependencies = new TasksDependencies();
         if (tasks_by_nature) {
-            dependencies.set(task, tasks_by_nature);
+            dependencies.set(my_task, tasks_by_nature);
         }
 
         return shallowMount(GanttTask, {
             propsData: {
-                task,
+                task: my_task,
                 time_period,
                 nb_additional_units: 2,
-                dimensions_map: getDimensionsMap([task], time_period),
+                dimensions_map: getDimensionsMap([my_task], time_period),
                 dependencies,
                 dependencies_nature_to_display,
                 popover_element_id: "roadmap-gantt-bar-popover-1-123",
@@ -71,7 +73,10 @@ describe("GanttTask", () => {
     }
 
     it("Displays the grid and the bar of the task", () => {
-        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 25));
+        const wrapper = mountGanttTask({
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 3, 25),
+        } as Task);
 
         expect(wrapper.findComponent(BackgroundGrid).exists()).toBe(true);
 
@@ -82,7 +87,10 @@ describe("GanttTask", () => {
     });
 
     it("Has a minimum width", () => {
-        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 6));
+        const wrapper = mountGanttTask({
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 3, 6),
+        } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -90,7 +98,10 @@ describe("GanttTask", () => {
     });
 
     it("If start = end, it is a milestone", () => {
-        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 5));
+        const wrapper = mountGanttTask({
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 3, 5),
+        } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -98,7 +109,7 @@ describe("GanttTask", () => {
     });
 
     it("Doesn't know yet where to put a task without start and end date, so it puts it at the beginning of the period", () => {
-        const wrapper = mountGanttTask(null, null);
+        const wrapper = mountGanttTask({ start: null, end: null } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -107,7 +118,7 @@ describe("GanttTask", () => {
     });
 
     it("Consider a task without a start date as a milestone", () => {
-        const wrapper = mountGanttTask(null, new Date(2020, 3, 25));
+        const wrapper = mountGanttTask({ start: null, end: new Date(2020, 3, 25) } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -116,7 +127,7 @@ describe("GanttTask", () => {
     });
 
     it("Consider a task without an end date as a milestone", () => {
-        const wrapper = mountGanttTask(new Date(2020, 3, 25), null);
+        const wrapper = mountGanttTask({ start: new Date(2020, 3, 25), end: null } as Task);
 
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
@@ -125,7 +136,10 @@ describe("GanttTask", () => {
     });
 
     it("Displays no arrows if no dependencies", () => {
-        const wrapper = mountGanttTask(new Date(2020, 3, 5), new Date(2020, 3, 25));
+        const wrapper = mountGanttTask({
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 3, 25),
+        } as Task);
 
         expect(wrapper.findComponent(DependencyArrow).exists()).toBe(false);
     });
@@ -140,8 +154,7 @@ describe("GanttTask", () => {
             ["", [dep_3]],
         ])("when nature is '%s'", (nature: string, expected_displayed_dependencies: Task[]) => {
             const wrapper = mountGanttTask(
-                new Date(2020, 3, 5),
-                new Date(2020, 3, 25),
+                { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
                 new TasksByNature([
                     ["depends_on", [dep_1, dep_2]],
                     ["", [dep_3]],
@@ -155,6 +168,72 @@ describe("GanttTask", () => {
             expected_displayed_dependencies.forEach((expected, index): void => {
                 expect(arrows.at(index).props("dependency")).toBe(expected);
             });
+        });
+    });
+
+    describe("percentage", () => {
+        it("should round the percentage to be displayed", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 3, 6),
+                progress: 0.42,
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.percentage).toBe("42%");
+        });
+
+        it("should be displayed next to the progress bar if there are enough room", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 6, 6),
+                progress: 0.42,
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.is_text_displayed_inside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_progress_bar).toBe(true);
+            expect(task_bar_props.is_text_displayed_outside_bar).toBe(false);
+        });
+
+        it("should be displayed inside the progress bar if there are not anymore enough room", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 6, 6),
+                progress: 0.98,
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.is_text_displayed_inside_progress_bar).toBe(true);
+            expect(task_bar_props.is_text_displayed_outside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_bar).toBe(false);
+        });
+
+        it("should be displayed outside of the task bar if the latter is too small", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 3, 6),
+                progress: 0.5,
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.is_text_displayed_inside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_bar).toBe(true);
+        });
+
+        it("should display nothing if there is no progress", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 3, 6),
+                progress: null,
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.percentage).toBe("");
+            expect(task_bar_props.is_text_displayed_inside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_bar).toBe(false);
         });
     });
 });
