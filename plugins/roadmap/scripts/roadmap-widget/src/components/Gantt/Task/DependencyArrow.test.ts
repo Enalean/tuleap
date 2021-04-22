@@ -69,7 +69,7 @@ describe("DependencyArrow", () => {
                         L30 57
                         L22 49
                         M30 57
-                        L22 65" class="roadmap-gantt-task-dependency-line"></path>
+                        L22 65" data-test="path" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
@@ -94,7 +94,7 @@ describe("DependencyArrow", () => {
                         L17 57
                         L9 49
                         M17 57
-                        L9 65" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
+                        L9 65" data-test="path" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });
@@ -119,7 +119,7 @@ describe("DependencyArrow", () => {
                         L17 17
                         L9 9
                         M17 17
-                        L9 25" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
+                        L9 25" data-test="path" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });
@@ -144,12 +144,12 @@ describe("DependencyArrow", () => {
                         L30 17
                         L22 9
                         M30 17
-                        L22 25" class="roadmap-gantt-task-dependency-line"></path>
+                        L22 25" data-test="path" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
 
-    it("Starts after the progress percentage text if it is displayed outside of the bar", async () => {
+    it("should starts the path after the progress percentage text if it is displayed outside of the bar, but does not consider that the task ends after its dependency start", async () => {
         const task_1 = {
             id: 1,
             start: new Date("2020-04-09T22:00:00.000Z"),
@@ -157,15 +157,23 @@ describe("DependencyArrow", () => {
         } as Task;
         const task_2 = {
             id: 2,
-            start: new Date("2020-04-19T22:00:00.000Z"),
+            start: new Date("2020-04-15T22:00:00.000Z"),
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false);
 
         expect(wrapper.element.style.left).toBe("33px");
+        expect(wrapper.element.style.width).toBe("34px");
+        expect(wrapper.find("[data-test=path]").classes()).not.toContain(
+            "roadmap-gantt-task-dependency-line-ends-after-start"
+        );
 
         await wrapper.setProps({ is_text_displayed_outside_bar: true });
-        expect(wrapper.element.style.left).toBe("46px");
+        expect(wrapper.element.style.left).toBe("33px");
+        expect(wrapper.element.style.width).toBe("60px");
+        expect(wrapper.find("[data-test=path]").classes()).not.toContain(
+            "roadmap-gantt-task-dependency-line-ends-after-start"
+        );
     });
 });

@@ -24,6 +24,7 @@
             class="roadmap-gantt-task-dependency-line"
             v-bind:class="line_class"
             v-bind:d="path"
+            data-test="path"
         />
     </svg>
 </template>
@@ -61,7 +62,7 @@ export default class DependencyArrow extends Vue {
 
     get style(): string {
         let top = Styles.TASK_HEIGHT_IN_PX / 2;
-        const left = Math.min(this.right_of_task, this.left_of_dependency);
+        const left = Math.min(this.right_of_task_and_text, this.left_of_dependency);
 
         const is_task_above_dependency = this.index_task < this.index_dependency;
         if (!is_task_above_dependency) {
@@ -79,15 +80,15 @@ export default class DependencyArrow extends Vue {
 
         const is_task_above_dependency = this.index_task < this.index_dependency;
 
-        if (is_task_above_dependency && !this.is_task_ends_after_dependency_start) {
+        if (is_task_above_dependency && !this.is_task_and_text_end_after_dependency_start) {
             return getDownRightArrow(width, height);
         }
 
-        if (is_task_above_dependency && this.is_task_ends_after_dependency_start) {
+        if (is_task_above_dependency && this.is_task_and_text_end_after_dependency_start) {
             return getDownLeftArrow(width, height);
         }
 
-        if (!is_task_above_dependency && !this.is_task_ends_after_dependency_start) {
+        if (!is_task_above_dependency && !this.is_task_and_text_end_after_dependency_start) {
             return getUpRightArrow(width, height);
         }
 
@@ -102,6 +103,10 @@ export default class DependencyArrow extends Vue {
 
     get is_task_ends_after_dependency_start(): boolean {
         return this.right_of_task > this.left_of_dependency;
+    }
+
+    get is_task_and_text_end_after_dependency_start(): boolean {
+        return this.right_of_task_and_text > this.left_of_dependency;
     }
 
     get task_dimensions(): TaskDimension {
@@ -121,11 +126,14 @@ export default class DependencyArrow extends Vue {
     }
 
     get width_without_gap(): number {
-        return Math.abs(this.left_of_dependency - this.right_of_task);
+        return Math.abs(this.left_of_dependency - this.right_of_task_and_text);
     }
 
     get right_of_task(): number {
-        const right_of_bar = this.task_dimensions.left + this.task_dimensions.width;
+        return this.task_dimensions.left + this.task_dimensions.width;
+    }
+
+    get right_of_task_and_text(): number {
         if (this.is_text_displayed_outside_bar && this.percentage.length > 0) {
             const width_of_text =
                 Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_PERCENT_SIGN_IN_PX +
@@ -133,10 +141,10 @@ export default class DependencyArrow extends Vue {
                     (this.percentage.length - 1) +
                 2 * Styles.TEXT_PERCENTAGE_MARGIN_IN_PX;
 
-            return right_of_bar + width_of_text;
+            return this.right_of_task + width_of_text;
         }
 
-        return right_of_bar;
+        return this.right_of_task;
     }
 
     get left_of_dependency(): number {
