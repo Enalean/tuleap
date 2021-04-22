@@ -11,13 +11,11 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/tlp-popovers": "file://../../src/scripts/lib/tlp-popovers",
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-popovers": "file://../../src/scripts/lib/tlp-popovers",
     "@types/dompurify": "^2.2.1",
     "@vue/test-utils": "^1.1.2",
     "dompurify": "^2.2.7",
-    "html-webpack-plugin": "^5.3.1",
-    "light-server": "^2.9.1",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
     "vuex-class": "^0.3.2"
@@ -30,6 +28,6 @@
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\"",
-    "dev:serve-arrows": "./node_modules/light-server/bin/light-server -s public -o -w \"public/*.html\""
+    "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && ../../../../$npm_package_config_bin/vite serve --host 127.0.0.1 --open"
   }
 }
