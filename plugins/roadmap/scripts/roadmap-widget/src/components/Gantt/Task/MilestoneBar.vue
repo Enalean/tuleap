@@ -78,6 +78,10 @@ export default class MilestoneBar extends Vue {
     }
 
     get clip_path(): string {
+        if (this.task.progress === null) {
+            return "";
+        }
+
         let clip_x = "23";
         if (this.task.progress <= 0) {
             clip_x = "-1";

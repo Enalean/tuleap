@@ -67,6 +67,24 @@ describe("TaskBar", () => {
         expect(progress_bar.element.style.width).toBe("70%");
     });
 
+    it("should display a full progress bar when the task does not have any progress", () => {
+        const wrapper = shallowMount(TaskBar, {
+            propsData: {
+                task: {
+                    color_name: "acid-green",
+                    progress: null,
+                    start: new Date(2020, 3, 15),
+                    end: new Date(2020, 3, 20),
+                },
+                left: 42,
+                width: 66,
+            },
+        });
+
+        const progress_bar = wrapper.find("[data-test=progress]");
+        expect(progress_bar.element.getAttribute("style")).toBeFalsy();
+    });
+
     it("Displays a milestone when there is no start", () => {
         const wrapper = shallowMount(TaskBar, {
             propsData: {

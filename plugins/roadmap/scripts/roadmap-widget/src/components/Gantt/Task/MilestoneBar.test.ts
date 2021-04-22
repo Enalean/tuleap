@@ -55,4 +55,19 @@ describe("MilestoneBar", () => {
             `"polygon(-1 -1, 23 -1, 23 23, -1 23)"`
         );
     });
+
+    it("should not clip at all when the task does not have any progress", () => {
+        const wrapper = shallowMount(MilestoneBar, {
+            propsData: {
+                task: {
+                    color_name: "fiesta-red",
+                    progress: null,
+                } as Task,
+                left: 0,
+            },
+        });
+
+        const progress_bar = wrapper.find("[data-test=progress]");
+        expect(progress_bar.attributes("clip-path")).toBe("");
+    });
 });
