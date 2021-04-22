@@ -55,17 +55,17 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     public function loadFromDb()
     {
         $arr                    = $this->getDao()->searchById($this->id)->getRow();
-        $this->field_start      = $arr['field_start'];
-        $this->field_due        = $arr['field_due'];
-        $this->field_finish     = $arr['field_finish'];
-        $this->field_percentage = $arr['field_percentage'];
-        $this->field_righttext  = $arr['field_righttext'];
-        $this->scale            = $arr['scale'];
+        $this->field_start      = $arr['field_start'] ?? null;
+        $this->field_due        = $arr['field_due'] ?? null;
+        $this->field_finish     = $arr['field_finish'] ?? null;
+        $this->field_percentage = $arr['field_percentage'] ?? null;
+        $this->field_righttext  = $arr['field_righttext'] ?? null;
+        $this->scale            = $arr['scale'] ?? null;
         $this->as_of_date       = 0;
-        if ($arr['as_of_date'] != 0) {
+        if (isset($arr['as_of_date']) && (int) $arr['as_of_date'] !== 0) {
             $this->as_of_date = date('Y-m-d', $arr['as_of_date']);
         }
-        $this->summary = $arr['summary'];
+        $this->summary = $arr['summary'] ?? null;
     }
 
     public function registerInSession()

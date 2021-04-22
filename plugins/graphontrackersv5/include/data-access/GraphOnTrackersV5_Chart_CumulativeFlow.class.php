@@ -109,13 +109,13 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * Load object from DB
      */
-    public function loadFromDb()
+    public function loadFromDb(): void
     {
         $arr              = $this->getDao()->searchById($this->id)->getRow();
-        $this->field_id   = $arr['field_id'];
-        $this->start_date = $arr['start_date'];
-        $this->scale      = $arr['scale'];
-        $this->stop_date  = $arr['stop_date'];
+        $this->field_id   = $arr['field_id'] ?? null;
+        $this->start_date = $arr['start_date'] ?? null;
+        $this->scale      = $arr['scale'] ?? null;
+        $this->stop_date  = $arr['stop_date'] ?? null;
     }
 
     public function registerInSession()
