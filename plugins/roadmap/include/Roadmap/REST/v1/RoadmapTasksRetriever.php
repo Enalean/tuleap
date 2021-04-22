@@ -28,6 +28,7 @@ use TrackerFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Roadmap\RoadmapWidgetDao;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -76,6 +77,10 @@ final class RoadmapTasksRetriever
      * @var RoadmapTasksOutOfDateFilter
      */
     private $tasks_filter;
+    /**
+     * @var SemanticProgressBuilder
+     */
+    private $progress_builder;
 
     public function __construct(
         RoadmapWidgetDao $dao,
@@ -87,7 +92,8 @@ final class RoadmapTasksRetriever
         TimeframeBuilder $timeframe_builder,
         \Tracker_ArtifactFactory $artifact_factory,
         IRetrieveDependencies $dependencies_retriever,
-        RoadmapTasksOutOfDateFilter $tasks_filter
+        RoadmapTasksOutOfDateFilter $tasks_filter,
+        SemanticProgressBuilder $progress_builder
     ) {
         $this->dao                        = $dao;
         $this->project_manager            = $project_manager;
@@ -99,6 +105,7 @@ final class RoadmapTasksRetriever
         $this->timeframe_builder          = $timeframe_builder;
         $this->dependencies_retriever     = $dependencies_retriever;
         $this->tasks_filter               = $tasks_filter;
+        $this->progress_builder           = $progress_builder;
     }
 
     /**
@@ -126,6 +133,8 @@ final class RoadmapTasksRetriever
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($tracker);
         $this->checkTrackerHasTimeframeSemantic($semantic_timeframe, $user);
 
+        $semantic_progress = $this->progress_builder->getSemantic($tracker);
+
         $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByTrackerId(
             $tracker->getId(),
             $limit,
@@ -152,7 +161,7 @@ final class RoadmapTasksRetriever
             $end_date    = $time_period->getEndDate();
             $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
-            $progress = null;
+            $progress = $semantic_progress->getProgress($artifact, $user);
 
             $representations[] = new TaskRepresentation(
                 $artifact->getId(),

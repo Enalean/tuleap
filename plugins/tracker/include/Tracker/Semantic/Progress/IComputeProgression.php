@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
+use Tuleap\Tracker\Artifact\Artifact;
 
 interface IComputeProgression
 {
@@ -30,4 +31,6 @@ interface IComputeProgression
     public function getCurrentConfigurationDescription(): string;
 
     public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool;
+
+    public function computeProgression(Artifact $artifact, \PFUser $user): ?float;
 }

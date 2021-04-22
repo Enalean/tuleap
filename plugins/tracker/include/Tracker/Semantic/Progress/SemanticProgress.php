@@ -30,6 +30,7 @@ use Tracker_FormElement_Field;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 
@@ -146,6 +147,15 @@ class SemanticProgress extends \Tracker_Semantic
     public function getComputationMethod(): ?IComputeProgression
     {
         return $this->method;
+    }
+
+    public function getProgress(Artifact $artifact, \PFUser $user): ?float
+    {
+        if (! $this->isDefined()) {
+            return null;
+        }
+
+        return $this->method->computeProgression($artifact, $user);
     }
 
     private function getSemanticUsage(): string
