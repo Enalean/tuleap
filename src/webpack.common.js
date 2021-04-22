@@ -230,7 +230,7 @@ const webpack_config_for_burning_parrot_code = {
         "project/project-registration-creation":
             "./scripts/project/registration/index-for-modal.ts",
         "site-admin-generate-pie-charts": "./scripts/site-admin/generate-pie-charts.ts",
-        "site-admin-mass-emailing": "./scripts/site-admin/massmail.js",
+        "site-admin-mass-emailing": "./scripts/site-admin/massmail.ts",
         "site-admin-most-recent-logins": "./scripts/site-admin/most-recent-logins.ts",
         "site-admin-pending-users": "./scripts/site-admin/pending-users.ts",
         "site-admin-permission-delegation": "./scripts/site-admin/permission-delegation.ts",
