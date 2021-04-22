@@ -22,9 +22,11 @@ import {
     getDownRightArrow,
     getUpLeftArrow,
     getUpRightArrow,
-} from "./helpers/svg-arrow-path";
-import { gap } from "./helpers/path";
-import { sanitize } from "dompurify";
+} from "../helpers/svg-arrow-path";
+import { gap } from "../helpers/path";
+import createDOMPurifyInstance from "dompurify";
+
+const sanitize = createDOMPurifyInstance().sanitize;
 
 function getExampleSvg(
     width: number,
