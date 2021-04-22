@@ -24,12 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class UserStoryLinkedToFeatureCheckerTest extends TestCase
+final class UserStoryLinkedToFeatureCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -42,7 +44,7 @@ class UserStoryLinkedToFeatureCheckerTest extends TestCase
      */
     private $artifact_factory;
     /**
-     * @var UserStoryLinkedToFeatureChecker
+     * @var VerifyLinkedUserStoryIsNotPlanned
      */
     private $checker;
     /**
@@ -78,7 +80,7 @@ class UserStoryLinkedToFeatureCheckerTest extends TestCase
             ->shouldReceive("getPlannedUserStory")
             ->once()
             ->andReturn([]);
-        self::assertFalse($this->checker->hasAPlannedUserStoryLinkedToFeature($this->user, 101));
+        self::assertFalse($this->checker->isLinkedToAtLeastOnePlannedUserStory($this->user, new FeatureIdentifier(101)));
     }
 
     public function testHasAPlannedUserStory(): void
@@ -103,7 +105,7 @@ class UserStoryLinkedToFeatureCheckerTest extends TestCase
             ->with(236, 20, 25)
             ->andReturn(true);
 
-        self::assertTrue($this->checker->hasAPlannedUserStoryLinkedToFeature($this->user, 101));
+        self::assertTrue($this->checker->isLinkedToAtLeastOnePlannedUserStory($this->user, new FeatureIdentifier(101)));
     }
 
     public function testHasNotAPlannedUserStoryIfUserStoriesAreLinkedButNotPlanned(): void
@@ -122,7 +124,7 @@ class UserStoryLinkedToFeatureCheckerTest extends TestCase
             ->with(666, 20, 666)
             ->andReturn(false);
 
-        self::assertFalse($this->checker->hasAPlannedUserStoryLinkedToFeature($this->user, 101));
+        self::assertFalse($this->checker->isLinkedToAtLeastOnePlannedUserStory($this->user, new FeatureIdentifier(101)));
     }
 
     public function testHasNotALinkedUserStoryToFeature(): void
@@ -132,7 +134,7 @@ class UserStoryLinkedToFeatureCheckerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        self::assertFalse($this->checker->hasStoryLinked($this->user, 101));
+        self::assertFalse($this->checker->hasStoryLinked($this->user, new FeatureIdentifier(101)));
     }
 
     public function testHasNotALinkedUserStoryToFeatureThatUserCanSee(): void
@@ -150,7 +152,7 @@ class UserStoryLinkedToFeatureCheckerTest extends TestCase
             ->with($this->user, 666)
             ->andReturnNull();
 
-        self::assertFalse($this->checker->hasStoryLinked($this->user, 101));
+        self::assertFalse($this->checker->hasStoryLinked($this->user, new FeatureIdentifier(101)));
     }
 
     public function testHasALinkedUserStoryToFeature(): void
@@ -168,6 +170,6 @@ class UserStoryLinkedToFeatureCheckerTest extends TestCase
             ->with($this->user, 236)
             ->andReturn(\Mockery::mock(\Artifact::class));
 
-        self::assertTrue($this->checker->hasStoryLinked($this->user, 101));
+        self::assertTrue($this->checker->hasStoryLinked($this->user, new FeatureIdentifier(101)));
     }
 }

@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use PFUser;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -42,7 +43,7 @@ class FeatureRepresentationBuilder
      */
     private $artifact_factory;
     /**
-     * @var UserStoryLinkedToFeatureChecker
+     * @var VerifyLinkedUserStoryIsNotPlanned
      */
     private $user_story_checker;
 
@@ -50,7 +51,7 @@ class FeatureRepresentationBuilder
         \Tracker_ArtifactFactory $artifact_factory,
         \Tracker_FormElementFactory $form_element_factory,
         BackgroundColorRetriever $retrieve_background_color,
-        UserStoryLinkedToFeatureChecker $user_story_checker
+        VerifyLinkedUserStoryIsNotPlanned $user_story_checker
     ) {
         $this->artifact_factory          = $artifact_factory;
         $this->form_element_factory      = $form_element_factory;
@@ -75,15 +76,16 @@ class FeatureRepresentationBuilder
             return null;
         }
 
+        $feature = new FeatureIdentifier($artifact_id);
         return new FeatureRepresentation(
-            $artifact_id,
+            $feature->id,
             $artifact_title,
             $full_artifact->getXRef(),
             $full_artifact->getUri(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
             $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user),
-            $this->user_story_checker->hasAPlannedUserStoryLinkedToFeature($user, $artifact_id),
-            $this->user_story_checker->hasStoryLinked($user, $artifact_id)
+            $this->user_story_checker->isLinkedToAtLeastOnePlannedUserStory($user, $feature),
+            $this->user_story_checker->hasStoryLinked($user, $feature)
         );
     }
 }
