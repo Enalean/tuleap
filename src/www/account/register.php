@@ -82,7 +82,7 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
         $errors['timezone'] = $Language->getText('account_register', 'err_notz');
         return 0;
     }
-    if (! $request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::get('sys_user_approval') && $request->get('page') != "admin_creation")) {
+    if (! $request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1 && $request->get('page') != "admin_creation")) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
         $errors['form_register_purpose'] = $Language->getText('account_register', 'err_nopurpose');
         return 0;
@@ -325,7 +325,7 @@ if ($request->isPost() && $request->exist('Register')) {
         $thanks    = $Language->getText('account_register', 'msg_thanks');
         $is_thanks = true;
 
-        if (ForgeConfig::get('sys_user_approval') == 0 || $admin_creation) {
+        if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0 || $admin_creation) {
             if (! $admin_creation) {
                 if (! send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
                     $GLOBALS['Response']->addFeedback(

@@ -70,7 +70,7 @@ $actif_users       = $nb_users_by_status->getNbActive();
 $hold_users        = $nb_users_by_status->getNbSuspended();
 $deleted_users     = $nb_users_by_status->getNbDeleted();
 
-if (ForgeConfig::get('sys_user_approval') == 1) {
+if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
     $pending_users = $realpending_users;
 } else {
     $pending_users = $realpending_users + $validated_users;
@@ -185,7 +185,7 @@ $project_stats->setContent('
     </section>
 ');
 
-if (ForgeConfig::get('sys_user_approval') == 1) {
+if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
     $pending_action = '<p class="siteadmin-homepage-no-validation">' . _('No users to validate') . '</p>';
     $pending_class  = '';
 
@@ -260,7 +260,7 @@ echo $site_admin_warnings->getAdminHomeWarningsWithUsersByStatus($nb_users_by_st
 echo '<div id="siteadmin-homepage-container">';
 echo '<div class="siteadmin-homepage-column">';
 
-$display_user_approval_block    = ForgeConfig::get('sys_user_approval') == 1 && $pending_users > 0;
+$display_user_approval_block    = ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1 && $pending_users > 0;
 $display_project_approval_block = ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1 &&
     $project_pending_count > 0;
 

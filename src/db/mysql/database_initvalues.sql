@@ -551,6 +551,7 @@ INSERT INTO system_events_followers (emails, types) VALUES ('admin', 'WARNING,ER
 
 INSERT INTO forgeconfig (name, value) VALUES ('access_mode', 'anonymous');
 INSERT INTO forgeconfig (name, value) VALUES ('sys_project_approval', '1');
+INSERT INTO forgeconfig (name, value) VALUES ('sys_user_approval', '0');
 INSERT INTO forgeconfig (name, value) VALUES ('display_homepage_statistics', '1');
 INSERT INTO forgeconfig (name, value) VALUES ('display_homepage_news', '1');
 INSERT INTO forgeconfig (name, value) VALUES ('display_tuleap_review_link', '1');

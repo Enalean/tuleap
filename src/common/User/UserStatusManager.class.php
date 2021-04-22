@@ -19,6 +19,12 @@
 
 class User_UserStatusManager
 {
+    /**
+     * Does the user registration needs to be approved by a site administrator (1) or not (0)
+     *
+     * @tlp-config-key
+     */
+    public const CONFIG_USER_REGISTRATION_APPROVAL = 'sys_user_approval';
 
     /**
      * Ensure user can use the platform
@@ -61,7 +67,7 @@ class User_UserStatusManager
                 case PFUser::STATUS_VALIDATED_RESTRICTED:
                     break;
                 case PFUser::STATUS_PENDING:
-                    if (ForgeConfig::get('sys_user_approval') == 0) {
+                    if (ForgeConfig::getInt(self::CONFIG_USER_REGISTRATION_APPROVAL) === 0) {
                         break;
                     }
                     // User should not have a pending status if approval is not required

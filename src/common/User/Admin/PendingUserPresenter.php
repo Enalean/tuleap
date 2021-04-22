@@ -21,6 +21,7 @@
 namespace Tuleap\User\Admin;
 
 use ForgeConfig;
+use User_UserStatusManager;
 
 class PendingUserPresenter
 {
@@ -48,7 +49,7 @@ class PendingUserPresenter
         if ($expiry_date) {
             $this->expiry_date = format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $expiry_date);
         }
-        $this->can_resend_email = ForgeConfig::get('sys_user_approval') == 0 || 'V' === $status || 'W' === $status;
+        $this->can_resend_email = ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0 || 'V' === $status || 'W' === $status;
         $this->resend_label     = $GLOBALS['Language']->getText('admin_approve_pending_users', 'resend');
     }
 }

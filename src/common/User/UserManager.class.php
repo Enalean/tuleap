@@ -1007,7 +1007,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
             switch ($user->getStatus()) {
                 case PFUser::STATUS_PENDING:
-                    if (ForgeConfig::get('sys_user_approval')) {
+                    if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
                         $this->pending_user_notifier->notifyAdministrator($user);
                     }
                     break;

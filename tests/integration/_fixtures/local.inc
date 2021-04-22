@@ -213,10 +213,6 @@ $sys_supported_languages = 'en_US,fr_FR';
 // Default language for the system
 $sys_lang = 'en_US';
 
-// If set to 1 (one) the user registration must be approved by site
-// admin. If 0 user can register by themselves
-$sys_user_approval = 0;
-
 // Is license approval mandatory when downloading a file from the FRS?
 // (1 is mandatory, 0 is optional)
 $sys_frs_license_mandatory = 1;

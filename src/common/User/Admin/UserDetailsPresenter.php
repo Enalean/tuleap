@@ -23,6 +23,7 @@ namespace Tuleap\User\Admin;
 use DateTimeImmutable;
 use ForgeConfig;
 use PFUser;
+use User_UserStatusManager;
 
 class UserDetailsPresenter
 {
@@ -119,7 +120,7 @@ class UserDetailsPresenter
         $this->projects     = $projects;
         $this->has_projects = count($projects) > 0;
 
-        $this->display_purpose = ForgeConfig::get('sys_user_approval') == 1;
+        $this->display_purpose = ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1;
         $this->purpose         = $user->getRegisterPurpose();
         if (! $this->purpose) {
             $this->purpose = false;

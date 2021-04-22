@@ -23,6 +23,7 @@ namespace Tuleap\Admin;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\News\Admin\AdminNewsDao;
 use Tuleap\News\Admin\NewsRetriever;
+use User_UserStatusManager;
 use UserManager;
 use PFUser;
 use ProjectManager;
@@ -85,7 +86,7 @@ class AdminSidebarPresenterBuilder
 
     private function usersNeedApproval()
     {
-        return \ForgeConfig::get('sys_user_approval') == 1;
+        return \ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1;
     }
 
     private function pendingUsersCount()
