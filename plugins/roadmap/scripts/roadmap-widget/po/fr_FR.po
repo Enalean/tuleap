@@ -30,6 +30,9 @@ msgstr "Aucun"
 msgid "Oops, something went wrong."
 msgstr "Oups, quelque chose ne va pas."
 
+msgid "Progress"
+msgstr "Progression"
+
 msgid "Q%{ quarter }"
 msgstr "Trim. %{ quarter }"
 

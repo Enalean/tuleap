@@ -38,7 +38,7 @@
                             <p class="roadmap-gantt-task-popover-label" v-translate>Start date</p>
                         </td>
                         <td>
-                            <p v-if="this.task.start" class="roadmap-gantt-task-popover-value">
+                            <p v-if="task.start" class="roadmap-gantt-task-popover-value">
                                 {{ start_date }}
                             </p>
                             <p v-else class="roadmap-gantt-task-popover-value-undefined">
@@ -51,11 +51,21 @@
                             <p class="roadmap-gantt-task-popover-label" v-translate>End date</p>
                         </td>
                         <td>
-                            <p v-if="this.task.end" class="roadmap-gantt-task-popover-value">
+                            <p v-if="task.end" class="roadmap-gantt-task-popover-value">
                                 {{ end_date }}
                             </p>
                             <p v-else class="roadmap-gantt-task-popover-value-undefined">
                                 <translate>Undefined</translate>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr v-if="percentage" data-test="progress">
+                        <td>
+                            <p class="roadmap-gantt-task-popover-label" v-translate>Progress</p>
+                        </td>
+                        <td>
+                            <p class="roadmap-gantt-task-popover-value">
+                                {{ percentage }}
                             </p>
                         </td>
                     </tr>
@@ -105,6 +115,14 @@ export default class BarPopover extends Vue {
         }
 
         return this.formatter.format(date);
+    }
+
+    get percentage(): string | null {
+        if (this.task.progress === null) {
+            return null;
+        }
+
+        return Math.round(Math.max(0, Math.min(100, this.task.progress * 100))) + "%";
     }
 }
 </script>
