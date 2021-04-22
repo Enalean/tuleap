@@ -34,10 +34,10 @@ class CommentCriterionValueRetriever
         $this->dao = $dao;
     }
 
-    public function getValueForReport(Tracker_Report $report)
+    public function getValueForReport(Tracker_Report $report): ?string
     {
         $row = $this->dao->searchByReportId($report->getId());
 
-        return $row['comment'];
+        return $row['comment'] ?? null;
     }
 }
