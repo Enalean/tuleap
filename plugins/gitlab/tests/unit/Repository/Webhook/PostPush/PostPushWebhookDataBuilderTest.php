@@ -46,7 +46,6 @@ class PostPushWebhookDataBuilderTest extends TestCase
     public function testItRetrievesPostPushWebhookData(): void
     {
         $webhook_data = [
-            "event_name" => "push",
             "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
             "ref" => "refs/heads/master",
             "commits" => [
@@ -74,13 +73,13 @@ class PostPushWebhookDataBuilderTest extends TestCase
         ];
 
         $webhook_data = $this->builder->build(
-            "push",
+            "Push Hook",
             123456,
             "https://example.com/path/repo01",
             $webhook_data
         );
 
-        $this->assertSame("push", $webhook_data->getEventName());
+        $this->assertSame("Push Hook", $webhook_data->getEventName());
         $this->assertSame(123456, $webhook_data->getGitlabProjectId());
         $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
         $this->assertInstanceOf(PostPushWebhookData::class, $webhook_data);

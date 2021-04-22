@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\EventNotAllowedException;
+use Tuleap\Gitlab\Repository\Webhook\MissingEventHeaderException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 use Tuleap\Gitlab\Repository\Webhook\RepositoryNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
@@ -41,7 +42,6 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Gitlab\Repository\Webhook\EmptyBranchNameException;
-use Tuleap\Gitlab\Repository\Webhook\MissingEventKeysException;
 
 class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
@@ -131,7 +131,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
             SecretNotDefinedException |
             EmptyBranchNameException |
             SecretHeaderNotMatchingException |
-            MissingEventKeysException $exception
+            MissingEventHeaderException $exception
         ) {
             $this->logger->error($exception->getMessage());
             return $this->response_factory->createResponse(400);
