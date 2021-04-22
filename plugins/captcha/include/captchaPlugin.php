@@ -73,10 +73,13 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    public function loadJavascriptFiles()
+    /**
+     * @psalm-param array{layout: \Layout} $params
+     */
+    public function loadJavascriptFiles(array $params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
-            echo '<script src="https://www.google.com/recaptcha/api.js" async></script>';
+            $params['layout']->includeFooterJavascriptFile('https://www.google.com/recaptcha/api.js');
         }
     }
 
