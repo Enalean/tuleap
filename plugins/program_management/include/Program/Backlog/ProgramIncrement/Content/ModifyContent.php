@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
@@ -42,6 +44,10 @@ interface ModifyContent
      * @throws FeatureCannotBePlannedInProgramIncrementException
      * @throws \Luracast\Restler\RestException
      * @throws InvalidFeatureIdInProgramIncrementException
+     * @throws FeatureHasPlannedUserStoryException
+     * @throws AddFeatureException
+     * @throws RemoveFeatureException
+     * @throws FeatureNotFoundException
      */
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void;
 }

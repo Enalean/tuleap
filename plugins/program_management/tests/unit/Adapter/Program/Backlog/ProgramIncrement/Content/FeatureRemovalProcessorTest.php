@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
@@ -39,7 +41,7 @@ final class FeatureRemovalProcessorTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var FeatureRemovalProcessor
+     * @var RemoveFeature
      */
     private $processor;
     /**
@@ -59,7 +61,7 @@ final class FeatureRemovalProcessorTest extends TestCase
     {
         $this->program_increments_dao = \Mockery::mock(ProgramIncrementsDAO::class);
         $this->artifact_factory       = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->artifact_link_updater  = \Mockery::spy(ArtifactLinkUpdater::class);
+        $this->artifact_link_updater  = \Mockery::mock(ArtifactLinkUpdater::class);
         $this->processor              = new FeatureRemovalProcessor(
             $this->program_increments_dao,
             $this->artifact_factory,
@@ -108,14 +110,46 @@ final class FeatureRemovalProcessorTest extends TestCase
         $this->processor->removeFromAllProgramIncrements($feature_removal);
     }
 
+    public function dataProviderExceptions(): array
+    {
+        return [
+            'it wraps Tracker_Exception'                    => [new \Tracker_Exception()],
+            'it wraps Tracker_NoArtifactLinkFieldException' => [new \Tracker_NoArtifactLinkFieldException()],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderExceptions
+     */
+    public function testItWrapsExceptions(\Throwable $exception): void
+    {
+        $program_increment_ids = [['id' => 25]];
+        $this->program_increments_dao->shouldReceive('getProgramIncrementsLinkToFeatureId')
+            ->andReturn($program_increment_ids);
+        $this->artifact_factory->shouldReceive('getArtifactById')
+            ->with(25)
+            ->andReturn(new Artifact(25, 7, 101, 1234567890, false));
+        $this->artifact_factory->shouldReceive('getArtifactById')
+            ->with(98)
+            ->andReturn(new Artifact(98, 7, 101, 1234567890, false));
+        $feature_removal = $this->buildFeatureRemoval();
+        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')->andThrow($exception);
+
+        $this->expectException(RemoveFeatureException::class);
+        $this->processor->removeFromAllProgramIncrements($feature_removal);
+    }
+
     public function testItUpdatesArtifactLinksToRemoveFeatureFromAllProgramIncrements(): void
     {
         $program_increment_ids = [['id' => 25], ['id' => 98]];
         $this->program_increments_dao->shouldReceive('getProgramIncrementsLinkToFeatureId')
             ->andReturn($program_increment_ids);
-        $program_increment_artifact = new Artifact(25, 7, 101, 1234567890, false);
         $this->artifact_factory->shouldReceive('getArtifactById')
-            ->andReturn($program_increment_artifact);
+            ->with(25)
+            ->andReturn(new Artifact(25, 7, 101, 1234567890, false));
+        $this->artifact_factory->shouldReceive('getArtifactById')
+            ->with(98)
+            ->andReturn(new Artifact(98, 7, 101, 1234567890, false));
 
         $feature_removal = $this->buildFeatureRemoval();
         $this->artifact_link_updater->shouldReceive('updateArtifactLinks')->twice();

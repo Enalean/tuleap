@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use BackendLogger;
 use Luracast\Restler\RestException;
-use Tracker_NoArtifactLinkFieldException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
@@ -59,6 +58,7 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\RetrieveFeatures;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
@@ -378,7 +378,7 @@ final class ProjectResource extends AuthenticatedResource
             throw new RestException(404, $e->getMessage());
         } catch (ProjectIsNotAProgramException $e) {
             throw new RestException(403, $e->getMessage());
-        } catch (Tracker_NoArtifactLinkFieldException $e) {
+        } catch (RemoveFeatureException $e) {
             throw new RestException(400, dgettext("tuleap-program_management", "Cannot add the feature to the top backlog because you cannot manipulate all the impacted program increments"));
         } catch (FeatureHasPlannedUserStoryException $e) {
             throw new RestException(400, $e->getMessage());

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-use Tracker_NoArtifactLinkFieldException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Program;
 
 class TopBacklogUpdater
@@ -41,7 +41,7 @@ class TopBacklogUpdater
     /**
      * @throws CannotManipulateTopBacklog
      * @throws FeatureHasPlannedUserStoryException
-     * @throws Tracker_NoArtifactLinkFieldException
+     * @throws RemoveFeatureException
      */
     public function updateTopBacklog(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void
     {

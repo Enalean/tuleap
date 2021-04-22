@@ -22,33 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Program\Program;
-
-/**
- * I identify a Feature, I'm its ID property
- * @psalm-immutable
- */
-final class FeatureIdentifier
+final class FeatureNotFoundException extends \Exception
 {
-    /**
-     * @var int
-     */
-    public $id;
-
-    private function __construct(int $id)
+    public function __construct(int $potential_feature_id_to_add)
     {
-        $this->id = $id;
-    }
-
-    public static function fromId(
-        VerifyIsVisibleFeature $feature_verifier,
-        int $feature_id,
-        \PFUser $user,
-        Program $program
-    ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user, $program)) {
-            return null;
-        }
-        return new self($feature_id);
+        parent::__construct(sprintf('Could not find feature with id #%d', $potential_feature_id_to_add));
     }
 }

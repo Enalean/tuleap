@@ -24,8 +24,13 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureAdditionProcessor;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
@@ -43,9 +48,14 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentChange;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentModifier;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeaturePlanner;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Plan\InvalidFeatureIdInProgramIncrementException;
@@ -55,6 +65,8 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 final class ProgramIncrementResource extends AuthenticatedResource
@@ -127,8 +139,6 @@ final class ProgramIncrementResource extends AuthenticatedResource
      *
      * Plan elements in the program increment.
      *
-     * <pre>⚠ This route is under construction ⚠</pre>
-     *
      * <br>
      * Add example
      * <pre>
@@ -140,7 +150,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
      * }
      * </pre>
      * <br>
-     * The feature with id 34 is planned (added to the contents) of the Program Increment. And it is added before feature with id 35.
+     * The feature with id 34 is planned (added to the contents) of the Program Increment. It is also ordered before feature with id 35.
      * <code>order</code> is not mandatory.
      *
      * @url    PATCH {id}/content
@@ -148,13 +158,21 @@ final class ProgramIncrementResource extends AuthenticatedResource
      *
      * @param int                                        $id                   ID of the program increment
      * @param ProgramIncrementContentPatchRepresentation $patch_representation {@from body}
+     * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 404
      */
     public function patchContent(int $id, ProgramIncrementContentPatchRepresentation $patch_representation): void
     {
-        $user     = $this->user_manager->getCurrentUser();
-        $modifier = new ContentModifier(
+        $user = $this->user_manager->getCurrentUser();
+
+        $artifact_factory       = \Tracker_ArtifactFactory::instance();
+        $program_increments_dao = new ProgramIncrementsDAO();
+        $artifact_link_updater  = new ArtifactLinkUpdater(
+            \Tracker_Artifact_PriorityManager::build(),
+            new ArtifactLinkUpdaterDataFormater()
+        );
+        $modifier               = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
                 \ProjectManager::instance(),
                 new ProjectAccessChecker(
@@ -163,11 +181,23 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 ),
                 new CanPrioritizeFeaturesDAO()
             ),
-            new ProgramIncrementRetriever(\Tracker_ArtifactFactory::instance(), new ProgramIncrementsDAO()),
+            new ProgramIncrementRetriever($artifact_factory, $program_increments_dao),
             new ProgramSearcher(new ProgramDao()),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory),
             new PlanDao(),
+            new FeaturePlanner(
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new UserStoryLinkedToFeatureChecker(
+                    new ArtifactsLinkedToParentDao(),
+                    new PlanningAdapter(\PlanningFactory::build()),
+                    $artifact_factory
+                ),
+                new FeatureRemovalProcessor($program_increments_dao, $artifact_factory, $artifact_link_updater),
+                new ArtifactsExplicitTopBacklogDAO(),
+                new FeatureAdditionProcessor($artifact_factory, $artifact_link_updater)
+            ),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
-            new FeatureDAO()
+            new FeatureDAO(),
         );
         try {
             $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
@@ -176,11 +206,9 @@ final class ProgramIncrementResource extends AuthenticatedResource
             throw new RestException(404, $e->getMessage());
         } catch (NotAllowedToPrioritizeException $e) {
             throw new RestException(403, $e->getMessage());
-        } catch (FeatureCannotBePlannedInProgramIncrementException | InvalidFeatureIdInProgramIncrementException $e) {
+        } catch (FeatureNotFoundException | FeatureCannotBePlannedInProgramIncrementException | InvalidFeatureIdInProgramIncrementException | FeatureHasPlannedUserStoryException | AddFeatureException | RemoveFeatureException $e) {
             throw new RestException(400, $e->getMessage());
         }
-
-        throw new RestException(501, 'This route is still under implementation');
     }
 
     /**

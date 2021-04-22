@@ -376,9 +376,11 @@ class ProjectResourceTest extends \RestBase
     public function testManipulatePIContent(int $program_increment_id): void
     {
         $program_id = $this->getProgramProjectId();
-        $featureA   = $this->getArtifactWithArtifactLink('description', 'FeatureA', $program_id, 'features');
+        $featureB   = $this->getArtifactWithArtifactLink('description', 'FeatureB', $program_id, 'features');
 
-        $this->patchProgramIncrementContent($program_increment_id, $featureA['id'], null);
+        $this->patchProgramIncrementContent($program_increment_id, $featureB['id'], null);
+
+        $this->checkGetFirstElementOfProgramIncrement($program_increment_id, 'id', (string) $featureB['id']);
     }
 
     /**
@@ -548,7 +550,7 @@ class ProjectResourceTest extends \RestBase
                 json_encode(['add' => $feature_to_add, 'order' => $order], JSON_THROW_ON_ERROR)
             )
         );
-        self::assertEquals(501, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     /**
