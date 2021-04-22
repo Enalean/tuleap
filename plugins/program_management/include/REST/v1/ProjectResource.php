@@ -24,41 +24,32 @@ namespace Tuleap\ProgramManagement\REST\v1;
 
 use BackendLogger;
 use Luracast\Restler\RestException;
-use Tracker_ArtifactFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogUpdater;
-use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Project\REST\UserGroupRetriever;
-use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
-use Tuleap\REST\AuthenticatedResource;
-use Tuleap\REST\Header;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupBuildAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
@@ -67,11 +58,20 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogUpdater;
 use Tuleap\ProgramManagement\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Program\Plan\PlanCreator;
 use Tuleap\ProgramManagement\Team\Creation\TeamCreator;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -339,9 +339,10 @@ final class ProjectResource extends AuthenticatedResource
 
         $project_manager     = \ProjectManager::instance();
         $program             = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao());
+        $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $top_backlog_updater = new TopBacklogUpdater(
             new ProcessTopBacklogChange(
-                \Tracker_ArtifactFactory::instance(),
+                $artifact_factory,
                 new PrioritizeFeaturesPermissionVerifier(
                     $project_manager,
                     $project_access_checker,
@@ -352,7 +353,12 @@ final class ProjectResource extends AuthenticatedResource
                 new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
                 new ProgramIncrementsDAO(),
                 new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
-                new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), Tracker_ArtifactFactory::instance())
+                new UserStoryLinkedToFeatureChecker(
+                    new ArtifactsLinkedToParentDao(),
+                    new PlanningAdapter(\PlanningFactory::build()),
+                    $artifact_factory
+                ),
+                new VerifyIsVisibleFeatureAdapter($artifact_factory),
             )
         );
 

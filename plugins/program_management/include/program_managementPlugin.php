@@ -70,6 +70,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\TrackerShouldPlanFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramAdapter;
@@ -581,15 +582,21 @@ final class program_managementPlugin extends Plugin
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
+        $artifact_factory       = Tracker_ArtifactFactory::instance();
         return new ProcessTopBacklogChange(
-            Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             new PrioritizeFeaturesPermissionVerifier(ProjectManager::instance(), $project_access_checker, new CanPrioritizeFeaturesDAO()),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
             new ProgramIncrementsDAO(),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
-            new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), Tracker_ArtifactFactory::instance())
+            new UserStoryLinkedToFeatureChecker(
+                new ArtifactsLinkedToParentDao(),
+                new PlanningAdapter(\PlanningFactory::build()),
+                $artifact_factory
+            ),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory),
         );
     }
 

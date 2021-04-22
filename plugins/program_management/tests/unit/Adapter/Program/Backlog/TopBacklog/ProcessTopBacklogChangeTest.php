@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
@@ -95,7 +96,8 @@ final class ProcessTopBacklogChangeTest extends TestCase
             $this->artifact_link_updater,
             $this->program_increment_dao,
             $this->feature_orderer,
-            $this->user_story_linked_checker
+            $this->user_story_linked_checker,
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory)
         );
     }
 
