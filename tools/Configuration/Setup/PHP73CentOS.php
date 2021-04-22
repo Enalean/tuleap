@@ -21,10 +21,10 @@
 namespace Tuleap\Configuration\Setup;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Configuration\Apache\LogrotateDeployer;
+use TuleapCfg\Command\SiteDeploy\Apache\LogrotateDeployer;
 use Tuleap\Configuration\Etc;
-use Tuleap\Configuration\Apache;
 use Tuleap\Configuration\Logger\Wrapper;
+use TuleapCfg\Command\SiteDeploy\Apache\SiteDeployApache;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
@@ -103,7 +103,7 @@ class PHP73CentOS
             );
         }
         if (in_array('apache', $modules, true)) {
-            $configs[] = new Apache\TuleapWeb($this->logger, '/etc/httpd', new LogrotateDeployer($this->logger));
+            $configs[] = new SiteDeployApache($this->logger, '/etc/httpd', new LogrotateDeployer($this->logger));
         }
 
         foreach ($configs as $conf) {

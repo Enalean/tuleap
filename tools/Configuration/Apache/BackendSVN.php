@@ -22,6 +22,7 @@ namespace Tuleap\Configuration\Apache;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Logger\Wrapper;
+use TuleapCfg\Command\SiteDeploy\Apache\LogrotateDeployer;
 
 class BackendSVN
 {
