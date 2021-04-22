@@ -55,7 +55,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->expectExceptionMessage("key object_attributes is missing");
 
         $webhook_content = [];
-        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 
     public function testItThrowsAnExceptionIfMergeRequestIdKeyIsMissing(): void
@@ -64,7 +64,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->expectExceptionMessage("key iid in object_attributes is missing");
 
         $webhook_content = ['object_attributes' => []];
-        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 
     public function testItThrowsAnExceptionIfMergeRequestTitleKeyIsMissing(): void
@@ -73,7 +73,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->expectExceptionMessage("key title in object_attributes is missing");
 
         $webhook_content = ['object_attributes' => ["iid" => 1]];
-        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 
     public function testItThrowsAnExceptionIfMergeRequestDescriptionKeyIsMissing(): void
@@ -82,7 +82,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->expectExceptionMessage("key description in object_attributes is missing");
 
         $webhook_content = ['object_attributes' => ["iid" => 1, "title" => "My Title"]];
-        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 
     public function testItThrowsAnExceptionIfMergeRequestCreatedAtKeyIsMissing(): void
@@ -98,7 +98,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
                 'state'       => 'closed',
             ],
         ];
-        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 
     public function testItThrowsAnExceptionIfMergeRequestAuthorIdKeyIsMissing(): void
@@ -115,7 +115,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
                 'created_at'  => '2021-01-12 13:49:35 UTC'
             ],
         ];
-        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 
     public function testItReturnsPostMergeRequestWebhookData(): void
@@ -146,6 +146,6 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
             ->with("|_ Its description is: My description")
             ->once();
 
-        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 }

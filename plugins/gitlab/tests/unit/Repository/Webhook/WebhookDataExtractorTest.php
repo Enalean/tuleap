@@ -65,25 +65,28 @@ class WebhookDataExtractorTest extends TestCase
         );
     }
 
-    public function testItThrowsAnExceptionIfEventKeyIsMissing(): void
+    public function testItThrowsAnExceptionIfEventHeaderIsMissing(): void
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream('{}')
         );
 
-        $this->expectException(MissingEventKeysException::class);
+        $this->expectException(MissingEventHeaderException::class);
 
         $this->extractor->retrieveWebhookData(
             $request
         );
     }
 
-    public function testItThrowsAnExceptionIfEventNameIsNotAPushAndEventTypeIsMissing(): void
+    public function testItThrowsAnExceptionIfEventIsNotAKnownEvent(): void
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "whatever"}'
+                '{}'
             )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Whatever Hook"
         );
 
         $this->expectException(EventNotAllowedException::class);
@@ -93,57 +96,15 @@ class WebhookDataExtractorTest extends TestCase
         );
     }
 
-    public function testItThrowsAnExceptionIfEventNameIsMissingAndEventTypeIsNotMergeRequest(): void
+    public function testItThrowsAnExceptionIfProjectKeyIsMissingInEvent(): void
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_type": "whatever"}'
+                '{}'
             )
-        );
-
-        $this->expectException(EventNotAllowedException::class);
-
-        $this->extractor->retrieveWebhookData(
-            $request
-        );
-    }
-
-    public function testItThrowsAnExceptionIfEventNameIsNotPushAndEventTypeIsNotMergeRequest(): void
-    {
-        $request = (new NullServerRequest())->withBody(
-            HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_type": "whatever", "event_type": "other"}'
-            )
-        );
-
-        $this->expectException(EventNotAllowedException::class);
-
-        $this->extractor->retrieveWebhookData(
-            $request
-        );
-    }
-
-    public function testItThrowsAnExceptionIfProjectKeyIsMissingInPostPush(): void
-    {
-        $request = (new NullServerRequest())->withBody(
-            HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "push"}'
-            )
-        );
-
-        $this->expectException(MissingKeyException::class);
-
-        $this->extractor->retrieveWebhookData(
-            $request
-        );
-    }
-
-    public function testItThrowsAnExceptionIfProjectKeyIsMissingInPostMergeRequest(): void
-    {
-        $request = (new NullServerRequest())->withBody(
-            HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_type": "merge_request"}'
-            )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Push Hook"
         );
 
         $this->expectException(MissingKeyException::class);
@@ -157,8 +118,11 @@ class WebhookDataExtractorTest extends TestCase
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "push", "project":{}}'
+                '{"project":{}}'
             )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Push Hook"
         );
 
         $this->expectException(MissingKeyException::class);
@@ -172,8 +136,11 @@ class WebhookDataExtractorTest extends TestCase
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_type": "merge_request", "project":{}}'
+                '{"project":{}}'
             )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Merge Request Hook"
         );
 
         $this->expectException(MissingKeyException::class);
@@ -187,8 +154,11 @@ class WebhookDataExtractorTest extends TestCase
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "push", "project":{"id": 123456}, "commits": []}'
+                '{"project":{"id": 123456}, "commits": []}'
             )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Push Hook"
         );
 
         $this->expectException(MissingKeyException::class);
@@ -202,8 +172,11 @@ class WebhookDataExtractorTest extends TestCase
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_type": "merge_request", "project":{"id": 123456}, "commits": []}'
+                '{"project":{"id": 123456}, "commits": []}'
             )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Merge Request Hook"
         );
 
         $this->expectException(MissingKeyException::class);
@@ -217,13 +190,12 @@ class WebhookDataExtractorTest extends TestCase
     {
         $this->logger
             ->shouldReceive("info")
-            ->with("|_ Webhook of type push received.")
+            ->with("|_ Webhook of type Push Hook received.")
             ->once();
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "push",
-                  "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
+                '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
                   "ref": "refs/heads/master",
                   "commits": [
                       {
@@ -249,13 +221,16 @@ class WebhookDataExtractorTest extends TestCase
                   ]
                 }'
             )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Push Hook"
         );
 
         $webhook_data = $this->extractor->retrieveWebhookData(
             $request
         );
 
-        $this->assertSame("push", $webhook_data->getEventName());
+        $this->assertSame("Push Hook", $webhook_data->getEventName());
         $this->assertSame(123456, $webhook_data->getGitlabProjectId());
         $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
         $this->assertInstanceOf(PostPushWebhookData::class, $webhook_data);
@@ -266,13 +241,12 @@ class WebhookDataExtractorTest extends TestCase
     {
         $this->logger
             ->shouldReceive("info")
-            ->with("|_ Webhook of type merge_request received.")
+            ->with("|_ Webhook of type Merge Request Hook received.")
             ->once();
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_type": "merge_request",
-                  "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
+                '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
                   "object_attributes":{
                     "iid": 2,
                     "title": "My Title",
@@ -283,13 +257,16 @@ class WebhookDataExtractorTest extends TestCase
                   }
                 }'
             )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Merge Request Hook"
         );
 
         $webhook_data = $this->extractor->retrieveWebhookData(
             $request
         );
 
-        $this->assertSame("merge_request", $webhook_data->getEventName());
+        $this->assertSame("Merge Request Hook", $webhook_data->getEventName());
         $this->assertSame(123456, $webhook_data->getGitlabProjectId());
         $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
         $this->assertInstanceOf(PostMergeRequestWebhookData::class, $webhook_data);

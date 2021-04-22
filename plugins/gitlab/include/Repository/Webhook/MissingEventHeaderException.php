@@ -20,13 +20,10 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-class MissingEventKeysException extends \RuntimeException
+class MissingEventHeaderException extends \RuntimeException
 {
-    /**
-     * @param string[] $keys_name
-     */
-    public function __construct(array $keys_name)
+    public function __construct()
     {
-        parent::__construct("The event keys " . implode(' or ', $keys_name) . " are missing in the GitLab webhook payload.");
+        parent::__construct("GitLab event type not provided in request header.");
     }
 }
