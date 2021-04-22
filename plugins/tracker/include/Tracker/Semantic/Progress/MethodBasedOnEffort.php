@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tracker_FormElement_Field_Numeric;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class MethodBasedOnEffort implements IComputeProgression
 {
@@ -84,5 +85,63 @@ class MethodBasedOnEffort implements IComputeProgression
 
         return $field_id === $this->total_effort_field->getId()
             || $field_id === $this->remaining_effort_field->getId();
+    }
+
+    public function computeProgression(Artifact $artifact, \PFUser $user): ?float
+    {
+        if (! $this->canUserReadBothFields($user)) {
+            return null;
+        }
+
+        $total_effort = $this->getNumericFieldValue(
+            $this->total_effort_field,
+            $artifact,
+            $user
+        );
+
+        $remaining_effort = $this->getNumericFieldValue(
+            $this->remaining_effort_field,
+            $artifact,
+            $user
+        );
+
+        if (! $this->canProgressBeComputed($total_effort, $remaining_effort)) {
+            return null;
+        }
+
+        return 1 - ($remaining_effort / $total_effort);
+    }
+
+    private function canProgressBeComputed(?float $total_effort, ?float $remaining_effort): bool
+    {
+        return ($total_effort !== null) &&
+            ($total_effort > 0) &&
+            ($remaining_effort !== null) &&
+            ($remaining_effort <= $total_effort) &&
+            ($remaining_effort >= 0);
+    }
+
+    private function getNumericFieldValue(\Tracker_FormElement_Field_Numeric $numeric_field, Artifact $artifact, \PFUser $user): ?float
+    {
+        if ($numeric_field instanceof \Tracker_FormElement_Field_Computed) {
+            return $numeric_field->getComputedValue($user, $artifact);
+        }
+
+        $last_changeset = $numeric_field->getLastChangesetValue($artifact);
+        if ($last_changeset === null) {
+            return null;
+        }
+
+        if (! ($last_changeset instanceof \Tracker_Artifact_ChangesetValue_Numeric)) {
+            return null;
+        }
+
+        return (float) $last_changeset->getNumeric();
+    }
+
+    private function canUserReadBothFields(\PFUser $user): bool
+    {
+        return $this->total_effort_field->userCanRead($user) &&
+            $this->remaining_effort_field->userCanRead($user);
     }
 }

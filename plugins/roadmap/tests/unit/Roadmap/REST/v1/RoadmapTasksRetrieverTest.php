@@ -36,6 +36,9 @@ use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -89,6 +92,10 @@ class RoadmapTasksRetrieverTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RoadmapTasksOutOfDateFilter
      */
     private $tasks_filter;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticProgressBuilder
+     */
+    private $progress_builder;
 
     protected function setUp(): void
     {
@@ -100,6 +107,7 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $this->artifact_factory           = Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->tasks_filter               = Mockery::mock(RoadmapTasksOutOfDateFilter::class);
+        $this->progress_builder           = Mockery::mock(SemanticProgressBuilder::class);
 
         $this->user = UserTestBuilder::anActiveUser()->build();
     }
@@ -116,7 +124,8 @@ class RoadmapTasksRetrieverTest extends TestCase
             new TimeframeBuilder($this->semantic_timeframe_builder, new NullLogger()),
             $this->artifact_factory,
             $dependencies_retriever,
-            $this->tasks_filter
+            $this->tasks_filter,
+            $this->progress_builder
         );
     }
 
@@ -739,12 +748,20 @@ class RoadmapTasksRetrieverTest extends TestCase
             ->with(self::TRACKER_ID)
             ->andReturn($tracker);
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $start_date_field       = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $end_date_field         = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $total_effort_field     = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
+        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
+
         $this->semantic_timeframe_builder
             ->shouldReceive('getSemantic')
             ->with($tracker)
             ->andReturn(new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field));
+
+        $this->progress_builder
+            ->shouldReceive('getSemantic')
+            ->with($tracker)
+            ->andReturn(new SemanticProgress($tracker, new MethodBasedOnEffort($total_effort_field, $remaining_effort_field)));
 
         $task_201 = Mockery::mock(
             Artifact::class,
@@ -796,6 +813,11 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->mockDate($task_203, $start_date_field, null);
         $this->mockDate($task_203, $end_date_field, 1234567890);
 
+        $this->mockEffort($task_201, $total_effort_field, 8);
+        $this->mockEffort($task_201, $remaining_effort_field, 5);
+        $this->mockEffort($task_203, $total_effort_field, 3);
+        $this->mockEffort($task_203, $remaining_effort_field, 0.75);
+
         $artifacts = [$task_201, $task_202, $task_203, $task_204];
         $this->artifact_factory
             ->shouldReceive('getPaginatedArtifactsByTrackerId')
@@ -837,7 +859,7 @@ class RoadmapTasksRetrieverTest extends TestCase
                     '/plugins/tracker?aid=201',
                     'Do this',
                     'acid-green',
-                    null,
+                    0.375,
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     [new DependenciesByNature('depends_on', [202, 203])],
@@ -848,7 +870,7 @@ class RoadmapTasksRetrieverTest extends TestCase
                     '/plugins/tracker?aid=203',
                     'Do those',
                     'acid-green',
-                    null,
+                    0.75,
                     null,
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     [],
@@ -881,5 +903,20 @@ class RoadmapTasksRetrieverTest extends TestCase
             ->shouldReceive('getLastChangesetValue')
             ->with($artifact)
             ->andReturn($value);
+    }
+
+    private function mockEffort(Artifact $artifact, Mockery\MockInterface $effort_field, float $effort)
+    {
+        $effort_field->shouldReceive('getLastChangesetValue')
+            ->with($artifact)
+            ->andReturn(
+                new \Tracker_Artifact_ChangesetValue_Float(
+                    1,
+                    Mockery::mock(\Tracker_Artifact_Changeset::class),
+                    $effort_field,
+                    false,
+                    $effort
+                )
+            );
     }
 }
