@@ -31,7 +31,7 @@ final class TopBacklogElementToOrderInvolvedInChangeRepresentation
     public const AFTER  = "after";
     public const BEFORE = "before";
     /**
-     * @var int[] {@required true} {@min 1}{@max 10}
+     * @var int[] {@required true} {@min 1}{@max 1}
      */
     public $ids;
 

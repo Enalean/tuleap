@@ -290,7 +290,8 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals($bug_id_1, $backlog_content[1]);
 
         // Clear program backlog
-        $this->patchTopBacklog($project_id, [], [$bug_id_1, $bug_id_2]);
+        $this->patchTopBacklog($project_id, [], [$bug_id_1]);
+        $this->patchTopBacklog($project_id, [], [$bug_id_2]);
         self::assertEmpty($this->getTopBacklogContent($project_id));
     }
 
