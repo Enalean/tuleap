@@ -25,6 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 
 class WebhookDataExtractor
 {
@@ -34,6 +35,7 @@ class WebhookDataExtractor
     private const PROJECT_URL_KEY     = 'web_url';
     private const PUSH_EVENT          = 'Push Hook';
     private const MERGE_REQUEST_EVENT = 'Merge Request Hook';
+    private const TAG_PUSH_EVENT      = 'Tag Push Hook';
 
     /**
      * @var LoggerInterface
@@ -47,14 +49,20 @@ class WebhookDataExtractor
      * @var PostPushWebhookDataBuilder
      */
     private $post_push_webhook_data_builder;
+    /**
+     * @var TagPushWebhookDataBuilder
+     */
+    private $tag_push_webhook_data_builder;
 
     public function __construct(
         PostPushWebhookDataBuilder $post_push_webhook_data_builder,
         PostMergeRequestWebhookDataBuilder $post_merge_request_webhook_data_builder,
+        TagPushWebhookDataBuilder $tag_push_webhook_data_builder,
         LoggerInterface $logger
     ) {
         $this->post_push_webhook_data_builder          = $post_push_webhook_data_builder;
         $this->post_merge_request_webhook_data_builder = $post_merge_request_webhook_data_builder;
+        $this->tag_push_webhook_data_builder           = $tag_push_webhook_data_builder;
         $this->logger                                  = $logger;
     }
 
@@ -63,11 +71,11 @@ class WebhookDataExtractor
      * @throws EventNotAllowedException
      * @throws EmptyBranchNameException
      * @throws MissingEventHeaderException
+     * @throws InvalidValueFormatException
      */
     public function retrieveWebhookData(ServerRequestInterface $request): WebhookData
     {
         $webhook_type = $this->getWebhookTypeFromRequestHeader($request);
-        $this->checkEvents($webhook_type);
 
         $webhook_content = json_decode($request->getBody()->getContents(), true);
         $this->checkCommonJsonKeysAreSet($webhook_content);
@@ -75,6 +83,16 @@ class WebhookDataExtractor
         if ($this->isPostPushEvent($webhook_type)) {
             $this->logger->info("|_ Webhook of type $webhook_type received.");
             return $this->post_push_webhook_data_builder->build(
+                $webhook_type,
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
+                $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
+                $webhook_content
+            );
+        }
+
+        if ($this->isTagPushRequestEvent($webhook_type)) {
+            $this->logger->info("|_ Webhook of type $webhook_type received.");
+            return $this->tag_push_webhook_data_builder->build(
                 $webhook_type,
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
@@ -94,6 +112,7 @@ class WebhookDataExtractor
 
     /**
      * @throws MissingEventHeaderException
+     * @throws EventNotAllowedException
      */
     private function getWebhookTypeFromRequestHeader(ServerRequestInterface $request): string
     {
@@ -102,9 +121,14 @@ class WebhookDataExtractor
             throw new MissingEventHeaderException();
         }
 
+        $this->checkEvents($gitlab_event_header);
+
         return $gitlab_event_header;
     }
 
+    /**
+     * @throws EventNotAllowedException
+     */
     private function checkEvents(string $webhook_type): void
     {
         if ($this->isPostPushEvent($webhook_type)) {
@@ -112,6 +136,10 @@ class WebhookDataExtractor
         }
 
         if ($this->isPostMergeRequestEvent($webhook_type)) {
+            return;
+        }
+
+        if ($this->isTagPushRequestEvent($webhook_type)) {
             return;
         }
 
@@ -126,6 +154,11 @@ class WebhookDataExtractor
     private function isPostMergeRequestEvent(string $webhook_type): bool
     {
         return $webhook_type === self::MERGE_REQUEST_EVENT;
+    }
+
+    private function isTagPushRequestEvent(string $webhook_type): bool
+    {
+        return $webhook_type === self::TAG_PUSH_EVENT;
     }
 
     /**
