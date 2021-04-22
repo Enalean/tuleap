@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,9 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Configuration\Apache;
+namespace TuleapCfg\Command\SiteDeploy\Apache;
 
 use Psr\Log\LoggerInterface;
 
@@ -34,7 +35,7 @@ class LogrotateDeployer
         $this->logger = $logger;
     }
 
-    public function deployLogrotate()
+    public function deployLogrotate(): void
     {
         $httpd_logrotate = '/etc/logrotate.d/httpd';
         if (! $this->fileContains($httpd_logrotate, '/usr/share/tuleap/src/utils/httpd/postrotate.php')) {
@@ -49,7 +50,7 @@ class LogrotateDeployer
         }
     }
 
-    private function fileContains($filepath, $needle)
+    private function fileContains(string $filepath, string $needle): bool
     {
         if (file_exists($filepath)) {
             return strpos(file_get_contents($filepath), $needle) !== false;

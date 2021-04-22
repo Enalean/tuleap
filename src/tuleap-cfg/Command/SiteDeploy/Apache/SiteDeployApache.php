@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,15 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Configuration\Apache;
+namespace TuleapCfg\Command\SiteDeploy\Apache;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Configuration\Logger\Wrapper;
+use WrapperLogger;
 
-class TuleapWeb
+class SiteDeployApache
 {
+    /**
+     * @var string
+     */
     private $httpd_conf_path;
     /**
      * @var LoggerInterface
@@ -35,14 +39,14 @@ class TuleapWeb
      */
     private $logrotate_deployer;
 
-    public function __construct(LoggerInterface $logger, $httpd_conf_path, LogrotateDeployer $logrotate_deployer)
+    public function __construct(LoggerInterface $logger, string $httpd_conf_path, LogrotateDeployer $logrotate_deployer)
     {
-        $this->logger             = new Wrapper($logger, 'apache');
+        $this->logger             = new WrapperLogger($logger, 'apache');
         $this->httpd_conf_path    = $httpd_conf_path;
         $this->logrotate_deployer = $logrotate_deployer;
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->logger->info("Start apache configuration");
         $this->updateHttpdConf();
@@ -51,7 +55,7 @@ class TuleapWeb
         $this->logger->info("Configuration done!");
     }
 
-    private function updateHttpdConf()
+    private function updateHttpdConf(): void
     {
         $httpd_conf = file_get_contents($this->httpd_conf_path . '/conf/httpd.conf');
 
@@ -75,7 +79,7 @@ class TuleapWeb
         }
     }
 
-    private function disableSSLvhost()
+    private function disableSSLvhost(): void
     {
         $vhost_file = $this->httpd_conf_path . '/conf.d/tuleap-vhost.conf';
         if (is_file($vhost_file)) {
@@ -113,7 +117,7 @@ class TuleapWeb
         }
     }
 
-    private function turnHttpVhostOn8080($content)
+    private function turnHttpVhostOn8080(string $content): string
     {
         return preg_replace(
             [

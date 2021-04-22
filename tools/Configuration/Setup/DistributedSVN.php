@@ -23,7 +23,7 @@ namespace Tuleap\Configuration\Setup;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Configuration;
-use Tuleap\Configuration\Apache\LogrotateDeployer;
+use TuleapCfg\Command\SiteDeploy\Apache\LogrotateDeployer;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 
 class DistributedSVN
