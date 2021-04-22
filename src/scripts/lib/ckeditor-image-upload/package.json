@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "$npm_package_config_bin/vite build",
-    "watch": "$npm_package_config_bin/nodemon --watch src/ --ignore \"src/**/*.test.js\" --ext js --exec '$npm_package_config_bin/vite build --mode development --minify false'",
+    "watch": "$npm_package_config_bin/vite build --watch --mode development --minify false",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
