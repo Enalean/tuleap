@@ -35,11 +35,10 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
         $result         = [];
         $ff             = Tracker_FormElementFactory::instance();
         $af             = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
-        \assert($af instanceof Tracker_FormElement_Field_List);
         if (! $af) {
-            $this->displayNoFieldError();
-            return $result;
+            throw new \Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException($this->chart->getTitle());
         }
+        \assert($af instanceof Tracker_FormElement_Field_List);
 
         if ($af->userCanRead()) {
             $select = " SELECT count(a.id) AS nb, " . $af->getQuerySelectWithDecorator();
