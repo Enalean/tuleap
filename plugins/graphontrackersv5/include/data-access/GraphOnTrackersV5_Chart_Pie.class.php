@@ -41,7 +41,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     public function loadFromDb()
     {
         $arr              = $this->getDao()->searchById($this->id)->getRow();
-        $this->field_base = $arr['field_base'];
+        $this->field_base = $arr['field_base'] ?? null;
     }
 
     public function registerInSession()

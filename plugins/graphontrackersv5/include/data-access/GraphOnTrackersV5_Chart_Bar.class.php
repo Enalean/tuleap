@@ -45,8 +45,8 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
     public function loadFromDb()
     {
         $arr               = $this->getDao()->searchById($this->id)->getRow();
-        $this->field_base  = $arr['field_base'];
-        $this->field_group = $arr['field_group'];
+        $this->field_base  = $arr['field_base'] ?? null;
+        $this->field_group = $arr['field_group'] ?? null;
     }
 
     public function registerInSession()

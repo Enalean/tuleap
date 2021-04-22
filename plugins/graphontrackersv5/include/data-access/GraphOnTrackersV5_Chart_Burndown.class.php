@@ -95,9 +95,9 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     public function loadFromDb()
     {
         $arr              = $this->getDao()->searchById($this->id)->getRow();
-        $this->field_id   = $arr['field_id'];
-        $this->start_date = $arr['start_date'];
-        $this->duration   = $arr['duration'];
+        $this->field_id   = $arr['field_id'] ?? null;
+        $this->start_date = $arr['start_date'] ?? null;
+        $this->duration   = $arr['duration'] ?? null;
     }
 
     public function registerInSession()
