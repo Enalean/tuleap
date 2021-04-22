@@ -161,7 +161,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             }
         }
 
-        if ($manual_value_for_current_node['value'] !== null && $has_manual_value_in_children) {
+        if (($manual_value_for_current_node['value'] ?? null) !== null && $has_manual_value_in_children) {
             $computed_children = 0;
             if (count($computed_children_to_fetch) > 0) {
                 $computed_children = $this->getStandardCalculationMode($computed_children_to_fetch);
@@ -174,7 +174,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return $this->getStopAtManualSetFieldMode([$artifact->getId()]);
         }
 
-        if ($has_manual_value_in_children && $manual_value_for_current_node['value'] === null) {
+        if ($has_manual_value_in_children && ($manual_value_for_current_node['value'] ?? null) === null) {
             return $this->getStandardCalculationMode([$artifact->getId()]);
         }
 
