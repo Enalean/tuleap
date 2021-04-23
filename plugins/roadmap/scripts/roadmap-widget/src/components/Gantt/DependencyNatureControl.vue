@@ -24,7 +24,7 @@
             Links
         </label>
         <select
-            class="tlp-select tlp-select-adjusted"
+            class="tlp-select tlp-select-small tlp-select-adjusted"
             v-bind:id="id"
             v-on:change="onchange"
             data-test="select-links"

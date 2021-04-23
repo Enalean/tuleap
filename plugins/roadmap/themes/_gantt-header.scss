@@ -32,38 +32,41 @@
         position: absolute;
         z-index: 3;
         top: 0;
-        right: -8px;
-        width: 8px;
+        right: -14px;
+        width: 12px;
         height: 100%;
-        background: linear-gradient(to right, var(--tlp-ui-border-normal), transparent);
+        opacity: .075;
+        background: linear-gradient(to right, var(--tlp-theme-dark-background-color), transparent);
     }
 }
 
 .roadmap-gantt-task-header {
-    $radius: 4px;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: roadmap-variables.$task-header-width;
     min-width: roadmap-variables.$task-header-width;
     height: 100%;
-    padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-large-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
+    padding: calc(var(--tlp-small-spacing) - 2px) var(--tlp-medium-spacing) calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) - 4px);
     border-bottom: 1px solid var(--tlp-ui-border-normal);
     color: var(--tlp-typo-default-text-color);
     white-space: nowrap;
 
-    &:first-child {
-        border-top-left-radius: $radius;
-    }
-
     &:last-child {
         border-bottom: 0;
-        border-bottom-left-radius: $radius;
+    }
+
+    &:hover {
+        text-decoration: none;
+
+        > .roadmap-gantt-task-header-title {
+            text-decoration: underline;
+        }
     }
 }
 
 .roadmap-gantt-task-header-xref {
+    margin: 0 0 2px;
     font-size: .625rem;
     line-height: .75rem;
 }

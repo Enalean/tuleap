@@ -66,12 +66,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: 3px; height: 74px; width: 47px;">
-              <path d="M17 17 L25 17 Q33 17, 33 25 L33 29 Q33 37, 25 37 L9 37 Q1 37, 1 45 L1 49 Q1 57, 9 57
-                        L30 57
-                        L22 49
-                        M30 57
-                        L22 65" data-test="path" class="roadmap-gantt-task-dependency-line"></path>
+            <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: 4px; height: 76px; width: 47px;">
+              <path d="M17 17 L25 17 Q33 17, 33 25 L33 30 Q33 38, 25 38 L9 38 Q1 38, 1 46 L1 51 Q1 59, 9 59
+                        L30 59
+                        L25 54
+                        M30 59
+                        L25 64" data-test="path" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
@@ -91,12 +91,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_2, task_1, [task_2, task_1], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: 3px; height: 74px; width: 87px;">
-              <path d="M70 17 L78 17 Q86 17, 86 25 L86 29 Q86 37, 78 37 L9 37 Q1 37, 1 45 L1 49 Q1 57, 9 57
-                        L17 57
-                        L9 49
-                        M17 57
-                        L9 65" data-test="path" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
+            <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: 4px; height: 76px; width: 87px;">
+              <path d="M70 17 L78 17 Q86 17, 86 25 L86 30 Q86 38, 78 38 L9 38 Q1 38, 1 46 L1 51 Q1 59, 9 59
+                        L17 59
+                        L12 54
+                        M17 59
+                        L12 64" data-test="path" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });
@@ -116,12 +116,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_2, task_1, [task_1, task_2], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: -37px; height: 74px; width: 87px;">
-              <path d="M70 57 L78 57 Q86 57, 86 49 L86 45 Q86 37, 78 37 L9 37 Q1 37, 1 29 L1 25 Q1 17, 9 17
+            <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: -38px; height: 76px; width: 87px;">
+              <path d="M70 59 L78 59 Q86 59, 86 51 L86 46 Q86 38, 78 38 L9 38 Q1 38, 1 30 L1 25 Q1 17, 9 17
                         L17 17
-                        L9 9
+                        L12 12
                         M17 17
-                        L9 25" data-test="path" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
+                        L12 22" data-test="path" class="roadmap-gantt-task-dependency-line roadmap-gantt-task-dependency-line-ends-after-start"></path>
             </svg>
         `);
     });
@@ -141,12 +141,12 @@ describe("DependencyArrow", () => {
         const wrapper = mountComponent(task_1, task_2, [task_2, task_1], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: -37px; height: 74px; width: 47px;">
-              <path d="M17 57 L25 57 Q33 57, 33 49 L33 45 Q33 37, 25 37 L9 37 Q1 37, 1 29 L1 25 Q1 17, 9 17
+            <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: -38px; height: 76px; width: 47px;">
+              <path d="M17 59 L25 59 Q33 59, 33 51 L33 46 Q33 38, 25 38 L9 38 Q1 38, 1 30 L1 25 Q1 17, 9 17
                         L30 17
-                        L22 9
+                        L25 12
                         M30 17
-                        L22 25" data-test="path" class="roadmap-gantt-task-dependency-line"></path>
+                        L25 22" data-test="path" class="roadmap-gantt-task-dependency-line"></path>
             </svg>
         `);
     });
@@ -173,7 +173,7 @@ describe("DependencyArrow", () => {
 
         await wrapper.setProps({ is_text_displayed_outside_bar: true });
         expect(wrapper.element.style.left).toBe("33px");
-        expect(wrapper.element.style.width).toBe("60px");
+        expect(wrapper.element.style.width).toBe("64px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
             "roadmap-gantt-task-dependency-line-ends-after-start"
         );

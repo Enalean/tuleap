@@ -24,6 +24,7 @@
     display: flex;
     height: roadmap-variables.$time-unit-height;
     margin: 0;
+    cursor: default;
 }
 
 @mixin timeperiod-style {
@@ -43,6 +44,10 @@
 .roadmap-gantt-timeperiod-year {
     @include timeperiod-style;
     background: var(--tlp-theme-color-dimmed-background);
+
+    &:not(:last-child) {
+        border-right: 1px solid var(--tlp-ui-white);
+    }
 }
 
 @for $i from 1 through 53 {

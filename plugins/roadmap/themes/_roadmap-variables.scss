@@ -18,7 +18,7 @@
  */
 
 $task-header-width: 286px;
-$task-height: 40px;
+$task-height: 42px;
 $task-bar-height: 25px;
 $task-bar-min-width: 10px;
 
@@ -33,3 +33,4 @@ $today-pin-shaft-size: 1px;
 
 $z-index-dependencies: 1;
 $z-index-bars: 2;
+$z-index-today: 3;
