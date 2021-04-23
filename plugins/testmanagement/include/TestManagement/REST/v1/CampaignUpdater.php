@@ -30,6 +30,9 @@ use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 
+/**
+ * @psalm-import-type StatusAcceptableValue from CampaignArtifactUpdateFieldValuesBuilder
+ */
 class CampaignUpdater
 {
     /** @var Tracker_REST_Artifact_ArtifactUpdater */
@@ -52,10 +55,10 @@ class CampaignUpdater
     }
 
     /**
+     * @psalm-param StatusAcceptableValue $change_status
      * @throws LabelFieldNotFoundException
      * @throws SemanticStatusNotDefinedException
      * @throws SemanticStatusClosedValueNotFoundException
-     * @throws CampaignStatusChangeUnknownValueException
      * @throws \Luracast\Restler\RestException
      * @throws \Tracker_AfterSaveException
      * @throws \Tracker_ChangesetCommitException

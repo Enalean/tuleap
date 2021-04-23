@@ -113,6 +113,9 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
 
+/**
+ * @psalm-import-type StatusAcceptableValue from CampaignArtifactUpdateFieldValuesBuilder
+ */
 class CampaignsResource
 {
     public const MAX_LIMIT = 50;
@@ -649,6 +652,7 @@ class CampaignsResource
      * @param JobConfigurationRepresentation          $job_configuration {@from body}
      * @param AutomatedTestsResultPATCHRepresentation $automated_tests_results {@from body}
      * @param string | null                           $change_status {@from body} {@required false} {@choice closed,open}
+     * @psalm-param StatusAcceptableValue             $change_status
      *
      * @return CampaignRepresentation
      *
@@ -705,8 +709,7 @@ class CampaignsResource
             throw new RestException(500, $exception->getMessage());
         } catch (
             SemanticStatusNotDefinedException |
-            SemanticStatusClosedValueNotFoundException |
-            CampaignStatusChangeUnknownValueException $exception
+            SemanticStatusClosedValueNotFoundException $exception
         ) {
             throw new RestException(400, $exception->getMessage());
         }
