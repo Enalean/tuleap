@@ -98,7 +98,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusNotOpenValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use UserManager;
 
@@ -698,13 +698,13 @@ class KanbanResource extends AuthenticatedResource
         );
 
         try {
-            $tracker        = $this->getTrackerForKanban($kanban);
-            $not_open_value = $status_value_retriever->getFirstNonOpenValueUserCanRead($tracker, $user);
+            $tracker      = $this->getTrackerForKanban($kanban);
+            $closed_value = $status_value_retriever->getFirstClosedValueUserCanRead($tracker, $user);
 
-            $this->moveArtifactsInColumn($kanban, $user, $add, $not_open_value->getId());
+            $this->moveArtifactsInColumn($kanban, $user, $add, $closed_value->getId());
         } catch (SemanticStatusNotDefinedException $exception) {
             throw new RestException(403);
-        } catch (SemanticStatusNotOpenValueNotFoundException $exception) {
+        } catch (SemanticStatusClosedValueNotFoundException $exception) {
             throw new RestException(500, 'Cannot found any suitable value corresponding to the [archive] column.');
         }
     }

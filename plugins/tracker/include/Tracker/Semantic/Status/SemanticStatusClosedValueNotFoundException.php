@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 /**
  * @psalm-immutable
  */
-class SemanticStatusNotOpenValueNotFoundException extends \RuntimeException
+class SemanticStatusClosedValueNotFoundException extends \RuntimeException
 {
     public function __construct()
     {

@@ -28,12 +28,13 @@ use Tracker_FormElementFactory;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusNotOpenValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
 class CampaignArtifactUpdateFieldValuesBuilder
 {
     private const STATUS_CHANGE_CLOSED_VALUE = 'closed';
+    private const STATUS_CHANGE_OPEN_VALUE   = 'open';
 
     /**
      * @var Tracker_FormElementFactory
@@ -53,12 +54,12 @@ class CampaignArtifactUpdateFieldValuesBuilder
     }
 
     /**
-     * @throws LabelFieldNotFoundException
+     * @return ArtifactValuesRepresentation[]
      * @throws SemanticStatusNotDefinedException
-     * @throws SemanticStatusNotOpenValueNotFoundException
+     * @throws SemanticStatusClosedValueNotFoundException
      * @throws CampaignStatusChangeUnknownValueException
      *
-     * @return ArtifactValuesRepresentation[]
+     * @throws LabelFieldNotFoundException
      */
     public function getFieldValuesForCampaignArtifactUpdate(
         Tracker $tracker,
@@ -84,7 +85,7 @@ class CampaignArtifactUpdateFieldValuesBuilder
 
     /**
      * @throws SemanticStatusNotDefinedException
-     * @throws SemanticStatusNotOpenValueNotFoundException
+     * @throws SemanticStatusClosedValueNotFoundException
      * @throws CampaignStatusChangeUnknownValueException
      */
     private function getStatusValueRepresentation(
@@ -96,7 +97,10 @@ class CampaignArtifactUpdateFieldValuesBuilder
             return null;
         }
 
-        if ($change_status !== self::STATUS_CHANGE_CLOSED_VALUE) {
+        if (
+            $change_status !== self::STATUS_CHANGE_CLOSED_VALUE &&
+            $change_status !== self::STATUS_CHANGE_OPEN_VALUE
+        ) {
             throw new CampaignStatusChangeUnknownValueException($change_status);
         }
 
@@ -107,10 +111,13 @@ class CampaignArtifactUpdateFieldValuesBuilder
 
         $status_value = new ArtifactValuesRepresentation();
 
-        $first_not_open_value         = $this->status_value_retriever->getFirstNonOpenValueUserCanRead($tracker, $user);
-        $status_value->bind_value_ids = [
-            $first_not_open_value->getId()
-        ];
+        if ($change_status === self::STATUS_CHANGE_CLOSED_VALUE) {
+            $value = $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker, $user);
+        } else {
+            $value = $this->status_value_retriever->getFirstOpenValueUserCanRead($tracker, $user);
+        }
+
+        $status_value->bind_value_ids = [$value->getId()];
         $status_value->field_id       = $status_field->getId();
 
         return $status_value;
