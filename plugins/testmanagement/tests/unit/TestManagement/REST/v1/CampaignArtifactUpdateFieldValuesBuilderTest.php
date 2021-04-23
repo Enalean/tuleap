@@ -264,43 +264,4 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends TestCase
             null
         );
     }
-
-    public function testItThrowsAnExceptionIfStatusChangedValueIsNotKnown(): void
-    {
-        $tracker = Mockery::mock(Tracker::class);
-        $user    = UserTestBuilder::aUser()->build();
-
-        $tracker->shouldReceive('getId')->andReturn(47);
-
-        $tracker->shouldNotReceive('getStatusField');
-        $this->status_value_retriever->shouldNotReceive('getFirstNonOpenValueUserCanRead');
-
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')
-            ->once()
-            ->andReturn(
-                new Tracker_FormElement_Field_String(
-                    89,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-                )
-            );
-
-        self::expectException(CampaignStatusChangeUnknownValueException::class);
-
-        $this->builder->getFieldValuesForCampaignArtifactUpdate(
-            $tracker,
-            $user,
-            'new_label',
-            'unknown'
-        );
-    }
 }

@@ -31,6 +31,9 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
+/**
+ * @psalm-type StatusAcceptableValue = self::STATUS_CHANGE_CLOSED_VALUE|self::STATUS_CHANGE_OPEN_VALUE|null
+ */
 class CampaignArtifactUpdateFieldValuesBuilder
 {
     private const STATUS_CHANGE_CLOSED_VALUE = 'closed';
@@ -54,10 +57,10 @@ class CampaignArtifactUpdateFieldValuesBuilder
     }
 
     /**
+     * @psalm-param StatusAcceptableValue $change_status
      * @return ArtifactValuesRepresentation[]
      * @throws SemanticStatusNotDefinedException
      * @throws SemanticStatusClosedValueNotFoundException
-     * @throws CampaignStatusChangeUnknownValueException
      *
      * @throws LabelFieldNotFoundException
      */
@@ -84,9 +87,10 @@ class CampaignArtifactUpdateFieldValuesBuilder
     }
 
     /**
+     * @psalm-param StatusAcceptableValue $change_status
+     *
      * @throws SemanticStatusNotDefinedException
      * @throws SemanticStatusClosedValueNotFoundException
-     * @throws CampaignStatusChangeUnknownValueException
      */
     private function getStatusValueRepresentation(
         Tracker $tracker,
@@ -95,13 +99,6 @@ class CampaignArtifactUpdateFieldValuesBuilder
     ): ?ArtifactValuesRepresentation {
         if ($change_status === null) {
             return null;
-        }
-
-        if (
-            $change_status !== self::STATUS_CHANGE_CLOSED_VALUE &&
-            $change_status !== self::STATUS_CHANGE_OPEN_VALUE
-        ) {
-            throw new CampaignStatusChangeUnknownValueException($change_status);
         }
 
         $status_field = $tracker->getStatusField();
