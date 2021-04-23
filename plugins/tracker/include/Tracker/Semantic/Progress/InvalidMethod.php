@@ -24,9 +24,19 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class MethodNotConfigured implements IComputeProgression
+class InvalidMethod implements IComputeProgression
 {
-    private const METHOD_NAME = 'not-configured';
+    private const METHOD_NAME = 'invalid';
+
+    /**
+     * @var string
+     */
+    private $error_message;
+
+    public function __construct(string $error_message)
+    {
+        $this->error_message = $error_message;
+    }
 
     public static function getMethodName(): string
     {
@@ -40,7 +50,7 @@ class MethodNotConfigured implements IComputeProgression
 
     public function getCurrentConfigurationDescription(): string
     {
-        return dgettext('tuleap-tracker', 'This semantic is not defined yet.');
+        return dgettext('tuleap-tracker', "Progress semantic is not properly configured.");
     }
 
     public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool
@@ -50,7 +60,7 @@ class MethodNotConfigured implements IComputeProgression
 
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
-        return new ProgressionResult(null, "");
+        return new ProgressionResult(null, $this->error_message);
     }
 
     public function isConfigured(): bool
@@ -60,6 +70,6 @@ class MethodNotConfigured implements IComputeProgression
 
     public function getErrorMessage(): string
     {
-        return '';
+        return $this->error_message;
     }
 }

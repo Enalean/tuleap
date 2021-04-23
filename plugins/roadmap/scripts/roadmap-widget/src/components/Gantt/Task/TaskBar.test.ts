@@ -20,15 +20,17 @@
 import { shallowMount } from "@vue/test-utils";
 import TaskBar from "./TaskBar.vue";
 import MilestoneBar from "./MilestoneBar.vue";
+import type { Task } from "../../../type";
 
 describe("TaskBar", () => {
     it("should adapt the width of the progress bar", async () => {
         const task = {
             color_name: "acid-green",
             progress: 0.4,
+            progress_error_message: "",
             start: new Date(2020, 3, 15),
             end: new Date(2020, 3, 20),
-        };
+        } as Task;
 
         const wrapper = shallowMount(TaskBar, {
             propsData: {
@@ -39,6 +41,9 @@ describe("TaskBar", () => {
                 is_text_displayed_inside_progress_bar: true,
                 is_text_displayed_outside_progress_bar: false,
                 is_text_displayed_outside_bar: false,
+                is_error_sign_displayed_outside_bar: false,
+                is_error_sign_displayed_inside_bar: false,
+                is_milestone: false,
             },
         });
 
@@ -55,15 +60,19 @@ describe("TaskBar", () => {
                 task: {
                     color_name: "acid-green",
                     progress: null,
+                    progress_error_message: "",
                     start: new Date(2020, 3, 15),
                     end: new Date(2020, 3, 20),
-                },
+                } as Task,
                 left: 42,
                 width: 66,
                 percentage: "",
                 is_text_displayed_inside_progress_bar: false,
                 is_text_displayed_outside_progress_bar: false,
                 is_text_displayed_outside_bar: false,
+                is_error_sign_displayed_outside_bar: false,
+                is_error_sign_displayed_inside_bar: false,
+                is_milestone: false,
             },
         });
 
@@ -71,60 +80,24 @@ describe("TaskBar", () => {
         expect(progress_bar.element.getAttribute("style")).toBeFalsy();
     });
 
-    it("Displays a milestone when there is no start", () => {
+    it("Displays a milestone", () => {
         const wrapper = shallowMount(TaskBar, {
             propsData: {
                 task: {
                     color_name: "acid-green",
                     start: null,
                     end: new Date(2020, 3, 20),
-                },
+                    progress_error_message: "",
+                } as Task,
                 left: 42,
                 width: 21,
                 percentage: "",
                 is_text_displayed_inside_progress_bar: false,
                 is_text_displayed_outside_progress_bar: false,
                 is_text_displayed_outside_bar: false,
-            },
-        });
-
-        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(true);
-    });
-
-    it("Displays a milestone when there is no end", () => {
-        const wrapper = shallowMount(TaskBar, {
-            propsData: {
-                task: {
-                    color_name: "acid-green",
-                    start: new Date(2020, 3, 20),
-                    end: null,
-                },
-                left: 42,
-                width: 21,
-                percentage: "",
-                is_text_displayed_inside_progress_bar: false,
-                is_text_displayed_outside_progress_bar: false,
-                is_text_displayed_outside_bar: false,
-            },
-        });
-
-        expect(wrapper.findComponent(MilestoneBar).exists()).toBe(true);
-    });
-
-    it("Displays a milestone when start = end", () => {
-        const wrapper = shallowMount(TaskBar, {
-            propsData: {
-                task: {
-                    color_name: "acid-green",
-                    start: new Date(2020, 3, 20),
-                    end: new Date(2020, 3, 20),
-                },
-                left: 42,
-                width: 21,
-                percentage: "",
-                is_text_displayed_inside_progress_bar: false,
-                is_text_displayed_outside_progress_bar: false,
-                is_text_displayed_outside_bar: false,
+                is_error_sign_displayed_outside_bar: false,
+                is_error_sign_displayed_inside_bar: false,
+                is_milestone: true,
             },
         });
 
@@ -140,13 +113,17 @@ describe("TaskBar", () => {
                         start: new Date(2020, 2, 20),
                         end: new Date(2020, 3, 20),
                         progress: 0.42,
-                    },
+                        progress_error_message: "",
+                    } as Task,
                     left: 42,
                     width: 100,
                     percentage: "42%",
                     is_text_displayed_inside_progress_bar: false,
                     is_text_displayed_outside_progress_bar: true,
                     is_text_displayed_outside_bar: false,
+                    is_error_sign_displayed_outside_bar: false,
+                    is_error_sign_displayed_inside_bar: false,
+                    is_milestone: false,
                 },
             });
 
@@ -165,13 +142,17 @@ describe("TaskBar", () => {
                         start: new Date(2020, 2, 20),
                         end: new Date(2020, 3, 20),
                         progress: 0.98,
-                    },
+                        progress_error_message: "",
+                    } as Task,
                     left: 42,
                     width: 100,
                     percentage: "98%",
                     is_text_displayed_inside_progress_bar: true,
                     is_text_displayed_outside_progress_bar: false,
                     is_text_displayed_outside_bar: false,
+                    is_error_sign_displayed_outside_bar: false,
+                    is_error_sign_displayed_inside_bar: false,
+                    is_milestone: false,
                 },
             });
 
@@ -192,19 +173,95 @@ describe("TaskBar", () => {
                         start: new Date(2020, 2, 20),
                         end: new Date(2020, 3, 20),
                         progress: 0.5,
-                    },
+                        progress_error_message: "",
+                    } as Task,
                     left: 42,
                     width: 10,
                     percentage: "50%",
                     is_text_displayed_inside_progress_bar: false,
                     is_text_displayed_outside_progress_bar: false,
                     is_text_displayed_outside_bar: true,
+                    is_error_sign_displayed_outside_bar: false,
+                    is_error_sign_displayed_inside_bar: false,
+                    is_milestone: false,
                 },
             });
 
             expect(wrapper.find("[data-test=container] > [data-test=percentage]").text()).toBe(
                 "50%"
             );
+        });
+    });
+
+    describe("progress in error", () => {
+        it("should display the error sign inside the bar", () => {
+            const wrapper = shallowMount(TaskBar, {
+                propsData: {
+                    task: {
+                        color_name: "acid-green",
+                        start: new Date(2020, 2, 20),
+                        end: new Date(2020, 3, 20),
+                        progress: null,
+                        progress_error_message: "You fucked up!",
+                    } as Task,
+                    left: 42,
+                    width: 10,
+                    percentage: "50%",
+                    is_text_displayed_inside_progress_bar: false,
+                    is_text_displayed_outside_progress_bar: false,
+                    is_text_displayed_outside_bar: true,
+                    is_error_sign_displayed_outside_bar: false,
+                    is_error_sign_displayed_inside_bar: true,
+                    is_milestone: false,
+                },
+            });
+
+            expect(
+                wrapper
+                    .find(
+                        "[data-test=container] > [data-test=bar] > [data-test=progress-error-sign]"
+                    )
+                    .exists()
+            ).toBe(true);
+            expect(
+                wrapper.find("[data-test=container] > [data-test=progress-error-sign]").exists()
+            ).toBe(false);
+            expect(wrapper.find("[data-test=progress]").exists()).toBe(false);
+        });
+
+        it("should display the error sign outside the bar", () => {
+            const wrapper = shallowMount(TaskBar, {
+                propsData: {
+                    task: {
+                        color_name: "acid-green",
+                        start: new Date(2020, 2, 20),
+                        end: new Date(2020, 3, 20),
+                        progress: null,
+                        progress_error_message: "You fucked up!",
+                    } as Task,
+                    left: 42,
+                    width: 10,
+                    percentage: "50%",
+                    is_text_displayed_inside_progress_bar: false,
+                    is_text_displayed_outside_progress_bar: false,
+                    is_text_displayed_outside_bar: true,
+                    is_error_sign_displayed_outside_bar: true,
+                    is_error_sign_displayed_inside_bar: false,
+                    is_milestone: false,
+                },
+            });
+
+            expect(
+                wrapper
+                    .find(
+                        "[data-test=container] > [data-test=bar] > [data-test=progress-error-sign]"
+                    )
+                    .exists()
+            ).toBe(false);
+            expect(
+                wrapper.find("[data-test=container] > [data-test=progress-error-sign]").exists()
+            ).toBe(true);
+            expect(wrapper.find("[data-test=progress]").exists()).toBe(false);
         });
     });
 });

@@ -43,11 +43,18 @@
                 class="roadmap-gantt-task-bar-milestone-progress"
                 data-test="progress"
                 v-bind:clip-path="clip_path"
+                v-if="!is_progress_in_error"
             />
         </svg>
+        <i
+            class="fas fa-exclamation-triangle roadmap-gantt-task-bar-progress-error-outside-bar"
+            aria-hidden="true"
+            data-test="progress-error-sign"
+            v-if="is_progress_in_error"
+        ></i>
         <span
             class="roadmap-gantt-task-bar-progress-text-outside-bar"
-            v-if="percentage.length > 0"
+            v-else-if="percentage.length > 0"
             data-test="percentage"
         >
             {{ percentage }}
@@ -101,6 +108,10 @@ export default class MilestoneBar extends Vue {
         }
 
         return `polygon(-1 -1, ${clip_x} -1, ${clip_x} 23, -1 23)`;
+    }
+
+    get is_progress_in_error(): boolean {
+        return this.task.progress_error_message.length > 0;
     }
 }
 </script>

@@ -30,7 +30,8 @@ describe("DependencyArrow", () => {
         dependency: Task,
         tasks: Task[],
         percentage: string,
-        is_text_displayed_outside_bar: boolean
+        is_text_displayed_outside_bar: boolean,
+        is_error_sign_displayed_outside_bar: boolean
     ): Wrapper<DependencyArrow> {
         const time_period = new TimePeriodMonth(
             new Date("2020-04-09T22:00:00.000Z"),
@@ -45,6 +46,7 @@ describe("DependencyArrow", () => {
                 dimensions_map: getDimensionsMap(tasks, time_period),
                 percentage,
                 is_text_displayed_outside_bar,
+                is_error_sign_displayed_outside_bar,
             },
         });
     }
@@ -61,7 +63,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "", false);
+        const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: 3px; height: 74px; width: 47px;">
@@ -86,7 +88,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_2, task_1, [task_2, task_1], "", false);
+        const wrapper = mountComponent(task_2, task_1, [task_2, task_1], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: 3px; height: 74px; width: 87px;">
@@ -111,7 +113,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_2, task_1, [task_1, task_2], "", false);
+        const wrapper = mountComponent(task_2, task_1, [task_1, task_2], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 13px; top: -37px; height: 74px; width: 87px;">
@@ -136,7 +138,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_1, task_2, [task_2, task_1], "", false);
+        const wrapper = mountComponent(task_1, task_2, [task_2, task_1], "", false, false);
 
         expect(wrapper).toMatchInlineSnapshot(`
             <svg class="roadmap-gantt-task-dependency" style="left: 33px; top: -37px; height: 74px; width: 47px;">
@@ -161,7 +163,7 @@ describe("DependencyArrow", () => {
             end: new Date("2020-04-24T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false);
+        const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false, false);
 
         expect(wrapper.element.style.left).toBe("33px");
         expect(wrapper.element.style.width).toBe("34px");
@@ -172,6 +174,35 @@ describe("DependencyArrow", () => {
         await wrapper.setProps({ is_text_displayed_outside_bar: true });
         expect(wrapper.element.style.left).toBe("33px");
         expect(wrapper.element.style.width).toBe("60px");
+        expect(wrapper.find("[data-test=path]").classes()).not.toContain(
+            "roadmap-gantt-task-dependency-line-ends-after-start"
+        );
+    });
+
+    it("should starts the path after the progress error sign if it is displayed outside of the bar, but does not consider that the task ends after its dependency start", async () => {
+        const task_1 = {
+            id: 1,
+            start: new Date("2020-04-09T22:00:00.000Z"),
+            end: new Date("2020-04-14T22:00:00.000Z"),
+            progress_error_message: "You fucked up!",
+        } as Task;
+        const task_2 = {
+            id: 2,
+            start: new Date("2020-04-15T22:00:00.000Z"),
+            end: new Date("2020-04-24T22:00:00.000Z"),
+        } as Task;
+
+        const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false, true);
+
+        expect(wrapper.element.style.left).toBe("33px");
+        expect(wrapper.element.style.width).toBe("56px");
+        expect(wrapper.find("[data-test=path]").classes()).not.toContain(
+            "roadmap-gantt-task-dependency-line-ends-after-start"
+        );
+
+        await wrapper.setProps({ is_text_displayed_outside_bar: true });
+        expect(wrapper.element.style.left).toBe("33px");
+        expect(wrapper.element.style.width).toBe("56px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
             "roadmap-gantt-task-dependency-line-ends-after-start"
         );

@@ -59,12 +59,18 @@
                             </p>
                         </td>
                     </tr>
-                    <tr v-if="percentage" data-test="progress">
+                    <tr v-if="is_progress_in_error || percentage" data-test="progress">
                         <td>
                             <p class="roadmap-gantt-task-popover-label" v-translate>Progress</p>
                         </td>
                         <td>
-                            <p class="roadmap-gantt-task-popover-value">
+                            <p
+                                class="roadmap-gantt-task-popover-value roadmap-gantt-task-popover-value-error"
+                                v-if="is_progress_in_error"
+                            >
+                                {{ task.progress_error_message }}
+                            </p>
+                            <p class="roadmap-gantt-task-popover-value" v-else>
                                 {{ percentage }}
                             </p>
                         </td>
@@ -115,6 +121,14 @@ export default class BarPopover extends Vue {
         }
 
         return this.formatter.format(date);
+    }
+
+    get should_we_display_progress_information(): boolean {
+        return this.task.progress !== null || this.is_progress_in_error;
+    }
+
+    get is_progress_in_error(): boolean {
+        return this.task.progress_error_message.length > 0;
     }
 
     get percentage(): string | null {

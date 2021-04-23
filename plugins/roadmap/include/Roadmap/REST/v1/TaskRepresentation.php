@@ -54,6 +54,10 @@ final class TaskRepresentation
      */
     public $progress;
     /**
+     * @var string
+     */
+    public $progress_error_message;
+    /**
      * @var string|null
      */
     public $start;
@@ -76,6 +80,7 @@ final class TaskRepresentation
         string $title,
         string $color_name,
         ?float $progress,
+        string $progress_error_message,
         ?\DateTimeImmutable $start,
         ?\DateTimeImmutable $end,
         array $dependencies
@@ -88,6 +93,8 @@ final class TaskRepresentation
         $this->progress   = $progress;
         $this->start      = JsonCast::fromDateTimeToDate($start);
         $this->end        = JsonCast::fromDateTimeToDate($end);
+
+        $this->progress_error_message = $progress_error_message;
 
         $this->dependencies = [];
         foreach ($dependencies as $dep) {

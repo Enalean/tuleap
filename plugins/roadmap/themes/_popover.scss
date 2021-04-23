@@ -88,6 +88,10 @@
     font-weight: 600;
 }
 
+.roadmap-gantt-task-popover-value-error {
+    color: var(--tlp-ui-danger-on-dark-background);
+}
+
 .roadmap-gantt-task-popover-value-undefined {
     color: var(--tlp-ui-dimmed-on-dark-background);
 }

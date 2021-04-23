@@ -87,10 +87,10 @@ class MethodBasedOnEffort implements IComputeProgression
             || $field_id === $this->remaining_effort_field->getId();
     }
 
-    public function computeProgression(Artifact $artifact, \PFUser $user): ?float
+    public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
         if (! $this->canUserReadBothFields($user)) {
-            return null;
+            return new ProgressionResult(null, "");
         }
 
         $total_effort = $this->getNumericFieldValue(
@@ -105,20 +105,31 @@ class MethodBasedOnEffort implements IComputeProgression
             $user
         );
 
-        if (! $this->canProgressBeComputed($total_effort, $remaining_effort)) {
-            return null;
+        if ($total_effort === null && $remaining_effort === null) {
+            return new ProgressionResult(null, '');
         }
 
-        return 1 - ($remaining_effort / $total_effort);
-    }
+        if (! $total_effort) {
+            return new ProgressionResult(null, dgettext('tuleap-tracker', 'There is no total effort.'));
+        }
 
-    private function canProgressBeComputed(?float $total_effort, ?float $remaining_effort): bool
-    {
-        return ($total_effort !== null) &&
-            ($total_effort > 0) &&
-            ($remaining_effort !== null) &&
-            ($remaining_effort <= $total_effort) &&
-            ($remaining_effort >= 0);
+        if ($total_effort < 0) {
+            return new ProgressionResult(null, dgettext('tuleap-tracker', 'Total effort cannot be negative.'));
+        }
+
+        if ($remaining_effort === null) {
+            return new ProgressionResult(null, dgettext('tuleap-tracker', 'There is no remaining effort.'));
+        }
+
+        if ($remaining_effort < 0) {
+            return new ProgressionResult(null, dgettext('tuleap-tracker', 'Remaining effort cannot be negative.'));
+        }
+
+        if ($remaining_effort > $total_effort) {
+            return new ProgressionResult(null, dgettext('tuleap-tracker', 'Remaining effort cannot be greater than total effort.'));
+        }
+
+        return new ProgressionResult(1 - ($remaining_effort / $total_effort), '');
     }
 
     private function getNumericFieldValue(\Tracker_FormElement_Field_Numeric $numeric_field, Artifact $artifact, \PFUser $user): ?float
@@ -148,5 +159,10 @@ class MethodBasedOnEffort implements IComputeProgression
     public function isConfigured(): bool
     {
         return true;
+    }
+
+    public function getErrorMessage(): string
+    {
+        return '';
     }
 }

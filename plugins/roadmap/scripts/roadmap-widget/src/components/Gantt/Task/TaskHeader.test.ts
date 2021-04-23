@@ -29,6 +29,7 @@ describe("TaskHeader", () => {
             xref: "task #123",
             color_name: "fiesta-red",
             progress: 1,
+            progress_error_message: "",
             html_url: "/plugins/tracker?aid=123",
             start: null,
             end: null,

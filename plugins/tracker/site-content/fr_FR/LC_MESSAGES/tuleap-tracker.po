@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -2278,6 +2278,23 @@ msgstr "Aperçu :"
 msgid "Progress"
 msgstr "Progression"
 
+msgid "Progress semantic is not properly configured."
+msgstr "La sémantique de progression n'est pas correctement configurée."
+
+msgid ""
+"Progress semantic is not properly configured: unable to find the remaining "
+"effort field."
+msgstr ""
+"La sémantique de progression n'est pas correctement configurée : impossible "
+"de trouver le champ pour l'effort restant."
+
+msgid ""
+"Progress semantic is not properly configured: unable to find the total "
+"effort field."
+msgstr ""
+"La sémantique de progression n'est pas correctement configurée : impossible "
+"de trouver le champ pour l'effort total."
+
 msgid "Project"
 msgstr "Projet"
 
@@ -2334,6 +2351,12 @@ msgstr "Cet artefact n'est pas référencé, et n'est pas source de références
 
 msgid "Referencing {{ artifact_xref }}"
 msgstr "Référençant {{ artifact_xref }}"
+
+msgid "Remaining effort cannot be greater than total effort."
+msgstr "L'effort restant ne peux pas être supérieur à l'effort total."
+
+msgid "Remaining effort cannot be negative."
+msgstr "L'effort restant ne peut pas être négatif."
 
 #, php-format
 msgid "Reminder: '%1$s' %2$s for '%3$s'"
@@ -3445,6 +3468,12 @@ msgstr ""
 msgid "There is no field with ID:%1$s"
 msgstr "Aucun champ avec l'ID:%1$s"
 
+msgid "There is no remaining effort."
+msgstr "Il n'y a pas d'effort restant."
+
+msgid "There is no total effort."
+msgstr "Il n'y a pas d'effort total."
+
 msgid "There isn't any fields in the tooltip yet."
 msgstr "Il n'y pas encore de champs dans le tooltip."
 
@@ -3633,6 +3662,9 @@ msgstr "Passerelle basée sur un jeton d'authentification"
 
 msgid "Tooltip"
 msgstr "Tooltip"
+
+msgid "Total effort cannot be negative."
+msgstr "L'effort total ne peux pas être négatif."
 
 msgid "Total number of artifacts"
 msgstr "Nombre total d'artefacts"

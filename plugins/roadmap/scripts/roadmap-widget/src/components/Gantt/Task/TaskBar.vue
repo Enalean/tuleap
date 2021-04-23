@@ -24,40 +24,59 @@
         v-bind:task="task"
         v-bind:left="left"
         v-bind:percentage="percentage"
-        v-bind:class="classes"
+        v-bind:class="container_classes"
     />
     <div
         class="roadmap-gantt-task-bar-container"
-        v-bind:class="classes"
+        v-bind:class="container_classes"
         v-bind:style="style_container"
         data-test="container"
         v-else
     >
-        <div class="roadmap-gantt-task-bar" v-bind:style="style_bar" data-test="bar">
-            <div
-                class="roadmap-gantt-task-bar-progress"
-                data-test="progress"
-                v-bind:style="progress_style"
-            >
+        <div
+            class="roadmap-gantt-task-bar"
+            v-bind:style="style_bar"
+            data-test="bar"
+            v-bind:class="bar_classes"
+        >
+            <i
+                class="fas fa-exclamation-triangle"
+                aria-hidden="true"
+                data-test="progress-error-sign"
+                v-if="is_error_sign_displayed_inside_bar"
+            ></i>
+            <template v-else-if="!is_progress_in_error">
+                <div
+                    class="roadmap-gantt-task-bar-progress"
+                    data-test="progress"
+                    v-bind:style="progress_style"
+                >
+                    <span
+                        class="roadmap-gantt-task-bar-progress-text-inside-progress-bar"
+                        v-if="is_text_displayed_inside_progress_bar"
+                        data-test="percentage"
+                    >
+                        {{ percentage }}
+                    </span>
+                </div>
                 <span
-                    class="roadmap-gantt-task-bar-progress-text-inside-progress-bar"
-                    v-if="is_text_displayed_inside_progress_bar"
+                    class="roadmap-gantt-task-bar-progress-text-outside-progress-bar"
+                    v-if="is_text_displayed_outside_progress_bar"
                     data-test="percentage"
                 >
                     {{ percentage }}
                 </span>
-            </div>
-            <span
-                class="roadmap-gantt-task-bar-progress-text-outside-progress-bar"
-                v-if="is_text_displayed_outside_progress_bar"
-                data-test="percentage"
-            >
-                {{ percentage }}
-            </span>
+            </template>
         </div>
+        <i
+            class="fas fa-exclamation-triangle roadmap-gantt-task-bar-progress-error-outside-bar"
+            aria-hidden="true"
+            data-test="progress-error-sign"
+            v-if="is_error_sign_displayed_outside_bar"
+        ></i>
         <span
             class="roadmap-gantt-task-bar-progress-text-outside-bar"
-            v-if="is_text_displayed_outside_bar"
+            v-else-if="!is_progress_in_error && is_text_displayed_outside_bar"
             data-test="percentage"
         >
             {{ percentage }}
@@ -96,8 +115,25 @@ export default class TaskBar extends Vue {
     @Prop({ required: true })
     readonly is_text_displayed_outside_bar!: boolean;
 
-    get classes(): string {
+    @Prop({ required: true })
+    readonly is_error_sign_displayed_outside_bar!: boolean;
+
+    @Prop({ required: true })
+    readonly is_error_sign_displayed_inside_bar!: boolean;
+
+    @Prop({ required: true })
+    readonly is_milestone!: boolean;
+
+    get container_classes(): string {
         return "roadmap-gantt-task-bar-container-" + this.task.color_name;
+    }
+
+    get bar_classes(): string {
+        return this.is_progress_in_error ? "roadmap-gantt-task-bar-with-progress-in-error" : "";
+    }
+
+    get is_progress_in_error(): boolean {
+        return this.task.progress_error_message.length > 0;
     }
 
     get style_container(): string {
@@ -106,14 +142,6 @@ export default class TaskBar extends Vue {
 
     get style_bar(): string {
         return `width: ${this.width}px;`;
-    }
-
-    get is_milestone(): boolean {
-        return (
-            !this.task.start ||
-            !this.task.end ||
-            this.task.end.toISOString() === this.task.start.toISOString()
-        );
     }
 
     get progress_style(): string {

@@ -62,7 +62,10 @@ class SemanticProgressBuilder
             );
         }
 
-        return $this->getUnconfiguredSemanticProgress($tracker);
+        return $this->getInvalidSemanticProgress(
+            $tracker,
+            dgettext('tuleap-tracker', 'Progress semantic is not properly configured.')
+        );
     }
 
     private function buildEffortBasedSemanticProgress(
@@ -82,24 +85,27 @@ class SemanticProgressBuilder
             ['int', 'float', 'computed']
         );
 
-        if ($total_effort_field === null || $remaining_effort_field === null) {
-            return $this->getUnconfiguredSemanticProgress($tracker);
-        }
-
-        if (
-            $total_effort_field instanceof Tracker_FormElement_Field_Numeric &&
-            $remaining_effort_field instanceof Tracker_FormElement_Field_Numeric
-        ) {
-            return new SemanticProgress(
+        if (! $total_effort_field instanceof Tracker_FormElement_Field_Numeric) {
+            return $this->getInvalidSemanticProgress(
                 $tracker,
-                new MethodBasedOnEffort(
-                    $total_effort_field,
-                    $remaining_effort_field
-                )
+                dgettext('tuleap-tracker', 'Progress semantic is not properly configured: unable to find the total effort field.')
             );
         }
 
-        return $this->getUnconfiguredSemanticProgress($tracker);
+        if (! $remaining_effort_field instanceof Tracker_FormElement_Field_Numeric) {
+            return $this->getInvalidSemanticProgress(
+                $tracker,
+                dgettext('tuleap-tracker', 'Progress semantic is not properly configured: unable to find the remaining effort field.')
+            );
+        }
+
+        return new SemanticProgress(
+            $tracker,
+            new MethodBasedOnEffort(
+                $total_effort_field,
+                $remaining_effort_field
+            )
+        );
     }
 
     private function getUnconfiguredSemanticProgress(Tracker $tracker): SemanticProgress
@@ -107,6 +113,14 @@ class SemanticProgressBuilder
         return new SemanticProgress(
             $tracker,
             new MethodNotConfigured()
+        );
+    }
+
+    private function getInvalidSemanticProgress(Tracker $tracker, string $error_message): SemanticProgress
+    {
+        return new SemanticProgress(
+            $tracker,
+            new InvalidMethod($error_message),
         );
     }
 }
