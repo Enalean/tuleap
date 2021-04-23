@@ -24,17 +24,17 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -73,10 +73,6 @@ final class ProcessTopBacklogChangeTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsDAO
      */
     private $program_increment_dao;
-    /**
-     * @var VerifyLinkedUserStoryIsNotPlanned
-     */
-    private $story_verifier;
 
     protected function setUp(): void
     {
@@ -86,18 +82,15 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
         $this->program_increment_dao = \Mockery::mock(ProgramIncrementsDAO::class);
         $this->feature_orderer       = \Mockery::mock(FeaturesRankOrderer::class);
-        $this->story_verifier        = $this->getStubStoryVerifier();
 
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
-            $this->artifact_factory,
             $this->permissions_verifier,
             $this->dao,
             new DBTransactionExecutorPassthrough(),
-            $this->artifact_link_updater,
-            $this->program_increment_dao,
             $this->feature_orderer,
-            $this->story_verifier,
-            new VerifyIsVisibleFeatureAdapter($this->artifact_factory)
+            new VerifyLinkedUserStoryIsNotPlannedStub(),
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
+            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater),
         );
     }
 
@@ -168,15 +161,13 @@ final class ProcessTopBacklogChangeTest extends TestCase
     public function testDontAddFeatureInBacklogIfUserStoriesAreLinkedAndThrowException(): void
     {
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
-            $this->artifact_factory,
             $this->permissions_verifier,
             $this->dao,
             new DBTransactionExecutorPassthrough(),
-            $this->artifact_link_updater,
-            $this->program_increment_dao,
             $this->feature_orderer,
-            $this->getStubStoryVerifier(true),
-            new VerifyIsVisibleFeatureAdapter($this->artifact_factory)
+            new VerifyLinkedUserStoryIsNotPlannedStub(true),
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
+            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater)
         );
 
         $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true)->once();
@@ -260,28 +251,5 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $artifact->shouldReceive('getTitle')->andReturn($title);
 
         return $artifact;
-    }
-
-    private function getStubStoryVerifier($is_linked = false): VerifyLinkedUserStoryIsNotPlanned
-    {
-        return new class ($is_linked) implements VerifyLinkedUserStoryIsNotPlanned {
-            /** @var bool */
-            private $is_linked;
-
-            public function __construct(bool $is_linked)
-            {
-                $this->is_linked = $is_linked;
-            }
-
-            public function isLinkedToAtLeastOnePlannedUserStory(\PFUser $user, FeatureIdentifier $feature): bool
-            {
-                return $this->is_linked;
-            }
-
-            public function hasStoryLinked(\PFUser $user, FeatureIdentifier $feature): bool
-            {
-                return false;
-            }
-        };
     }
 }

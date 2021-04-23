@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
@@ -340,9 +341,9 @@ final class ProjectResource extends AuthenticatedResource
         $project_manager     = \ProjectManager::instance();
         $program             = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao());
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
+        $priority_manager    = \Tracker_Artifact_PriorityManager::build();
         $top_backlog_updater = new TopBacklogUpdater(
             new ProcessTopBacklogChange(
-                $artifact_factory,
                 new PrioritizeFeaturesPermissionVerifier(
                     $project_manager,
                     $project_access_checker,
@@ -350,8 +351,6 @@ final class ProjectResource extends AuthenticatedResource
                 ),
                 new ArtifactsExplicitTopBacklogDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
-                new ProgramIncrementsDAO(),
                 new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
@@ -359,6 +358,11 @@ final class ProjectResource extends AuthenticatedResource
                     $artifact_factory
                 ),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory),
+                new FeatureRemovalProcessor(
+                    new ProgramIncrementsDAO(),
+                    $artifact_factory,
+                    new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater()),
+                ),
             )
         );
 

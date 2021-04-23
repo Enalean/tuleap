@@ -22,28 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use PFUser;
 use Tracker_NoArtifactLinkFieldException;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
     /**
      * @var ArtifactsExplicitTopBacklogDAO
      */
@@ -57,14 +52,6 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      */
     private $db_transaction_executor;
     /**
-     * @var ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
-    /**
-     * @var ProgramIncrementsDAO
-     */
-    private $program_increments_dao;
-    /**
      * @var FeaturesRankOrderer
      */
     private $features_rank_orderer;
@@ -76,27 +63,27 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      * @var VerifyIsVisibleFeature
      */
     private $visible_feature_verifier;
+    /**
+     * @var FeatureRemovalProcessor
+     */
+    private $feature_removal_processor;
 
     public function __construct(
-        \Tracker_ArtifactFactory $artifact_factory,
         PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier,
         ArtifactsExplicitTopBacklogDAO $explicit_top_backlog_dao,
         DBTransactionExecutor $db_transaction_executor,
-        ArtifactLinkUpdater $artifact_link_updater,
-        ProgramIncrementsDAO $program_increments_dao,
         FeaturesRankOrderer $features_rank_orderer,
         VerifyLinkedUserStoryIsNotPlanned $story_verifier,
-        VerifyIsVisibleFeature $visible_feature_verifier
+        VerifyIsVisibleFeature $visible_feature_verifier,
+        FeatureRemovalProcessor $feature_removal_processor
     ) {
-        $this->artifact_factory                        = $artifact_factory;
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
         $this->explicit_top_backlog_dao                = $explicit_top_backlog_dao;
         $this->db_transaction_executor                 = $db_transaction_executor;
-        $this->artifact_link_updater                   = $artifact_link_updater;
-        $this->program_increments_dao                  = $program_increments_dao;
         $this->features_rank_orderer                   = $features_rank_orderer;
         $this->story_verifier                          = $story_verifier;
         $this->visible_feature_verifier                = $visible_feature_verifier;
+        $this->feature_removal_processor               = $feature_removal_processor;
     }
 
     /**
@@ -114,26 +101,34 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 throw new CannotManipulateTopBacklog($program, $user);
             }
 
-            $feature_ids_to_add = $this->filterFeaturesThatCanBeManipulated(
+            $feature_add_removals = $this->filterFeaturesThatCanBeManipulated(
                 $top_backlog_change->potential_features_id_to_add,
                 $user,
                 $program
             );
 
-            if (count($feature_ids_to_add) > 0) {
+            if (count($feature_add_removals) > 0) {
                 if ($top_backlog_change->remove_program_increments_link_to_feature_to_add) {
-                    $this->removeFeaturesFromProgramIncrement($user, $feature_ids_to_add);
+                    $this->removeFeaturesFromProgramIncrement($feature_add_removals);
+                }
+                $feature_ids_to_add = [];
+                foreach ($feature_add_removals as $feature_removal) {
+                    $feature_ids_to_add[] = $feature_removal->feature_id;
                 }
                 $this->explicit_top_backlog_dao->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
             }
 
-            $feature_ids_to_remove = $this->filterFeaturesThatCanBeManipulated(
+            $feature_remove_removals = $this->filterFeaturesThatCanBeManipulated(
                 $top_backlog_change->potential_features_id_to_remove,
                 $user,
                 $program
             );
 
-            if (count($feature_ids_to_remove) > 0) {
+            if (count($feature_remove_removals) > 0) {
+                $feature_ids_to_remove = [];
+                foreach ($feature_remove_removals as $feature_removal) {
+                    $feature_ids_to_remove[] = $feature_removal->feature_id;
+                }
                 $this->explicit_top_backlog_dao->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
             }
 
@@ -148,33 +143,20 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     }
 
     /**
-     * @param int[] $feature_ids_to_add
+     * @param FeatureRemoval[] $feature_removals
      * @throws Tracker_NoArtifactLinkFieldException
      * @throws \Tracker_Exception
      */
-    private function removeFeaturesFromProgramIncrement(PFUser $user, array $feature_ids_to_add): void
+    private function removeFeaturesFromProgramIncrement(array $feature_removals): void
     {
-        foreach ($feature_ids_to_add as $feature_id_to_add) {
-            $program_ids = $this->program_increments_dao->getProgramIncrementsLinkToFeatureId($feature_id_to_add);
-            foreach ($program_ids as $program_id) {
-                $program_increment_artifact = $this->artifact_factory->getArtifactById($program_id['id']);
-                if (! $program_increment_artifact) {
-                    continue;
-                }
-                $this->artifact_link_updater->updateArtifactLinks(
-                    $user,
-                    $program_increment_artifact,
-                    [],
-                    [$feature_id_to_add],
-                    \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
-                );
-            }
+        foreach ($feature_removals as $feature_removal) {
+            $this->feature_removal_processor->removeFromAllProgramIncrements($feature_removal);
         }
     }
 
     /**
      * @param int[] $features_id
-     * @return int[]
+     * @return FeatureRemoval[]
      * @throws FeatureHasPlannedUserStoryException
      */
     private function filterFeaturesThatCanBeManipulated(array $features_id, \PFUser $user, Program $program): array
@@ -183,13 +165,17 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 
         foreach ($features_id as $feature_id) {
             $feature = new FeatureIdentifier($feature_id);
-            if (! $this->visible_feature_verifier->isVisibleFeature($feature, $user, $program)) {
+            $removal = FeatureRemoval::fromRawData(
+                $feature,
+                $user,
+                $program,
+                $this->visible_feature_verifier,
+                $this->story_verifier
+            );
+            if (! $removal) {
                 continue;
             }
-            if ($this->story_verifier->isLinkedToAtLeastOnePlannedUserStory($user, $feature)) {
-                throw new FeatureHasPlannedUserStoryException($feature->id);
-            }
-            $filtered_features[] = $feature->id;
+            $filtered_features[] = $removal;
         }
 
         return $filtered_features;

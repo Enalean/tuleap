@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticCheck
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfigurationBuilder;
@@ -583,20 +584,23 @@ final class program_managementPlugin extends Plugin
             \EventManager::instance()
         );
         $artifact_factory       = Tracker_ArtifactFactory::instance();
+        $priority_manager       = \Tracker_Artifact_PriorityManager::build();
         return new ProcessTopBacklogChange(
-            $artifact_factory,
             new PrioritizeFeaturesPermissionVerifier(ProjectManager::instance(), $project_access_checker, new CanPrioritizeFeaturesDAO()),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ArtifactLinkUpdater(\Tracker_Artifact_PriorityManager::build(), new ArtifactLinkUpdaterDataFormater()),
-            new ProgramIncrementsDAO(),
-            new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
+            new FeaturesRankOrderer($priority_manager),
             new UserStoryLinkedToFeatureChecker(
                 new ArtifactsLinkedToParentDao(),
                 new PlanningAdapter(\PlanningFactory::build()),
                 $artifact_factory
             ),
             new VerifyIsVisibleFeatureAdapter($artifact_factory),
+            new FeatureRemovalProcessor(
+                new ProgramIncrementsDAO(),
+                $artifact_factory,
+                new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater()),
+            ),
         );
     }
 
