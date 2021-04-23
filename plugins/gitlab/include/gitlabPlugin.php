@@ -59,6 +59,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
@@ -223,6 +224,7 @@ class gitlabPlugin extends Plugin
                     )
                 ),
                 new PostMergeRequestWebhookDataBuilder($logger),
+                new TagPushWebhookDataBuilder(),
                 $logger
             ),
             new WebhookRepositoryRetriever(

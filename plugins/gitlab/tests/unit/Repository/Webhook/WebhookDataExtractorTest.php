@@ -22,6 +22,8 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
@@ -61,6 +63,7 @@ class WebhookDataExtractorTest extends TestCase
         $this->extractor = new WebhookDataExtractor(
             $post_push_webhook_data_builder,
             new PostMergeRequestWebhookDataBuilder(new \Psr\Log\NullLogger()),
+            new TagPushWebhookDataBuilder(),
             $this->logger
         );
     }
@@ -150,6 +153,24 @@ class WebhookDataExtractorTest extends TestCase
         );
     }
 
+    public function testItThrowsAnExceptionIfProjectIdKeyIsMissingInTagPushRequest(): void
+    {
+        $request = (new NullServerRequest())->withBody(
+            HTTPFactoryBuilder::streamFactory()->createStream(
+                '{"project":{}}'
+            )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Tag Push Hook"
+        );
+
+        $this->expectException(MissingKeyException::class);
+
+        $this->extractor->retrieveWebhookData(
+            $request
+        );
+    }
+
     public function testItThrowsAnExceptionIfProjectHttpURLKeyIsMissingInPostPush(): void
     {
         $request = (new NullServerRequest())->withBody(
@@ -177,6 +198,24 @@ class WebhookDataExtractorTest extends TestCase
         )->withHeader(
             "X-Gitlab-Event",
             "Merge Request Hook"
+        );
+
+        $this->expectException(MissingKeyException::class);
+
+        $this->extractor->retrieveWebhookData(
+            $request
+        );
+    }
+
+    public function testItThrowsAnExceptionIfProjectHttpURLKeyIsMissingInTagPushRequest(): void
+    {
+        $request = (new NullServerRequest())->withBody(
+            HTTPFactoryBuilder::streamFactory()->createStream(
+                '{"project":{"id": 123456}, "commits": []}'
+            )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Tag Push Hook"
         );
 
         $this->expectException(MissingKeyException::class);
@@ -273,5 +312,34 @@ class WebhookDataExtractorTest extends TestCase
         $this->assertSame(2, $webhook_data->getMergeRequestId());
         $this->assertSame("My Title", $webhook_data->getTitle());
         $this->assertSame("My Description", $webhook_data->getDescription());
+    }
+
+    public function testItRetrievesTagPushRequestWebhookData(): void
+    {
+        $this->logger
+            ->shouldReceive("info")
+            ->with("|_ Webhook of type Tag Push Hook received.")
+            ->once();
+
+        $request = (new NullServerRequest())->withBody(
+            HTTPFactoryBuilder::streamFactory()->createStream(
+                '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
+                  "ref": "refs/tags/v1.0"
+                }'
+            )
+        )->withHeader(
+            "X-Gitlab-Event",
+            "Tag Push Hook"
+        );
+
+        $webhook_data = $this->extractor->retrieveWebhookData(
+            $request
+        );
+
+        $this->assertSame("Tag Push Hook", $webhook_data->getEventName());
+        $this->assertSame(123456, $webhook_data->getGitlabProjectId());
+        $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        $this->assertInstanceOf(TagPushWebhookData::class, $webhook_data);
+        $this->assertSame("refs/tags/v1.0", $webhook_data->getRef());
     }
 }

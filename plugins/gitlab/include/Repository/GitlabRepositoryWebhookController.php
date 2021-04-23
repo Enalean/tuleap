@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\EventNotAllowedException;
+use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingEventHeaderException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 use Tuleap\Gitlab\Repository\Webhook\RepositoryNotFoundException;
@@ -131,6 +132,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
             SecretNotDefinedException |
             EmptyBranchNameException |
             SecretHeaderNotMatchingException |
+            InvalidValueFormatException |
             MissingEventHeaderException $exception
         ) {
             $this->logger->error($exception->getMessage());

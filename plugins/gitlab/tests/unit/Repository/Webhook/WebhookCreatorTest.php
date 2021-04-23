@@ -124,11 +124,12 @@ class WebhookCreatorTest extends TestCase
                 '/projects/2/hooks',
                 Mockery::on(
                     function (array $config) {
-                        return count(array_keys($config)) === 5
+                        return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
                             && is_string($config['token'])
                             && $config['push_events'] === true
                             && $config['merge_requests_events'] === true
+                            && $config['tag_push_events'] === true
                             && $config['enable_ssl_verification'] === true;
                     }
                 )
@@ -201,11 +202,12 @@ class WebhookCreatorTest extends TestCase
                 '/projects/2/hooks',
                 Mockery::on(
                     function (array $config) {
-                        return count(array_keys($config)) === 5
+                        return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
                             && is_string($config['token'])
                             && $config['push_events'] === true
                             && $config['merge_requests_events'] === true
+                            && $config['tag_push_events'] === true
                             && $config['enable_ssl_verification'] === true;
                     }
                 )
@@ -261,11 +263,12 @@ class WebhookCreatorTest extends TestCase
                 "/projects/2/hooks",
                 Mockery::on(
                     function (array $config) {
-                        return count(array_keys($config)) === 5
+                        return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
                             && is_string($config['token'])
                             && $config['push_events'] === true
                             && $config['merge_requests_events'] === true
+                            && $config['tag_push_events'] === true
                             && $config['enable_ssl_verification'] === true;
                     }
                 )
@@ -313,11 +316,12 @@ class WebhookCreatorTest extends TestCase
                 "/projects/2/hooks",
                 Mockery::on(
                     function (array $config) {
-                        return count(array_keys($config)) === 5
+                        return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
                             && is_string($config['token'])
                             && $config['push_events'] === true
                             && $config['merge_requests_events'] === true
+                            && $config['tag_push_events'] === true
                             && $config['enable_ssl_verification'] === true;
                     }
                 )
