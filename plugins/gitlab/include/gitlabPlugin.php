@@ -24,6 +24,7 @@ use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
+use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
@@ -32,6 +33,7 @@ use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
 use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -59,6 +61,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
@@ -281,6 +284,17 @@ class gitlabPlugin extends Plugin
                     ),
                     new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
                 ),
+                new TagPushWebhookActionProcessor(
+                    new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                    new GitlabTagRetriever(
+                        $gitlab_api_client
+                    ),
+                    new WebhookTuleapReferencesParser(),
+                    $tuleap_reference_retriever,
+                    $gitlab_repository_project_retriever,
+                    ReferenceManager::instance(),
+                    $logger,
+                ),
                 $logger,
             ),
             $logger,
@@ -294,7 +308,8 @@ class gitlabPlugin extends Plugin
     {
         if (
             $event->getKeyword() === GitlabCommitReference::REFERENCE_NAME ||
-            $event->getKeyword() === GitlabMergeRequestReference::REFERENCE_NAME
+            $event->getKeyword() === GitlabMergeRequestReference::REFERENCE_NAME ||
+            $event->getKeyword() === GitlabTagReference::REFERENCE_NAME
         ) {
             $builder = new GitlabReferenceBuilder(
                 new \Tuleap\Gitlab\Reference\ReferenceDao(),
@@ -317,6 +332,7 @@ class gitlabPlugin extends Plugin
     {
         $params['keywords'][] = GitlabCommitReference::REFERENCE_NAME;
         $params['keywords'][] = GitlabMergeRequestReference::REFERENCE_NAME;
+        $params['keywords'][] = GitlabTagReference::REFERENCE_NAME;
     }
 
     /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
@@ -325,7 +341,11 @@ class gitlabPlugin extends Plugin
         $reference = $params['reference'];
         \assert($reference instanceof Reference);
 
-        if ($reference->getNature() === GitlabCommitReference::NATURE_NAME) {
+        if (
+            $reference->getNature() === GitlabCommitReference::NATURE_NAME ||
+            $reference->getNature() === GitlabMergeRequestReference::NATURE_NAME ||
+            $reference->getNature() === GitlabTagReference::NATURE_NAME
+        ) {
             $params['can_be_deleted'] = false;
             $params['can_be_edited']  = false;
         }
@@ -356,6 +376,16 @@ class gitlabPlugin extends Plugin
                 GitlabMergeRequestReference::REFERENCE_NAME,
                 'fab fa-gitlab',
                 dgettext('tuleap-gitlab', 'GitLab merge request'),
+                false
+            )
+        );
+
+        $natures->addNature(
+            GitlabTagReference::NATURE_NAME,
+            new Nature(
+                GitlabTagReference::REFERENCE_NAME,
+                'fab fa-gitlab',
+                dgettext('tuleap-gitlab', 'GitLab Tag'),
                 false
             )
         );
@@ -400,6 +430,13 @@ class gitlabPlugin extends Plugin
                 GitlabMergeRequestReference::REFERENCE_NAME,
                 dgettext('tuleap-gitlab', 'Reference to a GitLab merge request'),
                 dgettext('tuleap-gitlab', 'GitLab merge request'),
+            )
+        );
+        $collector->add(
+            new ExternalSystemReferencePresenter(
+                GitlabTagReference::REFERENCE_NAME,
+                dgettext('tuleap-gitlab', 'Reference to a GitLab tag'),
+                dgettext('tuleap-gitlab', 'GitLab tag'),
             )
         );
     }
