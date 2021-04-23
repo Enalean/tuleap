@@ -1690,11 +1690,6 @@ msgstr "Instancier dans les nouveaux projets"
 msgid "Integer"
 msgstr "Entier"
 
-#, php-format
-msgid "Invalid Progress Semantic configuration for tracker %u"
-msgstr ""
-"Configuration de la sémantique Progression invalide pour l'outil de suivi %u"
-
 msgid "Invalid color tracker name"
 msgstr "Nom de couleur pour l'outil de suivi non valide"
 
