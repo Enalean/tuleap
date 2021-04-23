@@ -92,6 +92,7 @@ class RoadmapPlugin extends Plugin
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
                 new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
+                TrackerFactory::instance()
             ));
         }
     }

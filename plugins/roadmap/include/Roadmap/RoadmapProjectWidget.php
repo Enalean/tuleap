@@ -25,12 +25,14 @@ namespace Tuleap\Roadmap;
 use Codendi_Request;
 use Project;
 use TemplateRenderer;
+use TrackerFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Roadmap\Widget\PreferencePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 final class RoadmapProjectWidget extends \Widget
@@ -61,13 +63,18 @@ final class RoadmapProjectWidget extends \Widget
      * @var NaturePresenterFactory
      */
     private $nature_presenter_factory;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
     public function __construct(
         Project $project,
         RoadmapWidgetDao $dao,
         DBTransactionExecutor $transaction_executor,
         TemplateRenderer $renderer,
-        NaturePresenterFactory $nature_presenter_factory
+        NaturePresenterFactory $nature_presenter_factory,
+        TrackerFactory $tracker_factory
     ) {
         parent::__construct(self::ID);
         $this->setOwner(
@@ -79,6 +86,7 @@ final class RoadmapProjectWidget extends \Widget
         $this->transaction_executor     = $transaction_executor;
         $this->renderer                 = $renderer;
         $this->nature_presenter_factory = $nature_presenter_factory;
+        $this->tracker_factory          = $tracker_factory;
     }
 
     public function getContent(): string
@@ -136,11 +144,15 @@ final class RoadmapProjectWidget extends \Widget
     {
         return $this->renderer->renderToString(
             'preferences-form',
-            [
-                'widget_id'  => $widget_id,
-                'title'      => $this->getTitle(),
-                'tracker_id' => $this->tracker_id,
-            ]
+            new PreferencePresenter(
+                $widget_id,
+                $this->getTitle(),
+                $this->tracker_id,
+                $this->tracker_factory->getTrackersByGroupIdUserCanView(
+                    $this->owner_id,
+                    $this->getCurrentUser()
+                )
+            )
         );
     }
 
@@ -148,11 +160,15 @@ final class RoadmapProjectWidget extends \Widget
     {
         return $this->renderer->renderToString(
             'preferences-form',
-            [
-                'widget_id'  => self::ID,
-                'title'      => $this->getTitle(),
-                'tracker_id' => false,
-            ]
+            new PreferencePresenter(
+                self::ID,
+                $this->getTitle(),
+                null,
+                $this->tracker_factory->getTrackersByGroupIdUserCanView(
+                    $this->owner_id,
+                    $this->getCurrentUser()
+                )
+            )
         );
     }
 
@@ -169,7 +185,7 @@ final class RoadmapProjectWidget extends \Widget
         $owner_type,
         MappingRegistry $mapping_registry
     ): int {
-        if (! $mapping_registry->hasCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY)) {
+        if (! $mapping_registry->hasCustomMapping(TrackerFactory::TRACKER_MAPPING_KEY)) {
             return $this->dao->cloneContent(
                 (int) $this->owner_id,
                 (string) $this->owner_type,
@@ -190,7 +206,7 @@ final class RoadmapProjectWidget extends \Widget
                     );
                 }
 
-                $tracker_mapping = $mapping_registry->getCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY);
+                $tracker_mapping = $mapping_registry->getCustomMapping(TrackerFactory::TRACKER_MAPPING_KEY);
                 if (! isset($tracker_mapping[$data['tracker_id']])) {
                     return $this->dao->insertContent(
                         (int) $owner_id,
