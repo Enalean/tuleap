@@ -24,17 +24,16 @@ import {
     getUpRightArrow,
 } from "../helpers/svg-arrow-path";
 import { gap } from "../helpers/path";
-import createDOMPurifyInstance from "dompurify";
-
-const sanitize = createDOMPurifyInstance().sanitize;
+import type { SVGTemplateResult } from "lit-html";
+import { html, svg, render } from "lit-html";
 
 function getExampleSvg(
     width: number,
     height: number,
     color: string,
     callback: (width: number, height: number) => string
-): string {
-    return `
+): SVGTemplateResult {
+    return svg`
         <svg style="height: ${height + 2 * gap}px; width: ${width + 2 * gap}px">
             <path
                 stroke="dimgray"
@@ -76,19 +75,23 @@ const step = 2;
 const theme_color = "#1593c4";
 const danger_color = "#da5353";
 
-const html = [
+const content = [
     { title: "Down right arrows", color: theme_color, callback: getDownRightArrow },
     { title: "Down left arrows", color: danger_color, callback: getDownLeftArrow },
     { title: "Up right arrows", color: theme_color, callback: getUpRightArrow },
     { title: "Up left arrows", color: danger_color, callback: getUpLeftArrow },
 ].reduce((previous, { title, color, callback }) => {
-    let html = previous;
-    html += `<h1>${title}</h1>`;
+    let content = html`
+        ${previous}
+        <h1>${title}</h1>
+    `;
     for (let width = 0; width < max_width; width += step) {
-        html += getExampleSvg(width, height, color, callback);
+        content = html`
+            ${content}${getExampleSvg(width, height, color, callback)}
+        `;
     }
 
-    return html;
-}, "");
+    return content;
+}, html``);
 
-document.body.innerHTML = sanitize(html);
+render(content, document.body);
