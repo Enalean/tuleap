@@ -82,11 +82,13 @@
     color: var(--tlp-ui-dimmed-on-dark-background);
     font-weight: 600;
     text-align: right;
+    white-space: nowrap;
 }
 
 .roadmap-gantt-task-popover-value {
     color: var(--tlp-ui-white);
     font-weight: 600;
+    line-height: normal;
 }
 
 .roadmap-gantt-task-popover-value-error {
