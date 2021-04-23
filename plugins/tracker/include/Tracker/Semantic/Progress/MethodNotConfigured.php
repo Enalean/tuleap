@@ -18,21 +18,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-interface IComputeProgression
+class MethodNotConfigured implements IComputeProgression
 {
-    public static function getMethodName(): string;
+    private const METHOD_NAME = 'not-configured';
 
-    public static function getMethodLabel(): string;
+    public static function getMethodName(): string
+    {
+        return self::METHOD_NAME;
+    }
 
-    public function getCurrentConfigurationDescription(): string;
+    public static function getMethodLabel(): string
+    {
+        return '';
+    }
 
-    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool;
+    public function getCurrentConfigurationDescription(): string
+    {
+        return dgettext('tuleap-tracker', 'This semantic is not defined yet.');
+    }
 
-    public function computeProgression(Artifact $artifact, \PFUser $user): ?float;
+    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool
+    {
+        return false;
+    }
 
-    public function isConfigured(): bool;
+    public function computeProgression(Artifact $artifact, \PFUser $user): ?float
+    {
+        return null;
+    }
+
+    public function isConfigured(): bool
+    {
+        return false;
+    }
 }

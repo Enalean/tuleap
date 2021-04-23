@@ -133,7 +133,7 @@ final class RoadmapTasksRetriever
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($tracker);
         $this->checkTrackerHasTimeframeSemantic($semantic_timeframe, $user);
 
-        $semantic_progress = $this->progress_builder->getSemantic($tracker);
+        $progress_calculator = $this->progress_builder->getSemantic($tracker)->getComputationMethod();
 
         $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByTrackerId(
             $tracker->getId(),
@@ -161,7 +161,7 @@ final class RoadmapTasksRetriever
             $end_date    = $time_period->getEndDate();
             $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
-            $progress = $semantic_progress->getProgress($artifact, $user);
+            $progress = $progress_calculator->computeProgression($artifact, $user);
 
             $representations[] = new TaskRepresentation(
                 $artifact->getId(),

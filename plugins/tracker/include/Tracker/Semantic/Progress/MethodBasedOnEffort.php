@@ -144,4 +144,9 @@ class MethodBasedOnEffort implements IComputeProgression
         return $this->total_effort_field->userCanRead($user) &&
             $this->remaining_effort_field->userCanRead($user);
     }
+
+    public function isConfigured(): bool
+    {
+        return true;
+    }
 }

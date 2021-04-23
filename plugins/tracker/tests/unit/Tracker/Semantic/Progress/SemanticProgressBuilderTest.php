@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Semantic\Progress\Exceptions\SemanticProgressBrokenConfigurationException;
 
 class SemanticProgressBuilderTest extends TestCase
 {
@@ -131,7 +130,7 @@ class SemanticProgressBuilderTest extends TestCase
         );
     }
 
-    public function testItThrowsAnExceptionWhenTotalEffortFieldCantBeFound(): void
+    public function testItReturnsANotConfiguredSemanticWhenTotalEffortFieldCantBeFound(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
@@ -157,11 +156,13 @@ class SemanticProgressBuilderTest extends TestCase
             ->andReturn(\Mockery::mock(\Tracker_FormElement_Field_Numeric::class))
             ->once();
 
-        $this->expectException(SemanticProgressBrokenConfigurationException::class);
-        $this->progress_builder->getSemantic($this->tracker);
+        $semantic = $this->progress_builder->getSemantic($this->tracker);
+
+        $this->assertFalse($semantic->isDefined());
+        $this->assertTrue($semantic->getComputationMethod() instanceof MethodNotConfigured);
     }
 
-    public function testItThrowsAnExceptionWhenRemainingEffortFieldCantBeFound(): void
+    public function testReturnsANotConfiguredSemanticWhenRemainingEffortFieldCantBeFound(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
@@ -187,11 +188,13 @@ class SemanticProgressBuilderTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->expectException(SemanticProgressBrokenConfigurationException::class);
-        $this->progress_builder->getSemantic($this->tracker);
+        $semantic = $this->progress_builder->getSemantic($this->tracker);
+
+        $this->assertFalse($semantic->isDefined());
+        $this->assertTrue($semantic->getComputationMethod() instanceof MethodNotConfigured);
     }
 
-    public function testItThrowsAnExceptionIfAFieldIsNotNumeric(): void
+    public function testReturnsANotConfiguredSemanticIfAFieldIsNotNumeric(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
@@ -217,7 +220,9 @@ class SemanticProgressBuilderTest extends TestCase
             ->andReturn(\Mockery::mock(\Tracker_FormElement_Field_Date::class))
             ->once();
 
-        $this->expectException(SemanticProgressBrokenConfigurationException::class);
-        $this->progress_builder->getSemantic($this->tracker);
+        $semantic = $this->progress_builder->getSemantic($this->tracker);
+
+        $this->assertFalse($semantic->isDefined());
+        $this->assertTrue($semantic->getComputationMethod() instanceof MethodNotConfigured);
     }
 }

@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tracker;
 use Tracker_FormElement_Field_Numeric;
-use Tuleap\Tracker\Semantic\Progress\Exceptions\SemanticProgressBrokenConfigurationException;
 
 class SemanticProgressBuilder
 {
@@ -45,14 +44,11 @@ class SemanticProgressBuilder
         $this->form_element_factory = $form_element_factory;
     }
 
-    /**
-     * @throws SemanticProgressBrokenConfigurationException
-     */
     public function getSemantic(Tracker $tracker): SemanticProgress
     {
         $row = $this->dao->searchByTrackerId($tracker->getId());
         if ($row === null) {
-            return new SemanticProgress($tracker, null);
+            return $this->getUnconfiguredSemanticProgress($tracker);
         }
 
         $total_effort_field_id     = $row['total_effort_field_id'];
@@ -66,7 +62,7 @@ class SemanticProgressBuilder
             );
         }
 
-        return new SemanticProgress($tracker, null);
+        return $this->getUnconfiguredSemanticProgress($tracker);
     }
 
     private function buildEffortBasedSemanticProgress(
@@ -87,7 +83,7 @@ class SemanticProgressBuilder
         );
 
         if ($total_effort_field === null || $remaining_effort_field === null) {
-            throw new SemanticProgressBrokenConfigurationException($tracker);
+            return $this->getUnconfiguredSemanticProgress($tracker);
         }
 
         if (
@@ -103,6 +99,14 @@ class SemanticProgressBuilder
             );
         }
 
-        throw new SemanticProgressBrokenConfigurationException($tracker);
+        return $this->getUnconfiguredSemanticProgress($tracker);
+    }
+
+    private function getUnconfiguredSemanticProgress(Tracker $tracker): SemanticProgress
+    {
+        return new SemanticProgress(
+            $tracker,
+            new MethodNotConfigured()
+        );
     }
 }

@@ -30,7 +30,6 @@ use Tracker_FormElement_Field;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenter;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 
@@ -38,13 +37,13 @@ class SemanticProgress extends \Tracker_Semantic
 {
     public const NAME = 'progress';
     /**
-     * @var IComputeProgression | null
+     * @var IComputeProgression
      */
     private $method;
 
     public function __construct(
         Tracker $tracker,
-        ?IComputeProgression $method
+        IComputeProgression $method
     ) {
         parent::__construct($tracker);
         $this->method = $method;
@@ -75,7 +74,7 @@ class SemanticProgress extends \Tracker_Semantic
         $presenter           = new SemanticProgressIntroductionPresenter(
             $this->getSemanticUsage(),
             $is_semantic_defined,
-            $this->isDefined() ? $this->method->getCurrentConfigurationDescription() : ''
+            $this->method->getCurrentConfigurationDescription()
         );
 
         $renderer->renderToPage(
@@ -124,10 +123,6 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
     {
-        if (! $this->isDefined()) {
-            return false;
-        }
-
         return $this->method->isFieldUsedInComputation($field);
     }
 
@@ -136,26 +131,14 @@ class SemanticProgress extends \Tracker_Semantic
         return false;
     }
 
-    /**
-     * @psalm-assert-if-true !null $this->method
-     */
     public function isDefined(): bool
     {
-        return $this->method !== null;
+        return $this->method->isConfigured();
     }
 
-    public function getComputationMethod(): ?IComputeProgression
+    public function getComputationMethod(): IComputeProgression
     {
         return $this->method;
-    }
-
-    public function getProgress(Artifact $artifact, \PFUser $user): ?float
-    {
-        if (! $this->isDefined()) {
-            return null;
-        }
-
-        return $this->method->computeProgression($artifact, $user);
     }
 
     private function getSemanticUsage(): string

@@ -1,9 +1,2 @@
-<p>
-    {{ semantic_usages_description }}
-</p>
-{{# is_semantic_defined }}
-    <p>{{ current_configuration_description }}</p>
-{{/ is_semantic_defined }}
-{{^ is_semantic_defined }}
-    <p>{{# dgettext }} tuleap-tracker | This semantic is not defined yet. {{/ dgettext }}</p>
-{{/ is_semantic_defined }}
+<p>{{ semantic_usages_description }}</p>
+<p>{{ current_configuration_description }}</p>
