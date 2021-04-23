@@ -25,6 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 use PFUser;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -43,6 +45,10 @@ class FeatureRepresentationBuilder
      */
     private $artifact_factory;
     /**
+     * @var VerifyIsVisibleFeature
+     */
+    private $feature_verifier;
+    /**
      * @var VerifyLinkedUserStoryIsNotPlanned
      */
     private $user_story_checker;
@@ -51,23 +57,29 @@ class FeatureRepresentationBuilder
         \Tracker_ArtifactFactory $artifact_factory,
         \Tracker_FormElementFactory $form_element_factory,
         BackgroundColorRetriever $retrieve_background_color,
+        VerifyIsVisibleFeature $feature_verifier,
         VerifyLinkedUserStoryIsNotPlanned $user_story_checker
     ) {
         $this->artifact_factory          = $artifact_factory;
         $this->form_element_factory      = $form_element_factory;
         $this->retrieve_background_color = $retrieve_background_color;
+        $this->feature_verifier          = $feature_verifier;
         $this->user_story_checker        = $user_story_checker;
     }
 
     public function buildFeatureRepresentation(
         PFUser $user,
+        Program $program,
         int $artifact_id,
         int $title_field_id,
         string $artifact_title
     ): ?FeatureRepresentation {
+        $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user, $program);
+        if (! $feature) {
+            return null;
+        }
         $full_artifact = $this->artifact_factory->getArtifactById($artifact_id);
-
-        if (! $full_artifact || ! $full_artifact->userCanView($user)) {
+        if (! $full_artifact) {
             return null;
         }
 
@@ -76,7 +88,6 @@ class FeatureRepresentationBuilder
             return null;
         }
 
-        $feature = new FeatureIdentifier($artifact_id);
         return new FeatureRepresentation(
             $feature->id,
             $artifact_title,

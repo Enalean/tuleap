@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Program\Program;
+
 /**
  * @psalm-immutable
  */
@@ -32,8 +34,20 @@ final class FeatureIdentifier
      */
     public $id;
 
-    public function __construct(int $id)
+    private function __construct(int $id)
     {
         $this->id = $id;
+    }
+
+    public static function fromId(
+        VerifyIsVisibleFeature $feature_verifier,
+        int $feature_id,
+        \PFUser $user,
+        Program $program
+    ): ?self {
+        if (! $feature_verifier->isVisibleFeature($feature_id, $user, $program)) {
+            return null;
+        }
+        return new self($feature_id);
     }
 }

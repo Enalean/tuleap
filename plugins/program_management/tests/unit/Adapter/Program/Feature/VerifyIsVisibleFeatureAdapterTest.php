@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -55,10 +54,9 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->once()->with($user, 404)->andReturnNull();
-        $feature = new FeatureIdentifier(404);
         $program = new Program(110);
 
-        self::assertFalse($this->verifier->isVisibleFeature($feature, $user, $program));
+        self::assertFalse($this->verifier->isVisibleFeature(404, $user, $program));
     }
 
     public function testReturnsFalseIfFeatureDoesNotBelongToGivenProgram(): void
@@ -69,10 +67,9 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $feature = new FeatureIdentifier($artifact->getId());
         $program = new Program(404);
 
-        self::assertFalse($this->verifier->isVisibleFeature($feature, $user, $program));
+        self::assertFalse($this->verifier->isVisibleFeature(741, $user, $program));
     }
 
     public function testReturnsTrue(): void
@@ -83,10 +80,9 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $feature = new FeatureIdentifier($artifact->getId());
         $program = new Program(110);
 
-        self::assertTrue($this->verifier->isVisibleFeature($feature, $user, $program));
+        self::assertTrue($this->verifier->isVisibleFeature(741, $user, $program));
     }
 
     private function buildFeatureArtifact(int $artifact_id, int $project_id): Artifact

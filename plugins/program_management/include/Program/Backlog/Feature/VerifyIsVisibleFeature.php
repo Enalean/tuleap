@@ -26,5 +26,5 @@ use Tuleap\ProgramManagement\Program\Program;
 
 interface VerifyIsVisibleFeature
 {
-    public function isVisibleFeature(FeatureIdentifier $feature, \PFUser $user, Program $program): bool;
+    public function isVisibleFeature(int $feature_id, \PFUser $user, Program $program): bool;
 }

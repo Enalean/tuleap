@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 interface RetrieveFeatureContent
@@ -30,8 +33,10 @@ interface RetrieveFeatureContent
     /**
      * @return FeatureRepresentation[]
      *
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException
      * @throws PlanTrackerException
+     * @throws ProgramNotFoundException
+     * @throws ProgramTrackerException
+     * @throws ProgramIncrementNotFoundException
      */
     public function retrieveProgramIncrementContent(int $id, \PFUser $user): array;
 }

@@ -125,15 +125,13 @@ final class FeatureRemovalProcessorTest extends TestCase
 
     private function buildFeatureRemoval(): FeatureRemoval
     {
-        $feature_identifier = new FeatureIdentifier(76);
-        $user               = UserTestBuilder::aUser()->build();
-        $program            = new Program(110);
-        return FeatureRemoval::fromRawData(
-            $feature_identifier,
-            $user,
-            $program,
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyLinkedUserStoryIsNotPlannedStub()
+        $user    = UserTestBuilder::aUser()->build();
+        $program = new Program(110);
+        $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
+        return FeatureRemoval::fromFeature(
+            new VerifyLinkedUserStoryIsNotPlannedStub(),
+            $feature,
+            $user
         );
     }
 }

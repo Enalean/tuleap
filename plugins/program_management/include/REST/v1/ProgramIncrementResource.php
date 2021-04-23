@@ -32,11 +32,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRet
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
@@ -79,8 +79,10 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $artifact_factory,
                 \Tracker_FormElementFactory::instance(),
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
+                new VerifyIsVisibleFeatureAdapter($artifact_factory),
                 new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), $artifact_factory)
-            )
+            ),
+            new ProgramSearcher(new ProgramDao())
         );
     }
 
@@ -110,7 +112,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
             return array_slice($elements, $offset, $limit);
-        } catch (ProgramIncrementNotFoundException | ProgramAccessException $e) {
+        } catch (ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (PlanTrackerException | ProgramTrackerException $e) {
             throw new RestException(404, $e->getMessage());
