@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@juggle/resize-observer": "^3.3.0",
     "current-week-number": "^1.0.7",
     "vue": "^2.6.12",
     "vue-gettext": "^2.1.12",
@@ -27,7 +28,7 @@
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\"",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\"",
     "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && ../../../../$npm_package_config_bin/vite serve --host 127.0.0.1 --open"
   }
 }

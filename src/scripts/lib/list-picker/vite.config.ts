@@ -30,5 +30,15 @@ export default defineConfig({
             entry: path.resolve(__dirname, "src/index.ts"),
             name: "ListPicker",
         },
+        rollupOptions: {
+            external: ["@juggle/resize-observer", "lit-html", "@tuleap/gettext"],
+            output: {
+                globals: {
+                    "@juggle/resize-observer": "@juggle/resize-observer",
+                    "lit-html": "lit-html",
+                    "@tuleap/gettext": "@tuleap/gettext",
+                },
+            },
+        },
     },
 });

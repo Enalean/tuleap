@@ -20,6 +20,4 @@
 module.exports = {
     ...require("../../../../../tests/jest/jest.base.config.js"),
     displayName: "@tuleap/plugin-tracker-rich-text-editor",
-    // transpile lit-html because of esmodules in nodejs
-    transformIgnorePatterns: ["/node_modules/(?!(lit-html)/).*/"],
 };

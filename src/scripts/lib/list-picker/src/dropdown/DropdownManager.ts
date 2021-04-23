@@ -18,6 +18,7 @@
  */
 import type { ScrollingManager } from "../events/ScrollingManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
+import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observer";
 
 export class DropdownManager {
     private resize_observer: ResizeObserver;
@@ -47,7 +48,8 @@ export class DropdownManager {
 
             this.resizeAndMoveDropdownUnderWrapperElement(is_list_being_filtered);
         };
-        this.resize_observer = new ResizeObserver(resize_dropdown_callback);
+        const ResizeObserverImplementation = window.ResizeObserver || ResizeObserverPolyfill;
+        this.resize_observer = new ResizeObserverImplementation(resize_dropdown_callback);
 
         this.resize_observer.observe(wrapper_element);
         this.resize_observer.observe(this.doc.body);

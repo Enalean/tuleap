@@ -22,8 +22,4 @@ const base_config = require("../../../../tests/jest/jest.base.config.js");
 module.exports = {
     ...base_config,
     displayName: "list-picker",
-    transformIgnorePatterns: [
-        // allow lit-html transformation
-        "node_modules/(?!lit-html)",
-    ],
 };
