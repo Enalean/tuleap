@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 final class FeaturesRankOrdererTest extends TestCase
 {
@@ -52,7 +52,7 @@ final class FeaturesRankOrdererTest extends TestCase
 
     public function testThrowErrorIfLinkFieldIsNotAccessible(): void
     {
-        $order              = new TopBacklogElementToOrderInvolvedInChangeRepresentation();
+        $order              = new FeatureElementToOrderInvolvedInChangeRepresentation();
         $order->ids         = [111];
         $order->compared_to = 45;
         $order->direction   = "before";

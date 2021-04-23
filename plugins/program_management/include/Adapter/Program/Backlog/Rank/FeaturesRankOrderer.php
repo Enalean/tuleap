@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 
 use Luracast\Restler\RestException;
+use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
-class FeaturesRankOrderer
+class FeaturesRankOrderer implements OrderFeatureRank
 {
     /**
      * @var \Tracker_Artifact_PriorityManager
@@ -42,10 +43,10 @@ class FeaturesRankOrderer
     /**
      * @throws RestException
      */
-    public function reorder(TopBacklogElementToOrderInvolvedInChangeRepresentation $order, string $context_id, Program $program): void
+    public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, Program $program): void
     {
         try {
-            if ($order->direction === TopBacklogElementToOrderInvolvedInChangeRepresentation::BEFORE) {
+            if ($order->direction === FeatureElementToOrderInvolvedInChangeRepresentation::BEFORE) {
                 $this->priority_manager->moveListOfArtifactsBefore(
                     $order->ids,
                     $order->compared_to,

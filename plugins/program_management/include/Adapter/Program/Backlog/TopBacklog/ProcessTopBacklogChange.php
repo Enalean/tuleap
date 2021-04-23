@@ -25,12 +25,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 use Tracker_NoArtifactLinkFieldException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
+use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
@@ -52,7 +52,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      */
     private $db_transaction_executor;
     /**
-     * @var FeaturesRankOrderer
+     * @var OrderFeatureRank
      */
     private $features_rank_orderer;
     /**
@@ -72,7 +72,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier,
         ArtifactsExplicitTopBacklogDAO $explicit_top_backlog_dao,
         DBTransactionExecutor $db_transaction_executor,
-        FeaturesRankOrderer $features_rank_orderer,
+        OrderFeatureRank $features_rank_orderer,
         VerifyLinkedUserStoryIsNotPlanned $story_verifier,
         VerifyIsVisibleFeature $visible_feature_verifier,
         FeatureRemovalProcessor $feature_removal_processor

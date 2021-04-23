@@ -25,27 +25,22 @@ namespace Tuleap\ProgramManagement\REST\v1;
 /**
  * @psalm-immutable
  */
-final class BacklogPatchRepresentation
+final class FeatureElementToOrderInvolvedInChangeRepresentation
 {
+    public const AFTER  = "after";
+    public const BEFORE = "before";
     /**
-     * @var array {@type \Tuleap\ProgramManagement\REST\v1\TopBacklogElementInvolvedInChangeRepresentation}{@max 1}
-     * @psalm-var TopBacklogElementInvolvedInChangeRepresentation[]
+     * @var int[] {@required true} {@min 1}{@max 1}
      */
-    public $add;
+    public $ids;
 
     /**
-     * @var array {@type \Tuleap\ProgramManagement\REST\v1\TopBacklogElementInvolvedInChangeRepresentation}{@max 1}
-     * @psalm-var TopBacklogElementInvolvedInChangeRepresentation[]
+     * @var string {@required true} {@choice after,before}
      */
-    public $remove;
+    public $direction;
 
     /**
-     * @var bool {@required false}
+     * @var int {@required true}
      */
-    public $remove_from_program_increment_to_add_to_the_backlog = false;
-
-    /**
-     * @var FeatureElementToOrderInvolvedInChangeRepresentation | null $order {@type \Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation} {@required false}
-     */
-    public $order;
+    public $compared_to;
 }

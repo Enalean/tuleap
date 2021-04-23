@@ -378,7 +378,33 @@ class ProjectResourceTest extends \RestBase
         $program_id = $this->getProgramProjectId();
         $featureA   = $this->getArtifactWithArtifactLink('description', 'FeatureA', $program_id, 'features');
 
-        $this->patchProgramIncrementContent($program_increment_id, $featureA['id']);
+        $this->patchProgramIncrementContent($program_increment_id, $featureA['id'], null);
+    }
+
+    /**
+     * @depends testGetProgramIncrements
+     */
+    public function testReorderFeatureInPIContent(int $program_increment_id): void
+    {
+        $program_id        = $this->getProgramProjectId();
+        $bug_id_1          = $this->getBugIDWithSpecificSummary('My artifact for top backlog manipulation', $program_id);
+        $bug_id_2          = $this->getBugIDWithSpecificSummary('My other artifact for top backlog manipulation', $program_id);
+        $program_increment = $this->getArtifactWithArtifactLink('release_number', 'PI', $program_id, 'pi');
+
+
+        $this->updateArtifactLinks($program_increment_id, [['id' => $bug_id_1], ['id' => $bug_id_2]], $program_increment['artifact_link_id']);
+
+        $this->patchProgramIncrementContent($program_increment_id, null, ["ids" => [$bug_id_2], "direction" => "after", "compared_to" => $bug_id_1]);
+
+        // Check featureB have been moved after featureA
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 0, "id", (string) $bug_id_1);
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 1, "id", (string) $bug_id_2);
+
+        $this->patchProgramIncrementContent($program_increment_id, null, ["ids" => [$bug_id_2], "direction" => "before", "compared_to" => $bug_id_1]);
+
+        // Check feature have been reordered
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 0, "id", (string) $bug_id_2);
+        $this->checkGetElementNumberNOfProgramIncrement($program_increment_id, 1, "id", (string) $bug_id_1);
     }
 
     private function checkGetEmptyProgramIncrementBacklog(int $program_id): void
@@ -403,6 +429,18 @@ class ProjectResourceTest extends \RestBase
 
         self::assertCount(1, $content);
         self::assertEquals($artifact_title, $content[0][$key]);
+    }
+
+    private function checkGetElementNumberNOfProgramIncrement(int $program_id, int $number_feature, string $key, string $artifact_title): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('program_increment/' . urlencode((string) $program_id) . '/content')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $content = $response->json();
+
+        self::assertEquals($artifact_title, $content[$number_feature][$key]);
     }
 
     private function getBugIDWithSpecificSummary(string $summary, int $program_id): int
@@ -494,14 +532,20 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    private function patchProgramIncrementContent(int $program_increment_id, int $to_add): void
+    /**
+     * @psalm-param null|array{ids: int[], direction: string, compared_to: int} $order
+     */
+    private function patchProgramIncrementContent(int $program_increment_id, ?int $to_add, ?array $order): void
     {
-        $feature_to_add = ['id' => $to_add];
-        $response       = $this->getResponse(
+        $feature_to_add = [];
+        if ($to_add) {
+            $feature_to_add = [['id' => $to_add]];
+        }
+        $response = $this->getResponse(
             $this->client->patch(
                 'program_increment/' . urlencode((string) $program_increment_id) . '/content',
                 null,
-                json_encode(['add' => [$feature_to_add]], JSON_THROW_ON_ERROR)
+                json_encode(['add' => $feature_to_add, 'order' => $order], JSON_THROW_ON_ERROR)
             )
         );
         self::assertEquals(501, $response->getStatusCode());

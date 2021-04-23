@@ -26,15 +26,15 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -219,7 +219,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
 
         $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
 
-        $element_to_order              =  new TopBacklogElementToOrderInvolvedInChangeRepresentation();
+        $element_to_order              =  new FeatureElementToOrderInvolvedInChangeRepresentation();
         $element_to_order->ids         = [964];
         $element_to_order->direction   = "before";
         $element_to_order->compared_to = 900;
