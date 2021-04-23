@@ -24,9 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use PFUser;
 use Tracker_ArtifactFactory;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
 
-class UserStoryLinkedToFeatureChecker
+final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNotPlanned
 {
     /**
      * @var ArtifactsLinkedToParentDao
@@ -51,9 +53,9 @@ class UserStoryLinkedToFeatureChecker
         $this->artifact_factory              = $artifact_factory;
     }
 
-    public function hasAPlannedUserStoryLinkedToFeature(PFUser $user, int $feature_id): bool
+    public function isLinkedToAtLeastOnePlannedUserStory(PFUser $user, FeatureIdentifier $feature): bool
     {
-        $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($feature_id);
+        $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {
             $planning = $this->planning_adapter->buildRootPlanning($user, $user_story['project_id']);
 
@@ -70,9 +72,9 @@ class UserStoryLinkedToFeatureChecker
         return false;
     }
 
-    public function hasStoryLinked(PFUser $user, int $artifact_id): bool
+    public function hasStoryLinked(PFUser $user, FeatureIdentifier $feature): bool
     {
-        $linked_children = $this->stories_linked_to_feature_dao->getChildrenOfFeatureInTeamProjects($artifact_id);
+        $linked_children = $this->stories_linked_to_feature_dao->getChildrenOfFeatureInTeamProjects($feature->id);
         foreach ($linked_children as $linked_child) {
             $child = $this->artifact_factory->getArtifactByIdUserCanView($user, $linked_child['children_id']);
             if ($child) {

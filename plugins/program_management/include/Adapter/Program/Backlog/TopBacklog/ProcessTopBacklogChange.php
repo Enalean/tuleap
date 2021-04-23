@@ -27,8 +27,8 @@ use Tracker_NoArtifactLinkFieldException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Rank\FeaturesRankOrderer;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
@@ -69,9 +69,9 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      */
     private $features_rank_orderer;
     /**
-     * @var UserStoryLinkedToFeatureChecker
+     * @var VerifyLinkedUserStoryIsNotPlanned
      */
-    private $user_story_linked_to_feature_checker;
+    private $story_verifier;
     /**
      * @var VerifyIsVisibleFeature
      */
@@ -85,7 +85,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         ArtifactLinkUpdater $artifact_link_updater,
         ProgramIncrementsDAO $program_increments_dao,
         FeaturesRankOrderer $features_rank_orderer,
-        UserStoryLinkedToFeatureChecker $user_story_linked_to_feature_checker,
+        VerifyLinkedUserStoryIsNotPlanned $story_verifier,
         VerifyIsVisibleFeature $visible_feature_verifier
     ) {
         $this->artifact_factory                        = $artifact_factory;
@@ -95,7 +95,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $this->artifact_link_updater                   = $artifact_link_updater;
         $this->program_increments_dao                  = $program_increments_dao;
         $this->features_rank_orderer                   = $features_rank_orderer;
-        $this->user_story_linked_to_feature_checker    = $user_story_linked_to_feature_checker;
+        $this->story_verifier                          = $story_verifier;
         $this->visible_feature_verifier                = $visible_feature_verifier;
     }
 
@@ -182,13 +182,14 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
-            if (! $this->visible_feature_verifier->isVisibleFeature(new FeatureIdentifier($feature_id), $user, $program)) {
+            $feature = new FeatureIdentifier($feature_id);
+            if (! $this->visible_feature_verifier->isVisibleFeature($feature, $user, $program)) {
                 continue;
             }
-            if ($this->user_story_linked_to_feature_checker->hasAPlannedUserStoryLinkedToFeature($user, $feature_id)) {
-                throw new FeatureHasPlannedUserStoryException($feature_id);
+            if ($this->story_verifier->isLinkedToAtLeastOnePlannedUserStory($user, $feature)) {
+                throw new FeatureHasPlannedUserStoryException($feature->id);
             }
-            $filtered_features[] = $feature_id;
+            $filtered_features[] = $feature->id;
         }
 
         return $filtered_features;
