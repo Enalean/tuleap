@@ -7,5 +7,6 @@ in
 [
       buildTools
       (import ./dev-tools-docker.nix { inherit pkgs; })
+      (import ./dev-tools-old-browsers.nix { inherit pkgs; })
       (import ./dev-tools-tests.nix { inherit pkgs; })
 ]
