@@ -21,6 +21,7 @@
 
 .roadmap-gantt-today {
     position: absolute;
+    z-index: roadmap-variables.$z-index-today;
     top: 0;
     bottom: 0;
     width: roadmap-variables.$today-pin-head-size;

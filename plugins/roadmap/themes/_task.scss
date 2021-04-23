@@ -95,11 +95,12 @@
 .roadmap-gantt-task-bar-progress-text-outside-bar,
 .roadmap-gantt-task-bar-progress-text-inside-progress-bar,
 .roadmap-gantt-task-bar-progress-text-outside-progress-bar {
-    margin: 0 2px;
+    margin: 0 4px;
     font-size: .625rem;
     font-weight: 600;
     line-height: .75rem;
     font-variant-numeric: tabular-nums;
+    cursor: default;
 }
 
 .roadmap-gantt-task-bar-progress-text-inside-progress-bar {

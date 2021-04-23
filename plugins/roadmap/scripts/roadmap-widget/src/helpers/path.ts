@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Styles } from "./styles";
+
 const offset = 8;
 const radius = offset;
 export const gap = offset + radius + 1;
 export const threshold = 2 * offset + 2 * radius + 2 * gap;
-const half_turn_offset = 20;
-const arrow = offset;
+const half_turn_offset = Styles.TASK_HEIGHT_IN_PX / 2;
+const arrow = 5;
 
 const TOP = "top";
 const RIGHT = "right";

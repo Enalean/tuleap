@@ -78,9 +78,10 @@
 
 .roadmap-gantt-task-popover-label,
 .roadmap-gantt-task-popover-label:last-child {
-    margin: 0 var(--tlp-medium-spacing) 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     color: var(--tlp-ui-dimmed-on-dark-background);
     font-weight: 600;
+    text-align: right;
 }
 
 .roadmap-gantt-task-popover-value {
