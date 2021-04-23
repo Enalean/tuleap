@@ -34,6 +34,7 @@ describe("BarPopover", () => {
                     start: new Date("2020-01-12T15:00:00.000Z"),
                     end: new Date("2020-01-30T15:00:00.000Z"),
                     progress: null,
+                    progress_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -62,6 +63,7 @@ describe("BarPopover", () => {
                     start: new Date("2020-01-12T15:00:00.000Z"),
                     end: new Date("2020-01-30T15:00:00.000Z"),
                     progress: 0.42123,
+                    progress_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -76,6 +78,31 @@ describe("BarPopover", () => {
         expect(wrapper.find("[data-test=progress]").text()).toContain("42%");
     });
 
+    it("should display the progress error message", async () => {
+        const wrapper = shallowMount(BarPopover, {
+            localVue: await createRoadmapLocalVue(),
+            propsData: {
+                task: {
+                    xref: "art #123",
+                    title: "Create button",
+                    start: new Date("2020-01-12T15:00:00.000Z"),
+                    end: new Date("2020-01-30T15:00:00.000Z"),
+                    progress: null,
+                    progress_error_message: "You fucked up!",
+                } as Task,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.find("[data-test=progress]").text()).toContain("You fucked up!");
+    });
+
     it("should display undefined if no start date", async () => {
         const wrapper = shallowMount(BarPopover, {
             localVue: await createRoadmapLocalVue(),
@@ -86,6 +113,7 @@ describe("BarPopover", () => {
                     start: null,
                     end: new Date("2020-01-30T15:00:00.000Z"),
                     progress: null,
+                    progress_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -111,6 +139,7 @@ describe("BarPopover", () => {
                     start: new Date("2020-01-12T15:00:00.000Z"),
                     end: null,
                     progress: null,
+                    progress_error_message: "",
                 } as Task,
             },
             mocks: {

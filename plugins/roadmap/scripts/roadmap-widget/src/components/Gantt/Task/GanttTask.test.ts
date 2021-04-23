@@ -41,6 +41,8 @@ describe("GanttTask", () => {
             xref: "task #123",
             color_name: "fiesta-red",
             html_url: "/plugins/tracker?aid=123",
+            progress: null,
+            progress_error_message: "",
         } as Task;
 
         const my_task: Task = {
@@ -84,6 +86,7 @@ describe("GanttTask", () => {
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(70);
         expect(task_bar.props("left")).toBe(13);
+        expect(task_bar.props("is_milestone")).toBe(false);
     });
 
     it("Has a minimum width", () => {
@@ -106,6 +109,7 @@ describe("GanttTask", () => {
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
+        expect(task_bar.props("is_milestone")).toBe(true);
     });
 
     it("Doesn't know yet where to put a task without start and end date, so it puts it at the beginning of the period", () => {
@@ -115,6 +119,7 @@ describe("GanttTask", () => {
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
         expect(task_bar.props("left")).toBe(0);
+        expect(task_bar.props("is_milestone")).toBe(true);
     });
 
     it("Consider a task without a start date as a milestone", () => {
@@ -124,6 +129,7 @@ describe("GanttTask", () => {
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
         expect(task_bar.props("left")).toBe(80);
+        expect(task_bar.props("is_milestone")).toBe(true);
     });
 
     it("Consider a task without an end date as a milestone", () => {
@@ -133,6 +139,7 @@ describe("GanttTask", () => {
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
         expect(task_bar.props("left")).toBe(80);
+        expect(task_bar.props("is_milestone")).toBe(true);
     });
 
     it("Displays no arrows if no dependencies", () => {
@@ -234,6 +241,47 @@ describe("GanttTask", () => {
             expect(task_bar_props.is_text_displayed_inside_progress_bar).toBe(false);
             expect(task_bar_props.is_text_displayed_outside_progress_bar).toBe(false);
             expect(task_bar_props.is_text_displayed_outside_bar).toBe(false);
+        });
+    });
+
+    describe("progress in error", () => {
+        it("should display the error sign inside the bar", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 6, 6),
+                progress: null,
+                progress_error_message: "You fucked up!",
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.is_error_sign_displayed_inside_bar).toBe(true);
+            expect(task_bar_props.is_error_sign_displayed_outside_bar).toBe(false);
+        });
+
+        it("should display the error sign outside the bar if the bar is too small", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 3, 6),
+                progress: null,
+                progress_error_message: "You fucked up!",
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.is_error_sign_displayed_inside_bar).toBe(false);
+            expect(task_bar_props.is_error_sign_displayed_outside_bar).toBe(true);
+        });
+
+        it("should display the error sign outside the bar if we have a milestone", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 5),
+                end: new Date(2020, 3, 5),
+                progress: null,
+                progress_error_message: "You fucked up!",
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.is_error_sign_displayed_inside_bar).toBe(false);
+            expect(task_bar_props.is_error_sign_displayed_outside_bar).toBe(true);
         });
     });
 });

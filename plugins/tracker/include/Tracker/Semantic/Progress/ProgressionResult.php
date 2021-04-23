@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Tuleap\Tracker\Artifact\Artifact;
-
-interface IComputeProgression
+/**
+ * @psalm-immutable
+ */
+final class ProgressionResult
 {
-    public static function getMethodName(): string;
+    /**
+     * @var float|null
+     */
+    private $value;
+    /**
+     * @var string
+     */
+    private $error_message;
 
-    public static function getMethodLabel(): string;
+    public function __construct(?float $value, string $error_message)
+    {
+        $this->value         = $value;
+        $this->error_message = $error_message;
+    }
 
-    public function getCurrentConfigurationDescription(): string;
+    public function getValue(): ?float
+    {
+        return $this->value;
+    }
 
-    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool;
-
-    public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult;
-
-    public function isConfigured(): bool;
-
-    public function getErrorMessage(): string;
+    public function getErrorMessage(): string
+    {
+        return $this->error_message;
+    }
 }

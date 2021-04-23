@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Semantic\Progress;
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-interface IComputeProgression
+final class MethodNotConfiguredTest extends TestCase
 {
-    public static function getMethodName(): string;
+    use MockeryPHPUnitIntegration;
 
-    public static function getMethodLabel(): string;
+    public function testItReturnsNullProgressWhenTheSemanticIsNotDefined(): void
+    {
+        $method = new MethodNotConfigured();
+        self::assertEquals("", $method->getErrorMessage());
 
-    public function getCurrentConfigurationDescription(): string;
-
-    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool;
-
-    public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult;
-
-    public function isConfigured(): bool;
-
-    public function getErrorMessage(): string;
+        $result = $method->computeProgression(Mockery::spy(Artifact::class), Mockery::spy(PFUser::class));
+        self::assertEquals("", $result->getErrorMessage());
+        self::assertEquals(null, $result->getValue());
+    }
 }

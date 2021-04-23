@@ -26,6 +26,7 @@ describe("MilestoneBar", () => {
         const task: Task = {
             color_name: "fiesta-red",
             progress: 0,
+            progress_error_message: "",
         } as Task;
 
         const wrapper = shallowMount(MilestoneBar, {
@@ -63,6 +64,7 @@ describe("MilestoneBar", () => {
                 task: {
                     color_name: "fiesta-red",
                     progress: null,
+                    progress_error_message: "",
                 } as Task,
                 left: 0,
                 percentage: "",
@@ -77,6 +79,7 @@ describe("MilestoneBar", () => {
         const task = {
             color_name: "fiesta-red",
             progress: 0.42,
+            progress_error_message: "",
         } as Task;
         const wrapper = shallowMount(MilestoneBar, {
             propsData: {
@@ -90,5 +93,27 @@ describe("MilestoneBar", () => {
 
         await wrapper.setProps({ task: { ...task, progress: null }, percentage: "" });
         expect(wrapper.find("[data-test=percentage]").exists()).toBeFalsy();
+    });
+
+    it("should display the progress error sign in place of the progress bar", async () => {
+        const task = {
+            color_name: "fiesta-red",
+            progress: 0.42,
+            progress_error_message: "",
+        } as Task;
+        const wrapper = shallowMount(MilestoneBar, {
+            propsData: {
+                task,
+                left: 0,
+                percentage: "42%",
+            },
+        });
+
+        expect(wrapper.find("[data-test=progress-error-sign]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=progress]").exists()).toBe(true);
+
+        await wrapper.setProps({ task: { ...task, progress_error_message: "You fucked up!" } });
+        expect(wrapper.find("[data-test=progress-error-sign]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=progress]").exists()).toBe(false);
     });
 });

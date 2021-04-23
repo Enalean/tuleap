@@ -65,17 +65,20 @@ class MethodBasedOnEffortTest extends TestCase
     }
 
     /**
-     * @testWith [8, 5.25, 0.34375]
-     *           [8, 8, 0]
-     *           [8, 0, 1]
-     *           [0, 0, null]
-     *           [8, -2, null]
-     *           [-2, 3, null]
-     *           [-2, -1, null]
-     *           [8, 10, null]
+     * @testWith [8, 5.25, 0.34375, ""]
+     *           [8, 8, 0, ""]
+     *           [8, 0, 1, ""]
+     *           [0, 0, null, "There is no total effort."]
+     *           [8, -2, null, "Remaining effort cannot be negative."]
+     *           [-2, 3, null, "Total effort cannot be negative."]
+     *           [8, 10, null, "Remaining effort cannot be greater than total effort."]
      */
-    public function testItComputesTheProgressWithFloatAndIntFields(int $total_effort, float $remaining_effort, ?float $expected_progress_value): void
-    {
+    public function testItComputesTheProgressWithFloatAndIntFields(
+        int $total_effort,
+        float $remaining_effort,
+        ?float $expected_progress_value,
+        string $expected_error_message
+    ): void {
         $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
         $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
 
@@ -95,24 +98,27 @@ class MethodBasedOnEffortTest extends TestCase
             ->with($this->artifact)
             ->andReturn($remaining_effort_last_changeset);
 
-        $this->assertEquals(
-            $expected_progress_value,
-            $this->method->computeProgression($this->artifact, $this->user)
-        );
+        $progression_result = $this->method->computeProgression($this->artifact, $this->user);
+
+        $this->assertEquals($expected_progress_value, $progression_result->getValue());
+        $this->assertEquals($expected_error_message, $progression_result->getErrorMessage());
     }
 
     /**
-     * @testWith [8, 5.25, 0.34375]
-     *           [8, 8, 0]
-     *           [8, 0, 1]
-     *           [0, 0, null]
-     *           [8, -2, null]
-     *           [-2, 3, null]
-     *           [-2, -1, null]
-     *           [8, 10, null]
+     * @testWith [8, 5.25, 0.34375, ""]
+     *           [8, 8, 0, ""]
+     *           [8, 0, 1, ""]
+     *           [0, 0, null, "There is no total effort."]
+     *           [8, -2, null, "Remaining effort cannot be negative."]
+     *           [-2, 3, null, "Total effort cannot be negative."]
+     *           [8, 10, null, "Remaining effort cannot be greater than total effort."]
      */
-    public function testItComputesProgressWithComputedFields(?float $total_effort, ?float $remaining_effort, ?float $expected_progress_value): void
-    {
+    public function testItComputesProgressWithComputedFields(
+        ?float $total_effort,
+        ?float $remaining_effort,
+        ?float $expected_progress_value,
+        string $expected_error_message
+    ): void {
         $computed_field_total_effort     = \Mockery::mock(\Tracker_FormElement_Field_Computed::class);
         $computed_field_remaining_effort = \Mockery::mock(\Tracker_FormElement_Field_Computed::class);
 
@@ -124,20 +130,20 @@ class MethodBasedOnEffortTest extends TestCase
 
         $method = new MethodBasedOnEffort($computed_field_total_effort, $computed_field_remaining_effort);
 
-        $this->assertEquals(
-            $expected_progress_value,
-            $method->computeProgression($this->artifact, $this->user)
-        );
+        $progression_result = $method->computeProgression($this->artifact, $this->user);
+
+        $this->assertEquals($expected_progress_value, $progression_result->getValue());
+        $this->assertEquals($expected_error_message, $progression_result->getErrorMessage());
     }
 
     public function testItReturnsNullWhenUserHasNotPermissionToReadTotalEffortField(): void
     {
         $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(false);
 
-        $this->assertEquals(
-            null,
-            $this->method->computeProgression($this->artifact, $this->user)
-        );
+        $progression_result = $this->method->computeProgression($this->artifact, $this->user);
+
+        $this->assertEquals(null, $progression_result->getValue());
+        $this->assertEquals('', $progression_result->getErrorMessage());
     }
 
     public function testItReturnsNullWhenUserHasNotPermissionToReadRemainingEffortField(): void
@@ -145,9 +151,9 @@ class MethodBasedOnEffortTest extends TestCase
         $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
         $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(false);
 
-        $this->assertEquals(
-            null,
-            $this->method->computeProgression($this->artifact, $this->user)
-        );
+        $progression_result = $this->method->computeProgression($this->artifact, $this->user);
+
+        $this->assertEquals(null, $progression_result->getValue());
+        $this->assertEquals('', $progression_result->getErrorMessage());
     }
 }

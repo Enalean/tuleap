@@ -130,7 +130,7 @@ class SemanticProgressBuilderTest extends TestCase
         );
     }
 
-    public function testItReturnsANotConfiguredSemanticWhenTotalEffortFieldCantBeFound(): void
+    public function testItReturnsAnInvalidSemanticWhenTotalEffortFieldCantBeFound(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
@@ -159,10 +159,10 @@ class SemanticProgressBuilderTest extends TestCase
         $semantic = $this->progress_builder->getSemantic($this->tracker);
 
         $this->assertFalse($semantic->isDefined());
-        $this->assertTrue($semantic->getComputationMethod() instanceof MethodNotConfigured);
+        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
     }
 
-    public function testReturnsANotConfiguredSemanticWhenRemainingEffortFieldCantBeFound(): void
+    public function testReturnsAnInvalidSemanticWhenRemainingEffortFieldCantBeFound(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
@@ -191,10 +191,10 @@ class SemanticProgressBuilderTest extends TestCase
         $semantic = $this->progress_builder->getSemantic($this->tracker);
 
         $this->assertFalse($semantic->isDefined());
-        $this->assertTrue($semantic->getComputationMethod() instanceof MethodNotConfigured);
+        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
     }
 
-    public function testReturnsANotConfiguredSemanticIfAFieldIsNotNumeric(): void
+    public function testReturnsAnInvalidSemanticIfAFieldIsNotNumeric(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
@@ -223,6 +223,6 @@ class SemanticProgressBuilderTest extends TestCase
         $semantic = $this->progress_builder->getSemantic($this->tracker);
 
         $this->assertFalse($semantic->isDefined());
-        $this->assertTrue($semantic->getComputationMethod() instanceof MethodNotConfigured);
+        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
     }
 }

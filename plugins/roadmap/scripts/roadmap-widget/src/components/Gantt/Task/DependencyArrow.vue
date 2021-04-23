@@ -60,6 +60,9 @@ export default class DependencyArrow extends Vue {
     @Prop({ required: true })
     readonly is_text_displayed_outside_bar!: boolean;
 
+    @Prop({ required: true })
+    readonly is_error_sign_displayed_outside_bar!: boolean;
+
     get style(): string {
         let top = Styles.TASK_HEIGHT_IN_PX / 2;
         const left = Math.min(this.right_of_task_and_text, this.left_of_dependency);
@@ -134,6 +137,10 @@ export default class DependencyArrow extends Vue {
     }
 
     get right_of_task_and_text(): number {
+        if (this.is_error_sign_displayed_outside_bar) {
+            return this.right_of_task + Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX;
+        }
+
         if (this.is_text_displayed_outside_bar && this.percentage.length > 0) {
             const width_of_text =
                 Styles.TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_PERCENT_SIGN_IN_PX +

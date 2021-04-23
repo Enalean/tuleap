@@ -161,7 +161,7 @@ final class RoadmapTasksRetriever
             $end_date    = $time_period->getEndDate();
             $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
-            $progress = $progress_calculator->computeProgression($artifact, $user);
+            $progress_result = $progress_calculator->computeProgression($artifact, $user);
 
             $representations[] = new TaskRepresentation(
                 $artifact->getId(),
@@ -169,7 +169,8 @@ final class RoadmapTasksRetriever
                 $artifact->getUri(),
                 (string) $artifact->getTitle(),
                 $tracker->getColor()->getName(),
-                $progress,
+                $progress_result->getValue(),
+                $progress_result->getErrorMessage(),
                 $start,
                 $end,
                 $this->dependencies_retriever->getDependencies($artifact),
