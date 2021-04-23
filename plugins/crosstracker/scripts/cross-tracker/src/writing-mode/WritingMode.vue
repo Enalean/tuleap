@@ -35,6 +35,7 @@
             <button
                 class="tlp-button-primary tlp-button-outline writing-mode-actions-cancel"
                 v-on:click="cancel"
+                data-test="writing-mode-cancel-button"
                 v-translate
             >
                 Cancel
@@ -50,70 +51,84 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import QueryEditor from "./QueryEditor.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
+import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
 import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import type { Tracker, Project } from "../type";
 
-export default {
-    name: "WritingMode",
-    components: {
-        QueryEditor,
-        TrackerSelection,
-        TrackerListWritingMode,
-    },
-    props: {
-        writingCrossTrackerReport: Object,
-    },
-    data() {
-        return {
-            selected_trackers: [],
-        };
-    },
-    mounted() {
+interface SelectTrackerAndProject {
+    selected_project: Project;
+    selected_tracker: Tracker;
+}
+
+interface TrackerToUpdate {
+    tracker_id: number;
+    tracker_label: string;
+    project_label: string;
+}
+
+@Component({
+    components: { QueryEditor, TrackerListWritingMode, TrackerSelection },
+})
+export default class WritingMode extends Vue {
+    @Prop({ required: true })
+    readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
+
+    private selected_trackers: TrackerToUpdate[] = [];
+
+    mounted(): void {
         this.updateSelectedTrackers();
-    },
-    methods: {
-        cancel() {
-            this.$emit("switch-to-reading-mode", { saved_state: true });
-        },
-        search() {
-            this.$emit("switch-to-reading-mode", { saved_state: false });
-        },
+    }
 
-        addTrackerToSelection({ selected_project, selected_tracker }) {
-            try {
-                this.writingCrossTrackerReport.addTracker(selected_project, selected_tracker);
-                this.updateSelectedTrackers();
-            } catch (error) {
-                if (error instanceof TooManyTrackersSelectedError) {
-                    this.$store.commit(
-                        "setErrorMessage",
-                        this.$gettext("Tracker selection is limited to 10 trackers")
-                    );
-                } else {
-                    throw error;
-                }
-            }
-        },
+    cancel(): void {
+        this.$emit("switch-to-reading-mode", { saved_state: true });
+    }
+    search(): void {
+        this.$emit("switch-to-reading-mode", { saved_state: false });
+    }
 
-        removeTrackerFromSelection({ tracker_id }) {
-            this.writingCrossTrackerReport.removeTracker(tracker_id);
+    addTrackerToSelection(payload: SelectTrackerAndProject): void {
+        try {
+            this.writingCrossTrackerReport.addTracker(
+                payload.selected_project,
+                payload.selected_tracker
+            );
             this.updateSelectedTrackers();
-            this.$store.commit("resetFeedbacks");
-        },
+        } catch (error) {
+            if (error instanceof TooManyTrackersSelectedError) {
+                this.$store.commit(
+                    "setErrorMessage",
+                    this.$gettext("Tracker selection is limited to 10 trackers")
+                );
+            } else {
+                throw error;
+            }
+        }
+    }
 
-        updateSelectedTrackers() {
-            const trackers = [...this.writingCrossTrackerReport.getTrackers()];
-            this.selected_trackers = trackers.map(({ tracker, project }) => {
+    removeTrackerFromSelection(tracker: TrackerToUpdate): void {
+        this.writingCrossTrackerReport.removeTracker(tracker.tracker_id);
+        this.updateSelectedTrackers();
+        this.$store.commit("resetFeedbacks");
+    }
+
+    updateSelectedTrackers(): void {
+        const trackers = Array.from(this.writingCrossTrackerReport.getTrackers());
+
+        this.selected_trackers = trackers.map(
+            ({ tracker, project }): TrackerToUpdate => {
                 return {
                     tracker_id: tracker.id,
                     tracker_label: tracker.label,
                     project_label: project.label,
                 };
-            });
-        },
-    },
-};
+            }
+        );
+    }
+}
 </script>
