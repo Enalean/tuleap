@@ -28,7 +28,7 @@ use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
 
-class PermissionCheckerTest extends TestCase
+final class PermissionCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -53,9 +53,9 @@ class PermissionCheckerTest extends TestCase
      */
     private $tracker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RetrieveTrackerPrivateCommentInformation
      */
-    private $enabled_dao;
+    private $tracker_private_comment_information_retriever;
 
     protected function setUp(): void
     {
@@ -69,25 +69,25 @@ class PermissionCheckerTest extends TestCase
 
         $this->comment = $this->buildComment([]);
 
-        $this->enabled_dao = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
-        $this->enabled_dao
-            ->shouldReceive('isTrackerEnabledPrivateComment')
-            ->with(200)
+        $this->tracker_private_comment_information_retriever = \Mockery::mock(RetrieveTrackerPrivateCommentInformation::class);
+        $this->tracker_private_comment_information_retriever
+            ->shouldReceive('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
             ->andReturnTrue()
             ->byDefault();
 
-        $this->checker = new PermissionChecker($this->enabled_dao);
+        $this->checker = new PermissionChecker($this->tracker_private_comment_information_retriever);
     }
 
     public function testReturnsFalseIfTrackerDoesNotUsePrivateComment(): void
     {
-        $this->enabled_dao
-            ->shouldReceive('isTrackerEnabledPrivateComment')
-            ->with(200)
+        $this->tracker_private_comment_information_retriever
+            ->shouldReceive('doesTrackerAllowPrivateComments')
+            ->with($this->tracker)
             ->once()
             ->andReturnFalse();
 
-        $this->assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
+        self::assertFalse($this->checker->isPrivateCommentForUser($this->user, $this->comment));
     }
 
     public function testReturnsFalseIfUserIsSiteAdmin(): void

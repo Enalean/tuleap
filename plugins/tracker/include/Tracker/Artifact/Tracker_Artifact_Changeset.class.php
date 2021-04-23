@@ -22,6 +22,8 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -606,7 +608,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
     protected function getPrivateCommentPermissionRetriever(): TrackerPrivateCommentUGroupPermissionRetriever
     {
-        return new TrackerPrivateCommentUGroupPermissionRetriever(new TrackerPrivateCommentUGroupPermissionDao(), new TrackerPrivateCommentUGroupEnabledDao(), new UGroupManager());
+        return new TrackerPrivateCommentUGroupPermissionRetriever(
+            new TrackerPrivateCommentUGroupPermissionDao(),
+            new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())),
+            new UGroupManager()
+        );
     }
 
     /**

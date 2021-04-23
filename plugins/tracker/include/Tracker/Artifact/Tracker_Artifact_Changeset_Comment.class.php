@@ -22,7 +22,9 @@
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentPresenterBuilder;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 
@@ -199,8 +201,7 @@ class Tracker_Artifact_Changeset_Comment
      */
     public function fetchFollowUp(PFUser $current_user)
     {
-        $presenter_builder = new CommentPresenterBuilder(new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao()), UserHelper::instance());
-        $presenter         = $presenter_builder->getCommentPresenter($this, $current_user);
+        $presenter = self::getCommentPresenterBuilder()->getCommentPresenter($this, $current_user);
 
         if (! $presenter) {
             return null;
@@ -223,10 +224,26 @@ class Tracker_Artifact_Changeset_Comment
 
     public function hasEmptyBodyForUser(PFUser $user): bool
     {
-        $presenter_builder = new CommentPresenterBuilder(new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao()), UserHelper::instance());
-        $presenter         = $presenter_builder->getCommentPresenter($this, $user);
+        $presenter = self::getCommentPresenterBuilder()->getCommentPresenter($this, $user);
 
         return $presenter === null;
+    }
+
+    private static function getCommentPresenterBuilder(): CommentPresenterBuilder
+    {
+        static $presenter_builder = null;
+        if ($presenter_builder === null) {
+            $presenter_builder = new CommentPresenterBuilder(
+                new PermissionChecker(
+                    new CachingTrackerPrivateCommentInformationRetriever(
+                        new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())
+                    )
+                ),
+                UserHelper::instance()
+            );
+        }
+
+        return $presenter_builder;
     }
 
     /**
