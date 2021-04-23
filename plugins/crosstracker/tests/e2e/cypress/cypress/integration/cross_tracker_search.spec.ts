@@ -20,10 +20,13 @@
 
 function updateSearchQuery(search_query: string): void {
     cy.get("[data-test=cross-tracker-reading-mode]").click();
-    cy.get("[data-test=expert-query-textarea]")
-        .clear({ force: true })
-        .type(search_query, { force: true });
+
+    clearCodeMirror();
+    // ignore for code mirror
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".CodeMirror-code").type(search_query);
     cy.get("[data-test=search-report-button]").click();
+    cy.get("[data-test=tql-reading-mode-query]").contains(search_query);
 }
 
 function assertOpenArtifacts(): void {
@@ -44,6 +47,15 @@ function assertAllArtifacts(): void {
         cy.wrap(artifact).should("contain", "bug");
         cy.wrap(artifact).should("contain", "bug 1");
         cy.wrap(artifact).should("contain", "bug 2");
+    });
+}
+
+function clearCodeMirror(): void {
+    // ignore for code mirror
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".CodeMirror").then((el) => {
+        const unwrap = Cypress.dom.unwrap(el)[0];
+        unwrap.CodeMirror.setValue("");
     });
 }
 

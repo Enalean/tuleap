@@ -34,6 +34,7 @@
   "devDependencies": {
     "@types/bootstrap": "^4.5.1",
     "@types/ckeditor": "^4.9.10",
+    "@types/codemirror": "0.0.109",
     "@types/dompurify": "^2.2.1",
     "@types/jquery": "^3.5.5",
     "@types/mustache": "^4.1.0",

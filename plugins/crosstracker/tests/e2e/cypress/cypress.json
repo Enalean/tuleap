@@ -9,6 +9,5 @@
     "video": true,
     "videoUploadOnPasses": false,
     "pluginsFile": false,
-    "pageLoadTimeout": 120000,
-    "retries": 1
+    "pageLoadTimeout": 120000
 }
