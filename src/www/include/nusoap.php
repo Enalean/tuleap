@@ -4897,7 +4897,7 @@ class wsdl extends nusoap_base
                         }
                         $ns      = $this->getNamespaceFromPrefix($typePrefix);
                         $typeDef = $this->getTypeDef($this->getLocalPart($partType), $ns);
-                        if ($typeDef['typeClass'] == 'element') {
+                        if (isset($typeDef['typeClass']) && $typeDef['typeClass'] === 'element') {
                                   $elementortype = 'element';
                         } else {
                               $elementortype = 'type';
