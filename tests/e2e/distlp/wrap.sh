@@ -54,5 +54,6 @@ $DOCKERCOMPOSE logs backend-web > "$test_results_folder/logs/backend-web/backend
 
 $DOCKERCOMPOSE logs test-cli > "$test_results_folder/logs/test-cli.log"
 $DOCKERCOMPOSE logs test-cypress > "$test_results_folder/logs/test-cypress.log"
+$DOCKERCOMPOSE logs reverse-proxy > "$test_results_folder/logs/reverse-proxy.log"
 
 clean_env
