@@ -37,5 +37,5 @@ interface BuildTracker
     /**
      * @throws ProgramTrackerException
      */
-    public function getValidTracker(int $tracker_id, int $project_id): \Tracker;
+    public function checkTrackerIsValid(int $tracker_id, int $project_id): void;
 }

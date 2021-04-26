@@ -48,9 +48,7 @@ final class ProgramTrackerAdapter implements BuildTracker
     {
         $plannable_trackers_ids = [];
         foreach ($plannable_trackers_id as $tracker_id) {
-            $tracker = $this->getValidTracker($tracker_id, $project_id);
-
-            $plannable_tracker        = new ProgramPlannableTracker($tracker->getId());
+            $plannable_tracker        = ProgramPlannableTracker::build($this, $tracker_id, $project_id);
             $plannable_trackers_ids[] = $plannable_tracker;
         }
 
@@ -64,7 +62,7 @@ final class ProgramTrackerAdapter implements BuildTracker
     /**
      * @throws ProgramTrackerException
      */
-    public function getValidTracker(int $tracker_id, int $project_id): \Tracker
+    public function checkTrackerIsValid(int $tracker_id, int $project_id): void
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
 
@@ -75,7 +73,5 @@ final class ProgramTrackerAdapter implements BuildTracker
         if ((int) $tracker->getGroupId() !== $project_id) {
             throw new PlanTrackerDoesNotBelongToProjectException($tracker_id, $project_id);
         }
-
-        return $tracker;
     }
 }

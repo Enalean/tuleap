@@ -52,8 +52,8 @@ final class ProgramIncrementTracker
         int $tracker_id,
         int $project_id
     ): self {
-        $tracker = $tracker_builder->getValidTracker($tracker_id, $project_id);
+        $tracker_builder->checkTrackerIsValid($tracker_id, $project_id);
 
-        return new self($tracker->getId());
+        return new self($tracker_id);
     }
 }

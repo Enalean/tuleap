@@ -26,7 +26,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\ProgramForManagement;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanCreatorTest extends TestCase
 {
@@ -48,12 +47,10 @@ final class PlanCreatorTest extends TestCase
         $program_adapter->shouldReceive('buildExistingProgramProjectForManagement')
             ->with($project_id, $user)->once()
             ->andReturn($program);
-        $tracker_adapter->shouldReceive('getValidTracker')
-            ->with($program_increment_tracker_id, $project_id)->once()
-            ->andReturn(TrackerTestBuilder::aTracker()->withId($program_increment_tracker_id)->build());
+        $tracker_adapter->shouldReceive('checkTrackerIsValid')->twice();
         $tracker_adapter->shouldReceive('buildPlannableTrackerList')
             ->with([$plannable_tracker_id], $project_id)->once()
-            ->andReturn([$plannable_tracker_id => new ProgramPlannableTracker($plannable_tracker_id)]);
+            ->andReturn([$plannable_tracker_id => ProgramPlannableTracker::build($tracker_adapter, $plannable_tracker_id, $project_id)]);
         $build_ugroups->shouldReceive('buildProgramUserGroups')->andReturn([$program]);
 
         $plan_dao = \Mockery::mock(PlanStore::class);

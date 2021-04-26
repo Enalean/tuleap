@@ -55,7 +55,7 @@ final class ProgramTrackerAdapterTest extends TestCase
 
         $this->expectException(PlanTrackerNotFoundException::class);
 
-        $this->adapter->getValidTracker($tracker_id, $project_id);
+        $this->adapter->checkTrackerIsValid($tracker_id, $project_id);
     }
 
     public function testItThrowsAnExceptionWhenTrackerDoesNotBelongToProject(): void
@@ -67,10 +67,10 @@ final class ProgramTrackerAdapterTest extends TestCase
 
         $this->expectException(PlanTrackerDoesNotBelongToProjectException::class);
 
-        $this->adapter->getValidTracker($tracker_id, $project_id);
+        $this->adapter->checkTrackerIsValid($tracker_id, $project_id);
     }
 
-    public function testItBuildAProgramIncrement(): void
+    public function testItDoesNotThrowWhenTrackerIsValid(): void
     {
         $tracker_id = 1;
         $project_id = 101;
@@ -78,7 +78,8 @@ final class ProgramTrackerAdapterTest extends TestCase
         $tracker    = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($project)->build();
         $this->tracker_factory->shouldReceive('getTrackerById')->with($tracker_id)->once()->andReturn($tracker);
 
-        self::assertEquals($tracker, $this->adapter->getValidTracker($tracker_id, $project_id));
+        $this->adapter->checkTrackerIsValid($tracker_id, $project_id);
+        $this->addToAssertionCount(1);
     }
 
     public function testItThrowsAnExceptionWhenTrackerListIsEmpty(): void
@@ -95,9 +96,9 @@ final class ProgramTrackerAdapterTest extends TestCase
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id]);
         $tracker    = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject($project)->build();
-        $this->tracker_factory->shouldReceive('getTrackerById')->with($tracker_id)->once()->andReturn($tracker);
+        $this->tracker_factory->shouldReceive('getTrackerById')->with($tracker_id)->andReturn($tracker);
 
-        $expected = [new ProgramPlannableTracker($tracker_id)];
+        $expected = [ProgramPlannableTracker::build($this->adapter, $tracker_id, $project_id)];
         self::assertEquals($expected, $this->adapter->buildPlannableTrackerList([$tracker_id], $project_id));
     }
 }

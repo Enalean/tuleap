@@ -15,28 +15,27 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Plan;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\PlanTrackerNotFoundException;
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
 
-class ProgramIncrementTrackerTest extends TestCase
+final class ProgramPlannableTrackerTest extends TestCase
 {
-    public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
+    public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
     {
-        $this->expectException(PlanTrackerNotFoundException::class);
-        ProgramIncrementTracker::buildProgramIncrementTracker($this->getStubBuildTracker(false), 1, 101);
+        $this->expectException(ProgramTrackerNotFoundException::class);
+        ProgramPlannableTracker::build($this->getStubBuildTracker(false), 1, 101);
     }
 
     public function testItBuildAProgramIncrement(): void
     {
-        $tracker = ProgramIncrementTracker::buildProgramIncrementTracker($this->getStubBuildTracker(), 1, 101);
+        $tracker = ProgramPlannableTracker::build($this->getStubBuildTracker(), 1, 101);
         self::assertEquals(1, $tracker->getId());
     }
 
@@ -60,7 +59,7 @@ class ProgramIncrementTrackerTest extends TestCase
             public function checkTrackerIsValid(int $tracker_id, int $project_id): void
             {
                 if (! $this->return_tracker) {
-                    throw new PlanTrackerNotFoundException($tracker_id);
+                    throw new ProgramTrackerNotFoundException($tracker_id);
                 }
             }
         };
