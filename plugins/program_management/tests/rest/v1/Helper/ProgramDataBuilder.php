@@ -27,10 +27,13 @@ use REST_TestDataBuilder;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Team\Creation\Team;
@@ -85,6 +88,8 @@ class ProgramDataBuilder extends REST_TestDataBuilder
     {
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
 
+        $team_adapter = new TeamAdapter($this->project_manager, new ProgramDao(), new ExplicitBacklogDao());
+
         $this->replication_data_adapter = new ReplicationDataAdapter(
             Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
@@ -103,11 +108,18 @@ class ProgramDataBuilder extends REST_TestDataBuilder
             new TaskBuilder()
         );
 
+        $this->user = \UserManager::instance()->getUserByUserName(\TestDataBuilder::TEST_USER_1_NAME);
+
         $this->program = $this->project_manager->getProjectByUnixName(self::PROJECT_PROGRAM_NAME);
         $this->team    = $this->project_manager->getProjectByUnixName(self::PROJECT_TEAM_NAME);
 
         $team_dao = new TeamDao();
-        $team_dao->save(new TeamCollection([new Team((int) $this->team->getID())], new ToBeCreatedProgram((int) $this->program->getID())));
+        $team_dao->save(
+            new TeamCollection(
+                [Team::buildForRestTest($team_adapter, (int) $this->team->getID(), $this->user)],
+                new ToBeCreatedProgram((int) $this->program->getID())
+            )
+        );
 
         $tracker_factory = \TrackerFactory::instance();
         assert($tracker_factory instanceof \TrackerFactory);
@@ -120,7 +132,6 @@ class ProgramDataBuilder extends REST_TestDataBuilder
         $this->program_increment = $this->getTrackerByName($program_trackers, "pi");
 
         $this->artifact_factory = \Tracker_ArtifactFactory::instance();
-        $this->user             = \UserManager::instance()->getUserByUserName(\TestDataBuilder::TEST_USER_1_NAME);
 
         $this->linkFeatureAndUserStories();
         $this->linkProgramIncrementToMirroredRelease();

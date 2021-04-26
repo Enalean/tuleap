@@ -37,4 +37,15 @@ interface BuildTeam
      * @throws TeamMustHaveExplicitBacklogEnabledException
      */
     public function buildTeamProject(array $team_ids, ToBeCreatedProgram $program, \PFUser $user): TeamCollection;
+
+    /**
+     * @throws ProjectIsAProgramException
+     * @throws TeamAccessException
+     */
+    public function checkProjectIsATeam(int $team_id, \PFUser $user): void;
+
+    /**
+     * @throws ProjectIsAProgramException
+     */
+    public function checkProjectIsATeamForRestTestInitialization(int $team_id, \PFUser $user): void;
 }

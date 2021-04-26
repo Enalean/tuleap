@@ -36,6 +36,7 @@ final class TeamCreatorTest extends TestCase
     {
         $program_adapter = \Mockery::mock(BuildProgram::class);
         $team_adapter    = \Mockery::mock(BuildTeam::class);
+        $team_adapter->shouldReceive('checkProjectIsATeam')->once();
 
         $project_id      = 101;
         $team_project_id = 2;
@@ -46,7 +47,7 @@ final class TeamCreatorTest extends TestCase
         $program_adapter->shouldReceive('buildNewProgramProject')
             ->with($project_id, $user)->once()
             ->andReturn($program);
-        $collection = new TeamCollection([new Team($team_project_id)], $program);
+        $collection = new TeamCollection([Team::build($team_adapter, $team_project_id, $user)], $program);
         $team_adapter->shouldReceive('buildTeamProject')
             ->with(
                 [$team_project_id],
