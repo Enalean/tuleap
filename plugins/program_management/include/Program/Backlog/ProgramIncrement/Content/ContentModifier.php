@@ -23,19 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Luracast\Restler\RestException;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Plan\InvalidFeatureIdInProgramIncrementException;
-use Tuleap\ProgramManagement\Program\Plan\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
@@ -82,15 +78,6 @@ final class ContentModifier implements ModifyContent
         $this->check_feature_is_planned_in_PI = $check_feature_is_planned_in_PI;
     }
 
-    /**
-     * @throws ProgramTrackerException
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramNotFoundException
-     * @throws NotAllowedToPrioritizeException
-     * @throws FeatureCannotBePlannedInProgramIncrementException
-     * @throws \Luracast\Restler\RestException
-     * @throws InvalidFeatureIdInProgramIncrementException
-     */
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void
     {
         $program_increment = $this->program_increment_retriever->retrieveProgramIncrement($program_increment_id, $user);

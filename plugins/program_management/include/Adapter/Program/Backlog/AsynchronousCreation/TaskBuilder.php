@@ -48,10 +48,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameF
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleValueAdapter as TitleValueAdapterAlias;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramIncrementConfigurationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
@@ -80,7 +80,7 @@ class TaskBuilder
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $logger               = BackendLogger::getDefaultLogger("program_management_syslog");
 
-        $feature_planner              = new FeatureInProgramIncrementPlanner(
+        $user_stories_planner         = new UserStoriesInMirroredMilestonesPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeatureToLinkBuilder(new ArtifactsLinkedToParentDao()),
             Tracker_ArtifactFactory::instance(),
@@ -139,7 +139,7 @@ class TaskBuilder
             $mirror_creator,
             $logger,
             new PendingArtifactCreationDao(),
-            $feature_planner
+            $user_stories_planner
         );
     }
 }

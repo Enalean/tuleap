@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Plan;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 interface VerifyCanBePlannedInProgramIncrement
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,26 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-final class FeatureHasPlannedUserStoryException extends \Exception
+interface TopBacklogStore
 {
-    public function __construct(int $feature_id)
-    {
-        parent::__construct("The feature with id#$feature_id cannot be unplanned because some linked user stories are planned in Teams program.");
-    }
+    public function isInTheExplicitTopBacklog(int $artifact_id): bool;
+
+    /**
+     * @psalm-param non-empty-array<int> $artifact_ids
+     */
+    public function addArtifactsToTheExplicitTopBacklog(array $artifact_ids): void;
+
+    /**
+     * @psalm-param non-empty-array<int> $artifact_ids
+     */
+    public function removeArtifactsFromExplicitTopBacklog(array $artifact_ids): void;
+
+    public function removeArtifactsPlannedInAProgramIncrement(int $potential_program_increment_id): void;
 }

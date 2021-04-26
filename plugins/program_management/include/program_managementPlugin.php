@@ -65,7 +65,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionRepresentation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureInProgramIncrementPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
@@ -359,7 +359,7 @@ final class program_managementPlugin extends Plugin
             $event->getUser()
         );
 
-        $this->getFeaturePlanner()->plan($program_increment_changed);
+        $this->getUserStoriesPlanner()->plan($program_increment_changed);
     }
 
     private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(\Tuleap\Tracker\Artifact\Artifact $artifact): void
@@ -811,11 +811,11 @@ final class program_managementPlugin extends Plugin
         );
     }
 
-    private function getFeaturePlanner(): FeatureInProgramIncrementPlanner
+    private function getUserStoriesPlanner(): UserStoriesInMirroredMilestonesPlanner
     {
         $artifact_factory = Tracker_ArtifactFactory::instance();
 
-        return new FeatureInProgramIncrementPlanner(
+        return new UserStoriesInMirroredMilestonesPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeatureToLinkBuilder(new ArtifactsLinkedToParentDao()),
             $artifact_factory,

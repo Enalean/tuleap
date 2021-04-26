@@ -27,22 +27,23 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Program\Program;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
     /**
-     * @var ArtifactsExplicitTopBacklogDAO
+     * @var TopBacklogStore
      */
-    private $explicit_top_backlog_dao;
+    private $top_backlog_store;
     /**
      * @var PrioritizeFeaturesPermissionVerifier
      */
@@ -70,7 +71,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 
     public function __construct(
         PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier,
-        ArtifactsExplicitTopBacklogDAO $explicit_top_backlog_dao,
+        TopBacklogStore $top_backlog_store,
         DBTransactionExecutor $db_transaction_executor,
         OrderFeatureRank $features_rank_orderer,
         VerifyLinkedUserStoryIsNotPlanned $story_verifier,
@@ -78,7 +79,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         FeatureRemovalProcessor $feature_removal_processor
     ) {
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
-        $this->explicit_top_backlog_dao                = $explicit_top_backlog_dao;
+        $this->top_backlog_store                       = $top_backlog_store;
         $this->db_transaction_executor                 = $db_transaction_executor;
         $this->features_rank_orderer                   = $features_rank_orderer;
         $this->story_verifier                          = $story_verifier;
@@ -115,7 +116,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 foreach ($feature_add_removals as $feature_removal) {
                     $feature_ids_to_add[] = $feature_removal->feature_id;
                 }
-                $this->explicit_top_backlog_dao->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
+                $this->top_backlog_store->addArtifactsToTheExplicitTopBacklog($feature_ids_to_add);
             }
 
             $feature_remove_removals = $this->filterFeaturesThatCanBeManipulated(
@@ -129,7 +130,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 foreach ($feature_remove_removals as $feature_removal) {
                     $feature_ids_to_remove[] = $feature_removal->feature_id;
                 }
-                $this->explicit_top_backlog_dao->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
+                $this->top_backlog_store->removeArtifactsFromExplicitTopBacklog($feature_ids_to_remove);
             }
 
             if ($top_backlog_change->elements_to_order) {

@@ -31,7 +31,6 @@ use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckFeatureIsPlan
 use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Plan\InvalidFeatureIdInProgramIncrementException;
-use Tuleap\ProgramManagement\Program\Plan\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;

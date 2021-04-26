@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
+namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-use Tracker_NoArtifactLinkFieldException;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
-use Tuleap\ProgramManagement\Program\Program;
-
-interface TopBacklogChangeProcessor
+interface PlanUserStoriesInMirroredMilestones
 {
     /**
-     * @throws CannotManipulateTopBacklog
-     * @throws Tracker_NoArtifactLinkFieldException
-     * @throws FeatureHasPlannedUserStoryException
+     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException
+     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
      */
-    public function processTopBacklogChangeForAProgram(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void;
+    public function plan(ProgramIncrementChanged $program_increment_changed): void;
 }
