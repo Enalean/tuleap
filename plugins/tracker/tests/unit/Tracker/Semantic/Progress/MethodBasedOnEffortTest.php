@@ -54,7 +54,7 @@ class MethodBasedOnEffortTest extends TestCase
     protected function setUp(): void
     {
         $this->total_effort_field     = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1001]);
-        $this->remaining_effort_field = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1001]);
+        $this->remaining_effort_field = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $this->method                 = new MethodBasedOnEffort(
             $this->total_effort_field,
             $this->remaining_effort_field
@@ -155,5 +155,32 @@ class MethodBasedOnEffortTest extends TestCase
 
         $this->assertEquals(null, $progression_result->getValue());
         $this->assertEquals('', $progression_result->getErrorMessage());
+    }
+
+    public function testItExportsToREST(): void
+    {
+        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
+        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
+
+        self::assertEquals(
+            new SemanticProgressRepresentation(1001, 1002),
+            $this->method->exportToREST($this->user),
+        );
+    }
+
+    public function testItExportsNothingToRESTIfUserCannotReadTotalEffortField(): void
+    {
+        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(false);
+        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(true);
+
+        self::assertNull($this->method->exportToREST($this->user));
+    }
+
+    public function testItExportsNothingToRESTIfUserCannotReadRemainingEffortField(): void
+    {
+        $this->total_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(true);
+        $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(false);
+
+        self::assertNull($this->method->exportToREST($this->user));
     }
 }

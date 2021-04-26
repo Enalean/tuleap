@@ -41,4 +41,10 @@ final class MethodNotConfiguredTest extends TestCase
         self::assertEquals("", $result->getErrorMessage());
         self::assertEquals(null, $result->getValue());
     }
+
+    public function testItExportsNothingToREST(): void
+    {
+        $method = new MethodNotConfigured();
+        self::assertNull($method->exportToREST(Mockery::spy(PFUser::class)));
+    }
 }

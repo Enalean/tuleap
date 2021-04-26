@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\REST\JsonCast;
 
-interface IComputeProgression
+/**
+ * @psalm-immutable
+ */
+final class SemanticProgressRepresentation
 {
-    public static function getMethodName(): string;
+    /**
+     * @var int
+     */
+    public $total_effort_field_id;
+    /**
+     * @var int
+     */
+    public $remaining_effort_field_id;
 
-    public static function getMethodLabel(): string;
-
-    public function getCurrentConfigurationDescription(): string;
-
-    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool;
-
-    public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult;
-
-    public function isConfigured(): bool;
-
-    public function getErrorMessage(): string;
-
-    public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation;
+    public function __construct(int $total_effort_field_id, int $remaining_effort_field_id)
+    {
+        $this->total_effort_field_id     = JsonCast::toInt($total_effort_field_id);
+        $this->remaining_effort_field_id = JsonCast::toInt($remaining_effort_field_id);
+    }
 }
