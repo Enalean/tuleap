@@ -39,6 +39,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -761,7 +762,16 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->progress_builder
             ->shouldReceive('getSemantic')
             ->with($tracker)
-            ->andReturn(new SemanticProgress($tracker, new MethodBasedOnEffort($total_effort_field, $remaining_effort_field)));
+            ->andReturn(
+                new SemanticProgress(
+                    $tracker,
+                    new MethodBasedOnEffort(
+                        Mockery::mock(SemanticProgressDao::class),
+                        $total_effort_field,
+                        $remaining_effort_field
+                    )
+                )
+            );
 
         $task_201 = Mockery::mock(
             Artifact::class,

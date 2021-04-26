@@ -67,4 +67,13 @@ class MethodNotConfigured implements IComputeProgression
     {
         return null;
     }
+
+    public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void
+    {
+    }
+
+    public function saveSemanticForTracker(\Tracker $tracker): bool
+    {
+        return false;
+    }
 }

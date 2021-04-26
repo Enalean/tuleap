@@ -50,12 +50,18 @@ class MethodBasedOnEffortTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
      */
     private $artifact;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticProgressDao
+     */
+    private $dao;
 
     protected function setUp(): void
     {
+        $this->dao                    = \Mockery::mock(SemanticProgressDao::class);
         $this->total_effort_field     = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1001]);
         $this->remaining_effort_field = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $this->method                 = new MethodBasedOnEffort(
+            $this->dao,
             $this->total_effort_field,
             $this->remaining_effort_field
         );
@@ -128,7 +134,11 @@ class MethodBasedOnEffortTest extends TestCase
         $computed_field_total_effort->shouldReceive('getComputedValue')->with($this->user, $this->artifact)->andReturn($total_effort);
         $computed_field_remaining_effort->shouldReceive('getComputedValue')->with($this->user, $this->artifact)->andReturn($remaining_effort);
 
-        $method = new MethodBasedOnEffort($computed_field_total_effort, $computed_field_remaining_effort);
+        $method = new MethodBasedOnEffort(
+            $this->dao,
+            $computed_field_total_effort,
+            $computed_field_remaining_effort
+        );
 
         $progression_result = $method->computeProgression($this->artifact, $this->user);
 
@@ -182,5 +192,54 @@ class MethodBasedOnEffortTest extends TestCase
         $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->andReturn(false);
 
         self::assertNull($this->method->exportToREST($this->user));
+    }
+
+    public function testItExportsSemanticConfigurationToXml(): void
+    {
+        $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
+        $root     = new \SimpleXMLElement($xml_data);
+
+        $this->method->exportToXMl($root, [
+            'F201' => 1001,
+            'F202' => 1002
+        ]);
+
+        $this->assertCount(1, $root->children());
+        $this->assertEquals('progress', (string) $root->semantic['type']);
+        $this->assertEquals('F201', (string) $root->semantic->total_effort_field['REF']);
+        $this->assertEquals('F202', (string) $root->semantic->remaining_effort_field['REF']);
+    }
+
+    public function testItDoesNotExportToXMLWhenThereIsNoReferenceToTotalEffortField(): void
+    {
+        $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
+        $root     = new \SimpleXMLElement($xml_data);
+
+        $this->method->exportToXMl($root, [
+            'F202' => 1002
+        ]);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItDoesNotExportToXMLWhenThereIsNoReferenceToRemainingEffortField(): void
+    {
+        $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
+        $root     = new \SimpleXMLElement($xml_data);
+
+        $this->method->exportToXMl($root, [
+            'F201' => 1001
+        ]);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItSavesItsConfiguration(): void
+    {
+        $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
+
+        $this->dao->shouldReceive('save')->with(113, 1001, 1002)->once()->andReturn(true);
+
+        $this->method->saveSemanticForTracker($tracker);
     }
 }

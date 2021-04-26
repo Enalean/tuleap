@@ -47,4 +47,24 @@ final class MethodNotConfiguredTest extends TestCase
         $method = new MethodNotConfigured();
         self::assertNull($method->exportToREST(Mockery::spy(PFUser::class)));
     }
+
+    public function testItExportsNothingToXML(): void
+    {
+        $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
+        $method   = new MethodNotConfigured();
+        $root     = new \SimpleXMLElement($xml_data);
+
+        $method->exportToXMl($root, []);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItDoesNotSaveItsConfiguration(): void
+    {
+        $method = new MethodNotConfigured();
+
+        $this->assertFalse(
+            $method->saveSemanticForTracker(\Mockery::mock(\Tracker::class))
+        );
+    }
 }

@@ -1604,6 +1604,23 @@
           </element>
         </choice>
       </group>
+      <group>
+        <attribute name="type">
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">progress</value>
+        </attribute>
+        <group>
+          <element name="total_effort_field">
+            <attribute name="REF">
+              <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </attribute>
+          </element>
+          <element name="remaining_effort_field">
+            <attribute name="REF">
+              <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </attribute>
+          </element>
+        </group>
+      </group>
     </choice>
   </define>
   <define name="reportContent">

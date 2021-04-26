@@ -47,4 +47,24 @@ final class InvalidMethodTest extends TestCase
         $method = new InvalidMethod("This is broken");
         self::assertNull($method->exportToREST(Mockery::spy(PFUser::class)));
     }
+
+    public function testItExportsNothingToXML(): void
+    {
+        $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
+        $method   = new InvalidMethod('This is broken');
+        $root     = new \SimpleXMLElement($xml_data);
+
+        $method->exportToXMl($root, []);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItDoesNotSaveItsConfiguration(): void
+    {
+        $method = new InvalidMethod('This is broken');
+
+        $this->assertFalse(
+            $method->saveSemanticForTracker(\Mockery::mock(\Tracker::class))
+        );
+    }
 }

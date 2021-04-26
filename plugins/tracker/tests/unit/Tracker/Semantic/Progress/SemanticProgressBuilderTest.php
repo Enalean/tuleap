@@ -194,6 +194,21 @@ class SemanticProgressBuilderTest extends TestCase
         $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
     }
 
+    public function testReturnsAnInvalidSemanticWhenTotalEffortAndRemainingEffortFieldAreTheSameField(): void
+    {
+        $this->dao->shouldReceive('searchByTrackerId')->andReturn(
+            [
+                'total_effort_field_id' => 1001,
+                'remaining_effort_field_id' => 1001
+            ]
+        )->once();
+
+        $semantic = $this->progress_builder->getSemantic($this->tracker);
+
+        $this->assertFalse($semantic->isDefined());
+        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
+    }
+
     public function testReturnsAnInvalidSemanticIfAFieldIsNotNumeric(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
