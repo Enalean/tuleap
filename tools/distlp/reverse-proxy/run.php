@@ -20,6 +20,7 @@
  */
 
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
+require_once __DIR__ . '/../../../src/vendor/autoload.php';
 
 $setup = new \Tuleap\Configuration\Setup\DistributedSVN();
 $setup->setTuleapBaseDir('/tuleap');
