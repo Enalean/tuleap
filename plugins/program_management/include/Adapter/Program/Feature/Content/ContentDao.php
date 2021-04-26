@@ -24,11 +24,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 
 class ContentDao extends DataAccessObject implements ContentStore
 {
-    public function searchContent(PlannedProgramIncrement $program_increment): array
+    public function searchContent(int $program_increment_id): array
     {
         $sql = '
                 SELECT program_increment_tracker.item_name AS tracker_name,
@@ -58,6 +57,6 @@ class ContentDao extends DataAccessObject implements ContentStore
                   AND plugin_program_management_explicit_top_backlog.artifact_id IS NULL
                 ORDER BY tracker_artifact_priority_rank.rank';
 
-        return $this->getDB()->run($sql, $program_increment->getId());
+        return $this->getDB()->run($sql, $program_increment_id);
     }
 }

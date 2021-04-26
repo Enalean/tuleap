@@ -20,12 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement;
 
-interface ContentStore
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+
+interface CheckProgramIncrement
 {
     /**
-     * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
+     * @throws ProgramIncrementNotFoundException
+     * @throws ProgramTrackerException
      */
-    public function searchContent(int $program_increment_id): array;
+    public function checkIsAProgramIncrement(int $program_increment_id, \PFUser $user): void;
 }

@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 
-class ProgramIncrementRetriever implements RetrieveProgramIncrement
+final class ProgramIncrementChecker implements CheckProgramIncrement
 {
     /**
      * @var \Tracker_ArtifactFactory
@@ -49,7 +48,7 @@ class ProgramIncrementRetriever implements RetrieveProgramIncrement
     /**
      * @throws ProgramIncrementNotFoundException
      */
-    public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement
+    public function checkIsAProgramIncrement(int $program_increment_id, \PFUser $user): void
     {
         $program_increment = $this->artifact_factory->getArtifactById($program_increment_id);
 
@@ -60,7 +59,5 @@ class ProgramIncrementRetriever implements RetrieveProgramIncrement
         ) {
             throw new ProgramIncrementNotFoundException($program_increment_id);
         }
-
-        return new PlannedProgramIncrement($program_increment->getId());
     }
 }

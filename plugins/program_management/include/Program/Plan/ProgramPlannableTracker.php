@@ -37,6 +37,9 @@ final class ProgramPlannableTracker
         $this->id = $id;
     }
 
+    /**
+     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
+     */
     public static function build(
         BuildTracker $build_tracker,
         int $tracker_id,

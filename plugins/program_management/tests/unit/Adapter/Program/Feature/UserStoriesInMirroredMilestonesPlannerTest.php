@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRe
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -83,7 +83,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
     private $prioritize_features_permission_verifier;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RetrieveProgramIncrement
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CheckProgramIncrement
      */
     private $retrieve_program_increment;
 

@@ -33,13 +33,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
+use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -62,7 +60,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
     private $retrieve_background;
 
     /**
-     * @var RetrieveProgramIncrement
+     * @var FeatureContentRetriever
      */
     private $retriever;
 
@@ -81,22 +79,17 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
      */
     private $content_store;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildProgram
-     */
-    private $retrieve_program_increment;
-
     protected function setUp(): void
     {
-        $this->content_store              = \Mockery::mock(ContentStore::class);
-        $this->retrieve_program_increment = \Mockery::mock(RetrieveProgramIncrement::class);
-        $this->artifact_factory           = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory       = \Mockery::mock(\Tracker_FormElementFactory::instance());
-        $this->retrieve_background        = \Mockery::mock(BackgroundColorRetriever::class);
-        $this->parent_dao                 = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $this->content_store        = \Mockery::mock(ContentStore::class);
+        $retrieve_program_increment = new CheckProgramIncrementStub(true);
+        $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
+        $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
+        $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
 
         $this->retriever = new FeatureContentRetriever(
-            $this->retrieve_program_increment,
+            $retrieve_program_increment,
             $this->content_store,
             new FeatureRepresentationBuilder(
                 $this->artifact_factory,
@@ -116,10 +109,6 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
     public function testItBuildsACollectionOfOpenedElements(): void
     {
         $user = UserTestBuilder::aUser()->build();
-
-        $this->retrieve_program_increment->shouldReceive('retrieveProgramIncrement')->andReturn(
-            new PlannedProgramIncrement(202)
-        );
         $this->content_store->shouldReceive('searchContent')->andReturn(
             [
                 [

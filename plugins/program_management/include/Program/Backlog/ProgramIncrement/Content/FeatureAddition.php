@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 
 /**
@@ -41,14 +41,14 @@ final class FeatureAddition
      */
     public $user;
     /**
-     * @var PlannedProgramIncrement
+     * @var ProgramIncrementIdentifier
      */
     public $program_increment;
 
     private function __construct(
         FeatureIdentifier $feature,
         \PFUser $user,
-        PlannedProgramIncrement $program_increment
+        ProgramIncrementIdentifier $program_increment
     ) {
         $this->feature           = $feature;
         $this->user              = $user;
@@ -61,7 +61,7 @@ final class FeatureAddition
     public static function fromFeature(
         VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
         FeatureIdentifier $feature,
-        PlannedProgramIncrement $program_increment,
+        ProgramIncrementIdentifier $program_increment,
         \PFUser $user
     ): self {
         $can_be_planned = $can_be_planned_verifier->canBePlannedInProgramIncrement(
