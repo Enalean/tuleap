@@ -41,4 +41,10 @@ final class InvalidMethodTest extends TestCase
         self::assertEquals("This is broken", $result->getErrorMessage());
         self::assertEquals(null, $result->getValue());
     }
+
+    public function testItExportsNothingToREST(): void
+    {
+        $method = new InvalidMethod("This is broken");
+        self::assertNull($method->exportToREST(Mockery::spy(PFUser::class)));
+    }
 }

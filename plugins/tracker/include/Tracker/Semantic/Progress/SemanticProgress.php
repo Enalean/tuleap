@@ -116,9 +116,9 @@ class SemanticProgress extends \Tracker_Semantic
     {
     }
 
-    public function exportToREST(PFUser $user): bool
+    public function exportToREST(PFUser $user): ?SemanticProgressRepresentation
     {
-        return false;
+        return $this->method->exportToREST($user);
     }
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool

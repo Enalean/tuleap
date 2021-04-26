@@ -62,4 +62,9 @@ class MethodNotConfigured implements IComputeProgression
     {
         return '';
     }
+
+    public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation
+    {
+        return null;
+    }
 }

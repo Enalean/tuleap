@@ -72,4 +72,9 @@ class InvalidMethod implements IComputeProgression
     {
         return $this->error_message;
     }
+
+    public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation
+    {
+        return null;
+    }
 }
