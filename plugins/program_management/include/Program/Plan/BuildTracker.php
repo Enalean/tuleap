@@ -28,14 +28,14 @@ use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 interface BuildTracker
 {
     /**
-     * @throws ProgramTrackerException
-     */
-    public function buildProgramIncrementTracker(int $tracker_id, int $project_id): ProgramIncrementTracker;
-
-    /**
      * @return array<ProgramPlannableTracker>
      * @throws ProgramTrackerException
      * @throws PlannableTrackerCannotBeEmptyException
      */
     public function buildPlannableTrackerList(array $plannable_trackers_id, int $project_id): array;
+
+    /**
+     * @throws ProgramTrackerException
+     */
+    public function getValidTracker(int $tracker_id, int $project_id): \Tracker;
 }

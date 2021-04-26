@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Plan;
 
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+
 /**
  * @psalm-immutable
  */
@@ -32,7 +34,7 @@ final class ProgramIncrementTracker
      */
     private $id;
 
-    public function __construct(int $id)
+    private function __construct(int $id)
     {
         $this->id = $id;
     }
@@ -40,5 +42,18 @@ final class ProgramIncrementTracker
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @throws ProgramTrackerException
+     */
+    public static function buildProgramIncrementTracker(
+        BuildTracker $tracker_builder,
+        int $tracker_id,
+        int $project_id
+    ): self {
+        $tracker = $tracker_builder->getValidTracker($tracker_id, $project_id);
+
+        return new self($tracker->getId());
     }
 }

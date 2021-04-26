@@ -82,7 +82,8 @@ final class PlanCreator implements CreatePlan
             throw new CannotPlanIntoItselfException();
         }
         $program_project            = $this->program_build->buildExistingProgramProjectForManagement($project_id, $user);
-        $program_tracker            = $this->build_tracker->buildProgramIncrementTracker(
+        $program_tracker            = ProgramIncrementTracker::buildProgramIncrementTracker(
+            $this->build_tracker,
             $program_increment_id,
             $program_project->id
         );
