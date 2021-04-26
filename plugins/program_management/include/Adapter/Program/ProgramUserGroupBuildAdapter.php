@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
+use Luracast\Restler\RestException;
 use Tuleap\ProgramManagement\Program\ProgramForManagement;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgramUserGroup;
@@ -50,15 +51,27 @@ final class ProgramUserGroupBuildAdapter implements BuildProgramUserGroup
         $program_user_groups = [];
 
         foreach ($raw_user_group_ids as $raw_user_group_id) {
-            $project_user_group = $this->user_group_retriever->getExistingUserGroup($raw_user_group_id);
-
-            if ((int) $project_user_group->getProjectId() !== $program->id) {
-                throw new ProgramUserGroupDoesNotExistException($raw_user_group_id);
-            }
-
-            $program_user_groups[] = new ProgramUserGroup($program, $project_user_group->getId());
+            $program_user_groups[] = ProgramUserGroup::buildProgramUserGroup($this, $raw_user_group_id, $program);
         }
 
         return $program_user_groups;
+    }
+
+    /**
+     * @throws InvalidProgramUserGroup
+     */
+    public function getProjectUserGroupId(string $raw_user_group_id, ProgramForManagement $program): int
+    {
+        try {
+            $project_user_group = $this->user_group_retriever->getExistingUserGroup($raw_user_group_id);
+        } catch (RestException $e) {
+            throw new ProgramUserGroupDoesNotExistException($raw_user_group_id);
+        }
+
+        if ((int) $project_user_group->getProjectId() !== $program->id) {
+            throw new ProgramUserGroupDoesNotExistException($raw_user_group_id);
+        }
+
+        return $project_user_group->getId();
     }
 }

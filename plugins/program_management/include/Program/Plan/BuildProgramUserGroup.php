@@ -33,4 +33,9 @@ interface BuildProgramUserGroup
      * @throws InvalidProgramUserGroup
      */
     public function buildProgramUserGroups(ProgramForManagement $program, array $raw_user_group_ids): array;
+
+    /**
+     * @throws InvalidProgramUserGroup
+     */
+    public function getProjectUserGroupId(string $raw_user_group_id, ProgramForManagement $program): int;
 }
