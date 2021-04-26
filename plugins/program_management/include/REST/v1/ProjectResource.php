@@ -141,6 +141,7 @@ final class ProjectResource extends AuthenticatedResource
                 $artifact_factory,
                 $form_element_factory,
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
+                new VerifyIsVisibleFeatureAdapter($artifact_factory),
                 new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), $artifact_factory)
             )
         );

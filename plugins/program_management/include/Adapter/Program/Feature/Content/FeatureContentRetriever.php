@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\ProgramSearcher;
 
 class FeatureContentRetriever implements RetrieveFeatureContent
 {
@@ -43,31 +42,34 @@ class FeatureContentRetriever implements RetrieveFeatureContent
      * @var FeatureRepresentationBuilder
      */
     private $feature_representation_builder;
+    /**
+     * @var ProgramSearcher
+     */
+    private $program_searcher;
 
     public function __construct(
         RetrieveProgramIncrement $program_increment_content_retriever,
         ContentStore $content_store,
-        FeatureRepresentationBuilder $feature_representation_builder
+        FeatureRepresentationBuilder $feature_representation_builder,
+        ProgramSearcher $program_searcher
     ) {
         $this->content_store                       = $content_store;
         $this->program_increment_content_retriever = $program_increment_content_retriever;
         $this->feature_representation_builder      = $feature_representation_builder;
+        $this->program_searcher                    = $program_searcher;
     }
 
-    /**
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
-     */
     public function retrieveProgramIncrementContent(int $id, \PFUser $user): array
     {
         $program_increment = $this->program_increment_content_retriever->retrieveProgramIncrement($id, $user);
-
-        $planned_content = $this->content_store->searchContent($program_increment);
+        $program           = $this->program_searcher->getProgramOfProgramIncrement($id);
+        $planned_content   = $this->content_store->searchContent($program_increment);
 
         $elements = [];
         foreach ($planned_content as $artifact) {
             $feature = $this->feature_representation_builder->buildFeatureRepresentation(
                 $user,
+                $program,
                 $artifact['artifact_id'],
                 $artifact['field_title_id'],
                 $artifact['artifact_title']

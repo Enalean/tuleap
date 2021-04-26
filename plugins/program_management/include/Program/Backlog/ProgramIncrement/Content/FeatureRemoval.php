@@ -24,9 +24,7 @@ namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\FeatureHasPlannedUserStoryException;
-use Tuleap\ProgramManagement\Program\Program;
 
 /**
  * I am an order to un-plan the Feature from all Program Increments
@@ -52,16 +50,11 @@ final class FeatureRemoval
     /**
      * @throws FeatureHasPlannedUserStoryException
      */
-    public static function fromRawData(
+    public static function fromFeature(
+        VerifyLinkedUserStoryIsNotPlanned $story_verifier,
         FeatureIdentifier $feature,
-        \PFUser $user,
-        Program $program,
-        VerifyIsVisibleFeature $visible_verifier,
-        VerifyLinkedUserStoryIsNotPlanned $story_verifier
-    ): ?self {
-        if (! $visible_verifier->isVisibleFeature($feature, $user, $program)) {
-            return null;
-        }
+        \PFUser $user
+    ): self {
         if ($story_verifier->isLinkedToAtLeastOnePlannedUserStory($user, $feature)) {
             throw new FeatureHasPlannedUserStoryException($feature->id);
         }

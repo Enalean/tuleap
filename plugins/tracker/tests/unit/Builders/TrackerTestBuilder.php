@@ -36,6 +36,10 @@ class TrackerTestBuilder
      */
     private $name = 'Irrelevant';
     /**
+     * @var string
+     */
+    private $short_name = 'irrelevant';
+    /**
      * @var Project
      */
     private $project;
@@ -66,7 +70,8 @@ class TrackerTestBuilder
 
     public function withName(string $name): self
     {
-        $this->name = $name;
+        $this->name       = $name;
+        $this->short_name = strtolower($name);
 
         return $this;
     }
@@ -103,7 +108,7 @@ class TrackerTestBuilder
             $this->getProjectId(),
             $this->name,
             'Irrelevant',
-            'irrelevant',
+            $this->short_name,
             false,
             null,
             null,

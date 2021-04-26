@@ -164,18 +164,15 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
-            $feature = new FeatureIdentifier($feature_id);
-            $removal = FeatureRemoval::fromRawData(
-                $feature,
-                $user,
-                $program,
-                $this->visible_feature_verifier,
-                $this->story_verifier
-            );
-            if (! $removal) {
+            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user, $program);
+            if (! $feature) {
                 continue;
             }
-            $filtered_features[] = $removal;
+            $filtered_features[] = FeatureRemoval::fromFeature(
+                $this->story_verifier,
+                $feature,
+                $user
+            );
         }
 
         return $filtered_features;

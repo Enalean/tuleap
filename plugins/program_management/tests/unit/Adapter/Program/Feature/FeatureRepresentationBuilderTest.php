@@ -31,8 +31,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
+use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -82,55 +84,53 @@ final class FeatureRepresentationBuilderTest extends TestCase
             $this->artifact_factory,
             $this->form_element_factory,
             $this->retrieve_background,
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
             new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory)
         );
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadArtifact(): void
     {
-        $user = UserTestBuilder::aUser()->build();
+        $user    = UserTestBuilder::aUser()->build();
+        $program = new Program(110);
 
-        $artifact = \Mockery::mock(\Artifact::class);
-        $artifact->shouldReceive('userCanView')->with($user)->andReturnFalse();
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturnNull();
 
-        self::assertNull($this->builder->buildFeatureRepresentation($user, 1, 101, 'title'));
+        self::assertNull($this->builder->buildFeatureRepresentation($user, $program, 1, 101, 'title'));
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
     {
-        $user = UserTestBuilder::aUser()->build();
+        $user    = UserTestBuilder::aUser()->build();
+        $program = new Program(110);
 
-        $artifact = \Mockery::mock(\Artifact::class);
-        $artifact->shouldReceive('userCanView')->with($user)->andReturnTrue();
+        $project  = $this->buildProject(110);
+        $tracker  = $this->buildTracker(14, $project);
+        $artifact = $this->buildArtifact(117, $tracker);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturn($artifact);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
 
         $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $this->form_element_factory->shouldReceive('getFieldById')->with(101)->andReturn($field);
         $field->shouldReceive('userCanRead')->andReturnFalse();
 
-        self::assertNull($this->builder->buildFeatureRepresentation($user, 1, 101, 'title'));
+        self::assertNull($this->builder->buildFeatureRepresentation($user, $program, 1, 101, 'title'));
     }
 
     public function testItBuildsRepresentation(): void
     {
-        $user = UserTestBuilder::aUser()->build();
+        $user    = UserTestBuilder::aUser()->build();
+        $program = new Program(101);
 
-        $artifact = \Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('userCanView')->with($user)->andReturnTrue();
-        $artifact->shouldReceive('getXRef')->andReturn('one #1');
-        $artifact->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=1');
-        $tracker = \Mockery::mock(\Tracker::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $tracker->shouldReceive("getColor")->andReturn(TrackerColor::fromName("lake-placid-blue"));
-        $tracker->shouldReceive("getId")->andReturn(1);
-        $tracker->shouldReceive("getName")->andReturn("bug");
-        $tracker->shouldReceive("getProject")->andReturn(
-            new Project(['group_id' => 101, 'group_name' => "My project"])
-        );
+        $project  = $this->buildProject(101);
+        $tracker  = $this->buildTracker(1, $project);
+        $artifact = $this->buildArtifact(1, $tracker);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturn($artifact);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 2)->once()->andReturnNull();
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 3)->once()->andReturn(\Mockery::mock(Artifact::class));
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 3)->once()->andReturn(
+            \Mockery::mock(Artifact::class)
+        );
 
         $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $this->form_element_factory->shouldReceive('getFieldById')->with(101)->andReturn($field);
@@ -163,7 +163,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
         $expected = new FeatureRepresentation(
             1,
             'title',
-            'one #1',
+            'bug #1',
             '/plugins/tracker/?aid=1',
             MinimalTrackerRepresentation::build($tracker),
             $background_color,
@@ -171,6 +171,31 @@ final class FeatureRepresentationBuilderTest extends TestCase
             true
         );
 
-        self::assertEquals($expected, $this->builder->buildFeatureRepresentation($user, 1, 101, 'title'));
+        self::assertEquals($expected, $this->builder->buildFeatureRepresentation($user, $program, 1, 101, 'title'));
+    }
+
+    private function buildProject(int $program_id): Project
+    {
+        return ProjectTestBuilder::aProject()
+            ->withId($program_id)
+            ->withPublicName('My project')
+            ->build();
+    }
+
+    private function buildTracker(int $tracker_id, Project $program_project): \Tracker
+    {
+        return TrackerTestBuilder::aTracker()
+            ->withId($tracker_id)
+            ->withProject($program_project)
+            ->withColor(TrackerColor::fromName('lake-placid-blue'))
+            ->withName('bug')
+            ->build();
+    }
+
+    private function buildArtifact(int $artifact_id, \Tracker $tracker): Artifact
+    {
+        $artifact = new Artifact($artifact_id, $tracker->getId(), 110, 1234567890, false);
+        $artifact->setTracker($tracker);
+        return $artifact;
     }
 }

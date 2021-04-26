@@ -32,50 +32,30 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureRemovalTest extends TestCase
 {
-    public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
-    {
-        $feature = new FeatureIdentifier(76);
-        $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(110);
-        self::assertNull(
-            FeatureRemoval::fromRawData(
-                $feature,
-                $user,
-                $program,
-                new VerifyIsVisibleFeatureStub(false),
-                new VerifyLinkedUserStoryIsNotPlannedStub(),
-            )
-        );
-    }
-
     public function testItThrowsWhenFeatureIsLinkedToAnAlreadyPlannedUserStory(): void
     {
-        $feature = new FeatureIdentifier(76);
         $user    = UserTestBuilder::aUser()->withId(104)->build();
         $program = new Program(110);
+        $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
 
         $this->expectException(FeatureHasPlannedUserStoryException::class);
-        FeatureRemoval::fromRawData(
-            $feature,
-            $user,
-            $program,
-            new VerifyIsVisibleFeatureStub(),
+        FeatureRemoval::fromFeature(
             new VerifyLinkedUserStoryIsNotPlannedStub(true),
+            $feature,
+            $user
         );
     }
 
     public function testItBuildsAValidPayload(): void
     {
-        $feature = new FeatureIdentifier(76);
         $user    = UserTestBuilder::aUser()->build();
         $program = new Program(110);
+        $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
 
-        $payload = FeatureRemoval::fromRawData(
-            $feature,
-            $user,
-            $program,
-            new VerifyIsVisibleFeatureStub(),
+        $payload = FeatureRemoval::fromFeature(
             new VerifyLinkedUserStoryIsNotPlannedStub(),
+            $feature,
+            $user
         );
         self::assertSame(76, $payload->feature_id);
     }

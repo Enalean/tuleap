@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Program;
 
@@ -38,9 +37,9 @@ final class VerifyIsVisibleFeatureAdapter implements VerifyIsVisibleFeature
         $this->artifact_factory = $artifact_factory;
     }
 
-    public function isVisibleFeature(FeatureIdentifier $feature, \PFUser $user, Program $program): bool
+    public function isVisibleFeature(int $feature_id, \PFUser $user, Program $program): bool
     {
-        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature->id);
+        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
         return $artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId();
     }
 }

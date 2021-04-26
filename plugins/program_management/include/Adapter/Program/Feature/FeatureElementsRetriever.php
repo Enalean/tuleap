@@ -69,6 +69,7 @@ final class FeatureElementsRetriever implements RetrieveFeatures
         foreach ($to_be_planned_artifacts as $artifact) {
             $feature = $this->feature_representation_builder->buildFeatureRepresentation(
                 $user,
+                $program,
                 $artifact['artifact_id'],
                 $artifact['field_title_id'],
                 $artifact['artifact_title']

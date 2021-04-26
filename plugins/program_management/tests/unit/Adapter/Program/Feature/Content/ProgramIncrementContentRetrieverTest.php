@@ -30,16 +30,21 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Program\ProgramSearcher;
+use Tuleap\ProgramManagement\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 final class ProgramIncrementContentRetrieverTest extends TestCase
@@ -97,8 +102,14 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
                 $this->artifact_factory,
                 $this->form_element_factory,
                 $this->retrieve_background,
-                new UserStoryLinkedToFeatureChecker($this->parent_dao, \Mockery::mock(BuildPlanning::class), $this->artifact_factory)
-            )
+                new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
+                new UserStoryLinkedToFeatureChecker(
+                    $this->parent_dao,
+                    \Mockery::mock(BuildPlanning::class),
+                    $this->artifact_factory
+                )
+            ),
+            new ProgramSearcher($this->getStubSearchProgram())
         );
     }
 
@@ -130,33 +141,16 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
         $this->form_element_factory->shouldReceive('getFieldById')->with(1)->andReturn($field);
         $field->shouldReceive('userCanRead')->andReturnTrue();
 
-        $artifact_one = \Mockery::mock(Artifact::class);
-        $artifact_one->shouldReceive('userCanView')->with($user)->andReturnTrue();
-        $artifact_one->shouldReceive('getXRef')->andReturn('one #1');
-        $artifact_one->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=1');
+        $project      = ProjectTestBuilder::aProject()->withId(101)->withPublicName('My project')->build();
+        $tracker_one  = $this->buildTracker(1, 'bug', $project);
+        $artifact_one = $this->buildArtifact(1, $tracker_one);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
-        $tracker_one = \Mockery::mock(\Tracker::class);
-        $tracker_one->shouldReceive("getColor")->andReturn(TrackerColor::fromName("lake-placid-blue"));
-        $tracker_one->shouldReceive("getId")->andReturn(1);
-        $tracker_one->shouldReceive("getName")->andReturn("bug");
-        $tracker_one->shouldReceive("getProject")->andReturn(
-            new Project(['group_id' => 101, 'group_name' => "My project"])
-        );
-        $artifact_one->shouldReceive('getTracker')->once()->andReturn($tracker_one);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturn($artifact_one);
 
-        $artifact_two = \Mockery::mock(Artifact::class);
-        $artifact_two->shouldReceive('userCanView')->with($user)->andReturnTrue();
-        $artifact_two->shouldReceive('getXRef')->andReturn('two #2');
-        $artifact_two->shouldReceive('getUri')->andReturn('/plugins/tracker/?aid=2');
+        $tracker_two  = $this->buildTracker(2, 'user stories', $project);
+        $artifact_two = $this->buildArtifact(2, $tracker_two);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
-        $tracker_two = \Mockery::mock(\Tracker::class);
-        $tracker_two->shouldReceive("getColor")->andReturn(TrackerColor::fromName("deep-blue"));
-        $tracker_two->shouldReceive("getId")->andReturn(2);
-        $tracker_two->shouldReceive("getName")->andReturn("user stories");
-        $tracker_two->shouldReceive("getProject")->andReturn(
-            new Project(['group_id' => 101, 'group_name' => "My project"])
-        );
-        $artifact_two->shouldReceive('getTracker')->once()->andReturn($tracker_two);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 2)->andReturn($artifact_two);
 
         $this->retrieve_background->shouldReceive('retrieveBackgroundColor')
             ->andReturn(new BackgroundColor("lake-placid-blue"));
@@ -168,7 +162,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
             new FeatureRepresentation(
                 1,
                 'Artifact 1',
-                'one #1',
+                'bug #1',
                 '/plugins/tracker/?aid=1',
                 MinimalTrackerRepresentation::build($tracker_one),
                 new BackgroundColor("lake-placid-blue"),
@@ -178,7 +172,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
             new FeatureRepresentation(
                 2,
                 'Artifact 2',
-                'two #2',
+                'user stories #2',
                 '/plugins/tracker/?aid=2',
                 MinimalTrackerRepresentation::build($tracker_two),
                 new BackgroundColor("lake-placid-blue"),
@@ -188,5 +182,32 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
         ];
 
         self::assertEquals($collection, $this->retriever->retrieveProgramIncrementContent(202, $user));
+    }
+
+    private function getStubSearchProgram(): SearchProgram
+    {
+        return new class implements SearchProgram {
+            public function searchProgramOfProgramIncrement(int $program_increment_id): ?int
+            {
+                return 101;
+            }
+        };
+    }
+
+    private function buildTracker(int $tracker_id, string $name, Project $project): \Tracker
+    {
+        return TrackerTestBuilder::aTracker()
+            ->withId($tracker_id)
+            ->withName($name)
+            ->withColor(TrackerColor::fromName('deep-blue'))
+            ->withProject($project)
+            ->build();
+    }
+
+    private function buildArtifact(int $artifact_id, \Tracker $tracker): Artifact
+    {
+        $artifact = new Artifact($artifact_id, $tracker->getId(), 110, 1234567890, false);
+        $artifact->setTracker($tracker);
+        return $artifact;
     }
 }
