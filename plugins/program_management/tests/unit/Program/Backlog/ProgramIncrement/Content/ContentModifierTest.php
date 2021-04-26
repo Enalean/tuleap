@@ -22,17 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
+use Luracast\Restler\RestException;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
+use Tuleap\ProgramManagement\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Plan\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Program\SearchProgram;
+use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
+use function PHPUnit\Framework\assertTrue;
 
 final class ContentModifierTest extends TestCase
 {
@@ -42,13 +48,15 @@ final class ContentModifierTest extends TestCase
             $this->getStubPermissionVerifier(false),
             $this->getStubProgramIncrementRetriever(),
             $this->getStubProgramSearcher(),
-            $this->getStubPlanVerifier()
+            $this->getStubPlanVerifier(),
+            $this->getStubOrderFeature(),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement()
         );
 
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectException(NotAllowedToPrioritizeException::class);
-        $modifier->modifyContent($user, 12, new ContentChange(201));
+        $modifier->modifyContent($user, 12, new ContentChange(201, null));
     }
 
     public function testItThrowsWhenFeatureToAddCannotBePlanned(): void
@@ -57,13 +65,15 @@ final class ContentModifierTest extends TestCase
             $this->getStubPermissionVerifier(),
             $this->getStubProgramIncrementRetriever(),
             $this->getStubProgramSearcher(),
-            $this->getStubPlanVerifier(false)
+            $this->getStubPlanVerifier(false),
+            $this->getStubOrderFeature(),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement()
         );
 
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
-        $modifier->modifyContent($user, 12, new ContentChange(404));
+        $modifier->modifyContent($user, 12, new ContentChange(404, null));
     }
 
     public function testItSucceeds(): void
@@ -72,28 +82,120 @@ final class ContentModifierTest extends TestCase
             $this->getStubPermissionVerifier(),
             $this->getStubProgramIncrementRetriever(),
             $this->getStubProgramSearcher(),
-            $this->getStubPlanVerifier()
+            $this->getStubPlanVerifier(),
+            $this->getStubOrderFeature(),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement()
         );
 
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectNotToPerformAssertions();
-        $modifier->modifyContent($user, 12, new ContentChange(201));
+        $modifier->modifyContent($user, 12, new ContentChange(201, null));
     }
 
-    public function testItSucceedsWhenThereIsNoFeatureToAdd(): void
+    public function testItFailedWhenThereIsNoFeatureToAddOrToOrder(): void
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
             $this->getStubProgramIncrementRetriever(),
             $this->getStubProgramSearcher(),
-            $this->getStubPlanVerifier()
+            $this->getStubPlanVerifier(),
+            $this->getStubOrderFeature(),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement()
         );
 
         $user = UserTestBuilder::aUser()->build();
 
-        $this->expectNotToPerformAssertions();
-        $modifier->modifyContent($user, 12, new ContentChange(null));
+        $this->expectException(RestException::class);
+        $modifier->modifyContent($user, 12, new ContentChange(null, null));
+    }
+
+    public function testItSucceedsWhenThereIsNoFeatureToAddAndFeatureToOrder(): void
+    {
+        $modifier = new ContentModifier(
+            $this->getStubPermissionVerifier(),
+            $this->getStubProgramIncrementRetriever(),
+            $this->getStubProgramSearcher(),
+            $this->getStubPlanVerifier(),
+            $this->getStubOrderFeature(true),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement()
+        );
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $modifier->modifyContent(
+            $user,
+            12,
+            new ContentChange(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+        );
+    }
+
+    public function testItThrowsWhenFeatureToReorderIsNotInPlan(): void
+    {
+        $modifier = new ContentModifier(
+            $this->getStubPermissionVerifier(),
+            $this->getStubProgramIncrementRetriever(),
+            $this->getStubProgramSearcher(),
+            $this->getStubPlanVerifier(false),
+            $this->getStubOrderFeature(),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement()
+        );
+
+        $user = UserTestBuilder::aUser()->build();
+        $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
+        $modifier->modifyContent(
+            $user,
+            12,
+            new ContentChange(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+        );
+    }
+
+    public function testItThrowsWhenFeatureToReorderIsNotInProgramIncrement(): void
+    {
+        $modifier = new ContentModifier(
+            $this->getStubPermissionVerifier(),
+            $this->getStubProgramIncrementRetriever(),
+            $this->getStubProgramSearcher(),
+            $this->getStubPlanVerifier(),
+            $this->getStubOrderFeature(),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement(false)
+        );
+
+        $user = UserTestBuilder::aUser()->build();
+        $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
+        $modifier->modifyContent(
+            $user,
+            12,
+            new ContentChange(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+        );
+    }
+
+    private function getFeatureElementToOrderRepresentation(int $id, int $compared_to_id, string $direction = "before"): FeatureElementToOrderInvolvedInChangeRepresentation
+    {
+        $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation();
+
+        $feature_to_order->ids         = [$id];
+        $feature_to_order->compared_to = $compared_to_id;
+        $feature_to_order->direction   = $direction;
+        return $feature_to_order;
+    }
+
+    private function getStubCheckFeatureIsPlannedInProgramIncrement(bool $is_planned = true): CheckFeatureIsPlannedInProgramIncrement
+    {
+        return new class ($is_planned) implements CheckFeatureIsPlannedInProgramIncrement {
+
+            /** @var bool */
+            private $is_planned;
+
+            public function __construct(bool $is_planned)
+            {
+                $this->is_planned = $is_planned;
+            }
+            public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool
+            {
+                return $this->is_planned;
+            }
+        };
     }
 
     private function getStubPermissionVerifier($is_authorized = true): VerifyPrioritizeFeaturesPermission
@@ -150,6 +252,27 @@ final class ContentModifierTest extends TestCase
             public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool
             {
                 return $this->can_plan;
+            }
+        };
+    }
+
+    private function getStubOrderFeature(bool $is_called = false): OrderFeatureRank
+    {
+        return new class ($is_called) implements OrderFeatureRank {
+
+            /** @var bool */
+            private $is_called;
+
+            public function __construct(bool $is_called)
+            {
+                $this->is_called = $is_called;
+            }
+            public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, Program $program): void
+            {
+                if ($this->is_called) {
+                    assertTrue($context_id === "12");
+                    assertTrue($program->getId() === 101);
+                }
             }
         };
     }

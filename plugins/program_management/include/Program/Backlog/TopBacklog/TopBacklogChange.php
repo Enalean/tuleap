@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
-use Tuleap\ProgramManagement\REST\v1\TopBacklogElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 /**
  * @psalm-immutable
@@ -42,7 +42,7 @@ final class TopBacklogChange
      */
     public $remove_program_increments_link_to_feature_to_add;
     /**
-     * @var TopBacklogElementToOrderInvolvedInChangeRepresentation|null
+     * @var FeatureElementToOrderInvolvedInChangeRepresentation|null
      */
     public $elements_to_order;
 
@@ -55,7 +55,7 @@ final class TopBacklogChange
         array $potential_features_id_to_add,
         array $potential_features_id_to_remove,
         bool $remove_program_increments_link_to_feature_to_add,
-        ?TopBacklogElementToOrderInvolvedInChangeRepresentation $elements_to_order
+        ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order
     ) {
         $this->potential_features_id_to_add                     = $potential_features_id_to_add;
         $this->potential_features_id_to_remove                  = $potential_features_id_to_remove;

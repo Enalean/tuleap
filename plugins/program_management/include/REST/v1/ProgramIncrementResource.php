@@ -25,10 +25,12 @@ namespace Tuleap\ProgramManagement\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
@@ -46,6 +48,7 @@ use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentCha
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentModifier;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
+use Tuleap\ProgramManagement\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 use Tuleap\Project\ProjectAccessChecker;
@@ -132,11 +135,13 @@ final class ProgramIncrementResource extends AuthenticatedResource
      * {
      *   "add": [
      *     { "id": 34 }
-     *   ]
+     *   ],
+     *   "order": { "ids": [ 34 ], "compared_to": 35, "direction": "before" }
      * }
      * </pre>
      * <br>
-     * The feature with id 34 is planned (added to the contents) of the Program Increment.
+     * The feature with id 34 is planned (added to the contents) of the Program Increment. And it is added before feature with id 35.
+     * <code>order</code> is not mandatory.
      *
      * @url    PATCH {id}/content
      * @access protected
@@ -161,15 +166,17 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ProgramIncrementRetriever(\Tracker_ArtifactFactory::instance(), new ProgramIncrementsDAO()),
             new ProgramSearcher(new ProgramDao()),
             new PlanDao(),
+            new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
+            new FeatureDAO()
         );
         try {
             $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
-            $modifier->modifyContent($user, $id, new ContentChange($potential_feature_id_to_add));
+            $modifier->modifyContent($user, $id, new ContentChange($potential_feature_id_to_add, $patch_representation->order));
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (NotAllowedToPrioritizeException $e) {
             throw new RestException(403, $e->getMessage());
-        } catch (FeatureCannotBePlannedInProgramIncrementException $e) {
+        } catch (FeatureCannotBePlannedInProgramIncrementException | InvalidFeatureIdInProgramIncrementException $e) {
             throw new RestException(400, $e->getMessage());
         }
 

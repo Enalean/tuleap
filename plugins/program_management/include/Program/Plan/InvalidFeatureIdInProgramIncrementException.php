@@ -20,27 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
+namespace Tuleap\ProgramManagement\Program\Plan;
 
-use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
-
-/**
- * @psalm-immutable
- */
-final class ContentChange
+final class InvalidFeatureIdInProgramIncrementException extends \Exception
 {
-    /**
-     * @var ?int
-     */
-    public $potential_feature_id_to_add;
-    /**
-     * @var FeatureElementToOrderInvolvedInChangeRepresentation|null
-     */
-    public $elements_to_order;
-
-    public function __construct(?int $potential_feature_id_to_add, ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order)
+    public function __construct(int $feature_id, int $program_increment_id)
     {
-        $this->potential_feature_id_to_add = $potential_feature_id_to_add;
-        $this->elements_to_order           = $elements_to_order;
+        parent::__construct(
+            sprintf('Feature #%d does not exist in program increment #%d', $feature_id, $program_increment_id)
+        );
     }
 }

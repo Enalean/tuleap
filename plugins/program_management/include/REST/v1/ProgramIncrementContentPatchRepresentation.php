@@ -32,4 +32,9 @@ final class ProgramIncrementContentPatchRepresentation
      * @psalm-var FeatureInvolvedInChangeRepresentation[]
      */
     public $add;
+
+    /**
+     * @var FeatureElementToOrderInvolvedInChangeRepresentation | null $order {@type \Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation} {@required false}
+     */
+    public $order;
 }

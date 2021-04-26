@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,33 +15,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\REST\v1;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement;
 
-
-/**
- * @psalm-immutable
- */
-final class TopBacklogElementToOrderInvolvedInChangeRepresentation
+interface CheckFeatureIsPlannedInProgramIncrement
 {
-    public const AFTER  = "after";
-    public const BEFORE = "before";
-    /**
-     * @var int[] {@required true} {@min 1}{@max 1}
-     */
-    public $ids;
-
-    /**
-     * @var string {@required true} {@choice after,before}
-     */
-    public $direction;
-
-    /**
-     * @var int {@required true}
-     */
-    public $compared_to;
+    public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool;
 }

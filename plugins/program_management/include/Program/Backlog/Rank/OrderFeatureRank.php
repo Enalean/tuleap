@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
+namespace Tuleap\ProgramManagement\Program\Backlog\Rank;
 
+use Luracast\Restler\RestException;
+use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
-/**
- * @psalm-immutable
- */
-final class ContentChange
+interface OrderFeatureRank
 {
     /**
-     * @var ?int
+     * @throws RestException
      */
-    public $potential_feature_id_to_add;
-    /**
-     * @var FeatureElementToOrderInvolvedInChangeRepresentation|null
-     */
-    public $elements_to_order;
-
-    public function __construct(?int $potential_feature_id_to_add, ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order)
-    {
-        $this->potential_feature_id_to_add = $potential_feature_id_to_add;
-        $this->elements_to_order           = $elements_to_order;
-    }
+    public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, Program $program): void;
 }
