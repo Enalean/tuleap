@@ -32,9 +32,19 @@ final class ProgramPlannableTracker
      */
     private $id;
 
-    public function __construct(int $id)
+    private function __construct(int $id)
     {
         $this->id = $id;
+    }
+
+    public static function build(
+        BuildTracker $build_tracker,
+        int $tracker_id,
+        int $project_id
+    ): self {
+        $build_tracker->checkTrackerIsValid($tracker_id, $project_id);
+
+        return new self($tracker_id);
     }
 
     public function getId(): int
