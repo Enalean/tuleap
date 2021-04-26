@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\PlanningConfiguration;
 
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
+use Tuleap\ProgramManagement\Program\BuildPlanning;
 use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\ProgramManagement\Project;
 
@@ -89,5 +91,25 @@ final class Planning
     public function getProjectData(): Project
     {
         return $this->project_data;
+    }
+
+    /**
+     * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningHasNoProgramIncrementException
+     */
+    public static function buildPlanning(BuildPlanning $build_planning, \PFUser $user, int $project_id): self
+    {
+        $root_planning = $build_planning->getRootPlanning(
+            $user,
+            $project_id
+        );
+
+        return new self(
+            new ProgramTracker($root_planning->getPlanningTracker()),
+            $root_planning->getId(),
+            $root_planning->getName(),
+            $root_planning->getBacklogTrackersIds(),
+            $build_planning->getProjectFromPlanning($root_planning)
+        );
     }
 }

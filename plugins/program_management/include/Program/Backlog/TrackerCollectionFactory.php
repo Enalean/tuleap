@@ -25,10 +25,12 @@ namespace Tuleap\ProgramManagement\Program\Backlog;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\ProgramManagement\Project;
@@ -57,6 +59,7 @@ class TrackerCollectionFactory
      * @throws TopPlanningNotFoundInProjectException
      * @throws PlanTrackerException
      * @throws ProgramTrackerNotFoundException
+     * @throws PlanningHasNoProgramIncrementException
      */
     public function buildFromProgramProjectAndItsTeam(
         Project $program_project,
@@ -79,6 +82,7 @@ class TrackerCollectionFactory
 
     /**
      * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningHasNoProgramIncrementException
      */
     public function buildFromTeamProjects(
         TeamProjectsCollection $team_projects_collection,
@@ -94,10 +98,11 @@ class TrackerCollectionFactory
 
     /**
      * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningHasNoProgramIncrementException
      */
     private function getPlannableTracker(\PFUser $user, Project $project): ProgramTracker
     {
-        $root_planning = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
+        $root_planning = Planning::buildPlanning($this->planning_adapter, $user, (int) $project->getID());
 
         return $root_planning->getPlanningTracker();
     }
