@@ -33,5 +33,8 @@ class MIME_MagicRule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public $mask;
     public $word_size;
     public $range_length;
+    /**
+     * @var self[]
+     */
     public $children;
 }

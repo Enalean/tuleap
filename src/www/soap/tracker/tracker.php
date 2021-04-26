@@ -1418,7 +1418,7 @@ if (defined('NUSOAP')) {
  *
  * WARNING : We check the permissions here : only the readable trackers and the readable fields are returned.
  *
- * @param Object{ArtifactType} $at the artifactType to convert.
+ * @param ArtifactType $at the artifactType to convert.
  * @return the SOAPArtifactType corresponding to the ArtifactType Object
  */
     function artifacttype_to_soap($at)

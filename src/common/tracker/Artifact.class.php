@@ -2562,8 +2562,9 @@ class Artifact
 
         $server_url = HTTPRequest::instance()->getServerUrl();
 
-        $artifact_href     = $server_url . "/tracker/?func=detail&aid=" . $this->getID() . "&atid=$group_artifact_id&group_id=$group_id";
-        $used_fields       = $art_field_fact->getAllUsedFields();
+        $artifact_href = $server_url . "/tracker/?func=detail&aid=" . $this->getID() . "&atid=$group_artifact_id&group_id=$group_id";
+        $used_fields   = $art_field_fact->getAllUsedFields();
+        assert($this->ArtifactType instanceof ArtifactType);
         $art_fieldset_fact = new ArtifactFieldSetFactory($this->ArtifactType);
         $used_fieldsets    = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
         $ok                = false;
@@ -2757,11 +2758,12 @@ class Artifact
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
 
-        $fmt_len            = 40;
-        $fmt_left           = sprintf("%%-%ds ", $fmt_len - 1);
-        $fmt_right          = "%s";
-        $artifact_href      = HTTPRequest::instance()->getServerUrl() . "/tracker/?func=detail&aid=" . $this->getID() . "&atid=$group_artifact_id&group_id=$group_id";
-        $used_fields        = $art_field_fact->getAllUsedFields();
+        $fmt_len       = 40;
+        $fmt_left      = sprintf("%%-%ds ", $fmt_len - 1);
+        $fmt_right     = "%s";
+        $artifact_href = HTTPRequest::instance()->getServerUrl() . "/tracker/?func=detail&aid=" . $this->getID() . "&atid=$group_artifact_id&group_id=$group_id";
+        $used_fields   = $art_field_fact->getAllUsedFields();
+        assert($this->ArtifactType instanceof ArtifactType);
          $art_fieldset_fact = new ArtifactFieldSetFactory($this->ArtifactType);
          $used_fieldsets    = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
         $ok                 = false;
@@ -3775,9 +3777,9 @@ class Artifact
     }
 
     /**
-     * @param $string
+     * @param string $string
      */
-    public function setError($string)
+    public function setError($string): void
     {
         $this->error_state   = true;
         $this->error_message = $string;
