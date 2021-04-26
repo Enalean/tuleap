@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Rank;
+namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
-use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
-
-interface OrderFeatureRank
+final class FeatureCanNotBeRankedWithItselfException extends \Exception
 {
-    /**
-     * @throws FeatureCanNotBeRankedWithItselfException
-     */
-    public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, Program $program): void;
+    public function __construct(\Throwable $previous)
+    {
+        parent::__construct("Feature cannot be ranked with itself", 0, $previous);
+    }
 }

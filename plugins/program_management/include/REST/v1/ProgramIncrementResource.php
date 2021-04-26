@@ -48,10 +48,12 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddOrOrderMustBeSetException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentChange;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentModifier;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeaturePlanner;
@@ -199,14 +201,19 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             new FeatureDAO(),
         );
+
         try {
             $potential_feature_id_to_add = $patch_representation->add[0]->id ?? null;
-            $modifier->modifyContent($user, $id, new ContentChange($potential_feature_id_to_add, $patch_representation->order));
+            $modifier->modifyContent(
+                $user,
+                $id,
+                new ContentChange($potential_feature_id_to_add, $patch_representation->order)
+            );
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (NotAllowedToPrioritizeException $e) {
             throw new RestException(403, $e->getMessage());
-        } catch (FeatureNotFoundException | FeatureCannotBePlannedInProgramIncrementException | InvalidFeatureIdInProgramIncrementException | FeatureHasPlannedUserStoryException | AddFeatureException | RemoveFeatureException $e) {
+        } catch (FeatureNotFoundException | FeatureCannotBePlannedInProgramIncrementException | InvalidFeatureIdInProgramIncrementException | FeatureHasPlannedUserStoryException | AddFeatureException | RemoveFeatureException | AddOrOrderMustBeSetException | FeatureCanNotBeRankedWithItselfException $e) {
             throw new RestException(400, $e->getMessage());
         }
     }

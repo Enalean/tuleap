@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
-use Luracast\Restler\RestException;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
@@ -138,7 +137,7 @@ final class ContentModifierTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $this->expectException(RestException::class);
+        $this->expectException(AddOrOrderMustBeSetException::class);
         $modifier->modifyContent($user, 12, new ContentChange(null, null));
     }
 

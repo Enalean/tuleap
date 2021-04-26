@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\Plan\InvalidFeatureIdInProgramIncrementException;
-use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 
 /**
  * I add and/or reorder the contents of a Program Increment
@@ -37,17 +37,18 @@ use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 interface ModifyContent
 {
     /**
-     * @throws ProgramTrackerException
-     * @throws ProgramIncrementNotFoundException
-     * @throws ProgramNotFoundException
-     * @throws NotAllowedToPrioritizeException
-     * @throws FeatureCannotBePlannedInProgramIncrementException
-     * @throws \Luracast\Restler\RestException
-     * @throws InvalidFeatureIdInProgramIncrementException
-     * @throws FeatureHasPlannedUserStoryException
      * @throws AddFeatureException
-     * @throws RemoveFeatureException
+     * @throws AddOrOrderMustBeSetException
+     * @throws FeatureCanNotBeRankedWithItselfException
+     * @throws FeatureCannotBePlannedInProgramIncrementException
+     * @throws FeatureHasPlannedUserStoryException
      * @throws FeatureNotFoundException
+     * @throws InvalidFeatureIdInProgramIncrementException
+     * @throws NotAllowedToPrioritizeException
+     * @throws ProgramIncrementNotFoundException
+     * @throws ProgramTrackerException
+     * @throws RemoveFeatureException
+     * @throws \Tuleap\ProgramManagement\Program\ProgramNotFoundException
      */
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void;
 }
