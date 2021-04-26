@@ -66,22 +66,7 @@ final class TeamAdapter implements BuildTeam
     {
         $team_list = [];
         foreach ($team_ids as $team_id) {
-            $project = $this->project_manager->getProject($team_id);
-            try {
-                ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
-            } catch (RestException $exception) {
-                throw new TeamAccessException($team_id);
-            }
-
-            if ($this->program_dao->isProjectAProgramProject((int) $project->getId())) {
-                throw new ProjectIsAProgramException((int) $project->getId());
-            }
-
-            if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getId())) {
-                throw new TeamMustHaveExplicitBacklogEnabledException($project);
-            }
-
-            $team_list[] = new Team((int) $project->getID());
+            $team_list[] = Team::build($this, $team_id, $user);
         }
 
         if (empty($team_list)) {
@@ -89,5 +74,45 @@ final class TeamAdapter implements BuildTeam
         }
 
         return new TeamCollection($team_list, $program);
+    }
+
+    /**
+     * @throws ProjectIsAProgramException
+     * @throws TeamAccessException
+     */
+    public function checkProjectIsATeam(int $team_id, \PFUser $user): void
+    {
+        $project = $this->project_manager->getProject($team_id);
+        try {
+            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+        } catch (RestException $exception) {
+            throw new TeamAccessException($team_id);
+        }
+
+        $this->checkProject($project);
+    }
+
+    /**
+     * @throws ProjectIsAProgramException
+     */
+    public function checkProjectIsATeamForRestTestInitialization(int $team_id, \PFUser $user): void
+    {
+        $project = $this->project_manager->getProject($team_id);
+
+        $this->checkProject($project);
+    }
+
+    /**
+     * @throws ProjectIsAProgramException
+     */
+    private function checkProject(\Project $project): void
+    {
+        if ($this->program_dao->isProjectAProgramProject((int) $project->getId())) {
+            throw new ProjectIsAProgramException((int) $project->getId());
+        }
+
+        if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getId())) {
+            throw new TeamMustHaveExplicitBacklogEnabledException($project);
+        }
     }
 }

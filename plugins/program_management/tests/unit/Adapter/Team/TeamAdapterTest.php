@@ -145,13 +145,13 @@ final class TeamAdapterTest extends TestCase
         $user->shouldReceive('isAnonymous')->andReturnFalse();
         $user->shouldReceive('isSuperUser')->andReturnTrue();
 
-        $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
+        $this->project_manager->shouldReceive('getProject')->with($team_id)->andReturn($project);
         $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(false);
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(true);
 
-        $team_collection = new TeamCollection([new Team($team_id)], $program);
+        $team_collection = new TeamCollection([Team::build($this->adapter, $team_id, $user)], $program);
 
-        $this->assertEquals($team_collection, $this->adapter->buildTeamProject([$team_id], $program, $user));
+        self::assertEquals($team_collection, $this->adapter->buildTeamProject([$team_id], $program, $user));
     }
 }

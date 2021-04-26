@@ -32,7 +32,7 @@ final class Team
      */
     private $team_id;
 
-    public function __construct(int $team_id)
+    private function __construct(int $team_id)
     {
         $this->team_id = $team_id;
     }
@@ -40,5 +40,28 @@ final class Team
     public function getTeamId(): int
     {
         return $this->team_id;
+    }
+
+    /**
+     * @throws \Tuleap\ProgramManagement\Adapter\Team\ProjectIsAProgramException
+     * @throws \Tuleap\ProgramManagement\Adapter\Team\TeamAccessException
+     */
+    public static function build(BuildTeam $build_team, int $team_id, \PFUser $user): self
+    {
+        $build_team->checkProjectIsATeam($team_id, $user);
+
+        return new self($team_id);
+    }
+
+    /**
+     * This method has meaning only while we can't do test initialization by xml import
+     * @throws \Tuleap\ProgramManagement\Adapter\Team\ProjectIsAProgramException
+     * @throws \Tuleap\ProgramManagement\Adapter\Team\TeamAccessException
+     */
+    public static function buildForRestTest(BuildTeam $build_team, int $team_id, \PFUser $user): self
+    {
+        $build_team->checkProjectIsATeamForRestTestInitialization($team_id, $user);
+
+        return new self($team_id);
     }
 }
