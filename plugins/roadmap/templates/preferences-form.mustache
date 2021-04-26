@@ -14,18 +14,17 @@
     >
 </div>
 <div class="tlp-form-element">
-    <label class="tlp-label" for="tracker-id-{{ widget_id }} . '">
-        {{# dgettext }}tuleap-roadmap | Tracker id{{/ dgettext }}
+    <label class="tlp-label" for="roadmap-tracker-{{ widget_id }}">
+        {{# dgettext }}tuleap-roadmap | Tracker{{/ dgettext }}
         <i class="fas fa-asterisk" aria-hidden="true"></i>
     </label>
-    <input
-        type="number"
-        size="5"
-        class="tlp-input"
-        id="tracker-id-{{ widget_id }}"
-        name="roadmap[tracker_id]"
-        {{# tracker_id }}value="{{ . }}"{{/ tracker_id }}
-        required
-        placeholder="123"
-    >
+
+    <select class="tlp-select" id="roadmap-tracker-{{ widget_id }}" name="roadmap[tracker_id]">
+        {{# is_in_creation }}
+            <option value="" selected disabled>{{# dgettext }}tuleap-roadmap | Please choose a tracker{{/ dgettext }}</option>
+        {{/ is_in_creation }}
+        {{# project_trackers }}
+            <option value="{{ id }}" {{# selected }}selected="selected"{{/ selected }}>{{ title }}</option>
+        {{/ project_trackers }}
+    </select>
 </div>

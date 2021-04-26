@@ -62,6 +62,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(NaturePresenterFactory::class),
+                Mockery::mock(\TrackerFactory::class),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -92,6 +93,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(NaturePresenterFactory::class),
+                Mockery::mock(\TrackerFactory::class),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -125,6 +127,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(NaturePresenterFactory::class),
+                Mockery::mock(\TrackerFactory::class),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>

@@ -61,6 +61,7 @@ final class RoadmapProjectWidgetTest extends TestCase
             new DBTransactionExecutorPassthrough(),
             $template_render,
             Mockery::mock(NaturePresenterFactory::class),
+            Mockery::mock(\TrackerFactory::class),
         );
     }
 

@@ -15,6 +15,9 @@ msgstr ""
 msgid "Displays project roadmap as a widget"
 msgstr "Affiche la feuille de route du projet en tant que widget"
 
+msgid "Please choose a tracker"
+msgstr "Veuillez choisir un outil de suivi"
+
 msgid "Roadmap"
 msgstr "Feuille de route"
 
@@ -35,8 +38,8 @@ msgstr ""
 "L'outil de suivi n'a pas de plage de temps définie, ou vous n'avez pas le "
 "droit de la voir."
 
-msgid "Tracker id"
-msgstr "Identifiant de l'outil de suivi"
+msgid "Tracker"
+msgstr "Outil de suivi"
 
 msgid "the Roadmap widget"
 msgstr "le widget Feuille de route"
