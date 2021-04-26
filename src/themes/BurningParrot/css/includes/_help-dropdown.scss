@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'sass:map';
+@use '../../../tlp/src/scss/variables/colors/swatch-colors';
+
 .help-dropdown {
     position: fixed;
     z-index: 1000;
@@ -104,7 +107,7 @@
             }
 
             > .review-link-icon {
-                color: $tlp-swatch-fiesta-red-text;
+                color: map.get(map.get(swatch-colors.$tlp-swatch-color-map, 'fiesta-red'), 'text-on-dark');
             }
         }
 
