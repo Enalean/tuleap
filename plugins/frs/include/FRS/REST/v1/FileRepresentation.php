@@ -131,12 +131,12 @@ class FileRepresentation
         return UserRepresentation::build($owner);
     }
 
-    private static function getDownloads(FRSFile $file)
+    private static function getDownloads(FRSFile $file): int
     {
         $download_dao = new FRSFileDownloadDao();
         $downloads    = $download_dao->searchByFile($file->getFileID());
 
-        return ($downloads['downloads'] ? $downloads['downloads'] : 0);
+        return $downloads['downloads'] ?? 0;
     }
 
     private static function retrieveFileSize(FRSFile $file): int
@@ -149,7 +149,7 @@ class FileRepresentation
         $processor_dao = new FRSProcessorDao();
         $processor     = $processor_dao->searchById($file->getProcessorID());
 
-        return $processor["name"];
+        return $processor["name"] ?? null;
     }
 
     private static function retrieveTypeLabel(FRSFile $file): ?string
@@ -157,6 +157,6 @@ class FileRepresentation
         $type_dao = new FRSFileTypeDao();
         $type     = $type_dao->searchById($file->getTypeID());
 
-        return $type["name"];
+        return $type["name"] ?? null;
     }
 }
