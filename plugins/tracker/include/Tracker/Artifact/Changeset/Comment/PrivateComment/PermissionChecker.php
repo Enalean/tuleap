@@ -29,13 +29,13 @@ use Tracker_Artifact_Changeset_Comment;
 class PermissionChecker
 {
     /**
-     * @var TrackerPrivateCommentUGroupEnabledDao
+     * @var RetrieveTrackerPrivateCommentInformation
      */
-    private $enabled_dao;
+    private $tracker_private_comment_information_retriever;
 
-    public function __construct(TrackerPrivateCommentUGroupEnabledDao $enabled_dao)
+    public function __construct(RetrieveTrackerPrivateCommentInformation $tracker_private_comment_information_retriever)
     {
-        $this->enabled_dao = $enabled_dao;
+        $this->tracker_private_comment_information_retriever = $tracker_private_comment_information_retriever;
     }
 
     public function isPrivateCommentForUser(
@@ -69,7 +69,7 @@ class PermissionChecker
 
     public function privateCheckMustBeDoneForUser(PFUser $user, Tracker $tracker): bool
     {
-        if (! $this->enabled_dao->isTrackerEnabledPrivateComment($tracker->getId())) {
+        if (! $this->tracker_private_comment_information_retriever->doesTrackerAllowPrivateComments($tracker)) {
             return false;
         }
 

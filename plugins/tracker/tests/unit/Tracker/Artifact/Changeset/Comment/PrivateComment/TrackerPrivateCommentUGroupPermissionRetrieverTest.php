@@ -34,9 +34,9 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
      */
     private $permission_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupEnabledDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|RetrieveTrackerPrivateCommentInformation
      */
-    private $ugroup_enabled_dao;
+    private $tracker_private_comment_information_retriever;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UGroupManager
      */
@@ -55,19 +55,19 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
         $this->permission_dao = \Mockery::mock(TrackerPrivateCommentUGroupPermissionDao::class);
         $this->ugroup_manager = \Mockery::mock(\UGroupManager::class);
 
-        $this->ugroup_enabled_dao = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
-        $this->ugroup_enabled_dao
-            ->shouldReceive("isTrackerEnabledPrivateComment")
-            ->with(15)
+        $this->tracker = \Mockery::mock(\Tracker::class, ["getId" => 15]);
+
+        $this->tracker_private_comment_information_retriever = \Mockery::mock(RetrieveTrackerPrivateCommentInformation::class);
+        $this->tracker_private_comment_information_retriever
+            ->shouldReceive("doesTrackerAllowPrivateComments")
+            ->with($this->tracker)
             ->once()
             ->andReturnTrue()
             ->byDefault();
 
-        $this->tracker = \Mockery::mock(\Tracker::class, ["getId" => 15]);
-
         $this->retriever = new TrackerPrivateCommentUGroupPermissionRetriever(
             $this->permission_dao,
-            $this->ugroup_enabled_dao,
+            $this->tracker_private_comment_information_retriever,
             $this->ugroup_manager
         );
     }
@@ -75,12 +75,12 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
     public function testReturnsNullIfTrackerDoesNotUsePrivateComment(): void
     {
         $this->permission_dao->shouldReceive("getUgroupIdsOfPrivateComment")->never();
-        $this->ugroup_enabled_dao->shouldReceive("isTrackerEnabledPrivateComment")->with(15)->once()->andReturnFalse();
+        $this->tracker_private_comment_information_retriever->shouldReceive("doesTrackerAllowPrivateComments")->with($this->tracker)->once()->andReturnFalse();
         $this->ugroup_manager->shouldReceive("getById")->never();
 
         $ugroups = $this->retriever->getUGroupsCanSeePrivateComment($this->tracker, 5);
 
-        $this->assertNull($ugroups);
+        self::assertNull($ugroups);
     }
 
     public function testReturnsNullIfThereIsNotUGroup(): void
@@ -90,7 +90,7 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
 
         $ugroups = $this->retriever->getUGroupsCanSeePrivateComment($this->tracker, 5);
 
-        $this->assertNull($ugroups);
+        self::assertNull($ugroups);
     }
 
     public function testReturnsArrayOfUgroupsIfTheyExist(): void
@@ -122,8 +122,8 @@ class TrackerPrivateCommentUGroupPermissionRetrieverTest extends TestCase
 
         $ugroups = $this->retriever->getUGroupsCanSeePrivateComment($this->tracker, 5);
 
-        $this->assertCount(2, $ugroups);
-        $this->assertEquals($ugroup_1, $ugroups[0]);
-        $this->assertEquals($ugroup_2, $ugroups[1]);
+        self::assertCount(2, $ugroups);
+        self::assertEquals($ugroup_1, $ugroups[0]);
+        self::assertEquals($ugroup_2, $ugroups[1]);
     }
 }

@@ -23,7 +23,9 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -2096,9 +2098,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     private function getCommentFromWhereBuilder(): CommentFromWhereBuilder
     {
         $factory = new CommentFromWhereBuilderFactory(
-            new PermissionChecker(
-                new TrackerPrivateCommentUGroupEnabledDao()
-            )
+            new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
         );
 
         return $factory->buildCommentFromWhereBuilderForTracker(

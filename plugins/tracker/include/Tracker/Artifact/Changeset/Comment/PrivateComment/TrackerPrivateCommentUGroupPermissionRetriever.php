@@ -31,22 +31,22 @@ class TrackerPrivateCommentUGroupPermissionRetriever
      */
     private $ugroup_permission_dao;
     /**
+     * @var RetrieveTrackerPrivateCommentInformation
+     */
+    private $tracker_private_comment_information_retriever;
+    /**
      * @var \UGroupManager
      */
     private $ugroup_manager;
-    /**
-     * @var TrackerPrivateCommentUGroupEnabledDao
-     */
-    private $ugroup_enabled_dao;
 
     public function __construct(
         TrackerPrivateCommentUGroupPermissionDao $ugroup_permission_dao,
-        TrackerPrivateCommentUGroupEnabledDao $ugroup_enabled_dao,
+        RetrieveTrackerPrivateCommentInformation $tracker_private_comment_information_retriever,
         \UGroupManager $ugroup_manager
     ) {
-        $this->ugroup_permission_dao = $ugroup_permission_dao;
-        $this->ugroup_manager        = $ugroup_manager;
-        $this->ugroup_enabled_dao    = $ugroup_enabled_dao;
+        $this->ugroup_permission_dao                         = $ugroup_permission_dao;
+        $this->tracker_private_comment_information_retriever = $tracker_private_comment_information_retriever;
+        $this->ugroup_manager                                = $ugroup_manager;
     }
 
     /**
@@ -54,7 +54,7 @@ class TrackerPrivateCommentUGroupPermissionRetriever
      */
     public function getUGroupsCanSeePrivateComment(Tracker $tracker, int $comment_id): ?array
     {
-        if (! $this->ugroup_enabled_dao->isTrackerEnabledPrivateComment($tracker->getId())) {
+        if (! $this->tracker_private_comment_information_retriever->doesTrackerAllowPrivateComments($tracker)) {
             return null;
         }
 

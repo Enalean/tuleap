@@ -32,7 +32,9 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
@@ -201,7 +203,7 @@ class ReportsResource extends AuthenticatedResource
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                 ),
-                new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao())
+                new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
             )
         );
 

@@ -36,7 +36,9 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerAvailability;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -146,7 +148,7 @@ class ActionsRunner
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                         ),
-                        new PermissionChecker(new TrackerPrivateCommentUGroupEnabledDao())
+                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
                     )
                 )
             )
