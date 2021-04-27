@@ -75,6 +75,10 @@ class TagPushWebhookActionProcessorTest extends TestCase
      * @var WebhookTuleapReferencesParser
      */
     private $tuleap_references_parser;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagInfoDao
+     */
+    private $tag_info_dao;
 
     protected function setUp(): void
     {
@@ -86,6 +90,7 @@ class TagPushWebhookActionProcessorTest extends TestCase
         $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
         $this->gitlab_repository_project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
         $this->reference_manager                   = Mockery::mock(ReferenceManager::class);
+        $this->tag_info_dao                        = Mockery::mock(TagInfoDao::class);
 
         $this->action_processor = new TagPushWebhookActionProcessor(
             $this->credentials_retriever,
@@ -94,6 +99,7 @@ class TagPushWebhookActionProcessorTest extends TestCase
             $this->tuleap_reference_retriever,
             $this->gitlab_repository_project_retriever,
             $this->reference_manager,
+            $this->tag_info_dao,
             new NullLogger()
         );
     }
@@ -128,7 +134,8 @@ class TagPushWebhookActionProcessorTest extends TestCase
 
         $gitlab_tag = new GitlabTag(
             "v1.0.2",
-            "This tag references TULEAP-2337"
+            "This tag references TULEAP-2337",
+            "sha1"
         );
 
         $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
@@ -169,6 +176,9 @@ class TagPushWebhookActionProcessorTest extends TestCase
                 )
             );
 
+        $this->tag_info_dao->shouldReceive('saveGitlabTagInfo')
+            ->once();
+
         $this->action_processor->process(
             $gitlab_repository,
             $tag_webhook_data
@@ -199,6 +209,7 @@ class TagPushWebhookActionProcessorTest extends TestCase
             ->andReturnNull();
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
+        $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
 
         $this->action_processor->process(
             $gitlab_repository,
@@ -236,7 +247,8 @@ class TagPushWebhookActionProcessorTest extends TestCase
 
         $gitlab_tag = new GitlabTag(
             "v1.0.2",
-            "This tag references 2337"
+            "This tag references 2337",
+            "sha1"
         );
 
         $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
@@ -251,6 +263,7 @@ class TagPushWebhookActionProcessorTest extends TestCase
             ->andReturn([$project]);
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
+        $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
 
         $this->action_processor->process(
             $gitlab_repository,

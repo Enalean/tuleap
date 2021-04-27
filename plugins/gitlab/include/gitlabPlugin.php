@@ -33,6 +33,7 @@ use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
 use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
@@ -61,6 +62,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
@@ -293,6 +295,7 @@ class gitlabPlugin extends Plugin
                     $tuleap_reference_retriever,
                     $gitlab_repository_project_retriever,
                     ReferenceManager::instance(),
+                    new TagInfoDao(),
                     $logger,
                 ),
                 $logger,
@@ -408,6 +411,9 @@ class gitlabPlugin extends Plugin
                 new TlpRelativeDatePresenterBuilder()
             ),
             new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao()),
+            new GitlabTagFactory(
+                new TagInfoDao()
+            ),
             ProjectManager::instance(),
             new TlpRelativeDatePresenterBuilder(),
             UserManager::instance(),

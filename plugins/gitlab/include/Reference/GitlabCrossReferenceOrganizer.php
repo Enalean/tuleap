@@ -30,6 +30,7 @@ use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -73,12 +74,17 @@ class GitlabCrossReferenceOrganizer
      * @var \UserHelper
      */
     private $user_helper;
+    /**
+     * @var GitlabTagFactory
+     */
+    private $gitlab_tag_factory;
 
     public function __construct(
         GitlabRepositoryFactory $gitlab_repository_factory,
         GitlabCommitFactory $gitlab_commit_factory,
         GitlabCommitCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
         GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever,
+        GitlabTagFactory $gitlab_tag_factory,
         \ProjectManager $project_manager,
         TlpRelativeDatePresenterBuilder $relative_date_builder,
         \UserManager $user_manager,
@@ -88,6 +94,7 @@ class GitlabCrossReferenceOrganizer
         $this->gitlab_commit_factory                    = $gitlab_commit_factory;
         $this->gitlab_cross_reference_enhancer          = $gitlab_cross_reference_enhancer;
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
+        $this->gitlab_tag_factory                       = $gitlab_tag_factory;
         $this->project_manager                          = $project_manager;
         $this->relative_date_builder                    = $relative_date_builder;
         $this->user_manager                             = $user_manager;
@@ -231,8 +238,25 @@ class GitlabCrossReferenceOrganizer
         GitlabRepository $repository,
         string $tag_name
     ): void {
+        $tag_info = $this->gitlab_tag_factory->getGitlabTagInRepositoryWithTagName(
+            $repository,
+            $tag_name
+        );
+
+        if ($tag_info === null) {
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+            return;
+        }
+
         $by_nature_organizer->moveCrossReferenceToSection(
-            $cross_reference_presenter->withTitle($tag_name, null),
+            $cross_reference_presenter
+                ->withTitle($tag_info->getTagMessage(), null)
+                ->withAdditionalBadges(
+                    [
+                        AdditionalBadgePresenter::buildPrimary($tag_info->getTagName()),
+                        AdditionalBadgePresenter::buildSecondary(substr($tag_info->getCommitSha1(), 0, 10))
+                    ]
+                ),
             $project->getUnixNameLowerCase() . '/' . $repository->getName()
         );
     }

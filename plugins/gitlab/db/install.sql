@@ -50,3 +50,12 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_merge_request_info (
     author_email TEXT DEFAULT NULL,
     UNIQUE KEY merge_request_id(repository_id, merge_request_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_tag_info (
+    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repository_id INT(11) NOT NULL,
+    commit_sha1 BINARY(20) NOT NULL,
+    tag_name TEXT NOT NULL,
+    tag_message TEXT NOT NULL,
+    INDEX idx_tag(repository_id, tag_name(10))
+) ENGINE=InnoDB;

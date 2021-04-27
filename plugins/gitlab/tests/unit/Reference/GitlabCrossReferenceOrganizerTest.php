@@ -34,6 +34,8 @@ use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
+use Tuleap\Gitlab\Reference\Tag\GitlabTag;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\GlobalLanguageMock;
@@ -83,6 +85,10 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserHelper
      */
     private $user_helper;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabTagFactory
+     */
+    private $gitlab_tag_factory;
 
     protected function setUp(): void
     {
@@ -90,6 +96,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->gitlab_commit_factory                    = Mockery::mock(GitlabCommitFactory::class);
         $this->gitlab_commit_cross_reference_enhancer   = Mockery::mock(GitlabCommitCrossReferenceEnhancer::class);
         $this->gitlab_merge_request_reference_retriever = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
+        $this->gitlab_tag_factory                       = Mockery::mock(GitlabTagFactory::class);
         $this->project_manager                          = Mockery::mock(ProjectManager::class);
         $this->relative_date_builder                    = new TlpRelativeDatePresenterBuilder();
         $this->user_manager                             = Mockery::mock(\UserManager::class);
@@ -105,6 +112,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             $this->gitlab_commit_factory,
             $this->gitlab_commit_cross_reference_enhancer,
             $this->gitlab_merge_request_reference_retriever,
+            $this->gitlab_tag_factory,
             $this->project_manager,
             $this->relative_date_builder,
             $this->user_manager,
@@ -706,6 +714,65 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
                 [
                     'getCrossReferencePresenters' => [$a_ref],
                     'getCurrentUser' => $user
+                ]
+            )->getMock();
+
+        $by_nature_organizer->shouldReceive('removeCrossReferenceToSection')->never();
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->once();
+
+        $this->organizer->organizeGitLabReferences($by_nature_organizer);
+    }
+
+    public function testItOrganizesGitlabTagCrossReferencesInTheirRespectiveRepositorySection(): void
+    {
+        $project = Mockery::mock(Project::class)
+            ->shouldReceive('getUnixNameLowercase')
+            ->andReturn('thenightwatch')
+            ->getMock();
+
+        $this->project_manager
+            ->shouldReceive('getProject')
+            ->with(1)
+            ->andReturn($project);
+
+        $repository = new GitlabRepository(
+            1,
+            2,
+            'winter-is-coming',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new DateTimeImmutable()
+        );
+
+        $this->gitlab_repository_factory
+            ->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->with($project, 'john-snow/winter-is-coming')
+            ->andReturn($repository);
+
+        $gitlab_tag = new GitlabTag(
+            'sha1',
+            'v1.0.2',
+            "This is the tag message"
+        );
+
+        $this->gitlab_tag_factory
+            ->shouldReceive('getGitlabTagInRepositoryWithTagName')
+            ->with($repository, "v1.0.2")
+            ->andReturn($gitlab_tag)
+            ->once();
+
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_tag')
+            ->withValue('john-snow/winter-is-coming/v1.0.2')
+            ->withProjectId(1)
+            ->build();
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(
+                [
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 

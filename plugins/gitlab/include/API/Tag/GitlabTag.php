@@ -38,32 +38,40 @@ class GitlabTag
      * @var string
      */
     private $message;
+    /**
+     * @var string
+     */
+    private $commit_sha1;
 
-    public function __construct(string $name, string $message)
+    public function __construct(string $name, string $message, string $commit_sha1)
     {
-        $this->name    = $name;
-        $this->message = $message;
+        $this->name        = $name;
+        $this->message     = $message;
+        $this->commit_sha1 = $commit_sha1;
     }
 
     public static function buildFromAPIResponse(array $tag_reponse): self
     {
         if (
             ! array_key_exists('name', $tag_reponse) ||
-            ! array_key_exists('message', $tag_reponse)
+            ! array_key_exists('message', $tag_reponse) ||
+            ! array_key_exists('target', $tag_reponse)
         ) {
             throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
         }
 
         if (
             ! is_string($tag_reponse['name']) ||
-            ! is_string($tag_reponse['message'])
+            ! is_string($tag_reponse['message']) ||
+            ! is_string($tag_reponse['target'])
         ) {
             throw new GitlabResponseAPIException("Some keys haven't the expected types. This is not expected. Aborting.");
         }
 
         return new self(
             $tag_reponse['name'],
-            $tag_reponse['message']
+            $tag_reponse['message'],
+            $tag_reponse['target'],
         );
     }
 
@@ -75,5 +83,10 @@ class GitlabTag
     public function getMessage(): string
     {
         return $this->message;
+    }
+
+    public function getCommitSha1(): string
+    {
+        return $this->commit_sha1;
     }
 }
