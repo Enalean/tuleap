@@ -1,10 +1,74 @@
 <div>
-    <div class="alert alert-info">
-        {{# dgettext }} tuleap-tracker | This semantic is under construction, it is not possible to define it yet. {{/ dgettext }}
-    </div>
     <p>
         {{ semantic_usages_description }}
     </p>
+    <div>
+        <form action="{{ updater_url }}" method="post">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            {{# dgettext }} tuleap-tracker | The computation of the progression will be {{/ dgettext }}
+            <select id="computation-method" name="computation-method" required>
+                <option value="">{{# dgettext }} tuleap-tracker | Choose a method... {{/ dgettext }}</option>
+                {{# available_computation_methods }}
+                    <option value="{{ name }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                {{/ available_computation_methods }}
+            </select>:
+            <div
+                id="effort-based-config"
+                class="
+                    semantic-progress-computation-method-config
+                    {{# is_method_effort_based }} selected-computation-method-config {{/ is_method_effort_based }}
+                "
+            >
+                <div class="control-group">
+                    <label class="control-label" for="total-effort">
+                        {{# dgettext }} tuleap-tracker | Total effort{{/ dgettext}}
+                        <span class="highlight">*</span>
+                    </label>
+                    <div class="controls">
+                        <select id="total-effort" name="total-effort-field-id" required>
+                            <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
+                            {{# total_effort_options }}
+                                <option value="{{ id }}"
+                                        {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                            {{/ total_effort_options }}
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="remaining-effort">
+                        {{# dgettext }} tuleap-tracker | Remaining effort{{/ dgettext}}
+                        <span class="highlight">*</span>
+                    </label>
+                    <div class="controls">
+                        <select id="remaining-effort" name="remaining-effort-field-id" required>
+                            <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
+                            {{# remaining_effort_options }}
+                                <option value="{{ id }}"
+                                        {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                            {{/ remaining_effort_options }}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit" name="update-semantic-progress">
+                    {{# dgettext }} tuleap-tracker | Save your modifications {{/ dgettext }}
+                </button>
+                {{# is_semantic_defined }}
+                    {{# dgettext }} tuleap-tracker | or {{/ dgettext }}
+                    <button
+                        class="btn btn-danger"
+                        type="submit"
+                        name="reset-semantic-progress"
+                    >
+                        {{# dgettext }} tuleap-tracker | Reset this semantic {{/ dgettext }}
+                    </button>
+                {{/ is_semantic_defined }}
+            </div>
+        </form>
+    </div>
     <div>
         <a href="{{ tracker_semantic_admin_url }}">
             {{# dgettext }} tuleap-tracker | « Go back to semantic overview {{/ dgettext }}

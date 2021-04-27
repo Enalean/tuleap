@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Tracker;
-use Tracker_FormElement_Field_Numeric;
 
 class SemanticProgressBuilder
 {
@@ -32,16 +31,16 @@ class SemanticProgressBuilder
      */
     private $dao;
     /**
-     * @var \Tracker_FormElementFactory
+     * @var MethodBuilder
      */
-    private $form_element_factory;
+    private $method_builder;
 
     public function __construct(
         SemanticProgressDao $dao,
-        \Tracker_FormElementFactory $form_element_factory
+        MethodBuilder $method_builder
     ) {
-        $this->dao                  = $dao;
-        $this->form_element_factory = $form_element_factory;
+        $this->dao            = $dao;
+        $this->method_builder = $method_builder;
     }
 
     public function getSemantic(Tracker $tracker): SemanticProgress
@@ -68,57 +67,6 @@ class SemanticProgressBuilder
         );
     }
 
-    private function buildEffortBasedSemanticProgress(
-        Tracker $tracker,
-        int $total_effort_field_id,
-        int $remaining_effort_field_id
-    ): SemanticProgress {
-        if ($total_effort_field_id === $remaining_effort_field_id) {
-            return $this->getInvalidSemanticProgress(
-                $tracker,
-                dgettext(
-                    'tuleap-tracker',
-                    'Progress semantic is not properly configured: total effort and remaining effort fields have to be two different fields.'
-                )
-            );
-        }
-
-        $total_effort_field = $this->form_element_factory->getUsedFieldByIdAndType(
-            $tracker,
-            $total_effort_field_id,
-            ['int', 'float', 'computed']
-        );
-
-        $remaining_effort_field = $this->form_element_factory->getUsedFieldByIdAndType(
-            $tracker,
-            $remaining_effort_field_id,
-            ['int', 'float', 'computed']
-        );
-
-        if (! $total_effort_field instanceof Tracker_FormElement_Field_Numeric) {
-            return $this->getInvalidSemanticProgress(
-                $tracker,
-                dgettext('tuleap-tracker', 'Progress semantic is not properly configured: unable to find the total effort field.')
-            );
-        }
-
-        if (! $remaining_effort_field instanceof Tracker_FormElement_Field_Numeric) {
-            return $this->getInvalidSemanticProgress(
-                $tracker,
-                dgettext('tuleap-tracker', 'Progress semantic is not properly configured: unable to find the remaining effort field.')
-            );
-        }
-
-        return new SemanticProgress(
-            $tracker,
-            new MethodBasedOnEffort(
-                $this->dao,
-                $total_effort_field,
-                $remaining_effort_field
-            )
-        );
-    }
-
     private function getUnconfiguredSemanticProgress(Tracker $tracker): SemanticProgress
     {
         return new SemanticProgress(
@@ -132,6 +80,17 @@ class SemanticProgressBuilder
         return new SemanticProgress(
             $tracker,
             new InvalidMethod($error_message),
+        );
+    }
+
+    private function buildEffortBasedSemanticProgress(
+        Tracker $tracker,
+        int $total_effort_field_id,
+        int $remaining_effort_field_id
+    ): SemanticProgress {
+        return new SemanticProgress(
+            $tracker,
+            $this->method_builder->buildMethodBasedOnEffort($tracker, $total_effort_field_id, $remaining_effort_field_id)
         );
     }
 }

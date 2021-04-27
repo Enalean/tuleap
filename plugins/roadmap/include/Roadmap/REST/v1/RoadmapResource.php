@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\REST\Header;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
@@ -82,6 +83,7 @@ final class RoadmapResource
         );
 
         $timeframe_builder = new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger());
+        $progress_dao      = new SemanticProgressDao();
         $retriever         = new RoadmapTasksRetriever(
             new RoadmapWidgetDao(),
             \ProjectManager::instance(),
@@ -98,8 +100,11 @@ final class RoadmapResource
                 $this->getLogger()
             ),
             new SemanticProgressBuilder(
-                new SemanticProgressDao(),
-                $form_element_factory
+                $progress_dao,
+                new MethodBuilder(
+                    $form_element_factory,
+                    $progress_dao
+                )
             )
         );
 

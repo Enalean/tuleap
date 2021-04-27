@@ -242,4 +242,15 @@ class MethodBasedOnEffortTest extends TestCase
 
         $this->method->saveSemanticForTracker($tracker);
     }
+
+    public function testItDeletesItsConfiguration(): void
+    {
+        $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
+
+        $this->dao->shouldReceive('delete')->with(113)->once()->andReturn(true);
+
+        $this->assertTrue(
+            $this->method->deleteSemanticForTracker($tracker)
+        );
+    }
 }

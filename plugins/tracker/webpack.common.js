@@ -61,6 +61,8 @@ const config_for_flaming_parrot = {
         "tracker-report-expert-mode": "./scripts/report/index.js",
         "tracker-semantic-timeframe-option-selector":
             "./scripts/semantic-timeframe-option-selector.js",
+        "tracker-semantic-progress-options-selector":
+            "./scripts/semantics/progress/admin-selectors.ts",
     },
     context,
     output,

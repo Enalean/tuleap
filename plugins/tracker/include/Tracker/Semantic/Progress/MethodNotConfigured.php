@@ -76,4 +76,9 @@ class MethodNotConfigured implements IComputeProgression
     {
         return false;
     }
+
+    public function deleteSemanticForTracker(\Tracker $tracker): bool
+    {
+        return false;
+    }
 }

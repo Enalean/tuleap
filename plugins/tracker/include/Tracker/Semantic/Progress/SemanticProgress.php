@@ -29,7 +29,8 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_SemanticManager;
 use TrackerManager;
-use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenter;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenterBuilder;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 
@@ -92,11 +93,24 @@ class SemanticProgress extends \Tracker_Semantic
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
         $renderer = $this->getTemplateRenderer();
+        $builder  = new SemanticProgressAdminPresenterBuilder(
+            \Tracker_FormElementFactory::instance()
+        );
+
+        $assets = new IncludeAssets(__DIR__ . '/../../../../../../src/www/assets/trackers', '/assets/trackers');
+        $GLOBALS['HTML']->includeFooterJavascriptFile(
+            $assets->getFileURL("tracker-semantic-progress-options-selector.js")
+        );
+
         $renderer->renderToPage(
             'semantic-progress-admin',
-            new SemanticProgressAdminPresenter(
+            $builder->build(
                 $this->tracker,
-                $this->getSemanticUsage()
+                $this->getSemanticUsage(),
+                $this->isDefined(),
+                $this->getUrl(),
+                $this->getCSRFToken(),
+                $this->method
             )
         );
 
@@ -109,7 +123,25 @@ class SemanticProgress extends \Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user
     ) {
+        if ($request->exist('update-semantic-progress')) {
+            $this->getCSRFToken()->check();
+            $this->updateSemantic($request);
+            $this->reloadSemanticProgressAdmin();
+            return;
+        }
+        if ($request->exist('reset-semantic-progress')) {
+            $this->getCSRFToken()->check();
+            $this->resetSemantic();
+            $this->reloadSemanticProgressAdmin();
+            return;
+        }
+
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
+    }
+
+    private function reloadSemanticProgressAdmin(): void
+    {
+        $GLOBALS['Response']->redirect($this->getUrl());
     }
 
     public function exportToXml(SimpleXMLElement $root, $xml_mapping): void
@@ -158,5 +190,43 @@ class SemanticProgress extends \Tracker_Semantic
             __DIR__ . '/../../../../templates/semantic-progress'
         );
         return $renderer;
+    }
+
+    private function updateSemantic(Codendi_Request $request): void
+    {
+        $method_builder = new MethodBuilder(
+            \Tracker_FormElementFactory::instance(),
+            new SemanticProgressDao()
+        );
+
+        $new_method = $method_builder->buildMethodFromRequest($this->tracker, $request);
+        if (! $new_method->saveSemanticForTracker($this->tracker)) {
+            $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $new_method->getErrorMessage());
+            return;
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::INFO,
+            dgettext('tuleap-tracker', 'Semantic has been saved successfully')
+        );
+    }
+
+    private function resetSemantic(): void
+    {
+        if (! $this->method->deleteSemanticForTracker($this->tracker)) {
+            $GLOBALS['Response']->addFeedback(
+                \Feedback::ERROR,
+                dgettext(
+                    'tuleap-tracker',
+                    'An error occurred while deleting the semantic'
+                )
+            );
+            return;
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::INFO,
+            dgettext('tuleap-tracker', 'Semantic has been deleted successfully')
+        );
     }
 }

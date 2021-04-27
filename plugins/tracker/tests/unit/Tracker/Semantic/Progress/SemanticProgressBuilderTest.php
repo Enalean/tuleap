@@ -34,10 +34,6 @@ class SemanticProgressBuilderTest extends TestCase
      */
     private $dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
      * @var SemanticProgressBuilder
      */
     private $progress_builder;
@@ -45,14 +41,18 @@ class SemanticProgressBuilderTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
      */
     private $tracker;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|MethodBuilder
+     */
+    private $method_builder;
 
     protected function setUp(): void
     {
-        $this->dao                  = \Mockery::mock(SemanticProgressDao::class);
-        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->progress_builder     = new SemanticProgressBuilder(
+        $this->dao              = \Mockery::mock(SemanticProgressDao::class);
+        $this->method_builder   = \Mockery::mock(MethodBuilder::class);
+        $this->progress_builder = new SemanticProgressBuilder(
             $this->dao,
-            $this->form_element_factory
+            $this->method_builder
         );
 
         $this->tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
@@ -94,29 +94,28 @@ class SemanticProgressBuilderTest extends TestCase
                 'remaining_effort_field_id' => 1002
             ]
         )->once();
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
+
+        $this->method_builder->shouldReceive('buildMethodBasedOnEffort')
             ->with(
                 $this->tracker,
                 1001,
-                ['int', 'float', 'computed']
+                1002
             )
-            ->andReturn($total_effort_field)
-            ->once();
-
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                1002,
-                ['int', 'float', 'computed']
+            ->andReturn(
+                new MethodBasedOnEffort(
+                    $this->dao,
+                    $total_effort_field,
+                    $remaining_effort_field
+                )
             )
-            ->andReturn($remaining_effort_field)
             ->once();
 
         $semantic           = $this->progress_builder->getSemantic($this->tracker);
         $computation_method = $semantic->getComputationMethod();
 
-        $this->assertTrue(
-            ($computation_method instanceof MethodBasedOnEffort)
+        $this->assertInstanceOf(
+            MethodBasedOnEffort::class,
+            $computation_method
         );
 
         $this->assertEquals(
@@ -130,114 +129,25 @@ class SemanticProgressBuilderTest extends TestCase
         );
     }
 
-    public function testItReturnsAnInvalidSemanticWhenTotalEffortFieldCantBeFound(): void
+    /**
+     * @testWith [null, 1002]
+     *           [1001, null]
+     *           [null, null]
+     */
+    public function testItReturnsAnInvalidSemanticWhenFieldsAreNull(?int $total_effort_field_id, ?int $remaining_effort_field_id): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
-                'total_effort_field_id' => 1001,
-                'remaining_effort_field_id' => 1002
+                'total_effort_field_id' => $total_effort_field_id,
+                'remaining_effort_field_id' => $remaining_effort_field_id
             ]
         )->once();
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                1001,
-                ['int', 'float', 'computed']
-            )
-            ->andReturn(null)
-            ->once();
 
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                1002,
-                ['int', 'float', 'computed']
-            )
-            ->andReturn(\Mockery::mock(\Tracker_FormElement_Field_Numeric::class))
-            ->once();
+        $this->method_builder->shouldReceive('buildMethodBasedOnEffort')->never();
 
         $semantic = $this->progress_builder->getSemantic($this->tracker);
 
         $this->assertFalse($semantic->isDefined());
-        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
-    }
-
-    public function testReturnsAnInvalidSemanticWhenRemainingEffortFieldCantBeFound(): void
-    {
-        $this->dao->shouldReceive('searchByTrackerId')->andReturn(
-            [
-                'total_effort_field_id' => 1001,
-                'remaining_effort_field_id' => 1002
-            ]
-        )->once();
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                1001,
-                ['int', 'float', 'computed']
-            )
-            ->andReturn(\Mockery::mock(\Tracker_FormElement_Field_Numeric::class))
-            ->once();
-
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                1002,
-                ['int', 'float', 'computed']
-            )
-            ->andReturn(null)
-            ->once();
-
-        $semantic = $this->progress_builder->getSemantic($this->tracker);
-
-        $this->assertFalse($semantic->isDefined());
-        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
-    }
-
-    public function testReturnsAnInvalidSemanticWhenTotalEffortAndRemainingEffortFieldAreTheSameField(): void
-    {
-        $this->dao->shouldReceive('searchByTrackerId')->andReturn(
-            [
-                'total_effort_field_id' => 1001,
-                'remaining_effort_field_id' => 1001
-            ]
-        )->once();
-
-        $semantic = $this->progress_builder->getSemantic($this->tracker);
-
-        $this->assertFalse($semantic->isDefined());
-        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
-    }
-
-    public function testReturnsAnInvalidSemanticIfAFieldIsNotNumeric(): void
-    {
-        $this->dao->shouldReceive('searchByTrackerId')->andReturn(
-            [
-                'total_effort_field_id' => 1001,
-                'remaining_effort_field_id' => 1002
-            ]
-        )->once();
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                1001,
-                ['int', 'float', 'computed']
-            )
-            ->andReturn(\Mockery::mock(\Tracker_FormElement_Field_Numeric::class))
-            ->once();
-
-        $this->form_element_factory->shouldReceive('getUsedFieldByIdAndType')
-            ->with(
-                $this->tracker,
-                1002,
-                ['int', 'float', 'computed']
-            )
-            ->andReturn(\Mockery::mock(\Tracker_FormElement_Field_Date::class))
-            ->once();
-
-        $semantic = $this->progress_builder->getSemantic($this->tracker);
-
-        $this->assertFalse($semantic->isDefined());
-        $this->assertTrue($semantic->getComputationMethod() instanceof InvalidMethod);
+        $this->assertInstanceOf(InvalidMethod::class, $semantic->getComputationMethod());
     }
 }

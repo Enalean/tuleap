@@ -67,4 +67,12 @@ final class InvalidMethodTest extends TestCase
             $method->saveSemanticForTracker(\Mockery::mock(\Tracker::class))
         );
     }
+
+    public function testItDoesNotDelete(): void
+    {
+        $method = new InvalidMethod("This is broken");
+        $this->assertFalse(
+            $method->deleteSemanticForTracker(\Mockery::mock(\Tracker::class))
+        );
+    }
 }

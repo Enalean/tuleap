@@ -208,4 +208,9 @@ class MethodBasedOnEffort implements IComputeProgression
             $this->remaining_effort_field->getId()
         );
     }
+
+    public function deleteSemanticForTracker(\Tracker $tracker): bool
+    {
+        return $this->dao->delete($tracker->getId());
+    }
 }
