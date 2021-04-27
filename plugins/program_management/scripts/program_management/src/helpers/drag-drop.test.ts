@@ -19,11 +19,6 @@
 
 import * as drag_drop from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
-import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
-import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
 
 describe(`drag-drop helper`, () => {
     describe(`isContainer()`, () => {
@@ -124,55 +119,5 @@ describe(`drag-drop helper`, () => {
                 true
             );
         });
-    });
-
-    it(`planFeatureInProgramIncrement()`, async () => {
-        const dropped_element = createElement();
-        dropped_element.setAttribute("data-element-id", "14");
-        const source_dropzone = createElement();
-        const target_dropzone = createElement();
-        target_dropzone.setAttribute("data-program-increment-id", "1");
-        target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
-        target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
-
-        const feature_planner = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
-        jest.spyOn(tlp, "put");
-
-        await drag_drop.planFeatureInProgramIncrement(
-            {
-                dropped_element,
-                source_dropzone,
-                target_dropzone,
-            } as SuccessfulDropCallbackParameter,
-            1,
-            14
-        );
-
-        expect(feature_planner).toHaveBeenCalledWith(1, 1234, [{ id: 14 }, { id: 12 }, { id: 13 }]);
-    });
-
-    it(`unplanFeature`, async () => {
-        const dropped_element = createElement();
-        dropped_element.setAttribute("data-element-id", "12");
-        dropped_element.setAttribute("data-program-increment-id", "1");
-        dropped_element.setAttribute("data-artifact-link-field-id", "1234");
-        dropped_element.setAttribute("data-planned-feature-ids", "12,13");
-        const source_dropzone = createElement();
-        const target_dropzone = createElement();
-
-        const feature_planner = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
-        jest.spyOn(tlp, "put");
-
-        await drag_drop.unplanFeature(
-            {
-                dropped_element,
-                source_dropzone,
-                target_dropzone,
-            } as SuccessfulDropCallbackParameter,
-            1,
-            12
-        );
-
-        expect(feature_planner).toHaveBeenCalledWith(1, 1234, [{ id: 13 }]);
     });
 });

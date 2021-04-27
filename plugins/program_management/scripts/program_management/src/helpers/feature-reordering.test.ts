@@ -19,6 +19,7 @@
 
 import {
     getFeaturePlanningChange,
+    getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement,
     getFeaturePlanningChangeInProgramIncrement,
     reorderFeatureInProgramBacklog,
     reorderFeatureInSameProgramIncrement,
@@ -307,7 +308,7 @@ describe("Feature Reordering", () => {
                     direction: "after",
                     compared_to: 117,
                 },
-                program_increment_id: 4,
+                to_program_increment_id: 4,
             });
         });
 
@@ -328,7 +329,7 @@ describe("Feature Reordering", () => {
                     direction: "after",
                     compared_to: 116,
                 },
-                program_increment_id: 4,
+                to_program_increment_id: 4,
             });
         });
 
@@ -349,7 +350,7 @@ describe("Feature Reordering", () => {
                     direction: "before",
                     compared_to: 116,
                 },
-                program_increment_id: 4,
+                to_program_increment_id: 4,
             });
         });
 
@@ -367,7 +368,110 @@ describe("Feature Reordering", () => {
             expect(getFeaturePlanningChangeInProgramIncrement(feature, null, [], 4)).toEqual({
                 feature: { id: 115 },
                 order: null,
-                program_increment_id: 4,
+                to_program_increment_id: 4,
+            });
+        });
+    });
+
+    describe("getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement", () => {
+        it("When sibling is null, Then we get a position after the last feature of the list", () => {
+            const feature: Feature = { id: 115 } as Feature;
+            const features = [feature, { id: 116 }, { id: 117 }] as Feature[];
+            const position = getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+                feature,
+                null,
+                features,
+                4,
+                18
+            );
+
+            expect(position).toEqual({
+                feature: { id: 115 },
+                order: {
+                    direction: "after",
+                    compared_to: 117,
+                },
+                from_program_increment_id: 4,
+                to_program_increment_id: 18,
+            });
+        });
+
+        it("When feature is moving between 2 features, Then we get a position after the first feature", () => {
+            const feature: Feature = { id: 115 } as Feature;
+            const sibling: Feature = { id: 117 } as Feature;
+            const features = [feature, { id: 116 }, sibling] as Feature[];
+            const position = getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+                feature,
+                sibling,
+                features,
+                4,
+                18
+            );
+
+            expect(position).toEqual({
+                feature: { id: 115 },
+                order: {
+                    direction: "after",
+                    compared_to: 116,
+                },
+                from_program_increment_id: 4,
+                to_program_increment_id: 18,
+            });
+        });
+
+        it("When feature is moving at the first place, Then we get a position before the first feature", () => {
+            const feature: Feature = { id: 115 } as Feature;
+            const sibling: Feature = { id: 116 } as Feature;
+            const features = [sibling, { id: 111 }, feature] as Feature[];
+            const position = getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+                feature,
+                sibling,
+                features,
+                4,
+                18
+            );
+
+            expect(position).toEqual({
+                feature: { id: 115 },
+                order: {
+                    direction: "before",
+                    compared_to: 116,
+                },
+                from_program_increment_id: 4,
+                to_program_increment_id: 18,
+            });
+        });
+
+        it("When sibling does not exist in the program increment, Then error is thrown", () => {
+            const feature: Feature = { id: 115 } as Feature;
+            const sibling: Feature = { id: 666 } as Feature;
+            const features = [feature] as Feature[];
+            expect(() =>
+                getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+                    feature,
+                    sibling,
+                    features,
+                    4,
+                    18
+                )
+            ).toThrowError("Cannot find feature with id #666");
+        });
+
+        it("When there are no features in program increment, Then FeatureReorder is null", () => {
+            const feature: Feature = { id: 115 } as Feature;
+            expect(
+                getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+                    feature,
+                    null,
+                    [],
+                    4,
+                    18
+                )
+            ).toEqual({
+                feature: { id: 115 },
+                order: null,
+                from_program_increment_id: 4,
+                to_program_increment_id: 18,
             });
         });
     });
@@ -442,7 +546,7 @@ describe("Feature Reordering", () => {
                     compared_to: 58,
                     direction: "after",
                 },
-                program_increment_id: 4,
+                to_program_increment_id: 4,
             };
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -487,7 +591,7 @@ describe("Feature Reordering", () => {
                     direction: "before",
                     compared_to: 56,
                 },
-                program_increment_id: 4,
+                to_program_increment_id: 4,
             };
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -528,7 +632,7 @@ describe("Feature Reordering", () => {
                     direction: "after",
                     compared_to: 58,
                 },
-                program_increment_id: 4,
+                to_program_increment_id: 4,
             };
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -576,7 +680,7 @@ describe("Feature Reordering", () => {
                     direction: "before",
                     compared_to: 56,
                 },
-                program_increment_id: 4,
+                to_program_increment_id: 4,
             };
 
             expect(context.commit).toHaveBeenCalledWith(

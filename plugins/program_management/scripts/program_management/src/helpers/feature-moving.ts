@@ -20,10 +20,14 @@
 import type { ActionContext } from "vuex";
 import type { State } from "../type";
 import type { HandleDropContextWithProgramId } from "./drag-drop";
-import { planFeatureInProgramIncrement as planFeature, unplanFeature } from "./drag-drop";
 import { moveElementFromProgramIncrementToTopBackLog } from "./ProgramIncrement/add-to-top-backlog";
 import { handleModalError } from "./error-handler";
-import { getFeaturePlanningChange } from "./feature-reordering";
+import {
+    getFeaturePlanningChange,
+    getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement,
+    getFeaturePlanningChangeInProgramIncrement,
+} from "./feature-reordering";
+import { planElementInProgramIncrement } from "./ProgramIncrement/Feature/feature-planner";
 
 export async function moveFeatureFromBacklogToProgramIncrement(
     context: ActionContext<State, State>,
@@ -36,14 +40,26 @@ export async function moveFeatureFromBacklogToProgramIncrement(
     }
     const element_id = parseInt(data_element_id, 10);
 
-    context.commit("moveFeatureFromBacklogToProgramIncrement", {
-        feature_id: element_id,
-        program_increment_id: plan_in_program_increment_id,
-    });
+    let sibling_feature = null;
+    if (handle_drop.next_sibling instanceof HTMLElement) {
+        sibling_feature = context.getters.getSiblingFeatureInProgramIncrement({
+            sibling: handle_drop.next_sibling,
+            program_increment_id: plan_in_program_increment_id,
+        });
+    }
+
+    const feature_planning_change = getFeaturePlanningChangeInProgramIncrement(
+        context.getters.getToBePlannedElementFromId(element_id),
+        sibling_feature,
+        context.getters.getFeaturesInProgramIncrement(plan_in_program_increment_id),
+        plan_in_program_increment_id
+    );
+
+    context.commit("moveFeatureFromBacklogToProgramIncrement", feature_planning_change);
 
     try {
         context.commit("startMoveElementInAProgramIncrement", element_id);
-        await planFeature(handle_drop, plan_in_program_increment_id, element_id);
+        await planElementInProgramIncrement(feature_planning_change);
     } catch (error) {
         await handleModalError(context, error);
     } finally {
@@ -114,19 +130,34 @@ export async function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
     }
     const element_id = parseInt(data_element_id, 10);
 
-    context.commit("moveFeatureFromProgramIncrementToAnotherProgramIncrement", {
-        feature_id: element_id,
-        from_program_increment_id: remove_from_program_increment_id,
-        to_program_increment_id: plan_in_program_increment_id,
-    });
+    let sibling_feature = null;
+    if (handle_drop.next_sibling instanceof HTMLElement) {
+        sibling_feature = context.getters.getSiblingFeatureInProgramIncrement({
+            sibling: handle_drop.next_sibling,
+            program_increment_id: plan_in_program_increment_id,
+        });
+    }
+
+    const feature_planning_change = getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+        context.getters.getFeatureInProgramIncrement({
+            feature_id: element_id,
+            program_increment_id: remove_from_program_increment_id,
+        }),
+        sibling_feature,
+        context.getters.getFeaturesInProgramIncrement(plan_in_program_increment_id),
+        remove_from_program_increment_id,
+        plan_in_program_increment_id
+    );
+
+    context.commit(
+        "moveFeatureFromProgramIncrementToAnotherProgramIncrement",
+        feature_planning_change
+    );
 
     try {
         context.commit("startMoveElementInAProgramIncrement", element_id);
 
-        await Promise.all([
-            unplanFeature(handle_drop, remove_from_program_increment_id, element_id),
-            planFeature(handle_drop, plan_in_program_increment_id, element_id),
-        ]);
+        await planElementInProgramIncrement(feature_planning_change);
     } catch (error) {
         await handleModalError(context, error);
     } finally {

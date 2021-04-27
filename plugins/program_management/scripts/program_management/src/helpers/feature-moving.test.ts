@@ -20,13 +20,13 @@
 import { createElement } from "./jest/create-dom-element";
 import * as tlp from "tlp";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as dragDrop from "./drag-drop";
 import type { HandleDropContextWithProgramId } from "./drag-drop";
 import type { ActionContext } from "vuex";
 import type { Feature, State } from "../type";
 import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 import {
     getFeatureInProgramIncrement,
+    getFeaturesInProgramIncrement,
     getProgramIncrementFromId,
     getSiblingFeatureFromProgramBacklog,
     getToBePlannedElementFromId,
@@ -37,6 +37,7 @@ import {
     moveFeatureFromProgramIncrementToBacklog,
 } from "./feature-moving";
 import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
+import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
 
 describe("FeatureMoving", () => {
     let context: ActionContext<State, State>;
@@ -57,6 +58,7 @@ describe("FeatureMoving", () => {
             getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
             getProgramIncrementFromId: getProgramIncrementFromId(context.state),
             getFeatureInProgramIncrement: getFeatureInProgramIncrement(context.state),
+            getFeaturesInProgramIncrement: getFeaturesInProgramIncrement(context.state),
             getSiblingFeatureFromProgramBacklog: getSiblingFeatureFromProgramBacklog(context.state),
         };
     });
@@ -83,9 +85,9 @@ describe("FeatureMoving", () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "125");
 
-            const put = jest.spyOn(tlp, "put");
-            mockFetchSuccess(put);
-            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(patch);
+            const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
             await moveFeatureFromBacklogToProgramIncrement(
                 context,
@@ -98,18 +100,17 @@ describe("FeatureMoving", () => {
             expect(context.commit).toHaveBeenCalledWith(
                 "moveFeatureFromBacklogToProgramIncrement",
                 {
-                    feature_id: 125,
-                    program_increment_id: 101,
+                    feature: { id: 125 },
+                    order: { compared_to: 12, direction: "after" },
+                    to_program_increment_id: 101,
                 }
             );
 
-            expect(plan_feature).toHaveBeenCalledWith(
-                {
-                    dropped_element,
-                },
-                101,
-                125
-            );
+            expect(plan_feature).toHaveBeenCalledWith({
+                feature: { id: 125 },
+                order: { compared_to: 12, direction: "after" },
+                to_program_increment_id: 101,
+            });
         });
 
         it(`When a error is thrown during plan elements, Then error is stored`, async () => {
@@ -118,13 +119,13 @@ describe("FeatureMoving", () => {
             const target_dropzone = createElement();
             target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
 
-            const put = jest.spyOn(tlp, "put");
-            mockFetchError(put, {
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },
             });
 
-            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
+            const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
             await moveFeatureFromBacklogToProgramIncrement(
                 context,
@@ -138,19 +139,17 @@ describe("FeatureMoving", () => {
             expect(context.commit).toHaveBeenCalledWith(
                 "moveFeatureFromBacklogToProgramIncrement",
                 {
-                    feature_id: 125,
-                    program_increment_id: 101,
+                    feature: { id: 125 },
+                    order: { compared_to: 12, direction: "after" },
+                    to_program_increment_id: 101,
                 }
             );
 
-            expect(plan_feature).toHaveBeenCalledWith(
-                {
-                    dropped_element,
-                    target_dropzone,
-                },
-                101,
-                125
-            );
+            expect(plan_feature).toHaveBeenCalledWith({
+                feature: { id: 125 },
+                order: { compared_to: 12, direction: "after" },
+                to_program_increment_id: 101,
+            });
 
             expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "404 Error");
         });
@@ -307,15 +306,14 @@ describe("FeatureMoving", () => {
             expect(context.commit).not.toHaveBeenCalled();
         });
 
-        it(`When feature is moving from increment to another increment, Then feature is unplanned and planned`, async () => {
+        it(`When feature is moving from increment to another increment, Then feature is planned in the other program increment`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
             const target_dropzone = createElement();
 
-            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
-            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
-            const put = jest.spyOn(tlp, "put");
-            mockFetchSuccess(put);
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(patch);
+            const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
             const handle_drop = {
                 dropped_element,
@@ -332,14 +330,19 @@ describe("FeatureMoving", () => {
             expect(context.commit).toHaveBeenCalledWith(
                 "moveFeatureFromProgramIncrementToAnotherProgramIncrement",
                 {
-                    feature_id: 12,
+                    feature: { id: 12 },
+                    order: null,
                     from_program_increment_id: 1,
                     to_program_increment_id: 2,
                 }
             );
 
-            expect(unplan_feature).toHaveBeenCalledWith(handle_drop, 1, 12);
-            expect(plan_feature).toHaveBeenCalledWith(handle_drop, 2, 12);
+            expect(plan_feature).toHaveBeenCalledWith({
+                feature: { id: 12 },
+                order: null,
+                from_program_increment_id: 1,
+                to_program_increment_id: 2,
+            });
         });
 
         it(`When feature are moving in the same program increment, Then nothing happen`, async () => {
@@ -348,8 +351,9 @@ describe("FeatureMoving", () => {
             const source_dropzone = createElement();
             const target_dropzone = createElement();
 
-            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
-            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(patch);
+            const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
             await moveFeatureFromProgramIncrementToAnotherProgramIncrement(
                 context,
@@ -363,7 +367,6 @@ describe("FeatureMoving", () => {
                 1
             );
 
-            expect(unplan_feature).not.toHaveBeenCalled();
             expect(plan_feature).not.toHaveBeenCalled();
         });
 
@@ -373,11 +376,10 @@ describe("FeatureMoving", () => {
             dropped_element.setAttribute("data-artifact-link-field-id", "1234");
             const target_dropzone = createElement();
 
-            const plan_feature = jest.spyOn(dragDrop, "planFeatureInProgramIncrement");
-            const unplan_feature = jest.spyOn(dragDrop, "unplanFeature");
+            const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
-            const put = jest.spyOn(tlp, "put");
-            mockFetchError(put, {
+            const patch = jest.spyOn(tlp, "patch");
+            mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },
             });
@@ -397,14 +399,19 @@ describe("FeatureMoving", () => {
             expect(context.commit).toHaveBeenCalledWith(
                 "moveFeatureFromProgramIncrementToAnotherProgramIncrement",
                 {
-                    feature_id: 12,
+                    feature: { id: 12 },
+                    order: null,
                     from_program_increment_id: 1,
                     to_program_increment_id: 2,
                 }
             );
 
-            expect(unplan_feature).toHaveBeenCalledWith(handle_drop, 1, 12);
-            expect(plan_feature).toHaveBeenCalledWith(handle_drop, 2, 12);
+            expect(plan_feature).toHaveBeenCalledWith({
+                feature: { id: 12 },
+                order: null,
+                from_program_increment_id: 1,
+                to_program_increment_id: 2,
+            });
 
             expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "404 Error");
         });

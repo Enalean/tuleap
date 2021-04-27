@@ -18,7 +18,6 @@
  */
 import type { HandleDragPayload } from "../type";
 import type { SuccessfulDropCallbackParameter } from "@tuleap/drag-and-drop";
-import { planElementInProgramIncrement } from "./ProgramIncrement/Feature/feature-planner";
 import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
 
 export interface FeatureToPlan {
@@ -89,78 +88,4 @@ export function checkAfterDrag(): void {
         dom_message.classList.remove("drop-not-accepted");
         dom_message.classList.add("drop-accepted");
     });
-}
-
-export async function planFeatureInProgramIncrement(
-    context: SuccessfulDropCallbackParameter,
-    plan_in_program_increment_id: number,
-    element_id: number
-): Promise<void> {
-    const feature_artifact_link_field_id = context.target_dropzone.dataset.artifactLinkFieldId;
-    if (!feature_artifact_link_field_id) {
-        return;
-    }
-
-    let features_id = context.target_dropzone.dataset.plannedFeatureIds;
-    if (!features_id) {
-        features_id = "";
-    }
-
-    const feature_to_plan = buildFeatureToPlan(features_id, element_id);
-    await planElementInProgramIncrement(
-        plan_in_program_increment_id,
-        parseInt(feature_artifact_link_field_id, 10),
-        feature_to_plan
-    );
-}
-
-export async function unplanFeature(
-    context: SuccessfulDropCallbackParameter,
-    remove_from_program_increment_id: number,
-    element_id: number
-): Promise<void> {
-    let features_id = context.dropped_element.dataset.plannedFeatureIds;
-    if (!features_id) {
-        features_id = "";
-    }
-
-    const feature_artifact_link_field_id = context.dropped_element.dataset.artifactLinkFieldId;
-    if (!feature_artifact_link_field_id) {
-        return;
-    }
-
-    const feature_to_unplan = buildFeatureToUnplan(features_id, element_id);
-    await planElementInProgramIncrement(
-        remove_from_program_increment_id,
-        parseInt(feature_artifact_link_field_id, 10),
-        feature_to_unplan
-    );
-}
-
-function buildFeatureToUnplan(existing_features: string, element_id: number): Array<FeatureToPlan> {
-    const feature_to_plan: Array<FeatureToPlan> = [];
-
-    const feature_list = existing_features.split(",");
-    feature_list.forEach((feature) => {
-        const feature_id = parseInt(feature, 10);
-        if (feature_id !== element_id) {
-            feature_to_plan.push({ id: feature_id });
-        }
-    });
-    return feature_to_plan;
-}
-
-function buildFeatureToPlan(existing_features: string, element_id: number): Array<FeatureToPlan> {
-    const feature_to_plan: Array<FeatureToPlan> = [];
-    feature_to_plan.push({ id: element_id });
-
-    if (existing_features === "") {
-        return feature_to_plan;
-    }
-
-    const feature_list = existing_features.split(",");
-    feature_list.forEach((feature) => {
-        feature_to_plan.push({ id: parseInt(feature, 10) });
-    });
-    return feature_to_plan;
 }

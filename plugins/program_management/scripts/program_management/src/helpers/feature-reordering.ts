@@ -31,7 +31,12 @@ export interface FeaturePlanningChange {
 }
 
 export interface FeaturePlanningChangeInProgramIncrement extends FeaturePlanningChange {
-    program_increment_id: number;
+    to_program_increment_id: number;
+}
+
+export interface FeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement
+    extends FeaturePlanningChangeInProgramIncrement {
+    from_program_increment_id: number;
 }
 
 export interface FeatureReorderPosition {
@@ -89,7 +94,22 @@ export function getFeaturePlanningChangeInProgramIncrement(
     return {
         feature,
         order: getFeatureReorderPosition(sibling, features_in_program_backlog),
-        program_increment_id,
+        to_program_increment_id: program_increment_id,
+    };
+}
+
+export function getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+    feature: Feature,
+    sibling: Feature | null,
+    features_in_program_backlog: Feature[],
+    from_program_increment_id: number,
+    to_program_increment_id: number
+): FeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement {
+    return {
+        feature,
+        order: getFeatureReorderPosition(sibling, features_in_program_backlog),
+        from_program_increment_id,
+        to_program_increment_id,
     };
 }
 
