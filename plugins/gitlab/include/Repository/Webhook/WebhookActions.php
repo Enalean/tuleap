@@ -30,6 +30,8 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookData;
 
 class WebhookActions
 {
@@ -49,16 +51,22 @@ class WebhookActions
      * @var PostMergeRequestWebhookActionProcessor
      */
     private $post_merge_request_action_processor;
+    /**
+     * @var TagPushWebhookActionProcessor
+     */
+    private $tag_push_webhook_action_processor;
 
     public function __construct(
         GitlabRepositoryDao $gitlab_repository_dao,
         PostPushWebhookActionProcessor $post_push_webhook_action_processor,
         PostMergeRequestWebhookActionProcessor $post_merge_request_action_processor,
+        TagPushWebhookActionProcessor $tag_push_webhook_action_processor,
         LoggerInterface $logger
     ) {
         $this->gitlab_repository_dao               = $gitlab_repository_dao;
         $this->post_push_webhook_action_processor  = $post_push_webhook_action_processor;
         $this->post_merge_request_action_processor = $post_merge_request_action_processor;
+        $this->tag_push_webhook_action_processor   = $tag_push_webhook_action_processor;
         $this->logger                              = $logger;
     }
 
@@ -79,6 +87,10 @@ class WebhookActions
 
         if ($webhook_data instanceof PostMergeRequestWebhookData) {
             $this->post_merge_request_action_processor->process($gitlab_repository, $webhook_data);
+        }
+
+        if ($webhook_data instanceof TagPushWebhookData) {
+            $this->tag_push_webhook_action_processor->process($gitlab_repository, $webhook_data);
         }
     }
 
@@ -102,6 +114,10 @@ class WebhookActions
         }
 
         if ($webhook_data instanceof PostMergeRequestWebhookData) {
+            return;
+        }
+
+        if ($webhook_data instanceof TagPushWebhookData) {
             return;
         }
 

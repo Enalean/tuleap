@@ -25,6 +25,7 @@ use Project;
 use Reference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 
 class GitlabReferenceBuilder
@@ -49,7 +50,8 @@ class GitlabReferenceBuilder
     {
         if (
             $keyword !== GitlabCommitReference::REFERENCE_NAME &&
-            $keyword !== GitlabMergeRequestReference::REFERENCE_NAME
+            $keyword !== GitlabMergeRequestReference::REFERENCE_NAME &&
+            $keyword !== GitlabTagReference::REFERENCE_NAME
         ) {
             return null;
         }
@@ -76,6 +78,12 @@ class GitlabReferenceBuilder
 
         if ($keyword === GitlabCommitReference::REFERENCE_NAME) {
             return new GitlabCommitReference(
+                $repository,
+                $project,
+                $item_id
+            );
+        } elseif ($keyword === GitlabTagReference::REFERENCE_NAME) {
+            return new GitlabTagReference(
                 $repository,
                 $project,
                 $item_id

@@ -18,11 +18,17 @@ msgstr "Fermée"
 msgid "GitLab"
 msgstr "GitLab"
 
+msgid "GitLab Tag"
+msgstr "Étiquette GitLab"
+
 msgid "GitLab commit"
 msgstr "Commit GitLab"
 
 msgid "GitLab merge request"
 msgstr "Demande de fusion GitLab"
+
+msgid "GitLab tag"
+msgstr "Étiquette GitLab"
 
 msgid "Merged"
 msgstr "Fusionnée"
@@ -49,6 +55,9 @@ msgstr "Référence vers un commit GitLab"
 
 msgid "Reference to a GitLab merge request"
 msgstr "Référence vers une demande de fusion GitLab"
+
+msgid "Reference to a GitLab tag"
+msgstr "Référence vers une étiquette GitLab"
 
 #, php-format
 msgid ""

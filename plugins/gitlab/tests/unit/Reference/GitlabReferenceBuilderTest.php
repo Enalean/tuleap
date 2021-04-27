@@ -205,4 +205,42 @@ class GitlabReferenceBuilderTest extends TestCase
         $this->assertSame('https://example.com/root/project01/-/merge_requests/123', $reference->getLink());
         $this->assertSame(101, $reference->getGroupId());
     }
+
+    public function testItReturnsTheTagReference(): void
+    {
+        $project = Project::buildForTest();
+
+        $this->reference_dao->shouldReceive('isAProjectReferenceExisting')
+            ->once()
+            ->with('gitlab_tag', 101)
+            ->andReturnFalse();
+
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->once()
+            ->with(
+                $project,
+                'root/project01'
+            )
+            ->andReturn(
+                new GitlabRepository(
+                    1,
+                    123456,
+                    'root/project01',
+                    '',
+                    'https://example.com/root/project01',
+                    new DateTimeImmutable()
+                )
+            );
+
+        $reference = $this->builder->buildGitlabReference(
+            $project,
+            'gitlab_tag',
+            'root/project01/v1.0.2'
+        );
+
+        $this->assertSame('gitlab_tag', $reference->getKeyword());
+        $this->assertSame('plugin_gitlab', $reference->getNature());
+        $this->assertSame('https://example.com/root/project01/-/tree/v1.0.2', $reference->getLink());
+        $this->assertSame(101, $reference->getGroupId());
+    }
 }

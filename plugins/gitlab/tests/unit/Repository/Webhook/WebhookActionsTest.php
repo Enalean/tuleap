@@ -34,6 +34,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
 
 final class WebhookActionsTest extends TestCase
 {
@@ -63,6 +64,10 @@ final class WebhookActionsTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestWebhookActionProcessor
      */
     private $post_merge_request_webhook_action_processor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagPushWebhookActionProcessor
+     */
+    private $tag_push_webhook_action_processor;
 
     protected function setUp(): void
     {
@@ -71,12 +76,14 @@ final class WebhookActionsTest extends TestCase
         $this->gitlab_repository_dao                       = Mockery::mock(GitlabRepositoryDao::class);
         $this->post_push_webhook_action_processor          = Mockery::mock(PostPushWebhookActionProcessor::class);
         $this->post_merge_request_webhook_action_processor = Mockery::mock(PostMergeRequestWebhookActionProcessor::class);
+        $this->tag_push_webhook_action_processor           = Mockery::mock(TagPushWebhookActionProcessor::class);
         $this->logger                                      = Mockery::mock(LoggerInterface::class);
 
         $this->actions = new WebhookActions(
             $this->gitlab_repository_dao,
             $this->post_push_webhook_action_processor,
             $this->post_merge_request_webhook_action_processor,
+            $this->tag_push_webhook_action_processor,
             $this->logger
         );
 
