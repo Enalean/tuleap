@@ -19,13 +19,7 @@
 
 import { patch } from "tlp";
 import type { FeaturePlanningChange } from "../feature-reordering";
-import type { Direction } from "../feature-reordering";
-
-interface OrderPositionForPatch {
-    readonly ids: number[];
-    readonly direction: Direction;
-    readonly compared_to: number;
-}
+import { formatOrderPositionForPatch } from "../order-position-for-patch-formatter";
 
 export async function moveElementFromProgramIncrementToTopBackLog(
     project_id: number,
@@ -42,20 +36,6 @@ export async function moveElementFromProgramIncrementToTopBackLog(
             order: formatOrderPositionForPatch(feature_moving),
         }),
     });
-}
-
-function formatOrderPositionForPatch(
-    reorder_position: FeaturePlanningChange
-): OrderPositionForPatch | null {
-    if (!reorder_position.order) {
-        return null;
-    }
-
-    return {
-        ids: [reorder_position.feature.id],
-        direction: reorder_position.order.direction,
-        compared_to: reorder_position.order.compared_to,
-    };
 }
 
 export async function reorderElementInTopBacklog(

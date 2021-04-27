@@ -48,6 +48,7 @@ describe("Actions", () => {
         let moveFeatureFromProgramIncrementToBacklog: jest.SpyInstance;
         let moveFeatureFromProgramIncrementToAnotherProgramIncrement: jest.SpyInstance;
         let reorderFeatureInProgramBacklog: jest.SpyInstance;
+        let reorderFeatureInSameProgramIncrement: jest.SpyInstance;
         beforeEach(() => {
             moveFeatureFromBacklogToProgramIncrement = jest.spyOn(
                 FeatureMoving,
@@ -64,6 +65,10 @@ describe("Actions", () => {
             reorderFeatureInProgramBacklog = jest.spyOn(
                 FeatureReordering,
                 "reorderFeatureInProgramBacklog"
+            );
+            reorderFeatureInSameProgramIncrement = jest.spyOn(
+                FeatureReordering,
+                "reorderFeatureInSameProgramIncrement"
             );
         });
         afterEach(() => {
@@ -94,6 +99,7 @@ describe("Actions", () => {
             expect(moveFeatureFromProgramIncrementToAnotherProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromProgramIncrementToBacklog).not.toHaveBeenCalled();
             expect(reorderFeatureInProgramBacklog).not.toHaveBeenCalled();
+            expect(reorderFeatureInSameProgramIncrement).not.toHaveBeenCalled();
         });
 
         it("When feature are moving from Program increment to backlog, Then FeatureMoving is called", async () => {
@@ -121,6 +127,7 @@ describe("Actions", () => {
             expect(moveFeatureFromProgramIncrementToAnotherProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromBacklogToProgramIncrement).not.toHaveBeenCalled();
             expect(reorderFeatureInProgramBacklog).not.toHaveBeenCalled();
+            expect(reorderFeatureInSameProgramIncrement).not.toHaveBeenCalled();
         });
 
         it("When feature are moving from Program increment to another Program Increment, Then FeatureMoving is called", async () => {
@@ -152,9 +159,10 @@ describe("Actions", () => {
             expect(moveFeatureFromBacklogToProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromProgramIncrementToBacklog).not.toHaveBeenCalled();
             expect(reorderFeatureInProgramBacklog).not.toHaveBeenCalled();
+            expect(reorderFeatureInSameProgramIncrement).not.toHaveBeenCalled();
         });
 
-        it(`When feature are moving in the same program increment, Then nothing happen`, async () => {
+        it(`When feature are moving in the same program increment, Then reorderFeatureInSameProgramIncrement is called`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
             dropped_element.setAttribute("data-program-increment-id", "1");
@@ -166,12 +174,20 @@ describe("Actions", () => {
             target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
             target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
 
-            await actions.handleDrop(context, {
+            const handle_drop = {
                 dropped_element,
                 source_dropzone,
                 target_dropzone,
                 program_id: 101,
-            } as HandleDropContextWithProgramId);
+            } as HandleDropContextWithProgramId;
+
+            await actions.handleDrop(context, handle_drop);
+
+            expect(reorderFeatureInSameProgramIncrement).toHaveBeenCalledWith(
+                context,
+                handle_drop,
+                1
+            );
 
             expect(moveFeatureFromProgramIncrementToAnotherProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromBacklogToProgramIncrement).not.toHaveBeenCalled();
@@ -197,6 +213,7 @@ describe("Actions", () => {
             expect(moveFeatureFromProgramIncrementToAnotherProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromBacklogToProgramIncrement).not.toHaveBeenCalled();
             expect(moveFeatureFromProgramIncrementToBacklog).not.toHaveBeenCalled();
+            expect(reorderFeatureInSameProgramIncrement).not.toHaveBeenCalled();
         });
     });
 

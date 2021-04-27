@@ -19,6 +19,7 @@
 import type { Feature, State } from "../type";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import type { FeatureIdWithProgramIncrementId } from "./mutations";
+import type { SiblingFeatureHTMLElementWithProgramIncrement } from "../helpers/feature-reordering";
 
 export const isProgramIncrementAlreadyAdded = (state: State) => (increment_id: number): boolean => {
     return (
@@ -96,4 +97,19 @@ export const getSiblingFeatureFromProgramBacklog = (state: State) => (
     }
 
     return getToBePlannedElementFromId(state)(parseInt(sibling_id, 10));
+};
+
+export const getSiblingFeatureInProgramIncrement = (state: State) => (
+    sibling_with_pi: SiblingFeatureHTMLElementWithProgramIncrement
+): Feature | null => {
+    const sibling_id = sibling_with_pi.sibling.dataset.elementId;
+
+    if (!sibling_id) {
+        return null;
+    }
+
+    return getFeatureInProgramIncrement(state)({
+        feature_id: parseInt(sibling_id, 10),
+        program_increment_id: sibling_with_pi.program_increment_id,
+    });
 };
