@@ -94,7 +94,9 @@ import TaskHeader from "./Task/TaskHeader.vue";
 import ScrollingArea from "./ScrollingArea.vue";
 import BarPopover from "./Task/BarPopover.vue";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
-import { State } from "vuex-class";
+import { namespace, State } from "vuex-class";
+
+const tasks = namespace("tasks");
 
 @Component({
     components: {
@@ -113,7 +115,7 @@ export default class GanttBoard extends Vue {
         time_period: TimePeriodHeader;
     };
 
-    @Prop({ required: true })
+    @tasks.State
     readonly tasks!: Task[];
 
     @State

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TasksState } from "./tasks/type";
+import type { RootState } from "../type";
+import type { TasksState } from "./type";
+import type { Module } from "vuex";
+import * as mutations from "./tasks-mutations";
+import * as actions from "./tasks-actions";
 
-export interface State {
-    readonly locale_bcp47: string;
-}
-
-export interface RootState extends State {
-    readonly tasks: TasksState;
+export function createTaskModule(): Module<TasksState, RootState> {
+    return {
+        namespaced: true,
+        state: {
+            tasks: [],
+            is_loading: true,
+            should_display_empty_state: false,
+            should_display_error_state: false,
+            error_message: "",
+        },
+        mutations,
+        actions,
+    };
 }

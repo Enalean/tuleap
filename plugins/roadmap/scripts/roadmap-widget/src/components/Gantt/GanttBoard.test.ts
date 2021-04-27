@@ -27,6 +27,8 @@ import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import ScrollingArea from "./ScrollingArea.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { RootState } from "../../store/type";
+import type { TasksState } from "../../store/tasks/type";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -47,17 +49,19 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
-                tasks: [
-                    { id: 1, dependencies: {} },
-                    { id: 2, dependencies: {} },
-                    { id: 3, dependencies: {} },
-                ] as Task[],
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                    },
+                        tasks: {
+                            tasks: [
+                                { id: 1, dependencies: {} },
+                                { id: 2, dependencies: {} },
+                                { id: 3, dependencies: {} },
+                            ] as Task[],
+                        } as TasksState,
+                    } as RootState,
                 }),
             },
         });
@@ -69,16 +73,18 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
-                tasks: [
-                    { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
-                    { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
-                ] as Task[],
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                    },
+                        tasks: {
+                            tasks: [
+                                { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
+                                { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
+                            ] as Task[],
+                        } as TasksState,
+                    } as RootState,
                 }),
             },
         });
@@ -107,16 +113,18 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
-                tasks: [
-                    { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
-                    { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
-                ] as Task[],
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                    },
+                        tasks: {
+                            tasks: [
+                                { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
+                                { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
+                            ] as Task[],
+                        } as TasksState,
+                    } as RootState,
                 }),
             },
         });
@@ -137,16 +145,18 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
-                tasks: [
-                    { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
-                    { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
-                ] as Task[],
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                    },
+                        tasks: {
+                            tasks: [
+                                { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
+                                { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
+                            ] as Task[],
+                        } as TasksState,
+                    } as RootState,
                 }),
             },
         });
@@ -178,17 +188,19 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
-                tasks: [
-                    { id: 1, dependencies: {} },
-                    { id: 2, dependencies: {} },
-                    { id: 3, dependencies: {} },
-                ] as Task[],
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                    },
+                        tasks: {
+                            tasks: [
+                                { id: 1, dependencies: {} },
+                                { id: 2, dependencies: {} },
+                                { id: 3, dependencies: {} },
+                            ] as Task[],
+                        } as TasksState,
+                    } as RootState,
                 }),
             },
         });
@@ -206,17 +218,19 @@ describe("GanttBoard", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
-                tasks: [
-                    { id: 1, dependencies: {} },
-                    { id: 2, dependencies: {} },
-                    { id: 3, dependencies: {} },
-                ] as Task[],
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                    },
+                        tasks: {
+                            tasks: [
+                                { id: 1, dependencies: {} },
+                                { id: 2, dependencies: {} },
+                                { id: 3, dependencies: {} },
+                            ] as Task[],
+                        } as TasksState,
+                    } as RootState,
                 }),
             },
         });

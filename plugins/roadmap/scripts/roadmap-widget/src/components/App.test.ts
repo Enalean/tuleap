@@ -22,37 +22,55 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
-import * as tlp from "tlp";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
 import type { Task } from "../type";
 import LoadingState from "./LoadingState.vue";
-
-jest.mock("tlp");
+import type { RootState } from "../store/type";
+import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { TasksState } from "../store/tasks/type";
 
 describe("App", () => {
-    async function mountComponent(): Promise<Wrapper<App>> {
-        const wrapper = shallowMount(App, {
+    async function mountComponent(tasks: TasksState = {} as TasksState): Promise<Wrapper<App>> {
+        return shallowMount(App, {
             propsData: {
                 roadmap_id: 123,
                 visible_natures: [],
             },
             localVue: await createRoadmapLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks,
+                    } as RootState,
+                }),
+            },
         });
-
-        // wait for load & parse response
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-
-        return wrapper;
     }
 
-    it("Displays an empty state", async () => {
-        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([]);
+    it("Displays a loading state", async () => {
+        const wrapper = await mountComponent({
+            tasks: [],
+            is_loading: true,
+            should_display_empty_state: false,
+            should_display_error_state: false,
+            error_message: "",
+        });
 
-        const wrapper = await mountComponent();
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
+    });
+
+    it("Displays an empty state", async () => {
+        const wrapper = await mountComponent({
+            tasks: [],
+            is_loading: false,
+            should_display_empty_state: true,
+            should_display_error_state: false,
+            error_message: "",
+        });
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
@@ -60,18 +78,14 @@ describe("App", () => {
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
     });
 
-    it("Displays an error state for a 400", async () => {
-        const recursive_get = jest.spyOn(tlp, "recursiveGet");
-        mockFetchError(recursive_get, {
-            status: 400,
-            error_json: {
-                error: {
-                    i18n_error_message: "Missing timeframe",
-                },
-            },
+    it("Displays an error state with a message", async () => {
+        const wrapper = await mountComponent({
+            tasks: [],
+            is_loading: false,
+            should_display_empty_state: false,
+            should_display_error_state: true,
+            error_message: "Missing timeframe",
         });
-
-        const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
@@ -82,32 +96,14 @@ describe("App", () => {
         expect(error_state.props("message")).toBe("Missing timeframe");
     });
 
-    it.each([[403], [404]])("Displays an empty state for a %i", async (status) => {
-        const recursive_get = jest.spyOn(tlp, "recursiveGet");
-        mockFetchError(recursive_get, {
-            status,
+    it("Displays an error state with a message even if there is no error message", async () => {
+        const wrapper = await mountComponent({
+            tasks: [],
+            is_loading: false,
+            should_display_empty_state: false,
+            should_display_error_state: true,
+            error_message: "",
         });
-
-        const wrapper = await mountComponent();
-
-        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
-        expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(GanttBoard).exists()).toBe(false);
-        expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
-    });
-
-    it("Displays a generic error state for a 500", async () => {
-        const recursive_get = jest.spyOn(tlp, "recursiveGet");
-        mockFetchError(recursive_get, {
-            status: 500,
-            error_json: {
-                error: {
-                    message: "Internal Server Error",
-                },
-            },
-        });
-
-        const wrapper = await mountComponent();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
@@ -119,13 +115,16 @@ describe("App", () => {
     });
 
     it("Displays a gantt board with tasks", async () => {
-        const tasks = [
-            { id: 1, start: new Date(2020, 3, 15), end: null },
-            { id: 2, start: new Date(2020, 4, 15), end: null },
-        ] as Task[];
-        jest.spyOn(tlp, "recursiveGet").mockResolvedValue(tasks);
-
-        const wrapper = await mountComponent();
+        const wrapper = await mountComponent({
+            tasks: [
+                { id: 1, start: new Date(2020, 3, 15), end: null },
+                { id: 2, start: new Date(2020, 4, 15), end: null },
+            ] as Task[],
+            is_loading: false,
+            should_display_empty_state: false,
+            should_display_error_state: false,
+            error_message: "",
+        });
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
@@ -133,6 +132,5 @@ describe("App", () => {
 
         const gantt_board = wrapper.findComponent(GanttBoard);
         expect(gantt_board.exists()).toBe(true);
-        expect(gantt_board.props("tasks")).toStrictEqual(tasks);
     });
 });
