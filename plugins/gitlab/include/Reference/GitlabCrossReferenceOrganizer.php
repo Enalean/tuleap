@@ -30,6 +30,7 @@ use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Reference\AdditionalBadgePresenter;
@@ -98,7 +99,8 @@ class GitlabCrossReferenceOrganizer
         foreach ($by_nature_organizer->getCrossReferencePresenters() as $cross_reference_presenter) {
             if (
                 $cross_reference_presenter->type === GitlabCommitReference::NATURE_NAME ||
-                $cross_reference_presenter->type === GitlabMergeRequestReference::NATURE_NAME
+                $cross_reference_presenter->type === GitlabMergeRequestReference::NATURE_NAME ||
+                $cross_reference_presenter->type === GitlabTagReference::NATURE_NAME
             ) {
                 $this->moveGitlabCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference_presenter);
             }
@@ -132,6 +134,14 @@ class GitlabCrossReferenceOrganizer
 
         if ($cross_reference_presenter->type === GitlabCommitReference::NATURE_NAME) {
             $this->moveGitlabCommitCrossReferenceToRepositorySection(
+                $by_nature_organizer,
+                $cross_reference_presenter,
+                $project,
+                $repository,
+                $item_id
+            );
+        } elseif ($cross_reference_presenter->type === GitlabTagReference::NATURE_NAME) {
+            $this->moveGitlabTagCrossReferenceToRepositorySection(
                 $by_nature_organizer,
                 $cross_reference_presenter,
                 $project,
@@ -210,6 +220,19 @@ class GitlabCrossReferenceOrganizer
                     $this->getCreatedOnPresenter($gitlab_merge_request, $user)
                 )
                 ->withAdditionalBadges($additional_badge_presenters),
+            $project->getUnixNameLowerCase() . '/' . $repository->getName()
+        );
+    }
+
+    private function moveGitlabTagCrossReferenceToRepositorySection(
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
+        CrossReferencePresenter $cross_reference_presenter,
+        Project $project,
+        GitlabRepository $repository,
+        string $tag_name
+    ): void {
+        $by_nature_organizer->moveCrossReferenceToSection(
+            $cross_reference_presenter->withTitle($tag_name, null),
             $project->getUnixNameLowerCase() . '/' . $repository->getName()
         );
     }
