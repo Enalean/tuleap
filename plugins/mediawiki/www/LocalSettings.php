@@ -218,8 +218,6 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $GLOBALS['sys_use_ssl']        = (bool) ForgeConfig::get('sys_https_host');
     $GLOBALS['sys_default_domain'] = forge_get_config('web_host');
     $GLOBALS['sys_custom_path']    = forge_get_config('custom_path');
-    $GLOBALS['gfwww']              = $gfwww;
-    $GLOBALS['gfplugins']          = $gfplugins;
     $GLOBALS['sys_lang']           = forge_get_config('default_language');
     $GLOBALS['sys_urlroot']        = forge_get_config('url_root');
     $GLOBALS['sys_session_key']    = forge_get_config('session_key');
