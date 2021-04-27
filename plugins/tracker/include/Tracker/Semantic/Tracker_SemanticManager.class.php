@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
@@ -126,10 +127,14 @@ class Tracker_SemanticManager
             Tracker_FormElementFactory::instance()
         );
 
-        $semantic_timeframe = $semantic_timeframe_builder->getSemantic($this->tracker);
-        $semantic_progress  = (new SemanticProgressBuilder(
-            new SemanticProgressDao(),
-            \Tracker_FormElementFactory::instance()
+        $semantic_timeframe    = $semantic_timeframe_builder->getSemantic($this->tracker);
+        $semantic_progress_dao = new SemanticProgressDao();
+        $semantic_progress     = (new SemanticProgressBuilder(
+            $semantic_progress_dao,
+            new MethodBuilder(
+                \Tracker_FormElementFactory::instance(),
+                $semantic_progress_dao
+            )
         ))->getSemantic($this->tracker);
 
         $semantics->add($semantic_timeframe);

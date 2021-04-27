@@ -67,4 +67,12 @@ final class MethodNotConfiguredTest extends TestCase
             $method->saveSemanticForTracker(\Mockery::mock(\Tracker::class))
         );
     }
+
+    public function testItDoesNotDelete(): void
+    {
+        $method = new MethodNotConfigured();
+        $this->assertFalse(
+            $method->deleteSemanticForTracker(\Mockery::mock(\Tracker::class))
+        );
+    }
 }

@@ -539,6 +539,9 @@ msgstr "Une erreur est survenue empechant la copie de l'artefact #%1$s"
 msgid "An error occured while creating the tracker."
 msgstr "Une erreur est survenue lors de la création de l'outil de suivi."
 
+msgid "An error occurred while deleting the semantic"
+msgstr "Une erreur est survenue lors de suppression de la sémantique"
+
 #, php-format
 msgid "An error occurred while trying to delete the tracker %s"
 msgstr "Une erreur est survenue lors de la suppression de l'outil de suivi %s"
@@ -921,6 +924,9 @@ msgstr "Enfants"
 
 msgid "Choose a field..."
 msgstr "Choisir un champ ..."
+
+msgid "Choose a method..."
+msgstr "Choisir une méthode ..."
 
 msgid "Choose values"
 msgstr "Choisir les valeurs"
@@ -2315,6 +2321,9 @@ msgstr ""
 msgid "Promote %s in the +New dropdown across the project"
 msgstr "Promouvoir %s dans le menu déroulant \"+ Nouveau\" dans tout le projet"
 
+msgid "Provided computation method does not exist"
+msgstr "La méthode de calcul fournie n'existe pas"
+
 msgid "Provides a textbox containing a list of values, with autocompletion"
 msgstr "Un champ texte contenant une liste de valeurs, avec auto-complétion"
 
@@ -2358,6 +2367,9 @@ msgstr "Cet artefact n'est pas référencé, et n'est pas source de références
 
 msgid "Referencing {{ artifact_xref }}"
 msgstr "Référençant {{ artifact_xref }}"
+
+msgid "Remaining effort"
+msgstr "Effort restant"
 
 msgid "Remaining effort cannot be greater than total effort."
 msgstr "L'effort restant ne peux pas être supérieur à l'effort total."
@@ -2514,6 +2526,12 @@ msgstr "Sélectionner la valeur par défaut"
 
 msgid "Selectbox"
 msgstr "Liste de choix"
+
+msgid "Semantic has been deleted successfully"
+msgstr "La sémantique a été supprimée avec succès"
+
+msgid "Semantic has been saved successfully"
+msgstr "La sémantique a été sauvegardée avec succès"
 
 msgid "Semantic is properly configured"
 msgstr "La sémantique est correctement configurée"
@@ -2845,6 +2863,9 @@ msgstr "Le changeset n'a pas pu être sauvegardé."
 
 msgid "The comment cannot be stored."
 msgstr "Le commentaire n'a pas pu être sauvegardé."
+
+msgid "The computation of the progression will be"
+msgstr "Le calcul de la progression sera"
 
 #, php-format
 msgid "The contributor/assignee is now: %1$s"
@@ -3593,12 +3614,6 @@ msgstr ""
 "Cette sémantique est seulement utilisée dans %s pour le moment. À plus long "
 "terme, nous prévoyons de l'utiliser dans %s."
 
-msgid ""
-"This semantic is under construction, it is not possible to define it yet."
-msgstr ""
-"Cette sémantique est en cours de construction, il n'est pas encore possible "
-"de la définir."
-
 msgid "This semantic is unused at the moment."
 msgstr "Cette sémantique est inutilisée pour le moment."
 
@@ -3669,6 +3684,9 @@ msgstr "Passerelle basée sur un jeton d'authentification"
 
 msgid "Tooltip"
 msgstr "Tooltip"
+
+msgid "Total effort"
+msgstr "Effort total"
 
 msgid "Total effort cannot be negative."
 msgstr "L'effort total ne peux pas être négatif."

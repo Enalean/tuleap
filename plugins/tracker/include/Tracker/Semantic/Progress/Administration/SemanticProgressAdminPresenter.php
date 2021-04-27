@@ -22,7 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
-class SemanticProgressAdminPresenter
+use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
+
+/**
+ * @psalm-immutable
+ */
+final class SemanticProgressAdminPresenter
 {
     /**
      * @var string
@@ -32,14 +37,63 @@ class SemanticProgressAdminPresenter
      * @var string
      */
     public $semantic_usages_description;
+    /**
+     * @var bool
+     */
+    public $is_semantic_defined;
+    /**
+     * @var string
+     */
+    public $updater_url;
+    /**
+     * @var string
+     */
+    public $current_method;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
+    /**
+     * @var array
+     */
+    public $total_effort_options;
+    /**
+     * @var array
+     */
+    public $remaining_effort_options;
+    /**
+     * @var array
+     */
+    public $available_computation_methods;
+    /**
+     * @var bool
+     */
+    public $is_method_effort_based;
 
-    public function __construct(\Tracker $tracker, string $semantic_usages_description)
-    {
-        $this->semantic_usages_description = $semantic_usages_description;
-        $this->tracker_semantic_admin_url  = TRACKER_BASE_URL . '/?' . http_build_query(
+    public function __construct(
+        \Tracker $tracker,
+        string $semantic_usages_description,
+        bool $is_semantic_defined,
+        string $updater_url,
+        string $current_method,
+        \CSRFSynchronizerToken $csrf_token,
+        array $total_effort_options,
+        array $remaining_effort_options,
+        array $available_computation_methods
+    ) {
+        $this->semantic_usages_description   = $semantic_usages_description;
+        $this->is_semantic_defined           = $is_semantic_defined;
+        $this->updater_url                   = $updater_url;
+        $this->current_method                = $current_method;
+        $this->csrf_token                    = $csrf_token;
+        $this->total_effort_options          = $total_effort_options;
+        $this->remaining_effort_options      = $remaining_effort_options;
+        $this->available_computation_methods = $available_computation_methods;
+        $this->is_method_effort_based        = $current_method === MethodBasedOnEffort::getMethodName();
+        $this->tracker_semantic_admin_url    = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
-                'func'    => 'admin-semantic'
+                'func' => 'admin-semantic'
             ]
         );
     }
