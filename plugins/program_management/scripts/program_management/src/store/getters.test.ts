@@ -162,4 +162,49 @@ describe("Getters", () => {
             expect(sibling).toEqual({ id: 14 });
         });
     });
+
+    describe("getSiblingFeatureInProgramIncrement", () => {
+        it("When sibling has no data element id, Then null is returned", () => {
+            const state = {} as State;
+
+            const sibling = getters.getSiblingFeatureInProgramIncrement(state)({
+                sibling: createElement(),
+                program_increment_id: 15,
+            });
+            expect(sibling).toBeNull();
+        });
+
+        it("When sibling does not exist in program increment, Then error is thrown", () => {
+            const next_sibling = createElement() as HTMLDivElement;
+            next_sibling.setAttribute("data-element-id", "14");
+
+            const state = {
+                program_increments: [{ id: 15, features: [] as Feature[] } as ProgramIncrement],
+            } as State;
+
+            expect(() =>
+                getters.getSiblingFeatureInProgramIncrement(state)({
+                    sibling: next_sibling,
+                    program_increment_id: 15,
+                })
+            ).toThrowError("Could not find feature with id #14 in program increment #15");
+        });
+
+        it("When sibling exists, Then Feature is returned", () => {
+            const next_sibling = createElement() as HTMLDivElement;
+            next_sibling.setAttribute("data-element-id", "14");
+
+            const state = {
+                program_increments: [
+                    { id: 15, features: [{ id: 14 }] as Feature[] } as ProgramIncrement,
+                ],
+            } as State;
+
+            const feature = getters.getSiblingFeatureInProgramIncrement(state)({
+                sibling: next_sibling,
+                program_increment_id: 15,
+            });
+            expect(feature).toEqual({ id: 14 });
+        });
+    });
 });

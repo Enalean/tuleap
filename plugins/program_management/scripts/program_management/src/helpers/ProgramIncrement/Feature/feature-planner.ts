@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { put } from "tlp";
+import { patch, put } from "tlp";
 import type { FeatureToPlan } from "../../drag-drop";
+import type { FeaturePlanningChangeInProgramIncrement } from "../../feature-reordering";
+import { formatOrderPositionForPatch } from "../../order-position-for-patch-formatter";
 
 export async function planElementInProgramIncrement(
     feature_id: number,
@@ -34,4 +36,34 @@ export async function planElementInProgramIncrement(
             comment: { body: "", format: "text" },
         }),
     });
+}
+export async function reorderElementInProgramIncrement(
+    feature_position: FeaturePlanningChangeInProgramIncrement
+): Promise<void> {
+    const order_format = formatOrderPositionForPatch(feature_position);
+
+    if (!order_format) {
+        throw new Error(
+            "Cannot reorder element #" +
+                feature_position.feature.id +
+                " in program increment #" +
+                feature_position.program_increment_id +
+                " because order is null"
+        );
+    }
+
+    await patch(
+        `/api/v1/program_increment/${encodeURIComponent(
+            feature_position.program_increment_id
+        )}/content`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                add: [],
+                order: order_format,
+            }),
+        }
+    );
 }

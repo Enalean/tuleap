@@ -23,10 +23,15 @@ import type { State } from "../type";
 import type { HandleDropContextWithProgramId } from "./drag-drop";
 import { reorderElementInTopBacklog } from "./ProgramIncrement/add-to-top-backlog";
 import { handleModalError } from "./error-handler";
+import { reorderElementInProgramIncrement } from "./ProgramIncrement/Feature/feature-planner";
 
 export interface FeaturePlanningChange {
     readonly feature: Feature;
     readonly order: FeatureReorderPosition | null;
+}
+
+export interface FeaturePlanningChangeInProgramIncrement extends FeaturePlanningChange {
+    program_increment_id: number;
 }
 
 export interface FeatureReorderPosition {
@@ -37,6 +42,11 @@ export interface FeatureReorderPosition {
 export enum Direction {
     BEFORE = "before",
     AFTER = "after",
+}
+
+export interface SiblingFeatureHTMLElementWithProgramIncrement {
+    sibling: HTMLElement;
+    program_increment_id: number;
 }
 
 function getFeatureReorderPosition(
@@ -70,28 +80,41 @@ export function getFeaturePlanningChange(
     };
 }
 
-function getFeatureToCompareWith(
+export function getFeaturePlanningChangeInProgramIncrement(
+    feature: Feature,
+    sibling: Feature | null,
     features_in_program_backlog: Feature[],
+    program_increment_id: number
+): FeaturePlanningChangeInProgramIncrement {
+    return {
+        feature,
+        order: getFeatureReorderPosition(sibling, features_in_program_backlog),
+        program_increment_id,
+    };
+}
+
+function getFeatureToCompareWith(
+    features_to_compare: Feature[],
     sibling: Feature
 ): { direction: Direction; compared_to: number } {
-    const index = features_in_program_backlog.findIndex(
+    const index = features_to_compare.findIndex(
         (column_feature) => column_feature.id === sibling.id
     );
 
     if (index === -1) {
-        throw new Error("Cannot find feature with id #" + sibling.id + " in program backlog.");
+        throw new Error("Cannot find feature with id #" + sibling.id);
     }
 
     if (index === 0) {
         return {
             direction: Direction.BEFORE,
-            compared_to: features_in_program_backlog[0].id,
+            compared_to: features_to_compare[0].id,
         };
     }
 
     return {
         direction: Direction.AFTER,
-        compared_to: features_in_program_backlog[index - 1].id,
+        compared_to: features_to_compare[index - 1].id,
     };
 }
 
@@ -122,6 +145,47 @@ export async function reorderFeatureInProgramBacklog(
         context.commit("startMoveElementInAProgramIncrement", element_id);
 
         await reorderElementInTopBacklog(handle_drop.program_id, feature_planning_change);
+    } catch (error) {
+        await handleModalError(context, error);
+    } finally {
+        context.commit("finishMoveElement", element_id);
+    }
+}
+
+export async function reorderFeatureInSameProgramIncrement(
+    context: ActionContext<State, State>,
+    handle_drop: HandleDropContextWithProgramId,
+    program_increment_id: number
+): Promise<void> {
+    const data_element_id = handle_drop.dropped_element.dataset.elementId;
+    if (!data_element_id) {
+        return;
+    }
+    let sibling_feature = null;
+    if (handle_drop.next_sibling instanceof HTMLElement) {
+        sibling_feature = context.getters.getSiblingFeatureInProgramIncrement({
+            sibling: handle_drop.next_sibling,
+            program_increment_id,
+        });
+    }
+
+    const element_id = parseInt(data_element_id, 10);
+    const feature_planning_change = getFeaturePlanningChangeInProgramIncrement(
+        context.getters.getFeatureInProgramIncrement({
+            feature_id: element_id,
+            program_increment_id,
+        }),
+        sibling_feature,
+        context.getters.getFeaturesInProgramIncrement(program_increment_id),
+        program_increment_id
+    );
+
+    context.commit("changeFeaturePositionInSameProgramIncrement", feature_planning_change);
+
+    try {
+        context.commit("startMoveElementInAProgramIncrement", element_id);
+
+        await reorderElementInProgramIncrement(feature_planning_change);
     } catch (error) {
         await handleModalError(context, error);
     } finally {

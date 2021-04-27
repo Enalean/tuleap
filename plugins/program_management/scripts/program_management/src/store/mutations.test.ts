@@ -484,4 +484,89 @@ describe("Mutations", () => {
             expect(state.program_increments[0].features).toEqual([]);
         });
     });
+
+    describe("changeFeaturePositionInSameProgramIncrement", () => {
+        it("When order does not exist, Then error is thrown", () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [{ id: 66 }] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            expect(() =>
+                mutations.changeFeaturePositionInSameProgramIncrement(state, {
+                    program_increment_id: 1,
+                    feature: { id: 66 } as Feature,
+                    order: null,
+                })
+            ).toThrowError("No order exists in feature position");
+        });
+
+        it("When sibling does not exist, Then nothing happens", () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [{ id: 66 }] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.changeFeaturePositionInSameProgramIncrement(state, {
+                program_increment_id: 1,
+                feature: { id: 66 } as Feature,
+                order: { compared_to: 9999, direction: Direction.BEFORE },
+            });
+
+            expect(state.program_increments[0].features).toEqual([{ id: 66 }]);
+        });
+
+        it("When direction is before, Then feature is moved before sibling", () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [{ id: 14 }, { id: 666 }, { id: 569 }] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.changeFeaturePositionInSameProgramIncrement(state, {
+                program_increment_id: 1,
+                feature: { id: 569 } as Feature,
+                order: { compared_to: 14, direction: Direction.BEFORE },
+            });
+
+            expect(state.program_increments[0].features).toEqual([
+                { id: 569 },
+                { id: 14 },
+                { id: 666 },
+            ]);
+        });
+        it("When direction is after, Then feature is moved after sibling", () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [{ id: 14 }, { id: 666 }, { id: 569 }] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.changeFeaturePositionInSameProgramIncrement(state, {
+                program_increment_id: 1,
+                feature: { id: 14 } as Feature,
+                order: { compared_to: 569, direction: Direction.AFTER },
+            });
+
+            expect(state.program_increments[0].features).toEqual([
+                { id: 666 },
+                { id: 569 },
+                { id: 14 },
+            ]);
+        });
+    });
 });

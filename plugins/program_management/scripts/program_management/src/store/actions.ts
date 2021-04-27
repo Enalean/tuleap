@@ -25,7 +25,10 @@ import { getToBePlannedElements } from "../helpers/ToBePlanned/element-to-plan-r
 import { getFeatures } from "../helpers/ProgramIncrement/Feature/feature-retriever";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 import { getLinkedUserStoriesToFeature } from "../helpers/UserStories/user-stories-retriever";
-import { reorderFeatureInProgramBacklog } from "../helpers/feature-reordering";
+import {
+    reorderFeatureInProgramBacklog,
+    reorderFeatureInSameProgramIncrement,
+} from "../helpers/feature-reordering";
 import {
     moveFeatureFromBacklogToProgramIncrement,
     moveFeatureFromProgramIncrementToAnotherProgramIncrement,
@@ -73,6 +76,20 @@ export async function handleDrop(
             parseInt(plan_in_program_increment_id, 10),
             parseInt(remove_from_program_increment_id, 10)
         );
+        return;
+    }
+
+    if (
+        plan_in_program_increment_id &&
+        remove_from_program_increment_id &&
+        plan_in_program_increment_id === remove_from_program_increment_id
+    ) {
+        await reorderFeatureInSameProgramIncrement(
+            context,
+            handle_drop,
+            parseInt(plan_in_program_increment_id, 10)
+        );
+
         return;
     }
 
