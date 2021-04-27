@@ -861,6 +861,23 @@
           </element>
         </choice>
       </group>
+      <group>
+        <attribute name="type">
+          <value>progress</value>
+        </attribute>
+        <group>
+          <element name="total_effort_field">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+          <element name="remaining_effort_field">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </group>
+      </group>
     </choice>
   </define>
   <define name="reportContent">

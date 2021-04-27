@@ -73,6 +73,16 @@ class SemanticProgressBuilder
         int $total_effort_field_id,
         int $remaining_effort_field_id
     ): SemanticProgress {
+        if ($total_effort_field_id === $remaining_effort_field_id) {
+            return $this->getInvalidSemanticProgress(
+                $tracker,
+                dgettext(
+                    'tuleap-tracker',
+                    'Progress semantic is not properly configured: total effort and remaining effort fields have to be two different fields.'
+                )
+            );
+        }
+
         $total_effort_field = $this->form_element_factory->getUsedFieldByIdAndType(
             $tracker,
             $total_effort_field_id,
@@ -102,6 +112,7 @@ class SemanticProgressBuilder
         return new SemanticProgress(
             $tracker,
             new MethodBasedOnEffort(
+                $this->dao,
                 $total_effort_field,
                 $remaining_effort_field
             )

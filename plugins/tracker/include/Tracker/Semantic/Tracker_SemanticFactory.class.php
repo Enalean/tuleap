@@ -23,6 +23,8 @@
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDuplicator;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressFromXMLBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
@@ -92,6 +94,12 @@ class Tracker_SemanticFactory
 
         if ($type === 'timeframe') {
             return (new SemanticTimeframeFromXMLBuilder());
+        }
+
+        if ($type === SemanticProgress::NAME) {
+            return new SemanticProgressFromXMLBuilder(
+                new SemanticProgressDao()
+            );
         }
 
         return null;

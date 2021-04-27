@@ -38,11 +38,17 @@ class MethodBasedOnEffort implements IComputeProgression
      * @var Tracker_FormElement_Field_Numeric
      */
     private $remaining_effort_field;
+    /**
+     * @var SemanticProgressDao
+     */
+    private $dao;
 
     public function __construct(
+        SemanticProgressDao $dao,
         Tracker_FormElement_Field_Numeric $total_effort_field,
         Tracker_FormElement_Field_Numeric $remaining_effort_field
     ) {
+        $this->dao                    = $dao;
         $this->total_effort_field     = $total_effort_field;
         $this->remaining_effort_field = $remaining_effort_field;
     }
@@ -173,6 +179,31 @@ class MethodBasedOnEffort implements IComputeProgression
         }
 
         return new SemanticProgressRepresentation(
+            $this->total_effort_field->getId(),
+            $this->remaining_effort_field->getId()
+        );
+    }
+
+    public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void
+    {
+        $total_effort_field_ref     = array_search($this->total_effort_field->getId(), $xml_mapping);
+        $remaining_effort_field_ref = array_search($this->remaining_effort_field->getId(), $xml_mapping);
+
+        if (! $total_effort_field_ref || ! $remaining_effort_field_ref) {
+            return;
+        }
+
+        $xml_semantic_progress = $root->addChild('semantic');
+        $xml_semantic_progress->addAttribute('type', SemanticProgress::NAME);
+
+        $xml_semantic_progress->addChild('total_effort_field')->addAttribute('REF', $total_effort_field_ref);
+        $xml_semantic_progress->addChild('remaining_effort_field')->addAttribute('REF', $remaining_effort_field_ref);
+    }
+
+    public function saveSemanticForTracker(\Tracker $tracker): bool
+    {
+        return $this->dao->save(
+            $tracker->getId(),
             $this->total_effort_field->getId(),
             $this->remaining_effort_field->getId()
         );

@@ -114,6 +114,7 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function exportToXml(SimpleXMLElement $root, $xml_mapping): void
     {
+        $this->method->exportToXMl($root, $xml_mapping);
     }
 
     public function exportToREST(PFUser $user): ?SemanticProgressRepresentation
@@ -128,7 +129,7 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function save(): bool
     {
-        return false;
+        return $this->method->saveSemanticForTracker($this->tracker);
     }
 
     public function isDefined(): bool

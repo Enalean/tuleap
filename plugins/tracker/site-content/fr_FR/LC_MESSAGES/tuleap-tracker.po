@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.2\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -2280,6 +2280,13 @@ msgstr "Progression"
 
 msgid "Progress semantic is not properly configured."
 msgstr "La sémantique de progression n'est pas correctement configurée."
+
+msgid ""
+"Progress semantic is not properly configured: total effort and remaining "
+"effort fields have to be two different fields."
+msgstr ""
+"La sémantique de progression n'est pas correctement configurée : les champs "
+"\"effort total\" et \"effort restant\" doivent être deux champs différents."
 
 msgid ""
 "Progress semantic is not properly configured: unable to find the remaining "

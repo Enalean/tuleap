@@ -50,7 +50,7 @@ class InvalidMethod implements IComputeProgression
 
     public function getCurrentConfigurationDescription(): string
     {
-        return dgettext('tuleap-tracker', "Progress semantic is not properly configured.");
+        return $this->getErrorMessage();
     }
 
     public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool
@@ -76,5 +76,14 @@ class InvalidMethod implements IComputeProgression
     public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation
     {
         return null;
+    }
+
+    public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void
+    {
+    }
+
+    public function saveSemanticForTracker(\Tracker $tracker): bool
+    {
+        return false;
     }
 }
