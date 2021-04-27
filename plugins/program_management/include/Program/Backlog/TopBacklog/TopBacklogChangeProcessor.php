@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\TopBacklog;
 
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Program;
 
@@ -32,6 +33,7 @@ interface TopBacklogChangeProcessor
      * @throws CannotManipulateTopBacklog
      * @throws FeatureHasPlannedUserStoryException
      * @throws RemoveFeatureException
+     * @throws FeatureNotFoundException
      */
     public function processTopBacklogChangeForAProgram(Program $program, TopBacklogChange $top_backlog_change, \PFUser $user): void;
 }
