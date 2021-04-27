@@ -32,7 +32,6 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRe
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\PlanUserStoriesInMirroredMilestones;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
 
 class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirroredMilestones
 {
@@ -95,7 +94,7 @@ class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirrore
         $program_increment_tracker_id = $program_increment_changed->tracker_id;
 
         $potential_feature_to_link = $this->content_dao->searchContent(
-            new PlannedProgramIncrement($program_increment_id)
+            $program_increment_id
         );
         $feature_plan_change       = $this->feature_to_plan_builder->buildFeatureChange(
             $potential_feature_to_link,

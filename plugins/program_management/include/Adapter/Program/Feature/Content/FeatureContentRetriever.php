@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 
 class FeatureContentRetriever implements RetrieveFeatureContent
@@ -35,7 +36,7 @@ class FeatureContentRetriever implements RetrieveFeatureContent
      */
     private $content_store;
     /**
-     * @var RetrieveProgramIncrement
+     * @var CheckProgramIncrement
      */
     private $program_increment_content_retriever;
     /**
@@ -48,7 +49,7 @@ class FeatureContentRetriever implements RetrieveFeatureContent
     private $program_searcher;
 
     public function __construct(
-        RetrieveProgramIncrement $program_increment_content_retriever,
+        CheckProgramIncrement $program_increment_content_retriever,
         ContentStore $content_store,
         FeatureRepresentationBuilder $feature_representation_builder,
         ProgramSearcher $program_searcher
@@ -61,9 +62,9 @@ class FeatureContentRetriever implements RetrieveFeatureContent
 
     public function retrieveProgramIncrementContent(int $id, \PFUser $user): array
     {
-        $program_increment = $this->program_increment_content_retriever->retrieveProgramIncrement($id, $user);
+        $program_increment = ProgramIncrementIdentifier::fromId($this->program_increment_content_retriever, $id, $user);
         $program           = $this->program_searcher->getProgramOfProgramIncrement($id);
-        $planned_content   = $this->content_store->searchContent($program_increment);
+        $planned_content   = $this->content_store->searchContent($program_increment->getId());
 
         $elements = [];
         foreach ($planned_content as $artifact) {

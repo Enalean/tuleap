@@ -28,9 +28,10 @@ use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddFeature;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -99,7 +100,7 @@ final class FeatureAdditionProcessorTest extends TestCase
     {
         $program                    = new Program(110);
         $user                       = UserTestBuilder::aUser()->build();
-        $program_increment          = new PlannedProgramIncrement(37);
+        $program_increment          = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
         $feature                    = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
         $feature_addition           = FeatureAddition::fromFeature(
             new VerifyCanBePlannedInProgramIncrementStub(),
@@ -120,7 +121,7 @@ final class FeatureAdditionProcessorTest extends TestCase
     {
         $program           = new Program(110);
         $user              = UserTestBuilder::aUser()->build();
-        $program_increment = new PlannedProgramIncrement(37);
+        $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
         $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
         return FeatureAddition::fromFeature(
             new VerifyCanBePlannedInProgramIncrementStub(),

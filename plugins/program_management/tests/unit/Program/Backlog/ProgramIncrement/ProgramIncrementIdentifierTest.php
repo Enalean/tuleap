@@ -22,23 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement;
 
-/**
- * @psalm-immutable
- */
-final class PlannedProgramIncrement
-{
-    /**
-     * @var int
-     */
-    private $id;
+use PHPUnit\Framework\TestCase;
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-    public function __construct(int $id)
+final class ProgramIncrementIdentifierTest extends TestCase
+{
+    public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
     {
-        $this->id = $id;
+        $user = UserTestBuilder::aUser()->build();
+        $this->expectException(ProgramTrackerNotFoundException::class);
+        ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(false), 1, $user);
     }
 
-    public function getId(): int
+    public function testItBuildAProgramIncrement(): void
     {
-        return $this->id;
+        $user    = UserTestBuilder::aUser()->build();
+        $tracker = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 1, $user);
+        self::assertEquals(1, $tracker->getId());
     }
 }

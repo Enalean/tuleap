@@ -26,8 +26,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
@@ -37,6 +35,7 @@ use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
@@ -50,7 +49,7 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(false),
-            $this->getStubProgramIncrementRetriever(),
+            new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
             new VerifyCanBePlannedInProgramIncrementStub(),
@@ -69,7 +68,7 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
-            $this->getStubProgramIncrementRetriever(),
+            new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(false),
             new VerifyCanBePlannedInProgramIncrementStub(),
@@ -88,7 +87,7 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
-            $this->getStubProgramIncrementRetriever(),
+            new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
             new VerifyCanBePlannedInProgramIncrementStub(false),
@@ -107,7 +106,7 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
-            $this->getStubProgramIncrementRetriever(),
+            new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
             new VerifyCanBePlannedInProgramIncrementStub(),
@@ -122,11 +121,30 @@ final class ContentModifierTest extends TestCase
         $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(201, null));
     }
 
+    public function testItFailedWhenThereIsNoFeatureToAddOrToOrder(): void
+    {
+        $modifier = new ContentModifier(
+            $this->getStubPermissionVerifier(),
+            new CheckProgramIncrementStub(true),
+            $this->getStubProgramSearcher(),
+            new VerifyIsVisibleFeatureStub(),
+            new VerifyCanBePlannedInProgramIncrementStub(),
+            $this->buildFeaturePlanner(),
+            $this->getStubOrderFeature(),
+            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+        );
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->expectException(AddOrOrderMustBeSetException::class);
+        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(null, null));
+    }
+
     public function testItSucceedsWhenThereIsOnlyFeatureToReorder(): void
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
-            $this->getStubProgramIncrementRetriever(),
+            new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
             new VerifyCanBePlannedInProgramIncrementStub(),
@@ -148,7 +166,7 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
-            $this->getStubProgramIncrementRetriever(),
+            new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
             new VerifyCanBePlannedInProgramIncrementStub(false),
@@ -170,7 +188,7 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             $this->getStubPermissionVerifier(),
-            $this->getStubProgramIncrementRetriever(),
+            new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
             new VerifyCanBePlannedInProgramIncrementStub(),
@@ -245,16 +263,6 @@ final class ContentModifierTest extends TestCase
                 }
             }
         );
-    }
-
-    private function getStubProgramIncrementRetriever(): RetrieveProgramIncrement
-    {
-        return new class implements RetrieveProgramIncrement {
-            public function retrieveProgramIncrement(int $program_increment_id, \PFUser $user): PlannedProgramIncrement
-            {
-                return new PlannedProgramIncrement($program_increment_id);
-            }
-        };
     }
 
     private function buildFeaturePlanner(): FeaturePlanner

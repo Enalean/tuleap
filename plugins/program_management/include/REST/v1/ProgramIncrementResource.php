@@ -34,7 +34,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplici
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureContentRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
@@ -90,7 +90,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $this->user_manager                        = \UserManager::instance();
         $artifact_factory                          = \Tracker_ArtifactFactory::instance();
         $this->program_increment_content_retriever = new FeatureContentRetriever(
-            new ProgramIncrementRetriever($artifact_factory, new ProgramIncrementsDAO()),
+            new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
             new ContentDao(),
             new FeatureRepresentationBuilder(
                 $artifact_factory,
@@ -183,7 +183,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 ),
                 new CanPrioritizeFeaturesDAO()
             ),
-            new ProgramIncrementRetriever($artifact_factory, $program_increments_dao),
+            new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
             new ProgramSearcher(new ProgramDao()),
             new VerifyIsVisibleFeatureAdapter($artifact_factory),
             new PlanDao(),

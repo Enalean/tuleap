@@ -20,12 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature\Content;
+namespace Tuleap\ProgramManagement\Stub;
 
-interface ContentStore
+use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
+
+final class CheckProgramIncrementStub implements CheckProgramIncrement
 {
-    /**
-     * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
-     */
-    public function searchContent(int $program_increment_id): array;
+    /** @var bool */
+    private $is_allowed;
+
+    public function __construct(bool $is_allowed = true)
+    {
+        $this->is_allowed = $is_allowed;
+    }
+
+    public function checkIsAProgramIncrement(int $program_increment_id, \PFUser $user): void
+    {
+        if (! $this->is_allowed) {
+            throw new ProgramTrackerNotFoundException(1);
+        }
+    }
 }
