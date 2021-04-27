@@ -36,13 +36,15 @@ class DueLicencesDao extends DataAccessObject
 
     public function getRealUsers($project_id): array
     {
+        $projects_id = "0, $project_id";
+
         $sql = 'SELECT users.*
             FROM user as users
                 LEFT OUTER JOIN plugin_userlog_request AS userlog ON (users.user_id = userlog.user_id)
                 WHERE users.status = ?
-                AND userlog.group_id NOT IN (0, ?)
+                AND userlog.group_id NOT IN (?)
             GROUP BY users.user_id';
 
-        return $this->getDB()->run($sql, PFUser::STATUS_ACTIVE, $project_id);
+        return $this->getDB()->run($sql, PFUser::STATUS_ACTIVE, $projects_id);
     }
 }
