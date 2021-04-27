@@ -39,10 +39,8 @@ export default class WritingCrossTrackerReport {
             throw new CannotAddTheSameTrackerTwiceError();
         }
 
-        this.trackers.set(tracker.id, {
-            project,
-            tracker,
-        });
+        const tracker_and_project: TrackerAndProject = { project, tracker };
+        this.trackers.set(tracker.id, tracker_and_project);
     }
 
     removeTracker(tracker_id: number): void {

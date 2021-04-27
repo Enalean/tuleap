@@ -22,6 +22,7 @@
         <div
             class="tlp-form-element"
             v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }"
+            data-test="cross-tracker-selector-global"
         >
             <label class="tlp-label" for="project">
                 <translate>Project</translate>
@@ -83,6 +84,7 @@
                     <i
                         v-if="is_loader_shown"
                         class="tlp-button-icon fas fa-circle-notch fa-spin"
+                        data-test="tracker-loader"
                     ></i>
                     <i v-else class="tlp-button-icon fa fa-plus"></i>
                     <translate>Add</translate>
@@ -91,94 +93,96 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { getSortedProjectsIAmMemberOf } from "./projects-cache";
 import { getTrackersOfProject } from "../api/rest-querier";
+import type { Project, SelectedTracker, Tracker } from "../type";
 
-export default {
-    name: "TrackerSelection",
-    props: {
-        selectedTrackers: Array,
-    },
-    data() {
-        return {
-            selected_project: null,
-            selected_tracker: null,
-            projects: [],
-            trackers: [],
-            is_loader_shown: false,
-        };
-    },
-    computed: {
-        is_project_select_disabled() {
-            return this.projects.length === 0;
-        },
-        is_tracker_select_disabled() {
-            return this.trackers.length === 0;
-        },
-        is_add_button_disabled() {
-            return this.selected_tracker === null;
-        },
-        tracker_options() {
-            return this.trackers.map(({ id, label }) => {
-                const is_already_selected = this.selectedTrackers.find(
-                    ({ tracker_id }) => id === tracker_id
-                );
-                return {
-                    id,
-                    label,
-                    disabled: is_already_selected !== undefined,
-                };
-            });
-        },
-    },
-    watch: {
-        selected_project: function (new_value) {
-            this.selected_tracker = null;
-            this.trackers = [];
+@Component({})
+export default class TrackerSelection extends Vue {
+    @Prop({ required: true })
+    readonly selectedTrackers!: SelectedTracker[];
+
+    private selected_project: Project | null = null;
+    private selected_tracker: Tracker | null = null;
+    private projects: Project[] = [];
+    private trackers: Tracker[] = [];
+    private is_loader_shown = false;
+
+    get is_project_select_disabled(): boolean {
+        return this.projects.length === 0;
+    }
+    get is_tracker_select_disabled(): boolean {
+        return this.trackers.length === 0;
+    }
+    get is_add_button_disabled(): boolean {
+        return this.selected_tracker === null;
+    }
+
+    get tracker_options(): Tracker[] {
+        return this.trackers.map(({ id, label }) => {
+            const is_already_selected = this.selectedTrackers.find(
+                ({ tracker_id }) => tracker_id === id
+            );
+            return {
+                id,
+                label,
+                disabled: is_already_selected !== undefined,
+            };
+        });
+    }
+
+    @Watch("selected_project")
+    selected_project_value(new_value: Tracker | null) {
+        this.selected_tracker = null;
+        this.trackers = [];
+        if (new_value) {
             this.loadTrackers(new_value.id);
-        },
-    },
-    mounted() {
+        }
+    }
+
+    mounted(): void {
         this.loadProjects();
-    },
-    methods: {
-        async loadProjects() {
-            this.is_loader_shown = true;
-            try {
-                this.projects = await getSortedProjectsIAmMemberOf();
-                this.selected_project = this.projects[0];
-            } catch (error) {
-                this.$store.commit(
-                    "setErrorMessage",
-                    this.$gettext("Error while fetching the list of projects you are member of")
-                );
-            } finally {
-                this.is_loader_shown = false;
-            }
-        },
+    }
 
-        async loadTrackers(project_id) {
-            this.is_loader_shown = true;
-            try {
-                this.trackers = await getTrackersOfProject(project_id);
-            } catch (error) {
-                this.$store.commit(
-                    "setErrorMessage",
-                    this.$gettext("Error while fetching the list of trackers of this project")
-                );
-            } finally {
-                this.is_loader_shown = false;
-            }
-        },
+    async loadProjects(): Promise<void> {
+        this.is_loader_shown = true;
+        try {
+            this.projects = await getSortedProjectsIAmMemberOf();
 
-        addTrackerToSelection() {
-            this.$emit("tracker-added", {
-                selected_project: this.selected_project,
-                selected_tracker: this.selected_tracker,
-            });
-            this.selected_tracker = null;
-        },
-    },
-};
+            this.selected_project = this.projects[0];
+        } catch (error) {
+            this.$store.commit(
+                "setErrorMessage",
+                this.$gettext("Error while fetching the list of projects you are member of")
+            );
+        } finally {
+            this.is_loader_shown = false;
+        }
+    }
+
+    async loadTrackers(project_id: number): Promise<void> {
+        this.is_loader_shown = true;
+        try {
+            this.trackers = await getTrackersOfProject(project_id);
+        } catch (error) {
+            this.$store.commit(
+                "setErrorMessage",
+                this.$gettext("Error while fetching the list of trackers of this project")
+            );
+        } finally {
+            this.is_loader_shown = false;
+        }
+    }
+
+    addTrackerToSelection(): void {
+        this.$emit("tracker-added", {
+            selected_project: this.selected_project,
+            selected_tracker: this.selected_tracker,
+        });
+        this.selected_tracker = null;
+    }
+}
 </script>

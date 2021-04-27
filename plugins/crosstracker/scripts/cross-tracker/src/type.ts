@@ -29,6 +29,10 @@ export interface State {
     report_id: number;
 }
 
+export interface SelectedTracker {
+    tracker_id: number;
+}
+
 export interface Tracker {
     id: number;
     label: string;

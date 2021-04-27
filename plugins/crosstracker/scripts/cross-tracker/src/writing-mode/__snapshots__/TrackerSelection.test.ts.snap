@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] = `
+<div
+  class="cross-tracker-selector"
+>
+  <div
+    class="tlp-form-element tlp-form-element-disabled"
+    data-test="cross-tracker-selector-global"
+  >
+    <label
+      class="tlp-label"
+      for="project"
+    >
+      <translate-stub
+        tag="span"
+      >
+        Project
+      </translate-stub>
+       
+      <i
+        class="fa fa-asterisk"
+      />
+    </label>
+     
+    <select
+      class="cross-tracker-selector-project-input tlp-select"
+      data-test="cross-tracker-selector-project"
+      disabled="disabled"
+      id="project"
+      name="project"
+    />
+  </div>
+   
+  <div
+    class="tlp-form-element tlp-form-element-disabled"
+  >
+    <label
+      class="tlp-label"
+      for="tracker"
+    >
+      <translate-stub
+        tag="span"
+      >
+        Tracker
+      </translate-stub>
+       
+      <i
+        class="fa fa-asterisk"
+      />
+    </label>
+     
+    <div
+      class="tlp-form-element tlp-form-element-append"
+    >
+      <select
+        class="cross-tracker-selector-tracker-input tlp-select"
+        data-test="cross-tracker-selector-tracker"
+        disabled="disabled"
+        id="tracker"
+        name="tracker"
+      >
+        <option
+          class="cross-tracker-please-choose-option"
+          data-current-language="en_US"
+          data-msgid="
+                    Please choose...
+                "
+          value=""
+        >
+          
+                    Please choose...
+                
+        </option>
+         
+      </select>
+       
+      <button
+        class="tlp-append tlp-button-primary tlp-button-outline"
+        data-test="cross-tracker-selector-tracker-button"
+        disabled="disabled"
+        type="button"
+      >
+        <i
+          class="tlp-button-icon fas fa-circle-notch fa-spin"
+          data-test="tracker-loader"
+        />
+         
+        <translate-stub
+          tag="span"
+        >
+          Add
+        </translate-stub>
+      </button>
+    </div>
+  </div>
+</div>
+`;
