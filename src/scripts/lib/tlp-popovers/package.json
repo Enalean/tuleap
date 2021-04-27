@@ -10,7 +10,7 @@
   "types": "types/scripts/lib/tlp-popovers/src/index.d.ts",
   "style": "dist/style.css",
   "dependencies": {
-    "popper.js": "^1.16.1"
+    "@popperjs/core": "^2.9.2"
   },
   "devDependencies": {},
   "config": {

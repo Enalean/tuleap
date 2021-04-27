@@ -20,7 +20,7 @@
 #project-sidebar-project-flags-popover,
 #project-sidebar-nav-title-popover,
 #current-project-nav-title-popover {
-    &[x-placement='right-start'] > .tlp-popover-arrow {
+    &[data-popper-placement='right-start'] > .tlp-popover-arrow {
         border-right-color: darken($tlp-theme-sidebar-background-color, 5%);
         border-bottom-color: transparent;
     }

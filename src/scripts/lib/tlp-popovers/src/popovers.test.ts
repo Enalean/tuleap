@@ -17,22 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as Popper from "popper.js";
+import * as popper from "@popperjs/core";
 import type { Popover } from "./popovers";
 import { createPopover, POPOVER_SHOWN_CLASS_NAME } from "./popovers";
+import type { Instance } from "@popperjs/core";
 
-jest.mock("popper.js", () => {
-    return {
-        __esModule: true,
-        default: function (trigger_element: Element, content_element: Element): Popper.default {
-            return ({
-                popper: content_element,
-                destroy: jest.fn(),
-                scheduleUpdate: jest.fn(),
-            } as unknown) as Popper.default;
-        },
-    };
-});
+jest.mock("@popperjs/core");
 
 describe(`Popovers`, () => {
     let trigger_element: HTMLElement, content_element: HTMLElement;
@@ -47,12 +37,20 @@ describe(`Popovers`, () => {
     afterEach(() => {
         trigger_element.remove();
         content_element.remove();
+        jest.clearAllMocks();
     });
 
     describe(`constructor`, () => {
         let popperConstructor: jest.SpyInstance;
         beforeEach(() => {
-            popperConstructor = jest.spyOn(Popper, "default");
+            popperConstructor = jest.spyOn(popper, "createPopper").mockImplementation(
+                (): Instance => {
+                    return ({
+                        destroy: jest.fn(),
+                        update: jest.fn(),
+                    } as unknown) as Instance;
+                }
+            );
         });
 
         it(`when there is an options.anchor,

@@ -20,12 +20,37 @@
 @use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 .roadmap-gantt-task-popover {
-    &.tlp-popover {
-        margin: -5px;
+    &.tlp-popover.tlp-popover-shown {
+        transform: translateY(-7px);
+
+        &.roadmap-gantt-task-milestone-popover {
+            transform: translateY(-9px);
+        }
     }
 
     > .roadmap-gantt-task-popover-arrow {
-        border-color: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-theme-dark-background-color-darker);
+    }
+
+    &.tlp-popover[data-popper-placement='left-end'],
+    &.tlp-popover[data-popper-placement='right-end'] {
+        &.tlp-popover-shown {
+            transform: translateY(7px);
+        }
+
+        > .roadmap-gantt-task-popover-arrow {
+            background: var(--tlp-theme-dark-background-color);
+        }
+    }
+
+    &.tlp-popover[data-popper-placement^='top'] {
+        &.tlp-popover-shown {
+            transform: translateY(0);
+        }
+
+        > .roadmap-gantt-task-popover-arrow {
+            background: var(--tlp-theme-dark-background-color);
+        }
     }
 }
 

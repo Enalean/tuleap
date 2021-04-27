@@ -63,7 +63,7 @@ export default class TaskBoardHeaderCell extends Vue {
     mounted(): void {
         const trigger = this.$refs.trigger;
         const container = this.$refs.container;
-        if (trigger instanceof HTMLElement && container instanceof Element) {
+        if (trigger instanceof HTMLElement && container instanceof HTMLElement) {
             createPopover(trigger, container);
         }
     }

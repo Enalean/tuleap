@@ -17,13 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Placement, PopperOptions } from "popper.js";
-import Popper from "popper.js";
+import type { Instance, Options, Placement } from "@popperjs/core";
+import { createPopper } from "@popperjs/core";
 import { findClosestElement } from "../../../../themes/tlp/src/js/dom-walker";
 
 export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
 
-export type PopoverOptions = PopperOptions & { anchor?: HTMLElement; trigger?: "click" | "hover" };
+export type PopoverOptions = Partial<Options> & {
+    anchor?: HTMLElement;
+    trigger?: "click" | "hover";
+};
 
 export interface Popover {
     hide(): void;
@@ -33,11 +36,11 @@ export interface Popover {
 export function createPopover(
     doc: Document,
     popover_trigger: HTMLElement,
-    popover_content: Element,
+    popover_content: HTMLElement,
     options: PopoverOptions = {}
 ): Popover {
     const anchor = options.anchor || popover_trigger;
-    const popper = new Popper(anchor, popover_content, getPopperOptions(anchor, options));
+    const popper = createPopper(anchor, popover_content, getPopperOptions(anchor, options));
 
     const dismiss_buttons = popover_content.querySelectorAll('[data-dismiss="popover"]');
     const listeners = buildListeners(
@@ -82,7 +85,7 @@ const allowed_placements = [
 const isPlacement = (string_to_check: string): string_to_check is Placement =>
     allowed_placements.includes(string_to_check);
 
-function getPopperOptions(anchor: HTMLElement, options: PopoverOptions): PopperOptions {
+function getPopperOptions(anchor: HTMLElement, options: PopoverOptions): Partial<Options> {
     const placement = options.placement || anchor.dataset.placement || "bottom";
 
     if (!isPlacement(placement)) {
@@ -93,16 +96,31 @@ function getPopperOptions(anchor: HTMLElement, options: PopoverOptions): PopperO
                 allowed_placements.join(",")
         );
     }
+
     return {
         placement,
-        modifiers: {
-            arrow: {
-                element: ".tlp-popover-arrow",
+        modifiers: [
+            {
+                name: "arrow",
+                options: {
+                    element: ".tlp-popover-arrow",
+                    padding: 15,
+                },
             },
-            computeStyle: {
-                gpuAcceleration: false,
+            {
+                name: "offset",
+                options: {
+                    offset: [0, 10],
+                },
             },
-        },
+            {
+                name: "computeStyles",
+                options: {
+                    gpuAcceleration: false, // true by default
+                },
+            },
+            ...(options.modifiers || []),
+        ],
     };
 }
 
@@ -120,7 +138,7 @@ function buildListeners(
     popover_content: Element,
     dismiss_buttons: NodeListOf<Element>,
     options: PopoverOptions,
-    popper: Popper
+    popper: Instance
 ): EventListener[] {
     const trigger = options.trigger || popover_trigger.dataset.trigger || "hover";
     if (trigger === "hover") {
@@ -160,7 +178,7 @@ function buildMouseOverListener(
     doc: Document,
     popover_trigger: HTMLElement,
     popover_content: Element,
-    popper: Popper
+    popper: Instance
 ): EventListener {
     return {
         element: popover_trigger,
@@ -191,7 +209,7 @@ function buildTriggerClickListener(
     doc: Document,
     popover_trigger: Element,
     popover_content: Element,
-    popper: Popper
+    popper: Instance
 ): EventListener {
     return {
         element: popover_trigger,
@@ -261,7 +279,7 @@ function hideAllShownPopovers(doc: Document): void {
     }
 }
 
-function showPopover(popover_content: Element, popper: Popper): void {
-    popper.scheduleUpdate();
+async function showPopover(popover_content: Element, popper: Instance): Promise<void> {
     popover_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
+    await popper.update();
 }
