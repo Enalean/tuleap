@@ -9,7 +9,7 @@
             {{/ csrf_token }}
             {{# dgettext }} tuleap-tracker | The computation of the progression will be {{/ dgettext }}
             <select id="computation-method" name="computation-method" required>
-                <option value="">{{# dgettext }} tuleap-tracker | Choose a method... {{/ dgettext }}</option>
+                <option value="" disabled selected>{{# dgettext }} tuleap-tracker | Choose a method... {{/ dgettext }}</option>
                 {{# available_computation_methods }}
                     <option value="{{ name }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
                 {{/ available_computation_methods }}
