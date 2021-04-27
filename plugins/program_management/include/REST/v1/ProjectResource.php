@@ -57,12 +57,12 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogUpdater;
 use Tuleap\ProgramManagement\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
@@ -343,33 +343,31 @@ final class ProjectResource extends AuthenticatedResource
         $program             = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao());
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $priority_manager    = \Tracker_Artifact_PriorityManager::build();
-        $top_backlog_updater = new TopBacklogUpdater(
-            new ProcessTopBacklogChange(
-                new PrioritizeFeaturesPermissionVerifier(
-                    $project_manager,
-                    $project_access_checker,
-                    new CanPrioritizeFeaturesDAO()
-                ),
-                new ArtifactsExplicitTopBacklogDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
-                new UserStoryLinkedToFeatureChecker(
-                    new ArtifactsLinkedToParentDao(),
-                    new PlanningAdapter(\PlanningFactory::build()),
-                    $artifact_factory
-                ),
-                new VerifyIsVisibleFeatureAdapter($artifact_factory),
-                new FeatureRemovalProcessor(
-                    new ProgramIncrementsDAO(),
-                    $artifact_factory,
-                    new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater()),
-                ),
+        $top_backlog_updater = new ProcessTopBacklogChange(
+            new PrioritizeFeaturesPermissionVerifier(
+                $project_manager,
+                $project_access_checker,
+                new CanPrioritizeFeaturesDAO()
+            ),
+            new ArtifactsExplicitTopBacklogDAO(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
+            new UserStoryLinkedToFeatureChecker(
+                new ArtifactsLinkedToParentDao(),
+                new PlanningAdapter(\PlanningFactory::build()),
+                $artifact_factory
+            ),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory),
+            new FeatureRemovalProcessor(
+                new ProgramIncrementsDAO(),
+                $artifact_factory,
+                new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater()),
             )
         );
 
         try {
             $program = $program->buildExistingProgramProject($id, $user);
-            $top_backlog_updater->updateTopBacklog(
+            $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
                 new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove, $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog, $backlog_patch_representation->order),
                 $user
@@ -380,7 +378,7 @@ final class ProjectResource extends AuthenticatedResource
             throw new RestException(403, $e->getMessage());
         } catch (RemoveFeatureException $e) {
             throw new RestException(400, dgettext("tuleap-program_management", "Cannot add the feature to the top backlog because you cannot manipulate all the impacted program increments"));
-        } catch (FeatureHasPlannedUserStoryException $e) {
+        } catch (FeatureHasPlannedUserStoryException | FeatureNotFoundException $e) {
             throw new RestException(400, $e->getMessage());
         }
     }

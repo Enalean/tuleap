@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogStore;
@@ -95,7 +96,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         );
     }
 
-    public function testAddAndRemoveOnlyArtifactsUserCanView(): void
+    public function testAddAThrowExceptionWhenFeatureCannotBeViewByUser(): void
     {
         $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
@@ -108,9 +109,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 789)->andReturn(null);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 790)->andReturn(null);
 
-        $this->dao->shouldReceive('removeArtifactsFromExplicitTopBacklog')->with([741])->once();
-        $this->dao->shouldReceive('addArtifactsToTheExplicitTopBacklog')->with([742])->once();
-
+        $this->expectException(FeatureNotFoundException::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
             new TopBacklogChange([742, 790], [741, 789], false, null),
@@ -118,7 +117,27 @@ final class ProcessTopBacklogChangeTest extends TestCase
         );
     }
 
-    public function testAddAndRemoveOnlyArtifactThatArePartOfTheRequestedProgram(): void
+    public function testRemoveWhenFeatureCannotBeViewByUserThenNothingHappens(): void
+    {
+        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
+        $user = UserTestBuilder::aUser()->build();
+
+        $tracker      = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
+        $artifact_741 = $this->mockAnArtifact(741, "My 741", $tracker);
+        $artifact_742 = $this->mockAnArtifact(742, "My 742", $tracker);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 741)->andReturn($artifact_741);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 789)->andReturn(null);
+
+        $this->dao->shouldReceive('removeArtifactsFromExplicitTopBacklog')->with([741])->once();
+
+        $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
+            new Program(102),
+            new TopBacklogChange([], [741, 789], false, null),
+            $user
+        );
+    }
+
+    public function testAddAndRemoveThrowExceptionWhenFeatureThatAreNotPartOfTheRequestedProgram(): void
     {
         $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
@@ -128,7 +147,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($artifact);
 
         $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
-
+        $this->expectException(FeatureNotFoundException::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             new Program(102),
             new TopBacklogChange([964], [963], false, null),
@@ -225,15 +244,15 @@ final class ProcessTopBacklogChangeTest extends TestCase
         $element_to_order->direction   = "before";
         $element_to_order->compared_to = 900;
 
-        $program = new Program(102);
+        $program = new Program(666);
 
         $this->feature_orderer->shouldReceive('reorder')->with($element_to_order, $program->getId(), $program)->once();
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             $program,
             new TopBacklogChange(
-                [964],
-                [963],
+                [],
+                [],
                 false,
                 $element_to_order
             ),

@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
@@ -100,7 +101,8 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
             $feature_add_removals = $this->filterFeaturesThatCanBeManipulated(
                 $top_backlog_change->potential_features_id_to_add,
                 $user,
-                $program
+                $program,
+                false
             );
 
             if (count($feature_add_removals) > 0) {
@@ -117,7 +119,8 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
             $feature_remove_removals = $this->filterFeaturesThatCanBeManipulated(
                 $top_backlog_change->potential_features_id_to_remove,
                 $user,
-                $program
+                $program,
+                true
             );
 
             if (count($feature_remove_removals) > 0) {
@@ -153,15 +156,23 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      * @param int[] $features_id
      * @return FeatureRemoval[]
      * @throws FeatureHasPlannedUserStoryException
+     * @throws FeatureNotFoundException
      */
-    private function filterFeaturesThatCanBeManipulated(array $features_id, \PFUser $user, Program $program): array
-    {
+    private function filterFeaturesThatCanBeManipulated(
+        array $features_id,
+        \PFUser $user,
+        Program $program,
+        bool $ignore_feature_cannot_be_retrieved
+    ): array {
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
             $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user, $program);
             if (! $feature) {
-                continue;
+                if ($ignore_feature_cannot_be_retrieved) {
+                    continue;
+                }
+                throw new FeatureNotFoundException($feature_id);
             }
             $filtered_features[] = FeatureRemoval::fromFeature(
                 $this->story_verifier,
