@@ -24,9 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Cont
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
-class FeatureRemovalProcessor
+final class FeatureRemovalProcessor implements RemoveFeature
 {
     /**
      * @var ProgramIncrementsDAO
@@ -51,10 +53,6 @@ class FeatureRemovalProcessor
         $this->artifact_link_updater  = $artifact_link_updater;
     }
 
-    /**
-     * @throws \Tracker_NoArtifactLinkFieldException
-     * @throws \Tracker_Exception
-     */
     public function removeFromAllProgramIncrements(FeatureRemoval $feature_removal): void
     {
         $program_ids = $this->program_increments_dao->getProgramIncrementsLinkToFeatureId($feature_removal->feature_id);
@@ -63,13 +61,17 @@ class FeatureRemovalProcessor
             if (! $program_increment_artifact) {
                 continue;
             }
-            $this->artifact_link_updater->updateArtifactLinks(
-                $feature_removal->user,
-                $program_increment_artifact,
-                [],
-                [$feature_removal->feature_id],
-                \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
-            );
+            try {
+                $this->artifact_link_updater->updateArtifactLinks(
+                    $feature_removal->user,
+                    $program_increment_artifact,
+                    [],
+                    [$feature_removal->feature_id],
+                    \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                );
+            } catch (\Tracker_NoArtifactLinkFieldException | \Tracker_Exception $e) {
+                throw new RemoveFeatureException($feature_removal->feature_id, $e);
+            }
         }
     }
 }

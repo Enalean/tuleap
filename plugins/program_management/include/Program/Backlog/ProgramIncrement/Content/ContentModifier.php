@@ -23,9 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Luracast\Restler\RestException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\RetrieveProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
@@ -50,6 +55,10 @@ final class ContentModifier implements ModifyContent
      */
     private $program_searcher;
     /**
+     * @var VerifyIsVisibleFeature
+     */
+    private $visible_verifier;
+    /**
      * @var VerifyCanBePlannedInProgramIncrement
      */
     private $can_be_planned_verifier;
@@ -61,19 +70,27 @@ final class ContentModifier implements ModifyContent
      * @var CheckFeatureIsPlannedInProgramIncrement
      */
     private $check_feature_is_planned_in_PI;
+    /**
+     * @var FeaturePlanner
+     */
+    private $feature_planner;
 
     public function __construct(
         VerifyPrioritizeFeaturesPermission $permission_verifier,
         RetrieveProgramIncrement $program_increment_retriever,
         ProgramSearcher $program_searcher,
+        VerifyIsVisibleFeature $visible_verifier,
         VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
+        FeaturePlanner $feature_planner,
         OrderFeatureRank $features_rank_orderer,
         CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI
     ) {
         $this->permission_verifier            = $permission_verifier;
         $this->program_increment_retriever    = $program_increment_retriever;
         $this->program_searcher               = $program_searcher;
+        $this->visible_verifier               = $visible_verifier;
         $this->can_be_planned_verifier        = $can_be_planned_verifier;
+        $this->feature_planner                = $feature_planner;
         $this->features_rank_orderer          = $features_rank_orderer;
         $this->check_feature_is_planned_in_PI = $check_feature_is_planned_in_PI;
     }
@@ -90,7 +107,7 @@ final class ContentModifier implements ModifyContent
             throw new RestException(400, "`add` and `order` must not both be null");
         }
         if ($content_change->potential_feature_id_to_add !== null) {
-            $this->planFeature($content_change->potential_feature_id_to_add, $program_increment);
+            $this->planFeature($content_change->potential_feature_id_to_add, $program_increment, $user, $program);
         }
         if ($content_change->elements_to_order !== null) {
             $this->reorderFeature($content_change->elements_to_order, $program_increment, $program);
@@ -99,21 +116,29 @@ final class ContentModifier implements ModifyContent
 
     /**
      * @throws FeatureCannotBePlannedInProgramIncrementException
+     * @throws FeatureHasPlannedUserStoryException
+     * @throws AddFeatureException
+     * @throws ProgramIncrementNotFoundException
+     * @throws RemoveFeatureException
+     * @throws FeatureNotFoundException
      */
     private function planFeature(
         int $potential_feature_id_to_add,
-        PlannedProgramIncrement $program_increment
+        PlannedProgramIncrement $program_increment,
+        \PFUser $user,
+        Program $program
     ): void {
-        $can_be_planned = $this->can_be_planned_verifier->canBePlannedInProgramIncrement(
-            $potential_feature_id_to_add,
-            $program_increment->getId()
-        );
-        if (! $can_be_planned) {
-            throw new FeatureCannotBePlannedInProgramIncrementException(
-                $potential_feature_id_to_add,
-                $program_increment->getId()
-            );
+        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user, $program);
+        if ($feature === null) {
+            throw new FeatureNotFoundException($potential_feature_id_to_add);
         }
+        $feature_addition = FeatureAddition::fromFeature(
+            $this->can_be_planned_verifier,
+            $feature,
+            $program_increment,
+            $user
+        );
+        $this->feature_planner->plan($feature_addition);
     }
 
     /**

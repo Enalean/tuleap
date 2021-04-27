@@ -20,35 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
 
-/**
- * I identify a Feature, I'm its ID property
- * @psalm-immutable
- */
-final class FeatureIdentifier
+final class VerifyCanBePlannedInProgramIncrementStub implements VerifyCanBePlannedInProgramIncrement
 {
-    /**
-     * @var int
-     */
-    public $id;
+    /** @var bool */
+    private $is_allowed;
 
-    private function __construct(int $id)
+    public function __construct(bool $is_allowed = true)
     {
-        $this->id = $id;
+        $this->is_allowed = $is_allowed;
     }
 
-    public static function fromId(
-        VerifyIsVisibleFeature $feature_verifier,
-        int $feature_id,
-        \PFUser $user,
-        Program $program
-    ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user, $program)) {
-            return null;
-        }
-        return new self($feature_id);
+    public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool
+    {
+        return $this->is_allowed;
     }
 }

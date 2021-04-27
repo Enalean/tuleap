@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use Tracker_NoArtifactLinkFieldException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
@@ -31,6 +30,7 @@ use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryE
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
@@ -87,11 +87,6 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $this->feature_removal_processor               = $feature_removal_processor;
     }
 
-    /**
-     * @throws CannotManipulateTopBacklog
-     * @throws Tracker_NoArtifactLinkFieldException
-     * @throws FeatureHasPlannedUserStoryException
-     */
     public function processTopBacklogChangeForAProgram(
         Program $program,
         TopBacklogChange $top_backlog_change,
@@ -145,8 +140,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 
     /**
      * @param FeatureRemoval[] $feature_removals
-     * @throws Tracker_NoArtifactLinkFieldException
-     * @throws \Tracker_Exception
+     * @throws RemoveFeatureException
      */
     private function removeFeaturesFromProgramIncrement(array $feature_removals): void
     {

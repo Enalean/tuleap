@@ -20,35 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 
-/**
- * I identify a Feature, I'm its ID property
- * @psalm-immutable
- */
-final class FeatureIdentifier
+interface AddFeature
 {
     /**
-     * @var int
+     * @throws AddFeatureException
+     * @throws ProgramIncrementNotFoundException
      */
-    public $id;
-
-    private function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public static function fromId(
-        VerifyIsVisibleFeature $feature_verifier,
-        int $feature_id,
-        \PFUser $user,
-        Program $program
-    ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user, $program)) {
-            return null;
-        }
-        return new self($feature_id);
-    }
+    public function add(FeatureAddition $feature_addition): void;
 }
