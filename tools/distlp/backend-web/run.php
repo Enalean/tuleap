@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Symfony\Component\Process\Process;
+use Tuleap\Configuration\Logger\Console;
+use Tuleap\Configuration\Nginx\BackendWeb;
 use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionRedis;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 
@@ -29,7 +32,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     die("$errno $errstr $errfile $errline");
 }, E_ALL | E_STRICT);
 
-$logger = new \Tuleap\Configuration\Logger\Console();
+$logger = new Console();
 
 $redis_conf_file = '/etc/tuleap/conf/redis.inc';
 $fpm             = new SiteDeployFPM(
@@ -45,18 +48,26 @@ $fpm             = new SiteDeployFPM(
     SiteDeployFPM::PHP73_SRC_CONF_DIR,
     [],
 );
-$nginx           = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
+$nginx           = new BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
 
 $fpm->forceDeploy();
 $nginx->configure();
 
-$exec = new \Tuleap\Configuration\Common\Exec();
-
 if (isset($argv[1]) && $argv[1] == 'test') {
     try {
-        $exec->command('/usr/share/tuleap/tools/distlp/backend-web/prepare-instance.sh');
+        $process = new Process(['/usr/share/tuleap/tools/distlp/backend-web/prepare-instance.sh']);
+        $process
+            ->setTimeout(0)
+            ->mustRun();
     } catch (Exception $e) {
         die($e->getMessage());
     }
-    file_put_contents('/etc/tuleap/conf/local.inc', preg_replace('/\$sys_trusted_proxies = \'\'/', '$sys_trusted_proxies = \'' . gethostbyname('reverse-proxy') . '\'', file_get_contents('/etc/tuleap/conf/local.inc')));
+    file_put_contents(
+        '/etc/tuleap/conf/local.inc',
+        preg_replace(
+            '/\$sys_trusted_proxies = \'\'/',
+            '$sys_trusted_proxies = \'10.0.0.0/8,172.16.0.0/12,192.168.0.0/16\'',
+            file_get_contents('/etc/tuleap/conf/local.inc')
+        )
+    );
 }

@@ -167,11 +167,11 @@ class HTTPRequest extends Codendi_Request
         return $this->isFromTrustedProxy() && isset($_SERVER[self::HEADER_X_FORWARDED_PROTO]);
     }
 
-    private function isFromTrustedProxy()
+    private function isFromTrustedProxy(): bool
     {
         if (isset($_SERVER[self::HEADER_REMOTE_ADDR])) {
             foreach ($this->trusted_proxied as $proxy => $nop) {
-                if ($this->checkIp4($_SERVER[self::HEADER_REMOTE_ADDR], $proxy)) {
+                if (self::checkIp4($_SERVER[self::HEADER_REMOTE_ADDR], $proxy)) {
                     return true;
                 }
             }
