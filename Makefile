@@ -281,7 +281,7 @@ pull-docker-images: ## Pull all docker images used for development
 	$(DOCKER) pull enalean/tuleap-test-phpunit:c7-php80
 	$(DOCKER) pull enalean/tuleap-test-rest:c7-php73
 	$(DOCKER) pull enalean/tuleap-test-rest:c7-php74
-	$(DOCKER) pull enalean/tuleap-aio:latest
+	$(DOCKER) pull enalean/tuleap-aio:centos7
 	$(DOCKER) pull enalean/rnc2rng:latest
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
 
