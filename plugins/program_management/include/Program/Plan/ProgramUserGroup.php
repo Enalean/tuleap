@@ -32,15 +32,37 @@ final class ProgramUserGroup
     /**
      * @var ProgramForManagement
      */
-    public $program;
+    private $program;
     /**
      * @var int
      */
-    public $id;
+    private $id;
 
-    public function __construct(ProgramForManagement $program, int $id)
+    private function __construct(ProgramForManagement $program, int $id)
     {
         $this->program = $program;
         $this->id      = $id;
+    }
+
+    /**
+     * @throws InvalidProgramUserGroup
+     */
+    public static function buildProgramUserGroup(
+        BuildProgramUserGroup $group_build_adapter,
+        string $raw_user_group_id,
+        ProgramForManagement $program
+    ): self {
+        $user_group_id = $group_build_adapter->getProjectUserGroupId($raw_user_group_id, $program);
+        return new self($program, $user_group_id);
+    }
+
+    public function getProgram(): ProgramForManagement
+    {
+        return $this->program;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }
