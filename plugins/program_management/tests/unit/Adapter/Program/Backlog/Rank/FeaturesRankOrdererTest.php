@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 
-use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
@@ -63,7 +63,7 @@ final class FeaturesRankOrdererTest extends TestCase
             ->once()
             ->andThrow(new Tracker_Artifact_Exception_CannotRankWithMyself(45));
 
-        $this->expectExceptionObject(new RestException(400, "Artifact 45 cannot be ranked with itself."));
+        $this->expectException(FeatureCanNotBeRankedWithItselfException::class);
         $this->orderer->reorder($order, "101", new Program(101));
     }
 }

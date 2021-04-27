@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
-use Luracast\Restler\RestException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlannedProgramIncrement;
@@ -97,14 +97,15 @@ final class ContentModifier implements ModifyContent
 
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void
     {
+        if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
+            throw new AddOrOrderMustBeSetException();
+        }
         $program_increment = $this->program_increment_retriever->retrieveProgramIncrement($program_increment_id, $user);
         $program           = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId());
         $has_permission    = $this->permission_verifier->canUserPrioritizeFeatures($program, $user);
+
         if (! $has_permission) {
             throw new NotAllowedToPrioritizeException((int) $user->getId(), $program_increment->getId());
-        }
-        if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
-            throw new RestException(400, "`add` and `order` must not both be null");
         }
         if ($content_change->potential_feature_id_to_add !== null) {
             $this->planFeature($content_change->potential_feature_id_to_add, $program_increment, $user, $program);
@@ -142,7 +143,7 @@ final class ContentModifier implements ModifyContent
     }
 
     /**
-     * @throws \Luracast\Restler\RestException
+     * @throws FeatureCanNotBeRankedWithItselfException
      * @throws InvalidFeatureIdInProgramIncrementException
      */
     private function reorderFeature(
