@@ -29,6 +29,6 @@ mkdir /var/log/tuleap
 
 /usr/share/tuleap/src/utils/tuleap config-set init_mode supervisord
 
-/opt/remi/php73/root/bin/php /usr/share/tuleap/tools/distlp/backend-svn/run.php
+/opt/remi/php74/root/bin/php /usr/share/tuleap/tools/distlp/backend-svn/run.php
 
 exec supervisord -n
