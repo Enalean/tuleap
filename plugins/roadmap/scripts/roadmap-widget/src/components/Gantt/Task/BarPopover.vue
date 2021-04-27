@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <section class="tlp-popover roadmap-gantt-task-popover">
+    <section class="tlp-popover roadmap-gantt-task-popover" v-bind:class="popover_class">
         <div class="tlp-popover-arrow roadmap-gantt-task-popover-arrow"></div>
         <div
             class="tlp-popover-header roadmap-gantt-task-popover-header"
@@ -111,6 +111,10 @@ export default class BarPopover extends Vue {
         return this.formatDate(this.task.end);
     }
 
+    get popover_class(): string {
+        return this.is_milestone ? "roadmap-gantt-task-milestone-popover" : "";
+    }
+
     get header_class(): string {
         return "roadmap-gantt-task-popover-header-" + this.task.color_name;
     }
@@ -137,6 +141,14 @@ export default class BarPopover extends Vue {
         }
 
         return Math.round(Math.max(0, Math.min(100, this.task.progress * 100))) + "%";
+    }
+
+    get is_milestone(): boolean {
+        return (
+            !this.task.start ||
+            !this.task.end ||
+            this.task.end.toISOString() === this.task.start.toISOString()
+        );
     }
 }
 </script>

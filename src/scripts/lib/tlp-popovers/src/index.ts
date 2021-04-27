@@ -24,6 +24,6 @@ import { createPopover as createPopoverImplementation } from "./popovers";
 // Apply partially the popover creation function to pass document
 export const createPopover = (
     popover_trigger: HTMLElement,
-    popover_content: Element,
+    popover_content: HTMLElement,
     options?: PopoverOptions
 ): Popover => createPopoverImplementation(document, popover_trigger, popover_content, options);
