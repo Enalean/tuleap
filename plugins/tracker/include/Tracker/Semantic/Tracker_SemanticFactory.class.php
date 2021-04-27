@@ -21,6 +21,8 @@
  */
 
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressDuplicator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
@@ -212,7 +214,8 @@ class Tracker_SemanticFactory
             $this->getSemanticStatusFactory(),
             $this->getSemanticContributorFactory(),
             $this->getSemanticTooltipFactory(),
-            $timeframe_duplicator
+            $timeframe_duplicator,
+            new SemanticProgressDuplicator(new SemanticProgressDao()),
         ];
 
         EventManager::instance()->processEvent(
