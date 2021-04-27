@@ -19,11 +19,6 @@ msgid "Can prioritize features"
 msgstr "Peut prioriser des fonctionnalités"
 
 msgid ""
-"Cannot add the feature to the top backlog because you cannot manipulate all "
-"the impacted program increments"
-msgstr "Impossible d'ajouter la fonctionnalité à la planification générale car vous n'avez pas les droits de manipuler tous les incréments de programme impactés"
-
-msgid ""
 "Enables managing several related projects, synchronizing teams and milestones"
 msgstr ""
 "Permet la gestion de plusieurs projets, de synchroniser les équipes et les "

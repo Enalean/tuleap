@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-final class FeatureNotFoundException extends \Exception
+final class FeatureNotFoundException extends \RuntimeException implements FeatureException
 {
     public function __construct(int $potential_feature_id_to_add)
     {

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
@@ -47,6 +48,7 @@ interface ModifyContent
      * @throws ProgramIncrementNotFoundException
      * @throws ProgramTrackerException
      * @throws RemoveFeatureException
+     *  @throws FeatureException
      * @throws \Tuleap\ProgramManagement\Program\ProgramNotFoundException
      */
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void;

@@ -56,10 +56,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamException;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\RetrieveFeatures;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
@@ -376,9 +374,7 @@ final class ProjectResource extends AuthenticatedResource
             throw new RestException(404, $e->getMessage());
         } catch (ProjectIsNotAProgramException $e) {
             throw new RestException(403, $e->getMessage());
-        } catch (RemoveFeatureException $e) {
-            throw new RestException(400, dgettext("tuleap-program_management", "Cannot add the feature to the top backlog because you cannot manipulate all the impacted program increments"));
-        } catch (FeatureHasPlannedUserStoryException | FeatureNotFoundException $e) {
+        } catch (FeatureException $e) {
             throw new RestException(400, $e->getMessage());
         }
     }

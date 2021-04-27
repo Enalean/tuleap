@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Plan;
 
-final class FeatureCannotBePlannedInProgramIncrementException extends \Exception
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureException;
+
+final class FeatureCannotBePlannedInProgramIncrementException extends \RuntimeException implements FeatureException
 {
     public function __construct(int $feature_id, int $program_increment_id)
     {

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content;
 
-final class AddFeatureException extends \Exception
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureException;
+
+final class AddFeatureException extends \RuntimeException implements FeatureException
 {
     public function __construct(int $feature_id, int $program_increment_id, \Throwable $previous)
     {
