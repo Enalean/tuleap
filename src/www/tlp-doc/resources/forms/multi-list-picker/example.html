@@ -108,6 +108,25 @@
 </div>
 
 <div class="tlp-form-element">
+    <label class="tlp-label" for="list-picker-msb-none">ListPicker multiple with none value</label>
+    <select id="list-picker-msb-none" name="list-value" multiple>
+        <option value="100" selected>None</option>
+        <option value="saucer" selected>Saucer</option>
+        <option value="spheroid">Spheroid</option>
+        <option value="triangular">Triangular</option>
+        <option value="cigar">Cigar</option>
+        <option value="ovoid">Ovoid</option>
+    </select>
+    <script type="text/javascript">
+        import { createListPicker } from "@tuleap/list-picker";
+
+        createListPicker(document.querySelector("#list-picker-msb-none"), {
+            none_value: "100"
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
     <label class="tlp-label" for="list-picker-msb-avatars">ListPicker with custom items templates</label>
     <select id="list-picker-msb-avatars" name="list-value" multiple>
         <option value=""></option>

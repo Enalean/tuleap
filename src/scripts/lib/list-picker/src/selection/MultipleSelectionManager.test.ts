@@ -30,6 +30,7 @@ import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 describe("MultipleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
         manager: MultipleSelectionManager,
+        manager_without_none: MultipleSelectionManager,
         item_map_manager: ItemsMapManager,
         selection_container: Element,
         search_input: HTMLInputElement,
@@ -67,7 +68,23 @@ describe("MultipleSelectionManager", () => {
         openListPicker = jest.fn();
 
         item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
+
+        await item_map_manager.refreshItemsMap();
+
+        const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
+
         manager = new MultipleSelectionManager(
+            source_select_box,
+            selection_element,
+            search_field_element,
+            "Please select some values",
+            { openListPicker } as DropdownManager,
+            item_map_manager,
+            gettext_provider,
+            item_none
+        );
+
+        manager_without_none = new MultipleSelectionManager(
             source_select_box,
             selection_element,
             search_field_element,
@@ -77,7 +94,6 @@ describe("MultipleSelectionManager", () => {
             gettext_provider
         );
 
-        await item_map_manager.refreshItemsMap();
         item_1 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
         item_2 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_2");
         jest.spyOn(source_select_box, "dispatchEvent");
@@ -111,19 +127,18 @@ describe("MultipleSelectionManager", () => {
             manager.processSelection(item_1.element);
 
             expect(isItemSelected(item_1)).toBe(false);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
 
-        it("when an item is unselected and was the only selected item, then the search input placeholder should be reset and the 'remove all values' button removed", () => {
+        it("when an item is unselected and was the only selected item, then the none value is selected", () => {
             item_1.target_option.setAttribute("selected", "selected");
+            const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
+
             manager.initSelection();
             manager.processSelection(item_1.element);
 
-            expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
-            expect(
-                selection_container.querySelector(".list-picker-selected-value-remove-button")
-            ).toBeNull();
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
+            expect(isItemSelected(item_none)).toBe(true);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
 
         it("when the first item is selected, the placeholder on the search input is removed, and the 'clear all values' button is added", () => {
@@ -183,6 +198,7 @@ describe("MultipleSelectionManager", () => {
 
     describe("unselecting items", () => {
         it("When the X button in the badge of a selected item is clicked, then the item should be unselected", () => {
+            const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
             manager.processSelection(item_1.element);
 
             const x_button = selection_container.querySelector(
@@ -196,13 +212,15 @@ describe("MultipleSelectionManager", () => {
             x_button.dispatchEvent(new Event("pointerup"));
 
             expect(isItemSelected(item_1)).toBe(false);
+            expect(isItemSelected(item_none)).toBe(true);
+
             expect(openListPicker).toHaveBeenCalled();
             expect(
                 selection_container.querySelector(
                     ".list-picker-badge[title='Value 1'] > .list-picker-value-remove-button"
                 )
             ).toBeNull();
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
 
         it("should not unselect the item if the source <select> is disabled", () => {
@@ -224,7 +242,9 @@ describe("MultipleSelectionManager", () => {
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
 
-        it("When the 'remove all value' button is clicked, then all values should be unselected", () => {
+        it("When the 'remove all value' button is clicked and none value exist, then none value should be selected", () => {
+            const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
+
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
 
@@ -239,11 +259,39 @@ describe("MultipleSelectionManager", () => {
 
             expect(isItemSelected(item_1)).toBe(false);
             expect(isItemSelected(item_2)).toBe(false);
-            expect(selection_container.querySelectorAll(".list-picker-badge").length).toEqual(0);
+            expect(isItemSelected(item_none)).toBe(true);
+            expect(selection_container.querySelectorAll(".list-picker-badge").length).toEqual(1);
+            expect(openListPicker).toHaveBeenCalled();
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 4);
+        });
+
+        it("When the 'remove all value' button is clicked and none value doesn't exist, then all values should be unselected and placeholder displayed", async () => {
+            manager_without_none.processSelection(item_1.element);
+            manager_without_none.processSelection(item_2.element);
+
+            const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
+
+            source_select_box.options.remove(0);
+            await item_map_manager.refreshItemsMap();
+
+            const clear_values_button = selection_container.querySelector(
+                ".list-picker-selected-value-remove-button"
+            );
+            if (clear_values_button === null) {
+                throw new Error("'remove all values' button not found in selection container");
+            }
+
+            clear_values_button.dispatchEvent(new Event("pointerdown"));
+
+            expect(isItemSelected(item_1)).toBe(false);
+            expect(isItemSelected(item_2)).toBe(false);
+            expect(isItemSelected(item_none)).toBe(false);
+
+            expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
             expect(
                 selection_container.querySelector(".list-picker-selected-value-remove-button")
             ).toBeNull();
-            expect(search_input.getAttribute("placeholder")).toEqual("Please select some values");
+
             expect(openListPicker).toHaveBeenCalled();
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });

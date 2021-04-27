@@ -75,6 +75,12 @@ export async function createListPicker(
     );
 
     let selection_manager;
+
+    let none_item;
+    if (options?.none_value) {
+        none_item = items_map_manager.getItemWithValue(options?.none_value);
+    }
+
     if (source_select_box.multiple) {
         selection_manager = new MultipleSelectionManager(
             source_select_box,
@@ -83,7 +89,8 @@ export async function createListPicker(
             options?.placeholder ?? "",
             dropdown_manager,
             items_map_manager,
-            gettext_provider
+            gettext_provider,
+            none_item ?? null
         );
     } else {
         selection_manager = new SingleSelectionManager(

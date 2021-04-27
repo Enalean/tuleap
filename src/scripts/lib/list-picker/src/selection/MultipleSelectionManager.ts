@@ -28,8 +28,6 @@ export class MultipleSelectionManager implements SelectionManager {
     private readonly selection_state: ListPickerSelectionStateMultiple;
     private readonly clear_selection_state_button_element: Element;
 
-    private static NONE_ITEM_ID = "list-picker-item-100";
-
     constructor(
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_element: Element,
@@ -37,7 +35,8 @@ export class MultipleSelectionManager implements SelectionManager {
         private readonly placeholder_text: string,
         private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager,
-        private readonly gettext_provider: GettextProvider
+        private readonly gettext_provider: GettextProvider,
+        private readonly none_item?: ListPickerItem | null
     ) {
         this.selection_state = {
             selected_items: new Map(),
@@ -52,13 +51,19 @@ export class MultipleSelectionManager implements SelectionManager {
             throw new Error("No data-item-id found on element.");
         }
 
-        const item_id = item.dataset.itemId;
-        const list_item = this.items_map_manager.findListPickerItemInItemMap(item_id);
+        let item_id = item.dataset.itemId;
+        let list_item = this.items_map_manager.findListPickerItemInItemMap(item_id);
         if (list_item.is_selected) {
             this.removeListItemFromSelection(list_item);
             this.togglePlaceholder();
             this.toggleClearValuesButton();
-            return;
+
+            if (this.selection_state.selected_items.size !== 0 || !this.none_item) {
+                return;
+            }
+
+            item_id = this.none_item.id;
+            list_item = this.none_item;
         }
 
         this.unselectOtherValuesIfNoneIsSelected(item_id);
@@ -82,20 +87,18 @@ export class MultipleSelectionManager implements SelectionManager {
 
     private unselectNoneValueIfOtherValueSelected(item_id: string): void {
         if (
-            item_id !== MultipleSelectionManager.NONE_ITEM_ID &&
-            this.selection_state.selected_items.has(MultipleSelectionManager.NONE_ITEM_ID)
+            this.none_item &&
+            item_id !== this.none_item.id &&
+            this.selection_state.selected_items.has(this.none_item.id)
         ) {
-            const none_item = this.items_map_manager.findListPickerItemInItemMap(
-                MultipleSelectionManager.NONE_ITEM_ID
-            );
-            this.removeListItemFromSelection(none_item);
+            this.removeListItemFromSelection(this.none_item);
             this.togglePlaceholder();
             this.toggleClearValuesButton();
         }
     }
 
     private unselectOtherValuesIfNoneIsSelected(item_id: string): void {
-        if (item_id === MultipleSelectionManager.NONE_ITEM_ID) {
+        if (this.none_item && item_id === this.none_item.id) {
             this.selection_state.selected_items.forEach((selected_item: ListPickerItem) => {
                 this.removeListItemFromSelection(selected_item);
             });
@@ -207,8 +210,14 @@ export class MultipleSelectionManager implements SelectionManager {
             event.cancelBubble = true;
 
             this.clearSelectionState(true);
-            this.togglePlaceholder();
-            this.removeClearSelectionStateButton();
+
+            if (this.none_item) {
+                this.processSelection(this.none_item.element);
+            } else {
+                this.togglePlaceholder();
+                this.removeClearSelectionStateButton();
+            }
+
             this.dropdown_manager.openListPicker();
         });
 

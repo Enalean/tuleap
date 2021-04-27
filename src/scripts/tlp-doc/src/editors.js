@@ -213,6 +213,10 @@ import { createListPicker } from "@tuleap/list-picker";
                     placeholder: "Choose some values in the list",
                 });
 
+                createListPicker(document.querySelector("#list-picker-msb-none"), {
+                    none_value: "100",
+                });
+
                 createListPicker(document.querySelector("#list-picker-msb-avatars"), {
                     placeholder: "Choose GoT characters",
                     is_filterable: true,

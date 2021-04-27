@@ -118,7 +118,18 @@ async function createListPickerForSelect(
     select: HTMLSelectElement,
     createListPicker: ListPickerCreator
 ): Promise<void> {
+    const none_value = getNoneElement(select);
     await createListPicker(select, {
         is_filterable: true,
+        none_value: none_value,
     });
+}
+
+function getNoneElement(select: HTMLSelectElement): string | null {
+    for (const item of select.options) {
+        if (item.value === "100") {
+            return item.value;
+        }
+    }
+    return null;
 }

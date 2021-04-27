@@ -46,11 +46,23 @@ function MultiselectBoxController($element, $timeout) {
         }
         buildColorValueOptionDataset();
 
-        const options = { locale: document.body.dataset.userLocale };
+        const none_value = getNoneElement(select);
+
+        const options = { locale: document.body.dataset.userLocale, none_value: none_value };
 
         self.destroy = await createListPicker(select, options).then((list_picker) => {
             return list_picker.destroy;
         });
+    }
+
+    function getNoneElement(select) {
+        for (const item of select.options) {
+            if (item.value === "100" || item.value === "number:100") {
+                return item.value;
+            }
+        }
+
+        return null;
     }
 
     function destroy() {

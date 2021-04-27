@@ -97,6 +97,7 @@ describe("list-pickers-creator", () => {
 
             expect(createListPicker).toHaveBeenCalledWith(select, {
                 is_filterable: true,
+                none_value: null,
             });
         });
     });
@@ -108,6 +109,7 @@ describe("list-pickers-creator", () => {
 
             expect(createListPicker).toHaveBeenCalledWith(select, {
                 is_filterable: true,
+                none_value: null,
             });
         });
     });
@@ -119,6 +121,25 @@ describe("list-pickers-creator", () => {
 
             expect(createListPicker).toHaveBeenCalledWith(select, {
                 is_filterable: true,
+                none_value: null,
+            });
+        });
+    });
+
+    it("should init list-pickers with none value when a none option exist", () => {
+        ["sb", "msb"].forEach((type) => {
+            const select = createArtifactFormElementFieldInEditionModeOfType(type, true);
+            const option_none = document.createElement("option");
+            option_none.value = "100";
+            option_none.innerText = "None";
+
+            select.add(option_none);
+
+            initListPickersPostUpdateErrorView(doc, createListPicker);
+
+            expect(createListPicker).toHaveBeenCalledWith(select, {
+                is_filterable: true,
+                none_value: "100",
             });
         });
     });
@@ -143,12 +164,15 @@ describe("list-pickers-creator", () => {
 
         expect(createListPicker).toHaveBeenCalledWith(select_1, {
             is_filterable: true,
+            none_value: null,
         });
         expect(createListPicker).toHaveBeenCalledWith(select_2, {
             is_filterable: true,
+            none_value: null,
         });
         expect(createListPicker).toHaveBeenCalledWith(select_3, {
             is_filterable: true,
+            none_value: null,
         });
     });
 });
