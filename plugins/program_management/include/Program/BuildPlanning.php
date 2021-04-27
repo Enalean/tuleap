@@ -22,13 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program;
 
-use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
+use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Project;
 
 interface BuildPlanning
 {
     /**
      * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningHasNoProgramIncrementException
      */
-    public function buildRootPlanning(\PFUser $user, int $project_id): Planning;
+    public function getRootPlanning(\PFUser $user, int $project_id): \Planning;
+
+    public function getProjectFromPlanning(\Planning $root_planning): Project;
 }

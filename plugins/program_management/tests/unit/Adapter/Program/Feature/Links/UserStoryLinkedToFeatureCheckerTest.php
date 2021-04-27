@@ -27,9 +27,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Project;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -58,15 +57,16 @@ final class UserStoryLinkedToFeatureCheckerTest extends TestCase
     {
         $planning_builder = new class implements BuildPlanning
         {
-            public function buildRootPlanning(\PFUser $user, int $project_id): Planning
+            public function getRootPlanning(\PFUser $user, int $project_id): \Planning
             {
-                return new Planning(
-                    new ProgramTracker(TrackerTestBuilder::aTracker()->withId(20)->build()),
-                    5,
-                    'Release plan',
-                    [50, 60],
-                    new \Tuleap\ProgramManagement\Project($project_id, 'my-project', "My project")
-                );
+                $planning = new \Planning(1, "Root planning", $project_id, '', '');
+                $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withId(20)->build());
+                return $planning;
+            }
+
+            public function getProjectFromPlanning(\Planning $root_planning): Project
+            {
+                return new \Tuleap\ProgramManagement\Project(101, 'my-project', "My project");
             }
         };
 

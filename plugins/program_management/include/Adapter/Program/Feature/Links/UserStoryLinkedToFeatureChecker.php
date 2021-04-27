@@ -27,6 +27,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
 
 final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNotPlanned
 {
@@ -57,7 +58,7 @@ final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNo
     {
         $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {
-            $planning = $this->planning_adapter->buildRootPlanning($user, $user_story['project_id']);
+            $planning = Planning::buildPlanning($this->planning_adapter, $user, $user_story['project_id']);
 
             $is_linked_to_a_sprint_in_mirrored_milestones = $this->stories_linked_to_feature_dao->isLinkedToASprintInMirroredMilestones(
                 $user_story['user_story_id'],

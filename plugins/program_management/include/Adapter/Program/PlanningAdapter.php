@@ -25,9 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Project;
 
 final class PlanningAdapter implements BuildPlanning
 {
@@ -43,8 +42,9 @@ final class PlanningAdapter implements BuildPlanning
 
     /**
      * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningHasNoProgramIncrementException
      */
-    public function buildRootPlanning(\PFUser $user, int $project_id): Planning
+    public function getRootPlanning(\PFUser $user, int $project_id): \Planning
     {
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,
@@ -55,18 +55,15 @@ final class PlanningAdapter implements BuildPlanning
             throw new TopPlanningNotFoundInProjectException($project_id);
         }
 
-
         if ($root_planning->getPlanningTracker() instanceof \NullTracker) {
             throw new PlanningHasNoProgramIncrementException($root_planning->getId());
         }
-        $project_data = ProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
 
-        return new Planning(
-            new ProgramTracker($root_planning->getPlanningTracker()),
-            $root_planning->getId(),
-            $root_planning->getName(),
-            $root_planning->getBacklogTrackersIds(),
-            $project_data
-        );
+        return $root_planning;
+    }
+
+    public function getProjectFromPlanning(\Planning $root_planning): Project
+    {
+        return ProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
     }
 }

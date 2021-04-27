@@ -30,9 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\ProgramTracker;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -150,15 +148,12 @@ final class FeatureRepresentationBuilderTest extends TestCase
             ]
         );
         $this->parent_dao->shouldReceive('isLinkedToASprintInMirroredMilestones')->andReturnTrue();
-        $this->build_planning->shouldReceive('buildRootPlanning')->andReturn(
-            new Planning(
-                new ProgramTracker(TrackerTestBuilder::aTracker()->withId(20)->build()),
-                5,
-                'Release plan',
-                [50, 60],
-                new \Tuleap\ProgramManagement\Project(1, 'my-porject', "My project")
-            )
-        );
+
+        $planning = new \Planning(1, "Root planning", 1, '', '', [50, 60], 20);
+        $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withId(20)->build());
+        $this->build_planning->shouldReceive("getRootPlanning")->andReturn($planning);
+
+        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Project(1, 'my-porject', "My project"));
 
         $expected = new FeatureRepresentation(
             1,

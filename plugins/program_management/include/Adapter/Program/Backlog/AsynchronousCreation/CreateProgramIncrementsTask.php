@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Replication
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ProgramManagement\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -100,6 +101,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      * @throws ProgramIncrementTrackerRetrievalException
      * @throws FieldRetrievalException
      * @throws FieldSynchronizationException
+     * @throws TopPlanningNotFoundInProjectException
      */
     private function create(ReplicationData $replication_data): void
     {
