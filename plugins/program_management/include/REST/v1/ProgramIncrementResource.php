@@ -207,7 +207,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $modifier->modifyContent(
                 $user,
                 $id,
-                new ContentChange($potential_feature_id_to_add, $patch_representation->order)
+                ContentChange::fromRESTRepresentation($potential_feature_id_to_add, $patch_representation->order)
             );
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
             throw new RestException(404, $e->getMessage());

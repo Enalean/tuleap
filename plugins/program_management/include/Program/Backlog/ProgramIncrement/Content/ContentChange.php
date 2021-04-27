@@ -38,9 +38,24 @@ final class ContentChange
      */
     public $elements_to_order;
 
-    public function __construct(?int $potential_feature_id_to_add, ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order)
-    {
+    private function __construct(
+        ?int $potential_feature_id_to_add,
+        ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order
+    ) {
         $this->potential_feature_id_to_add = $potential_feature_id_to_add;
         $this->elements_to_order           = $elements_to_order;
+    }
+
+    /**
+     * @throws AddOrOrderMustBeSetException
+     */
+    public static function fromRESTRepresentation(
+        ?int $potential_feature_id_to_add,
+        ?FeatureElementToOrderInvolvedInChangeRepresentation $elements_to_order
+    ): self {
+        if ($potential_feature_id_to_add === null && $elements_to_order === null) {
+            throw new AddOrOrderMustBeSetException();
+        }
+        return new self($potential_feature_id_to_add, $elements_to_order);
     }
 }

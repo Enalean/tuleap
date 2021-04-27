@@ -97,9 +97,6 @@ final class ContentModifier implements ModifyContent
 
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void
     {
-        if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
-            throw new AddOrOrderMustBeSetException();
-        }
         $program_increment = $this->program_increment_retriever->retrieveProgramIncrement($program_increment_id, $user);
         $program           = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId());
         $has_permission    = $this->permission_verifier->canUserPrioritizeFeatures($program, $user);

@@ -38,7 +38,6 @@ interface ModifyContent
 {
     /**
      * @throws AddFeatureException
-     * @throws AddOrOrderMustBeSetException
      * @throws FeatureCanNotBeRankedWithItselfException
      * @throws FeatureCannotBePlannedInProgramIncrementException
      * @throws FeatureHasPlannedUserStoryException

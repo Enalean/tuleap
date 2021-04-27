@@ -62,7 +62,7 @@ final class ContentModifierTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectException(NotAllowedToPrioritizeException::class);
-        $modifier->modifyContent($user, 12, new ContentChange(201, null));
+        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(201, null));
     }
 
     public function testItThrowsWhenUserCannotSeeFeatureToAdd(): void
@@ -81,7 +81,7 @@ final class ContentModifierTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectException(FeatureNotFoundException::class);
-        $modifier->modifyContent($user, 12, new ContentChange(404, null));
+        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(404, null));
     }
 
     public function testItThrowsWhenFeatureToAddCannotBePlanned(): void
@@ -100,7 +100,7 @@ final class ContentModifierTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
-        $modifier->modifyContent($user, 12, new ContentChange(404, null));
+        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(404, null));
     }
 
     public function testItSucceedsWhenThereIsOnlyFeatureToAdd(): void
@@ -119,26 +119,7 @@ final class ContentModifierTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectNotToPerformAssertions();
-        $modifier->modifyContent($user, 12, new ContentChange(201, null));
-    }
-
-    public function testItFailedWhenThereIsNoFeatureToAddOrToOrder(): void
-    {
-        $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
-            $this->getStubProgramIncrementRetriever(),
-            $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(),
-            $this->buildFeaturePlanner(),
-            $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
-        );
-
-        $user = UserTestBuilder::aUser()->build();
-
-        $this->expectException(AddOrOrderMustBeSetException::class);
-        $modifier->modifyContent($user, 12, new ContentChange(null, null));
+        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(201, null));
     }
 
     public function testItSucceedsWhenThereIsOnlyFeatureToReorder(): void
@@ -159,7 +140,7 @@ final class ContentModifierTest extends TestCase
         $modifier->modifyContent(
             $user,
             12,
-            new ContentChange(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
         );
     }
 
@@ -181,7 +162,7 @@ final class ContentModifierTest extends TestCase
         $modifier->modifyContent(
             $user,
             12,
-            new ContentChange(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
         );
     }
 
@@ -203,7 +184,7 @@ final class ContentModifierTest extends TestCase
         $modifier->modifyContent(
             $user,
             12,
-            new ContentChange(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
         );
     }
 
