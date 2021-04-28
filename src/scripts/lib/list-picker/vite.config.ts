@@ -31,11 +31,19 @@ export default defineConfig({
             name: "ListPicker",
         },
         rollupOptions: {
-            external: ["@juggle/resize-observer", "lit-html", "@tuleap/gettext"],
+            external: [
+                "@juggle/resize-observer",
+                "lit-html",
+                "lit-html/directives/style-map",
+                "lit-html/directives/class-map",
+                "@tuleap/gettext",
+            ],
             output: {
                 globals: {
                     "@juggle/resize-observer": "@juggle/resize-observer",
                     "lit-html": "lit-html",
+                    "lit-html/directives/style-map": "lit-html/directives/style-map",
+                    "lit-html/directives/class-map": "lit-html/directives/class-map",
                     "@tuleap/gettext": "@tuleap/gettext",
                 },
             },
