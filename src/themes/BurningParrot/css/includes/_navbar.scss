@@ -74,7 +74,7 @@ header.pinned > .header-container {
     width: $dropdown-width;
 
     > .tlp-popover-arrow {
-        border-bottom-color: $tlp-theme-sidebar-background-color;
+        background: $tlp-theme-sidebar-background-color;
     }
 
     > .tlp-popover-header {

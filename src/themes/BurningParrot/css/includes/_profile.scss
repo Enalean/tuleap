@@ -44,7 +44,7 @@ $profile-max-width: 720px;
     #nav-dropdown-user-content,
     #nav-dropdown-new-content {
         > .tlp-popover-arrow {
-            border-bottom-color: lighten($tlp-theme-sidebar-background-color, 10%);
+            background: lighten($tlp-theme-sidebar-background-color, 10%);
         }
 
         > .tlp-popover-header {
