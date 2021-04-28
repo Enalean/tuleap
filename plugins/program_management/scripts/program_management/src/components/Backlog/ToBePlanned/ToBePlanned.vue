@@ -21,6 +21,8 @@
     <div>
         <h2 v-translate class="program-to-be-planned-title">To Be Planned</h2>
         <div data-is-container="true" data-can-plan="true">
+            <program-increment-not-plannable />
+
             <empty-state
                 v-if="to_be_planned_elements.length === 0 && !is_loading && !has_error"
                 data-test="empty-state"
@@ -54,11 +56,18 @@ import { State } from "vuex-class";
 import type { Feature } from "../../../type";
 import { namespace } from "vuex-class";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
+import ProgramIncrementNotPlannable from "../ProgramIncrement/ProgramIncrementNotPlannable.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
-    components: { ErrorDisplayer, BacklogElementSkeleton, ToBePlannedCard, EmptyState },
+    components: {
+        ProgramIncrementNotPlannable,
+        ErrorDisplayer,
+        BacklogElementSkeleton,
+        ToBePlannedCard,
+        EmptyState,
+    },
 })
 export default class ToBePlanned extends Vue {
     private error_message = "";

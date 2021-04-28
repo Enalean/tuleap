@@ -110,7 +110,7 @@ export default class FeatureCard extends Vue {
     }
 
     get is_draggable(): boolean {
-        return !this.feature.has_user_story_planned && this.program_increment.user_can_plan;
+        return this.program_increment.user_can_plan;
     }
 
     get reason_why_feature_is_not_draggable(): string {
@@ -118,13 +118,8 @@ export default class FeatureCard extends Vue {
             return "";
         }
 
-        if (!this.program_increment.user_can_plan) {
-            return this.$gettext(
-                "The feature is not plannable, user does not have permission to update artifact or field link."
-            );
-        }
         return this.$gettext(
-            "The feature has elements planned in team project, it can not be unplanned"
+            "The feature is not plannable, user does not have permission to update artifact or field link."
         );
     }
 }

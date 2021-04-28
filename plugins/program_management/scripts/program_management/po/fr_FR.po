@@ -47,7 +47,7 @@ msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
 msgid ""
-"The feature has elements planned in team project, it can not be unplanned"
+"The feature has elements planned in team project, it can not be unplanned."
 msgstr ""
 "La fonctionnalité a des éléments plannifié dans une équipe, elle ne peut pas "
 "être déplanifiée"
