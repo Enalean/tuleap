@@ -10,6 +10,7 @@ function SharedPropertiesService() {
         uuid: undefined,
         milestone: undefined,
         trackers_using_list_picker: [],
+        csrf_token_campaign_status: undefined,
     };
 
     return {
@@ -39,6 +40,8 @@ function SharedPropertiesService() {
         setCurrentMilestone: setCurrentMilestone,
         isListPickerUsedByTracker: isListPickerUsedByTracker,
         setTrackersUsingListPicker: setTrackersUsingListPicker,
+        getCSRFTokenCampaignStatus: getCSRFTokenCampaignStatus,
+        setCSRFTokenCampaignStatus: setCSRFTokenCampaignStatus,
     };
 
     function getProjectId() {
@@ -143,5 +146,13 @@ function SharedPropertiesService() {
 
     function setTrackersUsingListPicker(trackers_using_list_picker) {
         property.trackers_using_list_picker = trackers_using_list_picker;
+    }
+
+    function getCSRFTokenCampaignStatus() {
+        return property.csrf_token_campaign_status;
+    }
+
+    function setCSRFTokenCampaignStatus(csrf_token) {
+        property.csrf_token_campaign_status = csrf_token;
     }
 }

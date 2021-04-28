@@ -52,6 +52,9 @@ function TestManagementCtrl(
         );
         SharedPropertiesService.setTrackersUsingListPicker(trackers_ids_using_list_picker);
 
+        const csrf_token = testmanagement_init_data.csrfTokenCampaignStatus;
+        SharedPropertiesService.setCSRFTokenCampaignStatus(csrf_token);
+
         const language = testmanagement_init_data.language;
         amMoment.changeLocale(language);
         gettextCatalog.setCurrentLanguage(language);
