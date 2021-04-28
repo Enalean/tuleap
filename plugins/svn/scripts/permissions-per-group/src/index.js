@@ -29,6 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const project_id = vue_mount_point.dataset.projectId;
+    if (project_id === undefined) {
+        throw new Error("Could not read data-project-id from mount point");
+    }
+
     Vue.use(GettextPlugin, {
         translations: {
             fr: french_translations.messages,
@@ -41,6 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const RootComponent = Vue.extend(SvnPermissions);
     new RootComponent({
-        propsData: { ...vue_mount_point.dataset },
+        propsData: { projectId: project_id },
     }).$mount(vue_mount_point);
 });
