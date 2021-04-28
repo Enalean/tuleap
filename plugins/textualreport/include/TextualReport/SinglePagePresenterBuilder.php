@@ -18,12 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\TextualReport;
 
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ThemeVariation;
 
@@ -72,11 +75,7 @@ class SinglePagePresenterBuilder
         ];
     }
 
-    /**
-     *
-     * @return bool|string
-     */
-    private function getStylesheetsToEmbed(PFUser $current_user)
+    private function getStylesheetsToEmbed(PFUser $current_user): string
     {
         $theme_variant   = new ThemeVariant();
         $color           = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
@@ -87,19 +86,16 @@ class SinglePagePresenterBuilder
             __DIR__ . '/../../../../src/www/assets/core'
         );
 
-        $tlp_framework_base_css = new CssAssetWithoutVariantDeclinaisons(
-            $assets,
-            'tlp' . $theme_variation->getFileColorCondensedSuffix()
-        );
+        $css_assets = [
+            new CssAssetWithDensityVariants($assets, 'tlp-vars'),
+            new CssAsset($assets, 'tlp'),
+            new CssAsset($assets, 'BurningParrot/burning-parrot'),
+        ];
 
-        $stylesheets  = file_get_contents(
-            $tlp_framework_base_css->getFileURL($theme_variation)
-        );
-        $stylesheets .= file_get_contents(
-            $assets->getFileURL(
-                'BurningParrot/burning-parrot-' . $color->getName() . '.css'
-            )
-        );
+        $stylesheets = '';
+        foreach ($css_assets as $css_asset) {
+            $stylesheets .= file_get_contents($css_asset->getFileURL($theme_variation));
+        }
 
         return $stylesheets;
     }
