@@ -62,6 +62,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 
 .tlp-popover-header {
     display: flex;
+    z-index: 1;
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border-top-left-radius: $tlp-popover-radius;
@@ -78,6 +79,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 }
 
 .tlp-popover-body {
+    z-index: 1;
     padding: var(--tlp-medium-spacing);
     background: var(--tlp-ui-white);
     font-weight: normal;
@@ -95,6 +97,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 
 .tlp-popover-footer {
     display: flex;
+    z-index: 1;
     align-items: center;
     justify-content: flex-end;
     padding: var(--tlp-medium-spacing);

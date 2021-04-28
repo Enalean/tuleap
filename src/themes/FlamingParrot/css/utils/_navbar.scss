@@ -179,7 +179,7 @@ header {
         width: $dropdown-width;
 
         > .tlp-popover-arrow {
-            border-bottom-color: $sidebar-background;
+            background: $sidebar-background;
         }
 
         > .tlp-popover-header {
