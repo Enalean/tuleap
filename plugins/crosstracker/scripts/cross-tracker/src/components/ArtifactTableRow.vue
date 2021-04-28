@@ -44,19 +44,19 @@
         </td>
     </tr>
 </template>
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import type { Artifact } from "../type";
 import ListBindUser from "./ListBindUser.vue";
 
-export default {
-    name: "ArtifactTableRow",
-    components: { ListBindUser },
-    props: {
-        artifact: Object,
-    },
-    computed: {
-        badge_color() {
-            return "tlp-badge-" + this.artifact.badge.color;
-        },
-    },
-};
+@Component({ components: { ListBindUser } })
+export default class ArtifactTableRow extends Vue {
+    @Prop({ required: true })
+    readonly artifact!: Artifact;
+
+    badge_color(): string {
+        return "tlp-badge-" + this.artifact.badge.color;
+    }
+}
 </script>

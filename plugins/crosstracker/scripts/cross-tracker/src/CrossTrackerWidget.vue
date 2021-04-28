@@ -47,104 +47,118 @@
         />
     </div>
 </template>
-<script>
-import { mapGetters, mapState } from "vuex";
+<script lang="ts">
+import Vue from "vue";
 import ArtifactTable from "./components/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
 import { getReport } from "./api/rest-querier";
+import ArtifactTableRow from "./components/ArtifactTableRow.vue";
+import ExportButton from "./components/ExportCSVButton.vue";
+import { Component, Prop } from "vue-property-decorator";
+import { Getter, State } from "vuex-class";
+import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
+import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
+import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 
-export default {
-    name: "CrossTrackerWidget",
+export interface SaveEvent {
+    saved_state: boolean;
+}
+
+@Component({
     components: {
-        ErrorMessage,
         ArtifactTable,
         ReadingMode,
         WritingMode,
+        ErrorMessage,
         ErrorInactiveProjectMessage,
+        ArtifactTableRow,
+        ExportButton,
     },
-    props: {
-        backendCrossTrackerReport: Object,
-        readingCrossTrackerReport: Object,
-        writingCrossTrackerReport: Object,
-    },
-    data() {
-        return {
-            is_loading: true,
-        };
-    },
-    computed: {
-        ...mapState([
-            "reading_mode",
-            "is_report_saved",
-            "report_id",
-            "success_message",
-            "is_user_admin",
-        ]),
-        ...mapGetters(["has_success_message"]),
-        is_reading_mode_shown() {
-            return this.reading_mode === true && !this.is_loading;
-        },
-    },
-    mounted() {
+})
+export default class CrossTrackerWidget extends Vue {
+    @Prop({ required: true })
+    readonly backendCrossTrackerReport!: BackendCrossTrackerReport;
+    @Prop({ required: true })
+    readonly readingCrossTrackerReport!: ReadingCrossTrackerReport;
+    @Prop({ required: true })
+    readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
+
+    @State
+    private readonly reading_mode!: boolean;
+    @State
+    private readonly report_id!: number;
+    @State
+    private readonly success_message!: string;
+    @State
+    private readonly is_user_admin!: boolean;
+
+    @Getter
+    readonly has_success_message!: boolean;
+
+    is_loading = true;
+
+    get is_reading_mode_shown(): boolean {
+        return this.reading_mode && !this.is_loading;
+    }
+    mounted(): void {
         this.loadBackendReport();
-    },
-    methods: {
-        switchToWritingMode() {
-            if (!this.is_user_admin) {
-                return;
-            }
+    }
 
+    switchToWritingMode(): void {
+        if (!this.is_user_admin) {
+            return;
+        }
+
+        this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
+        this.$store.commit("switchToWritingMode");
+    }
+
+    switchToReadingMode(event: SaveEvent): void {
+        if (event.saved_state) {
             this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-            this.$store.commit("switchToWritingMode");
-        },
-
-        switchToReadingMode(state) {
-            if (state.saved_state === true) {
-                this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-            } else {
-                this.readingCrossTrackerReport.duplicateFromReport(this.writingCrossTrackerReport);
-            }
-            this.$store.commit("switchToReadingMode", state.saved_state);
-        },
-
-        async loadBackendReport() {
-            this.is_loading = true;
-            try {
-                const { trackers, expert_query, invalid_trackers } = await getReport(
-                    this.report_id
-                );
-                this.backendCrossTrackerReport.init(trackers, expert_query);
-                this.initReports();
-
-                if (invalid_trackers.length > 0) {
-                    this.$store.commit("setInvalidTrackers", invalid_trackers);
-                }
-            } catch (error) {
-                if (Object.prototype.hasOwnProperty.call(error, "response")) {
-                    const error_json = await error.response.json();
-                    this.$store.commit("setErrorMessage", error_json.error.message);
-                }
-            } finally {
-                this.is_loading = false;
-            }
-        },
-
-        initReports() {
-            this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
-            this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-        },
-
-        reportSaved() {
-            this.initReports();
-            this.$store.commit("resetInvalidTrackerList");
-            this.$store.commit(
-                "switchReportToSaved",
-                this.$gettext("Report has been successfully saved")
+        } else {
+            this.readingCrossTrackerReport.duplicateFromWritingReport(
+                this.writingCrossTrackerReport
             );
-        },
-    },
-};
+        }
+        this.$store.commit("switchToReadingMode", event.saved_state);
+    }
+
+    async loadBackendReport(): Promise<void> {
+        this.is_loading = true;
+        try {
+            const { trackers, expert_query, invalid_trackers } = await getReport(this.report_id);
+            this.backendCrossTrackerReport.init(trackers, expert_query);
+            this.initReports();
+
+            if (invalid_trackers.length > 0) {
+                this.$store.commit("setInvalidTrackers", invalid_trackers);
+            }
+        } catch (error) {
+            if (Object.prototype.hasOwnProperty.call(error, "response")) {
+                const error_json = await error.response.json();
+                this.$store.commit("setErrorMessage", error_json.error.message);
+            }
+        } finally {
+            this.is_loading = false;
+        }
+    }
+
+    initReports(): void {
+        this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
+        this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
+    }
+
+    reportSaved(): void {
+        this.initReports();
+        this.$store.commit("resetInvalidTrackerList");
+        this.$store.commit(
+            "switchReportToSaved",
+            this.$gettext("Report has been successfully saved")
+        );
+    }
+}
 </script>

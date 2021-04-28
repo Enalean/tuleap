@@ -22,11 +22,15 @@
         {{ props.user.display_name }}
     </a>
 </template>
-<script>
-export default {
-    name: "ListBindUser",
-    props: {
-        user: Object,
-    },
-};
+<script lang="ts">
+import Vue from "vue";
+import { Prop } from "vue-property-decorator";
+import Component from "vue-class-component";
+import type { User } from "../type";
+
+@Component({})
+export default class ListBindUser extends Vue {
+    @Prop({ required: true })
+    readonly user!: User;
+}
 </script>

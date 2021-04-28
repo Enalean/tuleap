@@ -24,6 +24,7 @@
         v-bind:disabled="is_loading"
         v-if="should_display_export_button"
         v-on:click="exportCSV()"
+        data-test="export-cvs-button"
     >
         <i
             class="tlp-button-icon fa fa-download"
@@ -32,46 +33,41 @@
         <translate>Export CSV</translate>
     </button>
 </template>
-<script>
-import { mapState, mapGetters } from "vuex";
+<script lang="ts">
 import { download } from "../helpers/download-helper";
 import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";
+import Vue from "vue";
+import Component from "vue-class-component";
+import { State, Getter } from "vuex-class";
 
-export default {
-    name: "ExportCSVButton",
-    data() {
-        return {
-            is_loading: false,
-        };
-    },
-    computed: {
-        ...mapState(["report_id"]),
-        ...mapGetters(["should_display_export_button"]),
-    },
-    methods: {
-        exportCSV: async function () {
-            this.is_loading = true;
-            this.$store.commit("resetFeedbacks");
-            try {
-                const report = await getCSVReport(this.report_id);
-                const report_with_bom = addBOM(report);
-                download(
-                    report_with_bom,
-                    `export-${this.report_id}.csv`,
-                    "text/csv;encoding:utf-8"
-                );
-            } catch (error) {
-                if (error.response.status.toString().substring(0, 2) === "50") {
-                    this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
-                    return;
-                }
-                const message = await error.response.text();
-                this.$store.commit("setErrorMessage", message);
-            } finally {
-                this.is_loading = false;
+@Component
+export default class ExportCSVButton extends Vue {
+    @State
+    private readonly report_id!: number;
+
+    @Getter
+    readonly should_display_export_button!: boolean;
+
+    is_loading = false;
+
+    async exportCSV(): Promise<void> {
+        this.is_loading = true;
+        this.$store.commit("resetFeedbacks");
+        try {
+            const report = await getCSVReport(this.report_id);
+            const report_with_bom = addBOM(report);
+            download(report_with_bom, `export-${this.report_id}.csv`, "text/csv;encoding:utf-8");
+        } catch (error) {
+            if (error.response.status.toString().substring(0, 2) === "50") {
+                this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
+                return;
             }
-        },
-    },
-};
+            const message = await error.response.text();
+            this.$store.commit("setErrorMessage", message);
+        } finally {
+            this.is_loading = false;
+        }
+    }
+}
 </script>

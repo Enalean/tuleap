@@ -32,13 +32,21 @@
     </div>
 </template>
 
-<script>
-import { mapGetters, mapState } from "vuex";
-export default {
-    name: "ErrorInactiveProjectMessage",
-    computed: {
-        ...mapGetters(["has_invalid_trackers"]),
-        ...mapState(["invalid_trackers", "is_user_admin"]),
-    },
-};
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import { State, Getter } from "vuex-class";
+import type { Tracker } from "../type";
+
+@Component
+export default class ErrorInactiveProjectMessage extends Vue {
+    @State
+    private readonly invalid_trackers!: Tracker[];
+
+    @State
+    private readonly is_user_admin!: boolean;
+
+    @Getter
+    readonly has_invalid_trackers!: boolean;
+}
 </script>
