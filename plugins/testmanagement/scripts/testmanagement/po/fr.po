@@ -207,14 +207,14 @@ msgstr "Bugs liés"
 msgid "Load closed campaigns"
 msgstr "Charger les campagnes fermées"
 
-msgid "Mark test as blocked"
-msgstr "Marquer le test comme bloqué"
+msgid "Mark test as blocked and open next test"
+msgstr "Marquer le test comme bloqué et ouvrir le suivant"
 
-msgid "Mark test as not run"
-msgstr "Marquer le test comme non-passé"
+msgid "Mark test as not run and open next test"
+msgstr "Marquer le test comme non-passé et ouvrir le suivant"
 
-msgid "Mark test as passed"
-msgstr "Marquer le test comme passé avec succès"
+msgid "Mark test as passed and open next test"
+msgstr "Marquer le test comme passé avec succès et ouvrir le suivant"
 
 msgid "Milestone tests"
 msgstr "Tests du jalon"

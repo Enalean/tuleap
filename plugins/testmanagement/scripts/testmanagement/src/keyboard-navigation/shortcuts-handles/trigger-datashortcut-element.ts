@@ -18,15 +18,15 @@
  */
 
 export function clickOnElement(doc: Document, selector: string): void {
-    const data_shortcut_element = doc.querySelector(selector);
-    if (data_shortcut_element instanceof HTMLElement) {
-        data_shortcut_element.click();
+    const element = doc.querySelector(selector);
+    if (element instanceof HTMLElement) {
+        element.click();
     }
 }
 
 export function focusElement(doc: Document, selector: string): void {
-    const data_shortcut_element = doc.querySelector(selector);
-    if (data_shortcut_element instanceof HTMLElement) {
-        data_shortcut_element.focus();
+    const element = doc.querySelector(selector);
+    if (element instanceof HTMLElement) {
+        element.focus();
     }
 }

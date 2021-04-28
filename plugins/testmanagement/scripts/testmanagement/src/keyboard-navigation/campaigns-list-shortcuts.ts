@@ -22,12 +22,15 @@ import type { GettextProvider } from "./type";
 
 import { clickOnElement, focusElement } from "./shortcuts-handles/trigger-datashortcut-element";
 
-export function createCampaignsListShortcutsGroup(gettextCatalog: GettextProvider): ShortcutsGroup {
+export function createCampaignsListShortcutsGroup(
+    doc: Document,
+    gettextCatalog: GettextProvider
+): ShortcutsGroup {
     const focus_search_field: Shortcut = {
         keyboard_inputs: "f",
         description: gettextCatalog.getString("Set focus in search campaigns field"),
         handle: (): void => {
-            focusElement(document, "[data-shortcut-search-filter]");
+            focusElement(doc, "[data-shortcut-search-filter]");
         },
     };
 
@@ -35,7 +38,7 @@ export function createCampaignsListShortcutsGroup(gettextCatalog: GettextProvide
         keyboard_inputs: "a",
         description: gettextCatalog.getString("Toggle closed campaigns"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-closed-campaigns]");
+            clickOnElement(doc, "[data-shortcut-closed-campaigns]");
         },
     };
 

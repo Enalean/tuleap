@@ -35,10 +35,19 @@ export class KeyboardShortcuts {
     private readonly campaigns_list_shortcuts_group: ShortcutsGroup;
 
     constructor(gettextCatalog: GettextProvider) {
-        this.test_execution_shortcuts_group = createTestExecutionShortcutsGroup(gettextCatalog);
-        this.campaign_shortcuts_group = createCampaignShortcutsGroup(gettextCatalog);
-        this.tests_list_navigation_shortcuts_group = createTestsListNavigation(gettextCatalog);
-        this.campaigns_list_shortcuts_group = createCampaignsListShortcutsGroup(gettextCatalog);
+        this.test_execution_shortcuts_group = createTestExecutionShortcutsGroup(
+            document,
+            gettextCatalog
+        );
+        this.campaign_shortcuts_group = createCampaignShortcutsGroup(document, gettextCatalog);
+        this.tests_list_navigation_shortcuts_group = createTestsListNavigation(
+            document,
+            gettextCatalog
+        );
+        this.campaigns_list_shortcuts_group = createCampaignsListShortcutsGroup(
+            document,
+            gettextCatalog
+        );
     }
 
     setCampaignPageShortcuts(): void {

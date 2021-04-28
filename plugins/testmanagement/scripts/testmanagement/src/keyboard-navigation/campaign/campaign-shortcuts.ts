@@ -23,12 +23,15 @@ import type { GettextProvider } from "../type";
 import { clickOnElement, focusElement } from "../shortcuts-handles/trigger-datashortcut-element";
 import { showRemainingTests } from "../shortcuts-handles/show-remaining-tests";
 
-export function createCampaignShortcutsGroup(gettextCatalog: GettextProvider): ShortcutsGroup {
+export function createCampaignShortcutsGroup(
+    doc: Document,
+    gettextCatalog: GettextProvider
+): ShortcutsGroup {
     const select_tests: Shortcut = {
         keyboard_inputs: "e",
         description: gettextCatalog.getString("Select tests"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-select-tests]");
+            clickOnElement(doc, "[data-shortcut-select-tests]");
         },
     };
 
@@ -36,7 +39,7 @@ export function createCampaignShortcutsGroup(gettextCatalog: GettextProvider): S
         keyboard_inputs: "f",
         description: gettextCatalog.getString("Set focus in search filter"),
         handle: (): void => {
-            focusElement(document, "[data-shortcut-search-filter]");
+            focusElement(doc, "[data-shortcut-search-filter]");
         },
     };
 
@@ -44,7 +47,7 @@ export function createCampaignShortcutsGroup(gettextCatalog: GettextProvider): S
         keyboard_inputs: "a",
         description: gettextCatalog.getString("Toggle automated tests"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-filter-automated]");
+            clickOnElement(doc, "[data-shortcut-filter-automated]");
         },
     };
 
@@ -52,7 +55,7 @@ export function createCampaignShortcutsGroup(gettextCatalog: GettextProvider): S
         keyboard_inputs: "r",
         description: gettextCatalog.getString("Show remaining tests only"),
         handle: (): void => {
-            showRemainingTests(document);
+            showRemainingTests(doc);
         },
     };
 
@@ -60,7 +63,7 @@ export function createCampaignShortcutsGroup(gettextCatalog: GettextProvider): S
         keyboard_inputs: "l",
         description: gettextCatalog.getString("Set focus in tests list"),
         handle: (): void => {
-            focusElement(document, "[data-navigation-test-link][tabindex='0']");
+            focusElement(doc, "[data-navigation-test-link][tabindex='0']");
         },
     };
 
