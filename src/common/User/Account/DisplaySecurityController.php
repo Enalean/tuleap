@@ -94,13 +94,19 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
             throw new ForbiddenException();
         }
 
+        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new \Tuleap\Layout\IncludeCoreAssets(),
+                $core_assets,
                 'account/security.js'
             )
         );
-        $layout->includeFooterJavascriptFile('/scripts/check_pw.js');
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                $core_assets,
+                'account/check-pw.js'
+            )
+        );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);

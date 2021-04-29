@@ -23,10 +23,13 @@ namespace Tuleap\User\Password;
 class PasswordValidatorPresenter
 {
     public $key;
+    /**
+     * @var string
+     */
     public $regexp;
     public $description;
 
-    public function __construct($key, $regexp, $description)
+    public function __construct($key, string $regexp, $description)
     {
         $this->key         = $key;
         $this->regexp      = $regexp;

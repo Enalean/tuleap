@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -393,7 +394,12 @@ if ($page == 'admin_creation') {
 }
 
 // not valid registration, or first time to page
-$HTML->includeJavascriptFile('/scripts/check_pw.js');
+$HTML->addJavascriptAsset(
+    new JavascriptAsset(
+        new \Tuleap\Layout\IncludeCoreAssets(),
+        'account/check-pw.js'
+    )
+);
 $HTML->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
 $HTML->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
 $HTML->header(['title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class]);

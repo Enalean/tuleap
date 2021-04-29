@@ -31,6 +31,11 @@ class UserChangePasswordPresenter
     public $additional_password_messages;
     /** @var array */
     public $passwords_validators;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $json_password_strategy_keys;
     public $user_id;
     public $modal_title;
     public $modal_save;
@@ -47,6 +52,11 @@ class UserChangePasswordPresenter
         $this->csrf_token                   = $csrf_token;
         $this->additional_password_messages = $additional_password_messages;
         $this->passwords_validators         = $passwords_validators;
+        $password_strategy_keys             = [];
+        foreach ($this->passwords_validators as $passwords_validator) {
+                $password_strategy_keys[] = (int) $passwords_validator->regexp;
+        }
+        $this->json_password_strategy_keys = json_encode($password_strategy_keys, JSON_THROW_ON_ERROR);
 
         $this->user_id                      = $user->getId();
         $this->modal_title                  = $GLOBALS['Language']->getText('admin_user_changepw', 'header');

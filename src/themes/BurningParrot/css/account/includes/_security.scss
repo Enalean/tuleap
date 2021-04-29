@@ -49,11 +49,19 @@
         &.good {
             background: transparentize($tlp-ui-success, .93);
             color: $tlp-ui-success;
+
+            > .password-strategy-bad {
+                display: none;
+            }
         }
 
         &.bad {
             background: transparentize($tlp-ui-danger, .93);
             color: $tlp-ui-danger;
+
+            > .password-strategy-good {
+                display: none;
+            }
         }
 
         > .password-strategy-good,

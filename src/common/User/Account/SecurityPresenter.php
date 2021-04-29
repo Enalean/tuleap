@@ -65,6 +65,11 @@ final class SecurityPresenter
      * @var string
      * @psalm-readonly
      */
+    public $json_password_strategy_keys;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $last_successful_login = '-';
     /**
      * @var string
@@ -89,6 +94,11 @@ final class SecurityPresenter
         $this->username                 = $user->getUserName();
         $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
         $this->passwords_validators     = $password_validator_presenter;
+        $password_strategy_keys         = [];
+        foreach ($this->passwords_validators as $passwords_validator) {
+            $password_strategy_keys[] = (int) $passwords_validator->regexp;
+        }
+        $this->json_password_strategy_keys = json_encode($password_strategy_keys, JSON_THROW_ON_ERROR);
         if ($user_access['last_auth_success']) {
             $this->last_successful_login = \DateHelper::formatForLanguage(
                 $user->getLanguage(),

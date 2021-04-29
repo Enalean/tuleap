@@ -29,6 +29,7 @@ use Tuleap\InviteBuddy\Admin\InvitedByPresenterBuilder;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\User\Admin\RestrictedProjectsUserCounter;
@@ -54,7 +55,12 @@ $include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core')
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-user-details.js')
 );
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
+$GLOBALS['HTML']->addJavascriptAsset(
+    new JavascriptAsset(
+        $include_assets,
+        'account/check-pw.js'
+    )
+);
 
 $um                  = UserManager::instance();
 $em                  = EventManager::instance();
