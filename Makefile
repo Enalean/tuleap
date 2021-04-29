@@ -383,7 +383,9 @@ show-gerrit-ssh-pub-key:
 
 start-jenkins:
 	@$(DOCKER_COMPOSE) up -d jenkins
-	@echo "Jenkins is running at http://$(call get_ip_addr,jenkins):8080"
+	@echo "Jenkins is running at https://tuleap-web.tuleap-aio-dev.docker/jenkins"
+	@sleep 1
+	@$(DOCKER_COMPOSE) exec -T -u 0 jenkins /usr/local/bin/register_certificate.sh
 	@if $(DOCKER_COMPOSE) exec jenkins test -f /var/jenkins_home/secrets/initialAdminPassword; then \
 		echo "Admin credentials are admin `$(DOCKER_COMPOSE) exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`"; \
 	else \

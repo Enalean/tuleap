@@ -62,9 +62,13 @@ services:
       - ldap
 
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: tools/docker/jenkins
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
     volumes:
     - jenkins-data:/var/jenkins_home
+    - reverse-proxy-cert:/opt/reverse-proxy-cert:ro
 
   gitlab:
     build:
