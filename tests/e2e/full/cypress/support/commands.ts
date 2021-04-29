@@ -32,6 +32,7 @@ declare global {
             platformAdminLogin(): void;
             restrictedMemberLogin(): void;
             restrictedRegularUserLogin(): void;
+            regularUserLogin(): void;
             heisenbergLogin(): void;
             userLogout(): void;
             updatePlatformVisibilityAndAllowRestricted(): void;
@@ -86,6 +87,12 @@ Cypress.Commands.add("restrictedMemberLogin", () => {
 Cypress.Commands.add("restrictedRegularUserLogin", () => {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type("RestrictedRegularUser");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+});
+
+Cypress.Commands.add("regularUserLogin", () => {
+    cy.visit("/");
+    cy.get("[data-test=form_loginname]").type("RegularUser");
     cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
