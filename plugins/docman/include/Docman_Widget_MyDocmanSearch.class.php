@@ -71,9 +71,9 @@ class Docman_Widget_MyDocmanSearch extends Widget
                     <label class="tlp-label" for="docman_id">' .
             dgettext('tuleap-docman', 'Search document id') .
             '</label>
-                    <input type="text" name="docman_id" value="' . $docman_id . '" id="docman_id" class="tlp-input" placeholder="123"/>
+                    <input type="text" name="docman_id" data-test="document-search-id" value="' . $docman_id . '" id="docman_id" class="tlp-input" placeholder="123"/>
                   </div>';
-        $html .= '<input type="submit" class="tlp-button-primary" value="' . dgettext('tuleap-docman', 'Search') . '"/>';
+        $html .= '<input type="submit" data-test="document-button-search" class="tlp-button-primary" value="' . dgettext('tuleap-docman', 'Search') . '"/>';
         $html .= '</form>';
 
         if (($func == 'show_docman') && $docman_id) {
@@ -84,11 +84,11 @@ class Docman_Widget_MyDocmanSearch extends Widget
                 $itemPerm = $dPm->userCanAccess($user, $docman_id);
 
                 if ($itemPerm) {
-                    $html .= '<p><a href="/plugins/docman/?group_id=' . $res['group_id'] . '&action=details&id=' . $docman_id . '&section=properties">Show &quot;' . $res['title'] . '&quot; Properties</a></p>';
+                    $html .= '<p><a data-test="document-search-link" href="/plugins/docman/?group_id=' . $res['group_id'] . '&action=details&id=' . $docman_id . '&section=properties">Show &quot;' . $res['title'] . '&quot; Properties</a></p>';
                     return $html;
                 }
             }
-            $html .= '<p>' . dgettext('tuleap-docman', 'You do not have the permission to access the document') . '</p>';
+            $html .= '<p data-test="document-search-result">' . dgettext('tuleap-docman', 'You do not have the permission to access the document') . '</p>';
         }
 
         return $html;
