@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df97c9dac569d2bfe329469b5232ea8f",
+    "content-hash": "067c4c2a87f7f07644aefa6fe8b97106",
     "packages": [
         {
             "name": "smarty-gettext/smarty-gettext",
@@ -58,6 +58,10 @@
             ],
             "description": "Gettext plugin enabling internationalization in Smarty Package files",
             "homepage": "https://github.com/smarty-gettext/smarty-gettext",
+            "support": {
+                "issues": "https://github.com/smarty-gettext/smarty-gettext/issues",
+                "source": "https://github.com/smarty-gettext/smarty-gettext/tree/master"
+            },
             "time": "2017-05-12T12:14:46+00:00"
         },
         {
@@ -109,6 +113,12 @@
             "keywords": [
                 "templating"
             ],
+            "support": {
+                "forum": "http://www.smarty.net/forums/",
+                "irc": "irc://irc.freenode.org/smarty",
+                "issues": "http://code.google.com/p/smarty-php/issues/list",
+                "source": "https://github.com/smarty-php/smarty/tree/Smarty2"
+            },
             "time": "2017-11-03T06:39:13+00:00"
         }
     ],
@@ -120,7 +130,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "platform-overrides": {
-        "ext-gettext": "0"
-    }
+    "plugin-api-version": "2.0.0"
 }

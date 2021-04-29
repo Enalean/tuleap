@@ -10,7 +10,6 @@ let
         filter
         gd
         gettext
-        hash
         iconv
         intl
         json

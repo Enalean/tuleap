@@ -16,9 +16,6 @@
     }
   },
   "config": {
-    "platform": {
-      "ext-gettext": "0"
-    },
     "sort-packages": true
   }
 }

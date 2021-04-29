@@ -20,10 +20,6 @@
     "php-mime-mail-parser/php-mime-mail-parser": "^6.0"
   },
   "config": {
-    "platform": {
-      "php": "7.3",
-      "ext-mbstring": "0",
-      "ext-mailparse": "0"
-    }
+    "sort-packages": true
   }
 }

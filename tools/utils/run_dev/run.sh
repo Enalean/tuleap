@@ -7,7 +7,18 @@ if [ -z "$PHP_VERSION" ]; then
     exit 1
 fi
 
-/opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/tools/utils/php"$PHP_VERSION"/run.php --development
+tuleap-cfg site-deploy:apache
+tuleap-cfg site-deploy:fpm --development --php-version=$PHP_VERSION
+tuleap-cfg site-deploy:nginx --development
+
+# Workaround that at the time of switch to php 7.4 enalean/tuleap-aio-dev image will not contain the php 7.4 service
+# (because it need the commit where all the php 7.4 changes are included).
+# At a later point the following code can be removed.
+if [ "$PHP_VERSION" = "php74" ]; then
+    /bin/cp -f /usr/share/tuleap/src/utils/systemd/tuleap-php-fpm.service /lib/systemd/system/tuleap-php-fpm.service
+    systemctl daemon-reload
+    systemctl restart tuleap-php-fpm
+fi
 
 while [ ! -f /etc/pki/ca-trust/source/anchors/tuleap-realtime-cert.pem ]; do
     echo "Waiting for Tuleap Realtime certificate…"

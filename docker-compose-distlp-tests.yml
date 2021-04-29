@@ -45,7 +45,7 @@ services:
       - tuleap
 
   backend-web:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c7-php73-nginx
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c7-php74-nginx
     volumes:
       - .:/usr/share/tuleap
       - tests-tuleap-data:/data

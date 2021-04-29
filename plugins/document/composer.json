@@ -6,10 +6,6 @@
     }
   },
   "config": {
-    "platform": {
-      "php": "7.3",
-      "ext-mbstring": "0"
-    },
     "sort-packages": true
   },
   "require": {

@@ -133,7 +133,6 @@ seed_data() {
 setup_lhs
 setup_tuleap
 setup_database
-/usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy
 seed_data
 
@@ -143,7 +142,7 @@ seed_data
 sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf
 /usr/sbin/postfix -c /etc/postfix start
 
-/opt/remi/php73/root/usr/sbin/php-fpm --daemonize
+/opt/remi/php74/root/usr/sbin/php-fpm --daemonize
 nginx
 
 exec tail -f /var/log/nginx/error.log

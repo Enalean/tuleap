@@ -6,9 +6,6 @@
         }
     },
     "config": {
-        "platform": {
-            "php": "7.3"
-        },
         "sort-packages": true
     }
 }

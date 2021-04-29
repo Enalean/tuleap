@@ -44,8 +44,8 @@ $fpm             = new SiteDeployFPM(
         'codendiadm',
         'redis',
     ),
-    SiteDeployFPM::PHP73_DST_CONF_DIR,
-    SiteDeployFPM::PHP73_SRC_CONF_DIR,
+    SiteDeployFPM::PHP74_DST_CONF_DIR,
+    SiteDeployFPM::PHP74_SRC_CONF_DIR,
     [],
 );
 $nginx           = new BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');

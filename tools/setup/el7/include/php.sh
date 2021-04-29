@@ -13,9 +13,3 @@ _phpForgeupgrade() {
     "${php}" "${forgeupgrade_dir}/forgeupgrade.php" \
         --config="${forgeupgrade_conf}" "${1}" 2> >(_logCatcher)
 }
-
-_phpConfigureModule() {
-    # ${1}: module name
-
-    ${install_dir}/tools/utils/php73/run.php --module="${1}"
-}

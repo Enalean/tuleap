@@ -6,9 +6,9 @@ Conflicts=php73-php-fpm.service
 
 [Service]
 Type=notify
-PIDFile=/var/opt/remi/php73/run/php-fpm/php-fpm.pid
-EnvironmentFile=/etc/opt/remi/php73/sysconfig/php-fpm
-ExecStart=/opt/remi/php73/root/usr/sbin/php-fpm --nodaemonize
+PIDFile=/var/opt/remi/php74/run/php-fpm/php-fpm.pid
+EnvironmentFile=/etc/opt/remi/php74/sysconfig/php-fpm
+ExecStart=/opt/remi/php74/root/usr/sbin/php-fpm --nodaemonize
 ExecReload=/bin/kill -USR2 $MAINPID
 PrivateTmp=false
 

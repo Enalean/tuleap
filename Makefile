@@ -118,7 +118,7 @@ npm-build:
 	npm run build
 
 redeploy-nginx: ## Redeploy nginx configuration
-	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/tools/utils/php73/run.php --module=nginx
+	@$(DOCKER_COMPOSE) exec web tuleap-cfg site-deploy:nginx
 	@$(DOCKER_COMPOSE) exec web systemctl restart nginx
 
 restart-services: redeploy-nginx ## Restart nginx, apache and fpm
@@ -328,8 +328,8 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start-php73-centos7 start: ## Start Tuleap web with php73 & nginx on CentOS7
-	@echo "Start Tuleap in PHP 7.3 on CentOS 7"
+start: ## Start Tuleap web with php 7.4 & nginx on CentOS7
+	@echo "Start Tuleap in PHP 7.4 on CentOS 7"
 	@$(DOCKER_COMPOSE) up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
 

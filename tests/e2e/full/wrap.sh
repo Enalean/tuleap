@@ -30,7 +30,7 @@ TEST_RESULT_OUTPUT="$test_results_folder" CYPRESS_VERSION="$cypress_version" $TI
 tuleap_container_id="$($DOCKERCOMPOSE ps -q tuleap)"
 mkdir -p "$test_results_folder/logs"
 docker cp ${tuleap_container_id}:/var/log/nginx/ "$test_results_folder/logs"
-docker cp ${tuleap_container_id}:/var/opt/remi/php73/log/php-fpm/ "$test_results_folder/logs"
+docker cp ${tuleap_container_id}:/var/opt/remi/php74/log/php-fpm/ "$test_results_folder/logs"
 $DOCKERCOMPOSE logs tuleap > "$test_results_folder/logs/tuleap.log"
 
 $DOCKERCOMPOSE logs test > "$test_results_folder/logs/test.log"

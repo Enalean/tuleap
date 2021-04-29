@@ -122,7 +122,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
 
     ${tuleapcfg} site-deploy --force
 
-    _phpConfigureModule "nginx"
     ${tuleapcfg} systemctl restart "nginx" "tuleap"
     ${tuleapcfg} systemctl enable "nginx"
     _endMessage
@@ -136,7 +135,8 @@ if [ ${configure:-false} = "true" ]; then
     _configureCVS
     if ${printf} '%s' ${plugins_configured[@]:-false} | \
         ${grep} --quiet "true"; then
-        _phpConfigureModule "nginx"
+
+        ${tuleapcfg} site-deploy
         ${tuleapcfg} systemctl reload "nginx"
         ${tuleapcfg} systemctl restart "tuleap.service"
     fi
