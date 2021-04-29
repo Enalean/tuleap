@@ -33,7 +33,7 @@ services:
       - external-connectivity
 
   reverse-proxy:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-reverseproxy:distlp-1.4
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-reverseproxy:distlp-1.5
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:
       - .:/tuleap
@@ -60,7 +60,7 @@ services:
       - tuleap
 
   backend-svn:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-dev:1.13
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-dev:1.14
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap

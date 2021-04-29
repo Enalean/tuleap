@@ -7,6 +7,6 @@ while [ ! -f "/data/etc/tuleap/conf/local.inc" ]; do
     sleep 1
 done
 
-/opt/remi/php73/root/bin/php /tuleap/tools/distlp/reverse-proxy/run.php
+/opt/remi/php74/root/bin/php /tuleap/tools/distlp/reverse-proxy/run.php
 
 exec /sbin/nginx -g "daemon off;"
