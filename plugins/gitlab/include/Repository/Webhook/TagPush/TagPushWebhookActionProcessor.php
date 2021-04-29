@@ -25,6 +25,7 @@ use CrossReference;
 use Project;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
+use Tuleap\Gitlab\API\Tag\GitlabTag;
 use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
@@ -66,6 +67,10 @@ class TagPushWebhookActionProcessor
      * @var ReferenceManager
      */
     private $reference_manager;
+    /**
+     * @var TagInfoDao
+     */
+    private $tag_info_dao;
 
     public function __construct(
         CredentialsRetriever $credentials_retriever,
@@ -74,6 +79,7 @@ class TagPushWebhookActionProcessor
         TuleapReferenceRetriever $tuleap_reference_retriever,
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         ReferenceManager $reference_manager,
+        TagInfoDao $tag_info_dao,
         LoggerInterface $logger
     ) {
         $this->credentials_retriever               = $credentials_retriever;
@@ -82,6 +88,7 @@ class TagPushWebhookActionProcessor
         $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
         $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
         $this->reference_manager                   = $reference_manager;
+        $this->tag_info_dao                        = $tag_info_dao;
         $this->logger                              = $logger;
     }
 
@@ -129,6 +136,11 @@ class TagPushWebhookActionProcessor
                     $external_reference,
                     $projects
                 );
+
+                $this->saveTagData(
+                    $gitlab_repository,
+                    $gitlab_tag
+                );
             } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $reference_exception) {
                 $this->logger->error($reference_exception->getMessage());
             }
@@ -160,5 +172,18 @@ class TagPushWebhookActionProcessor
 
             $this->reference_manager->insertCrossReference($cross_reference);
         }
+    }
+
+    private function saveTagData(GitlabRepository $gitlab_repository, GitlabTag $gitlab_tag): void
+    {
+        $tag_name = $gitlab_tag->getName();
+
+        $this->tag_info_dao->saveGitlabTagInfo(
+            $gitlab_repository->getId(),
+            $gitlab_tag->getCommitSha1(),
+            $tag_name,
+            $gitlab_tag->getMessage(),
+        );
+        $this->logger->info("Tag data for $tag_name saved in database");
     }
 }

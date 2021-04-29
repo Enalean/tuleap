@@ -31,6 +31,7 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 
 class GitlabRepositoryDeletor
@@ -72,6 +73,10 @@ class GitlabRepositoryDeletor
      * @var CredentialsRetriever
      */
     private $credentials_retriever;
+    /**
+     * @var TagInfoDao
+     */
+    private $tag_info_dao;
 
     public function __construct(
         GitPermissionsManager $git_permissions_manager,
@@ -82,6 +87,7 @@ class GitlabRepositoryDeletor
         GitlabBotApiTokenDao $gitlab_bot_api_token_dao,
         CommitTuleapReferenceDao $commit_tuleap_reference_dao,
         MergeRequestTuleapReferenceDao $merge_request_dao,
+        TagInfoDao $tag_info_dao,
         CredentialsRetriever $credentials_retriever
     ) {
         $this->git_permissions_manager       = $git_permissions_manager;
@@ -92,6 +98,7 @@ class GitlabRepositoryDeletor
         $this->gitlab_bot_api_token_dao      = $gitlab_bot_api_token_dao;
         $this->commit_tuleap_reference_dao   = $commit_tuleap_reference_dao;
         $this->merge_request_dao             = $merge_request_dao;
+        $this->tag_info_dao                  = $tag_info_dao;
         $this->credentials_retriever         = $credentials_retriever;
     }
 
@@ -137,6 +144,7 @@ class GitlabRepositoryDeletor
                 $this->gitlab_bot_api_token_dao->deleteGitlabBotToken($repository_id);
                 $this->commit_tuleap_reference_dao->deleteCommitsInGitlabRepository($repository_id);
                 $this->merge_request_dao->deleteAllMergeRequestWithRepositoryId($repository_id);
+                $this->tag_info_dao->deleteTagsInGitlabRepository($repository_id);
                 $this->gitlab_repository_dao->deleteGitlabRepository($repository_id);
             }
         });

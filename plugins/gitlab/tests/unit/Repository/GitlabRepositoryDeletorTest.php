@@ -34,6 +34,7 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -101,6 +102,10 @@ class GitlabRepositoryDeletorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
      */
     private $credentials_retriever;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagInfoDao
+     */
+    private $tag_info_dao;
 
     protected function setUp(): void
     {
@@ -114,6 +119,7 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_bot_api_token_dao      = Mockery::mock(GitlabBotApiTokenDao::class);
         $this->commit_tuleap_reference_dao   = Mockery::mock(CommitTuleapReferenceDao::class);
         $this->merge_request_dao             = Mockery::mock(MergeRequestTuleapReferenceDao::class);
+        $this->tag_info_dao                  = Mockery::mock(TagInfoDao::class);
         $this->credentials_retriever         = Mockery::mock(CredentialsRetriever::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
@@ -125,6 +131,7 @@ class GitlabRepositoryDeletorTest extends TestCase
             $this->gitlab_bot_api_token_dao,
             $this->commit_tuleap_reference_dao,
             $this->merge_request_dao,
+            $this->tag_info_dao,
             $this->credentials_retriever
         );
 
@@ -257,6 +264,7 @@ class GitlabRepositoryDeletorTest extends TestCase
             ->once();
 
         $this->merge_request_dao->shouldReceive('deleteAllMergeRequestWithRepositoryId')->once();
+        $this->tag_info_dao->shouldReceive('deleteTagsInGitlabRepository')->once();
 
         $this->deletor->deleteRepositoryInProject(
             $this->gitlab_repository,
