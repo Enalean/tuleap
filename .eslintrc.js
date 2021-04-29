@@ -94,6 +94,13 @@ module.exports = {
         "vue/match-component-file-name": "error",
         "vue/require-direct-export": "off",
         // Typescript
+        "no-restricted-syntax": [
+            "error",
+            {
+                selector: "TSEnumDeclaration",
+                message: `[Ban TypeScript Enum] Please replace by string constant union types ("before" | "after") or plain Javascript object (Direction.before, Direction.after).`,
+            },
+        ],
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/class-literal-property-style": "error",
         "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],

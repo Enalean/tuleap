@@ -18,7 +18,7 @@
  */
 
 import type { Card, Mapping, Swimlane } from "../../type";
-import { Direction } from "../../type";
+import { AFTER } from "../../type";
 import type {
     AddChildrenToSwimlanePayload,
     MoveCardsPayload,
@@ -116,7 +116,7 @@ export function changeCardPosition(state: SwimlaneState, payload: ReorderCardsPa
         return;
     }
 
-    const offset = payload.position.direction === Direction.AFTER ? 1 : 0;
+    const offset = payload.position.direction === AFTER ? 1 : 0;
     state_swimlane.children_cards.splice(sibling_index + offset, 0, card_to_move);
 }
 

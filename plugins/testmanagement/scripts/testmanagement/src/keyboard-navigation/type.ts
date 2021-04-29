@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum Direction {
-    bottom = "BOTTOM",
-    top = "TOP",
-    next = "NEXT",
-    previous = "PREVIOUS",
-}
+export type Direction = "BOTTOM" | "TOP" | "NEXT" | "PREVIOUS";
+export const BOTTOM: Direction = "BOTTOM";
+export const TOP: Direction = "TOP";
+export const NEXT: Direction = "NEXT";
+export const PREVIOUS: Direction = "PREVIOUS";
 
 export interface GettextProvider {
     getString(translatable_string: string, scope?: null, context?: string): string;

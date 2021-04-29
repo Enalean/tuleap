@@ -28,7 +28,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { CreationOptions } from "../../../../../store/type";
+import { TRACKER_EMPTY } from "../../../../../store/type";
 import SvgTrackerEmpty from "./SvgTrackerEmpty.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerEmptyCardDescription from "./TrackerEmptyCardDescription.vue";
@@ -41,6 +41,6 @@ import TrackerEmptyCardDescription from "./TrackerEmptyCardDescription.vue";
     },
 })
 export default class TrackerEmptyCard extends Vue {
-    private option_name: CreationOptions = CreationOptions.TRACKER_EMPTY;
+    private option_name = TRACKER_EMPTY;
 }
 </script>

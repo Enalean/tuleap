@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum TextFormat {
-    TEXT = "text",
-    HTML = "html",
-}
+export const TEXT = "text";
+export const HTML = "html";
+export type TextFormat = typeof TEXT | typeof HTML;
 
 export interface TextValue {
     readonly content: string;

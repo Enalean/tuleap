@@ -23,7 +23,7 @@ import * as mutations from "./mutations";
 import type { ProgramIncrement } from "../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 import type { FeaturePlanningChange } from "../helpers/feature-reordering";
-import { Direction } from "../helpers/feature-reordering";
+import { AFTER, BEFORE } from "../helpers/feature-reordering";
 
 describe("Mutations", () => {
     describe("addProgramIncrement", () => {
@@ -94,7 +94,7 @@ describe("Mutations", () => {
                 feature: { id: 125 } as Feature,
                 order: {
                     feature: { id: 125 } as Feature,
-                    direction: Direction.AFTER,
+                    direction: AFTER,
                     compared_to: 14,
                 },
             } as FeaturePlanningChange;
@@ -114,7 +114,7 @@ describe("Mutations", () => {
                 feature: { id: 125 } as Feature,
                 order: {
                     feature: { id: 125 } as Feature,
-                    direction: Direction.BEFORE,
+                    direction: BEFORE,
                     compared_to: 14,
                 },
             } as FeaturePlanningChange;
@@ -305,7 +305,7 @@ describe("Mutations", () => {
             mutations.changeFeaturePositionInProgramBacklog(state, {
                 order: {
                     compared_to: 666,
-                    direction: Direction.AFTER,
+                    direction: AFTER,
                 },
                 feature: { id: 101 } as Feature,
             });
@@ -328,7 +328,7 @@ describe("Mutations", () => {
             mutations.changeFeaturePositionInProgramBacklog(state, {
                 order: {
                     compared_to: 102,
-                    direction: Direction.AFTER,
+                    direction: AFTER,
                 },
                 feature: { id: 101 } as Feature,
             });
@@ -351,7 +351,7 @@ describe("Mutations", () => {
             mutations.changeFeaturePositionInProgramBacklog(state, {
                 order: {
                     compared_to: 101,
-                    direction: Direction.BEFORE,
+                    direction: BEFORE,
                 },
                 feature: { id: 102 } as Feature,
             });
@@ -441,7 +441,7 @@ describe("Mutations", () => {
             mutations.moveFeatureFromBacklogToProgramIncrement(state, {
                 feature: { id: 101 } as Feature,
                 to_program_increment_id: 1,
-                order: { direction: Direction.BEFORE, compared_to: 102 },
+                order: { direction: BEFORE, compared_to: 102 },
             });
 
             expect(state).toEqual({
@@ -483,7 +483,7 @@ describe("Mutations", () => {
             mutations.moveFeatureFromBacklogToProgramIncrement(state, {
                 feature: { id: 101 } as Feature,
                 to_program_increment_id: 1,
-                order: { direction: Direction.AFTER, compared_to: 102 },
+                order: { direction: AFTER, compared_to: 102 },
             });
 
             expect(state).toEqual({
@@ -574,7 +574,7 @@ describe("Mutations", () => {
                 feature: { id: 101 } as Feature,
                 from_program_increment_id: 666,
                 to_program_increment_id: 1,
-                order: { compared_to: 106, direction: Direction.BEFORE },
+                order: { compared_to: 106, direction: BEFORE },
             });
 
             expect(state).toEqual({
@@ -624,7 +624,7 @@ describe("Mutations", () => {
                 feature: { id: 101 } as Feature,
                 from_program_increment_id: 666,
                 to_program_increment_id: 1,
-                order: { compared_to: 106, direction: Direction.AFTER },
+                order: { compared_to: 106, direction: AFTER },
             });
 
             expect(state).toEqual({
@@ -705,7 +705,7 @@ describe("Mutations", () => {
             mutations.changeFeaturePositionInSameProgramIncrement(state, {
                 to_program_increment_id: 1,
                 feature: { id: 66 } as Feature,
-                order: { compared_to: 9999, direction: Direction.BEFORE },
+                order: { compared_to: 9999, direction: BEFORE },
             });
 
             expect(state.program_increments[0].features).toEqual([{ id: 66 }]);
@@ -724,7 +724,7 @@ describe("Mutations", () => {
             mutations.changeFeaturePositionInSameProgramIncrement(state, {
                 to_program_increment_id: 1,
                 feature: { id: 569 } as Feature,
-                order: { compared_to: 14, direction: Direction.BEFORE },
+                order: { compared_to: 14, direction: BEFORE },
             });
 
             expect(state.program_increments[0].features).toEqual([
@@ -746,7 +746,7 @@ describe("Mutations", () => {
             mutations.changeFeaturePositionInSameProgramIncrement(state, {
                 to_program_increment_id: 1,
                 feature: { id: 14 } as Feature,
-                order: { compared_to: 569, direction: Direction.AFTER },
+                order: { compared_to: 569, direction: AFTER },
             });
 
             expect(state.program_increments[0].features).toEqual([

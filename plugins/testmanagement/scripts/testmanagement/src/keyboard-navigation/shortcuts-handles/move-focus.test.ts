@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { moveFocus, getTargetTest } from "./move-focus";
-import { Direction } from "../type";
+import { getTargetTest, moveFocus } from "./move-focus";
+import { BOTTOM, NEXT, PREVIOUS, TOP } from "../type";
 
 import * as getter_current_test from "./get-current-test";
 import * as getter_current_category from "./get-current-category";
@@ -52,7 +52,7 @@ describe("move-focus", () => {
             const focus = jest.spyOn(first_test_link, "focus");
             jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
 
-            moveFocus(doc, Direction.top);
+            moveFocus(doc, TOP);
 
             expect(focus).toHaveBeenCalled();
         });
@@ -61,7 +61,7 @@ describe("move-focus", () => {
     describe("getTargetTest", () => {
         it("returns null if no test is focused", () => {
             jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(null);
-            const target_test = getTargetTest(doc, Direction.top);
+            const target_test = getTargetTest(doc, TOP);
 
             expect(target_test).toBe(null);
         });
@@ -71,28 +71,28 @@ describe("move-focus", () => {
             second_test_link.removeAttribute("data-navigation-test-link");
 
             expect(() => {
-                getTargetTest(doc, Direction.next);
+                getTargetTest(doc, NEXT);
             }).toThrowError();
         });
 
         it("returns the first test link in document", () => {
             jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
-            const target_test = getTargetTest(doc, Direction.top);
+            const target_test = getTargetTest(doc, TOP);
 
             expect(target_test).toBe(first_test_link);
         });
 
         it("return the last test link in document", () => {
             jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
-            const target_test = getTargetTest(doc, Direction.bottom);
+            const target_test = getTargetTest(doc, BOTTOM);
 
             expect(target_test).toBe(fourth_test_link);
         });
 
-        describe("Direction.next", () => {
+        describe("NEXT", () => {
             it("returns the next test link", () => {
                 jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(first_test);
-                const target_test = getTargetTest(doc, Direction.next);
+                const target_test = getTargetTest(doc, NEXT);
 
                 expect(target_test).toBe(second_test_link);
             });
@@ -102,7 +102,7 @@ describe("move-focus", () => {
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
                     first_category
                 );
-                const target_test = getTargetTest(doc, Direction.next);
+                const target_test = getTargetTest(doc, NEXT);
 
                 expect(target_test).toBe(third_test_link);
             });
@@ -112,16 +112,16 @@ describe("move-focus", () => {
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
                     second_category
                 );
-                const target_test = getTargetTest(doc, Direction.next);
+                const target_test = getTargetTest(doc, NEXT);
 
                 expect(target_test).toBe(first_test_link);
             });
         });
 
-        describe("Direction.previous", () => {
+        describe("PREVIOUS", () => {
             it("returns the previous test link", () => {
                 jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(second_test);
-                const target_test = getTargetTest(doc, Direction.previous);
+                const target_test = getTargetTest(doc, PREVIOUS);
 
                 expect(target_test).toBe(first_test_link);
             });
@@ -131,7 +131,7 @@ describe("move-focus", () => {
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
                     second_category
                 );
-                const target_test = getTargetTest(doc, Direction.previous);
+                const target_test = getTargetTest(doc, PREVIOUS);
 
                 expect(target_test).toBe(second_test_link);
             });
@@ -141,7 +141,7 @@ describe("move-focus", () => {
                 jest.spyOn(getter_current_category, "getCurrentCategory").mockReturnValue(
                     first_category
                 );
-                const target_test = getTargetTest(doc, Direction.previous);
+                const target_test = getTargetTest(doc, PREVIOUS);
 
                 expect(target_test).toBe(fourth_test_link);
             });

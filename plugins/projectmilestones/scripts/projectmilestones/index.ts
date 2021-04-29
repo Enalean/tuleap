@@ -28,7 +28,7 @@ import {
     getPOFileFromLocale,
 } from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import type { TrackerAgileDashboard } from "./src/type";
-import { BurnupMode } from "./src/type";
+import { COUNT, EFFORT } from "./src/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 label_start_date,
                 label_timeframe,
                 user_can_view_sub_milestones_planning,
-                burnup_mode === "count" ? BurnupMode.COUNT : BurnupMode.EFFORT
+                burnup_mode === "count" ? COUNT : EFFORT
             ),
         }).$mount(widget);
     }

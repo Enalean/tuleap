@@ -44,10 +44,9 @@ export interface FeatureReorderPosition {
     readonly compared_to: number;
 }
 
-export enum Direction {
-    BEFORE = "before",
-    AFTER = "after",
-}
+export type Direction = "before" | "after";
+export const BEFORE: Direction = "before";
+export const AFTER: Direction = "after";
 
 export interface SiblingFeatureHTMLElementWithProgramIncrement {
     sibling: HTMLElement;
@@ -63,7 +62,7 @@ function getFeatureReorderPosition(
             return null;
         }
 
-        const direction = Direction.AFTER;
+        const direction = AFTER;
         const last_feature_in_column =
             features_in_program_backlog[features_in_program_backlog.length - 1];
         const compared_to = last_feature_in_column.id;
@@ -127,13 +126,13 @@ function getFeatureToCompareWith(
 
     if (index === 0) {
         return {
-            direction: Direction.BEFORE,
+            direction: BEFORE,
             compared_to: features_to_compare[0].id,
         };
     }
 
     return {
-        direction: Direction.AFTER,
+        direction: AFTER,
         compared_to: features_to_compare[index - 1].id,
     };
 }

@@ -34,7 +34,7 @@ import type {
     DataForColorPicker,
     Tracker,
 } from "./src/store/type";
-import { CreationOptions } from "./src/store/type";
+import { NONE_YET } from "./src/store/type";
 import { createRouter } from "./src/router";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         trackers_from_other_projects,
         color_picker_data,
         default_tracker_color: tracker_colors.default_color,
-        active_option: CreationOptions.NONE_YET,
+        active_option: NONE_YET,
         selected_tracker_template: null,
         selected_project_tracker_template: null,
         selected_project: null,

@@ -20,14 +20,14 @@
 import * as mutations from "./mutations";
 import { setActiveOption } from "./mutations";
 import type { ProjectTemplate, State, Tracker } from "./type";
-import { CreationOptions } from "./type";
+import { NONE_YET, TRACKER_EMPTY, TRACKER_TEMPLATE } from "./type";
 
 describe("mutations", () => {
     describe("setActiveOption", () => {
         it("stores the active option for empty", () => {
-            const state: State = { active_option: CreationOptions.NONE_YET } as State;
-            setActiveOption(state, CreationOptions.TRACKER_EMPTY);
-            expect(state.active_option).toBe(CreationOptions.TRACKER_EMPTY);
+            const state: State = { active_option: NONE_YET } as State;
+            setActiveOption(state, TRACKER_EMPTY);
+            expect(state.active_option).toBe(TRACKER_EMPTY);
         });
 
         it("stores the active option for default template", () => {
@@ -38,7 +38,7 @@ describe("mutations", () => {
                 tlp_color: "fiesta-red",
             };
             const state: State = {
-                active_option: CreationOptions.NONE_YET,
+                active_option: NONE_YET,
                 project_templates: [] as ProjectTemplate[],
                 default_templates: [tracker],
             } as State;
@@ -58,8 +58,8 @@ describe("mutations", () => {
                     tlp_color: "fiesta-red",
                 },
             } as State;
-            setActiveOption(state, CreationOptions.TRACKER_TEMPLATE);
-            expect(state.active_option).toBe(CreationOptions.TRACKER_TEMPLATE);
+            setActiveOption(state, TRACKER_TEMPLATE);
+            expect(state.active_option).toBe(TRACKER_TEMPLATE);
             expect(state.selected_tracker_template).toBe(null);
         });
     });

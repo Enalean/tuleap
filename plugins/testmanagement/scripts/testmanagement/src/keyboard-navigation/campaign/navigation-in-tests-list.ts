@@ -19,7 +19,7 @@
 
 import type { Shortcut, ShortcutsGroup } from "../setup-shortcuts";
 import type { GettextProvider } from "../type";
-import { Direction } from "../type";
+import { BOTTOM, NEXT, PREVIOUS, TOP } from "../type";
 
 import { moveFocus } from "../shortcuts-handles/move-focus";
 
@@ -29,7 +29,7 @@ export function createTestsListNavigation(gettextCatalog: GettextProvider): Shor
         displayed_inputs: "k,↓",
         description: gettextCatalog.getString("Select next test tab from test list"),
         handle: (): void => {
-            moveFocus(document, Direction.next);
+            moveFocus(document, NEXT);
         },
     };
 
@@ -38,7 +38,7 @@ export function createTestsListNavigation(gettextCatalog: GettextProvider): Shor
         displayed_inputs: "j,↑",
         description: gettextCatalog.getString("Select previous test tab from test list"),
         handle: (): void => {
-            moveFocus(document, Direction.previous);
+            moveFocus(document, PREVIOUS);
         },
     };
 
@@ -47,7 +47,7 @@ export function createTestsListNavigation(gettextCatalog: GettextProvider): Shor
         displayed_inputs: gettextCatalog.getString("End", null, "Keyboard input"),
         description: gettextCatalog.getString("Select last test tab from test list"),
         handle: (): void => {
-            moveFocus(document, Direction.bottom);
+            moveFocus(document, BOTTOM);
         },
     };
 
@@ -56,7 +56,7 @@ export function createTestsListNavigation(gettextCatalog: GettextProvider): Shor
         displayed_inputs: gettextCatalog.getString("Home,↖", null, "Keyboard input"),
         description: gettextCatalog.getString("Select first test tab from test list"),
         handle: (): void => {
-            moveFocus(document, Direction.top);
+            moveFocus(document, TOP);
         },
     };
 

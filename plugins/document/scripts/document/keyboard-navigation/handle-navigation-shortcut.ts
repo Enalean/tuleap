@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Direction } from "../type";
+import type { Direction } from "../type";
+import { BOTTOM, NEXT, TOP } from "../type";
 import {
-    getTableLastChild,
-    getTableFirstChild,
     getNextSibling,
     getPreviousSibling,
+    getTableFirstChild,
+    getTableLastChild,
 } from "./get-target-row";
 import { getFocusedRow } from "./get-focused-row";
 
@@ -45,10 +46,10 @@ function getTargetRow(doc: Document, direction: Direction): HTMLElement | null {
     if (!table_body || (table_body && !table_body.hasChildNodes())) {
         return null;
     }
-    if (direction === Direction.bottom) {
+    if (direction === BOTTOM) {
         return getTableLastChild(table_body);
     }
-    if (direction === Direction.top) {
+    if (direction === TOP) {
         return getTableFirstChild(table_body);
     }
 
@@ -56,7 +57,7 @@ function getTargetRow(doc: Document, direction: Direction): HTMLElement | null {
     if (!focused_row) {
         return null;
     }
-    if (direction === Direction.next) {
+    if (direction === NEXT) {
         return getNextSibling(focused_row);
     }
     return getPreviousSibling(focused_row);

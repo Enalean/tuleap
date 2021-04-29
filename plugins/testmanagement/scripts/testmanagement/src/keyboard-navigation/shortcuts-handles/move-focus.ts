@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Direction } from "../type";
+import type { Direction } from "../type";
+import { BOTTOM, NEXT, PREVIOUS, TOP } from "../type";
 
 import { getCurrentTest } from "./get-current-test";
 import { getCurrentCategory } from "./get-current-category";
@@ -35,21 +36,21 @@ export function getTargetTest(doc: Document, direction: Direction): HTMLAnchorEl
         return null;
     }
 
-    if (direction === Direction.top) {
+    if (direction === TOP) {
         return getFirstTestLink(doc);
     }
 
-    if (direction === Direction.bottom) {
+    if (direction === BOTTOM) {
         return getLastTestLink(doc);
     }
 
     const current_category = getCurrentCategory(doc);
 
-    if (direction === Direction.next) {
+    if (direction === NEXT) {
         return getNextTestLink(doc, current_test, current_category);
     }
 
-    if (direction === Direction.previous) {
+    if (direction === PREVIOUS) {
         return getPreviousTestLink(doc, current_test, current_category);
     }
 

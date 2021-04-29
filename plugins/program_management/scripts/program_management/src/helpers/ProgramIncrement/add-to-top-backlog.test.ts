@@ -22,7 +22,7 @@ import {
     moveElementFromProgramIncrementToTopBackLog,
     reorderElementInTopBacklog,
 } from "./add-to-top-backlog";
-import { Direction } from "../feature-reordering";
+import { BEFORE } from "../feature-reordering";
 import type { Feature } from "../../type";
 
 jest.mock("tlp");
@@ -52,7 +52,7 @@ describe("Add to top backlog", () => {
         const tlpPatch = jest.spyOn(tlp, "patch");
         await moveElementFromProgramIncrementToTopBackLog(101, {
             order: {
-                direction: Direction.BEFORE,
+                direction: BEFORE,
                 compared_to: 14,
             },
             feature: { id: 1 } as Feature,
@@ -76,7 +76,7 @@ describe("Add to top backlog", () => {
         await reorderElementInTopBacklog(101, {
             feature: { id: 415 } as Feature,
             order: {
-                direction: Direction.BEFORE,
+                direction: BEFORE,
                 compared_to: 56,
             },
         });

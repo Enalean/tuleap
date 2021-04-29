@@ -1,7 +1,7 @@
 import * as tlp from "tlp";
 import { planElementInProgramIncrement, reorderElementInProgramIncrement } from "./feature-planner";
 import type { Feature } from "../../../type";
-import { Direction } from "../../feature-reordering";
+import { AFTER } from "../../feature-reordering";
 
 jest.mock("tlp");
 
@@ -12,7 +12,7 @@ describe("Feature planner", () => {
             await planElementInProgramIncrement({
                 to_program_increment_id: 4,
                 feature: { id: 5 } as Feature,
-                order: { direction: Direction.AFTER, compared_to: 19 },
+                order: { direction: AFTER, compared_to: 19 },
             });
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/v1/program_increment/4/content`, {
@@ -66,7 +66,7 @@ describe("Feature planner", () => {
             await reorderElementInProgramIncrement({
                 to_program_increment_id: 1,
                 feature: { id: 45 } as Feature,
-                order: { compared_to: 9, direction: Direction.AFTER },
+                order: { compared_to: 9, direction: AFTER },
             });
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/v1/program_increment/1/content`, {

@@ -5,6 +5,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 <!-- adrlog -- Regenerate the content by using "adr-log -e template.md -i". You can install it via "npm install -g adr-log" -->
 
 * [ADR-0001](0001-supported-browser-versions.md) - Supported browser list
+* [ADR-0002](0002-ban-typescript-enum.md) - Ban TypeScript Enum syntax
 
 <!-- adrlogstop -->
 
