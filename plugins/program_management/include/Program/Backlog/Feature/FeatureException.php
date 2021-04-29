@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Program\Plan;
+namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureException;
-
-final class InvalidFeatureIdInProgramIncrementException extends \RuntimeException implements FeatureException
+interface FeatureException extends \Throwable
 {
-    public function __construct(int $feature_id, int $program_increment_id)
-    {
-        parent::__construct(
-            sprintf('Feature #%d does not exist in program increment #%d', $feature_id, $program_increment_id)
-        );
-    }
 }

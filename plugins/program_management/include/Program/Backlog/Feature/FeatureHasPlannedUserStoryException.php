@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-final class FeatureHasPlannedUserStoryException extends \Exception
+final class FeatureHasPlannedUserStoryException extends \RuntimeException implements FeatureException
 {
     public function __construct(int $feature_id)
     {

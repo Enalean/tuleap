@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Program\Backlog\Feature;
 
-final class FeatureCanNotBeRankedWithItselfException extends \Exception
+final class FeatureCanNotBeRankedWithItselfException extends \RuntimeException implements FeatureException
 {
     public function __construct(\Throwable $previous)
     {

@@ -48,19 +48,13 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\RetrieveFeatureContent;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureNotFoundException;
+use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\NotAllowedToPrioritizeException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddOrOrderMustBeSetException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentChange;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\ContentModifier;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeaturePlanner;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
-use Tuleap\ProgramManagement\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Program\ProgramSearcher;
 use Tuleap\Project\ProjectAccessChecker;
@@ -213,7 +207,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             throw new RestException(404, $e->getMessage());
         } catch (NotAllowedToPrioritizeException $e) {
             throw new RestException(403, $e->getMessage());
-        } catch (FeatureNotFoundException | FeatureCannotBePlannedInProgramIncrementException | InvalidFeatureIdInProgramIncrementException | FeatureHasPlannedUserStoryException | AddFeatureException | RemoveFeatureException | AddOrOrderMustBeSetException | FeatureCanNotBeRankedWithItselfException $e) {
+        } catch (FeatureException | AddOrOrderMustBeSetException $e) {
             throw new RestException(400, $e->getMessage());
         }
     }
