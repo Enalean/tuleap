@@ -34,6 +34,7 @@
             <scrolling-area
                 v-bind:time_period="time_period"
                 v-bind:now="now"
+                v-bind:timescale="timescale"
                 v-on:is_scrolling="isScrolling"
             >
                 <time-period-header
