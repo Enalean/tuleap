@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 
 class FeatureToLinkBuilder
 {

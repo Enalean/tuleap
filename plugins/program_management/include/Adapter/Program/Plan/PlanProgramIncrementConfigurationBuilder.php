@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Program\Backlog\Plan\PlanCheckException;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrementConfiguration
 {

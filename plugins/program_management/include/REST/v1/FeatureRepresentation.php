@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
-use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**

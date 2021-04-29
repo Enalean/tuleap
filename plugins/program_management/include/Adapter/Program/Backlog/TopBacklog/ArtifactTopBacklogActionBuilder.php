@@ -28,8 +28,8 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 

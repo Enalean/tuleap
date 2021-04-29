@@ -26,10 +26,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Program\ProgramStore;
-use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
 

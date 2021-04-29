@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Program\Backlog\CreationCheck\CheckRequiredField;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckRequiredField;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 
 final class RequiredFieldChecker implements CheckRequiredField
 {

@@ -24,8 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;

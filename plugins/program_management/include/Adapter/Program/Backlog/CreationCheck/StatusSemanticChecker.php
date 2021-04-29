@@ -24,9 +24,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
-use Tuleap\ProgramManagement\Program\Backlog\CreationCheck\CheckStatus;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class StatusSemanticChecker implements CheckStatus
 {

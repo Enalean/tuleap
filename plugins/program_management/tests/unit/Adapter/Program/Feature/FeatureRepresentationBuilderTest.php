@@ -28,9 +28,9 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
-use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -153,7 +153,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
         $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withId(20)->build());
         $this->build_planning->shouldReceive("getRootPlanning")->andReturn($planning);
 
-        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Project(1, 'my-porject', "My project"));
+        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Domain\Project(1, 'my-porject', "My project"));
 
         $expected = new FeatureRepresentation(
             1,

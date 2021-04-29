@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
 
 class ContentDao extends DataAccessObject implements ContentStore
 {

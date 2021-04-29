@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 
 class PendingArtifactNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {

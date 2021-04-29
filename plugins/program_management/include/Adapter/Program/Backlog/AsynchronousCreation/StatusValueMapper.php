@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tracker_FormElement_Field_List;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\MapStatusByValue;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 final class StatusValueMapper implements MapStatusByValue

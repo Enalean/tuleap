@@ -25,11 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Cont
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\Test\Builders\UserTestBuilder;

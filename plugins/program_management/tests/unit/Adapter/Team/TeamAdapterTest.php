@@ -27,10 +27,10 @@ use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Program\ProgramStore;
-use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
-use Tuleap\ProgramManagement\Team\Creation\Team;
-use Tuleap\ProgramManagement\Team\Creation\TeamCollection;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 
 final class TeamAdapterTest extends TestCase
 {

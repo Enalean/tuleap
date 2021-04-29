@@ -31,11 +31,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilde
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\ContentStore;
-use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\ProgramSearcher;
-use Tuleap\ProgramManagement\Program\SearchProgram;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\ContentStore;
+use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
+use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;

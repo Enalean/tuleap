@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class ArtifactLinkFieldAdapter implements BuildField
 {

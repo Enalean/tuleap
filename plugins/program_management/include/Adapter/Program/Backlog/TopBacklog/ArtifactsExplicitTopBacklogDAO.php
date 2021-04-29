@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 
 class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBacklogStore
 {

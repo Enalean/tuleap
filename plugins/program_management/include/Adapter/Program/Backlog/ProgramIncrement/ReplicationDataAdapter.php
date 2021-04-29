@@ -25,11 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Artifact;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Artifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use UserManager;
 
 final class ReplicationDataAdapter implements BuildReplicationData

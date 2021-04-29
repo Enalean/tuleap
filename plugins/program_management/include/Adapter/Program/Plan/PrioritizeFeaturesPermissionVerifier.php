@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
-use Tuleap\ProgramManagement\Program\Plan\VerifyPrioritizeFeaturesPermission;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 use Tuleap\Project\ProjectAccessChecker;
 
 class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission

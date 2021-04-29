@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\Project\REST\UserGroupRetriever;
 
 final class ProgramUserGroupBuildAdapterTest extends TestCase

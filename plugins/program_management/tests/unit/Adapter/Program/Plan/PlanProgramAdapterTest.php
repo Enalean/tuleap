@@ -26,8 +26,8 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessProjectNotFoundException;
-use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanProgramAdapterTest extends TestCase

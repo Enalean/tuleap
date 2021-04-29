@@ -27,9 +27,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MassChangeTopBacklogActionBuilderTest extends TestCase

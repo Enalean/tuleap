@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project_AccessException;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;

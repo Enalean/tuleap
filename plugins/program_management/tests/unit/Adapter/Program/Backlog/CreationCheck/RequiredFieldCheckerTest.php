@@ -25,12 +25,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class RequiredFieldCheckerTest extends TestCase
 {
@@ -50,10 +50,10 @@ final class RequiredFieldCheckerTest extends TestCase
     {
         $required_title = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $required_title->shouldReceive('isRequired')->andReturn(true);
-        $required_title->shouldReceive('getId')->andReturn('789');
+        $required_title->shouldReceive('getId')->andReturn(789);
         $non_required_artifact_link = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class);
         $non_required_artifact_link->shouldReceive('isRequired')->andReturn(false);
-        $non_required_artifact_link->shouldReceive('getId')->andReturn('987');
+        $non_required_artifact_link->shouldReceive('getId')->andReturn(987);
 
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getFormElementFields')->andReturn([$required_title, $non_required_artifact_link]);
@@ -65,7 +65,7 @@ final class RequiredFieldCheckerTest extends TestCase
         $other_tracker_with_no_required_field->shouldReceive('getFormElementFields')->andReturn(
             [$other_non_required_field]
         );
-        $other_tracker_with_no_required_field->shouldReceive('getGroupId')->andReturn('148');
+        $other_tracker_with_no_required_field->shouldReceive('getGroupId')->andReturn(148);
 
         $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(
             $required_title,
@@ -79,17 +79,17 @@ final class RequiredFieldCheckerTest extends TestCase
             ),
             $collection
         );
-        $this->assertTrue($no_other_required_fields);
+        self::assertTrue($no_other_required_fields);
     }
 
     public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
     {
         $required_title = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $required_title->shouldReceive('isRequired')->andReturn(true);
-        $required_title->shouldReceive('getId')->andReturn('789');
+        $required_title->shouldReceive('getId')->andReturn(789);
         $required_artifact_link = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class);
         $required_artifact_link->shouldReceive('isRequired')->andReturn(true);
-        $required_artifact_link->shouldReceive('getId')->andReturn('789');
+        $required_artifact_link->shouldReceive('getId')->andReturn(789);
 
         $other_required_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
         $other_required_field->shouldReceive('isRequired')->andReturn(true);

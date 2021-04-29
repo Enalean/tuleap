@@ -30,8 +30,8 @@ use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 

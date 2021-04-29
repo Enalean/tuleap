@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use PFUser;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 

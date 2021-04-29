@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class TitleFieldAdapter implements BuildField
 {

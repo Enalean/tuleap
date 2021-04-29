@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 
 final class ProgramIncrementChecker implements CheckProgramIncrement
 {

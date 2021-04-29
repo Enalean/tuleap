@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Workspace\UnusedComponentCleaner;
+use Tuleap\ProgramManagement\Domain\Workspace\UnusedComponentCleaner;
 
 final class WorkspaceDAO extends DataAccessObject implements UnusedComponentCleaner
 {

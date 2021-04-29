@@ -24,10 +24,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use PFUser;
 use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\PlanningConfiguration\Planning;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
 
 final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNotPlanned
 {

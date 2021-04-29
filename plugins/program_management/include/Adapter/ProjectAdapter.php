@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter;
 
 use Project;
-use Tuleap\ProgramManagement\BuildProject;
-use Tuleap\ProgramManagement\Project as ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
 
 final class ProjectAdapter implements BuildProject
 {

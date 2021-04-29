@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddFeature;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureAdditionProcessor implements AddFeature

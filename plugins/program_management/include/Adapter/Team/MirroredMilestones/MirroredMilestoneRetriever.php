@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
-use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Team\MirroredMilestone\MirroredMilestone;
 
 class MirroredMilestoneRetriever
 {

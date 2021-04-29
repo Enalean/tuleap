@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Team\Creation\TeamCollection;
-use Tuleap\ProgramManagement\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 
 final class TeamDao extends DataAccessObject implements TeamStore
 {

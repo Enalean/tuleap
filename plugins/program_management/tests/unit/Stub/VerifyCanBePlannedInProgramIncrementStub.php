@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
 
 final class VerifyCanBePlannedInProgramIncrementStub implements VerifyCanBePlannedInProgramIncrement
 {

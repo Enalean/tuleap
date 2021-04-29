@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\ProgramManagement\Project as ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
 
 final class ProjectDataAdapterTest extends TestCase
 {

@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project;
 use Project_AccessException;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\Program\ProgramStore;
-use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
 
 final class ProgramAdapter implements BuildProgram
 {

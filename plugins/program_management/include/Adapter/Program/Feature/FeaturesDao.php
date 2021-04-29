@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeaturesStore;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 
 final class FeaturesDao extends DataAccessObject implements FeaturesStore
 {

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Program\Backlog\Feature\VerifyIsVisibleFeature;
-use Tuleap\ProgramManagement\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Program;
 
 final class VerifyIsVisibleFeatureStub implements VerifyIsVisibleFeature
 {

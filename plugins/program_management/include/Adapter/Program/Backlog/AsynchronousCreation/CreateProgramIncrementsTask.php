@@ -24,19 +24,19 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ProgramManagement\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ProgramManagement\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {

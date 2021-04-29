@@ -24,11 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 

@@ -24,8 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 
 final class AddToTopBacklogPostActionRepresentationTest extends TestCase
 {
