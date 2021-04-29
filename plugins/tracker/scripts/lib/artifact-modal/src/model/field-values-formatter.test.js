@@ -154,31 +154,11 @@ describe("TuleapArtifactFieldValues", () => {
             });
         });
 
-        describe("Given a tracker containing a string field,", function () {
-            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a null value will be returned", function () {
-                const tracker = {
-                    fields: [
-                        {
-                            field_id: 870,
-                            label: "Mammilloid",
-                            name: "coquelicot",
-                            permissions: ["read", "update", "create"],
-                            type: "string",
-                        },
-                    ],
-                };
-                const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
-                    870: {
-                        field_id: 870,
-                        permissions: ["read", "update", "create"],
-                        type: "string",
-                        value: null,
-                    },
-                });
-            });
-
-            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and its default value will be returned", function () {
+        describe("Given a tracker containing a string field", () => {
+            it(`and that it had a default value,
+                when I get the fields' selected values,
+                then a map of objects containing the field's id
+                and its default value will be returned`, () => {
                 const tracker = {
                     fields: [
                         {
@@ -296,44 +276,38 @@ describe("TuleapArtifactFieldValues", () => {
             });
         });
 
-        describe("Given a tracker containing an int field and a float field,", function () {
-            it("and that those fields didn't have a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and a null value will be returned", function () {
+        describe("Given a tracker containing an int field and a float field", () => {
+            it(`and that those fields had an empty string default value,
+                when I get the fields' selected values,
+                then it will let them as empty fields`, () => {
                 const tracker = {
                     fields: [
                         {
-                            field_id: 685,
-                            label: "raiiform",
-                            name: "loft",
-                            permissions: ["read", "update", "create"],
-                            type: "int",
-                        },
-                        {
-                            field_id: 775,
-                            label: "phalacrocoracine",
-                            name: "unvariant",
+                            field_id: 794,
+                            label: "coreciprocal",
+                            name: "lymphangiectasis",
                             permissions: ["read", "update", "create"],
                             type: "float",
+                            default_value: "",
+                        },
+                        {
+                            field_id: 974,
+                            label: "triplane",
+                            name: "anisotropically",
+                            permissions: ["read", "update", "create"],
+                            type: "int",
+                            default_value: "",
                         },
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
-                    685: {
-                        field_id: 685,
-                        type: "int",
-                        permissions: ["read", "update", "create"],
-                        value: null,
-                    },
-                    775: {
-                        field_id: 775,
-                        type: "float",
-                        permissions: ["read", "update", "create"],
-                        value: null,
-                    },
-                });
+                expect(output[794].value).toEqual("");
+                expect(output[974].value).toEqual("");
             });
 
-            it("and that those fields had a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and their default value will be returned", function () {
+            it(`and that those fields had a default value,
+                when I get the fields' selected values,
+                then a map of objects containing only the fields' id and their default value will be returned`, () => {
                 const tracker = {
                     fields: [
                         {

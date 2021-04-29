@@ -23,7 +23,10 @@ import angular_moment from "angular-moment";
 import filter from "angular-filter";
 import "angular-gettext";
 import angular_tlp from "@tuleap/angular-tlp";
+import { define } from "hybrids";
 import french_translations from "../po/fr_FR.po";
+
+import angular_custom_elements_module from "angular-custom-elements";
 
 import "ngVue";
 import "ngVue/build/plugins.js";
@@ -55,6 +58,11 @@ import ListPickerDirective from "./fields/list-picker-field/list-picker-field-di
 import ListPickerMultipleDirective from "./fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
 import RadioButtonFieldComponent from "./fields/radio-button-field/radio-button-field-component.js";
 
+import { IntField } from "./fields/int-field/IntField";
+import { StringField } from "./fields/string-field/StringField";
+
+define(IntField, StringField);
+
 export default angular
     .module("tuleap.artifact-modal", [
         angular_moment,
@@ -62,6 +70,7 @@ export default angular
         "ngVue",
         "ngVue.plugins",
         angular_tlp,
+        angular_custom_elements_module,
         filter,
         ngSanitize,
     ])
