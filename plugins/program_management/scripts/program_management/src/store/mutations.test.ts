@@ -381,7 +381,7 @@ describe("Mutations", () => {
     });
 
     describe("moveFeatureFromBacklogToProgramIncrement", () => {
-        it(`When feature is moving from backlog to Program Increment, Then feature is added to program increment`, () => {
+        it(`When feature is moving from backlog to Program Increment without order, Then feature is added to program increment`, () => {
             const state = {
                 to_be_planned_elements: [
                     {
@@ -395,8 +395,9 @@ describe("Mutations", () => {
             } as State;
 
             mutations.moveFeatureFromBacklogToProgramIncrement(state, {
-                feature_id: 101,
-                program_increment_id: 1,
+                feature: { id: 101 } as Feature,
+                to_program_increment_id: 1,
+                order: null,
             });
 
             expect(state).toEqual({
@@ -417,9 +418,94 @@ describe("Mutations", () => {
                 ] as ProgramIncrement[],
             });
         });
+
+        it(`When feature is moving from backlog to Program Increment with direction is before, Then feature is added to program increment`, () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 101,
+                    },
+                ] as Feature[],
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 102,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.moveFeatureFromBacklogToProgramIncrement(state, {
+                feature: { id: 101 } as Feature,
+                to_program_increment_id: 1,
+                order: { direction: Direction.BEFORE, compared_to: 102 },
+            });
+
+            expect(state).toEqual({
+                to_be_planned_elements: [] as Feature[],
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                            {
+                                id: 102,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            });
+        });
+        it(`When feature is moving from backlog to Program Increment with direction is after, Then feature is added to program increment`, () => {
+            const state = {
+                to_be_planned_elements: [
+                    {
+                        id: 101,
+                    },
+                ] as Feature[],
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 102,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.moveFeatureFromBacklogToProgramIncrement(state, {
+                feature: { id: 101 } as Feature,
+                to_program_increment_id: 1,
+                order: { direction: Direction.AFTER, compared_to: 102 },
+            });
+
+            expect(state).toEqual({
+                to_be_planned_elements: [] as Feature[],
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 102,
+                            },
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            });
+        });
     });
     describe("moveFeatureFromProgramIncrementToAnotherProgramIncrement", () => {
-        it(`When feature is moving from increment to another increment, Then feature is unplanned and planned`, () => {
+        it(`When feature is moving from increment to another increment without order, Then feature is unplanned and planned`, () => {
             const state = {
                 program_increments: [
                     {
@@ -438,9 +524,10 @@ describe("Mutations", () => {
             } as State;
 
             mutations.moveFeatureFromProgramIncrementToAnotherProgramIncrement(state, {
-                feature_id: 101,
+                feature: { id: 101 } as Feature,
                 from_program_increment_id: 666,
                 to_program_increment_id: 1,
+                order: null,
             });
 
             expect(state).toEqual({
@@ -448,6 +535,106 @@ describe("Mutations", () => {
                     {
                         id: 1,
                         features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                    {
+                        id: 666,
+                        features: [] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            });
+        });
+
+        it(`When feature is moving from increment to another increment with order is before, Then feature is unplanned and planned`, () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 106,
+                            },
+                        ] as Feature[],
+                    },
+                    {
+                        id: 666,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.moveFeatureFromProgramIncrementToAnotherProgramIncrement(state, {
+                feature: { id: 101 } as Feature,
+                from_program_increment_id: 666,
+                to_program_increment_id: 1,
+                order: { compared_to: 106, direction: Direction.BEFORE },
+            });
+
+            expect(state).toEqual({
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                            {
+                                id: 106,
+                            },
+                        ] as Feature[],
+                    },
+                    {
+                        id: 666,
+                        features: [] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            });
+        });
+
+        it(`When feature is moving from increment to another increment with order is after, Then feature is unplanned and planned`, () => {
+            const state = {
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 106,
+                            },
+                        ] as Feature[],
+                    },
+                    {
+                        id: 666,
+                        features: [
+                            {
+                                id: 101,
+                            },
+                        ] as Feature[],
+                    },
+                ] as ProgramIncrement[],
+            } as State;
+
+            mutations.moveFeatureFromProgramIncrementToAnotherProgramIncrement(state, {
+                feature: { id: 101 } as Feature,
+                from_program_increment_id: 666,
+                to_program_increment_id: 1,
+                order: { compared_to: 106, direction: Direction.AFTER },
+            });
+
+            expect(state).toEqual({
+                program_increments: [
+                    {
+                        id: 1,
+                        features: [
+                            {
+                                id: 106,
+                            },
                             {
                                 id: 101,
                             },
@@ -498,7 +685,7 @@ describe("Mutations", () => {
 
             expect(() =>
                 mutations.changeFeaturePositionInSameProgramIncrement(state, {
-                    program_increment_id: 1,
+                    to_program_increment_id: 1,
                     feature: { id: 66 } as Feature,
                     order: null,
                 })
@@ -516,7 +703,7 @@ describe("Mutations", () => {
             } as State;
 
             mutations.changeFeaturePositionInSameProgramIncrement(state, {
-                program_increment_id: 1,
+                to_program_increment_id: 1,
                 feature: { id: 66 } as Feature,
                 order: { compared_to: 9999, direction: Direction.BEFORE },
             });
@@ -535,7 +722,7 @@ describe("Mutations", () => {
             } as State;
 
             mutations.changeFeaturePositionInSameProgramIncrement(state, {
-                program_increment_id: 1,
+                to_program_increment_id: 1,
                 feature: { id: 569 } as Feature,
                 order: { compared_to: 14, direction: Direction.BEFORE },
             });
@@ -557,7 +744,7 @@ describe("Mutations", () => {
             } as State;
 
             mutations.changeFeaturePositionInSameProgramIncrement(state, {
-                program_increment_id: 1,
+                to_program_increment_id: 1,
                 feature: { id: 14 } as Feature,
                 order: { compared_to: 569, direction: Direction.AFTER },
             });

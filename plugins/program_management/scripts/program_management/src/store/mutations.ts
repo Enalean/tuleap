@@ -24,15 +24,12 @@ import type { FeatureIdWithProgramIncrement } from "../helpers/drag-drop";
 import type { UserStory } from "../helpers/UserStories/user-stories-retriever";
 import type {
     FeaturePlanningChange,
+    FeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement,
     FeaturePlanningChangeInProgramIncrement,
     FeatureReorderPosition,
 } from "../helpers/feature-reordering";
 import { Direction } from "../helpers/feature-reordering";
-import {
-    getToBePlannedElementFromId,
-    getProgramIncrementFromId,
-    getFeaturesInProgramIncrement,
-} from "./getters";
+import { getProgramIncrementFromId, getFeaturesInProgramIncrement } from "./getters";
 
 export interface LinkUserStoryToPlannedElement {
     element_id: number;
@@ -46,12 +43,6 @@ export interface LinkUserStoryToFeature extends LinkUserStoryToPlannedElement {
 export interface FeatureIdWithProgramIncrementId {
     feature_id: number;
     program_increment_id: number;
-}
-
-export interface MoveFeatureIdBetweenProgramIncrements {
-    feature_id: number;
-    from_program_increment_id: number;
-    to_program_increment_id: number;
 }
 
 export function addProgramIncrement(state: State, program_increment: ProgramIncrement): void {
@@ -200,7 +191,8 @@ export function changeFeaturePositionInSameProgramIncrement(
         state,
         feature_planning_change.order,
         feature_planning_change.feature,
-        feature_planning_change.program_increment_id
+        feature_planning_change.to_program_increment_id,
+        true
     );
 }
 
@@ -208,7 +200,8 @@ function orderFeatureInProgramIncrement(
     state: State,
     reorder_position: FeatureReorderPosition,
     feature: Feature,
-    program_increment_id: number
+    program_increment_id: number,
+    order_in_same_program_increment: boolean
 ): void {
     const sibling_index = getAllFeaturesInProgramIncrementWithoutFeature(
         state,
@@ -219,8 +212,9 @@ function orderFeatureInProgramIncrement(
     if (sibling_index === -1) {
         return;
     }
-
-    removeFeatureFromProgramIncrement(state, { program_increment_id, feature_id: feature.id });
+    if (order_in_same_program_increment) {
+        removeFeatureFromProgramIncrement(state, { program_increment_id, feature_id: feature.id });
+    }
 
     const offset = reorder_position.direction === Direction.AFTER ? 1 : 0;
     getFeaturesInProgramIncrement(state)(program_increment_id).splice(
@@ -247,40 +241,56 @@ function getAllFeaturesInProgramIncrementWithoutFeature(
 
 export function moveFeatureFromBacklogToProgramIncrement(
     state: State,
-    feature_id_with_program_increment_id: FeatureIdWithProgramIncrementId
+    feature_order: FeaturePlanningChangeInProgramIncrement
 ): void {
-    const feature_to_plan = getToBePlannedElementFromId(state)(
-        feature_id_with_program_increment_id.feature_id
-    );
+    removeToBePlannedElement(state, feature_order.feature);
+    if (!feature_order.order) {
+        const program_increment = getProgramIncrementFromId(state)(
+            feature_order.to_program_increment_id
+        );
+        program_increment.features.push(feature_order.feature);
+        return;
+    }
 
-    removeToBePlannedElement(state, feature_to_plan);
-
-    const program_increment = getProgramIncrementFromId(state)(
-        feature_id_with_program_increment_id.program_increment_id
+    orderFeatureInProgramIncrement(
+        state,
+        feature_order.order,
+        feature_order.feature,
+        feature_order.to_program_increment_id,
+        false
     );
-    program_increment.features.push(feature_to_plan);
 }
 
 export function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
     state: State,
-    feature_id_with_program_increments_ids: MoveFeatureIdBetweenProgramIncrements
+    feature_order: FeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement
 ): void {
     const from_program_increment = getProgramIncrementFromId(state)(
-        feature_id_with_program_increments_ids.from_program_increment_id
-    );
-    const to_program_increment = getProgramIncrementFromId(state)(
-        feature_id_with_program_increments_ids.to_program_increment_id
+        feature_order.from_program_increment_id
     );
 
     const feature_to_move_index = extractFeatureIndexFromProgramIncrement({
-        feature_id: feature_id_with_program_increments_ids.feature_id,
+        feature_id: feature_order.feature.id,
         program_increment: from_program_increment,
     });
 
-    const feature_to_move = from_program_increment.features[feature_to_move_index];
-
     from_program_increment.features.splice(feature_to_move_index, 1);
-    to_program_increment.features.push(feature_to_move);
+
+    if (!feature_order.order) {
+        const program_increment = getProgramIncrementFromId(state)(
+            feature_order.to_program_increment_id
+        );
+        program_increment.features.push(feature_order.feature);
+        return;
+    }
+
+    orderFeatureInProgramIncrement(
+        state,
+        feature_order.order,
+        feature_order.feature,
+        feature_order.to_program_increment_id,
+        false
+    );
 }
 
 export function removeFeatureFromProgramIncrement(

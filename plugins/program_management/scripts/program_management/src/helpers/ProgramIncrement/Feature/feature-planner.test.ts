@@ -6,18 +6,42 @@ import { Direction } from "../../feature-reordering";
 jest.mock("tlp");
 
 describe("Feature planner", () => {
-    it("Plan elements", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
-        await planElementInProgramIncrement(1, 10000, [{ id: 100 }, { id: 200 }]);
+    describe("planElementInProgramIncrement", () => {
+        it("Plan feature with order", async () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            await planElementInProgramIncrement({
+                to_program_increment_id: 4,
+                feature: { id: 5 } as Feature,
+                order: { direction: Direction.AFTER, compared_to: 19 },
+            });
 
-        expect(tlpPut).toHaveBeenCalledWith(`/api/v1/artifacts/1`, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                values: [{ field_id: 10000, links: [{ id: 100 }, { id: 200 }] }],
-                comment: { body: "", format: "text" },
-            }),
+            expect(tlpPatch).toHaveBeenCalledWith(`/api/v1/program_increment/4/content`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    add: [{ id: 5 }],
+                    order: { ids: [5], direction: "after", compared_to: 19 },
+                }),
+            });
+        });
+        it("Plan feature without order", async () => {
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            await planElementInProgramIncrement({
+                to_program_increment_id: 4,
+                feature: { id: 5 } as Feature,
+                order: null,
+            });
+
+            expect(tlpPatch).toHaveBeenCalledWith(`/api/v1/program_increment/4/content`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    add: [{ id: 5 }],
+                    order: null,
+                }),
+            });
         });
     });
 
@@ -25,7 +49,7 @@ describe("Feature planner", () => {
         it("When formatted order is null, Then error is thrown", async () => {
             await expect(
                 reorderElementInProgramIncrement({
-                    program_increment_id: 1,
+                    to_program_increment_id: 1,
                     feature: { id: 45 } as Feature,
                     order: null,
                 })
@@ -40,7 +64,7 @@ describe("Feature planner", () => {
             const tlpPatch = jest.spyOn(tlp, "patch");
 
             await reorderElementInProgramIncrement({
-                program_increment_id: 1,
+                to_program_increment_id: 1,
                 feature: { id: 45 } as Feature,
                 order: { compared_to: 9, direction: Direction.AFTER },
             });

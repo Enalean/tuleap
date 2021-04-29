@@ -17,25 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch, put } from "tlp";
-import type { FeatureToPlan } from "../../drag-drop";
+import { patch } from "tlp";
 import type { FeaturePlanningChangeInProgramIncrement } from "../../feature-reordering";
 import { formatOrderPositionForPatch } from "../../order-position-for-patch-formatter";
 
 export async function planElementInProgramIncrement(
-    feature_id: number,
-    feature_artifact_link_id: number,
-    element_to_plan: Array<FeatureToPlan>
+    feature_position: FeaturePlanningChangeInProgramIncrement
 ): Promise<void> {
-    await put(`/api/v1/artifacts/${encodeURIComponent(feature_id)}`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            values: [{ field_id: feature_artifact_link_id, links: element_to_plan }],
-            comment: { body: "", format: "text" },
-        }),
-    });
+    await patch(
+        `/api/v1/program_increment/${encodeURIComponent(
+            feature_position.to_program_increment_id
+        )}/content`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                add: [{ id: feature_position.feature.id }],
+                order: formatOrderPositionForPatch(feature_position),
+            }),
+        }
+    );
 }
 export async function reorderElementInProgramIncrement(
     feature_position: FeaturePlanningChangeInProgramIncrement
@@ -47,14 +49,14 @@ export async function reorderElementInProgramIncrement(
             "Cannot reorder element #" +
                 feature_position.feature.id +
                 " in program increment #" +
-                feature_position.program_increment_id +
+                feature_position.to_program_increment_id +
                 " because order is null"
         );
     }
 
     await patch(
         `/api/v1/program_increment/${encodeURIComponent(
-            feature_position.program_increment_id
+            feature_position.to_program_increment_id
         )}/content`,
         {
             headers: {
