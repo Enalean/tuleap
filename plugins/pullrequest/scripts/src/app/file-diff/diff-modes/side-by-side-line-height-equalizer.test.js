@@ -38,6 +38,7 @@ describe("line-height-equalizer", () => {
         it("Given a line with a new comment, when the opposite line has no comment or placeholder, then it should return some widget creation parameters for the opposite line with height equal to the new_comment widget height.", () => {
             const handles = {
                 left_handle: {
+                    text: "Ceci est un text",
                     widgets: [
                         {
                             height: 20,
@@ -48,7 +49,9 @@ describe("line-height-equalizer", () => {
                         },
                     ],
                 },
-                right_handle: {},
+                right_handle: {
+                    text: "Ceci est un autre text",
+                },
             };
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
@@ -77,12 +80,14 @@ describe("line-height-equalizer", () => {
 
             const handles = {
                 left_handle: {
+                    text: "Ceci est un text",
                     widgets: [
                         { height: 25, node: { localName: "inline-comment", className: "" } },
                         { height: 20, node: { localName: "new-inline-comment", className: "" } },
                     ],
                 },
                 right_handle: {
+                    text: "Ceci est un autre text",
                     widgets: [placeholder],
                 },
             };
@@ -109,12 +114,14 @@ describe("line-height-equalizer", () => {
 
             const handles = {
                 left_handle: {
+                    text: "Ceci est un text",
                     widgets: [
                         { height: 25, node: { localName: "inline-comment", className: "" } },
                         { height: 20, node: { localName: "inline-comment", className: "" } },
                     ],
                 },
                 right_handle: {
+                    text: "Ceci est un autre text",
                     name: "right",
                     widgets: [
                         { height: 20, node: { localName: "new-inline-comment", className: "" } },
@@ -149,9 +156,11 @@ describe("line-height-equalizer", () => {
 
             const handles = {
                 left_handle: {
+                    text: "Ceci est un text",
                     widgets: [{ height: 20, node: { localName: "inline-comment", className: "" } }],
                 },
                 right_handle: {
+                    text: "Ceci est un autre text",
                     widgets: [
                         placeholder,
                         { height: 20, node: { localName: "new-inline-comment", className: "" } },
@@ -172,6 +181,37 @@ describe("line-height-equalizer", () => {
             expect(placeholder_to_create).not.toBeDefined();
             expect(placeholder.node.style.height).toEqual("0px");
         });
+
+        it("Given one side without content, then there is no need to resize it.", () => {
+            const placeholder = {
+                height: 20,
+                node: {
+                    localName: "placeholder",
+                    style: { height: "20px" },
+                    className: "pull-request-file-diff-comment-placeholder-block",
+                },
+                changed: () => {},
+            };
+
+            const handles = {
+                left_handle: {
+                    text: "",
+                    widgets: [{ height: 20, node: { localName: "inline-comment", className: "" } }],
+                },
+                right_handle: {
+                    text: "Ceci est un text",
+                    widgets: [
+                        placeholder,
+                        { height: 45, node: { localName: "new-inline-comment", className: "" } },
+                    ],
+                },
+            };
+
+            const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
+
+            expect(placeholder_to_create).toBeNull();
+            expect(placeholder.node.style.height).toEqual("20px");
+        });
     });
 
     it("Given a line with a code placeholder (added/deleted line), when a new inline comment is added, a comment placeholder will be added and the code placeholder will remain untouched.", () => {
@@ -189,9 +229,11 @@ describe("line-height-equalizer", () => {
 
         const handles = {
             left_handle: {
+                text: "Ceci est un text",
                 widgets: [code_placeholder],
             },
             right_handle: {
+                text: "Ceci est un autre text",
                 widgets: [{ height: 20, node: { localName: "new-inline-comment", className: "" } }],
             },
         };
