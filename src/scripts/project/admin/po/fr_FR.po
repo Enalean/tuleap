@@ -28,13 +28,11 @@ msgstr "Chargement de l'aperçu..."
 msgid "There isn't any new user to import"
 msgstr "Il n'y a aucun nouvel utilisateur à importer"
 
-#, javascript-format
 msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
 msgstr ""
 "Vous êtes sur le point d'ajouter <b>%s</b> dans le groupe utilisateur <b>%s</"
 "b>."
 
-#, javascript-format
 msgid ""
 "You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
 "action."
@@ -42,7 +40,6 @@ msgstr ""
 "Vous êtes sur le point de retirer <b>%s</b> de <b>%s</b>. Veuillez confirmer "
 "votre action."
 
-#, javascript-format
 msgid ""
 "You're about to remove <b>%s</b> from this project. Please confirm your "
 "action."

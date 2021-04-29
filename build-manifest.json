@@ -26,6 +26,10 @@
         "global-shortcuts": {
             "src": "src/scripts/global-shortcuts/src",
             "po": "src/scripts/global-shortcuts/po"
+        },
+        "project-admin-ugroups": {
+            "src": "src/scripts/project/admin/src/",
+            "po": "src/scripts/project/admin/po"
         }
     },
     "gettext-vue": {

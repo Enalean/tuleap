@@ -18,9 +18,12 @@
  */
 
 describe("Project admin", function () {
+    let project_id: string;
+    const project_admin_group_id = 4;
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
+        cy.getProjectId("project-admin-test").as("project_id");
     });
 
     beforeEach(() => {
@@ -74,12 +77,33 @@ describe("Project admin", function () {
             ).click();
             // ignore rule for select2
             // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-search__field").type("ProjectMember{enter}");
+            cy.get(".select2-search__field").type("SecondProjectAdministrator{enter}");
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get(".select2-result-user").click();
             cy.get('[data-test="project-admin-submit-add-member"]').click();
 
             cy.get("[data-test=feedback]").contains("User added", {
+                timeout: 40000,
+            });
+
+            project_id = this.project_id;
+            const project_admin_group_id = 4;
+            cy.visit(
+                "/project/admin/editugroup.php?group_id=" +
+                    project_id +
+                    "&ugroup_id=" +
+                    project_admin_group_id
+            );
+
+            cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
+            // ignore rule for select2
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-search__field").type("SecondProjectAdministrator{enter}");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-result-user").click();
+            cy.get('[data-test="project-admin-submit-add-member"]').click();
+
+            cy.contains("SecondProjectAdministrator", {
                 timeout: 40000,
             });
         });
@@ -108,6 +132,29 @@ describe("Project admin", function () {
             cy.get("[data-test=feedback]").contains("Successfully Updated Service", {
                 timeout: 40000,
             });
+        });
+
+        it("should be able to add member that is not project member as project administrator", () => {
+            cy.visit(
+                "/project/admin/editugroup.php?group_id=" +
+                    project_id +
+                    "&ugroup_id=" +
+                    project_admin_group_id
+            );
+
+            cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
+            // ignore rule for select2
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-search__field").type("Heisenberg{enter}");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-result-user").click();
+            cy.get('[data-test="project-admin-submit-add-member"]').click();
+            cy.get('[data-test="project-admin-confirm-add-member"]').click();
+
+            cy.get("[data-test=feedback]").contains("User added", {
+                timeout: 40000,
+            });
+            cy.contains("Heisenberg");
         });
     });
 });

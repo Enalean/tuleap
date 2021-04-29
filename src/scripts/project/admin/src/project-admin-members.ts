@@ -25,33 +25,54 @@ import { createModal } from "tlp";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { escaper } from "@tuleap/html-escaper";
 import { sanitize } from "dompurify";
-import Gettext from "node-gettext";
-import french_translations from "../po/fr.po";
 import { sprintf } from "sprintf-js";
-import { autocomplete_users_for_select2 } from "../../../tuleap/autocomplete-for-select2.js";
+import { autocomplete_users_for_select2 } from "../../../tuleap/autocomplete-for-select2";
 import { initImportMembersPreview } from "./members-import/project-admin-members-import";
+import type GetText from "node-gettext";
+import { getPOFileFromLocale, initGettext } from "../../../tuleap/gettext/gettext-init";
 
-const gettext_provider = new Gettext();
+let gettext_provider: GetText | null;
 
-document.addEventListener("DOMContentLoaded", () => {
-    gettext_provider.addTranslations("fr_FR", "project-admin", french_translations);
-    gettext_provider.setTextDomain("project-admin");
-    gettext_provider.setLocale(document.body.dataset.userLocale);
+document.addEventListener("DOMContentLoaded", async () => {
+    const user_locale = document.body.dataset.userLocale;
+    if (!user_locale) {
+        throw new Error("No user locale");
+    }
+    gettext_provider = await initGettext(
+        user_locale,
+        "project-admin",
+        (user_locale) =>
+            import(
+                /* webpackChunkName: "project-admin-po-" */ "../po/" +
+                    getPOFileFromLocale(user_locale)
+            )
+    );
 
     initProjectMembersSelect2();
     initMembersFilter();
     initModals();
-    initImportMembersPreview();
+    await initImportMembersPreview();
 });
 
-function initModals() {
+function initModals(): void {
     document.addEventListener("click", (event) => {
         const button = event.target;
+        if (!(button instanceof HTMLElement)) {
+            throw new Error("No button target");
+        }
         if (
             button.id === "project-admin-members-modal-import-users-button" ||
             button.classList.contains("project-members-delete-button")
         ) {
-            const modal = createModal(document.getElementById(button.dataset.targetModalId), {
+            const target_modal_id = button.dataset.targetModalId;
+            if (!target_modal_id) {
+                throw new Error("No target Modal Id");
+            }
+            const target_modal_element = document.getElementById(target_modal_id);
+            if (!target_modal_element) {
+                throw new Error("No target Modal element");
+            }
+            const modal = createModal(target_modal_element, {
                 destroy_on_hide: true,
             });
 
@@ -63,32 +84,52 @@ function initModals() {
     });
 }
 
-function updateDeleteModalContent(button) {
-    document.getElementById("project-admin-members-confirm-member-removal-modal-user-id").value =
-        button.dataset.userId;
+function updateDeleteModalContent(button: HTMLElement): void {
+    const button_confirm_remove = document.getElementById(
+        "project-admin-members-confirm-member-removal-modal-user-id"
+    );
+    if (!(button_confirm_remove instanceof HTMLInputElement)) {
+        throw new Error("No button to confirm removal user");
+    }
+    const user_id = button.dataset.userId;
+    if (!user_id) {
+        throw new Error("No user id");
+    }
+
+    button_confirm_remove.value = user_id;
     updateDeleteModalDescription(button);
 }
 
-function updateDeleteModalDescription(button) {
+function updateDeleteModalDescription(button: HTMLElement): void {
     const modal_description = document.getElementById(
         "project-admin-members-confirm-member-removal-modal-description"
     );
+    if (!modal_description) {
+        throw new Error("No modal description");
+    }
+    const user_name = button.dataset.name;
+    if (!user_name) {
+        throw new Error("No user name");
+    }
+    if (!gettext_provider) {
+        throw new Error("No gettext provider");
+    }
 
     modal_description.innerText = "";
     modal_description.insertAdjacentHTML(
-        "afterBegin",
+        "afterbegin",
         sanitize(
             sprintf(
                 gettext_provider.gettext(
                     "You're about to remove <b>%s</b> from this project. Please confirm your action."
                 ),
-                escaper.html(button.dataset.name)
+                escaper.html(user_name)
             )
         )
     );
 }
 
-function initProjectMembersSelect2() {
+function initProjectMembersSelect2(): void {
     const select_element = document.getElementById("project-admin-members-add-user-select");
 
     if (!select_element) {
@@ -96,16 +137,15 @@ function initProjectMembersSelect2() {
     }
 
     autocomplete_users_for_select2(select_element, {
-        internal_users_only: false,
+        internal_users_only: 0,
         use_tuleap_id: true,
         project_id: select_element.dataset.projectId,
     });
 }
 
-function initMembersFilter() {
+function initMembersFilter(): void {
     const members_filter = document.getElementById("project-admin-members-list-filter-table");
-
-    if (members_filter) {
+    if (members_filter instanceof HTMLInputElement) {
         filterInlineTable(members_filter);
     }
 }

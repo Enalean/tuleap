@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,11 +14,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import "../../../labels/project-admin/project-admin-labels.js";
-import "./project-admin-details.js";
-import "./project-admin-ugroups.ts";
-import "./project-admin-members.ts";
-import "./categories.js";
+declare module "*.mustache" {
+    const content: string;
+    export default content;
+}
