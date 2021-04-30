@@ -27,12 +27,8 @@ const output = webpack_configurator.configureOutput(
 
 const entry_points = {
     "tuleap-frs": "./scripts/release-notes/src/app.js",
+    "frs-style": "./themes/frs.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`frs-${color}`] = `./themes/BurningParrot/frs-${color}.scss`;
-}
 
 module.exports = [
     {
