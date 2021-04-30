@@ -24,14 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class FeaturesDao extends DataAccessObject implements FeaturesStore
 {
     /**
      * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
      */
-    public function searchPlannableFeatures(Program $program): array
+    public function searchPlannableFeatures(ProgramIdentifier $program): array
     {
         $sql = '
                 SELECT tracker.item_name AS tracker_name, artifact.id AS artifact_id, title_value.value AS artifact_title, title.field_id AS field_title_id

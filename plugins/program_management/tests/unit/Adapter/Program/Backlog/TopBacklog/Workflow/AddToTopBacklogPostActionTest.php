@@ -31,7 +31,8 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
@@ -93,7 +94,9 @@ final class AddToTopBacklogPostActionTest extends TestCase
         $tracker = \Mockery::mock(Tracker::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $tracker->shouldReceive('getGroupId')->andReturn('102');
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102)
+        );
 
         $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')->once();
 

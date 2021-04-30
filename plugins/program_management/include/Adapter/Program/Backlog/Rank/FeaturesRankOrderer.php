@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 class FeaturesRankOrderer implements OrderFeatureRank
@@ -43,7 +43,7 @@ class FeaturesRankOrderer implements OrderFeatureRank
     /**
      * @throws FeatureCanNotBeRankedWithItselfException
      */
-    public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, Program $program): void
+    public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, ProgramIdentifier $program): void
     {
         try {
             if ($order->direction === FeatureElementToOrderInvolvedInChangeRepresentation::BEFORE) {

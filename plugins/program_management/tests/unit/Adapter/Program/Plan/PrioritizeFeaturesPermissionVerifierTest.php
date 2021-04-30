@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project_AccessException;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -71,7 +72,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends TestCase
         $user->shouldReceive('isAdmin')->andReturn(false);
         $user->shouldReceive('isMemberOfUGroup')->andReturn(true);
 
-        self::assertTrue($this->verifier->canUserPrioritizeFeatures(new Program(102), $user));
+        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), $user));
     }
 
     public function testUsersCanPrioritizeFeaturesWhenTheyAreProjectAdmin(): void
@@ -81,7 +82,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends TestCase
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->andReturn(true);
 
-        self::assertTrue($this->verifier->canUserPrioritizeFeatures(new Program(102), $user));
+        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), $user));
     }
 
     public function testUsersCannotPrioritizeFeaturesWhenTheyCanAccessTheProjectButAreNotPartOfTheAuthorizedUserGroups(): void
@@ -93,13 +94,13 @@ final class PrioritizeFeaturesPermissionVerifierTest extends TestCase
         $user->shouldReceive('isAdmin')->andReturn(false);
         $user->shouldReceive('isMemberOfUGroup')->andReturn(false);
 
-        self::assertFalse($this->verifier->canUserPrioritizeFeatures(new Program(102), $user));
+        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), $user));
     }
 
     public function testUsersCannotPrioritizeFeaturesWhenTheyCannotAccessTheProject(): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(\Mockery::mock(Project_AccessException::class));
 
-        self::assertFalse($this->verifier->canUserPrioritizeFeatures(new Program(102), UserTestBuilder::aUser()->build()));
+        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), UserTestBuilder::aUser()->build()));
     }
 }

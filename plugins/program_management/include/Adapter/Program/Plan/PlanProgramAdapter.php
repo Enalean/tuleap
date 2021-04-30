@@ -27,7 +27,8 @@ use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessRestrictedException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\Project\ProjectAccessSuspendedException;
 
@@ -45,21 +46,27 @@ final class PlanProgramAdapter implements BuildPlanProgramConfiguration
      * @var TeamStore
      */
     private $team_store;
+    /**
+     * @var BuildProgram
+     */
+    private $build_program;
 
     public function __construct(
         \ProjectManager $project_manager,
         \URLVerification $url_verification,
-        TeamStore $team_store
+        TeamStore $team_store,
+        BuildProgram $build_program
     ) {
         $this->project_manager  = $project_manager;
         $this->url_verification = $url_verification;
         $this->team_store       = $team_store;
+        $this->build_program    = $build_program;
     }
 
     /**
      * @throws PlanTrackerException
      */
-    public function buildProgramTrackerFromTeamProject(\Project $project, \PFUser $user): ?Program
+    public function buildProgramIdentifierFromTeamProject(\Project $project, \PFUser $user): ?ProgramIdentifier
     {
         $team = $this->project_manager->getProject($project->getID());
 
@@ -77,6 +84,6 @@ final class PlanProgramAdapter implements BuildPlanProgramConfiguration
             throw new UserCanNotAccessToProgramException((int) $program->getID(), (int) $user->getId(), $e->getMessage());
         }
 
-        return new Program((int) $program->getID());
+        return ProgramIdentifier::fromId($this->build_program, (int) $program->getID());
     }
 }

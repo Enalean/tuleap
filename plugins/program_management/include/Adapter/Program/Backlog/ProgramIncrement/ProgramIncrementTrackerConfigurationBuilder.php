@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncreme
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncrementTrackerConfiguration
 {
@@ -59,7 +59,7 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
      * @throws ProgramTrackerException
      * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException
      */
-    public function build(\PFUser $user, Program $project): ProgramIncrementTrackerConfiguration
+    public function build(\PFUser $user, ProgramIdentifier $project): ProgramIncrementTrackerConfiguration
     {
         $tracker                      = $this->plan_configuration_builder->buildTrackerProgramIncrementFromProjectId(
             $project->getId(),

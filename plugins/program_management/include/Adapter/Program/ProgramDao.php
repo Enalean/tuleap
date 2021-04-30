@@ -67,6 +67,6 @@ final class ProgramDao extends DataAccessObject implements ProgramStore, SearchP
                 GROUP BY teams.program_project_id';
 
         $result = $this->getDB()->cell($sql, $program_increment_id);
-        return ($result !== false) ? $result : null;
+        return ($result !== false) ? (int) $result : null;
     }
 }

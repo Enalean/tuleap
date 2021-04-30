@@ -20,9 +20,9 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface VerifyPrioritizeFeaturesPermission
 {
-    public function canUserPrioritizeFeatures(Program $program, \PFUser $user): bool;
+    public function canUserPrioritizeFeatures(ProgramIdentifier $program, \PFUser $user): bool;
 }

@@ -434,7 +434,8 @@ final class program_managementPlugin extends Plugin
         $plan_program_builder = new PlanProgramAdapter(
             ProjectManager::instance(),
             new URLVerification(),
-            new TeamDao()
+            new TeamDao(),
+            $this->getProgramAdapter()
         );
 
         $configuration_checker = new ConfigurationChecker(

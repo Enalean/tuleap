@@ -32,8 +32,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -106,7 +107,9 @@ class FeatureElementsRetrieverTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
 
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(202));
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 202)
+        );
         $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [
                 ['tracker_name' => 'User stories', 'artifact_id' => 1, 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],

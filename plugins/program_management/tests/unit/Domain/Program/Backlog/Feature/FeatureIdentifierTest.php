@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -32,7 +33,7 @@ final class FeatureIdentifierTest extends TestCase
     public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
 
         self::assertNull(FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(false), 404, $user, $program));
     }
@@ -40,7 +41,7 @@ final class FeatureIdentifierTest extends TestCase
     public function testItBuildsAValidFeature(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
 
         $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 87, $user, $program);
         self::assertSame(87, $feature->id);

@@ -30,8 +30,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -90,7 +91,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
     public function testItDoesNotReturnAnythingWhenUserCanNotReadArtifact(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
 
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturnNull();
 
@@ -100,7 +101,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
 
         $project  = $this->buildProject(110);
         $tracker  = $this->buildTracker(14, $project);
@@ -118,7 +119,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
     public function testItBuildsRepresentation(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(101);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101);
 
         $project  = $this->buildProject(101);
         $tracker  = $this->buildTracker(1, $project);

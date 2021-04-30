@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface VerifyIsVisibleFeature
 {
-    public function isVisibleFeature(int $feature_id, \PFUser $user, Program $program): bool;
+    public function isVisibleFeature(int $feature_id, \PFUser $user, ProgramIdentifier $program): bool;
 }

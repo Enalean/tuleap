@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface FeaturesStore
 {
     /**
      * @psalm-return array{tracker_name: string, artifact_id: int, artifact_title: string, field_title_id: int}[]
      */
-    public function searchPlannableFeatures(Program $program): array;
+    public function searchPlannableFeatures(ProgramIdentifier $program): array;
 }

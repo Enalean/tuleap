@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 /**
  * I identify a Feature, I'm its ID property
@@ -44,7 +44,7 @@ final class FeatureIdentifier
         VerifyIsVisibleFeature $feature_verifier,
         int $feature_id,
         \PFUser $user,
-        Program $program
+        ProgramIdentifier $program
     ): ?self {
         if (! $feature_verifier->isVisibleFeature($feature_id, $user, $program)) {
             return null;

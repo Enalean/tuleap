@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Plan;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -40,9 +41,9 @@ final class ConfigurationCheckerTest extends TestCase
         $plan_adapter     = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
         $checker          = new ConfigurationChecker($planning_adapter, $plan_adapter);
 
-        $program           = new Program(1);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1);
         $program_increment = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
-        $planning_adapter->shouldReceive('buildProgramTrackerFromTeamProject')->andReturn($program);
+        $planning_adapter->shouldReceive('buildProgramIdentifierFromTeamProject')->andReturn($program);
         $plan_adapter->shouldReceive('buildTrackerProgramIncrementFromProjectId')->andReturn($program_increment);
 
         $user    = UserTestBuilder::aUser()->build();
@@ -57,7 +58,7 @@ final class ConfigurationCheckerTest extends TestCase
         $plan_adapter     = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
         $checker          = new ConfigurationChecker($planning_adapter, $plan_adapter);
 
-        $planning_adapter->shouldReceive('buildProgramTrackerFromTeamProject')->andReturn(null);
+        $planning_adapter->shouldReceive('buildProgramIdentifierFromTeamProject')->andReturn(null);
 
         $user    = UserTestBuilder::aUser()->build();
         $project = new Project(['group_id' => 1]);

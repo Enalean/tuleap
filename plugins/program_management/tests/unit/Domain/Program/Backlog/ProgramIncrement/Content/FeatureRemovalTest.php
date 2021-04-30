@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Conte
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -35,7 +36,7 @@ final class FeatureRemovalTest extends TestCase
     public function testItThrowsWhenFeatureIsLinkedToAnAlreadyPlannedUserStory(): void
     {
         $user    = UserTestBuilder::aUser()->withId(104)->build();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
 
         $this->expectException(FeatureHasPlannedUserStoryException::class);
@@ -49,7 +50,7 @@ final class FeatureRemovalTest extends TestCase
     public function testItBuildsAValidPayload(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
 
         $payload = FeatureRemoval::fromFeature(

@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -102,7 +103,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
                     $this->artifact_factory
                 )
             ),
-            new ProgramSearcher($this->getStubSearchProgram())
+            new ProgramSearcher($this->getStubSearchProgram(), BuildProgramStub::stubValidProgram())
         );
     }
 

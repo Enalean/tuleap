@@ -29,7 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -160,7 +161,7 @@ final class FeatureRemovalProcessorTest extends TestCase
     private function buildFeatureRemoval(): FeatureRemoval
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
         return FeatureRemoval::fromFeature(
             new VerifyLinkedUserStoryIsNotPlannedStub(),

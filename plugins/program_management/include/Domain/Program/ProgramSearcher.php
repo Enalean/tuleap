@@ -22,22 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+
 final class ProgramSearcher
 {
     /**
      * @var SearchProgram
      */
     private $search_program;
+    /**
+     * @var BuildProgram
+     */
+    private $build_program;
 
-    public function __construct(SearchProgram $search_program)
+    public function __construct(SearchProgram $search_program, BuildProgram $build_program)
     {
         $this->search_program = $search_program;
+        $this->build_program  = $build_program;
     }
 
     /**
      * @throws ProgramNotFoundException
      */
-    public function getProgramOfProgramIncrement(int $program_increment_id): Program
+    public function getProgramOfProgramIncrement(int $program_increment_id): ProgramIdentifier
     {
         $potential_program_id = $this->search_program->searchProgramOfProgramIncrement($program_increment_id);
         if ($potential_program_id === null) {
@@ -45,6 +52,6 @@ final class ProgramSearcher
                 "Could not find the program of program increment #$program_increment_id"
             );
         }
-        return new Program($potential_program_id);
+        return ProgramIdentifier::fromId($this->build_program, $potential_program_id);
     }
 }
