@@ -124,7 +124,7 @@ export default class App extends Vue {
             isInvalidDragHandle: invalid,
             isConsideredInDropzone,
             doesDropzoneAcceptDraggable: (context: PossibleDropCallbackParameter): boolean => {
-                return checkAcceptsDrop({
+                return checkAcceptsDrop(this.$store, this, {
                     dropped_card: context.dragged_element,
                     source_cell: context.source_dropzone,
                     target_cell: context.target_dropzone,

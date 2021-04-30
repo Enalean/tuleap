@@ -94,40 +94,6 @@ describe("FeatureCard", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Displays a not draggable card when feature has planned user stories", async () => {
-        component_options = {
-            propsData: {
-                feature: {
-                    id: 100,
-                    title: "My artifact",
-                    tracker: {
-                        label: "bug",
-                        color_name: "lake_placid_blue",
-                    },
-                    background_color: "",
-                    has_user_story_planned: true,
-                } as Feature,
-                program_increment: {
-                    user_can_plan: true,
-                } as ProgramIncrement,
-            },
-            localVue: await createProgramManagementLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            accessibility: false,
-                            can_create_program_increment: true,
-                        },
-                    },
-                }),
-            },
-        };
-
-        const wrapper = shallowMount(FeatureCard, component_options);
-        expect(wrapper.element).toMatchSnapshot();
-    });
-
     it("Displays a not draggable card when user can not plan/unplan features", async () => {
         component_options = {
             propsData: {
