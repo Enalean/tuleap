@@ -2,7 +2,7 @@
     {{# has_only_one_user_dashboard }}
         <div class="btn-group">
             {{# user_dashboards_presenter }}
-                <a class="btn btn-mini" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
+                <a class="btn btn-mini" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}" data-test="add-to-my-dashboard">
                     <i class="fas fa-tachometer-alt"></i> {{ my_dashboard }}
                 </a>
             {{/ user_dashboards_presenter }}
@@ -28,7 +28,7 @@
         {{# has_only_one_project_dashboard }}
             <div class="btn-group">
                 {{# project_dashboards_presenter }}
-                    <a class="btn btn-mini" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
+                    <a class="btn btn-mini" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}" data-test="add-to-project-dashboard">
                         <i class="fas fa-tachometer-alt"></i> {{ project_dashboard }}
                     </a>
                 {{/ project_dashboards_presenter }}

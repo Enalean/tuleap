@@ -97,6 +97,15 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=button-create-my-tracker]").click();
             cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
         });
+
+        it("can add a report on the project home page", function () {
+            cy.visitProjectService("tracker-artifact", "Trackers");
+            cy.get("[data-test=tracker-link-artifact_link]").click();
+            cy.get("[data-test=add-to-project-dashboard]").click();
+
+            cy.get("[data-test=artifact-report-table]").contains("test A");
+            cy.get("[data-test=artifact-report-table]").contains("test B");
+        });
     });
 
     describe("Tracker regular users", function () {
@@ -168,6 +177,15 @@ describe("Tracker artifacts", function () {
                 submitAndStay();
                 cy.get("[data-test=computed-value]").contains("Empty");
             });
+        });
+
+        it("can add a report on his dashboard", function () {
+            cy.visitProjectService("tracker-artifact", "Trackers");
+            cy.get("[data-test=tracker-link-artifact_link]").click();
+            cy.get("[data-test=add-to-my-dashboard]").click();
+
+            cy.get("[data-test=artifact-report-table]").contains("test A");
+            cy.get("[data-test=artifact-report-table]").contains("test B");
         });
     });
 
