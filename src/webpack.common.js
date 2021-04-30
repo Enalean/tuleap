@@ -211,6 +211,7 @@ const webpack_config_for_burning_parrot_code = {
         "access-denied-error": "./scripts/BurningParrot/src/access-denied-error.ts",
         "account/appearance": "./scripts/account/appearance.ts",
         "account/avatar": "./scripts/account/avatar.ts",
+        "account/check-pw": "./scripts/account/check-pw.ts",
         "account/keys-tokens": "./scripts/account/keys-tokens.ts",
         "account/preferences-nav": "./scripts/account/preferences-nav.ts",
         "account/security": "./scripts/account/security.ts",

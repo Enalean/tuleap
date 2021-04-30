@@ -7,7 +7,7 @@
                 <div class="control-group error">
                     <div class="controls">
             {{/has_error }}
-                        <input type="text" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
+                        <input type="text" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required data-password-validators="{{ json_password_strategy_keys }}" />
                         <script type="text/javascript" src="/scripts/user.js"></script>
             {{# has_error }}
                         <span class="help-inline">{{ error }}</span>
