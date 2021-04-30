@@ -12,6 +12,7 @@
         "scripts/platform/banner/admin/**/*",
         "scripts/project/admin/banner/**/*",
         "scripts/project/admin/header-background/**/*",
+        "scripts/project/admin/src/**/*",
         "scripts/project/banner/**/*",
         "scripts/project/registration/**/*",
         "scripts/site-admin/project-widgets-configuration/**/*",

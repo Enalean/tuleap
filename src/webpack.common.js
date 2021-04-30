@@ -223,7 +223,7 @@ const webpack_config_for_burning_parrot_code = {
         "manage-allowed-projects-on-resource":
             "./scripts/tuleap/manage-allowed-projects-on-resource.js",
         "project-admin": "./scripts/project/admin/src/index.js",
-        "project-admin-ugroups": "./scripts/project/admin/src/project-admin-ugroups.js",
+        "project-admin-ugroups": "./scripts/project/admin/src/project-admin-ugroups.ts",
         "project/project-banner-bp": "./scripts/project/banner/index-bp.ts",
         "project/project-banner-fp": "./scripts/project/banner/index-fp.ts",
         "platform/platform-banner-bp": "./scripts/platform/banner/index-bp.ts",

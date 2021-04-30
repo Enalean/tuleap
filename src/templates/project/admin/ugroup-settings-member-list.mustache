@@ -31,6 +31,7 @@
                                     size="50"
                                     data-placeholder="{{# gettext }}User name{{/ gettext }}"
                                     data-project-id="{{ project_id }}"
+                                    data-test="select-member-to-add-in-ugroup"
                                 ></select>
                                 <button
                                     class="tlp-append tlp-button-primary"
@@ -39,6 +40,7 @@
                                         data-target-modal-id="add-user-to-ugroup-and-project-members"
                                         data-project-id="{{ project_id }}"
                                         data-ugroup-id="{{ id }}"
+                                        data-test="project-admin-submit-add-member"
                                     {{/ is_dynamic_group }}
                                 >
                                     <i class="fa fa-plus tlp-button-icon" id="project-administration-add-to-ugroup-and-project-members-icon"></i> {{# gettext }}

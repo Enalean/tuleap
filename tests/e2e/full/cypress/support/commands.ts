@@ -84,6 +84,12 @@ Cypress.Commands.add("heisenbergLogin", () => {
     cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
+Cypress.Commands.add("secondProjectAdministratorLogin", () => {
+    cy.visit("/");
+    cy.get("[data-test=form_loginname]").type("SecondProjectAdministrator");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+});
+
 Cypress.Commands.add("userLogout", () => {
     cy.get("[data-test=user_logout]").click({ force: true });
 });

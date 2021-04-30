@@ -23,19 +23,25 @@
 
 import { post } from "tlp";
 import { render } from "mustache";
-import Gettext from "node-gettext";
-import french_translations from "../../po/fr.po";
+import { getPOFileFromLocale, initGettext } from "../../../../tuleap/gettext/gettext-init";
 import import_preview_template from "./project-admin-member-import-preview.mustache";
 import import_spinner from "./members-import-spinner.mustache";
+import type GetText from "node-gettext";
 
-const gettext_provider = new Gettext();
+let gettext_provider: GetText | null;
 
-export function initImportMembersPreview() {
-    initGettext();
+interface ResultImport {
+    warning_multiple_users: string[];
+    warning_invalid_users: string[];
+    users: string[];
+}
+
+export async function initImportMembersPreview(): Promise<void> {
+    await initGettextProvider();
     initUploadButton();
 }
 
-function initGettext() {
+async function initGettextProvider(): Promise<void> {
     const import_button = document.getElementById(
         "project-admin-members-modal-import-users-button"
     );
@@ -44,25 +50,37 @@ function initGettext() {
     }
     const locale = import_button.dataset.targetUserLocale;
 
-    gettext_provider.addTranslations("fr_FR", "project-admin", french_translations);
-    gettext_provider.setTextDomain("project-admin");
-    gettext_provider.setLocale(locale);
+    if (!locale) {
+        throw new Error("No user locale");
+    }
+    gettext_provider = await initGettext(
+        locale,
+        "project-admin",
+        (locale) =>
+            import(
+                /* webpackChunkName: "project-admin-po-" */ "../../po/" +
+                    getPOFileFromLocale(locale)
+            )
+    );
 }
 
-function initUploadButton() {
+function initUploadButton(): void {
     const upload_button = document.getElementById("project-admin-members-import-users-file");
 
     if (!upload_button) {
         return;
     }
 
-    upload_button.addEventListener("change", () => {
-        uploadFile();
+    upload_button.addEventListener("change", async () => {
+        await uploadFile();
     });
 }
 
-function toggleImportButton() {
+function toggleImportButton(): void {
     const import_button = document.getElementById("project-admin-import-members-load-validation");
+    if (!import_button) {
+        throw new Error("No button to import members");
+    }
 
     if (!isFileValid()) {
         disableImportButton();
@@ -74,43 +92,68 @@ function toggleImportButton() {
     import_button.removeAttribute("title");
 }
 
-function disableImportButton() {
+function disableImportButton(): void {
     const import_button = document.getElementById("project-admin-import-members-load-validation");
-
+    if (!import_button) {
+        throw new Error("No button to import members");
+    }
     import_button.setAttribute("disabled", "");
+    if (!gettext_provider) {
+        throw new Error("No gettext provider");
+    }
     import_button.setAttribute("title", gettext_provider.gettext("Please select a file to upload"));
 }
 
-function showFileFormatError() {
+function showFileFormatError(): void {
     const file_input_label = document.getElementById(
         "project-admin-members-upload-file-form-element"
     );
+    if (!file_input_label) {
+        throw new Error("No file input label");
+    }
     const error_display = document.getElementById("file-input-bad-type");
-
+    if (!error_display) {
+        throw new Error("No error displayer");
+    }
     file_input_label.classList.add("tlp-form-element-error");
     file_input_label.classList.add("file-input-error");
     error_display.removeAttribute("hidden");
 }
 
-function hideFileFormatError() {
+function hideFileFormatError(): void {
     const file_input_label = document.getElementById(
         "project-admin-members-upload-file-form-element"
     );
+    if (!file_input_label) {
+        throw new Error("No file input label");
+    }
     const error_display = document.getElementById("file-input-bad-type");
+    if (!error_display) {
+        throw new Error("No error displayer");
+    }
 
     file_input_label.classList.remove("tlp-form-element-error");
     file_input_label.classList.remove("file-input-error");
     error_display.setAttribute("hidden", "");
 }
 
-function isFileValid() {
-    const file = document.getElementById("project-admin-members-import-users-file").files[0];
-
+function isFileValid(): boolean {
+    const file_element = document.getElementById("project-admin-members-import-users-file");
+    if (!(file_element instanceof HTMLInputElement)) {
+        throw new Error("No users file");
+    }
+    if (!file_element.files || !file_element.files[0]) {
+        throw new Error("No users file");
+    }
+    const file = file_element.files[0];
     return file && file.type === "text/plain";
 }
 
-async function uploadFile() {
+async function uploadFile(): Promise<void> {
     const preview_section = document.getElementById("modal-import-users-preview");
+    if (!preview_section) {
+        throw new Error("No modal preview to import user ");
+    }
 
     removeAllChildren(preview_section);
 
@@ -126,6 +169,9 @@ async function uploadFile() {
     hideFileFormatError();
 
     const form = document.getElementById("project-admin-user-import-form");
+    if (!(form instanceof HTMLFormElement)) {
+        throw new Error("No form to import user");
+    }
     const form_data = new FormData(form);
     const response = await post("/project/admin/userimport.php", {
         body: form_data,
@@ -136,11 +182,14 @@ async function uploadFile() {
     renderImportPreview(json);
 }
 
-function renderImportPreview(import_result) {
+function renderImportPreview(import_result: ResultImport): void {
     const preview_section = document.getElementById("modal-import-users-preview");
+    if (!preview_section) {
+        throw new Error("No modal preview to import user ");
+    }
     const import_warnings = [
         ...import_result.warning_multiple_users,
-        ...import_result.warning_inavlid_users,
+        ...import_result.warning_invalid_users,
     ];
 
     removeAllChildren(preview_section);
@@ -151,8 +200,12 @@ function renderImportPreview(import_result) {
         disableImportButton();
     }
 
+    if (!gettext_provider) {
+        throw new Error("No gettext provider");
+    }
+
     preview_section.insertAdjacentHTML(
-        "beforeEnd",
+        "beforeend",
         render(import_preview_template, {
             import_warnings,
             parsed_users: import_result.users,
@@ -163,11 +216,14 @@ function renderImportPreview(import_result) {
     );
 }
 
-function removeAllChildren(element) {
+function removeAllChildren(element: HTMLElement): void {
     [...element.children].forEach((child) => child.remove());
 }
 
-function startSpinner(element) {
+function startSpinner(element: HTMLElement): void {
+    if (!gettext_provider) {
+        throw new Error("No gettext provider");
+    }
     element.insertAdjacentHTML(
         "afterbegin",
         render(import_spinner, {

@@ -14,4 +14,11 @@
         <email>ProjectMember@example.com</email>
         <ldapid></ldapid>
     </user>
+    <user>
+      <id>103</id>
+      <username>SecondProjectAdministrator</username>
+      <realname>SecondProjectAdministrator</realname>
+      <email>SecondProjectAdministrator@example.com</email>
+      <ldapid></ldapid>
+    </user>
 </users>
