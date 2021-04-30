@@ -47,17 +47,29 @@ class TagPushWebhookData implements WebhookData
      * @var string
      */
     private $ref;
+    /**
+     * @var string
+     */
+    private $before;
+    /**
+     * @var string
+     */
+    private $after;
 
     public function __construct(
         string $event_name,
         int $gitlab_project_id,
         string $gitlab_web_url,
-        string $ref
+        string $ref,
+        string $before,
+        string $after
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;
         $this->gitlab_web_url    = $gitlab_web_url;
         $this->ref               = $ref;
+        $this->before            = $before;
+        $this->after             = $after;
     }
 
     public function getEventName(): string
@@ -83,5 +95,15 @@ class TagPushWebhookData implements WebhookData
     public function getTagName(): string
     {
         return str_replace("refs/tags/", "", $this->ref);
+    }
+
+    public function getBefore(): string
+    {
+        return $this->before;
+    }
+
+    public function getAfter(): string
+    {
+        return $this->after;
     }
 }

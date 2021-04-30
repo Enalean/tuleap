@@ -324,7 +324,9 @@ class WebhookDataExtractorTest extends TestCase
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
                 '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
-                  "ref": "refs/tags/v1.0"
+                  "ref": "refs/tags/v1.0",
+                  "before": "before",
+                  "after": "after"
                 }'
             )
         )->withHeader(

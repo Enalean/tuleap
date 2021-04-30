@@ -27,7 +27,9 @@ use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 class TagPushWebhookDataBuilder
 {
-    private const REF_KEY = 'ref';
+    private const REF_KEY    = 'ref';
+    private const BEFORE_KEY = 'before';
+    private const AFTER_KEY  = 'after';
 
     /**
      * @throws MissingKeyException
@@ -39,15 +41,33 @@ class TagPushWebhookDataBuilder
             throw new MissingKeyException(self::REF_KEY);
         }
 
+        if (! isset($tag_push_content[self::BEFORE_KEY])) {
+            throw new MissingKeyException(self::BEFORE_KEY);
+        }
+
+        if (! isset($tag_push_content[self::AFTER_KEY])) {
+            throw new MissingKeyException(self::AFTER_KEY);
+        }
+
         if (! is_string($tag_push_content[self::REF_KEY])) {
             throw new InvalidValueFormatException(self::REF_KEY, "string");
+        }
+
+        if (! is_string($tag_push_content[self::BEFORE_KEY])) {
+            throw new InvalidValueFormatException(self::BEFORE_KEY, "string");
+        }
+
+        if (! is_string($tag_push_content[self::AFTER_KEY])) {
+            throw new InvalidValueFormatException(self::AFTER_KEY, "string");
         }
 
         return new TagPushWebhookData(
             $event_name,
             $project_id,
             $project_url,
-            $tag_push_content[self::REF_KEY]
+            $tag_push_content[self::REF_KEY],
+            $tag_push_content[self::BEFORE_KEY],
+            $tag_push_content[self::AFTER_KEY],
         );
     }
 }

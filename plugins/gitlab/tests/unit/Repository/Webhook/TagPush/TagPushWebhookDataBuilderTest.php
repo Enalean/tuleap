@@ -46,11 +46,95 @@ class TagPushWebhookDataBuilderTest extends TestCase
         );
     }
 
+    public function testItThrowsAnExceptionIfAfterIsNotInContent(): void
+    {
+        $webhook_data = [
+            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
+            "ref" => 1.0,
+            "before" => "before",
+        ];
+
+        $builder = new TagPushWebhookDataBuilder();
+
+        $this->expectException(MissingKeyException::class);
+
+        $builder->build(
+            "Tag Push Hook",
+            123456,
+            "https://example.com/path/repo01",
+            $webhook_data
+        );
+    }
+
+    public function testItThrowsAnExceptionIfBeforeIsNotInContent(): void
+    {
+        $webhook_data = [
+            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
+            "ref" => 1.0,
+            "after" => "after",
+        ];
+
+        $builder = new TagPushWebhookDataBuilder();
+
+        $this->expectException(MissingKeyException::class);
+
+        $builder->build(
+            "Tag Push Hook",
+            123456,
+            "https://example.com/path/repo01",
+            $webhook_data
+        );
+    }
+
     public function testItThrowsAnExceptionIfRefIsNotAString(): void
     {
         $webhook_data = [
             "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
             "ref" => 1.0,
+            "before" => "before",
+            "after" => "after",
+        ];
+
+        $builder = new TagPushWebhookDataBuilder();
+
+        $this->expectException(InvalidValueFormatException::class);
+
+        $builder->build(
+            "Tag Push Hook",
+            123456,
+            "https://example.com/path/repo01",
+            $webhook_data
+        );
+    }
+
+    public function testItThrowsAnExceptionIfBeforeIsNotAString(): void
+    {
+        $webhook_data = [
+            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
+            "ref" => "refs/tags/v1.0",
+            "before" => 5845,
+            "after" => "after",
+        ];
+
+        $builder = new TagPushWebhookDataBuilder();
+
+        $this->expectException(InvalidValueFormatException::class);
+
+        $builder->build(
+            "Tag Push Hook",
+            123456,
+            "https://example.com/path/repo01",
+            $webhook_data
+        );
+    }
+
+    public function testItThrowsAnExceptionIfAfterIsNotAString(): void
+    {
+        $webhook_data = [
+            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
+            "ref" => "refs/tags/v1.0",
+            "before" => "before",
+            "after" => 4845,
         ];
 
         $builder = new TagPushWebhookDataBuilder();
@@ -70,6 +154,8 @@ class TagPushWebhookDataBuilderTest extends TestCase
         $webhook_data = [
             "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
             "ref" => "refs/tags/v1.0",
+            "before" => "before",
+            "after" => "after",
         ];
 
         $builder = new TagPushWebhookDataBuilder();
