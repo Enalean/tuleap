@@ -68,121 +68,125 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import Vue from "vue";
 import moment from "moment";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "./ExportCSVButton.vue";
 import { getReportContent, getQueryResult } from "../api/rest-querier";
-import { getUserPreferredDateFormat } from "../user-service.js";
+import { getUserPreferredDateFormat } from "../user-service";
+import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import type { Artifact, ArtifactsCollection } from "../type";
+import { State } from "vuex-class";
 
-export default {
-    name: "ArtifactTable",
-    components: { ArtifactTableRow, ExportButton },
-    props: {
-        writingCrossTrackerReport: Object,
-    },
-    data() {
-        return {
-            is_loading: true,
-            artifacts: [],
-            is_load_more_displayed: false,
-            is_loading_more: false,
-            current_offset: 0,
-            limit: 30,
-        };
-    },
-    computed: {
-        ...mapState(["reading_mode", "is_report_saved", "report_id"]),
-        report_state() {
-            // We just need to react to certain changes in this
-            return [this.reading_mode, this.is_report_saved];
-        },
-        is_table_empty() {
-            return !this.is_loading && this.artifacts.length === 0;
-        },
-        should_show_export_button() {
-            return this.reading_mode && this.is_report_saved && !this.is_table_empty;
-        },
-    },
-    watch: {
-        report_state() {
-            if (this.reading_mode === true) {
-                this.refreshArtifactList();
-            }
-        },
-    },
-    mounted() {
+@Component({ components: { ArtifactTableRow, ExportButton } })
+export default class ArtifactTable extends Vue {
+    @Prop({ required: true })
+    readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
+
+    @State
+    private readonly reading_mode!: boolean;
+    @State
+    private readonly is_report_saved!: boolean;
+    @State
+    private readonly report_id!: number;
+
+    is_loading = true;
+    artifacts: Artifact[] = [];
+    is_load_more_displayed = false;
+    is_loading_more = false;
+    current_offset = 0;
+    limit = 30;
+
+    get report_state(): Array<boolean> {
+        // We just need to react to certain changes in this
+        return [this.reading_mode, this.is_report_saved];
+    }
+    get is_table_empty(): boolean {
+        return !this.is_loading && this.artifacts.length === 0;
+    }
+    get should_show_export_button(): boolean {
+        return this.reading_mode && this.is_report_saved && !this.is_table_empty;
+    }
+
+    @Watch("report_state")
+    report_state_value() {
+        if (this.reading_mode) {
+            this.refreshArtifactList();
+        }
+    }
+
+    mounted(): void {
         this.is_loading = true;
         this.loadArtifacts();
-    },
-    methods: {
-        loadMoreArtifacts() {
-            this.is_loading_more = true;
-            this.loadArtifacts();
-        },
+    }
 
-        refreshArtifactList() {
-            this.artifacts = [];
-            this.current_offset = 0;
-            this.is_loading = true;
+    loadMoreArtifacts(): void {
+        this.is_loading_more = true;
+        this.loadArtifacts();
+    }
+
+    refreshArtifactList(): void {
+        this.artifacts = [];
+        this.current_offset = 0;
+        this.is_loading = true;
+        this.is_load_more_displayed = false;
+
+        this.loadArtifacts();
+    }
+
+    async loadArtifacts(): Promise<void> {
+        try {
+            const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
+
+            this.current_offset += artifacts.length;
+            this.is_load_more_displayed = this.current_offset < parseInt(total, 10);
+
+            const new_artifacts = this.formatArtifacts(artifacts);
+            this.artifacts = this.artifacts.concat(new_artifacts);
+        } catch (error) {
             this.is_load_more_displayed = false;
-
-            this.loadArtifacts();
-        },
-
-        async loadArtifacts() {
-            try {
-                const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
-
-                this.current_offset += artifacts.length;
-                this.is_load_more_displayed = this.current_offset < total;
-
-                const new_artifacts = this.formatArtifacts(artifacts);
-                this.artifacts = this.artifacts.concat(new_artifacts);
-            } catch (error) {
-                this.is_load_more_displayed = false;
-                if (Object.prototype.hasOwnProperty.call(error, "response")) {
-                    const error_json = await error.response.json();
-                    if (
-                        error_json &&
-                        Object.prototype.hasOwnProperty.call(error_json, "error") &&
-                        Object.prototype.hasOwnProperty.call(error_json.error, "i18n_error_message")
-                    ) {
-                        this.$store.commit("setErrorMessage", error_json.error.i18n_error_message);
-                    } else {
-                        this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
-                    }
+            if (Object.prototype.hasOwnProperty.call(error, "response")) {
+                const error_json = await error.response.json();
+                if (
+                    error_json &&
+                    Object.prototype.hasOwnProperty.call(error_json, "error") &&
+                    Object.prototype.hasOwnProperty.call(error_json.error, "i18n_error_message")
+                ) {
+                    this.$store.commit("setErrorMessage", error_json.error.i18n_error_message);
+                } else {
+                    this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
                 }
-            } finally {
-                this.is_loading = false;
-                this.is_loading_more = false;
             }
-        },
+        } finally {
+            this.is_loading = false;
+            this.is_loading_more = false;
+        }
+    }
 
-        getArtifactsFromReportOrUnsavedQuery() {
-            if (this.is_report_saved === true) {
-                return getReportContent(this.report_id, this.limit, this.current_offset);
-            }
+    getArtifactsFromReportOrUnsavedQuery(): Promise<ArtifactsCollection> {
+        if (this.is_report_saved) {
+            return getReportContent(this.report_id, this.limit, this.current_offset);
+        }
 
-            return getQueryResult(
-                this.report_id,
-                this.writingCrossTrackerReport.getTrackerIds(),
-                this.writingCrossTrackerReport.expert_query,
-                this.limit,
-                this.current_offset
+        return getQueryResult(
+            this.report_id,
+            this.writingCrossTrackerReport.getTrackerIds(),
+            this.writingCrossTrackerReport.expert_query,
+            this.limit,
+            this.current_offset
+        );
+    }
+
+    formatArtifacts(artifacts: Array<Artifact>): Array<Artifact> {
+        return artifacts.map((artifact) => {
+            artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
+                getUserPreferredDateFormat()
             );
-        },
 
-        formatArtifacts(artifacts) {
-            return artifacts.map((artifact) => {
-                artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
-                    getUserPreferredDateFormat()
-                );
-
-                return artifact;
-            });
-        },
-    },
-};
+            return artifact;
+        });
+    }
+}
 </script>

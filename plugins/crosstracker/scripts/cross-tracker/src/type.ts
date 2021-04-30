@@ -67,4 +67,14 @@ export interface ArtifactsCollection {
 
 export interface Artifact {
     id: number;
+    badge: {
+        color: string;
+    };
+    formatted_last_update_date: string;
+    last_update_date: string;
+}
+
+export interface User {
+    display_name: string;
+    user_url: string;
 }

@@ -22,13 +22,17 @@
         {{ error_message }}
     </div>
 </template>
-<script>
-import { mapState, mapGetters } from "vuex";
-export default {
-    name: "ErrorMessage",
-    computed: {
-        ...mapState(["error_message", "rest_error"]),
-        ...mapGetters(["has_error_message"]),
-    },
-};
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import { State, Getter } from "vuex-class";
+
+@Component
+export default class ErrorMessage extends Vue {
+    @State
+    private readonly error_message!: string;
+
+    @Getter
+    readonly has_error_message!: boolean;
+}
 </script>

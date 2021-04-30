@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import Vuex from "vuex";
-import GettextPlugin from "vue-gettext";
+import moment from "moment";
+import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
-export const localVue = createLocalVue();
-localVue.use(Vuex);
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true,
-});
+export { init, getUserPreferredDateFormat };
+
+let date_format: string;
+
+function init(localized_php_date_format: string, locale: string): void {
+    date_format = formatFromPhpToMoment(localized_php_date_format);
+    moment.locale(locale);
+}
+
+function getUserPreferredDateFormat(): string {
+    return date_format;
+}

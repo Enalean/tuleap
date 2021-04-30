@@ -18,28 +18,35 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { localVue } from "../helpers/local-vue";
+import type { Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { createStore } from "../store/index";
 import ExportCSVButton from "./ExportCSVButton.vue";
 import * as rest_querier from "../api/rest-querier";
 import * as download_helper from "../helpers/download-helper";
 import * as bom_helper from "../helpers/bom-helper";
+import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
 
 describe("ExportCSVButton", () => {
-    let download, getCSVReport, addBOM;
+    let download: jest.SpyInstance, getCSVReport: jest.SpyInstance, addBOM: jest.SpyInstance;
+    let store = {};
     beforeEach(() => {
-        download = jest.spyOn(download_helper, "download").mockImplementation(() => {});
+        download = jest.spyOn(download_helper, "download").mockImplementation(() => {
+            //nothing to mock
+        });
         getCSVReport = jest.spyOn(rest_querier, "getCSVReport");
         addBOM = jest.spyOn(bom_helper, "addBOM");
     });
 
-    function instantiateComponent() {
+    async function instantiateComponent(): Promise<Wrapper<ExportCSVButton>> {
+        const store_options = {
+            state: { report_id: 1 },
+            getters: { should_display_export_button: true },
+        };
+        store = createStoreMock(store_options);
+
         return shallowMount(ExportCSVButton, {
-            localVue,
-            mocks: {
-                $store: createStoreMock(createStore()),
-            },
+            localVue: await createCrossTrackerLocalVue(),
+            mocks: { $store: store },
         });
     }
 
@@ -47,25 +54,26 @@ describe("ExportCSVButton", () => {
         it(`When the server responds,
             then it will hide feedbacks,
             show a spinner and offer to download a CSV file with the results`, async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
             wrapper.vm.$store.state.report_id = 36;
             const csv = `"id"\r\n72\r\n17\r\n`;
             getCSVReport.mockResolvedValue(csv);
             addBOM.mockImplementation((csv) => csv);
 
-            const promise = wrapper.vm.exportCSV();
+            wrapper.find("[data-test=export-cvs-button]").trigger("click");
 
-            expect(wrapper.vm.is_loading).toBe(true);
-            await promise;
+            expect(wrapper.vm.$data.is_loading).toBe(true);
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
             expect(getCSVReport).toHaveBeenCalledWith(36);
             expect(download).toHaveBeenCalledWith(csv, "export-36.csv", "text/csv;encoding:utf-8");
-            expect(wrapper.vm.is_loading).toBe(false);
+            expect(wrapper.vm.$data.is_loading).toBe(false);
         });
 
         it("When there is a REST error, then it will be shown", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
             getCSVReport.mockImplementation(() =>
                 Promise.reject({
                     response: {
@@ -75,9 +83,11 @@ describe("ExportCSVButton", () => {
                 })
             );
 
-            await wrapper.vm.exportCSV();
+            wrapper.find("[data-test=export-cvs-button]").trigger("click");
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
 
-            expect(wrapper.vm.is_loading).toBe(false);
+            expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
                 "Report with id 90 not found"
@@ -85,7 +95,7 @@ describe("ExportCSVButton", () => {
         });
 
         it("When there is a 50x REST error, then a generic error message will be shown", async () => {
-            const wrapper = instantiateComponent();
+            const wrapper = await instantiateComponent();
             getCSVReport.mockImplementation(() =>
                 Promise.reject({
                     response: {
@@ -94,9 +104,11 @@ describe("ExportCSVButton", () => {
                 })
             );
 
-            await wrapper.vm.exportCSV();
+            wrapper.find("[data-test=export-cvs-button]").trigger("click");
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
 
-            expect(wrapper.vm.is_loading).toBe(false);
+            expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
                 expect.any(String)

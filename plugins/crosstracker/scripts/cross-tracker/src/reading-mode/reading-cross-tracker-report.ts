@@ -18,6 +18,7 @@
  */
 import type { TrackerAndProject } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
+import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 
 export default class ReadingCrossTrackerReport {
     trackers: Map<number, TrackerAndProject>;
@@ -41,6 +42,11 @@ export default class ReadingCrossTrackerReport {
     }
 
     duplicateFromReport(report: BackendCrossTrackerReport): void {
+        this.trackers = report.trackers;
+        this.expert_query = report.expert_query;
+    }
+
+    duplicateFromWritingReport(report: WritingCrossTrackerReport): void {
         this.trackers = report.trackers;
         this.expert_query = report.expert_query;
     }

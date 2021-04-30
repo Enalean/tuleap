@@ -21,7 +21,7 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 let entry_points = {
-    "cross-tracker": "./scripts/cross-tracker/src/index.js",
+    "cross-tracker": "./scripts/cross-tracker/src/index.ts",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
