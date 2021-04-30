@@ -31,8 +31,9 @@ export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
     const { left_handle, right_handle } = handles;
     const left_line_height = getTotalHeight(left_handle);
     const right_line_height = getTotalHeight(right_handle);
+    const one_size_is_empty = left_handle.text === "" || right_handle.text === "";
 
-    if (left_line_height === right_line_height) {
+    if (left_line_height === right_line_height || one_size_is_empty) {
         // nothing to do, all is already perfect
         return null;
     }
