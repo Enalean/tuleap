@@ -30,7 +30,7 @@ function getReleaseIdFromREST(): Cypress.Chainable<Response> {
 
 describe(`Taskboard`, function () {
     before(function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.projectMemberLogin();
         getReleaseIdFromREST()
             .as("release_id")
@@ -40,7 +40,7 @@ describe(`Taskboard`, function () {
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it(`loads`, function () {

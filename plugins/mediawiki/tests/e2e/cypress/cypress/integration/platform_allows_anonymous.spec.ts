@@ -19,7 +19,7 @@
 
 describe("Plateform allows anonymous", function () {
     it("project administrator can define permission access level of mediawiki", function () {
-        cy.ProjectAdministratorLogin();
+        cy.projectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-anonymous/");
 
@@ -34,7 +34,7 @@ describe("Plateform allows anonymous", function () {
     });
 
     it("given project is switched from public to private, anonymous are redirected to login page", function () {
-        cy.ProjectAdministratorLogin();
+        cy.projectAdministratorLogin();
 
         cy.visitProjectService("platform-allows-anonymous", "Admin");
         cy.contains("Details").click();

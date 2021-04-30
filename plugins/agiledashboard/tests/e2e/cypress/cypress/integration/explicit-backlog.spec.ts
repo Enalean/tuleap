@@ -19,13 +19,13 @@
 
 describe(`Planning view Explicit Backlog`, function () {
     before(function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
 
         cy.projectMemberLogin();
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
         cy.visitProjectService("explicit-backlog", "Agile Dashboard");
     });
 

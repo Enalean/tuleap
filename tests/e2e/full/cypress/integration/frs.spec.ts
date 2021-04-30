@@ -22,13 +22,13 @@ describe("Frs", function () {
 
     context("Project administrators", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("permissions-project-01").as("project_id");
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
             cy.visitProjectService("frs-project", "Files");
         });
 
@@ -140,12 +140,12 @@ describe("Frs", function () {
 
     context("Project members", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("should raise an error when user try to access to plugin files admin page", function () {

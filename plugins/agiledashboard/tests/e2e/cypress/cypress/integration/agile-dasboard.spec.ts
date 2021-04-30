@@ -21,13 +21,13 @@ describe("Agile Dashboard", function () {
     let project_id: string;
     context("Project administrators", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("agile-dashboard").as("project_id");
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("can access to admin section", function () {
@@ -72,12 +72,12 @@ describe("Agile Dashboard", function () {
 
     describe("Project members", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("can not for admin page access", function () {

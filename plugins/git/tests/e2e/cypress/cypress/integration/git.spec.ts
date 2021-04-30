@@ -21,13 +21,13 @@ describe("Git", function () {
     let project_id: string;
     context("Project administrators", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("git-project").as("project_id");
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("can access to admin section", function () {
@@ -135,12 +135,12 @@ describe("Git", function () {
 
     context("Project members", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
         it("should raise an error when user try to access to plugin Git admin page", function () {
             cy.visit("/plugins/git/?group_id=" + project_id + "&action=admin");

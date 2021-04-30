@@ -19,13 +19,13 @@
 
 describe("TTM shortcuts", () => {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.projectMemberLogin();
         cy.visitProjectService("test-management-project", "Test Management");
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
         // eslint-disable-next-line cypress/require-data-selectors
         cy.get("body").as("body");
     });

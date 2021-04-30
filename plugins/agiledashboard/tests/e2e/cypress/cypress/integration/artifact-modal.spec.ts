@@ -20,13 +20,13 @@
 describe(`Artifact Modal`, function () {
     const now: number = Date.now();
     before(function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.projectMemberLogin();
         getArtifactLinkIdFromREST().as("artifact_link_id");
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it(`can create an artifact with all fields`, function () {

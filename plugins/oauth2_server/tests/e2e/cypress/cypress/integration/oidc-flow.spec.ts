@@ -23,13 +23,13 @@ function visitProjectAdmin(project_id: string): void {
 
 describe("OIDC flow", function () {
     before(function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.ProjectAdministratorLogin();
+        cy.clearSessionCookie();
+        cy.projectAdministratorLogin();
         cy.getProjectId("oidc-flow").as("project_id");
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it("setup a OAuth2 app to sign in on a third party service", function () {

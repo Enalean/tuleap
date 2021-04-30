@@ -76,7 +76,7 @@ describe("Report expert queries", () => {
     let summary_column_id: string;
 
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.projectMemberLogin();
         cy.getProjectId("tracker-project").as("project_id");
 
@@ -93,7 +93,7 @@ describe("Report expert queries", () => {
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     describe("Report table shows", () => {

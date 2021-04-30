@@ -20,12 +20,12 @@
 describe("Navigation", function () {
     context("As a project member", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
 
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get("body").as("body");
@@ -77,8 +77,8 @@ describe("Navigation", function () {
     context("As project admin", function () {
         context("switch-to", function () {
             before(function () {
-                cy.clearCookie("__Host-TULEAP_session_hash");
-                cy.ProjectAdministratorLogin();
+                cy.clearSessionCookie();
+                cy.projectAdministratorLogin();
                 // eslint-disable-next-line cypress/require-data-selectors
                 cy.get("body").as("body");
             });

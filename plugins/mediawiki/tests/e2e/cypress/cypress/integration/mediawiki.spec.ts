@@ -19,11 +19,11 @@
 
 describe("Mediawiki", function () {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
     });
 
     it("project is imported", function () {
-        cy.ProjectAdministratorLogin();
+        cy.projectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/mediawiki-public-project/");
 

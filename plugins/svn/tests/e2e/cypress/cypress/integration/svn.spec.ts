@@ -21,14 +21,14 @@
 describe("SVN", function () {
     context("Project Administrators", function () {
         beforeEach(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
 
             cy.getProjectId("svn-project-full").as("svn_project_id");
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
 
             cy.visitProjectService("svn-project-full", "SVN");
         });
@@ -113,12 +113,12 @@ describe("SVN", function () {
 
     context("Regular users", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
 
             cy.visitProjectService("svn-project-full", "SVN");
         });
@@ -145,19 +145,19 @@ describe("SVN", function () {
 
     describe("Project Administrators", function () {
         beforeEach(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
 
             cy.getProjectId("svn-project-full").as("svn_project_id");
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("should be able to delegate the administrator permission", function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.visitProjectService("svn-project-full", "SVN");
             cy.get("[data-test=svn-admin-groups]").click({ force: true });
             cy.get("[data-test=svn-admin-group-select]").select([
@@ -170,7 +170,7 @@ describe("SVN", function () {
             cy.get("[data-test=feedback]").contains("it was already granted to");
         });
         it("regular user is now administrator", function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
             cy.visitProjectService("svn-project-full", "SVN");
             cy.get("[data-test=svn-admin-groups]").click({ force: true });

@@ -22,13 +22,13 @@ describe("List", function () {
     let project_id: string;
     context("Project administrators", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("permissions-project-01").as("project_id");
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("can access to admin section", function () {
@@ -38,12 +38,12 @@ describe("List", function () {
     });
     context("Project members", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
         it("should raise an error when user try to access to List admin page", function () {
             //failOnStatusCode ignore the 401 thrown in HTTP Headers by server

@@ -20,15 +20,15 @@
 describe("FRS plugin", () => {
     let now: number;
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.ProjectAdministratorLogin();
+        cy.clearSessionCookie();
+        cy.projectAdministratorLogin();
         cy.getProjectId("frs-plugin").as("frs_project_id");
 
         now = Date.now();
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it("user can link a frs release to an agiledashboard release", function (): void {

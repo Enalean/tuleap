@@ -22,13 +22,13 @@ describe("News", function () {
     let project_id: string;
     context("Project administrators", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("permissions-project-01").as("project_id");
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("can access to admin section", function () {
@@ -38,12 +38,12 @@ describe("News", function () {
     });
     context("Project members", function () {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
         it("should raise an error when user try to access to News admin page", function () {
             cy.visit("/news/admin/?group_id=" + project_id);
