@@ -57,5 +57,5 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_tag_info (
     commit_sha1 BINARY(20) NOT NULL,
     tag_name TEXT NOT NULL,
     tag_message TEXT NOT NULL,
-    INDEX idx_tag(repository_id, tag_name(10))
+    UNIQUE(repository_id, tag_name(255))
 ) ENGINE=InnoDB;
