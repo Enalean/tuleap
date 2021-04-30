@@ -8,10 +8,6 @@
         "burning-parrot": {
             "src": "src/scripts/BurningParrot/src",
             "po": "src/scripts/BurningParrot/po"
-        },
-        "project-admin": {
-            "src": "src/scripts/project/admin/src",
-            "po": "src/scripts/project/admin/po"
         }
     },
     "gettext-ts": {
