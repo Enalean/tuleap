@@ -22,22 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User\Account;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\User\Account\AccountTabPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AppsTabAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testAddTabs(): void
     {
-        $collection = M::mock(AccountTabPresenterCollection::class);
-        $collection->shouldReceive('add')
-            ->with(M::type(AccountTabPresenter::class))
-            ->once();
-        $collection->shouldReceive('getCurrentHref');
+        $collection = $this->createMock(AccountTabPresenterCollection::class);
+        $collection->expects(self::once())->method('add')
+            ->with(self::isInstanceOf(AccountTabPresenter::class));
+        $collection->method('getCurrentHref');
 
         (new AppsTabAdder())->addTabs($collection);
     }

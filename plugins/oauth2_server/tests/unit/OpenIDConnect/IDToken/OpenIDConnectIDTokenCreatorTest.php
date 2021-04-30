@@ -27,7 +27,6 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Validator;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -41,7 +40,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
-    use MockeryPHPUnitIntegration;
 
     private const SIGNING_PUBLIC_KEY_FINGERPRINT = '13e908c0c14b52fa364f6573cda85971d16de83b17d6ef8793447724c464c01c';
     private const SIGNING_PUBLIC_KEY             = <<<EOT
@@ -90,7 +88,7 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
     private const EXPECTED_EXPIRATION_DELAY_SECONDS = 60;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
      */
     private $user_manager;
     /**
@@ -100,15 +98,15 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 
     protected function setUp(): void
     {
-        $signing_key_factory = \Mockery::mock(OpenIDConnectSigningKeyFactory::class);
-        $signing_key_factory->shouldReceive('getKey')->andReturn(
+        $signing_key_factory = $this->createMock(OpenIDConnectSigningKeyFactory::class);
+        $signing_key_factory->method('getKey')->willReturn(
             new SigningPrivateKey(
                 SigningPublicKey::fromPEMFormat(self::SIGNING_PUBLIC_KEY),
                 new ConcealedString(self::SIGNING_PRIVATE_KEY)
             )
         );
 
-        $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->user_manager = $this->createMock(\UserManager::class);
 
         $this->id_token_creator = new OpenIDConnectIDTokenCreator(
             OAuth2SignInScope::fromItself(),
@@ -129,7 +127,7 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
         \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
         $current_time = new \DateTimeImmutable('@10');
 
-        $this->user_manager->shouldReceive('getUserAccessInfo')->andReturn(['last_auth_success' => '5']);
+        $this->user_manager->method('getUserAccessInfo')->willReturn(['last_auth_success' => '5']);
 
         $payload = $this->id_token_creator->issueIDTokenFromAuthorizationCode(
             $current_time,

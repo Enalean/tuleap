@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -40,45 +38,43 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var AuthorizationEndpointProcessConsentController
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
      */
     private $user_manager;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
      */
     private $app_factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthenticationScopeBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthenticationScopeBuilder
      */
     private $scope_builder;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationCreator
      */
     private $authorization_creator;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCodeResponseFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationCodeResponseFactory
      */
     private $response_factory;
     /**
-     * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
 
     protected function setUp(): void
     {
-        $this->user_manager          = M::mock(\UserManager::class);
-        $this->app_factory           = M::mock(AppFactory::class);
-        $this->scope_builder         = M::mock(AuthenticationScopeBuilder::class);
-        $this->authorization_creator = M::mock(AuthorizationCreator::class);
-        $this->response_factory      = M::mock(AuthorizationCodeResponseFactory::class);
-        $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
+        $this->user_manager          = $this->createMock(\UserManager::class);
+        $this->app_factory           = $this->createMock(AppFactory::class);
+        $this->scope_builder         = $this->createMock(AuthenticationScopeBuilder::class);
+        $this->authorization_creator = $this->createMock(AuthorizationCreator::class);
+        $this->response_factory      = $this->createMock(AuthorizationCodeResponseFactory::class);
+        $this->csrf_token            = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller            = new AuthorizationEndpointProcessConsentController(
             $this->user_manager,
             $this->app_factory,
@@ -86,13 +82,13 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
             $this->authorization_creator,
             $this->response_factory,
             $this->csrf_token,
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
     public function testHandleThrowsForbiddenWhenUserIsAnonymous(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::anAnonymousUser()->build()
         );
 
@@ -102,8 +98,8 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
 
     public function testHandleThrowsForbiddenWhenRequestHasNoBodyParams(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn(UserTestBuilder::aUser()->withId(102)->build());
         $request = new NullServerRequest();
 
         $this->expectException(ForbiddenException::class);
@@ -112,12 +108,12 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
 
     public function testHandleThrowsForbiddenWhenTheClientIdentifierCannotBeParsed(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn(UserTestBuilder::aUser()->withId(102)->build());
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'invalid_app_identifier', 'scope' => ['foo:bar', 'type:value']]
         );
-        $this->csrf_token->shouldReceive('check');
+        $this->csrf_token->method('check');
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -125,14 +121,14 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
 
     public function testHandleThrowsForbiddenWhenTheClientIdentifierIsUnknown(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn(UserTestBuilder::aUser()->withId(102)->build());
         $client_identifier = ClientIdentifier::fromClientId('tlp-client-id-404');
         $request           = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => $client_identifier->toString(), 'scope' => ['foo:bar', 'type:value']]
         );
-        $this->csrf_token->shouldReceive('check');
-        $this->app_factory->shouldReceive('getAppMatchingClientId')->andThrow(new OAuth2AppNotFoundException($client_identifier));
+        $this->csrf_token->method('check');
+        $this->app_factory->method('getAppMatchingClientId')->willThrowException(new OAuth2AppNotFoundException($client_identifier));
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -141,15 +137,15 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
     public function testHandleThrowsForbiddenWhenNoValidScopeCanBeFound(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn($user);
-        $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(78));
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
-            ->andReturn(null);
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn($user);
+        $this->app_factory->method('getAppMatchingClientId')->willReturn($this->buildOAuth2App(78));
+        $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')
+            ->willReturn(null);
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-78', 'scope' => ['not:found']]
         );
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -158,15 +154,15 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
     public function testHandleThrowsForbiddenWhenCodeChallengeIsNotHexEncoded(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn($user);
-        $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(78));
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
-            ->andReturn(M::mock(AuthenticationScope::class));
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn($user);
+        $this->app_factory->method('getAppMatchingClientId')->willReturn($this->buildOAuth2App(78));
+        $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')
+            ->willReturn($this->createMock(AuthenticationScope::class));
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-78', 'scope' => ['foo:bar'], 'pkce_code_challenge' => 'not_hex_encoded']
         );
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -188,9 +184,9 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
      */
     public function testHandleThrowsForbiddenWhenInvalidBodyParams(array $body_params): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
-        $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(13));
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn(UserTestBuilder::aUser()->withId(102)->build());
+        $this->app_factory->method('getAppMatchingClientId')->willReturn($this->buildOAuth2App(13));
         $request = (new NullServerRequest())->withParsedBody($body_params);
 
         $this->expectException(ForbiddenException::class);
@@ -200,21 +196,20 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
     public function testHandleRedirects(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->andReturn($user);
-        $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(77));
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
-            ->andReturn(M::mock(AuthenticationScope::class));
+        $this->user_manager->method('getCurrentUser')
+            ->willReturn($user);
+        $this->app_factory->method('getAppMatchingClientId')->willReturn($this->buildOAuth2App(77));
+        $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')
+            ->willReturn($this->createMock(AuthenticationScope::class));
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-77', 'scope' => ['foo:bar', 'type:value', 'foo:bar']]
         );
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->csrf_token->expects(self::once())->method('check');
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createSuccessfulResponse')->once()->andReturn($response);
-        $this->authorization_creator->shouldReceive('saveAuthorization')
-            ->once()
+        $this->response_factory->expects(self::once())->method('createSuccessfulResponse')->willReturn($response);
+        $this->authorization_creator->expects(self::once())->method('saveAuthorization')
             ->with(
-                M::on(
+                self::callback(
                     function (NewAuthorization $new_authorization) use ($user) {
                         $identifiers = $new_authorization->getScopeIdentifiers();
                         return $new_authorization->getAppId() === 77

@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -37,31 +35,29 @@ use Tuleap\User\OAuth2\OAuth2Exception;
 
 final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var TokenRevocationController
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2RefreshTokenRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenRevoker
      */
     private $refresh_token_revoker;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AccessTokenRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenRevoker
      */
     private $access_token_revoker;
 
     protected function setUp(): void
     {
-        $this->refresh_token_revoker = M::mock(OAuth2RefreshTokenRevoker::class);
-        $this->access_token_revoker  = M::mock(OAuth2AccessTokenRevoker::class);
+        $this->refresh_token_revoker = $this->createMock(OAuth2RefreshTokenRevoker::class);
+        $this->access_token_revoker  = $this->createMock(OAuth2AccessTokenRevoker::class);
         $this->controller            = new TokenRevocationController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             $this->refresh_token_revoker,
             $this->access_token_revoker,
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
@@ -70,8 +66,8 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = $this->controller->handle(new NullServerRequest());
 
         $this->assertSame(401, $response->getStatusCode());
-        $this->refresh_token_revoker->shouldNotHaveReceived('revokeGrantOfRefreshToken');
-        $this->access_token_revoker->shouldNotHaveReceived('revokeGrantOfAccessToken');
+        $this->refresh_token_revoker->expects(self::never())->method('revokeGrantOfRefreshToken');
+        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
         $this->assertTrue($response->hasHeader('WWW-Authenticate'));
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_client"}', $response->getBody()->getContents());
@@ -87,8 +83,8 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = $this->controller->handle($request);
 
         $this->assertSame(400, $response->getStatusCode());
-        $this->refresh_token_revoker->shouldNotHaveReceived('revokeGrantOfRefreshToken');
-        $this->access_token_revoker->shouldNotHaveReceived('revokeGrantOfAccessToken');
+        $this->refresh_token_revoker->expects(self::never())->method('revokeGrantOfRefreshToken');
+        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
     }
@@ -104,15 +100,13 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleSilentlyIgnoresBadlyFormattedToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
-            ->once()
-            ->andThrow(
+        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+            ->willThrowException(
                 new class extends SplitTokenException {
                 }
             );
-        $this->access_token_revoker->shouldReceive('revokeGrantOfAccessToken')
-            ->once()
-            ->andThrow(
+        $this->access_token_revoker->expects(self::once())->method('revokeGrantOfAccessToken')
+            ->willThrowException(
                 new class extends SplitTokenException {
                 }
             );
@@ -124,13 +118,12 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleSilentlyIgnoresRefreshTokenNotAssociatedToThisClient(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
-            ->once()
-            ->andThrow(
+        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+            ->willThrowException(
                 new class extends \RuntimeException implements OAuth2ServerException {
                 }
             );
-        $this->access_token_revoker->shouldNotReceive('revokeGrantOfAccessToken');
+        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
 
         $response = $this->controller->handle($request);
         $this->assertSame(200, $response->getStatusCode());
@@ -139,15 +132,13 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleSilentlyIgnoresAccessTokenNotAssociatedToThisClient(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
-            ->once()
-            ->andThrow(
+        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+            ->willThrowException(
                 new class extends SplitTokenException {
                 }
             );
-        $this->access_token_revoker->shouldReceive('revokeGrantOfAccessToken')
-            ->once()
-            ->andThrow(
+        $this->access_token_revoker->expects(self::once())->method('revokeGrantOfAccessToken')
+            ->willThrowException(
                 new class extends \RuntimeException implements OAuth2Exception {
                 }
             );
@@ -159,8 +150,8 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRevokesGrantOfRefreshToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')->once();
-        $this->access_token_revoker->shouldNotReceive('revokeGrantOfAccessToken');
+        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken');
+        $this->access_token_revoker->expects(self::never())->method('revokeGrantOfAccessToken');
 
         $response = $this->controller->handle($request);
         $this->assertSame(200, $response->getStatusCode());
@@ -169,13 +160,12 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleFallsbackToRevokingGrantOfAccessToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
-            ->once()
-            ->andThrow(
+        $this->refresh_token_revoker->expects(self::once())->method('revokeGrantOfRefreshToken')
+            ->willThrowException(
                 new class extends SplitTokenException {
                 }
             );
-        $this->access_token_revoker->shouldReceive('revokeGrantOfAccessToken')->once();
+        $this->access_token_revoker->expects(self::once())->method('revokeGrantOfAccessToken');
 
         $response = $this->controller->handle($request);
         $this->assertSame(200, $response->getStatusCode());

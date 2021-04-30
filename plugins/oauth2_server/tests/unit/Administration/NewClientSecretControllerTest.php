@@ -21,8 +21,6 @@
 namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -34,24 +32,18 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppProjectVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppProjectVerifier
      */
     private $project_verifier;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ClientSecretUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject|ClientSecretUpdater
      */
     private $client_secret_updater;
-    /**
-     * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
-     */
-    private $csrf_token;
     /**
      * @var NewClientSecretController
      */
@@ -59,19 +51,19 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->redirector            = M::mock(RedirectWithFeedbackFactory::class);
-        $this->project_verifier      = M::mock(OAuth2AppProjectVerifier::class);
-        $this->client_secret_updater = M::mock(ClientSecretUpdater::class);
-        $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
+        $this->redirector            = $this->createMock(RedirectWithFeedbackFactory::class);
+        $this->project_verifier      = $this->createMock(OAuth2AppProjectVerifier::class);
+        $this->client_secret_updater = $this->createMock(ClientSecretUpdater::class);
+        $csrf_token                  = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller            = new NewClientSecretController(
             HTTPFactoryBuilder::responseFactory(),
             $this->redirector,
             $this->project_verifier,
             $this->client_secret_updater,
-            $this->csrf_token,
-            M::mock(EmitterInterface::class)
+            $csrf_token,
+            $this->createMock(EmitterInterface::class)
         );
-        $this->csrf_token->shouldReceive('check');
+        $csrf_token->method('check');
     }
 
     public function testGetProjectAdminUrl(): void
@@ -91,11 +83,10 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
-            ->once()
-            ->andReturn($response);
-        $this->client_secret_updater->shouldNotReceive('updateClientSecret');
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
+            ->willReturn($response);
+        $this->client_secret_updater->expects(self::never())->method('updateClientSecret');
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -111,10 +102,8 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleProjectAdminGeneratesClientSecretAndRedirects(): void
     {
         $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '45']);
-        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
-        $this->client_secret_updater->shouldReceive('updateClientSecret')
-            ->once()
-            ->with(45);
+        $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(true);
+        $this->client_secret_updater->expects(self::once())->method('updateClientSecret')->with(45);
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -124,10 +113,8 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleSiteAdminGeneratesClientSecretAndRedirects(): void
     {
         $request = $this->buildSiteAdminRequest()->withParsedBody(['app_id' => '45']);
-        $this->project_verifier->shouldReceive('isASiteLevelApp')->andReturn(true);
-        $this->client_secret_updater->shouldReceive('updateClientSecret')
-            ->once()
-            ->with(45);
+        $this->project_verifier->method('isASiteLevelApp')->willReturn(true);
+        $this->client_secret_updater->expects(self::once())->method('updateClientSecret')->with(45);
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -136,7 +123,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsGenerationOfNewSecretForAnAppOfAnotherProject(): void
     {
-        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
+        $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(false);
 
         $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '45']);
 

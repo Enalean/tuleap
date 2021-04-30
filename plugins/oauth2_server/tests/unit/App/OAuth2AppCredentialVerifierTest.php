@@ -22,25 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
      */
     private $app_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
      */
     private $app_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
@@ -50,9 +48,9 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
 
     protected function setUp(): void
     {
-        $this->app_factory = \Mockery::mock(AppFactory::class);
-        $this->app_dao     = \Mockery::mock(AppDao::class);
-        $this->hasher      = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $this->app_factory = $this->createMock(AppFactory::class);
+        $this->app_dao     = $this->createMock(AppDao::class);
+        $this->hasher      = $this->createMock(SplitTokenVerificationStringHasher::class);
         $this->verifier    = new OAuth2AppCredentialVerifier(
             $this->app_factory,
             $this->app_dao,
@@ -64,8 +62,8 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $expected_app = $this->buildApp();
 
-        $this->app_dao->shouldReceive('searchClientSecretByClientID')->andReturn('valid_secret_hash');
-        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $this->app_dao->method('searchClientSecretByClientID')->willReturn('valid_secret_hash');
+        $this->hasher->method('verifyHash')->willReturn(true);
 
         $app = $this->verifier->getApp(
             ClientIdentifier::fromOAuth2App($expected_app),
@@ -90,8 +88,8 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $expected_app = $this->buildApp();
 
-        $this->app_dao->shouldReceive('searchClientSecretByClientID')->andReturn('other_secret_hash');
-        $this->hasher->shouldReceive('verifyHash')->andReturn(false);
+        $this->app_dao->method('searchClientSecretByClientID')->willReturn('other_secret_hash');
+        $this->hasher->method('verifyHash')->willReturn(false);
 
         $this->expectException(InvalidOAuth2AppSecretException::class);
         $this->verifier->getApp(
@@ -104,7 +102,7 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $expected_app = $this->buildApp();
 
-        $this->app_dao->shouldReceive('searchClientSecretByClientID')->andReturn(null);
+        $this->app_dao->method('searchClientSecretByClientID')->willReturn(null);
 
         $this->expectException(OAuth2MissingVerifierStringException::class);
         $this->verifier->getApp(
@@ -115,16 +113,14 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private function buildApp(): OAuth2App
     {
-        $app = new OAuth2App(1, 'Name', 'https://example.com', true, \Mockery::mock(\Project::class));
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->with(
-                \Mockery::on(
-                    static function (ClientIdentifier $identifier) use ($app): bool {
-                        return $identifier->getInternalId() === ClientIdentifier::fromOAuth2App($app)->getInternalId();
-                    }
-                )
-            )
-            ->andReturn($app);
+        $app = new OAuth2App(1, 'Name', 'https://example.com', true, ProjectTestBuilder::aProject()->build());
+        $this->app_factory->method('getAppMatchingClientId')
+            ->with(self::callback(
+                static function (ClientIdentifier $identifier) use ($app): bool {
+                    return $identifier->getInternalId() === ClientIdentifier::fromOAuth2App($app)->getInternalId();
+                }
+            ))
+            ->willReturn($app);
 
         return $app;
     }

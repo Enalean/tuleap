@@ -22,15 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Administration;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OAuth2Server\App\AppDao;
 
 final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
      */
     private $app_dao;
     /**
@@ -40,14 +37,14 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->app_dao          = \Mockery::mock(AppDao::class);
+        $this->app_dao          = $this->createMock(AppDao::class);
         $this->project_verifier = new OAuth2AppProjectVerifier($this->app_dao);
     }
 
     public function testAppIsPartOfTheExpectedProject(): void
     {
         $expected_project = \Project::buildForTest();
-        $this->app_dao->shouldReceive('searchProjectIDByClientID')->andReturn((int) $expected_project->getID());
+        $this->app_dao->method('searchProjectIDByClientID')->willReturn((int) $expected_project->getID());
 
         self::assertTrue($this->project_verifier->isAppPartOfTheExpectedProject($expected_project, 1));
         self::assertFalse($this->project_verifier->isASiteLevelApp(1));
@@ -55,7 +52,7 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAppIsASiteLevelApp(): void
     {
-        $this->app_dao->shouldReceive('searchProjectIDByClientID')->andReturn(null);
+        $this->app_dao->method('searchProjectIDByClientID')->willReturn(null);
 
         self::assertTrue($this->project_verifier->isASiteLevelApp(1));
     }
@@ -65,7 +62,7 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testAppIsNotPartOfTheExpectedProject(?int $app_project_id): void
     {
-        $this->app_dao->shouldReceive('searchProjectIDByClientID')->andReturn($app_project_id);
+        $this->app_dao->method('searchProjectIDByClientID')->willReturn($app_project_id);
 
         self::assertFalse($this->project_verifier->isAppPartOfTheExpectedProject(\Project::buildForTest(), 1));
     }

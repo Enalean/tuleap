@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -39,17 +38,16 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenIdentifierTranslator
      */
     private $client_secret_unserializer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AppCredentialVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppCredentialVerifier
      */
     private $verifier;
     /**
@@ -63,8 +61,8 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
 
     protected function setUp(): void
     {
-        $this->client_secret_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
-        $this->verifier                   = \Mockery::mock(OAuth2AppCredentialVerifier::class);
+        $this->client_secret_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
+        $this->verifier                   = $this->createMock(OAuth2AppCredentialVerifier::class);
         $this->logger                     = new TestLogger();
         $this->middleware                 = new OAuth2ClientAuthenticationMiddleware(
             $this->client_secret_unserializer,
@@ -79,12 +77,12 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
         $incoming_server_request = (new NullServerRequest())
             ->withHeader('Authorization', 'Basic ' . base64_encode('tlp-client-id-1:client_secret'));
 
-        $this->client_secret_unserializer->shouldReceive('getSplitToken')->andReturn(
+        $this->client_secret_unserializer->method('getSplitToken')->willReturn(
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString())
         );
 
-        $expected_app = new OAuth2App(1, 'Name', 'https://example.com', true, \Mockery::mock(\Project::class));
-        $this->verifier->shouldReceive('getApp')->andReturn($expected_app);
+        $expected_app = new OAuth2App(1, 'Name', 'https://example.com', true, ProjectTestBuilder::aProject()->build());
+        $this->verifier->method('getApp')->willReturn($expected_app);
 
         $handler = $this->buildHandler($expected_app);
 
@@ -117,7 +115,7 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
         $incoming_server_request = (new NullServerRequest())
             ->withHeader('Authorization', 'Basic ' . base64_encode('tlp-client-id-1:wrong_format_client_secret'));
 
-        $this->client_secret_unserializer->shouldReceive('getSplitToken')->andThrow(
+        $this->client_secret_unserializer->method('getSplitToken')->willThrowException(
             new class extends SplitTokenException {
             }
         );
@@ -133,11 +131,11 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
         $incoming_server_request = (new NullServerRequest())
             ->withHeader('Authorization', 'Basic ' . base64_encode('tlp-client-id-3:client_secret'));
 
-        $this->client_secret_unserializer->shouldReceive('getSplitToken')->andReturn(
+        $this->client_secret_unserializer->method('getSplitToken')->willReturn(
             new SplitToken(3, SplitTokenVerificationString::generateNewSplitTokenVerificationString())
         );
 
-        $this->verifier->shouldReceive('getApp')->andThrow(
+        $this->verifier->method('getApp')->willThrowException(
             new class extends \RuntimeException implements OAuth2ServerException
             {
             }
@@ -153,12 +151,12 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
         $incoming_server_request = (new NullServerRequest())
             ->withHeader('Authorization', 'Basic ' . base64_encode('tlp-client-id-4:client_secret'));
 
-        $this->client_secret_unserializer->shouldReceive('getSplitToken')->andReturn(
+        $this->client_secret_unserializer->method('getSplitToken')->willReturn(
             new SplitToken(4, SplitTokenVerificationString::generateNewSplitTokenVerificationString())
         );
 
         $exception = new \LogicException('State is not consistent with the code');
-        $this->verifier->shouldReceive('getApp')->andThrow($exception);
+        $this->verifier->method('getApp')->willThrowException($exception);
 
         $handler = $this->buildHandler(null);
 

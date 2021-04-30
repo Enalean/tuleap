@@ -22,21 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 final class OAuth2AuthorizationCodeRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testRevokeByAuthCodeId(): void
     {
-        $dao     = M::mock(OAuth2AuthorizationCodeDAO::class);
+        $dao     = $this->createMock(OAuth2AuthorizationCodeDAO::class);
         $revoker = new OAuth2AuthorizationCodeRevoker($dao);
 
-        $dao->shouldReceive('deleteAuthorizationCodeByID')
-            ->with(15)
-            ->once();
+        $dao->expects(self::once())->method('deleteAuthorizationCodeByID')->with(15);
 
         $revoker->revokeByAuthCodeId(15);
     }

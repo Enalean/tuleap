@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
@@ -34,26 +33,24 @@ use UserManager;
 
 final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AdminPageRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject|AdminPageRenderer
      */
     private $admin_page_renderer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|UserManager
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AdminOAuth2AppsPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|AdminOAuth2AppsPresenterBuilder
      */
     private $presenter_builder;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|IncludeAssets
+     * @var \PHPUnit\Framework\MockObject\MockObject|IncludeAssets
      */
     private $include_assets;
     /**
-     * @var \CSRFSynchronizerToken|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**
@@ -63,11 +60,11 @@ final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     protected function setUp(): void
     {
-        $this->admin_page_renderer = \Mockery::mock(AdminPageRenderer::class);
-        $this->user_manager        = \Mockery::mock(UserManager::class);
-        $this->presenter_builder   = \Mockery::mock(AdminOAuth2AppsPresenterBuilder::class);
-        $this->include_assets      = \Mockery::mock(IncludeAssets::class);
-        $this->csrf_token          = \Mockery::mock(\CSRFSynchronizerToken::class);
+        $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);
+        $this->user_manager        = $this->createMock(UserManager::class);
+        $this->presenter_builder   = $this->createMock(AdminOAuth2AppsPresenterBuilder::class);
+        $this->include_assets      = $this->createMock(IncludeAssets::class);
+        $this->csrf_token          = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller          = new SiteAdminListAppsController(
             $this->admin_page_renderer,
             $this->user_manager,
@@ -79,31 +76,29 @@ final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testProcessRendersSomething(): void
     {
-        $this->admin_page_renderer->shouldReceive('renderAPresenter')->once();
+        $this->admin_page_renderer->expects(self::once())->method('renderAPresenter');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(true);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
 
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
+        $this->include_assets->expects(self::once())->method('getFileURL')
             ->with('administration.js');
-        $this->include_assets->shouldReceive('getPath')
+        $this->include_assets->method('getPath')
             ->with('administration-style');
 
-        $this->presenter_builder->shouldReceive('buildSiteAdministration')
-            ->once()
+        $this->presenter_builder->expects(self::once())->method('buildSiteAdministration')
             ->with($this->csrf_token)
-            ->andReturn(AdminOAuth2AppsPresenter::forSiteAdministration([], $this->csrf_token, null));
+            ->willReturn(AdminOAuth2AppsPresenter::forSiteAdministration([], $this->csrf_token, null));
 
         $this->controller->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), []);
     }
 
     public function testForbidsAccessIfUserIsNotSiteAdministrator(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
 
         $this->expectException(ForbiddenException::class);
 

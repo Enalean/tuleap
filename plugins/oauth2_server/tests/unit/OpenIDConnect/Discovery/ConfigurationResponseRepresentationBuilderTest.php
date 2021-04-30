@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\Discovery;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
@@ -33,26 +31,24 @@ use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
-    use MockeryPHPUnitIntegration;
 
     public function testBuildsRepresentation(): void
     {
         \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
-        $language_factory = M::mock(\BaseLanguageFactory::class);
+        $language_factory = $this->createMock(\BaseLanguageFactory::class);
         $language_factory
-            ->shouldReceive('getAvailableLanguages')
-            ->once()
-            ->andReturn(
+            ->expects(self::once())
+            ->method('getAvailableLanguages')
+            ->willReturn(
                 [
                     'ja_JP' => '日本語',
                     'en_US' => 'English',
                     'fr_FR' => 'Français'
                 ]
             );
-        $scope_builder = M::mock(AuthenticationScopeBuilder::class);
-        $scope_builder->shouldReceive('buildAllAvailableAuthenticationScopes')
-            ->once()
-            ->andReturn(
+        $scope_builder = $this->createMock(AuthenticationScopeBuilder::class);
+        $scope_builder->expects(self::once())->method('buildAllAvailableAuthenticationScopes')
+            ->willReturn(
                 [
                     OAuth2SignInScope::fromItself(),
                     OpenIDConnectEmailScope::fromItself(),

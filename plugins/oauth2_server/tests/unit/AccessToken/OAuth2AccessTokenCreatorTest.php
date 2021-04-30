@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AccessToken;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
@@ -33,16 +32,14 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenDAO
      */
     private $access_token_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeSaver
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeSaver
      */
     private $scope_saver;
 
@@ -53,8 +50,8 @@ final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->access_token_dao = \Mockery::mock(OAuth2AccessTokenDAO::class);
-        $this->scope_saver      = \Mockery::mock(OAuth2ScopeSaver::class);
+        $this->access_token_dao = $this->createMock(OAuth2AccessTokenDAO::class);
+        $this->scope_saver      = $this->createMock(OAuth2ScopeSaver::class);
 
         $formatter = new class implements SplitTokenFormatter
         {
@@ -80,13 +77,13 @@ final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $authorization_grant_id    = 3;
         $generated_access_token_id = 1;
 
-        $this->access_token_dao->shouldReceive('create')->once()->andReturn($generated_access_token_id);
-        $this->scope_saver->shouldReceive('saveScopes')->once();
+        $this->access_token_dao->expects(self::once())->method('create')->willReturn($generated_access_token_id);
+        $this->scope_saver->expects(self::once())->method('saveScopes');
 
         $access_token = $this->token_creator->issueAccessToken(
             $current_time,
             $authorization_grant_id,
-            [\Mockery::mock(AuthenticationScope::class)]
+            [$this->createMock(AuthenticationScope::class)]
         );
 
         $this->assertEquals(
@@ -99,9 +96,9 @@ final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $current_time = new \DateTimeImmutable('@10');
 
-        $this->access_token_dao->shouldReceive('create')->andReturn(1);
-        $this->scope_saver->shouldReceive('saveScopes');
-        $scopes = [\Mockery::mock(AuthenticationScope::class)];
+        $this->access_token_dao->method('create')->willReturn(1);
+        $this->scope_saver->method('saveScopes');
+        $scopes = [$this->createMock(AuthenticationScope::class)];
 
         $access_token_1 = $this->token_creator->issueAccessToken($current_time, 1, $scopes);
         $access_token_2 = $this->token_creator->issueAccessToken($current_time, 2, $scopes);

@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\User\Account;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -38,7 +36,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
@@ -46,40 +43,39 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
      */
     private $user_manager;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationRevoker
      */
     private $autorization_revoker;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
      */
     private $redirector;
 
     protected function setUp(): void
     {
-        $csrf_token = M::mock(\CSRFSynchronizerToken::class);
-        $csrf_token->shouldReceive('check');
-        $this->user_manager         = M::mock(\UserManager::class);
-        $this->autorization_revoker = M::mock(AuthorizationRevoker::class);
-        $this->redirector           = M::mock(RedirectWithFeedbackFactory::class);
+        $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
+        $csrf_token->method('check');
+        $this->user_manager         = $this->createMock(\UserManager::class);
+        $this->autorization_revoker = $this->createMock(AuthorizationRevoker::class);
+        $this->redirector           = $this->createMock(RedirectWithFeedbackFactory::class);
         $this->controller           = new AppRevocationController(
             HTTPFactoryBuilder::responseFactory(),
             $csrf_token,
             $this->user_manager,
             $this->autorization_revoker,
             $this->redirector,
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
     public function testHandleRedirectsWhenUserIsAnonymous(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn(UserTestBuilder::anAnonymousUser()->build());
+        $this->user_manager->expects(self::once())->method('getCurrentUser')
+            ->willReturn(UserTestBuilder::anAnonymousUser()->build());
         $inspector = new LayoutInspector();
         $request   = (new NullServerRequest())->withAttribute(
             BaseLayout::class,
@@ -94,12 +90,11 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRedirectsWithErrorWhenNoAppIdInBody(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
         $request = (new NullServerRequest())->withAttribute(BaseLayout::class, LayoutBuilder::build());
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with($user, AccountAppsController::URL, M::type(NewFeedback::class))
-            ->once()
-            ->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with($user, AccountAppsController::URL, self::isInstanceOf(NewFeedback::class))
+            ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());
@@ -108,20 +103,18 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRedirectsWithErrorIfNoAuthorizationFoundForUserAndAppID(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
         $inspector = new LayoutInspector();
         $request   = (new NullServerRequest())->withAttribute(
             BaseLayout::class,
             LayoutBuilder::buildWithInspector($inspector)
         )->withParsedBody(['app_id' => '53']);
-        $this->autorization_revoker->shouldReceive('doesAuthorizationExist')
+        $this->autorization_revoker->expects(self::once())->method('doesAuthorizationExist')
             ->with($user, 53)
-            ->once()
-            ->andReturnFalse();
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with($user, AccountAppsController::URL, M::type(NewFeedback::class))
-            ->once()
-            ->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
+            ->willReturn(false);
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with($user, AccountAppsController::URL, self::isInstanceOf(NewFeedback::class))
+            ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());
@@ -130,21 +123,19 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRevokesAuthorizationAndRedirects(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
         $inspector = new LayoutInspector();
         $request   = (new NullServerRequest())->withAttribute(
             BaseLayout::class,
             LayoutBuilder::buildWithInspector($inspector)
         )->withParsedBody(['app_id' => '53']);
-        $this->autorization_revoker->shouldReceive('doesAuthorizationExist')
+        $this->autorization_revoker->expects(self::once())->method('doesAuthorizationExist')
             ->with($user, 53)
-            ->once()
-            ->andReturnTrue();
-        $this->autorization_revoker->shouldReceive('revokeAppAuthorization')->with($user, 53)->once();
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with($user, AccountAppsController::URL, M::type(NewFeedback::class))
-            ->once()
-            ->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
+            ->willReturn(true);
+        $this->autorization_revoker->expects(self::once())->method('revokeAppAuthorization')->with($user, 53);
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with($user, AccountAppsController::URL, self::isInstanceOf(NewFeedback::class))
+            ->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse(302));
 
         $response = $this->controller->handle($request);
         $this->assertSame(302, $response->getStatusCode());

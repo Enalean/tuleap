@@ -20,15 +20,10 @@
 
 namespace Tuleap\OAuth2Server\App;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 final class ClientSecretUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var ClientSecretUpdater
      */
@@ -38,19 +33,19 @@ final class ClientSecretUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $hasher;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
      */
     private $app_dao;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|LastGeneratedClientSecretStore
+     * @var \PHPUnit\Framework\MockObject\MockObject|LastGeneratedClientSecretStore
      */
     private $client_secret_store;
 
     protected function setUp(): void
     {
         $this->hasher              = new SplitTokenVerificationStringHasher();
-        $this->app_dao             = M::mock(AppDao::class);
-        $this->client_secret_store = M::mock(LastGeneratedClientSecretStore::class);
+        $this->app_dao             = $this->createMock(AppDao::class);
+        $this->client_secret_store = $this->createMock(LastGeneratedClientSecretStore::class);
         $this->updater             = new ClientSecretUpdater(
             $this->hasher,
             $this->app_dao,
@@ -60,12 +55,10 @@ final class ClientSecretUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGeneratesClientSecretAndStoresItInAppAndStore(): void
     {
-        $this->app_dao->shouldReceive('updateSecret')
-            ->once()
-            ->with(45, M::type("string"));
-        $this->client_secret_store->shouldReceive('storeLastGeneratedClientSecret')
-            ->once()
-            ->with(45, M::type(SplitTokenVerificationString::class));
+        $this->app_dao->expects(self::once())->method('updateSecret')
+            ->with(45, self::anything());
+        $this->client_secret_store->expects(self::once())->method('storeLastGeneratedClientSecret')
+            ->with(45, self::anything());
         $this->updater->updateClientSecret(45);
     }
 }

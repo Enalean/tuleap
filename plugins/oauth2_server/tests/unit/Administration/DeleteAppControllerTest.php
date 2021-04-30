@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -36,43 +34,37 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var DeleteAppController
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppProjectVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppProjectVerifier
      */
     private $project_verifier;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppRemover
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppRemover
      */
     private $app_remover;
-    /**
-     * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
-     */
-    private $csrf_token;
 
     protected function setUp(): void
     {
-        $this->redirector       = M::mock(RedirectWithFeedbackFactory::class);
-        $this->project_verifier = M::mock(OAuth2AppProjectVerifier::class);
-        $this->app_remover      = M::mock(OAuth2AppRemover::class);
-        $this->csrf_token       = M::mock(\CSRFSynchronizerToken::class);
+        $this->redirector       = $this->createMock(RedirectWithFeedbackFactory::class);
+        $this->project_verifier = $this->createMock(OAuth2AppProjectVerifier::class);
+        $this->app_remover      = $this->createMock(OAuth2AppRemover::class);
+        $csrf_token             = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller       = new DeleteAppController(
             $this->redirector,
             $this->project_verifier,
             $this->app_remover,
-            $this->csrf_token,
-            M::mock(EmitterInterface::class)
+            $csrf_token,
+            $this->createMock(EmitterInterface::class)
         );
-        $this->csrf_token->shouldReceive('check');
+        $csrf_token->method('check');
     }
 
     /**
@@ -83,11 +75,10 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
-            ->once()
-            ->andReturn($response);
-        $this->app_remover->shouldNotReceive('deleteAppByID');
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
+            ->willReturn($response);
+        $this->app_remover->expects(self::never())->method('deleteAppByID');
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -103,17 +94,13 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleDeletesProjectAppAndRedirects(): void
     {
         $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '12']);
-        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
-        $this->app_remover->shouldReceive('deleteAppByID')
-            ->once()
-            ->with(12);
+        $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(true);
+        $this->app_remover->expects(self::once())->method('deleteAppByID')->with(12);
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
-            ->once()
-            ->andReturn($response);
-        $this->app_remover->shouldNotReceive('deleteAppByID');
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
+            ->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -121,24 +108,20 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleDeletesSiteAppAndRedirects(): void
     {
         $request = $this->buildSiteAdminRequest()->withParsedBody(['app_id' => '12']);
-        $this->project_verifier->shouldReceive('isASiteLevelApp')->andReturn(true);
-        $this->app_remover->shouldReceive('deleteAppByID')
-            ->once()
-            ->with(12);
+        $this->project_verifier->method('isASiteLevelApp')->willReturn(true);
+        $this->app_remover->expects(self::once())->method('deleteAppByID')->with(12);
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/admin', M::type(NewFeedback::class))
-            ->once()
-            ->andReturn($response);
-        $this->app_remover->shouldNotReceive('deleteAppByID');
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/admin', self::isInstanceOf(NewFeedback::class))
+            ->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
 
     public function testRejectsDeletingAppOfAnotherProject(): void
     {
-        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
+        $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(false);
 
         $request = $this->buildProjectAdminRequest()->withParsedBody(['app_id' => '12']);
 

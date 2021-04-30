@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User\Account;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
@@ -37,28 +35,26 @@ use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var AppsPresenterBuilder */
     private $builder;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|EventDispatcherInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|EventDispatcherInterface
      */
     private $dispatcher;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
      */
     private $app_factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizedScopeFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizedScopeFactory
      */
     private $authorized_scope_factory;
 
     protected function setUp(): void
     {
-        $this->dispatcher               = M::mock(EventDispatcherInterface::class);
-        $this->app_factory              = M::mock(AppFactory::class);
-        $this->authorized_scope_factory = M::mock(AuthorizedScopeFactory::class);
+        $this->dispatcher               = $this->createMock(EventDispatcherInterface::class);
+        $this->app_factory              = $this->createMock(AppFactory::class);
+        $this->authorized_scope_factory = $this->createMock(AuthorizedScopeFactory::class);
         $this->builder                  = new AppsPresenterBuilder(
             $this->dispatcher,
             $this->app_factory,
@@ -74,10 +70,9 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBuildTransformsAppsIntoPresenters(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->dispatcher->shouldReceive('dispatch')
-            ->with(M::type(AccountTabPresenterCollection::class))
-            ->once()
-            ->andReturnArg(0);
+        $this->dispatcher->expects(self::once())->method('dispatch')
+            ->with(self::isInstanceOf(AccountTabPresenterCollection::class))
+            ->willReturnArgument(0);
         $jenkins_app    = new OAuth2App(
             1,
             'Jenkins',
@@ -99,25 +94,15 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             true,
             null
         );
-        $this->app_factory->shouldReceive('getAppsAuthorizedByUser')
+        $this->app_factory->expects(self::once())->method('getAppsAuthorizedByUser')
             ->with($user)
-            ->once()
-            ->andReturn([$jenkins_app, $custom_app, $site_level_app]);
+            ->willReturn([$jenkins_app, $custom_app, $site_level_app]);
 
         $foobar_scope    = $this->buildFooBarScopeDefinition();
         $typevalue_scope = $this->buildTypeValueScopeDefinition();
-        $this->authorized_scope_factory->shouldReceive('getAuthorizedScopes')
-            ->once()
-            ->with($user, $jenkins_app)
-            ->andReturn([$foobar_scope]);
-        $this->authorized_scope_factory->shouldReceive('getAuthorizedScopes')
-            ->once()
-            ->with($user, $custom_app)
-            ->andReturn([$foobar_scope, $typevalue_scope]);
-        $this->authorized_scope_factory->shouldReceive('getAuthorizedScopes')
-            ->once()
-            ->with($user, $site_level_app)
-            ->andReturn([$foobar_scope]);
+        $this->authorized_scope_factory->method('getAuthorizedScopes')
+            ->withConsecutive([$user, $jenkins_app], [$user, $custom_app], [$user, $site_level_app])
+            ->willReturnOnConsecutiveCalls([$foobar_scope], [$foobar_scope, $typevalue_scope], [$foobar_scope]);
         $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
 
         $this->assertEquals(
@@ -150,7 +135,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildFooBarScopeDefinition(): AuthenticationScope
     {
-        $foobar_scope      = M::mock(AuthenticationScope::class);
+        $foobar_scope      = $this->createMock(AuthenticationScope::class);
         $foobar_definition = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
@@ -162,13 +147,13 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 return 'Test scope';
             }
         };
-        $foobar_scope->shouldReceive('getDefinition')->andReturn($foobar_definition);
+        $foobar_scope->method('getDefinition')->willReturn($foobar_definition);
         return $foobar_scope;
     }
 
     private function buildTypeValueScopeDefinition(): AuthenticationScope
     {
-        $typevalue_scope      = M::mock(AuthenticationScope::class);
+        $typevalue_scope      = $this->createMock(AuthenticationScope::class);
         $typevalue_definition = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
@@ -180,7 +165,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 return 'Other test scope';
             }
         };
-        $typevalue_scope->shouldReceive('getDefinition')->andReturn($typevalue_definition);
+        $typevalue_scope->method('getDefinition')->willReturn($typevalue_definition);
         return $typevalue_scope;
     }
 }

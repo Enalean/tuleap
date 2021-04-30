@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -43,53 +41,52 @@ use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var AuthorizationEndpointController */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationFormRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationFormRenderer
      */
     private $form_renderer;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
      */
     private $app_factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
      */
     private $user_manager;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ScopeExtractor
+     * @var \PHPUnit\Framework\MockObject\MockObject|ScopeExtractor
      */
     private $scope_extractor;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCodeResponseFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationCodeResponseFactory
      */
     private $response_factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationComparator
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationComparator
      */
     private $comparator;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|PKCEInformationExtractor
+     * @var \PHPUnit\Framework\MockObject\MockObject|PKCEInformationExtractor
      */
     private $pkce_information_extractor;
 
     protected function setUp(): void
     {
-        $this->form_renderer              = M::mock(AuthorizationFormRenderer::class);
-        $this->app_factory                = M::mock(AppFactory::class);
-        $this->user_manager               = M::mock(\UserManager::class);
-        $this->scope_extractor            = M::mock(ScopeExtractor::class);
-        $this->response_factory           = M::mock(AuthorizationCodeResponseFactory::class);
-        $this->comparator                 = M::mock(AuthorizationComparator::class);
-        $this->pkce_information_extractor = M::mock(PKCEInformationExtractor::class);
+        $this->form_renderer              = $this->createMock(AuthorizationFormRenderer::class);
+        $this->app_factory                = $this->createMock(AppFactory::class);
+        $this->user_manager               = $this->createMock(\UserManager::class);
+        $this->scope_extractor            = $this->createMock(ScopeExtractor::class);
+        $this->response_factory           = $this->createMock(AuthorizationCodeResponseFactory::class);
+        $this->comparator                 = $this->createMock(AuthorizationComparator::class);
+        $this->pkce_information_extractor = $this->createMock(PKCEInformationExtractor::class);
         $this->controller                 = new AuthorizationEndpointController(
             $this->form_renderer,
             $this->user_manager,
@@ -101,7 +98,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             new PromptParameterValuesExtractor(),
             OAuth2OfflineAccessScope::fromItself(),
             new NullLogger(),
-            \Mockery::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
@@ -114,7 +111,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testHandleRedirectsAnonymousToLoginWhenInteractionAreAllowed(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::anAnonymousUser()->build()
         );
         $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
@@ -125,18 +122,17 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'response_type'  => 'code',
             ]
         );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->once()->andReturn($response);
+        $this->response_factory->expects(self::once())->method('createRedirectToLoginResponse')->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
 
     public function testRejectsAnonymousUserWithAnErrorWhenNoInteractionAreAllowed(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::anAnonymousUser()->build()
         );
         $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
@@ -148,20 +144,19 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'prompt'         => 'none',
             ]
         );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createErrorResponse')
+        $this->response_factory->expects(self::once())->method('createErrorResponse')
             ->with('login_required', 'https://example.com/redirect', null)
-            ->once()->andReturn($response);
+            ->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
 
     public function testHandleRedirectsToLoginWhenPromptParameterRequiresIt(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::aUser()->withId(102)->build()
         );
         $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
@@ -173,21 +168,20 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'prompt'         => 'login',
             ]
         );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->once()->andReturn($response);
+        $this->response_factory->expects(self::once())->method('createRedirectToLoginResponse')->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
 
     public function testHandleRedirectsToLoginWhenMaxAgeParameterRequiresIt(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn(
             UserTestBuilder::aUser()->withId(102)->build()
         );
-        $this->user_manager->shouldReceive('getUserAccessInfo')->andReturn(['last_auth_success' => 1]);
+        $this->user_manager->method('getUserAccessInfo')->willReturn(['last_auth_success' => 1]);
         $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
         $request = (new NullServerRequest())->withQueryParams(
             [
@@ -197,11 +191,10 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'max_age'        => '1',
             ]
         );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->once()->andReturn($response);
+        $this->response_factory->expects(self::once())->method('createRedirectToLoginResponse')->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -212,27 +205,24 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testHandleThrowsForbiddenWhenEssentialQueryParametersAreInvalid(array $query_parameters): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
         $request = (new NullServerRequest())->withQueryParams($query_parameters);
         $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->with(
-                M::on(
-                    static function (ClientIdentifier $identifier) {
-                        return 'tlp-client-id-1' === $identifier->toString();
-                    }
-                )
-            )
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->with(
-                M::on(
-                    static function (ClientIdentifier $identifier) {
-                        return 'tlp-client-id-404' === $identifier->toString();
-                    }
-                )
-            )
-            ->andThrow(new OAuth2AppNotFoundException(ClientIdentifier::fromClientId('tlp-client-id-404')));
+        $this->app_factory->method('getAppMatchingClientId')->willReturnCallback(
+            static function (ClientIdentifier $identifier) use ($project): OAuth2App {
+                $raw_string_id = $identifier->toString();
+
+                if ('tlp-client-id-1' === $raw_string_id) {
+                    return new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project);
+                }
+
+                if ('tlp-client-id-404' === $raw_string_id) {
+                    throw new OAuth2AppNotFoundException(ClientIdentifier::fromClientId('tlp-client-id-404'));
+                }
+
+                throw new \LogicException(sprintf('Client ID %s was not expected', $raw_string_id));
+            }
+        );
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle($request);
@@ -252,7 +242,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testHandlesThrowsForbiddenWhenPOSTRequestHasNoBody(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
         $request = (new NullServerRequest())->withParsedBody(null)->withMethod('POST');
 
         $this->expectException(ForbiddenException::class);
@@ -267,17 +257,16 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         string $expected_redirection_url
     ): void {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
         $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
         $request = (new NullServerRequest())->withQueryParams($query_parameters);
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', $query_parameters['redirect_uri'], true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->andThrow(InvalidOAuth2ScopeException::scopeDoesNotExist(OAuth2ScopeIdentifier::fromIdentifierKey('donotexist')));
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', $query_parameters['redirect_uri'], true, $project));
+        $this->scope_extractor->method('extractScopes')
+            ->willThrowException(InvalidOAuth2ScopeException::scopeDoesNotExist(OAuth2ScopeIdentifier::fromIdentifierKey('donotexist')));
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createErrorResponse')->andReturn($response);
+        $this->response_factory->method('createErrorResponse')->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -327,7 +316,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testHandleRedirectsWithErrorPKCECodeChallengeExtractionFails(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
         $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
         $request = (new NullServerRequest())->withQueryParams(
             [
@@ -339,13 +328,11 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'scope'          => 'scopename:read'
             ]
         );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
-            ->andReturn([M::mock(AuthenticationScope::class)]);
-        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andThrow(
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->expects(self::once())->method('extractScopes')
+            ->willReturn([$this->createMock(AuthenticationScope::class)]);
+        $this->pkce_information_extractor->method('extractCodeChallenge')->willThrowException(
             new class extends \RuntimeException implements OAuth2PKCEInformationExtractionException
             {
 
@@ -353,7 +340,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         );
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createErrorResponse')->andReturn($response);
+        $this->response_factory->method('createErrorResponse')->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -364,10 +351,8 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testHandleRedirectsWithAuthorizationCodeWhenAPreviousAuthorizationHasBeenGranted(string $request_http_method): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project        = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+        $project        = ProjectTestBuilder::aProject()->withPublicName('Test Project')->build();
         $request_params = [
             'client_id'     => 'tlp-client-id-1',
             'redirect_uri'  => 'https://example.com/redirect',
@@ -381,20 +366,17 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             $request = (new NullServerRequest())->withQueryParams($request_params)->withMethod('GET');
         }
 
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
-            ->andReturn([OAuth2TestScope::fromItself()]);
-        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
-            ->once()
-            ->andReturnTrue();
-        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
-        $this->form_renderer->shouldNotReceive('renderForm');
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->expects(self::once())->method('extractScopes')
+            ->willReturn([OAuth2TestScope::fromItself()]);
+        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
+            ->willReturn(true);
+        $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
+        $this->form_renderer->expects(self::never())->method('renderForm');
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createSuccessfulResponse')->andReturn($response);
+        $this->response_factory->method('createSuccessfulResponse')->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -402,10 +384,8 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testRendersAuthorizationFormWhenAPreviousAuthorizationHasBeenGrantedButConsentIsRequiredByPromptParameter(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+        $project = ProjectTestBuilder::aProject()->withPublicName('Test Project')->build();
         $request = (new NullServerRequest())->withQueryParams(
             [
                 'client_id'     => 'tlp-client-id-1',
@@ -417,17 +397,15 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ]
         );
 
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
-            ->andReturn([M::mock(AuthenticationScope::class)]);
-        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
-            ->andReturnTrue();
-        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->expects(self::once())->method('extractScopes')
+            ->willReturn([$this->createMock(AuthenticationScope::class)]);
+        $this->comparator->method('areRequestedScopesAlreadyGranted')
+            ->willReturn(true);
+        $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
 
-        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+        $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
@@ -435,10 +413,8 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testRendersAuthorizationFormWhenAPreviousAuthorizationHasBeenGrantedButConsentIsRequiredBecauseOfflineAccessScopeIsAsked(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+        $project = ProjectTestBuilder::aProject()->withPublicName('Test Project')->build();
         $request = (new NullServerRequest())->withQueryParams(
             [
                 'client_id'     => 'tlp-client-id-1',
@@ -449,18 +425,15 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ]
         );
 
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
-            ->andReturn([OAuth2OfflineAccessScope::fromItself()]);
-        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
-            ->once()
-            ->andReturnTrue();
-        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->expects(self::once())->method('extractScopes')
+            ->willReturn([OAuth2OfflineAccessScope::fromItself()]);
+        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
+            ->willReturn(true);
+        $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
 
-        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+        $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
@@ -468,10 +441,8 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testHandlesRedirectWithAnInteractionRequiredErrorWhenUserNeedsToConsent(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+        $project = ProjectTestBuilder::aProject()->withPublicName('Test Project')->build();
         $request = (new NullServerRequest())->withQueryParams(
             [
                 'client_id'     => 'tlp-client-id-1',
@@ -483,21 +454,18 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ]
         );
 
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
-            ->andReturn([M::mock(AuthenticationScope::class)]);
-        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
-            ->once()
-            ->andReturnFalse();
-        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
+        $this->app_factory->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->expects(self::once())->method('extractScopes')
+            ->willReturn([$this->createMock(AuthenticationScope::class)]);
+        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
+            ->willReturn(false);
+        $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createErrorResponse')
+        $this->response_factory->expects(self::once())->method('createErrorResponse')
             ->with('interaction_required', 'https://example.com/redirect', 'xyz')
-            ->once()->andReturn($response);
+            ->willReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -508,10 +476,8 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testHandleRendersAuthorizationForm(string $request_http_method): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project        = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+        $project        = ProjectTestBuilder::aProject()->withPublicName('Test Project')->build();
         $request        = (new NullServerRequest())->withMethod($request_http_method);
         $request_params = [
             'client_id'     => 'tlp-client-id-1',
@@ -525,17 +491,14 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         } else {
             $request = $request->withQueryParams($request_params);
         }
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
-            ->andReturn([M::mock(AuthenticationScope::class)]);
-        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
-            ->once()
-            ->andReturnFalse();
-        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
-        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->expects(self::once())->method('extractScopes')
+            ->willReturn([$this->createMock(AuthenticationScope::class)]);
+        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
+            ->willReturn(false);
+        $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
+        $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $response = $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
 
@@ -554,13 +517,11 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testHandleRendersAuthorizationFormWhenMaxAgeParameterIsSetButTheUserHasAuthenticatedRecently(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->user_manager->shouldReceive('getUserAccessInfo')->andReturn(
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+        $this->user_manager->method('getUserAccessInfo')->willReturn(
             ['last_auth_success' => (new \DateTimeImmutable())->sub(new \DateInterval('PT60S'))->getTimestamp()]
         );
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
-            ->andReturn('Test Project')
-            ->getMock();
+        $project = ProjectTestBuilder::aProject()->withPublicName('Test Project')->build();
         $request = (new NullServerRequest())->withQueryParams(
             [
                 'client_id'     => 'tlp-client-id-1',
@@ -571,17 +532,14 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 'max_age'       => '3600'
             ]
         );
-        $this->app_factory->shouldReceive('getAppMatchingClientId')
-            ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
-        $this->scope_extractor->shouldReceive('extractScopes')
-            ->once()
-            ->andReturn([M::mock(AuthenticationScope::class)]);
-        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
-            ->once()
-            ->andReturnFalse();
-        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
-        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
+        $this->app_factory->expects(self::once())->method('getAppMatchingClientId')
+            ->willReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->expects(self::once())->method('extractScopes')
+            ->willReturn([$this->createMock(AuthenticationScope::class)]);
+        $this->comparator->expects(self::once())->method('areRequestedScopesAlreadyGranted')
+            ->willReturn(false);
+        $this->pkce_information_extractor->method('extractCodeChallenge')->willReturn('extracted_code_challenge');
+        $this->form_renderer->expects(self::once())->method('renderForm')->willReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }

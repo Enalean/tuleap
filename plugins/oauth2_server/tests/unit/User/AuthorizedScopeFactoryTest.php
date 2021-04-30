@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -33,16 +31,14 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var AuthorizedScopeFactory */
     private $factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationDao
      */
     private $authorization_dao;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationScopeDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationScopeDao
      */
     private $scope_dao;
 
@@ -63,8 +59,8 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
         };
-        $this->authorization_dao = M::mock(AuthorizationDao::class);
-        $this->scope_dao         = M::mock(AuthorizationScopeDao::class);
+        $this->authorization_dao = $this->createMock(AuthorizationDao::class);
+        $this->scope_dao         = $this->createMock(AuthorizationScopeDao::class);
         $this->factory           = new AuthorizedScopeFactory(
             $this->authorization_dao,
             $this->scope_dao,
@@ -76,10 +72,9 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->authorization_dao->shouldReceive('searchAuthorization')
-            ->once()
+        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
             ->with($user, 17)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->assertEmpty(
             $this->factory->getAuthorizedScopes($user, $app)
@@ -90,13 +85,11 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->authorization_dao->shouldReceive('searchAuthorization')
-            ->once()
-            ->andReturn(12);
-        $this->scope_dao->shouldReceive('searchScopes')
-            ->once()
+        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+            ->willReturn(12);
+        $this->scope_dao->expects(self::once())->method('searchScopes')
             ->with(12)
-            ->andReturn(['foo:bar', 'type:value']);
+            ->willReturn(['foo:bar', 'type:value']);
 
         $saved_scopes = $this->factory->getAuthorizedScopes($user, $app);
         $this->assertSame(2, count($saved_scopes));
@@ -108,13 +101,11 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->authorization_dao->shouldReceive('searchAuthorization')
-            ->once()
-            ->andReturn(12);
-        $this->scope_dao->shouldReceive('searchScopes')
-            ->once()
+        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
+            ->willReturn(12);
+        $this->scope_dao->expects(self::once())->method('searchScopes')
             ->with(12)
-            ->andReturn(['flob:wobble', 'type:value']);
+            ->willReturn(['flob:wobble', 'type:value']);
 
         $saved_scopes = $this->factory->getAuthorizedScopes($user, $app);
         $this->assertSame(1, count($saved_scopes));

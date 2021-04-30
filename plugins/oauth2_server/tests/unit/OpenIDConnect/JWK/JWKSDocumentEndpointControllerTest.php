@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\JWK;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -32,8 +31,6 @@ use Tuleap\OAuth2Server\OpenIDConnect\IDToken\SigningPublicKey;
 
 final class JWKSDocumentEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const PUBLIC_KEY = <<<EOT
         -----BEGIN PUBLIC KEY-----
         MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA6ffRDU/iebFRDNAQKi4h
@@ -53,15 +50,15 @@ final class JWKSDocumentEndpointControllerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testBuildsResponse(): void
     {
-        $signing_key_factory = \Mockery::mock(OpenIDConnectSigningKeyFactory::class);
+        $signing_key_factory = $this->createMock(OpenIDConnectSigningKeyFactory::class);
         $controller          = new JWKSDocumentEndpointController(
             $signing_key_factory,
             new \DateInterval('PT30S'),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            \Mockery::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
 
-        $signing_key_factory->shouldReceive('getPublicKeys')->andReturn([SigningPublicKey::fromPEMFormat(self::PUBLIC_KEY)]);
+        $signing_key_factory->method('getPublicKeys')->willReturn([SigningPublicKey::fromPEMFormat(self::PUBLIC_KEY)]);
 
         $response = $controller->handle(new NullServerRequest());
         $this->assertEquals(200, $response->getStatusCode());

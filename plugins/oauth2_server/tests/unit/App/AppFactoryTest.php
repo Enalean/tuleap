@@ -22,31 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var AppFactory
      */
     private $app_factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
      */
     private $app_dao;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\ProjectManager
      */
     private $project_manager;
 
     protected function setUp(): void
     {
-        $this->app_dao         = M::mock(AppDao::class);
-        $this->project_manager = M::mock(\ProjectManager::class);
+        $this->app_dao         = $this->createMock(AppDao::class);
+        $this->project_manager = $this->createMock(\ProjectManager::class);
         $this->app_factory     = new AppFactory($this->app_dao, $this->project_manager);
     }
 
@@ -56,11 +53,10 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['id' => 1, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1],
             ['id' => 2, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0]
         ];
-        $project = M::mock(\Project::class);
-        $this->app_dao->shouldReceive('searchByProject')
-            ->once()
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->app_dao->expects(self::once())->method('searchByProject')
             ->with($project)
-            ->andReturn($rows);
+            ->willReturn($rows);
 
         $result = $this->app_factory->getAppsForProject($project);
         $this->assertEquals(
@@ -74,14 +70,11 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetSiteLevelApps(): void
     {
-        $rows    = [
+        $rows = [
             ['id' => 3, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1],
             ['id' => 4, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0]
         ];
-        $project = M::mock(\Project::class);
-        $this->app_dao->shouldReceive('searchSiteLevelApps')
-            ->once()
-            ->andReturn($rows);
+        $this->app_dao->expects(self::once())->method('searchSiteLevelApps')->willReturn($rows);
 
         $result = $this->app_factory->getSiteLevelApps();
         $this->assertEquals(
@@ -95,9 +88,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdThrowsWhenIDNotFoundInDatabase(): void
     {
-        $this->app_dao->shouldReceive('searchByClientId')
-            ->once()
-            ->andReturnNull();
+        $this->app_dao->expects(self::once())->method('searchByClientId')->willReturn(null);
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
 
         $this->expectException(OAuth2AppNotFoundException::class);
@@ -106,16 +97,14 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdThrowsWhenProjectNotFound(): void
     {
-        $this->app_dao->shouldReceive('searchByClientId')
-            ->once()
-            ->andReturn(
+        $this->app_dao->expects(self::once())->method('searchByClientId')
+            ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 404, 'redirect_endpoint' => 'https://jenkins.example.com']
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-        $this->project_manager->shouldReceive('getValidProject')
-            ->once()
+        $this->project_manager->expects(self::once())->method('getValidProject')
             ->with(404)
-            ->andThrow(new \Project_NotFoundException());
+            ->willThrowException(new \Project_NotFoundException());
 
         $this->expectException(OAuth2AppNotFoundException::class);
         $this->app_factory->getAppMatchingClientId($client_id);
@@ -123,17 +112,15 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetAppMatchingClientIdReturnsAnApp(): void
     {
-        $this->app_dao->shouldReceive('searchByClientId')
-            ->once()
-            ->andReturn(
+        $this->app_dao->expects(self::once())->method('searchByClientId')
+            ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
-        $project   = M::mock(\Project::class);
-        $this->project_manager->shouldReceive('getValidProject')
-            ->once()
+        $project   = $this->createMock(\Project::class);
+        $this->project_manager->expects(self::once())->method('getValidProject')
             ->with(102)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $result = $this->app_factory->getAppMatchingClientId($client_id);
         $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project), $result);
@@ -141,9 +128,8 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetSiteLevelAppMatchingClientIdReturnsAnApp(): void
     {
-        $this->app_dao->shouldReceive('searchByClientId')
-            ->once()
-            ->andReturn(
+        $this->app_dao->expects(self::once())->method('searchByClientId')
+            ->willReturn(
                 ['id' => 1, 'name' => 'Jenkins', 'project_id' => null, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
@@ -178,14 +164,14 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->app_dao->shouldReceive('searchAuthorizedAppsByUser')
-            ->once()
+        $this->app_dao->expects(self::once())->method('searchAuthorizedAppsByUser')
             ->with($user)
-            ->andReturn($rows);
+            ->willReturn($rows);
         $project_204 = new \Project(['group_id' => 204]);
         $project_205 = new \Project(['group_id' => 205]);
-        $this->project_manager->shouldReceive('getValidProject')->once()->with(204)->andReturn($project_204);
-        $this->project_manager->shouldReceive('getValidProject')->once()->with(205)->andReturn($project_205);
+        $this->project_manager->expects(self::exactly(2))->method('getValidProject')
+            ->withConsecutive([204], [205])
+            ->willReturnOnConsecutiveCalls($project_204, $project_205);
 
         $result = $this->app_factory->getAppsAuthorizedByUser($user);
         $this->assertEquals(
@@ -216,16 +202,22 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->app_dao->shouldReceive('searchAuthorizedAppsByUser')
-            ->once()
+        $this->app_dao->expects(self::once())->method('searchAuthorizedAppsByUser')
             ->with($user)
-            ->andReturn($rows);
+            ->willReturn($rows);
         $project_204 = new \Project(['group_id' => 204]);
-        $this->project_manager->shouldReceive('getValidProject')->once()->with(204)->andReturn($project_204);
-        $this->project_manager->shouldReceive('getValidProject')
-            ->once()
-            ->with(404)
-            ->andThrow(\Project_NotFoundException::class);
+        $this->project_manager->expects(self::exactly(2))->method('getValidProject')->willReturnCallback(
+            static function (int $project_id) use ($project_204): \Project {
+                if ($project_id === 204) {
+                    return $project_204;
+                }
+                if ($project_id === 404) {
+                    throw new \Project_NotFoundException();
+                }
+
+                throw new \LogicException(sprintf('Project ID %d is not expected', $project_id));
+            }
+        );
 
         $result = $this->app_factory->getAppsAuthorizedByUser($user);
         $this->assertEquals([

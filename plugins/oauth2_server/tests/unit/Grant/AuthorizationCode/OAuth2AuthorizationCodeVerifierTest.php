@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use DateTimeImmutable;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -34,22 +33,20 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
      */
     private $user_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeDAO
      */
     private $dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeRetriever
      */
     private $scope_retriever;
     /**
@@ -59,10 +56,10 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
 
     protected function setUp(): void
     {
-        $this->hasher          = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->user_manager    = \Mockery::mock(\UserManager::class);
-        $this->dao             = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
-        $this->scope_retriever = \Mockery::mock(OAuth2ScopeRetriever::class);
+        $this->hasher          = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->user_manager    = $this->createMock(\UserManager::class);
+        $this->dao             = $this->createMock(OAuth2AuthorizationCodeDAO::class);
+        $this->scope_retriever = $this->createMock(OAuth2ScopeRetriever::class);
         $this->verifier        = new OAuth2AuthorizationCodeVerifier(
             $this->hasher,
             $this->user_manager,
@@ -75,13 +72,13 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testGivingACorrectTokenTheCorrespondingUserIsRetrieved(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
+        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
 
         $auth_code = new SplitToken(
             1,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'expected_hashed_verification_string',
@@ -91,9 +88,9 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'oidc_nonce'            => 'nonce',
             ]
         );
-        $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
-        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
-        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([OAuth2TestScope::fromItself()]);
+        $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
+        $this->hasher->method('verifyHash')->willReturn(true);
+        $this->scope_retriever->method('getScopesBySplitToken')->willReturn([OAuth2TestScope::fromItself()]);
 
         $verified_authorization = $this->verifier->getAuthorizationCode($auth_code);
 
@@ -107,7 +104,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
             404,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->shouldReceive('searchAuthorizationCode')->andReturn(null);
+        $this->dao->method('searchAuthorizationCode')->willReturn(null);
 
         $this->expectException(OAuth2AuthCodeNotFoundException::class);
         $this->verifier->getAuthorizationCode($auth_code);
@@ -116,12 +113,12 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
+        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
         $auth_code = new SplitToken(
             2,
             new SplitTokenVerificationString(new ConcealedString('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'))
         );
-        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',
@@ -129,7 +126,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 0
             ]
         );
-        $this->hasher->shouldReceive('verifyHash')->andReturn(false);
+        $this->hasher->method('verifyHash')->willReturn(false);
 
         $this->expectException(InvalidOAuth2AuthCodeException::class);
         $this->verifier->getAuthorizationCode($auth_code);
@@ -138,12 +135,12 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testVerificationFailsWhenTheAuthCodeHasExpired(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
+        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
         $auth_code = new SplitToken(
             3,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'wrong_hashed_verification_string',
@@ -151,7 +148,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 0
             ]
         );
-        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $this->hasher->method('verifyHash')->willReturn(true);
 
         $this->expectException(OAuth2AuthCodeExpiredException::class);
         $this->verifier->getAuthorizationCode($auth_code);
@@ -159,13 +156,13 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testVerificationFailsWhenTheUserAssociatedWithTheAuthCodeCannotBeFound(): void
     {
-        $this->user_manager->shouldReceive('getUserById')->andReturn(null);
+        $this->user_manager->method('getUserById')->willReturn(null);
 
         $auth_code = new SplitToken(
             4,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => 404,
                 'verifier'              => 'expected_hashed_verification_string',
@@ -173,8 +170,8 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 0
             ]
         );
-        $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
-        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
+        $this->hasher->method('verifyHash')->willReturn(true);
 
         $this->expectException(OAuth2AuthCodeMatchingUnknownUserException::class);
         $this->verifier->getAuthorizationCode($auth_code);
@@ -186,7 +183,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
             5,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => 102,
                 'verifier'              => 'expected_hashed_verification_string',
@@ -194,8 +191,8 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 1
             ]
         );
-        $this->dao->shouldReceive('deleteAuthorizationCodeByID')->with($auth_code->getID())->once();
-        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $this->dao->expects(self::once())->method('deleteAuthorizationCodeByID')->with($auth_code->getID());
+        $this->hasher->method('verifyHash')->willReturn(true);
 
         $this->expectException(OAuth2AuthCodeReusedException::class);
         $this->verifier->getAuthorizationCode($auth_code);
@@ -204,13 +201,13 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
     public function testVerificationFailsWhenNoValidScopesCanBeFound(): void
     {
         $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
-        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
+        $this->user_manager->method('getUserById')->with($expected_user->getId())->willReturn($expected_user);
 
         $auth_code = new SplitToken(
             6,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+        $this->dao->method('searchAuthorizationCode')->with($auth_code->getID())->willReturn(
             [
                 'user_id'               => $expected_user->getId(),
                 'verifier'              => 'expected_hashed_verification_string',
@@ -218,9 +215,9 @@ final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\Tes
                 'has_already_been_used' => 0
             ]
         );
-        $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
-        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
-        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([]);
+        $this->dao->expects(self::once())->method('markAuthorizationCodeAsUsed')->with($auth_code->getID());
+        $this->hasher->method('verifyHash')->willReturn(true);
+        $this->scope_retriever->method('getScopesBySplitToken')->willReturn([]);
 
         $this->expectException(OAuth2AuthCodeNoValidScopeFound::class);
         $this->verifier->getAuthorizationCode($auth_code);

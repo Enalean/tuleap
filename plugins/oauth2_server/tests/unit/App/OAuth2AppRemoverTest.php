@@ -22,20 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AppRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testRemovesAnApp(): void
     {
-        $app_dao           = \Mockery::mock(AppDao::class);
-        $auth_code_dao     = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
-        $authorization_dao = \Mockery::mock(AuthorizationDao::class);
+        $app_dao           = $this->createMock(AppDao::class);
+        $auth_code_dao     = $this->createMock(OAuth2AuthorizationCodeDAO::class);
+        $authorization_dao = $this->createMock(AuthorizationDao::class);
 
         $app_remover = new OAuth2AppRemover(
             $app_dao,
@@ -44,9 +41,9 @@ final class OAuth2AppRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough()
         );
 
-        $app_dao->shouldReceive('delete')->with(12)->once();
-        $auth_code_dao->shouldReceive('deleteAuthorizationCodeByAppID')->with(12)->once();
-        $authorization_dao->shouldReceive('deleteAuthorizationByAppID')->with(12)->once();
+        $app_dao->expects(self::once())->method('delete')->with(12);
+        $auth_code_dao->expects(self::once())->method('deleteAuthorizationCodeByAppID')->with(12);
+        $authorization_dao->expects(self::once())->method('deleteAuthorizationByAppID')->with(12);
 
         $app_remover->deleteAppByID(12);
     }

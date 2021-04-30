@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use GuzzleHttp\Psr7\Uri;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -36,19 +34,18 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     /** @var AuthorizationFormRenderer */
     private $form_renderer;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationFormPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationFormPresenterBuilder
      */
     private $presenter_builder;
 
     protected function setUp(): void
     {
-        $this->presenter_builder = M::mock(AuthorizationFormPresenterBuilder::class);
+        $this->presenter_builder = $this->createMock(AuthorizationFormPresenterBuilder::class);
         $this->form_renderer     = new AuthorizationFormRenderer(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
@@ -59,7 +56,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRenderForm(): void
     {
-        $foobar_scope         = M::mock(AuthenticationScope::class);
+        $foobar_scope         = $this->createMock(AuthenticationScope::class);
         $foobar_definition    = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
@@ -71,7 +68,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                 return 'Test scope';
             }
         };
-        $typevalue_scope      = M::mock(AuthenticationScope::class);
+        $typevalue_scope      = $this->createMock(AuthenticationScope::class);
         $typevalue_definition = new class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
@@ -92,7 +89,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                 true,
                 new \Project(['group_id' => 101, 'group_name' => 'Test Project'])
             ),
-            M::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
             $redirect_uri,
             'xyz',
             'pkce_chall',
@@ -100,9 +97,8 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             $foobar_scope,
             $typevalue_scope
         );
-        $this->presenter_builder->shouldReceive('build')
-            ->once()
-            ->andReturn(
+        $this->presenter_builder->expects(self::once())->method('build')
+            ->willReturn(
                 new AuthorizationFormPresenter(
                     $form_data,
                     new Uri($redirect_uri),

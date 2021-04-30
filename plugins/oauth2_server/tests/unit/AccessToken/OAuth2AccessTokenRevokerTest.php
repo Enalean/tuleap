@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AccessToken;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
@@ -37,33 +35,31 @@ use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 
 final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var OAuth2RefreshTokenRevoker */
     private $revoker;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenIdentifierTranslator
      */
     private $access_token_unserializer;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AccessTokenDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenDAO
      */
     private $dao;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AuthorizationCodeRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeRevoker
      */
     private $authorization_code_revoker;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
      */
     private $hasher;
 
     protected function setUp(): void
     {
-        $this->access_token_unserializer  = M::mock(SplitTokenIdentifierTranslator::class);
-        $this->authorization_code_revoker = M::mock(OAuth2AuthorizationCodeRevoker::class);
-        $this->dao                        = M::mock(OAuth2AccessTokenDAO::class);
-        $this->hasher                     = M::mock(SplitTokenVerificationStringHasher::class);
+        $this->access_token_unserializer  = $this->createMock(SplitTokenIdentifierTranslator::class);
+        $this->authorization_code_revoker = $this->createMock(OAuth2AuthorizationCodeRevoker::class);
+        $this->dao                        = $this->createMock(OAuth2AccessTokenDAO::class);
+        $this->hasher                     = $this->createMock(SplitTokenVerificationStringHasher::class);
         $this->revoker                    = new OAuth2AccessTokenRevoker(
             $this->access_token_unserializer,
             $this->authorization_code_revoker,
@@ -74,12 +70,10 @@ final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTheAccessTokenIsNotAssociatedToTheApp(): void
     {
-        $this->access_token_unserializer->shouldReceive('getSplitToken')
-            ->once()
-            ->andReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->shouldReceive('searchAccessTokenByApp')
-            ->once()
-            ->andReturnNull();
+        $this->access_token_unserializer->expects(self::once())->method('getSplitToken')
+            ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
+        $this->dao->expects(self::once())->method('searchAccessTokenByApp')
+            ->willReturn(null);
 
         $this->expectException(OAuth2AccessTokenNotFoundException::class);
         $this->revoker->revokeGrantOfAccessToken($this->buildApp(), new ConcealedString('token_identifier'));
@@ -87,13 +81,11 @@ final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTheAccessTokenIsInvalid(): void
     {
-        $this->access_token_unserializer->shouldReceive('getSplitToken')
-            ->once()
-            ->andReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->shouldReceive('searchAccessTokenByApp')
-            ->once()
-            ->andReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->shouldReceive('verifyHash')->once()->andReturnFalse();
+        $this->access_token_unserializer->expects(self::once())->method('getSplitToken')
+            ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
+        $this->dao->expects(self::once())->method('searchAccessTokenByApp')
+            ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
+        $this->hasher->expects(self::once())->method('verifyHash')->willReturn(false);
 
         $this->expectException(InvalidOAuth2AccessTokenException::class);
         $this->revoker->revokeGrantOfAccessToken($this->buildApp(), new ConcealedString('token_identifier'));
@@ -101,15 +93,12 @@ final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRevokeGrantOfAccessToken(): void
     {
-        $this->access_token_unserializer->shouldReceive('getSplitToken')
-            ->once()
-            ->andReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->dao->shouldReceive('searchAccessTokenByApp')
-            ->once()
-            ->andReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
-        $this->hasher->shouldReceive('verifyHash')->once()->andReturnTrue();
-        $this->authorization_code_revoker->shouldReceive('revokeByAuthCodeId')
-            ->once()
+        $this->access_token_unserializer->expects(self::once())->method('getSplitToken')
+            ->willReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
+        $this->dao->expects(self::once())->method('searchAccessTokenByApp')
+            ->willReturn(['authorization_code_id' => 89, 'verifier' => 'valid_verifier']);
+        $this->hasher->expects(self::once())->method('verifyHash')->willReturn(true);
+        $this->authorization_code_revoker->expects(self::once())->method('revokeByAuthCodeId')
             ->with(89);
 
         $this->revoker->revokeGrantOfAccessToken($this->buildApp(), new ConcealedString('token_identifier'));

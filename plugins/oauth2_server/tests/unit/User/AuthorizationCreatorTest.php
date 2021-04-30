@@ -22,31 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var AuthorizationCreator */
     private $creator;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationDao
      */
     private $authorization_dao;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationScopeDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationScopeDao
      */
     private $scope_dao;
 
     protected function setUp(): void
     {
-        $this->authorization_dao = M::mock(AuthorizationDao::class);
-        $this->scope_dao         = M::mock(AuthorizationScopeDao::class);
+        $this->authorization_dao = $this->createMock(AuthorizationDao::class);
+        $this->scope_dao         = $this->createMock(AuthorizationScopeDao::class);
         $this->creator           = new AuthorizationCreator(
             new DBTransactionExecutorPassthrough(),
             $this->authorization_dao,
@@ -61,19 +57,15 @@ final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $foobar_scope    = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
         $typevalue_scope = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
 
-        $this->authorization_dao->shouldReceive('searchAuthorization')
-            ->once()
+        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
             ->with($user, $app_id)
-            ->andReturnNull();
-        $this->authorization_dao->shouldReceive('create')
-            ->once()
+            ->willReturn(null);
+        $this->authorization_dao->expects(self::once())->method('create')
             ->with($user, $app_id)
-            ->andReturn(17);
-        $this->scope_dao->shouldReceive('deleteForAuthorization')
-            ->once()
+            ->willReturn(17);
+        $this->scope_dao->expects(self::once())->method('deleteForAuthorization')
             ->with(17);
-        $this->scope_dao->shouldReceive('createMany')
-            ->once()
+        $this->scope_dao->expects(self::once())->method('createMany')
             ->with(17, $foobar_scope, $typevalue_scope);
 
         $this->creator->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));
@@ -86,16 +78,13 @@ final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $foobar_scope    = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
         $typevalue_scope = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
 
-        $this->authorization_dao->shouldReceive('searchAuthorization')
-            ->once()
+        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
             ->with($user, $app_id)
-            ->andReturn(17);
-        $this->authorization_dao->shouldNotReceive('create');
-        $this->scope_dao->shouldReceive('deleteForAuthorization')
-            ->once()
+            ->willReturn(17);
+        $this->authorization_dao->expects(self::never())->method('create');
+        $this->scope_dao->expects(self::once())->method('deleteForAuthorization')
             ->with(17);
-        $this->scope_dao->shouldReceive('createMany')
-            ->once()
+        $this->scope_dao->expects(self::once())->method('createMany')
             ->with(17, $foobar_scope, $typevalue_scope);
 
         $this->creator->saveAuthorization(new NewAuthorization($user, $app_id, $foobar_scope, $typevalue_scope));

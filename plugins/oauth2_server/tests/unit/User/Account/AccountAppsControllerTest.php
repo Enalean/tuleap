@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\User\Account;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -38,7 +36,6 @@ use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
     /**
@@ -46,25 +43,25 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppsPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppsPresenterBuilder
      */
     private $presenter_builder;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
      */
     private $user_manager;
 
     protected function setUp(): void
     {
-        $this->presenter_builder = M::mock(AppsPresenterBuilder::class);
-        $this->user_manager      = M::mock(\UserManager::class);
+        $this->presenter_builder = $this->createMock(AppsPresenterBuilder::class);
+        $this->user_manager      = $this->createMock(\UserManager::class);
         $this->controller        = new AccountAppsController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             $this->presenter_builder,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->user_manager,
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
@@ -76,7 +73,7 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleForbidsAnonymousUsers(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
 
         $this->expectException(ForbiddenException::class);
         $this->controller->handle(new NullServerRequest());
@@ -85,13 +82,12 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleRendersAccountApps(): void
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->user_manager->expects(self::once())->method('getCurrentUser')->willReturn($user);
         $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
 
-        $this->presenter_builder->shouldReceive('build')
-            ->with($user, M::type(CSRFSynchronizerTokenPresenter::class))
-            ->once()
-            ->andReturn(new AppsPresenter($csrf_presenter, M::mock(AccountTabPresenterCollection::class)));
+        $this->presenter_builder->expects(self::once())->method('build')
+            ->with($user, self::isInstanceOf(CSRFSynchronizerTokenPresenter::class))
+            ->willReturn(new AppsPresenter($csrf_presenter, $this->createMock(AccountTabPresenterCollection::class)));
 
         $response = $this->controller->handle(
             (new NullServerRequest())->withAttribute(BaseLayout::class, LayoutBuilder::build())

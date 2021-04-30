@@ -22,35 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Administration;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecret;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var AdminOAuth2AppsPresenterBuilder
      */
     private $presenter_builder;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|LastGeneratedClientSecretStore
+     * @var \PHPUnit\Framework\MockObject\MockObject|LastGeneratedClientSecretStore
      */
     private $client_secret_store;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
      */
     private $app_factory;
 
     protected function setUp(): void
     {
-        $this->app_factory         = M::mock(AppFactory::class);
-        $this->client_secret_store = M::mock(LastGeneratedClientSecretStore::class);
+        $this->app_factory         = $this->createMock(AppFactory::class);
+        $this->client_secret_store = $this->createMock(LastGeneratedClientSecretStore::class);
         $this->presenter_builder   = new AdminOAuth2AppsPresenterBuilder($this->app_factory, $this->client_secret_store);
     }
 
@@ -61,20 +58,17 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         ?LastGeneratedClientSecret $last_generated_client_secret,
         ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter
     ): void {
-        $project    = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
-        $csrf_token = M::mock(\CSRFSynchronizerToken::class);
-        $this->app_factory->shouldReceive('getAppsForProject')
-            ->once()
+        $project    = ProjectTestBuilder::aProject()->withId(102)->build();
+        $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->app_factory->expects(self::once())->method('getAppsForProject')
             ->with($project)
-            ->andReturn(
+            ->willReturn(
                 [
                     new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project),
                     new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, $project)
                 ]
             );
-        $this->client_secret_store->shouldReceive('getLastGeneratedClientSecret')->once()->andReturn(
+        $this->client_secret_store->expects(self::once())->method('getLastGeneratedClientSecret')->willReturn(
             $last_generated_client_secret
         );
 
@@ -97,16 +91,15 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         ?LastGeneratedClientSecret $last_generated_client_secret,
         ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter
     ): void {
-        $csrf_token = M::mock(\CSRFSynchronizerToken::class);
-        $this->app_factory->shouldReceive('getSiteLevelApps')
-            ->once()
-            ->andReturn(
+        $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->app_factory->expects(self::once())->method('getSiteLevelApps')
+            ->willReturn(
                 [
                     new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, null),
                     new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, null)
                 ]
             );
-        $this->client_secret_store->shouldReceive('getLastGeneratedClientSecret')->once()->andReturn(
+        $this->client_secret_store->expects(self::once())->method('getLastGeneratedClientSecret')->willReturn(
             $last_generated_client_secret
         );
 

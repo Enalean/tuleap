@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -37,40 +35,38 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var EditAppController
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppProjectVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppProjectVerifier
      */
     private $project_verifier;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
      */
     private $app_dao;
 
     protected function setUp(): void
     {
-        $this->redirector       = M::mock(RedirectWithFeedbackFactory::class);
-        $this->project_verifier = M::mock(OAuth2AppProjectVerifier::class);
-        $this->app_dao          = M::mock(AppDao::class);
-        $csrf_token             = M::mock(\CSRFSynchronizerToken::class);
+        $this->redirector       = $this->createMock(RedirectWithFeedbackFactory::class);
+        $this->project_verifier = $this->createMock(OAuth2AppProjectVerifier::class);
+        $this->app_dao          = $this->createMock(AppDao::class);
+        $csrf_token             = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller       = new EditAppController(
             HTTPFactoryBuilder::responseFactory(),
             $this->redirector,
             $this->project_verifier,
             $this->app_dao,
             $csrf_token,
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
-        $csrf_token->shouldReceive('check');
+        $csrf_token->method('check');
     }
 
     public function testGetProjectAdminUrl(): void
@@ -87,11 +83,10 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
-            ->once()
-            ->andReturn($response);
-        $this->app_dao->shouldNotReceive('updateApp');
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
+            ->willReturn($response);
+        $this->app_dao->expects(self::never())->method('updateApp');
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -112,10 +107,9 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleUpdatesProjectAppAndRedirects(array $parsed_body): void
     {
         $request = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
-        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(true);
-        $this->app_dao->shouldReceive('updateApp')
-            ->once()
-            ->with(M::type(OAuth2App::class));
+        $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(true);
+        $this->app_dao->expects(self::once())->method('updateApp')
+            ->with(self::isInstanceOf(OAuth2App::class));
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -128,10 +122,9 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleUpdatesSiteAppAndRedirects(array $parsed_body): void
     {
         $request = $this->buildSiteAdminRequest()->withParsedBody($parsed_body);
-        $this->project_verifier->shouldReceive('isASiteLevelApp')->andReturn(true);
-        $this->app_dao->shouldReceive('updateApp')
-            ->once()
-            ->with(M::type(OAuth2App::class));
+        $this->project_verifier->method('isASiteLevelApp')->willReturn(true);
+        $this->app_dao->expects(self::once())->method('updateApp')
+            ->with(self::isInstanceOf(OAuth2App::class));
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -152,7 +145,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsUpdatingAppOfAnotherProject(): void
     {
-        $this->project_verifier->shouldReceive('isAppPartOfTheExpectedProject')->andReturn(false);
+        $this->project_verifier->method('isAppPartOfTheExpectedProject')->willReturn(false);
 
         $request = $this->buildProjectAdminRequest()->withParsedBody(
             ['app_id' => '72', 'name' => 'Jenkins', 'redirect_uri' => 'https://example.com/redirect', 'use_pkce' => '1']

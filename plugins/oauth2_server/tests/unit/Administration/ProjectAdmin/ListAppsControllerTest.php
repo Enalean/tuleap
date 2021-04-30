@@ -22,40 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var ListAppsController */
     private $controller;
     /** @var LayoutHelperPassthrough */
     private $layout_helper;
-    /** @var M\LegacyMockInterface|M\MockInterface|\TemplateRenderer */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer */
     private $renderer;
-    /** @var M\LegacyMockInterface|M\MockInterface|AdminOAuth2AppsPresenterBuilder */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|AdminOAuth2AppsPresenterBuilder */
     private $presenter_builder;
-    /** @var M\LegacyMockInterface|M\MockInterface|IncludeAssets */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|IncludeAssets */
     private $include_assets;
-    /** @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface */
+    /** @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject */
     private $csrf_token;
 
     protected function setUp(): void
     {
         $this->layout_helper     = new LayoutHelperPassthrough();
-        $this->renderer          = M::mock(\TemplateRenderer::class);
-        $this->presenter_builder = M::mock(AdminOAuth2AppsPresenterBuilder::class);
-        $this->include_assets    = M::mock(IncludeAssets::class);
-        $this->csrf_token        = M::mock(\CSRFSynchronizerToken::class);
+        $this->renderer          = $this->createMock(\TemplateRenderer::class);
+        $this->presenter_builder = $this->createMock(AdminOAuth2AppsPresenterBuilder::class);
+        $this->include_assets    = $this->createMock(IncludeAssets::class);
+        $this->csrf_token        = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller        = new ListAppsController(
             $this->layout_helper,
             $this->renderer,
@@ -67,26 +64,19 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessRenders(): void
     {
-        $project      = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
         $current_user = UserTestBuilder::aUser()->build();
         $this->layout_helper->setCallbackParams($project, $current_user);
 
         $request = HTTPRequestBuilder::get()->build();
         $layout  = LayoutBuilder::build();
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
-            ->with('administration.js');
-        $this->include_assets->shouldReceive('getPath')
-            ->with('administration-style');
+        $this->include_assets->expects(self::once())->method('getFileURL')->with('administration.js');
+        $this->include_assets->method('getPath')->with('administration-style');
         $presenter = AdminOAuth2AppsPresenter::forProjectAdministration($project, [], $this->csrf_token, null);
-        $this->presenter_builder->shouldReceive('buildProjectAdministration')
-            ->once()
+        $this->presenter_builder->expects(self::once())->method('buildProjectAdministration')
             ->with($this->csrf_token, $project)
-            ->andReturn($presenter);
-        $this->renderer->shouldReceive('renderToPage')
-            ->once()
+            ->willReturn($presenter);
+        $this->renderer->expects(self::once())->method('renderToPage')
             ->with('project-admin', $presenter);
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
@@ -94,10 +84,7 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetUrl(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(102)
-            ->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
         $this->assertSame('/plugins/oauth2_server/project/102/admin', ListAppsController::getUrl($project));
     }
 }

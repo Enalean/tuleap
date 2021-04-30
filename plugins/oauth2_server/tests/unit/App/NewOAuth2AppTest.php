@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider dataProviderInvalidData
      */
@@ -40,7 +37,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             $app_name,
             $redirect_uri,
             true,
-            M::mock(\Project::class),
+            ProjectTestBuilder::aProject()->build(),
             new SplitTokenVerificationStringHasher()
         );
     }
@@ -63,7 +60,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         bool $use_pkce
     ): void {
         $app_name = 'Jenkins';
-        $project  = M::mock(\Project::class);
+        $project  = ProjectTestBuilder::aProject()->build();
         $new_app  = NewOAuth2App::fromProjectAdministrationAppData(
             $app_name,
             $redirect_uri,
@@ -108,7 +105,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNewAppSecretCanBeHashed(): void
     {
         $hasher  = new SplitTokenVerificationStringHasher();
-        $new_app = NewOAuth2App::fromProjectAdministrationAppData('App', 'https://example.com', true, M::mock(\Project::class), $hasher);
+        $new_app = NewOAuth2App::fromProjectAdministrationAppData('App', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher);
 
         $this->assertEquals($hasher->computeHash($new_app->getSecret()), $new_app->getHashedSecret());
     }
@@ -116,8 +113,8 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testEachNewAppIsAssignedADifferentSecret(): void
     {
         $hasher    = new SplitTokenVerificationStringHasher();
-        $new_app_1 = NewOAuth2App::fromProjectAdministrationAppData('App1', 'https://example.com', true, M::mock(\Project::class), $hasher);
-        $new_app_2 = NewOAuth2App::fromProjectAdministrationAppData('App2', 'https://example.com', true, M::mock(\Project::class), $hasher);
+        $new_app_1 = NewOAuth2App::fromProjectAdministrationAppData('App1', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher);
+        $new_app_2 = NewOAuth2App::fromProjectAdministrationAppData('App2', 'https://example.com', true, ProjectTestBuilder::aProject()->build(), $hasher);
 
         $this->assertNotEquals($new_app_1->getSecret(), $new_app_2->getSecret());
         $this->assertNotEquals($new_app_1->getHashedSecret(), $new_app_2->getHashedSecret());
