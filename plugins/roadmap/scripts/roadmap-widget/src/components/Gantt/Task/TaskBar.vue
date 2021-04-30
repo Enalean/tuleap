@@ -23,7 +23,6 @@
         v-if="is_milestone"
         v-bind:task="task"
         v-bind:left="left"
-        v-bind:percentage="percentage"
         v-bind:class="container_classes"
     />
     <div
