@@ -20,6 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
@@ -133,7 +136,11 @@ class Tracker_SemanticManager
             $semantic_progress_dao,
             new MethodBuilder(
                 \Tracker_FormElementFactory::instance(),
-                $semantic_progress_dao
+                $semantic_progress_dao,
+                new NaturePresenterFactory(
+                    new NatureDao(),
+                    new ArtifactLinksUsageDao()
+                )
             )
         ))->getSemantic($this->tracker);
 

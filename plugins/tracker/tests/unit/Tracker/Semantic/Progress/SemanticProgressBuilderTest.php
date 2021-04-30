@@ -68,21 +68,6 @@ class SemanticProgressBuilderTest extends TestCase
         $this->assertFalse($semantic->isDefined());
     }
 
-    public function testItBuildsAnEmptySemanticProgressWhenTheSemanticIsNotEffortBased(): void
-    {
-        $this->dao->shouldReceive('searchByTrackerId')->andReturn(
-            [
-                'total_effort_field_id' => null,
-                'remaining_effort_field_id' => null
-            ]
-        )->once();
-        $semantic = $this->progress_builder->getSemantic(
-            $this->tracker
-        );
-
-        $this->assertFalse($semantic->isDefined());
-    }
-
     public function testItBuildsAnEffortBasedSemanticProgress(): void
     {
         $total_effort_field     = \Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1001]);
@@ -91,7 +76,8 @@ class SemanticProgressBuilderTest extends TestCase
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
                 'total_effort_field_id' => 1001,
-                'remaining_effort_field_id' => 1002
+                'remaining_effort_field_id' => 1002,
+                'artifact_link_type' => null
             ]
         )->once();
 
@@ -129,17 +115,56 @@ class SemanticProgressBuilderTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [null, 1002]
-     *           [1001, null]
-     *           [null, null]
-     */
-    public function testItReturnsAnInvalidSemanticWhenFieldsAreNull(?int $total_effort_field_id, ?int $remaining_effort_field_id): void
+    public function testItBuildsAChildCountBasedSemanticProgress(): void
     {
         $this->dao->shouldReceive('searchByTrackerId')->andReturn(
             [
+                'total_effort_field_id' => null,
+                'remaining_effort_field_id' => null,
+                'artifact_link_type' => 'covered_by'
+            ]
+        )->once();
+
+        $this->method_builder->shouldReceive('buildMethodBasedOnChildCount')
+            ->with(
+                $this->tracker,
+                'covered_by',
+            )
+            ->andReturn(
+                new MethodBasedOnLinksCount(
+                    $this->dao,
+                    \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class, ['getId' => 1003]),
+                    'covered_by'
+                )
+            )
+            ->once();
+
+        $semantic           = $this->progress_builder->getSemantic($this->tracker);
+        $computation_method = $semantic->getComputationMethod();
+
+        $this->assertInstanceOf(
+            MethodBasedOnLinksCount::class,
+            $computation_method
+        );
+    }
+
+    /**
+     * @testWith [null, 1002, "_fixed_in"]
+     *           [1001, null, "_fixed_in"]
+     *           [null, null, null]
+     *           [null, 1002, null]
+     *           [1001, null, null]
+     */
+    public function testItReturnsAnInvalidSemantic(
+        ?int $total_effort_field_id,
+        ?int $remaining_effort_field_id,
+        ?string $artifact_link_type
+    ): void {
+        $this->dao->shouldReceive('searchByTrackerId')->andReturn(
+            [
                 'total_effort_field_id' => $total_effort_field_id,
-                'remaining_effort_field_id' => $remaining_effort_field_id
+                'remaining_effort_field_id' => $remaining_effort_field_id,
+                'artifact_link_type' => $artifact_link_type
             ]
         )->once();
 

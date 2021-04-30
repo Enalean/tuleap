@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 class MethodBuilderTest extends TestCase
 {
@@ -45,14 +47,28 @@ class MethodBuilderTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker
      */
     private $tracker;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Project
+     */
+    private $project;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|NaturePresenterFactory
+     */
+    private $natures_factory;
 
     protected function setUp(): void
     {
         $this->dao                  = \Mockery::mock(SemanticProgressDao::class);
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->method_builder       = new MethodBuilder($this->form_element_factory, $this->dao);
+        $this->natures_factory      = \Mockery::mock(NaturePresenterFactory::class);
+        $this->method_builder       = new MethodBuilder(
+            $this->form_element_factory,
+            $this->dao,
+            $this->natures_factory
+        );
 
-        $this->tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
+        $this->project = \Mockery::mock(\Project::class);
+        $this->tracker = \Mockery::mock(\Tracker::class, ['getName' => 'User Stories', 'getProject' => $this->project]);
     }
 
     public function testItBuildsAnInvalidMethodWhenTotalAndRemainingEffortFieldsAreTheSameField(): void
@@ -191,6 +207,96 @@ class MethodBuilderTest extends TestCase
         $method = $this->method_builder->buildMethodFromRequest(
             $this->tracker,
             $request
+        );
+
+        $this->assertInstanceOf(
+            InvalidMethod::class,
+            $method
+        );
+    }
+
+    public function testItBuildsAMethodBasedOnChildCount(): void
+    {
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+            ->with($this->tracker)
+            ->once()
+            ->andReturn([
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+            ]);
+
+        $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
+            ->with($this->project, '_is_child')
+            ->once()
+            ->andReturn(
+                new NaturePresenter('_is_child', 'Parent', 'Child', true)
+            );
+
+        $method = $this->method_builder->buildMethodBasedOnChildCount(
+            $this->tracker,
+            '_is_child',
+        );
+
+        $this->assertInstanceOf(
+            MethodBasedOnLinksCount::class,
+            $method
+        );
+    }
+
+    public function testItBuildsAnInvalidMethodWhenThereIsNoArtifactLinkFieldInTracker(): void
+    {
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+            ->with($this->tracker)
+            ->once()
+            ->andReturn([]);
+
+        $method = $this->method_builder->buildMethodBasedOnChildCount(
+            $this->tracker,
+            '_is_child',
+        );
+
+        $this->assertInstanceOf(
+            InvalidMethod::class,
+            $method
+        );
+    }
+
+    public function testItBuildsAnInvalidMethodWhenLinkNatureIsNotIsChild(): void
+    {
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+            ->with($this->tracker)
+            ->once()
+            ->andReturn([
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+            ]);
+
+        $method = $this->method_builder->buildMethodBasedOnChildCount(
+            $this->tracker,
+            'delivered_in',
+        );
+
+        $this->assertInstanceOf(
+            InvalidMethod::class,
+            $method
+        );
+    }
+
+    public function testItBuildsAnInvalidMethodWhenLinkNatureIsChildIsNotEnabledInProject(): void
+    {
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+            ->with($this->tracker)
+            ->once()
+            ->andReturn([
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+            ]);
+
+        $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
+            ->with($this->project, '_is_child')
+            ->once()
+            ->andReturn(null);
+
+        $method = $this->method_builder->buildMethodBasedOnChildCount(
+            $this->tracker,
+            '_is_child',
         );
 
         $this->assertInstanceOf(

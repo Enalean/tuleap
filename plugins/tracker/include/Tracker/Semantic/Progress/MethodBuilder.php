@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+
 class MethodBuilder
 {
     /**
@@ -32,13 +34,19 @@ class MethodBuilder
      * @var SemanticProgressDao
      */
     private $dao;
+    /**
+     * @var NaturePresenterFactory
+     */
+    private $natures_factory;
 
     public function __construct(
         \Tracker_FormElementFactory $form_element_factory,
-        SemanticProgressDao $dao
+        SemanticProgressDao $dao,
+        NaturePresenterFactory $natures_factory
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->dao                  = $dao;
+        $this->natures_factory      = $natures_factory;
     }
 
     public function buildMethodBasedOnEffort(
@@ -83,6 +91,52 @@ class MethodBuilder
             $this->dao,
             $total_effort_field,
             $remaining_effort_field
+        );
+    }
+
+    public function buildMethodBasedOnChildCount(
+        \Tracker $tracker,
+        string $link_type
+    ): IComputeProgression {
+        $artifact_links_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
+        if (empty($artifact_links_fields)) {
+            return new InvalidMethod(
+                sprintf(
+                    dgettext(
+                        'tuleap-tracker',
+                        'Progress semantic is not properly configured: Unable to find an artifact link field in tracker %s.'
+                    ),
+                    $tracker->getName()
+                )
+            );
+        }
+
+        if ($link_type !== \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+            return new InvalidMethod(
+                dgettext(
+                    'tuleap-tracker',
+                    'Progress semantic is not properly configured: Only links of type "Child" are supported.'
+                )
+            );
+        }
+
+        $nature = $this->natures_factory->getTypeEnabledInProjectFromShortname($tracker->getProject(), $link_type);
+        if ($nature === null) {
+            return new InvalidMethod(
+                sprintf(
+                    dgettext(
+                        'tuleap-tracker',
+                        'Progress semantic is not properly configured: Link type %s is not activated in the project or does not exist.'
+                    ),
+                    $link_type
+                )
+            );
+        }
+
+        return new MethodBasedOnLinksCount(
+            $this->dao,
+            $artifact_links_fields[0],
+            $link_type
         );
     }
 
