@@ -1,7 +1,7 @@
-/*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 describe("User dashboards", function () {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.projectMemberLogin();
+        cy.platformAdminLogin();
     });
 
     beforeEach(function () {
@@ -39,32 +38,6 @@ describe("User dashboards", function () {
         cy.get("[data-test=dashboard-add-input-name]").type("My Dashboard");
         cy.get("[data-test=dashboard-add-button-submit]").click();
 
-        // widget image
-        cy.get("[data-test=dashboard-add-widget-empty-state-button]").click();
-        cy.get("[data-test=myimageviewer]").click();
-        cy.get("[data-test=dashboard-widget-image-input-url]").type(
-            "https://tuleap/images/organization_logo.png"
-        );
-        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-        cy.get("[data-test=dashboard-widget-myimageviewer]")
-            .find("img")
-            .should("have.attr", "src", "https://tuleap/images/organization_logo.png");
-
-        // widget my artifacts
-        cy.get("[data-test=dashboard-configuration-button]").click();
-        cy.get("[data-test=dashboard-add-widget-button]").click();
-
-        cy.get("[data-test=plugin_tracker_myartifacts]").click();
-        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-        cy.get("[data-test=dashboard-my-artifacts-content]");
-
-        // widget my projects
-        cy.get("[data-test=dashboard-configuration-button]").click();
-        cy.get("[data-test=dashboard-add-widget-button]").click();
-        cy.get("[data-test=myprojects]").click();
-        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-        cy.get("[data-test=dashboard-my-projects]").find("td").contains("User dashboard");
-
         // widget document
         cy.get("[data-test=dashboard-configuration-button]").click();
         cy.get("[data-test=dashboard-add-widget-button]").click();
@@ -73,8 +46,6 @@ describe("User dashboards", function () {
         cy.get("[data-test=document-search-id]").type("1");
 
         cy.get("[data-test=document-button-search]").click();
-        cy.get("[data-test=document-search-result]").contains(
-            "You do not have the permission to access the document"
-        );
+        cy.get("[data-test=document-search-link]").contains("Show");
     });
 });
