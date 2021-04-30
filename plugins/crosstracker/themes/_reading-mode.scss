@@ -20,12 +20,12 @@
 .reading-mode-report {
     display: flex;
     flex-direction: column;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 15px;
 
     &:hover:not(.disabled) {
         margin: 0;
-        background-color: transparentize($tlp-theme-color, .9);
+        background-color: var(--tlp-theme-color-transparent-80);
         cursor: pointer;
     }
 }
@@ -55,13 +55,13 @@
     display: flex;
     align-items: center;
     margin: 5px 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
     font-weight: 400;
 
     > .cross-tracker-project-icon {
         margin: 0 5px 0 0;
-        fill: $tlp-theme-color;
+        fill: var(--tlp-theme-color);
     }
 }
 
@@ -74,7 +74,7 @@
     display: flex;
     justify-content: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    border-bottom: 1px solid $tlp-ui-border-light;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
 }
 
 .reading-mode-actions-cancel {
