@@ -188,7 +188,7 @@ Float
 
 CurrentDateTime
     = "now"i _ "(" _ ")" _ period:PeriodCurrentDateTime? {
-        return new CurrentDateTimeValueWrapper($period["sign"], $period["duration"]);
+        return new CurrentDateTimeValueWrapper($period["sign"] ?? null, $period["duration"] ?? null);
     }
 
 CurrentUser
