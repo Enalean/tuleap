@@ -6,13 +6,9 @@
         }
     },
     "require": {
-        "ext-gettext": "*",
         "php-di/php-di": "^6.0"
     },
     "config": {
-        "platform": {
-            "php": "7.3"
-        },
         "sort-packages": true
     }
 }
