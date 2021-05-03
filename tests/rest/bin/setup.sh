@@ -154,11 +154,11 @@ setup_database
 case "$PHP_FPM" in
     '/opt/remi/php73/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 7.3"
-    "$PHP_CLI" /usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
+    /usr/bin/tuleap-cfg site-deploy --php-version=php73
     ;;
     '/opt/remi/php74/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 7.4"
-    "$PHP_CLI" /usr/share/tuleap/tools/utils/php74/run.php --modules=nginx,fpm
+    /usr/bin/tuleap-cfg site-deploy --php-version=php74
     ;;
 esac
 tuleap_db_config

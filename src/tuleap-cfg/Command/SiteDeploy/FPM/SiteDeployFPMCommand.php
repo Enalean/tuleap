@@ -49,7 +49,7 @@ final class SiteDeployFPMCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Deploy PHP FPM configuration files')
-            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php73` (default) or `php74`', self::PHP73)
+            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php73` or `php74` (default)', self::PHP74)
             ->addOption(self::OPT_DEVELOPMENT, '', InputOption::VALUE_NONE, 'Deploy development version of the configuration files')
             ->addOption(self::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force files to be rewritten (by default existing files are not modified)');
     }

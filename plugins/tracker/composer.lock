@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80a3a287d23f249acdd8cf06d8823e5b",
+    "content-hash": "b05a8c093f1a590612e510c8344902bc",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -160,6 +160,10 @@
                 "parser",
                 "php"
             ],
+            "support": {
+                "issues": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/issues",
+                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/master"
+            },
             "time": "2020-01-14T12:45:01+00:00"
         }
     ],
@@ -171,10 +175,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "platform-overrides": {
-        "php": "7.3",
-        "ext-mbstring": "0",
-        "ext-mailparse": "0"
-    },
     "plugin-api-version": "2.0.0"
 }

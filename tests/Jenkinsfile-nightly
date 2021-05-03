@@ -44,7 +44,7 @@ pipeline {
         }
 
         stage('Unit tests PHP with coverage') {
-            steps { script { actions.runPHPUnitTests('73', true) } }
+            steps { script { actions.runPHPUnitTests('74', true) } }
             post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
         }
 
@@ -69,10 +69,10 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage ('PHP 7.4') {
+                stage ('PHP 7.3') {
                     stages {
-                        stage('UT PHPUnit PHP 7.4') {
-                            steps { script { actions.runPHPUnitTests('74') } }
+                        stage('UT PHPUnit PHP 7.3') {
+                            steps { script { actions.runPHPUnitTests('73') } }
                             post {
                                 always {
                                     junit 'results/ut-phpunit/*/phpunit_tests_results.xml'
@@ -97,42 +97,33 @@ pipeline {
                 }
                 stage('REST') {
                     stages {
-                        stage('REST PHP 7.3 MariaDB 10.3') {
-                            steps { script { actions.runRESTTests('mariadb103', '73') } }
+                        stage('REST PHP 7.3 MySQL 5.7') {
+                            steps { script { actions.runRESTTests('mysql57', '73') } }
                         }
                         stage('REST PHP 7.4 MariaDB 10.3') {
                             steps { script { actions.runRESTTests('mariadb103', '74') } }
-                        }
-                        stage('REST PHP 7.4 MySQL 5.7') {
-                            steps { script { actions.runRESTTests('mysql57', '74') } }
                         }
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                 }
                 stage('SOAP') {
                     stages {
-                        stage('SOAP PHP 7.3 MariaDB 10.3') {
-                            steps { script { actions.runSOAPTests('mariadb103', '73') } }
+                        stage('SOAP PHP 7.3 MySQL 5.7') {
+                            steps { script { actions.runSOAPTests('mysql57', '73') } }
                         }
                         stage('SOAP PHP 7.4 MariaDB 10.3') {
                             steps { script { actions.runSOAPTests('mariadb103', '74') } }
-                        }
-                        stage('SOAP PHP 7.4 MySQL 5.7') {
-                            steps { script { actions.runSOAPTests('mysql57', '74') } }
                         }
                     }
                     post { always { junit 'results/soap/*/soap_tests.xml' } }
                 }
                 stage('DB Integration') {
                     stages {
-                        stage('DB PHP 7.3 MariaDB 10.3') {
-                            steps { script { actions.runDBTests('mariadb103', '73') } }
+                        stage('DB PHP 7.3 MySQL 5.7') {
+                            steps { script { actions.runDBTests('mysql57', '73') } }
                         }
                         stage('DB PHP 7.4 MariaDB 10.3') {
                             steps { script { actions.runDBTests('mariadb103', '74') } }
-                        }
-                        stage('DB PHP 7.4 MySQL 5.7') {
-                            steps { script { actions.runDBTests('mysql57', '74') } }
                         }
                     }
                     post { always { junit 'results/db/*/db_tests.xml' } }
@@ -140,7 +131,7 @@ pipeline {
                 stage('Psalm static analysis (unused code)') {
                     agent {
                         docker {
-                            image 'enalean/tuleap-test-phpunit:c7-php73'
+                            image 'enalean/tuleap-test-phpunit:c7-php74'
                             reuseNode true
                             args '--network none'
                         }
@@ -153,6 +144,32 @@ pipeline {
                     post {
                         always {
                             recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
+                        }
+                    }
+                }
+                stage('Psalm static analysis 7.3') {
+                    agent {
+                        docker {
+                            image 'enalean/tuleap-test-phpunit:c7-php73'
+                            reuseNode true
+                            args '--network none'
+                        }
+                    }
+                    steps {
+                        script {
+                            withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
+                                dir ('sources') {
+                                    sh """
+                                    mkdir -p ../results/psalm_php73/
+                                    scl enable php73 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm_php73/checkstyle.xml"
+                                    """
+                                }
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm_73', pattern: 'results/psalm_php73/checkstyle.xml')]
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 {
   "name": "tuleap/tuleap",
+  "description": "Tuleap Core",
   "autoload": {
     "psr-4": {
       "Tuleap\\": ["common/"],
@@ -80,15 +81,6 @@
     "willdurand/negotiation": "^3.0"
   },
   "config": {
-    "platform": {
-      "php": "7.3",
-      "ext-bcmath": "0",
-      "ext-mbstring": "0",
-      "ext-curl": "0",
-      "ext-iconv": "0",
-      "ext-gd": "0",
-      "ext-gettext": "0"
-    },
     "sort-packages": true
   },
   "require-dev": {

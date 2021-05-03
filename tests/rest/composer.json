@@ -9,12 +9,6 @@
     "require": {
         "guzzle/guzzle": "~3.7"
     },
-    "config": {
-        "platform": {
-            "ext-curl": "0",
-            "ext-mbstring": "0"
-        }
-    },
     "require-dev": {
         "phpunit/phpunit": "^9.0"
     }

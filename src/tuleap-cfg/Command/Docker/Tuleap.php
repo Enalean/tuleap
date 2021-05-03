@@ -32,6 +32,7 @@ use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 use TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3;
+use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
 final class Tuleap
 {
@@ -73,14 +74,27 @@ final class Tuleap
 
     private function regenerateConfigurations(OutputInterface $output): void
     {
+        $logger      = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
+        $server_name = $this->getServerFQDNFromConfiguration();
+        if (! $server_name) {
+            throw new \RuntimeException('No `sys_default_domain` defined, abort');
+        }
+
         $output->writeln('<info>Ensure Tuleap knows it\'s under supervisord control</info>');
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
 
+
         $output->writeln('<info>Regenerate configurations for nginx</info>');
-        $this->process_factory->getProcess([__DIR__ . '/../../../../tools/utils/php73/run.php', '--module=nginx'])->mustRun();
+        $site_deploy_nginx = new SiteDeployNginx(
+            $logger,
+            __DIR__ . '/../../../../',
+            '/etc/nginx',
+            $server_name,
+            false,
+        );
+        $site_deploy_nginx->configure();
 
         ForgeConfig::loadLocalInc();
-        $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
         $output->writeln('<info>Regenerate configuration for fpm</info>');
         $site_deploy_fpm = SiteDeployFPM::buildForPHP73(
             new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
@@ -108,5 +122,14 @@ final class Tuleap
     {
         $output->writeln('<info>Queue a system check</info>');
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'queue-system-check'])->mustRun();
+    }
+
+    private function getServerFQDNFromConfiguration(): ?string
+    {
+        ForgeConfig::store();
+        ForgeConfig::loadLocalInc();
+        $fqdn = ForgeConfig::get('sys_default_domain', null);
+        ForgeConfig::restore();
+        return $fqdn;
     }
 }
