@@ -26,7 +26,7 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;

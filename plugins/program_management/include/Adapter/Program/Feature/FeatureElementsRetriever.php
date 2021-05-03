@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeaturesStore;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\RetrieveFeatures;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 final class FeatureElementsRetriever implements RetrieveFeatures

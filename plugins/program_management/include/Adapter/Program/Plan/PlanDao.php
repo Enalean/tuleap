@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
-use Tuleap\ProgramManagement\Program\Plan\Plan;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement
 {

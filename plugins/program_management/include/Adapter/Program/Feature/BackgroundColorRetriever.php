@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Cardwall_Semantic_CardFields;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class BackgroundColorRetriever

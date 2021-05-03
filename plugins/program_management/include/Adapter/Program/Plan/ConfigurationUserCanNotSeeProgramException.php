@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
-use Tuleap\ProgramManagement\Program\Backlog\Plan\PlanCheckException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
 
 final class ConfigurationUserCanNotSeeProgramException extends \Exception implements PlanCheckException
 {

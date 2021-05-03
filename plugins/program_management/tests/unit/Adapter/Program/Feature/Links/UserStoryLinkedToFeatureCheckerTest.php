@@ -24,11 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\Project;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -66,7 +66,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends TestCase
 
             public function getProjectFromPlanning(\Planning $root_planning): Project
             {
-                return new \Tuleap\ProgramManagement\Project(101, 'my-project', "My project");
+                return new \Tuleap\ProgramManagement\Domain\Project(101, 'my-project', "My project");
             }
         };
 

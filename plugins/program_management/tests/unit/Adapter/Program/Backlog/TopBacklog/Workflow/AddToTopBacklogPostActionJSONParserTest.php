@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\REST\I18NRestException;
 use Workflow;
 

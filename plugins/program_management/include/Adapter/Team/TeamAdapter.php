@@ -24,12 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
+use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\ProgramManagement\Program\ProgramStore;
-use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
-use Tuleap\ProgramManagement\Team\Creation\BuildTeam;
-use Tuleap\ProgramManagement\Team\Creation\Team;
-use Tuleap\ProgramManagement\Team\Creation\TeamCollection;
 
 final class TeamAdapter implements BuildTeam
 {

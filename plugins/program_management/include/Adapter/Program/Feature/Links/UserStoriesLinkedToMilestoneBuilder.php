@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
-use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
+use Tuleap\ProgramManagement\Domain\Team\MirroredMilestone\MirroredMilestone;
 
 class UserStoriesLinkedToMilestoneBuilder
 {

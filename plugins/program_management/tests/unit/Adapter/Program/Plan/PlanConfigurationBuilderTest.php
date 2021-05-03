@@ -25,10 +25,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Program\ProgramStore;
-use Tuleap\ProgramManagement\ProgramTracker;
-use Tuleap\ProgramManagement\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanConfigurationBuilderTest extends TestCase

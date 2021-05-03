@@ -29,9 +29,9 @@ use Transition;
 use Transition_PostAction;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChange;
-use Tuleap\ProgramManagement\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklogPostAction extends Transition_PostAction

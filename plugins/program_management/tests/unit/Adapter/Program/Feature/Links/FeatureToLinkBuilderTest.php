@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\FeaturePlanChange;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 
 final class FeatureToLinkBuilderTest extends TestCase
 {

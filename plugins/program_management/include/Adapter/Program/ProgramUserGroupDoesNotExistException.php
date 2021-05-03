@@ -20,7 +20,7 @@
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
-use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
+use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
 
 final class ProgramUserGroupDoesNotExistException extends \RuntimeException implements InvalidProgramUserGroup
 {

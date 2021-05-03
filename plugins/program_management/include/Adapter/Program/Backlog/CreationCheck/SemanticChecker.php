@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Program\Backlog\CreationCheck\CheckSemantic;
-use Tuleap\ProgramManagement\Program\Backlog\CreationCheck\CheckStatus;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\ProgramManagement\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckSemantic;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticChecker implements CheckSemantic

@@ -35,9 +35,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Replicatio
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Program\ToBeCreatedProgram;
-use Tuleap\ProgramManagement\Team\Creation\Team;
-use Tuleap\ProgramManagement\Team\Creation\TeamCollection;
+use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;

@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureIsNotPlannable
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;

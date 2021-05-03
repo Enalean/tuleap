@@ -22,9 +22,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
 
 use PFUser;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
-use Tuleap\ProgramManagement\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact

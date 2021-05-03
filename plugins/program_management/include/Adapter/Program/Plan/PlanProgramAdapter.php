@@ -26,10 +26,10 @@ use Project_AccessDeletedException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessRestrictedException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\Project\ProjectAccessSuspendedException;
-use Tuleap\ProgramManagement\Program\Backlog\Plan\BuildPlanProgramConfiguration;
-use Tuleap\ProgramManagement\Program\Program;
-use Tuleap\ProgramManagement\Team\Creation\TeamStore;
 
 final class PlanProgramAdapter implements BuildPlanProgramConfiguration
 {

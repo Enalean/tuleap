@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Exception;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\ProgramManagement\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
-use Tuleap\ProgramManagement\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
 {

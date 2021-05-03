@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Luracast\Restler\RestException;
-use Tuleap\ProgramManagement\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgramUserGroup;
+use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramUserGroup;
+use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\Project\REST\UserGroupRetriever;
-use Tuleap\ProgramManagement\Program\Plan\BuildProgramUserGroup;
-use Tuleap\ProgramManagement\Program\Plan\InvalidProgramUserGroup;
-use Tuleap\ProgramManagement\Program\Plan\ProgramUserGroup;
 
 final class ProgramUserGroupBuildAdapter implements BuildProgramUserGroup
 {

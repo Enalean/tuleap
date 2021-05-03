@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\RetrieveFeatureUserStories;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;

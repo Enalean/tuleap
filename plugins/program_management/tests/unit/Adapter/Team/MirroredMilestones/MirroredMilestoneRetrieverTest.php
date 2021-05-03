@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Team\MirroredMilestone\MirroredMilestone;
+use Tuleap\ProgramManagement\Domain\Team\MirroredMilestone\MirroredMilestone;
 
 final class MirroredMilestoneRetrieverTest extends TestCase
 {

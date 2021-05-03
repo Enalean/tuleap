@@ -29,9 +29,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\FieldData;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\PlanUserStoriesInMirroredMilestones;
-use Tuleap\ProgramManagement\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredMilestones;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 
 class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirroredMilestones
 {

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tuleap\ProgramManagement\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionUpdateJsonParser;
 use Tuleap\Tracker\Workflow\Update\PostAction;
