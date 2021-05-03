@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
 use EventManager;
 use PFUser;
 use Tracker_FormElementFactory;
@@ -85,6 +86,7 @@ class IndexController extends TestManagementController
                 $current_user,
                 $milestone_representation,
                 $this->project_flags_builder->buildProjectFlags($this->project),
+                new CSRFSynchronizerToken("/plugins/testmanagement/?group_id=" . (int) $this->project->getID())
             )
         );
     }

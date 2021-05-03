@@ -36,8 +36,8 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
  */
 class CampaignArtifactUpdateFieldValuesBuilder
 {
-    private const STATUS_CHANGE_CLOSED_VALUE = 'closed';
-    private const STATUS_CHANGE_OPEN_VALUE   = 'open';
+    public const STATUS_CHANGE_CLOSED_VALUE = 'closed';
+    public const STATUS_CHANGE_OPEN_VALUE   = 'open';
 
     /**
      * @var Tracker_FormElementFactory

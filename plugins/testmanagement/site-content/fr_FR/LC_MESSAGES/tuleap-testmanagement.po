@@ -143,6 +143,14 @@ msgstr "Campagne de tests"
 msgid "Tests executions"
 msgstr "Exécution de tests"
 
+#, php-format
+msgid "The campaign %s is now closed."
+msgstr "La campagne %s est maintenant fermée."
+
+#, php-format
+msgid "The campaign %s is now open."
+msgstr "La campagne %s est maintenant ouverte."
+
 msgid "The campaign is closed."
 msgstr "La campagne est fermée."
 

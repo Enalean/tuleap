@@ -60,6 +60,41 @@
                 <i class="fas fa-tlp-robot tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
                 {{ ::'Configure automated tests' | translate }}
             </button>
+            <form method="post" action="{{ $ctrl.getCloseFormURL() }}">
+                <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
+                <input type="hidden"
+                       name="milestone_id"
+                       value="{{ $ctrl.getCurrentMilestone().id }}"
+                       ng-if="$ctrl.getCurrentMilestone().id !== undefined"
+                />
+                <button
+                    type="submit"
+                    class="tlp-dropdown-menu-item testmanagement-button-update-status"
+                    role="menuitem"
+                    ng-if="$ctrl.campaign_state.campaign.is_open"
+                >
+                    <i class="fas fa-times tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                    {{ ::'Close campaign' | translate }}
+                </button>
+            </form>
+            <form method="post" action="{{ $ctrl.getOpenFormURL() }}">
+                <input type="hidden" name="challenge" value="{{ $ctrl.getCSRFTokenCampaignStatus() }}" />
+                <input type="hidden"
+                       name="milestone_id"
+                       value="{{ $ctrl.getCurrentMilestone().id }}"
+                       ng-if="$ctrl.getCurrentMilestone().id !== undefined"
+                />
+                <button
+                    type="submit"
+                    class="tlp-dropdown-menu-item testmanagement-button-update-status"
+                    role="menuitem"
+                    ng-if="! $ctrl.campaign_state.campaign.is_open"
+                >
+                    <i class="fas fa-check tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+                    {{ ::'Open campaign' | translate }}
+                </button>
+            </form>
+
         </div>
     </div>
 

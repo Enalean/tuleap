@@ -95,6 +95,9 @@ msgstr "Sélectionner les tests"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Close campaign"
+msgstr "Fermer la campagne"
+
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -236,6 +239,9 @@ msgstr "Non exécuté"
 
 msgid "Open bug options dropdown"
 msgstr "Ouvrir les options de bugs"
+
+msgid "Open campaign"
+msgstr "Ouvrir la campagne"
 
 msgid "Passed"
 msgstr "Succès"

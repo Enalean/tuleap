@@ -19,6 +19,7 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
@@ -35,7 +36,12 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
 use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
+use Tuleap\TestManagement\Campaign\CampaignDao;
+use Tuleap\TestManagement\Campaign\CampaignRetriever;
+use Tuleap\TestManagement\Campaign\CampaignSaver;
+use Tuleap\TestManagement\Campaign\CloseCampaignController;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
+use Tuleap\TestManagement\Campaign\OpenCampaignController;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
@@ -45,6 +51,8 @@ use Tuleap\TestManagement\LegacyRoutingController;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
+use Tuleap\TestManagement\REST\v1\CampaignArtifactUpdateFieldValuesBuilder;
+use Tuleap\TestManagement\REST\v1\CampaignUpdater;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
@@ -77,6 +85,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
@@ -128,6 +137,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
+
 
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(GetEditableTypesInProject::NAME);
@@ -406,7 +416,59 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeViaLegacyRouter'));
+            $r->addRoute(['POST'], '/campaign/{campaign_id:\d+}/open', $this->getRouteHandler('routeOpenCampaignController'));
+            $r->addRoute(['POST'], '/campaign/{campaign_id:\d+}/close', $this->getRouteHandler('routeCloseCampaignController'));
         });
+    }
+
+    public function routeOpenCampaignController(): OpenCampaignController
+    {
+        return new OpenCampaignController(
+            new CampaignRetriever(
+                Tracker_ArtifactFactory::instance(),
+                new CampaignDao(),
+                new KeyFactory()
+            ),
+            new CampaignUpdater(
+                new Tracker_REST_Artifact_ArtifactUpdater(
+                    new Tracker_REST_Artifact_ArtifactValidator(
+                        Tracker_FormElementFactory::instance()
+                    )
+                ),
+                new CampaignSaver(new CampaignDao(), new KeyFactory()),
+                new CampaignArtifactUpdateFieldValuesBuilder(
+                    Tracker_FormElementFactory::instance(),
+                    new StatusValueRetriever(
+                        Tracker_Semantic_StatusFactory::instance()
+                    )
+                )
+            )
+        );
+    }
+
+    public function routeCloseCampaignController(): CloseCampaignController
+    {
+        return new CloseCampaignController(
+            new CampaignRetriever(
+                Tracker_ArtifactFactory::instance(),
+                new CampaignDao(),
+                new KeyFactory()
+            ),
+            new CampaignUpdater(
+                new Tracker_REST_Artifact_ArtifactUpdater(
+                    new Tracker_REST_Artifact_ArtifactValidator(
+                        Tracker_FormElementFactory::instance()
+                    )
+                ),
+                new CampaignSaver(new CampaignDao(), new KeyFactory()),
+                new CampaignArtifactUpdateFieldValuesBuilder(
+                    Tracker_FormElementFactory::instance(),
+                    new StatusValueRetriever(
+                        Tracker_Semantic_StatusFactory::instance()
+                    )
+                )
+            )
+        );
     }
 
     public function routeViaLegacyRouter(): LegacyRoutingController

@@ -40,6 +40,10 @@ export default function controller(
         launchAutomatedTests,
         campaign_state: ExecutionService,
         triggered: false,
+        getOpenFormURL,
+        getCloseFormURL,
+        getCSRFTokenCampaignStatus,
+        getCurrentMilestone,
     });
 
     function openEditCampaignModal() {
@@ -134,5 +138,21 @@ export default function controller(
             .finally(() => {
                 self.triggered = false;
             });
+    }
+
+    function getOpenFormURL() {
+        return "/plugins/testmanagement/campaign/" + self.campaign_state.campaign.id + "/open";
+    }
+
+    function getCloseFormURL() {
+        return "/plugins/testmanagement/campaign/" + self.campaign_state.campaign.id + "/close";
+    }
+
+    function getCSRFTokenCampaignStatus() {
+        return SharedPropertiesService.getCSRFTokenCampaignStatus();
+    }
+
+    function getCurrentMilestone() {
+        return SharedPropertiesService.getCurrentMilestone();
     }
 }

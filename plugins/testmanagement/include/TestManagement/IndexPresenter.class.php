@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
+use CSRFSynchronizerToken;
 use ForgeConfig as TuleapConfig;
 use PFUser;
 use Tuleap\Project\ProjectPrivacyPresenter;
@@ -113,6 +114,10 @@ class IndexPresenter
      * @var string
      */
     public $trackers_ids_using_list_picker;
+    /**
+     * @var string
+     */
+    public $csrf_token_campaign_status;
 
     /**
      * @param int|false                         $campaign_tracker_id
@@ -130,7 +135,8 @@ class IndexPresenter
         array $issue_tracker_config,
         PFUser $current_user,
         object $milestone_representation,
-        array $project_flags
+        array $project_flags,
+        CSRFSynchronizerToken $csrf_token
     ) {
         $this->lang = $this->getLanguageAbbreviation($current_user);
 
@@ -173,6 +179,7 @@ class IndexPresenter
             $test_definition_tracker_id,
             $issue_tracker_id
         );
+        $this->csrf_token_campaign_status     = $csrf_token->getToken();
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string
