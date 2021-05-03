@@ -21,6 +21,8 @@
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
@@ -65,6 +67,7 @@ use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDeleteAction;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
@@ -296,6 +299,15 @@ class gitlabPlugin extends Plugin
                     $gitlab_repository_project_retriever,
                     ReferenceManager::instance(),
                     new TagInfoDao(),
+                    new TagPushWebhookDeleteAction(
+                        $gitlab_repository_project_retriever,
+                        new TagInfoDao(),
+                        new CrossReferenceManager(),
+                        $logger,
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
+                    ),
                     $logger,
                 ),
                 $logger,

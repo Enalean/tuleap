@@ -33,6 +33,8 @@ class TagPushWebhookDataTest extends TestCase
             1254,
             "https://example.com",
             "refs/tags/v1.0.1",
+            "before",
+            "after"
         );
 
         $this->assertSame("v1.0.1", $webhook_data->getTagName());

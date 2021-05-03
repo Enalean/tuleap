@@ -77,4 +77,15 @@ class TagInfoDao extends DataAccessObject
             ]
         );
     }
+
+    public function deleteTagInGitlabRepository(int $repository_id, string $tag_name): void
+    {
+        $this->getDB()->delete(
+            'plugin_gitlab_tag_info',
+            [
+                'repository_id' => $repository_id,
+                'tag_name' => $tag_name,
+            ]
+        );
+    }
 }

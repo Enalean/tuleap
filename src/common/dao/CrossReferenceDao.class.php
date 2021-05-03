@@ -52,7 +52,7 @@ class CrossReferenceDao extends DataAccessObject
 
     public function deleteEntity($id, $nature, $group_id)
     {
-        $id       = $this->da->escapeInt($id);
+        $id       = $this->da->quoteSmart($id);
         $nature   = $this->da->quoteSmart($nature);
         $group_id = $this->da->escapeInt($group_id);
 

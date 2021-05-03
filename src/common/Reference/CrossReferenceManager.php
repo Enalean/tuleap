@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class CrossReferenceManager
 {
     private $dao;
@@ -31,15 +32,9 @@ class CrossReferenceManager
      * Delete all cross references that with given entity as source or target.
      *
      * To be used when entity is deleted
-     *
-     * @param int $id
-     * @param String  $nature
-     * @param int $group_id
-     *
-     * @return bool
      */
-    public function deleteEntity($id, $nature, $group_id)
+    public function deleteEntity(string $id, string $nature, int $project_id): bool
     {
-        return $this->dao->deleteEntity($id, $nature, $group_id);
+        return $this->dao->deleteEntity($id, $nature, $project_id);
     }
 }

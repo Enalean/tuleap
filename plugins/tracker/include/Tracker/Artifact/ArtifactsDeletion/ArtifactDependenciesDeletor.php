@@ -83,7 +83,7 @@ class ArtifactDependenciesDeletor
         $this->permissions_manager->clearPermission(Artifact::PERMISSION_ACCESS, $artifact->getId());
         $tracker = $artifact->getTracker();
         $this->cross_reference_manager->deleteEntity(
-            $artifact->getId(),
+            (string) $artifact->getId(),
             Artifact::REFERENCE_NATURE,
             $tracker->getGroupId()
         );

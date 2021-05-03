@@ -39,6 +39,8 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class TagPushWebhookActionProcessor
 {
+    private const NO_REFERENCE = '0000000000000000000000000000000000000000';
+
     /**
      * @var GitlabTagRetriever
      */
@@ -71,6 +73,10 @@ class TagPushWebhookActionProcessor
      * @var TagInfoDao
      */
     private $tag_info_dao;
+    /**
+     * @var TagPushWebhookDeleteAction
+     */
+    private $push_webhook_delete_action;
 
     public function __construct(
         CredentialsRetriever $credentials_retriever,
@@ -80,6 +86,7 @@ class TagPushWebhookActionProcessor
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         ReferenceManager $reference_manager,
         TagInfoDao $tag_info_dao,
+        TagPushWebhookDeleteAction $push_webhook_delete_action,
         LoggerInterface $logger
     ) {
         $this->credentials_retriever               = $credentials_retriever;
@@ -89,11 +96,20 @@ class TagPushWebhookActionProcessor
         $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
         $this->reference_manager                   = $reference_manager;
         $this->tag_info_dao                        = $tag_info_dao;
+        $this->push_webhook_delete_action          = $push_webhook_delete_action;
         $this->logger                              = $logger;
     }
 
     public function process(GitlabRepository $gitlab_repository, TagPushWebhookData $tag_push_webhook_data): void
     {
+        if ($tag_push_webhook_data->getAfter() === self::NO_REFERENCE) {
+            $this->push_webhook_delete_action->deleteTagReferences(
+                $gitlab_repository,
+                $tag_push_webhook_data
+            );
+            return;
+        }
+
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
         if ($credentials === null) {
             //Do nothing, not able to query the GitLab API
@@ -102,6 +118,10 @@ class TagPushWebhookActionProcessor
         }
 
         $tag_name = $tag_push_webhook_data->getTagName();
+
+        $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
+            $gitlab_repository
+        );
 
         $gitlab_tag = $this->gitlab_tag_retriever->getTagFromGitlabAPI(
             $credentials,
@@ -113,12 +133,9 @@ class TagPushWebhookActionProcessor
             $gitlab_tag->getMessage()
         );
 
-        $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
-            $gitlab_repository
-        );
-
         $this->logger->info(count($references_collection->getTuleapReferences()) . " Tuleap references found in tag message " . $tag_push_webhook_data->getRef());
 
+        $valid_tuleap_references = [];
         foreach ($references_collection->getTuleapReferences() as $tuleap_reference) {
             $this->logger->info("|_ Reference to Tuleap artifact #" . $tuleap_reference->getId() . " found.");
 
@@ -137,13 +154,17 @@ class TagPushWebhookActionProcessor
                     $projects
                 );
 
-                $this->saveTagData(
-                    $gitlab_repository,
-                    $gitlab_tag
-                );
+                $valid_tuleap_references[] = $tuleap_reference;
             } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $reference_exception) {
                 $this->logger->error($reference_exception->getMessage());
             }
+        }
+
+        if (! empty($valid_tuleap_references)) {
+            $this->saveTagData(
+                $gitlab_repository,
+                $gitlab_tag
+            );
         }
     }
 
