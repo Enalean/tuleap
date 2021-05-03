@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Roadmap\REST;
+namespace Tuleap\Test\PHPUnit;
 
-use Tuleap\Roadmap\REST\v1\RoadmapResource;
-use Tuleap\Roadmap\REST\v1\TasksResource;
+use PHPUnit\Framework\MockObject\MockBuilder;
 
-final class ResourcesInjector
+trait ForceStrictPHPUnitMock
 {
-    public function populate(\Luracast\Restler\Restler $restler): void
+    public function getMockBuilder($className): MockBuilder
     {
-        $restler->addAPIClass(RoadmapResource::class, 'roadmaps');
-        $restler->addAPIClass(TasksResource::class, TasksResource::ROUTE);
+        return parent::getMockBuilder($className)
+            ->disableAutoReturnValueGeneration();
     }
 }

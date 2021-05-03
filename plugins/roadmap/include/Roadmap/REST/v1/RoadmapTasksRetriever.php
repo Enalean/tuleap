@@ -133,7 +133,12 @@ final class RoadmapTasksRetriever
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($tracker);
         $this->checkTrackerHasTimeframeSemantic($semantic_timeframe, $user);
 
-        $progress_calculator = $this->progress_builder->getSemantic($tracker)->getComputationMethod();
+        $representation_builder = new TaskRepresentationBuilderForTracker(
+            $tracker,
+            $this->timeframe_builder,
+            $this->dependencies_retriever,
+            $this->progress_builder
+        );
 
         $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByTrackerId(
             $tracker->getId(),
@@ -155,26 +160,7 @@ final class RoadmapTasksRetriever
                 continue;
             }
 
-            $time_period = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
-            $start_date  = $time_period->getStartDate();
-            $start       = $start_date ? (new \DateTimeImmutable())->setTimestamp($start_date) : null;
-            $end_date    = $time_period->getEndDate();
-            $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
-
-            $progress_result = $progress_calculator->computeProgression($artifact, $user);
-
-            $representations[] = new TaskRepresentation(
-                $artifact->getId(),
-                $artifact->getXRef(),
-                $artifact->getUri(),
-                (string) $artifact->getTitle(),
-                $tracker->getColor()->getName(),
-                $progress_result->getValue(),
-                $progress_result->getErrorMessage(),
-                $start,
-                $end,
-                $this->dependencies_retriever->getDependencies($artifact),
-            );
+            $representations[] = $representation_builder->buildRepresentation($artifact, $user);
         }
 
         return new PaginatedCollectionOfTaskRepresentations($representations, $paginated_artifacts->getTotalSize());
