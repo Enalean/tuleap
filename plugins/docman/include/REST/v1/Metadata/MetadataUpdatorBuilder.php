@@ -47,7 +47,7 @@ class MetadataUpdatorBuilder
         $list_values_builder = new MetadataListOfValuesElementListBuilder(new \Docman_MetadataListOfValuesElementDao());
 
         return new MetadataUpdator(
-            new \Docman_ItemFactory(),
+            new \Docman_ItemFactory($project->getID()),
             new ItemStatusMapper(new Docman_SettingsBo($project->getID())),
             new HardcodedMetadataObsolescenceDateRetriever(
                 new HardcodedMetdataObsolescenceDateChecker(
