@@ -26,7 +26,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Widget;
@@ -167,7 +167,7 @@ class ProjectCrossTrackerSearch extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAsset($this->getAssets(), 'style')]);
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'cross-tracker-style')]);
     }
 
     private function getAssets(): IncludeAssets

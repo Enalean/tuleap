@@ -20,7 +20,7 @@
 
 .cross-tracker-writing-mode {
     padding: var(--tlp-medium-spacing);
-    border-bottom: 1px solid $tlp-ui-border-light;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
 }
 
 .cross-tracker-selector {
@@ -37,7 +37,7 @@
 }
 
 .cross-tracker-please-choose-option {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .cross-tracker-selected-tracker {

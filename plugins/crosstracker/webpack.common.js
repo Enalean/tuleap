@@ -22,12 +22,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 let entry_points = {
     "cross-tracker": "./scripts/cross-tracker/src/index.ts",
+    "cross-tracker-style": "./themes/cross-tracker.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {

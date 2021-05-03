@@ -29,7 +29,7 @@
 
 .cross-tracker-loader {
     height: 100px;
-    background: url('../../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url('../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
 .cross-tracker-artifacts-table {
@@ -38,13 +38,13 @@
 
 .cross-tracker-last-update-date,
 .cross-tracker-list-bind-user {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
 }
 
 .cross-tracker-list-bind-user {
     &:hover {
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 
     &:not(:last-child)::after {
@@ -62,7 +62,7 @@
     color: inherit;
 
     &:hover {
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 }
 
