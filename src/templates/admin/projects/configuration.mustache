@@ -47,7 +47,7 @@
                                     {{/ lastStatus }}</td>
                                     <td class="tlp-table-cell-actions siteadmin-project-webhook-actions">
                                         {{# lastStatus }}
-                                            <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="logs-modal-{{ id }}">
+                                            <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-target-modal-id="logs-modal-{{ id }}">
                                                 <i class="fa fa-list tlp-button-icon"></i> {{ button_show_logs }}
                                             </button>
                                             <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
