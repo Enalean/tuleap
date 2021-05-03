@@ -86,11 +86,11 @@ class DistributedSVN
         exit(1);
     }
 
-    public function backendSVN()
+    public function backendSVN(): void
     {
         $vars = $this->getVars();
 
-        $fpm           = SiteDeployFPM::buildForPHP73($this->logger, $vars->getApplicationUser(), true);
+        $fpm           = SiteDeployFPM::buildForPHP74($this->logger, $vars->getApplicationUser(), true);
         $nginx         = new Configuration\Nginx\BackendSVN($this->logger, $vars->getApplicationBaseDir(), '/etc/nginx', $vars->getServerName());
         $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), new LogrotateDeployer($this->logger));
 
