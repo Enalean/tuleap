@@ -28,9 +28,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import TodayIndicator from "./TodayIndicator.vue";
-import type { TimePeriod } from "../../type";
+import type { TimePeriod, TimeScale } from "../../type";
 
 @Component({
     components: { TodayIndicator },
@@ -47,21 +47,30 @@ export default class ScrollingArea extends Vue {
     @Prop({ required: true })
     readonly now!: Date;
 
+    @Prop({ required: true })
+    readonly timescale!: TimeScale;
+
     private observer: IntersectionObserver | null = null;
 
     mounted(): void {
-        if (this.$el.scrollTo && this.$refs.today.$el instanceof HTMLElement) {
-            this.$el.scrollTo({
-                top: 0,
-                left: this.$refs.today.$el.offsetLeft,
-                behavior: "smooth",
-            });
-        }
+        this.autoscrollToToday();
 
         this.observer = new IntersectionObserver(this.detectScrolling, {
             root: this.$el,
         });
         this.observer.observe(this.$refs.empty_pixel);
+    }
+
+    @Watch("timescale")
+    async autoscrollToToday(): Promise<void> {
+        await this.$nextTick();
+        if (this.$el.scrollTo && this.$refs.today.$el instanceof HTMLElement) {
+            this.$el.scrollTo({
+                top: 0,
+                left: Math.max(0, this.$refs.today.$el.offsetLeft - this.$el.clientWidth / 2),
+                behavior: "smooth",
+            });
+        }
     }
 
     detectScrolling(entries: IntersectionObserverEntry[]): void {

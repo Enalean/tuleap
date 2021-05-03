@@ -21,6 +21,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ScrollingArea from "./ScrollingArea.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
+import Vue from "vue";
 
 describe("ScrollingArea", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
@@ -40,11 +41,12 @@ describe("ScrollingArea", () => {
                     "en-US"
                 ),
                 now: new Date(),
+                timescale: "month",
             },
         });
     }
 
-    it("Auto scroll to today once mounted", () => {
+    it("Auto scroll to today once mounted", async () => {
         const observe = jest.fn();
         const mockIntersectionObserver = jest.fn();
         mockIntersectionObserver.mockReturnValue({
@@ -59,7 +61,36 @@ describe("ScrollingArea", () => {
 
         aScrollingArea();
 
-        expect(scrollTo).toHaveBeenCalledWith({
+        await Vue.nextTick();
+
+        expect(scrollTo).toHaveBeenNthCalledWith(1, {
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+        });
+    });
+
+    it("Auto scroll to today whenever the timescale is changed", async () => {
+        const observe = jest.fn();
+        const mockIntersectionObserver = jest.fn();
+        mockIntersectionObserver.mockReturnValue({
+            observe,
+        });
+        window.IntersectionObserver = mockIntersectionObserver;
+
+        Element.prototype.scrollTo = (): void => {
+            // mock implementation
+        };
+        const scrollTo = jest.spyOn(Element.prototype, "scrollTo");
+
+        const wrapper = aScrollingArea();
+        await Vue.nextTick();
+
+        wrapper.setProps({ timescale: "week" });
+        await Vue.nextTick();
+        await Vue.nextTick();
+
+        expect(scrollTo).toHaveBeenNthCalledWith(2, {
             top: 0,
             left: 0,
             behavior: "smooth",
