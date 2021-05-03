@@ -36,7 +36,7 @@ class ArtifactFieldSetFactory
     /**
      * The ArtifactType object.
      *
-     * @var Object{ArtifactType} $ArtifactType.
+     * @var ArtifactType $ArtifactType.
      */
     public $ArtifactType;
 
@@ -58,7 +58,7 @@ class ArtifactFieldSetFactory
     /**
      *
      *
-     *    @param    object $ArtifactType The ArtifactType object to which this ArtifactFieldSetFactory is associated
+     *    @param    ArtifactType $ArtifactType The ArtifactType object to which this ArtifactFieldSetFactory is associated
      *    @return bool success.
      */
     public function __construct($ArtifactType)
