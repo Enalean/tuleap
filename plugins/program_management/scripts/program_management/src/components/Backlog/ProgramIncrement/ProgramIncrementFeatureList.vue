@@ -24,8 +24,6 @@
         v-bind:data-can-plan="doesIncrementAcceptPlannableItems()"
         data-test="program-increment-feature-list"
         v-bind:data-program-increment-id="increment.id"
-        v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"
-        v-bind:data-artifact-link-field-id="program_increment_artifact_link_id"
     >
         <backlog-element-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
 
@@ -44,8 +42,6 @@
             v-bind:program_increment="increment"
             data-test="to-be-planned-elements"
             v-bind:data-program-increment-id="increment.id"
-            v-bind:data-planned-feature-ids="getFeaturesAlreadyLinked()"
-            v-bind:data-artifact-link-field-id="program_increment_artifact_link_id"
         />
 
         <error-displayer
@@ -64,11 +60,9 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementNotPlannable from "./ProgramIncrementNotPlannable.vue";
-import { Getter, namespace } from "vuex-class";
+import { Getter } from "vuex-class";
 import type { Feature } from "../../../type";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
-
-const configuration = namespace("configuration");
 
 @Component({
     components: {
@@ -92,8 +86,6 @@ export default class ProgramIncrementFeatureList extends Vue {
     readonly getFeaturesInProgramIncrement!: (increment_id: number) => Feature[];
     @Getter
     readonly isProgramIncrementAlreadyAdded!: (increment_id: number) => boolean;
-    @configuration.State
-    readonly program_increment_artifact_link_id!: number | null;
 
     async mounted(): Promise<void> {
         if (this.isProgramIncrementAlreadyAdded(this.increment.id)) {
@@ -120,14 +112,6 @@ export default class ProgramIncrementFeatureList extends Vue {
 
     public doesIncrementAcceptPlannableItems(): boolean {
         return this.increment.user_can_plan;
-    }
-
-    public getFeaturesAlreadyLinked(): string {
-        return this.features
-            .map((feature) => {
-                return feature.id;
-            })
-            .toString();
     }
 }
 </script>

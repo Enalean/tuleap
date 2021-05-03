@@ -80,8 +80,6 @@ describe("Actions", () => {
             const source_dropzone = createElement();
             const target_dropzone = createElement();
             target_dropzone.setAttribute("data-program-increment-id", "1");
-            target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
-            target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
 
             const handle_drop = {
                 dropped_element,
@@ -106,8 +104,6 @@ describe("Actions", () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
             dropped_element.setAttribute("data-program-increment-id", "1");
-            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
-            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
             const source_dropzone = createElement();
             const target_dropzone = createElement();
 
@@ -134,13 +130,9 @@ describe("Actions", () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
             dropped_element.setAttribute("data-program-increment-id", "1");
-            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
-            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
             const source_dropzone = createElement();
             const target_dropzone = createElement();
             target_dropzone.setAttribute("data-program-increment-id", "2");
-            target_dropzone.setAttribute("data-artifact-link-field-id", "3691");
-            target_dropzone.setAttribute("data-planned-feature-ids", "125,126");
 
             const handle_drop = {
                 dropped_element,
@@ -166,13 +158,9 @@ describe("Actions", () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
             dropped_element.setAttribute("data-program-increment-id", "1");
-            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
-            dropped_element.setAttribute("data-planned-feature-ids", "12,13");
             const source_dropzone = createElement();
             const target_dropzone = createElement();
             target_dropzone.setAttribute("data-program-increment-id", "1");
-            target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
-            target_dropzone.setAttribute("data-planned-feature-ids", "12,13");
 
             const handle_drop = {
                 dropped_element,

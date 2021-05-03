@@ -125,7 +125,6 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
                 (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE),
                 $plan_configuration->canCreateProgramIncrement(),
                 $plan_configuration->getProgramIncrementTrackerId(),
-                $plan_configuration->getArtifactLinkFieldId(),
                 $plan_configuration->getProgramIncrementLabel(),
                 $plan_configuration->getProgramIncrementSubLabel()
             )

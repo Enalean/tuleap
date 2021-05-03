@@ -31,7 +31,6 @@ export interface ConfigurationState {
     readonly user_locale: string;
     readonly can_create_program_increment: boolean;
     readonly tracker_program_increment_id: number;
-    readonly program_increment_artifact_link_id: number | null;
     readonly tracker_program_increment_label: string;
     readonly tracker_program_increment_sub_label: string;
 }
