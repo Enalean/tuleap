@@ -18,7 +18,8 @@
  */
 
 import { createModal } from "tlp";
-import { autocomplete_projects_for_select2 as autocomplete } from "../../../tuleap/autocomplete-for-select2.js";
+import { autocomplete_projects_for_select2 as autocomplete } from "../../../tuleap/autocomplete-for-select2";
+import { openTargetModalIdOnClick } from "../../../tuleap/modals/modal-opener";
 
 document.addEventListener("DOMContentLoaded", () => {
     initTOSCheckbox();
@@ -36,41 +37,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function initHierarchyModal() {
-    const button = document.getElementById("project-admin-details-hierarchy-delete-button");
-    if (!button) {
-        return;
-    }
-
-    const modal = createModal(document.getElementById(button.dataset.targetModalId));
-
-    button.addEventListener("click", () => {
-        modal.show();
-    });
+function initHierarchyModal(): void {
+    openTargetModalIdOnClick(document, "project-admin-details-hierarchy-delete-button");
 }
 
-function initTOSCheckbox() {
+function initTOSCheckbox(): void {
     const select_element = document.getElementById("project_visibility");
     if (!select_element) {
         return;
     }
     select_element.addEventListener("change", () => {
-        document.getElementById("term-of-service").required = true;
-        document.getElementById("term-of-service-usage").style.display = "block";
+        const term_service_element = document.getElementById("term-of-service");
+        if (!(term_service_element instanceof HTMLInputElement)) {
+            throw new Error("No term of service element");
+        }
+        const term_service_usage_element = document.getElementById("term-of-service-usage");
+        if (!term_service_usage_element) {
+            throw new Error("No term of service usage element");
+        }
+        term_service_element.required = true;
+        term_service_usage_element.style.display = "block";
     });
 }
 
-function initWarningRestrictedUsersRemovalOnProjectVisibilityChange() {
+function initWarningRestrictedUsersRemovalOnProjectVisibilityChange(): void {
     const warning_restricted_users_removal_modal_element = document.getElementById(
         "modal-warning-restricted-users-removal"
     );
     if (!warning_restricted_users_removal_modal_element) {
         return;
     }
-    const number_of_restricted_users_in_project = parseInt(
-        warning_restricted_users_removal_modal_element.dataset.nbRestrictedUsersInProject,
-        10
-    );
+    const nb_restricted_user =
+        warning_restricted_users_removal_modal_element.dataset.nbRestrictedUsersInProject;
+    if (!nb_restricted_user) {
+        throw new Error("No number of restricted user in project");
+    }
+    const number_of_restricted_users_in_project = parseInt(nb_restricted_user, 10);
     if (
         Number.isNaN(number_of_restricted_users_in_project) ||
         number_of_restricted_users_in_project <= 0
@@ -86,7 +88,7 @@ function initWarningRestrictedUsersRemovalOnProjectVisibilityChange() {
     }
 
     const project_info_form = document.getElementById("project_info_form");
-    if (!project_info_form) {
+    if (!(project_info_form instanceof HTMLFormElement)) {
         return;
     }
 
@@ -101,8 +103,8 @@ function initWarningRestrictedUsersRemovalOnProjectVisibilityChange() {
             return;
         }
 
-        const project_visibility_input = project_info_form.elements["project_visibility"];
-        if (!project_visibility_input) {
+        const project_visibility_input = project_info_form.elements.namedItem("project_visibility");
+        if (!(project_visibility_input instanceof HTMLSelectElement)) {
             return;
         }
 
@@ -112,7 +114,6 @@ function initWarningRestrictedUsersRemovalOnProjectVisibilityChange() {
         }
 
         event.preventDefault();
-
         const modal = createModal(warning_restricted_users_removal_modal_element, {
             destroy_on_hide: true,
         });
