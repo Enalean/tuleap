@@ -46,7 +46,8 @@ class PlaceHolderBuilder
         $row = $result->getRow();
 
         if (
-            $row['msg_to_requester'] === "member_request_delegation_msg_to_requester"
+            ! isset($row['msg_to_requester'])
+            || $row['msg_to_requester'] === "member_request_delegation_msg_to_requester"
             || $row['msg_to_requester'] === null
         ) {
             return $default_message;
