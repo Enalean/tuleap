@@ -19,7 +19,7 @@
 
 describe(`Planning view Implicit Backlog`, function () {
     before(function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
 
         cy.projectMemberLogin();
         cy.visitProjectService("implicit-backlog", "Agile Dashboard");

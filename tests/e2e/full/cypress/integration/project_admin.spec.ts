@@ -21,13 +21,13 @@ describe("Project admin", function () {
     let project_id: string;
     const project_admin_group_id = 4;
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.ProjectAdministratorLogin();
+        cy.clearSessionCookie();
+        cy.projectAdministratorLogin();
         cy.getProjectId("project-admin-test").as("project_id");
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     context("project basic administration", function () {
@@ -161,12 +161,12 @@ describe("Project admin", function () {
 
 context("Project member", function () {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.projectMemberLogin();
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it("should raise an error when user try to access to project admin page", function () {
@@ -179,13 +179,13 @@ context("Project member", function () {
 
 context("Restricted users", function () {
     it("should not be able to create new project", function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
 
         // enable restricted users
         cy.updatePlatformVisibilityAndAllowRestricted();
 
         // check restricted user can NOT create a project
-        cy.RestrictedRegularUserLogin();
+        cy.restrictedRegularUserLogin();
         cy.get("[data-test=new-button]").should("not.exist");
 
         cy.userLogout();
@@ -204,7 +204,7 @@ context("Restricted users", function () {
         cy.userLogout();
 
         // restricted users can now create projects
-        cy.RestrictedRegularUserLogin();
+        cy.restrictedRegularUserLogin();
         cy.get("[data-test=new-button]").click();
         cy.get("[data-test=create-new-item]").click();
 

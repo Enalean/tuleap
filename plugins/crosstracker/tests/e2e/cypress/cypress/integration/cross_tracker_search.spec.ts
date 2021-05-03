@@ -61,12 +61,12 @@ function clearCodeMirror(): void {
 
 describe("Cross tracker search", function () {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.projectMemberLogin();
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it("User should be able to set trackers from widgets", function () {

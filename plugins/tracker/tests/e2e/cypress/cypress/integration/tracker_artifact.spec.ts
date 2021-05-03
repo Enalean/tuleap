@@ -36,7 +36,7 @@ describe("Tracker artifacts", function () {
 
     describe("Site admin specific settings for move/deletion", function () {
         it("must be able to set the artifact deletion setting", function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.platformAdminLogin();
 
             cy.get("[data-test=platform-administration-link]").click();
@@ -50,13 +50,13 @@ describe("Tracker artifacts", function () {
 
     describe("Tracker administration", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("tracker-artifact").as("project_id");
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
             cy.visitProjectService("tracker-artifact", "Trackers");
         });
 
@@ -101,12 +101,12 @@ describe("Tracker artifacts", function () {
 
     describe("Tracker regular users", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         describe("Artifact manipulation", function () {
@@ -173,7 +173,7 @@ describe("Tracker artifacts", function () {
 
     describe("Tracker dedicated permissions", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
         });
 
         it("should raise an error when user try to access to plugin Tracker admin page", function () {
@@ -187,7 +187,7 @@ describe("Tracker artifacts", function () {
         });
 
         it("tracker admin must be able to delegate tracker administration privilege", function () {
-            cy.ProjectAdministratorLogin();
+            cy.projectAdministratorLogin();
             cy.visitProjectService("tracker-artifact", "Trackers");
 
             cy.get("[data-test=tracker-link-bug]").click();
@@ -248,7 +248,7 @@ describe("Tracker artifacts", function () {
 
     describe("Concurrent artifact edition", () => {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
         });
 

@@ -23,12 +23,12 @@ function assertFeedbackContainsMessage(expected_feedback_message: string): void 
 
 describe("User preferences", () => {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.heisenbergLogin();
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     describe("in the [account] Tab", () => {

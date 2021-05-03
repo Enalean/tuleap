@@ -19,12 +19,12 @@
 
 describe("Project Milestones Widget", function () {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
     });
 
     context("Project Dashboard", function () {
         it("Add Project Milestones on a dashboard project", () => {
-            cy.ProjectAdministratorLogin();
+            cy.projectAdministratorLogin();
             cy.visit("/projects/projectmilestones-dashboard");
 
             cy.get("[data-test=dashboard-configuration-button]").click();

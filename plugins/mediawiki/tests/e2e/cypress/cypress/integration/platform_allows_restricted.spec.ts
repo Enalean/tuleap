@@ -21,7 +21,7 @@ describe("Platform allows restricted", function () {
     it("project administrator can define permission access level of mediawiki", function () {
         cy.updatePlatformVisibilityAndAllowRestricted();
 
-        cy.ProjectAdministratorLogin();
+        cy.projectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
 
@@ -32,12 +32,12 @@ describe("Platform allows restricted", function () {
     });
 
     it("given project is public only restricted project members can access it", function () {
-        cy.RestrictedMemberLogin();
+        cy.restrictedMemberLogin();
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
 
         cy.userLogout();
 
-        cy.RestrictedRegularUserLogin();
+        cy.restrictedRegularUserLogin();
         //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/", {
             failOnStatusCode: false,
@@ -49,7 +49,7 @@ describe("Platform allows restricted", function () {
     });
 
     it("given project is switched from public to private, permissions are respected", function () {
-        cy.ProjectAdministratorLogin();
+        cy.projectAdministratorLogin();
 
         cy.visitProjectService("platform-allows-restricted", "Admin");
         cy.contains("Details").click();

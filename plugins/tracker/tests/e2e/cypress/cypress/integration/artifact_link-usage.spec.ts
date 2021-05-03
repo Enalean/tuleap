@@ -21,7 +21,7 @@ describe("Artifact link usage", () => {
     let project_id: string;
     describe("Site administrator", () => {
         before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.platformAdminLogin();
         });
 
@@ -55,13 +55,13 @@ describe("Artifact link usage", () => {
 
     describe("Tracker administration", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("tracker-artifact").as("project_id");
         });
 
         beforeEach(function () {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("can enable/disable artifact links", function () {

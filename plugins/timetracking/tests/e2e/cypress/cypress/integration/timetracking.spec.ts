@@ -20,7 +20,7 @@
 
 describe("Time tracking", function () {
     it("Project administrator must be able to configure timetracking", function () {
-        cy.ProjectAdministratorLogin();
+        cy.projectAdministratorLogin();
 
         cy.visitProjectService("timetracking", "Trackers");
         cy.get("[data-test=tracker-link-issue]").click();
@@ -124,7 +124,7 @@ describe("Time tracking", function () {
     });
 
     it("manager should be able to track time of his subordinates", function () {
-        cy.ProjectAdministratorLogin();
+        cy.projectAdministratorLogin();
         cy.visit("/my");
 
         cy.get("[data-test=dashboard-add-widget-button]").click({ force: true });

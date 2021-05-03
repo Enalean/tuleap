@@ -32,8 +32,8 @@ describe(`Tracker Workflow`, () => {
     const INITIAL_EFFORT_FIELD_LABEL = "Initial Effort";
 
     before(function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.ProjectAdministratorLogin();
+        cy.clearSessionCookie();
+        cy.projectAdministratorLogin();
         cy.getProjectId("tracker-project").as("project_id");
         getTrackerIdFromTrackerListPage()
             .as("workflow_tracker_id")
@@ -43,7 +43,7 @@ describe(`Tracker Workflow`, () => {
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it(`has an empty state`, function () {

@@ -28,13 +28,13 @@ function disableSpecificErrorThrownByCkeditor(): void {
 
 describe("Document new UI", () => {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         cy.projectMemberLogin();
         cy.visitProjectService("document-project", "Documents");
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
     });
 
     it("has an empty state", () => {

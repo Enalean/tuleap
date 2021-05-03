@@ -19,8 +19,8 @@
 
 describe("Kanban for the Agile Dashboard service", () => {
     it(`Project administrator can start Kanban`, function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.ProjectAdministratorLogin();
+        cy.clearSessionCookie();
+        cy.projectAdministratorLogin();
         cy.visitProjectService("kanban-project", "Agile Dashboard");
 
         cy.get("[data-test=start-kanban]").click();
@@ -41,13 +41,13 @@ describe("Kanban for the Agile Dashboard service", () => {
     });
     context("As Project Admin", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.visit(this.kanban_url);
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it(`can rename the kanban`, function () {
@@ -188,13 +188,13 @@ describe("Kanban for the Agile Dashboard service", () => {
     });
     context("As Project member", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
             cy.visit(this.kanban_url);
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it(`I can create cards`, function () {

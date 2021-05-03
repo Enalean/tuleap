@@ -24,11 +24,14 @@ declare global {
         // Be consistent with Cypress declaration
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
-            ProjectAdministratorLogin(): void;
+            clearSessionCookie(): void;
+            preserveSessionCookies(): void;
+            projectAdministratorLogin(): void;
+            secondProjectAdministratorLogin(): void;
             projectMemberLogin(): void;
             platformAdminLogin(): void;
-            RestrictedMemberLogin(): void;
-            RestrictedRegularUserLogin(): void;
+            restrictedMemberLogin(): void;
+            restrictedRegularUserLogin(): void;
             heisenbergLogin(): void;
             userLogout(): void;
             updatePlatformVisibilityAndAllowRestricted(): void;
@@ -47,7 +50,15 @@ declare global {
     }
 }
 
-Cypress.Commands.add("ProjectAdministratorLogin", () => {
+Cypress.Commands.add("clearSessionCookie", () => {
+    cy.clearCookie("__Host-TULEAP_session_hash");
+});
+
+Cypress.Commands.add("preserveSessionCookies", () => {
+    Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+});
+
+Cypress.Commands.add("projectAdministratorLogin", () => {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type("ProjectAdministrator");
     cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
@@ -66,13 +77,13 @@ Cypress.Commands.add("platformAdminLogin", () => {
     cy.get("[data-test=form_pw]").type("welcome0{enter}");
 });
 
-Cypress.Commands.add("RestrictedMemberLogin", () => {
+Cypress.Commands.add("restrictedMemberLogin", () => {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type("RestrictedMember");
     cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
-Cypress.Commands.add("RestrictedRegularUserLogin", () => {
+Cypress.Commands.add("restrictedRegularUserLogin", () => {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type("RestrictedRegularUser");
     cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");

@@ -21,12 +21,12 @@ describe("TTM campaign", () => {
     let ttm_project_name: string, ttm_project_public_name: string, now: number;
 
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
         now = Date.now();
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        cy.preserveSessionCookies();
 
         ttm_project_name = "test-ttm-" + now;
         ttm_project_public_name = "Test TTM " + now;
@@ -34,7 +34,7 @@ describe("TTM campaign", () => {
 
     context("As project administrator", () => {
         before(() => {
-            cy.ProjectAdministratorLogin();
+            cy.projectAdministratorLogin();
         });
 
         after(() => {

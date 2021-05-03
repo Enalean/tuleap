@@ -22,13 +22,13 @@ describe("Docman", function () {
 
     context("Project administrators", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.ProjectAdministratorLogin();
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
             cy.getProjectId("docman-project").as("docman_project_id");
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         it("can access to admin section", function () {
@@ -204,14 +204,14 @@ describe("Docman", function () {
 
     context("Project members", function () {
         before(function () {
-            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.clearSessionCookie();
             cy.projectMemberLogin();
 
             cy.getProjectId("docman-project").as("docman_project_id");
         });
 
         beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+            cy.preserveSessionCookies();
         });
 
         context("docman permissions", function () {
