@@ -32,7 +32,6 @@ use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
-use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class TagPushWebhookDeleteActionTest extends TestCase
 {
@@ -68,7 +67,6 @@ class TagPushWebhookDeleteActionTest extends TestCase
             $this->tag_info_dao,
             $this->cross_reference_manager,
             new NullLogger(),
-            new DBTransactionExecutorPassthrough()
         );
     }
 
