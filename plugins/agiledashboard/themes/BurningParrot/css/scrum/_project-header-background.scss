@@ -23,7 +23,7 @@
 .project-with-background {
     .agiledashboard-header-title,
     .agiledashboard-header-title small {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
 
         .tlp-dropdown-menu-item {
             text-shadow: initial;
@@ -37,7 +37,6 @@ body {
     @each $element-with-project-background in $elements-with-project-background {
         @include background.apply-background(
             $element-with-project-background,
-            $tlp-theme-sidebar-background-color,
             $sidebar-expanded-width,
             $sidebar-collapsed-width,
         );

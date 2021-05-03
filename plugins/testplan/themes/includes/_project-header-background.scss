@@ -23,7 +23,7 @@
 .project-with-background {
     .testplan-root-title,
     .testplan-root-title small {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
 
         .tlp-dropdown-menu-item {
             text-shadow: initial;
@@ -34,7 +34,6 @@
 body {
     @include background.apply-background(
         '.testplan-root-title',
-        $tlp-theme-sidebar-background-color,
         $sidebar-expanded-width,
         $sidebar-collapsed-width,
     );
