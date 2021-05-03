@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TasksState } from "./tasks/type";
+import type { Task } from "../../type";
 
-export interface State {
-    readonly locale_bcp47: string;
-}
-
-export interface RootState extends State {
-    readonly tasks: TasksState;
+export interface TasksState {
+    tasks: Task[];
+    is_loading: boolean;
+    should_display_empty_state: boolean;
+    should_display_error_state: boolean;
+    error_message: string;
 }

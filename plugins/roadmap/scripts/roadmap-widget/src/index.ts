@@ -26,7 +26,7 @@ import {
 } from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
 import { createStore } from "./store";
-import type { State } from "./store/type";
+import type { RootState } from "./store/type";
 import { toBCP47 } from "./helpers/locale-for-intl";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -61,9 +61,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             $gettextInterpolate: Vue.prototype.$gettextInterpolate,
         });
 
-        const initial_root_state: State = {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const initial_root_state: RootState = {
             locale_bcp47: toBCP47(document.body.dataset.userLocale || "en_US"),
-        };
+        } as RootState;
 
         new AppComponent({
             store: createStore(initial_root_state),

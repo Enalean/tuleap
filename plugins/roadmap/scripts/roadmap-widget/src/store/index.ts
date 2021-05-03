@@ -19,11 +19,15 @@
 
 import type { StoreOptions } from "vuex";
 import { Store } from "vuex";
-import type { State } from "./type";
+import type { RootState } from "./type";
+import { createTaskModule } from "./tasks";
 
-export function createStore(initial_root_state: State): Store<State> {
-    const store_options: StoreOptions<State> = {
+export function createStore(initial_root_state: RootState): Store<RootState> {
+    const store_options: StoreOptions<RootState> = {
         state: initial_root_state,
+        modules: {
+            tasks: createTaskModule(),
+        },
     };
 
     return new Store(store_options);
