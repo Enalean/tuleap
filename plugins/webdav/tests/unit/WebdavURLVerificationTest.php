@@ -27,6 +27,7 @@ use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
+use Webdav_URLVerification;
 
 class WebdavURLVerificationTest extends TestCase
 {
@@ -48,7 +49,7 @@ class WebdavURLVerificationTest extends TestCase
         parent::setUp();
 
         $this->request               = \Mockery::spy(\HTTPRequest::class);
-        $this->webdavURLVerification = \Mockery::mock(\Webdav_URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->webdavURLVerification = \Mockery::mock(Webdav_URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function testAssertValidUrlHTTPAndHTTPSHostNotAvailable(): void
@@ -152,5 +153,10 @@ class WebdavURLVerificationTest extends TestCase
         $this->webdavURLVerification->shouldReceive('isException')->once()->andReturns(true);
 
         $this->webdavURLVerification->assertValidUrl($server, $this->request);
+    }
+
+    public function testAssumesTheRequestIsNotForTheWebdavHostWhenNoHostHeaderIsProvided(): void
+    {
+        self::assertFalse(Webdav_URLVerification::isRequestForDedicatedWebdavHost([], 'webdav.example.com'));
     }
 }
