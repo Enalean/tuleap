@@ -18,20 +18,32 @@
  *
  */
 
-.comparison-comment {
-    color: $tlp-ui-dimmed;
-    white-space: pre-wrap;
+.statistics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    color: var(--tlp-ui-white);
 }
 
-.comparison-actions {
-    display: inline-block;
+%statistic {
+    display: flex;
+    width: 12em;
+    min-width: 12em;
+    height: 7em;
+    margin-right: var(--tlp-medium-spacing);
+    margin-bottom: var(--tlp-medium-spacing);
+    padding-right: var(--tlp-medium-spacing);
+    padding-left: var(--tlp-medium-spacing);
+    border-radius: .2em;
 }
 
-.baseline-comparison-separator {
-    margin: 0 var(--tlp-medium-spacing);
-    font-size: 22px;
+.statistic-label {
+    margin-top: auto;
+    margin-bottom: auto;
+    color: var(--tlp-ui-white);
 }
 
-h1 > .statistics-skeleton {
-    width: 2em;
+.statistic-label-title {
+    display: block;
+    font-size: 45%;
 }

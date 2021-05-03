@@ -31,20 +31,20 @@
 
 .comparison-statistic-added-artifacts {
     @extend %statistic;
-    background-color: $tlp-ui-success;
+    background-color: var(--tlp-ui-success);
 }
 
 .comparison-statistic-deleted-artifacts {
     @extend %statistic;
-    background-color: $tlp-ui-danger;
+    background-color: var(--tlp-ui-danger);
 }
 
 .comparison-statistic-modified-artifacts {
     @extend %statistic;
-    background-color: $tlp-ui-warning;
+    background-color: var(--tlp-ui-warning);
 }
 
 .comparison-statistic-initial-effort {
     @extend %statistic;
-    background-color: $tlp-ui-info;
+    background-color: var(--tlp-ui-info);
 }

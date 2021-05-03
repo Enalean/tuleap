@@ -25,12 +25,8 @@ const assets_public_path = "/assets/baseline/";
 
 const entry_points = {
     baseline: "./scripts/baseline/index.js",
+    "baseline-style": "./themes/baseline.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`baseline-${color}`] = `./themes/BurningParrot/baseline-${color}.scss`;
-}
 
 module.exports = [
     {

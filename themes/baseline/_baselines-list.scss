@@ -39,6 +39,6 @@
 
 .baselines-table-column-snapshot-date,
 .baselines-table-column-author {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
 }

@@ -18,21 +18,23 @@
  *
  */
 
+@use '../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 $artifact-body-padding: var(--tlp-medium-spacing);
 
 %comparison-removed {
     padding-right: var(--tlp-medium-spacing);
     padding-left: var(--tlp-medium-spacing);
-    background-color: $tlp-ui-danger;
-    color: $tlp-ui-white;
+    background-color: var(--tlp-ui-danger);
+    color: var(--tlp-ui-white);
     text-decoration: line-through;
 }
 
 %comparison-added {
     padding-right: var(--tlp-medium-spacing);
     padding-left: var(--tlp-medium-spacing);
-    background-color: $tlp-ui-success;
-    color: $tlp-ui-white;
+    background-color: var(--tlp-ui-success);
+    color: var(--tlp-ui-white);
 }
 
 .comparison-content-artifact-ol {
@@ -49,8 +51,8 @@ $artifact-body-padding: var(--tlp-medium-spacing);
         content: counters(artifact-counter, '.');
         margin-right: .3rem;
         padding-right: .5rem;
-        border-right: 1px solid $tlp-swatch-firemist-silver;
-        color: $tlp-theme-color;
+        border-right: 1px solid swatch-colors.$tlp-swatch-firemist-silver;
+        color: var(--tlp-theme-color);
         font-size: 1.3rem;
     }
 }
@@ -61,44 +63,44 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 
 .comparison-content-artifact-added {
     &::before {
-        color: $tlp-ui-success !important;
+        color: var(--tlp-ui-success) !important;
     }
 
     .baseline-artifact-badge {
-        border-color: $tlp-ui-success;
-        color: $tlp-ui-success;
+        border-color: var(--tlp-ui-success);
+        color: var(--tlp-ui-success);
     }
 
     .baseline-artifact-title {
-        background-color: $tlp-ui-success;
-        color: $tlp-ui-white;
+        background-color: var(--tlp-ui-success);
+        color: var(--tlp-ui-white);
     }
 }
 
 .comparison-content-artifact-removed {
     &::before {
-        color: $tlp-ui-danger !important;
+        color: var(--tlp-ui-danger) !important;
     }
 
     .baseline-artifact-badge {
-        border-color: $tlp-ui-danger;
-        color: $tlp-ui-danger;
+        border-color: var(--tlp-ui-danger);
+        color: var(--tlp-ui-danger);
     }
 
     .baseline-artifact-title {
-        background-color: $tlp-ui-danger;
-        color: $tlp-ui-white;
+        background-color: var(--tlp-ui-danger);
+        color: var(--tlp-ui-white);
         text-decoration: line-through;
     }
 }
 
 .comparison-content-artifact-error-message {
-    color: $tlp-swatch-red-wine-border;
+    color: swatch-colors.$tlp-swatch-red-wine-border;
 }
 
 .comparison-content-artifact-header {
     display: initial;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 1.3rem;
 }
 
@@ -113,7 +115,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 .comparison-content-artifact-body-field-label {
     margin-top: var(--tlp-medium-spacing);
     margin-bottom: var(--tlp-small-spacing);
-    color: $tlp-swatch-firemist-silver;
+    color: swatch-colors.$tlp-swatch-firemist-silver;
 }
 
 .comparison-content-field-value-reference {
@@ -125,12 +127,12 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 }
 
 ins {
-    background-color: $tlp-ui-success;
-    color: $tlp-ui-white;
+    background-color: var(--tlp-ui-success);
+    color: var(--tlp-ui-white);
 }
 
 del {
-    background-color: $tlp-ui-danger;
-    color: $tlp-ui-white;
+    background-color: var(--tlp-ui-danger);
+    color: var(--tlp-ui-white);
     text-decoration: line-through;
 }
