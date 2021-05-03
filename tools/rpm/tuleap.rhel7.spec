@@ -59,7 +59,7 @@ Requires: php73-php-pecl-zip
 Requires: php74-php-pecl-zip
 Requires: rh-mysql57-mysql
 
-Requires: perl-DBI, perl-DBD-MySQL, sudo
+Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, sudo
 Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
 
 # Unit file
