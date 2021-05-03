@@ -66,6 +66,7 @@ use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookCreateAction;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDeleteAction;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
@@ -290,25 +291,27 @@ class gitlabPlugin extends Plugin
                     new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
                 ),
                 new TagPushWebhookActionProcessor(
-                    new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
-                    new GitlabTagRetriever(
-                        $gitlab_api_client
+                    new TagPushWebhookCreateAction(
+                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        new GitlabTagRetriever(
+                            $gitlab_api_client
+                        ),
+                        new WebhookTuleapReferencesParser(),
+                        $tuleap_reference_retriever,
+                        $gitlab_repository_project_retriever,
+                        ReferenceManager::instance(),
+                        new TagInfoDao(),
+                        $logger
                     ),
-                    new WebhookTuleapReferencesParser(),
-                    $tuleap_reference_retriever,
-                    $gitlab_repository_project_retriever,
-                    ReferenceManager::instance(),
-                    new TagInfoDao(),
                     new TagPushWebhookDeleteAction(
                         $gitlab_repository_project_retriever,
                         new TagInfoDao(),
                         new CrossReferenceManager(),
-                        $logger,
-                        new DBTransactionExecutorWithConnection(
-                            DBFactory::getMainTuleapDBConnection()
-                        )
+                        $logger
                     ),
-                    $logger,
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
+                    )
                 ),
                 $logger,
             ),

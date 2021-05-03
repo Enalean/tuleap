@@ -23,7 +23,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use CrossReferenceManager;
 use Psr\Log\LoggerInterface;
-use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
@@ -46,49 +45,41 @@ class TagPushWebhookDeleteAction
      * @var CrossReferenceManager
      */
     private $cross_reference_manager;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $db_transaction_executor;
 
     public function __construct(
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         TagInfoDao $tag_info_dao,
         CrossReferenceManager $cross_reference_manager,
-        LoggerInterface $logger,
-        DBTransactionExecutor $db_transaction_executor
+        LoggerInterface $logger
     ) {
         $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
         $this->tag_info_dao                        = $tag_info_dao;
         $this->cross_reference_manager             = $cross_reference_manager;
         $this->logger                              = $logger;
-        $this->db_transaction_executor             = $db_transaction_executor;
     }
 
     public function deleteTagReferences(GitlabRepository $gitlab_repository, TagPushWebhookData $tag_push_webhook_data): void
     {
-        $this->db_transaction_executor->execute(function () use ($gitlab_repository, $tag_push_webhook_data) {
-            $tag_name = $tag_push_webhook_data->getTagName();
+        $tag_name = $tag_push_webhook_data->getTagName();
 
-            $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
-                $gitlab_repository
+        $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
+            $gitlab_repository
+        );
+
+        $this->logger->info("Tag $tag_name has been deleted, all references will be removed from database");
+        foreach ($projects as $project) {
+            $this->cross_reference_manager->deleteEntity(
+                $gitlab_repository->getName() . '/' . $tag_name,
+                GitlabTagReference::NATURE_NAME,
+                (int) $project->getID()
             );
+        }
 
-            $this->logger->info("Tag $tag_name has been deleted, all references will be removed from database");
-            foreach ($projects as $project) {
-                $this->cross_reference_manager->deleteEntity(
-                    $gitlab_repository->getName() . '/' . $tag_name,
-                    GitlabTagReference::NATURE_NAME,
-                    (int) $project->getID()
-                );
-            }
+        $this->tag_info_dao->deleteTagInGitlabRepository(
+            $gitlab_repository->getId(),
+            $tag_name
+        );
 
-            $this->tag_info_dao->deleteTagInGitlabRepository(
-                $gitlab_repository->getId(),
-                $tag_name
-            );
-
-            $this->logger->info("Tag data for $tag_name deleted in database");
-        });
+        $this->logger->info("Tag data for $tag_name deleted in database");
     }
 }
