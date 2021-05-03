@@ -859,7 +859,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html  = '';
         $html .= '<table';
         if (! $only_one_column) {
-            $html .= ' id="tracker_report_table' . $id_suffix . '"  width="100%"';
+            $html .= ' id="tracker_report_table' . $id_suffix . '"  width="100%" data-test="artifact-report-table"';
         }
 
         $classnames = '';

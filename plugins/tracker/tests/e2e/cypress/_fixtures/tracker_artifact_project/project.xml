@@ -745,7 +745,7 @@
             <submitted_on format="ISO8601">2021-02-03T16:24:55+01:00</submitted_on>
             <comments/>
             <field_change type="string" field_name="title">
-              <value><![CDATA[test]]></value>
+              <value><![CDATA[test A]]></value>
             </field_change>
             <field_change field_name="links" type="art_link">
               <value nature="fixed_in"><![CDATA[1923]]></value>
@@ -758,7 +758,7 @@
             <submitted_on format="ISO8601">2021-02-03T16:25:09+01:00</submitted_on>
             <comments/>
             <field_change type="string" field_name="title">
-              <value><![CDATA[test]]></value>
+              <value><![CDATA[test B]]></value>
             </field_change>
             <field_change field_name="links" type="art_link">
               <value nature="fixed_in"><![CDATA[1922]]></value>
@@ -772,4 +772,13 @@
   <natures>
     <nature><![CDATA[_is_child]]></nature>
   </natures>
+  <dashboards>
+    <dashboard name="Project Dashboard">
+      <line>
+        <column>
+          <widget name="projectheartbeat" />
+        </column>
+      </line>
+    </dashboard>
+  </dashboards>
 </project>
