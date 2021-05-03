@@ -38,10 +38,10 @@ use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Campaign\CampaignDao;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
-use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\Campaign\CloseCampaignController;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\OpenCampaignController;
+use Tuleap\TestManagement\Campaign\StatusUpdater;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
@@ -51,8 +51,6 @@ use Tuleap\TestManagement\LegacyRoutingController;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
-use Tuleap\TestManagement\REST\v1\CampaignArtifactUpdateFieldValuesBuilder;
-use Tuleap\TestManagement\REST\v1\CampaignUpdater;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
@@ -429,18 +427,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
                 new CampaignDao(),
                 new KeyFactory()
             ),
-            new CampaignUpdater(
-                new Tracker_REST_Artifact_ArtifactUpdater(
-                    new Tracker_REST_Artifact_ArtifactValidator(
-                        Tracker_FormElementFactory::instance()
-                    )
-                ),
-                new CampaignSaver(new CampaignDao(), new KeyFactory()),
-                new CampaignArtifactUpdateFieldValuesBuilder(
-                    Tracker_FormElementFactory::instance(),
-                    new StatusValueRetriever(
-                        Tracker_Semantic_StatusFactory::instance()
-                    )
+            new StatusUpdater(
+                new StatusValueRetriever(
+                    Tracker_Semantic_StatusFactory::instance()
                 )
             )
         );
@@ -454,18 +443,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
                 new CampaignDao(),
                 new KeyFactory()
             ),
-            new CampaignUpdater(
-                new Tracker_REST_Artifact_ArtifactUpdater(
-                    new Tracker_REST_Artifact_ArtifactValidator(
-                        Tracker_FormElementFactory::instance()
-                    )
-                ),
-                new CampaignSaver(new CampaignDao(), new KeyFactory()),
-                new CampaignArtifactUpdateFieldValuesBuilder(
-                    Tracker_FormElementFactory::instance(),
-                    new StatusValueRetriever(
-                        Tracker_Semantic_StatusFactory::instance()
-                    )
+            new StatusUpdater(
+                new StatusValueRetriever(
+                    Tracker_Semantic_StatusFactory::instance()
                 )
             )
         );
