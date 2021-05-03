@@ -72,14 +72,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         10
     );
 
-    let program_increment_artifact_link_id = null;
-    if (vue_mount_point.dataset.programIncrementArtifactLinkId) {
-        program_increment_artifact_link_id = parseInt(
-            vue_mount_point.dataset.programIncrementArtifactLinkId,
-            10
-        );
-    }
-
     if (!vue_mount_point.dataset.programIncrementLabel) {
         throw new Error("Missing program_increment_label dataset");
     }
@@ -105,7 +97,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         user_locale: locale.replace("_", "-"),
         can_create_program_increment,
         tracker_program_increment_id: program_increment_tracker_id,
-        program_increment_artifact_link_id,
         tracker_program_increment_label: program_increment_label,
         tracker_program_increment_sub_label: program_increment_sub_label,
     };

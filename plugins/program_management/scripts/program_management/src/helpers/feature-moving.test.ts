@@ -117,7 +117,6 @@ describe("FeatureMoving", () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "125");
             const target_dropzone = createElement();
-            target_dropzone.setAttribute("data-artifact-link-field-id", "1234");
 
             const patch = jest.spyOn(tlp, "patch");
             mockFetchError(patch, {
@@ -373,7 +372,6 @@ describe("FeatureMoving", () => {
         it(`When an error is thrown moving in the same program increment, Then error is stored`, async () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "12");
-            dropped_element.setAttribute("data-artifact-link-field-id", "1234");
             const target_dropzone = createElement();
 
             const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
