@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -54,7 +55,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->once()->with($user, 404)->andReturnNull();
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
 
         self::assertFalse($this->verifier->isVisibleFeature(404, $user, $program));
     }
@@ -67,7 +68,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $program = new Program(404);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404);
 
         self::assertFalse($this->verifier->isVisibleFeature(741, $user, $program));
     }
@@ -80,7 +81,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $program = new Program(110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
 
         self::assertTrue($this->verifier->isVisibleFeature(741, $user, $program));
     }

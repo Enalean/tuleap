@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 
@@ -34,7 +34,7 @@ interface BuildProgram
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function buildExistingProgramProject(int $id, \PFUser $user): Program;
+    public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier;
 
     /**
      * @throws ProjectIsNotAProgramException
@@ -46,4 +46,9 @@ interface BuildProgram
      * @throws ProgramAccessException
      */
     public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram;
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     */
+    public function ensureProgramIsAProject(int $project_id): void;
 }

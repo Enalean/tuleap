@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface BuildProgramIncrementTrackerConfiguration
 {
-    public function build(\PFUser $user, Program $project): ProgramIncrementTrackerConfiguration;
+    public function build(\PFUser $user, ProgramIdentifier $project): ProgramIncrementTrackerConfiguration;
 }

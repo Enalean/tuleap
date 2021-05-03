@@ -53,7 +53,7 @@ final class ConfigurationChecker
      */
     public function getProgramIncrementTracker(\PFUser $user, Project $project): ?ProgramTracker
     {
-        $program = $this->plan_program_builder->buildProgramTrackerFromTeamProject($project, $user);
+        $program = $this->plan_program_builder->buildProgramIdentifierFromTeamProject($project, $user);
 
         if (! $program) {
             return null;

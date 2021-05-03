@@ -23,20 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 
 final class ProgramSearcherTest extends TestCase
 {
     public function testItReturnsAProgramFromAProgramIncrementID(): void
     {
-        $searcher = new ProgramSearcher($this->getStubDao());
+        $searcher = new ProgramSearcher($this->getStubDao(), BuildProgramStub::stubValidProgram());
         $result   = $searcher->getProgramOfProgramIncrement(42);
 
-        self::assertEquals(new Program(101), $result);
+        self::assertEquals(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101), $result);
     }
 
     public function testItThrowsIfProgramWasNotFound(): void
     {
-        $searcher = new ProgramSearcher($this->getStubDao(true));
+        $searcher = new ProgramSearcher($this->getStubDao(true), BuildProgramStub::stubValidProgram());
         $this->expectException(ProgramNotFoundException::class);
 
         $searcher->getProgramOfProgramIncrement(404);

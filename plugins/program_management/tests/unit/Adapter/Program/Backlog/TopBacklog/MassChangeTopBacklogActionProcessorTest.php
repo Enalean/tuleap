@@ -29,7 +29,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MassChangeTopBacklogActionProcessorTest extends TestCase
@@ -68,14 +69,14 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
 
     public function testCanProcessMassAdditionToTheTopBacklog(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102));
         $source_information = new MassChangeTopBacklogSourceInformation(102, [400, 401], UserTestBuilder::aUser()->build(), 'add');
 
         $expected_top_backlog_change = new TopBacklogChange([400, 401], [], false, null);
 
         $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')
             ->withArgs(function (
-                Program $program,
+                ProgramIdentifier $program,
                 TopBacklogChange $top_backlog_change,
                 \PFUser $user
             ) use (
@@ -90,14 +91,14 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
 
     public function testCanProcessMassDeletionToTheTopBacklog(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102));
         $source_information = new MassChangeTopBacklogSourceInformation(102, [402, 403], UserTestBuilder::aUser()->build(), 'remove');
 
         $expected_top_backlog_change = new TopBacklogChange([], [402, 403], false, null);
 
         $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')
             ->withArgs(function (
-                Program $program,
+                ProgramIdentifier $program,
                 TopBacklogChange $top_backlog_change,
                 \PFUser $user
             ) use (
@@ -112,7 +113,7 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
 
     public function testDoesNothingWhenProcessingAMassChangeWithNoTopBacklogModification(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(102));
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102));
         $source_information = new MassChangeTopBacklogSourceInformation(102, [405], UserTestBuilder::aUser()->build(), 'unchanged');
 
         $this->top_backlog_change_processor->shouldNotReceive('processTopBacklogChangeForAProgram');

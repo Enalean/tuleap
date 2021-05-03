@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
@@ -89,7 +89,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     }
 
     public function processTopBacklogChangeForAProgram(
-        Program $program,
+        ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,
         \PFUser $user
     ): void {
@@ -161,7 +161,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     private function filterFeaturesThatCanBeManipulated(
         array $features_id,
         \PFUser $user,
-        Program $program,
+        ProgramIdentifier $program,
         bool $ignore_feature_cannot_be_retrieved
     ): array {
         $filtered_features = [];

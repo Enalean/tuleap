@@ -26,8 +26,9 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessProjectNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanProgramAdapterTest extends TestCase
@@ -60,7 +61,8 @@ final class PlanProgramAdapterTest extends TestCase
         $this->adapter = new PlanProgramAdapter(
             $this->project_manager,
             $this->url_verification,
-            $this->team_store
+            $this->team_store,
+            BuildProgramStub::stubValidProgram()
         );
     }
 
@@ -78,7 +80,7 @@ final class PlanProgramAdapterTest extends TestCase
         $this->url_verification->shouldReceive('userCanAccessProject')->once()
             ->andThrow(Project_AccessProjectNotFoundException::class);
         $this->expectException(UserCanNotAccessToProgramException::class);
-        $this->adapter->buildProgramTrackerFromTeamProject($project, $user);
+        $this->adapter->buildProgramIdentifierFromTeamProject($project, $user);
     }
 
     public function testItBuildAProgram(): void
@@ -94,8 +96,8 @@ final class PlanProgramAdapterTest extends TestCase
 
         $this->url_verification->shouldReceive('userCanAccessProject')->once();
 
-        $program = new Program($program_increment->getID());
-        self::assertEquals($program, $this->adapter->buildProgramTrackerFromTeamProject($project, $user));
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $program_increment->getID());
+        self::assertEquals($program, $this->adapter->buildProgramIdentifierFromTeamProject($project, $user));
     }
 
     public function testItReturnsNullWhenProgramIsNotFound(): void
@@ -107,6 +109,6 @@ final class PlanProgramAdapterTest extends TestCase
 
         $this->team_store->shouldReceive('getProgramIncrementOfTeam')->andReturnNull();
 
-        self::assertNull($this->adapter->buildProgramTrackerFromTeamProject($project, $user));
+        self::assertNull($this->adapter->buildProgramIdentifierFromTeamProject($project, $user));
     }
 }

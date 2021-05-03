@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface RetrieveProgramIncrements
 {
     /**
      * @return ProgramIncrement[]
      */
-    public function retrieveOpenProgramIncrements(Program $program, \PFUser $user): array;
+    public function retrieveOpenProgramIncrements(ProgramIdentifier $program, \PFUser $user): array;
 }

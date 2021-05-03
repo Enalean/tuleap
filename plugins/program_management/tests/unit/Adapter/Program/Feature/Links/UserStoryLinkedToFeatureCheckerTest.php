@@ -27,8 +27,9 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -177,6 +178,6 @@ final class UserStoryLinkedToFeatureCheckerTest extends TestCase
 
     private function buildFeature(int $feature_id): FeatureIdentifier
     {
-        return FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), $feature_id, $this->user, new Program(110));
+        return FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), $feature_id, $this->user, ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110));
     }
 }

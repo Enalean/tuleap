@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
@@ -131,7 +131,7 @@ final class ContentModifier implements ModifyContent
         int $potential_feature_id_to_add,
         ProgramIncrementIdentifier $program_increment,
         \PFUser $user,
-        Program $program
+        ProgramIdentifier $program
     ): void {
         $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user, $program);
         if ($feature === null) {
@@ -153,7 +153,7 @@ final class ContentModifier implements ModifyContent
     private function reorderFeature(
         FeatureElementToOrderInvolvedInChangeRepresentation $feature_to_order_representation,
         ProgramIncrementIdentifier $program_increment,
-        Program $program
+        ProgramIdentifier $program
     ): void {
         $this->checkFeatureCanBeReordered($feature_to_order_representation->ids[0], $program_increment);
         $this->checkFeatureCanBeReordered($feature_to_order_representation->compared_to, $program_increment);

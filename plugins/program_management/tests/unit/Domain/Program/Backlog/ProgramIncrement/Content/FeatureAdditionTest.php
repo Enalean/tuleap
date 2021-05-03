@@ -26,7 +26,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
@@ -38,7 +39,7 @@ final class FeatureAdditionTest extends TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
-        $program           = new Program(110);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 127, $user, $program);
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
@@ -54,7 +55,7 @@ final class FeatureAdditionTest extends TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
-        $program           = new Program(110);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
 
         $payload = FeatureAddition::fromFeature(

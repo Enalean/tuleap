@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
 
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class CannotManipulateTopBacklog extends \RuntimeException
 {
-    public function __construct(Program $program, \PFUser $user)
+    public function __construct(ProgramIdentifier $program, \PFUser $user)
     {
         parent::__construct(
             sprintf(

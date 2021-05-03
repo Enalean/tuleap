@@ -26,7 +26,8 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -136,8 +137,8 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram(), $user));
     }
 
-    private static function buildProgram(): Program
+    private static function buildProgram(): ProgramIdentifier
     {
-        return new Program(1);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1);
     }
 }

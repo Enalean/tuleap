@@ -27,8 +27,9 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -89,7 +90,7 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
             ->once();
 
         $user                   = UserTestBuilder::aUser()->build();
-        $project                = new Program(101);
+        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101);
         $expected_configuration = new ProgramIncrementTrackerConfiguration(
             $project->getId(),
             false,
@@ -109,7 +110,7 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
             ->once();
 
         $user                   = UserTestBuilder::aUser()->build();
-        $project                = new Program(101);
+        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101);
         $expected_configuration = new ProgramIncrementTrackerConfiguration(
             $project->getId(),
             false,

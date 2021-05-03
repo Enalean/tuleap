@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST\v1;
 
 use Luracast\Restler\RestException;
+use ProjectManager;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -44,6 +45,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
@@ -93,7 +95,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new VerifyIsVisibleFeatureAdapter($artifact_factory),
                 new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), $artifact_factory)
             ),
-            new ProgramSearcher(new ProgramDao())
+            $this->getProgramSearcher()
         );
     }
 
@@ -178,7 +180,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 new CanPrioritizeFeaturesDAO()
             ),
             new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
-            new ProgramSearcher(new ProgramDao()),
+            $this->getProgramSearcher(),
             new VerifyIsVisibleFeatureAdapter($artifact_factory),
             new PlanDao(),
             new FeaturePlanner(
@@ -220,5 +222,17 @@ final class ProgramIncrementResource extends AuthenticatedResource
     public function optionsContent(int $id): void
     {
         Header::allowOptionsGetPatch();
+    }
+
+    private function getProgramSearcher(): ProgramSearcher
+    {
+        return new ProgramSearcher(
+            new ProgramDao(),
+            new ProgramAdapter(
+                ProjectManager::instance(),
+                new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
+                new ProgramDao()
+            )
+        );
     }
 }

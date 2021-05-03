@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 use PFUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
@@ -57,7 +57,7 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
     /**
      * @return ProgramIncrement[]
      */
-    public function retrieveOpenProgramIncrements(Program $program, \PFUser $user): array
+    public function retrieveOpenProgramIncrements(ProgramIdentifier $program, \PFUser $user): array
     {
         $program_increment_rows      = $this->program_increments_dao->searchOpenProgramIncrements($program->getId());
         $program_increment_artifacts = [];

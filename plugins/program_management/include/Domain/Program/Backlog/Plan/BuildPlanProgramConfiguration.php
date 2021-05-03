@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Plan;
 
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface BuildPlanProgramConfiguration
 {
     /**
      * @throws PlanTrackerException
      */
-    public function buildProgramTrackerFromTeamProject(\Project $project, \PFUser $user): ?Program;
+    public function buildProgramIdentifierFromTeamProject(\Project $project, \PFUser $user): ?ProgramIdentifier;
 }

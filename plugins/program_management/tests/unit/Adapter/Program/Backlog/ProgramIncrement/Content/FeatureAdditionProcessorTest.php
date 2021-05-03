@@ -30,7 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Add
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
@@ -98,7 +99,7 @@ final class FeatureAdditionProcessorTest extends TestCase
 
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
-        $program                    = new Program(110);
+        $program                    = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $user                       = UserTestBuilder::aUser()->build();
         $program_increment          = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
         $feature                    = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
@@ -119,7 +120,7 @@ final class FeatureAdditionProcessorTest extends TestCase
 
     private function buildFeatureAddition(): FeatureAddition
     {
-        $program           = new Program(110);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $user              = UserTestBuilder::aUser()->build();
         $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
         $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);

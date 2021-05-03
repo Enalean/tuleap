@@ -23,41 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Program;
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramIncrementBuilderTest extends TestCase
 {
     public function testBuildsOpenProgramIncrements(): void
     {
-        $build_program = new class implements BuildProgram {
-            public function buildExistingProgramProject(int $id, \PFUser $user): Program
-            {
-                return new Program($id);
-            }
-
-            public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
-            {
-                throw new \LogicException("Not implemented");
-            }
-
-            public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
-            {
-                throw new \LogicException("Not implemented");
-            }
-        };
-
         $retrieve_program_increments = new class implements RetrieveProgramIncrements {
-            public function retrieveOpenProgramIncrements(Program $program, \PFUser $user): array
+            public function retrieveOpenProgramIncrements(ProgramIdentifier $program, \PFUser $user): array
             {
                 return [];
             }
         };
 
-        $program_increment_builder = new ProgramIncrementBuilder($build_program, $retrieve_program_increments);
+        $program_increment_builder = new ProgramIncrementBuilder(BuildProgramStub::stubExistingProgram(), $retrieve_program_increments);
         self::assertEquals([], $program_increment_builder->buildOpenProgramIncrements(12, UserTestBuilder::aUser()->build()));
     }
 }

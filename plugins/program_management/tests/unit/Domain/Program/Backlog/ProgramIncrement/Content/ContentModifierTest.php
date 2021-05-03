@@ -31,10 +31,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
@@ -246,7 +247,7 @@ final class ContentModifierTest extends TestCase
                 $this->is_authorized = $is_authorized;
             }
 
-            public function canUserPrioritizeFeatures(Program $program, \PFUser $user): bool
+            public function canUserPrioritizeFeatures(ProgramIdentifier $program, \PFUser $user): bool
             {
                 return $this->is_authorized;
             }
@@ -261,7 +262,8 @@ final class ContentModifierTest extends TestCase
                 {
                     return 101;
                 }
-            }
+            },
+            BuildProgramStub::stubValidProgram()
         );
     }
 
@@ -332,7 +334,7 @@ final class ContentModifierTest extends TestCase
             {
                 $this->is_called = $is_called;
             }
-            public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, Program $program): void
+            public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, ProgramIdentifier $program): void
             {
                 if ($this->is_called) {
                     assertTrue($context_id === "12");

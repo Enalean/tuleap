@@ -26,10 +26,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -110,7 +111,7 @@ final class ProgramAdapterTest extends TestCase
         $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnTrue();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
 
-        $expected = new Program($project_id);
+        $expected = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $project_id);
 
         self::assertEquals($expected, $this->adapter->buildExistingProgramProject($project_id, UserTestBuilder::aUser()->build()));
     }

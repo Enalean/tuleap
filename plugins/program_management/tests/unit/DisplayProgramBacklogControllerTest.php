@@ -34,7 +34,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -145,7 +146,7 @@ final class DisplayProgramBacklogControllerTest extends TestCase
         $request->shouldReceive('getCurrentUser')->andReturn($user);
         $this->build_program->shouldReceive('buildExistingProgramProject')
             ->with($project->getID(), $user)
-            ->once()->andReturn(new Program(101));
+            ->once()->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110));
 
         $layout = \Mockery::mock(BaseLayout::class);
         $layout->shouldReceive('addCssAsset')->once();

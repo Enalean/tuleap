@@ -26,7 +26,7 @@ use PFUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -69,7 +69,7 @@ class FeatureRepresentationBuilder
 
     public function buildFeatureRepresentation(
         PFUser $user,
-        Program $program,
+        ProgramIdentifier $program,
         int $artifact_id,
         int $title_field_id,
         string $artifact_title

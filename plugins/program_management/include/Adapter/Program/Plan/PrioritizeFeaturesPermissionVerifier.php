@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Project\ProjectAccessChecker;
 
 class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
@@ -52,7 +52,7 @@ class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPe
         $this->can_prioritize_features_dao = $can_prioritize_features_dao;
     }
 
-    public function canUserPrioritizeFeatures(Program $program, \PFUser $user): bool
+    public function canUserPrioritizeFeatures(ProgramIdentifier $program, \PFUser $user): bool
     {
         $program_id = $program->getId();
         $project    = $this->project_manager->getProject($program_id);

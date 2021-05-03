@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
-use Project;
 use Project_AccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
@@ -60,12 +59,11 @@ final class ProgramAdapter implements BuildProgram
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function buildExistingProgramProject(int $id, \PFUser $user): Program
+    public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier
     {
         $project = $this->getProject($id, $user);
-        $this->ensureProgramIsAProject($project);
 
-        return new Program((int) $project->getID());
+        return ProgramIdentifier::fromId($this, (int) $project->getID());
     }
 
     /**
@@ -75,7 +73,7 @@ final class ProgramAdapter implements BuildProgram
     public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
     {
         $project = $this->getProjectForManagement($id, $user);
-        $this->ensureProgramIsAProject($project);
+        $this->ensureProgramIsAProject((int) $project->getID());
 
         return new ProgramForManagement((int) $project->getID());
     }
@@ -93,10 +91,10 @@ final class ProgramAdapter implements BuildProgram
     /**
      * @throws ProjectIsNotAProgramException
      */
-    private function ensureProgramIsAProject(Project $project): void
+    public function ensureProgramIsAProject(int $project_id): void
     {
-        if (! $this->program_store->isProjectAProgramProject((int) $project->getId())) {
-            throw new ProjectIsNotAProgramException((int) $project->getId());
+        if (! $this->program_store->isProjectAProgramProject($project_id)) {
+            throw new ProjectIsNotAProgramException($project_id);
         }
     }
 

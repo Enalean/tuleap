@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
-use Tuleap\ProgramManagement\Domain\Program\Program;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class VerifyIsVisibleFeatureStub implements VerifyIsVisibleFeature
 {
@@ -35,7 +35,7 @@ final class VerifyIsVisibleFeatureStub implements VerifyIsVisibleFeature
         $this->is_visible = $is_visible;
     }
 
-    public function isVisibleFeature(int $feature_id, \PFUser $user, Program $program): bool
+    public function isVisibleFeature(int $feature_id, \PFUser $user, ProgramIdentifier $program): bool
     {
         return $this->is_visible;
     }

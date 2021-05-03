@@ -22,17 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+
 /**
  * @psalm-immutable
  */
-final class Program
+final class ProgramIdentifier
 {
     /**
      * @var int
      */
     private $id;
 
-    public function __construct(int $id)
+    private function __construct(int $id)
     {
         $this->id = $id;
     }
@@ -40,5 +43,15 @@ final class Program
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     */
+    public static function fromId(BuildProgram $build_program, int $id): self
+    {
+        $build_program->ensureProgramIsAProject($id);
+
+        return new self($id);
     }
 }
