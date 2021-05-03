@@ -79,7 +79,7 @@ class Webdav_URLVerification extends URLVerification
     public static function isRequestForDedicatedWebdavHost(array $server, string $webdav_host): bool
     {
         return $webdav_host
-            && strcmp($server['HTTP_HOST'], $webdav_host) === 0
+            && strcmp($server['HTTP_HOST'] ?? '', $webdav_host) === 0
             && strcmp($webdav_host, ForgeConfig::get('sys_default_domain')) !== 0
             && strcmp($webdav_host, ForgeConfig::get('sys_https_host')) !== 0;
     }
