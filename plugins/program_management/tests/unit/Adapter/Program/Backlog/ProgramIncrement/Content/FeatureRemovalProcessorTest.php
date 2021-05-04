@@ -164,9 +164,9 @@ final class FeatureRemovalProcessorTest extends TestCase
     {
         $user    = UserTestBuilder::aUser()->build();
         $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
-        $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
+        $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
         return FeatureRemoval::fromFeature(
-            new VerifyLinkedUserStoryIsNotPlannedStub(),
+            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
             $feature,
             UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
         );

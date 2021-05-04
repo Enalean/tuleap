@@ -91,7 +91,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
-            new VerifyLinkedUserStoryIsNotPlannedStub(),
+            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
             new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater),
         );
@@ -186,7 +186,7 @@ final class ProcessTopBacklogChangeTest extends TestCase
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
-            new VerifyLinkedUserStoryIsNotPlannedStub(true),
+            VerifyLinkedUserStoryIsNotPlannedStub::buildLinkedStories(),
             new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
             new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater)
         );

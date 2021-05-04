@@ -40,13 +40,13 @@ final class FeatureAdditionTest extends TestCase
     public function testItThrowsWhenFeatureCannotBePlannedInProgramIncrement(): void
     {
         $user              = UserTestBuilder::aUser()->build();
-        $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
+        $program_increment = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 89, $user);
         $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
-        $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 127, $user, $program);
+        $feature           = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 127, $user, $program);
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
         FeatureAddition::fromFeature(
-            new VerifyCanBePlannedInProgramIncrementStub(false),
+            VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
             $feature,
             $program_increment,
             UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
@@ -56,12 +56,12 @@ final class FeatureAdditionTest extends TestCase
     public function testItBuildsAValidPayload(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $program_increment   = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
+        $program_increment   = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 89, $user);
         $program             = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
-        $feature             = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
+        $feature             = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 741, $user, $program);
         $user_can_prioritize = UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program);
         $payload             = FeatureAddition::fromFeature(
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $feature,
             $program_increment,
             $user_can_prioritize

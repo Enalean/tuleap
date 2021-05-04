@@ -83,7 +83,7 @@ final class ProgramIncrementContentRetrieverTest extends TestCase
     protected function setUp(): void
     {
         $this->content_store        = \Mockery::mock(ContentStore::class);
-        $retrieve_program_increment = new CheckProgramIncrementStub(true);
+        $retrieve_program_increment = CheckProgramIncrementStub::buildProgramIncrementChecker();
         $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);

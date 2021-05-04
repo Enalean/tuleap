@@ -29,7 +29,7 @@ final class VerifyCanBePlannedInProgramIncrementStub implements VerifyCanBePlann
     /** @var bool */
     private $is_allowed;
 
-    public function __construct(bool $is_allowed = true)
+    private function __construct(bool $is_allowed = true)
     {
         $this->is_allowed = $is_allowed;
     }
@@ -37,5 +37,15 @@ final class VerifyCanBePlannedInProgramIncrementStub implements VerifyCanBePlann
     public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool
     {
         return $this->is_allowed;
+    }
+
+    public static function buildCanBePlannedVerifier(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildNotPlannableVerifier(): self
+    {
+        return new self(false);
     }
 }
