@@ -19,7 +19,6 @@
 
 @use '../../src/themes/common/css/project-background/background';
 @use '../../src/themes/FlamingParrot/css/utils/variables-common';
-@use '../../src/themes/FlamingParrot/css/utils/variables-color-common';
 @use '../../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
 @use '../../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
 @use '../../../../../../src/themes/FlamingParrot/css/utils/variables-green';
@@ -33,7 +32,7 @@
     .tracker_artifact_title,
     .tracker-hierarchy:not(.tracker-hierarchy-admin) .direct-link-to-artifact,
     .tracker-hierarchy:not(.tracker-hierarchy-admin) {
-        @include background.project-background-title-header-typography(variables-color-common.$white);
+        @include background.project-background-title-header-typography();
 
         .dropdown-menu {
             text-shadow: none;
@@ -60,7 +59,6 @@ body.in_tracker_report .project-with-background .content { // stylelint-disable-
     @each $element-with-project-background in $elements-with-project-background {
         @include background.apply-background(
             $element-with-project-background,
-            $sidebar-background,
             variables-common.$sidebar-width,
             variables-common.$sidebar-width-collapsed,
         );

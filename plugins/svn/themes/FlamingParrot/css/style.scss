@@ -25,7 +25,6 @@
     &.viewvc-epel {
         @include background.apply-background(
             '.svn-repository-header',
-            $sidebar-background,
             variables-common.$sidebar-width,
             variables-common.$sidebar-width-collapsed,
         );

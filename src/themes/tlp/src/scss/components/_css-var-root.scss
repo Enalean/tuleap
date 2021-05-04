@@ -43,6 +43,7 @@
     --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};
     --tlp-ui-dimmed-on-dark-background: #{$tlp-ui-border-dark};
     --tlp-theme-dark-background-color: #{$tlp-theme-sidebar-background-color};
+    --tlp-theme-dark-background-color-transparent-70: #{transparentize($tlp-theme-sidebar-background-color, .7)};
     --tlp-theme-dark-background-color-darker: #{color.scale($tlp-theme-sidebar-background-color, $lightness: -20%)};
     --tlp-typo-default-text-color-on-dark-background: #{$tlp-ui-border-normal};
 

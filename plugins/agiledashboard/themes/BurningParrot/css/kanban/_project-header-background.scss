@@ -23,7 +23,7 @@
     .kanban-header-title,
     .kanban-header-filter-label,
     .kanban-header-filter-text-info {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
     }
 
     .kanban-column-header {
@@ -37,7 +37,6 @@
     @each $element-with-project-background in $elements-with-project-background {
         @include background.apply-background(
             $element-with-project-background,
-            $tlp-theme-sidebar-background-color,
             $sidebar-expanded-width,
             $sidebar-collapsed-width,
         );

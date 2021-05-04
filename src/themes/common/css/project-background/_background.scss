@@ -258,10 +258,6 @@ $definitions: (
     @return map-get($def, 'size');
 }
 
-@function opacifier-color($sidebar-background) {
-    @return transparentize($sidebar-background, .7);
-}
-
 @mixin css-custom-properties($background) {
     --project-background-image: #{get-image($background)};
     --project-background-prominent-color: #{get-color($background)};
@@ -281,17 +277,15 @@ $definitions: (
 
 @mixin apply-background(
     $element,
-    $sidebar-background,
     $sidebar-expanded-width,
     $sidebar-collapsed-width
 ) {
     $motd-minimum-height: 54px;
     $project-banner-minimum-height: 56px;
-    $opacifier-color: opacifier-color($sidebar-background);
 
     .project-with-background #{$element} {
         background:
-            linear-gradient($opacifier-color, $opacifier-color),
+            linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)),
             var(--project-background-image),
             linear-gradient(var(--project-background-prominent-color), var(--project-background-prominent-color));
         background-attachment: fixed;
@@ -316,8 +310,8 @@ $definitions: (
     }
 }
 
-@mixin project-background-title-header-typography($white) {
-    color: $white;
+@mixin project-background-title-header-typography() {
+    color: var(--tlp-ui-white);
     text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
 }
 

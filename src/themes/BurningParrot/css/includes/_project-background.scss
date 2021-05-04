@@ -20,14 +20,12 @@
 @use '../../../../themes/common/css/project-background/background' with ($project-background-images-path: '../../common/images/project-background/');
 @use 'sass:map';
 
-$opacifier-color: background.opacifier-color($tlp-theme-sidebar-background-color);
-
 body {
     @import '../../../common/css/project-background/project-background';
 
     @each $identifier, $definition in background.$definitions {
         .project-admin-background-preview-#{$identifier} {
-            background: linear-gradient($opacifier-color, $opacifier-color),
+            background: linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)),
                 map-get($definition, 'image-1680px'),
                 linear-gradient(map-get($definition, 'color'), map-get($definition, 'color'));
             background-size: map-get($definition, 'size');
@@ -37,21 +35,21 @@ body {
 
 .project-with-background {
     .project-administration-title {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
         margin: 0;
         padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
     }
 
     .dashboard-project-title {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
     }
 
     .dashboard-project-header-trovecat-icon {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
     }
 
     .dashboard-project-header-trovecat {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
         font-weight: 500;
     }
 
@@ -82,7 +80,7 @@ body {
     .breadcrumb,
     .breadcrumb-link,
     #dashboard-tabs-dropdown-trigger {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
     }
 
     .breadcrumb-dropdown-item,

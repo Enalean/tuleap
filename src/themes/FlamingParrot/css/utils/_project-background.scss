@@ -30,7 +30,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
     .administration-title,
     .cvs-header > .administration-title,
     .project-header-title {
-        @include background.project-background-title-header-typography($white);
+        @include background.project-background-title-header-typography();
         margin: 0;
         padding: 0 $tlp-medium-spacing 30px;
     }
@@ -39,7 +39,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
         border-bottom: initial;
 
         li > a {
-            @include background.project-background-title-header-typography($white);
+            @include background.project-background-title-header-typography();
         }
 
         li > a:hover,
@@ -54,7 +54,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
     .breadcrumb,
     .breadcrumb-link {
-        @include background.project-background-title-header-typography($white); }
+        @include background.project-background-title-header-typography(); }
 
     .breadcrumb-dropdown-item,
     .breadcrumb-dropdown-section-title {

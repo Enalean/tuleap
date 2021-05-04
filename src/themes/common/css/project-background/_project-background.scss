@@ -29,5 +29,5 @@ $elements-that-can-contain-background: '.main-project-tabs',
     '.toolbar.nav-pills';
 
 @each $element in $elements-that-can-contain-background {
-    @include background.apply-background($element, $tlp-theme-sidebar-background-color, $sidebar-expanded-width, $sidebar-collapsed-width);
+    @include background.apply-background($element, $sidebar-expanded-width, $sidebar-collapsed-width);
 }
