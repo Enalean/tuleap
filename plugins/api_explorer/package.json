@@ -12,9 +12,9 @@
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
   },
   "dependencies": {
-    "swagger-ui": "^3.47.1"
+    "swagger-ui": "^3.48.0"
   },
   "devDependencies": {
-    "@types/react": "^17.0.3"
+    "@types/react": "^17.0.4"
   }
 }
