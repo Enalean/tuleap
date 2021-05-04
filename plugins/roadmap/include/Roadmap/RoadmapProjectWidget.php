@@ -33,7 +33,7 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Roadmap\Widget\PreferencePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
 
 final class RoadmapProjectWidget extends \Widget
 {
@@ -60,20 +60,20 @@ final class RoadmapProjectWidget extends \Widget
      */
     private $transaction_executor;
     /**
-     * @var NaturePresenterFactory
-     */
-    private $nature_presenter_factory;
-    /**
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var RoadmapWidgetPresenterBuilder
+     */
+    private $presenter_builder;
 
     public function __construct(
         Project $project,
         RoadmapWidgetDao $dao,
         DBTransactionExecutor $transaction_executor,
         TemplateRenderer $renderer,
-        NaturePresenterFactory $nature_presenter_factory,
+        RoadmapWidgetPresenterBuilder $presenter_builder,
         TrackerFactory $tracker_factory
     ) {
         parent::__construct(self::ID);
@@ -82,11 +82,11 @@ final class RoadmapProjectWidget extends \Widget
             \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
 
-        $this->dao                      = $dao;
-        $this->transaction_executor     = $transaction_executor;
-        $this->renderer                 = $renderer;
-        $this->nature_presenter_factory = $nature_presenter_factory;
-        $this->tracker_factory          = $tracker_factory;
+        $this->dao                  = $dao;
+        $this->transaction_executor = $transaction_executor;
+        $this->renderer             = $renderer;
+        $this->presenter_builder    = $presenter_builder;
+        $this->tracker_factory      = $tracker_factory;
     }
 
     public function getContent(): string
@@ -96,12 +96,10 @@ final class RoadmapProjectWidget extends \Widget
             'Total number of display of roadmap project widget',
         );
 
-        $visible_natures = $this->nature_presenter_factory->getOnlyVisibleNatures();
-
-        return $this->renderer->renderToString('widget-roadmap', [
-            'roadmap_id' => $this->content_id,
-            'visible_natures' => \json_encode(array_values($visible_natures), JSON_THROW_ON_ERROR),
-        ]);
+        return $this->renderer->renderToString(
+            'widget-roadmap',
+            $this->presenter_builder->getPresenter((int) $this->content_id)
+        );
     }
 
     public function isAjax(): bool
@@ -175,7 +173,7 @@ final class RoadmapProjectWidget extends \Widget
     /**
      * @param int|string $id
      * @param int|string $owner_id
-     * @param string $owner_type
+     * @param string     $owner_type
      */
     public function cloneContent(
         Project $template_project,
