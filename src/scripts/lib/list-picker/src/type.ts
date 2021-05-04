@@ -27,6 +27,7 @@ export interface ListPickerOptions {
     readonly locale?: string;
     placeholder?: string;
     is_filterable?: boolean;
+    none_value?: string | null;
     items_template_formatter?: (
         html: typeof HTMLTemplateStringProcessor,
         value_id: string,
