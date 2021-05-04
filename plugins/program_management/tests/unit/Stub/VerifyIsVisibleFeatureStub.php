@@ -30,7 +30,7 @@ final class VerifyIsVisibleFeatureStub implements VerifyIsVisibleFeature
     /** @var bool */
     private $is_visible;
 
-    public function __construct(bool $is_visible = true)
+    private function __construct(bool $is_visible = true)
     {
         $this->is_visible = $is_visible;
     }
@@ -38,5 +38,15 @@ final class VerifyIsVisibleFeatureStub implements VerifyIsVisibleFeature
     public function isVisibleFeature(int $feature_id, \PFUser $user, ProgramIdentifier $program): bool
     {
         return $this->is_visible;
+    }
+
+    public static function buildVisibleFeature(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildInvisibleFeature(): self
+    {
+        return new self(false);
     }
 }

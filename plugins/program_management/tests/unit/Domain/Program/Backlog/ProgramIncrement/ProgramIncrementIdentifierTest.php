@@ -33,13 +33,13 @@ final class ProgramIncrementIdentifierTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
         $this->expectException(ProgramTrackerNotFoundException::class);
-        ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(false), 1, $user);
+        ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildOtherArtifactChecker(), 1, $user);
     }
 
     public function testItBuildAProgramIncrement(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $tracker = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 1, $user);
+        $tracker = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 1, $user);
         self::assertEquals(1, $tracker->getId());
     }
 }

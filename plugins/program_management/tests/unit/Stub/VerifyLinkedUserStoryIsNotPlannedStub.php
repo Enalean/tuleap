@@ -30,7 +30,7 @@ final class VerifyLinkedUserStoryIsNotPlannedStub implements VerifyLinkedUserSto
     /** @var bool */
     private $is_linked;
 
-    public function __construct(bool $is_linked = false)
+    private function __construct(bool $is_linked = false)
     {
         $this->is_linked = $is_linked;
     }
@@ -43,5 +43,15 @@ final class VerifyLinkedUserStoryIsNotPlannedStub implements VerifyLinkedUserSto
     public function hasStoryLinked(\PFUser $user, FeatureIdentifier $feature): bool
     {
         return false;
+    }
+
+    public static function buildLinkedStories(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildNotLinkedStories(): self
+    {
+        return new self(false);
     }
 }

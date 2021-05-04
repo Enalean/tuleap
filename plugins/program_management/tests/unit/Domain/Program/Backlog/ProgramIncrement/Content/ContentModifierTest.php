@@ -50,10 +50,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::cannotPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
@@ -69,10 +69,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(false),
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyIsVisibleFeatureStub::buildInvisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
@@ -88,10 +88,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(false),
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
@@ -107,10 +107,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
@@ -126,10 +126,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
@@ -145,10 +145,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(true),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
@@ -167,10 +167,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(false),
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
@@ -189,10 +189,10 @@ final class ContentModifierTest extends TestCase
     {
         $modifier = new ContentModifier(
             VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
-            new CheckProgramIncrementStub(true),
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            new VerifyIsVisibleFeatureStub(),
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(false),
@@ -253,7 +253,7 @@ final class ContentModifierTest extends TestCase
     {
         return new FeaturePlanner(
             new DBTransactionExecutorPassthrough(),
-            new VerifyLinkedUserStoryIsNotPlannedStub(),
+            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
             $this->buildFeatureRemoverStub(),
             $this->buildTopBacklogStoreStub(),
             $this->buildFeatureAdderStub()

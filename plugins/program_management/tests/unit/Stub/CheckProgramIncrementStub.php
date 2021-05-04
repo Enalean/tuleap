@@ -30,7 +30,7 @@ final class CheckProgramIncrementStub implements CheckProgramIncrement
     /** @var bool */
     private $is_allowed;
 
-    public function __construct(bool $is_allowed = true)
+    private function __construct(bool $is_allowed = true)
     {
         $this->is_allowed = $is_allowed;
     }
@@ -40,5 +40,15 @@ final class CheckProgramIncrementStub implements CheckProgramIncrement
         if (! $this->is_allowed) {
             throw new ProgramTrackerNotFoundException(1);
         }
+    }
+
+    public static function buildProgramIncrementChecker(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildOtherArtifactChecker(): self
+    {
+        return new self(false);
     }
 }

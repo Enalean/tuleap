@@ -103,10 +103,10 @@ final class FeatureAdditionProcessorTest extends TestCase
     {
         $user                       = UserTestBuilder::aUser()->build();
         $program                    = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
-        $program_increment          = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
-        $feature                    = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
+        $program_increment          = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 37, $user);
+        $feature                    = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
         $feature_addition           = FeatureAddition::fromFeature(
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $feature,
             $program_increment,
             UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
@@ -124,10 +124,10 @@ final class FeatureAdditionProcessorTest extends TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
-        $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
-        $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
+        $program_increment = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 37, $user);
+        $feature           = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
         return FeatureAddition::fromFeature(
-            new VerifyCanBePlannedInProgramIncrementStub(),
+            VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $feature,
             $program_increment,
             UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
