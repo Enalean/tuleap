@@ -31,6 +31,8 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamAdapterTest extends TestCase
 {
@@ -76,7 +78,7 @@ final class TeamAdapterTest extends TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = new ToBeCreatedProgram(101);
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnFalse();
         $user->shouldReceive('isMember')->with($team_id)->andReturnFalse();
@@ -94,7 +96,7 @@ final class TeamAdapterTest extends TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = new ToBeCreatedProgram(101);
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();
@@ -109,7 +111,7 @@ final class TeamAdapterTest extends TestCase
 
     public function testItThrowExceptionWhenNoTeamIsFound(): void
     {
-        $program = new ToBeCreatedProgram(101);
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
         $user    = \Mockery::mock(\PFUser::class);
 
         $this->expectException(AtLeastOneTeamShouldBeDefinedException::class);
@@ -120,7 +122,7 @@ final class TeamAdapterTest extends TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = new ToBeCreatedProgram(101);
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();
@@ -139,7 +141,7 @@ final class TeamAdapterTest extends TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = new ToBeCreatedProgram(101);
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();
