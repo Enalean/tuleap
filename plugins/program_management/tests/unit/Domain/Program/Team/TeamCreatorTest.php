@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamCreatorTest extends TestCase
@@ -43,7 +44,7 @@ final class TeamCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $program = new ToBeCreatedProgram($project_id);
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), $project_id, UserTestBuilder::aUser()->build());
         $program_adapter->shouldReceive('buildNewProgramProject')
             ->with($project_id, $user)->once()
             ->andReturn($program);

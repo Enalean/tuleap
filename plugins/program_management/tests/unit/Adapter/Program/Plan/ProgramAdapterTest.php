@@ -141,7 +141,7 @@ final class ProgramAdapterTest extends TestCase
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
 
-        $expected = new ToBeCreatedProgram($project_id);
+        $expected = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), $project_id, UserTestBuilder::aUser()->build());
 
         self::assertEquals($expected, $this->adapter->buildNewProgramProject($project_id, $user));
     }

@@ -80,8 +80,7 @@ final class ProgramAdapter implements BuildProgram
      */
     public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
     {
-        $this->ensureUserIsAdminOfProject($id, $user);
-        return new ToBeCreatedProgram($id);
+        return ToBeCreatedProgram::fromId($this, $id, $user);
     }
 
     /**
@@ -102,6 +101,12 @@ final class ProgramAdapter implements BuildProgram
     {
         $this->ensureUserIsAdminOfProject($id, $user);
         $this->ensureProgramIsAProject($id);
+    }
+
+
+    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void
+    {
+        $this->ensureUserIsAdminOfProject($id, $user);
     }
 
     /**

@@ -32,12 +32,15 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Create
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
@@ -88,7 +91,12 @@ class ProgramDataBuilder extends REST_TestDataBuilder
     {
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
 
-        $team_adapter = new TeamAdapter($this->project_manager, new ProgramDao(), new ExplicitBacklogDao());
+        $team_adapter    = new TeamAdapter($this->project_manager, new ProgramDao(), new ExplicitBacklogDao());
+        $program_adapter = new ProgramAdapter(
+            $this->project_manager,
+            new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
+            new ProgramDao()
+        );
 
         $this->replication_data_adapter = new ReplicationDataAdapter(
             Tracker_ArtifactFactory::instance(),
@@ -117,7 +125,7 @@ class ProgramDataBuilder extends REST_TestDataBuilder
         $team_dao->save(
             new TeamCollection(
                 [Team::buildForRestTest($team_adapter, (int) $this->team->getID(), $this->user)],
-                new ToBeCreatedProgram((int) $this->program->getID())
+                ToBeCreatedProgram::fromId($program_adapter, (int) $this->program->getID(), $this->user)
             )
         );
 

@@ -36,15 +36,19 @@ class BuildProgramStub implements BuildProgram
     private $is_existing_program;
     /** @var bool */
     private $is_valid_program_for_management;
+    /** @var bool */
+    private $is_valid_to_be_created_program;
 
     private function __construct(
         bool $is_allowed = true,
         bool $is_existing_program = false,
-        bool $is_valid_program_for_management = false
+        bool $is_valid_program_for_management = false,
+        bool $is_valid_to_be_created_program = false
     ) {
         $this->is_allowed                      = $is_allowed;
         $this->is_existing_program             = $is_existing_program;
         $this->is_valid_program_for_management = $is_valid_program_for_management;
+        $this->is_valid_to_be_created_program  = $is_valid_to_be_created_program;
     }
 
     public function ensureProgramIsAProject(int $program_increment_id): void
@@ -56,17 +60,22 @@ class BuildProgramStub implements BuildProgram
 
     public static function stubValidProgram(): self
     {
-        return new self(true, false, false);
+        return new self(true, false, false, false);
     }
 
     public static function stubExistingProgram(): self
     {
-        return new self(true, true, false);
+        return new self(true, true, false, false);
     }
 
     public static function stubValidProgramForManagement(): self
     {
-        return new self(true, false, true);
+        return new self(true, false, true, false);
+    }
+
+    public static function stubValidToBeCreatedProgram(): self
+    {
+        return new self(true, false, false, true);
     }
 
     public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier
@@ -93,6 +102,15 @@ class BuildProgramStub implements BuildProgram
         if ($this->is_valid_program_for_management) {
             return;
         }
+        throw new \LogicException("Not implemented");
+    }
+
+    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void
+    {
+        if ($this->is_valid_to_be_created_program) {
+            return;
+        }
+
         throw new \LogicException("Not implemented");
     }
 }

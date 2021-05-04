@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+
 /**
  * @psalm-immutable
  */
@@ -32,7 +35,7 @@ final class ToBeCreatedProgram
      */
     private $id;
 
-    public function __construct(int $id)
+    private function __construct(int $id)
     {
         $this->id = $id;
     }
@@ -40,5 +43,15 @@ final class ToBeCreatedProgram
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @throws ProgramAccessException
+     */
+    public static function fromId(BuildProgram $build_program, int $id, \PFUser $user): self
+    {
+        $build_program->ensureProgramIsProjectAndUserIsAdminOf($id, $user);
+
+        return new self($id);
     }
 }
