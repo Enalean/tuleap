@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2017-Present. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-/**
-* Widget_ProjectLatestFileReleases
-*
-*/
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Widget_ProjectLatestFileReleases extends Widget
 {
     public $content;
@@ -44,11 +41,11 @@ class Widget_ProjectLatestFileReleases extends Widget
 
     public function getTitle()
     {
-        return $this->content['title'];
+        return $this->content['title'] ?? '';
     }
     public function getContent()
     {
-        return $this->content['content'];
+        return $this->content['content'] ?? '';
     }
     public function isAvailable()
     {

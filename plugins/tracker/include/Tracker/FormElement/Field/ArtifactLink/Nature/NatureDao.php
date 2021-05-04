@@ -116,14 +116,13 @@ class NatureDao extends DataAccessObject
     {
         $shortname = $this->da->quoteSmart($shortname);
 
-        $sql = "SELECT nature
+        $sql = "SELECT 1
                   FROM tracker_changeset_value_artifactlink
                  WHERE nature = $shortname
                  LIMIT 1";
 
-        $row = $this->retrieve($sql)->getRow();
-
-        return (bool) $row['nature'];
+        $dar = $this->retrieve($sql);
+        return $dar && count($dar) !== 0;
     }
 
     public function searchAllUsedNatureByProject($project_id)

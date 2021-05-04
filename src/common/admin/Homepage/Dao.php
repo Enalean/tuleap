@@ -36,9 +36,12 @@ class Admin_Homepage_Dao extends DataAccessObject
 
         $sql = "SELECT * FROM homepage_headline WHERE language_id = $language_id";
 
-        $row = $this->retrieve($sql)->getRow();
+        $dar = $this->retrieve($sql);
+        if (! $dar || count($dar) !== 1) {
+            return null;
+        }
 
-        return $row['headline'];
+        return $dar->getRow()['headline'];
     }
 
     /** @return bool */

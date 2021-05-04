@@ -65,6 +65,9 @@ final class SvnlookTest extends TestCase
         $this->repository = SvnRepository::buildActiveRepository(2, $repository_name, $project);
     }
 
+    /**
+     * @requires PHP >= 7.4
+     */
     public function testItGetFileSizeDuringTransaction(): void
     {
         $data = 'abc';

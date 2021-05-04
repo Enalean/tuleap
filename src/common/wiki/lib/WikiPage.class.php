@@ -221,8 +221,10 @@ class WikiPage
                 )
             );
         }
-        $row      = db_fetch_array($res);
-        $this->id =  $row['id'];
+        if (db_numrows($res) === 1) {
+            $row      = db_fetch_array($res);
+            $this->id =  $row['id'];
+        }
     }
 
 
@@ -469,22 +471,11 @@ class WikiPage
      */
     public function getAllUserPages()
     {
-        $excluded_pages_db_escaped = [];
-        foreach (array_merge(self::getAdminPages(), self::getDefaultPages()) as $excluded_page) {
-            $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
-        }
-
         $allPages = [];
-
-        $res = db_query(' SELECT pagename'
-                        . ' FROM wiki_page, wiki_nonempty'
-                        . ' WHERE wiki_page.group_id="' . db_ei(self::$gid) . '"'
-                        . ' AND wiki_nonempty.id=wiki_page.id'
-                        . ' AND wiki_page.pagename NOT IN (' . implode(',', $excluded_pages_db_escaped) . ')');
-        while ($row = db_fetch_array($res)) {
-            $allPages[] = $row[0];
+        $dao      = new WikiPageDao();
+        foreach ($dao->getAllUserPages((int) self::$gid, array_merge(self::getAdminPages(), self::getDefaultPages())) as $row) {
+            $allPages[] = $row['pagename'];
         }
-
         return $allPages;
     }
 
