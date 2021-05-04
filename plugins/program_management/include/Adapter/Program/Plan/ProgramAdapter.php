@@ -61,9 +61,7 @@ final class ProgramAdapter implements BuildProgram
      */
     public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier
     {
-        $project = $this->getProject($id, $user);
-
-        return ProgramIdentifier::fromId($this, (int) $project->getID());
+        return ProgramIdentifier::fromId($this, $id, $user);
     }
 
     /**
@@ -85,9 +83,11 @@ final class ProgramAdapter implements BuildProgram
 
     /**
      * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
      */
-    public function ensureProgramIsAProject(int $project_id): void
+    public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
     {
+        $this->ensureUserCanAccessToProject($project_id, $user);
         if (! $this->program_store->isProjectAProgramProject($project_id)) {
             throw new ProjectIsNotAProgramException($project_id);
         }
@@ -100,7 +100,7 @@ final class ProgramAdapter implements BuildProgram
     public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void
     {
         $this->ensureUserIsAdminOfProject($id, $user);
-        $this->ensureProgramIsAProject($id);
+        $this->ensureProgramIsAProject($id, $user);
     }
 
 
@@ -114,13 +114,16 @@ final class ProgramAdapter implements BuildProgram
      */
     private function ensureUserIsAdminOfProject(int $id, \PFUser $user): void
     {
-        $this->getProject($id, $user);
+        $this->ensureUserCanAccessToProject($id, $user);
         if (! $user->isAdmin($id)) {
             throw new ProgramAccessException();
         }
     }
 
-    private function getProject(int $id, \PFUser $user): \Project
+    /**
+     * @throws ProgramAccessException
+     */
+    private function ensureUserCanAccessToProject(int $id, \PFUser $user): void
     {
         $project = $this->project_manager->getProject($id);
         try {
@@ -128,7 +131,5 @@ final class ProgramAdapter implements BuildProgram
         } catch (Project_AccessException $exception) {
             throw new ProgramAccessException();
         }
-
-        return $project;
     }
 }

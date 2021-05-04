@@ -108,7 +108,7 @@ class FeatureElementsRetrieverTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 202)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 202, $user)
         );
         $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [

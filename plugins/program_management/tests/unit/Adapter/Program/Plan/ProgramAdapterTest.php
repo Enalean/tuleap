@@ -111,7 +111,7 @@ final class ProgramAdapterTest extends TestCase
         $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnTrue();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
 
-        $expected = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $project_id);
+        $expected = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $project_id, UserTestBuilder::aUser()->build());
 
         self::assertEquals($expected, $this->adapter->buildExistingProgramProject($project_id, UserTestBuilder::aUser()->build()));
     }

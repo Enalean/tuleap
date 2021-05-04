@@ -51,7 +51,7 @@ class BuildProgramStub implements BuildProgram
         $this->is_valid_to_be_created_program  = $is_valid_to_be_created_program;
     }
 
-    public function ensureProgramIsAProject(int $program_increment_id): void
+    public function ensureProgramIsAProject(int $program_increment_id, \PFUser $user): void
     {
         if (! $this->is_allowed) {
             throw new ProjectIsNotAProgramException(1);
@@ -81,7 +81,7 @@ class BuildProgramStub implements BuildProgram
     public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier
     {
         if ($this->is_existing_program) {
-            return ProgramIdentifier::fromId(self::stubValidProgram(), $id);
+            return ProgramIdentifier::fromId(self::stubValidProgram(), $id, $user);
         }
 
         throw new \LogicException("Not implemented");

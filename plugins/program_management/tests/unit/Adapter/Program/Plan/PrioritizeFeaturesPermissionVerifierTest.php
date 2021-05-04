@@ -72,7 +72,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends TestCase
         $user->shouldReceive('isAdmin')->andReturn(false);
         $user->shouldReceive('isMemberOfUGroup')->andReturn(true);
 
-        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), $user));
+        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user), $user));
     }
 
     public function testUsersCanPrioritizeFeaturesWhenTheyAreProjectAdmin(): void
@@ -82,7 +82,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends TestCase
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->andReturn(true);
 
-        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), $user));
+        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user), $user));
     }
 
     public function testUsersCannotPrioritizeFeaturesWhenTheyCanAccessTheProjectButAreNotPartOfTheAuthorizedUserGroups(): void
@@ -94,13 +94,13 @@ final class PrioritizeFeaturesPermissionVerifierTest extends TestCase
         $user->shouldReceive('isAdmin')->andReturn(false);
         $user->shouldReceive('isMemberOfUGroup')->andReturn(false);
 
-        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), $user));
+        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user), $user));
     }
 
     public function testUsersCannotPrioritizeFeaturesWhenTheyCannotAccessTheProject(): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(\Mockery::mock(Project_AccessException::class));
 
-        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102), UserTestBuilder::aUser()->build()));
+        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserTestBuilder::aUser()->build()), UserTestBuilder::aUser()->build()));
     }
 }

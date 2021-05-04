@@ -105,7 +105,7 @@ final class ContentModifier implements ModifyContent
             $program_increment_id,
             $user
         );
-        $program           = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId());
+        $program           = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user);
         $has_permission    = $this->permission_verifier->canUserPrioritizeFeatures($program, $user);
 
         if (! $has_permission) {

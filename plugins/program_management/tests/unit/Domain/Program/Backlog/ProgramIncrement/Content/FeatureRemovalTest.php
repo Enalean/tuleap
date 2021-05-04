@@ -36,7 +36,7 @@ final class FeatureRemovalTest extends TestCase
     public function testItThrowsWhenFeatureIsLinkedToAnAlreadyPlannedUserStory(): void
     {
         $user    = UserTestBuilder::aUser()->withId(104)->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
         $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
 
         $this->expectException(FeatureHasPlannedUserStoryException::class);
@@ -50,7 +50,7 @@ final class FeatureRemovalTest extends TestCase
     public function testItBuildsAValidPayload(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
         $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
 
         $payload = FeatureRemoval::fromFeature(

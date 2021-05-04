@@ -39,7 +39,7 @@ final class FeatureAdditionTest extends TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
         $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 127, $user, $program);
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
@@ -55,7 +55,7 @@ final class FeatureAdditionTest extends TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
         $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
 
         $payload = FeatureAddition::fromFeature(

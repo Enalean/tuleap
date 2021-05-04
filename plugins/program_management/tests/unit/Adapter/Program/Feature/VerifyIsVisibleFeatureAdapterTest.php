@@ -55,7 +55,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->once()->with($user, 404)->andReturnNull();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
 
         self::assertFalse($this->verifier->isVisibleFeature(404, $user, $program));
     }
@@ -68,7 +68,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, $user);
 
         self::assertFalse($this->verifier->isVisibleFeature(741, $user, $program));
     }
@@ -81,7 +81,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends TestCase
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
 
         self::assertTrue($this->verifier->isVisibleFeature(741, $user, $program));
     }

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 
 final class ProgramSearcher
@@ -43,8 +45,10 @@ final class ProgramSearcher
 
     /**
      * @throws ProgramNotFoundException
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
      */
-    public function getProgramOfProgramIncrement(int $program_increment_id): ProgramIdentifier
+    public function getProgramOfProgramIncrement(int $program_increment_id, \PFUser $user): ProgramIdentifier
     {
         $potential_program_id = $this->search_program->searchProgramOfProgramIncrement($program_increment_id);
         if ($potential_program_id === null) {
@@ -52,6 +56,6 @@ final class ProgramSearcher
                 "Could not find the program of program increment #$program_increment_id"
             );
         }
-        return ProgramIdentifier::fromId($this->build_program, $potential_program_id);
+        return ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user);
     }
 }

@@ -63,7 +63,7 @@ class FeatureContentRetriever implements RetrieveFeatureContent
     public function retrieveProgramIncrementContent(int $id, \PFUser $user): array
     {
         $program_increment = ProgramIncrementIdentifier::fromId($this->program_increment_content_retriever, $id, $user);
-        $program           = $this->program_searcher->getProgramOfProgramIncrement($id);
+        $program           = $this->program_searcher->getProgramOfProgramIncrement($id, $user);
         $planned_content   = $this->content_store->searchContent($program_increment->getId());
 
         $elements = [];
