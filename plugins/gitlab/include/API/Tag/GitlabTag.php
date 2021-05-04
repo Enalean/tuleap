@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -55,7 +55,14 @@ class GitlabTag
         if (
             ! array_key_exists('name', $tag_reponse) ||
             ! array_key_exists('message', $tag_reponse) ||
-            ! array_key_exists('target', $tag_reponse)
+            ! array_key_exists('commit', $tag_reponse)
+        ) {
+            throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
+        }
+
+        $tag_commit_info = $tag_reponse['commit'];
+        if (
+            ! array_key_exists('id', $tag_commit_info)
         ) {
             throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
         }
@@ -63,7 +70,7 @@ class GitlabTag
         if (
             ! is_string($tag_reponse['name']) ||
             ! is_string($tag_reponse['message']) ||
-            ! is_string($tag_reponse['target'])
+            ! is_string($tag_commit_info['id'])
         ) {
             throw new GitlabResponseAPIException("Some keys haven't the expected types. This is not expected. Aborting.");
         }
@@ -71,7 +78,7 @@ class GitlabTag
         return new self(
             $tag_reponse['name'],
             $tag_reponse['message'],
-            $tag_reponse['target'],
+            $tag_commit_info['id'],
         );
     }
 
