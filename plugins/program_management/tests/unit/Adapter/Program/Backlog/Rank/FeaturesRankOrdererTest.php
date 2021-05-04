@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRanke
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeaturesRankOrdererTest extends TestCase
 {
@@ -65,6 +66,6 @@ final class FeaturesRankOrdererTest extends TestCase
             ->andThrow(new Tracker_Artifact_Exception_CannotRankWithMyself(45));
 
         $this->expectException(FeatureCanNotBeRankedWithItselfException::class);
-        $this->orderer->reorder($order, "101", ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101));
+        $this->orderer->reorder($order, "101", ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserTestBuilder::aUser()->build()));
     }
 }

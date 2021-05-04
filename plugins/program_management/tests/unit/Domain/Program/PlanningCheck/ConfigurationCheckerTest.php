@@ -37,16 +37,15 @@ final class ConfigurationCheckerTest extends TestCase
 
     public function testItBuildAProgramIncrementTracker(): void
     {
-        $planning_adapter = Mockery::mock(BuildPlanProgramConfiguration::class);
-        $plan_adapter     = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
-        $checker          = new ConfigurationChecker($planning_adapter, $plan_adapter);
-
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1);
+        $planning_adapter  = Mockery::mock(BuildPlanProgramConfiguration::class);
+        $plan_adapter      = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
+        $checker           = new ConfigurationChecker($planning_adapter, $plan_adapter);
+        $user              = UserTestBuilder::aUser()->build();
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user);
         $program_increment = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
         $planning_adapter->shouldReceive('buildProgramIdentifierFromTeamProject')->andReturn($program);
         $plan_adapter->shouldReceive('buildTrackerProgramIncrementFromProjectId')->andReturn($program_increment);
 
-        $user    = UserTestBuilder::aUser()->build();
         $project = new Project(['group_id' => 1]);
 
         self::assertEquals($program_increment, $checker->getProgramIncrementTracker($user, $project));

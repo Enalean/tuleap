@@ -91,7 +91,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
     public function testItDoesNotReturnAnythingWhenUserCanNotReadArtifact(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
 
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturnNull();
 
@@ -101,7 +101,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
 
         $project  = $this->buildProject(110);
         $tracker  = $this->buildTracker(14, $project);
@@ -119,7 +119,7 @@ final class FeatureRepresentationBuilderTest extends TestCase
     public function testItBuildsRepresentation(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
 
         $project  = $this->buildProject(101);
         $tracker  = $this->buildTracker(1, $project);

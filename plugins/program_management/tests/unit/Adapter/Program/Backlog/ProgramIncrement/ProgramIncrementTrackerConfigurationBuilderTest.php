@@ -90,7 +90,7 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
             ->once();
 
         $user                   = UserTestBuilder::aUser()->build();
-        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101);
+        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
         $expected_configuration = new ProgramIncrementTrackerConfiguration(
             $project->getId(),
             false,
@@ -110,7 +110,7 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
             ->once();
 
         $user                   = UserTestBuilder::aUser()->build();
-        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101);
+        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
         $expected_configuration = new ProgramIncrementTrackerConfiguration(
             $project->getId(),
             false,

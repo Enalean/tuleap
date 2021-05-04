@@ -84,28 +84,30 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testBuildsActionForAnUnplannedArtifact(): void
     {
+        $user               = UserTestBuilder::aUser()->build();
         $source_information = new TopBacklogActionActifactSourceInformation(888, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user)
         );
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
         $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
         $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(false);
 
-        self::assertNotNull($this->action_builder->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNotNull($this->action_builder->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testBuildsActionForAnArtifactInTheTopBacklog(): void
     {
+        $user               = UserTestBuilder::aUser()->build();
         $source_information = new TopBacklogActionActifactSourceInformation(999, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user)
         );
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(true);
 
-        self::assertNotNull($this->action_builder->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNotNull($this->action_builder->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testNoActionIsBuiltForArtifactsThatAreNotInAProgramProject(): void
@@ -118,39 +120,42 @@ final class ArtifactTopBacklogActionBuilderTest extends TestCase
 
     public function testNoActionIsBuiltForUsersThatCannotPrioritizeFeatures(): void
     {
+        $user               = UserTestBuilder::aUser()->build();
         $source_information = new TopBacklogActionActifactSourceInformation(401, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user)
         );
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(false);
 
-        self::assertNull($this->action_builder->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNull($this->action_builder->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testNoActionIsBuiltForArtifactsThatAreNotPlannable(): void
     {
+        $user               = UserTestBuilder::aUser()->build();
         $source_information = new TopBacklogActionActifactSourceInformation(2, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user)
         );
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
         $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
 
-        self::assertNull($this->action_builder->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNull($this->action_builder->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testNoActionIsBuiltForArtifactsThatArePlannedInAProgramIncrement(): void
     {
+        $user               = UserTestBuilder::aUser()->build();
         $source_information = new TopBacklogActionActifactSourceInformation(3, 140, 102);
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user)
         );
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
         $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
         $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(true);
 
-        self::assertNull($this->action_builder->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNull($this->action_builder->buildTopBacklogActionBuilder($source_information, $user));
     }
 }

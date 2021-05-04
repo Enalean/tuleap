@@ -49,8 +49,9 @@ interface BuildProgram
 
     /**
      * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
      */
-    public function ensureProgramIsAProject(int $project_id): void;
+    public function ensureProgramIsAProject(int $project_id, \PFUser $user): void;
 
     /**
      * @throws ProgramAccessException

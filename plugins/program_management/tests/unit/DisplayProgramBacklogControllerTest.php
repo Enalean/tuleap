@@ -146,7 +146,7 @@ final class DisplayProgramBacklogControllerTest extends TestCase
         $request->shouldReceive('getCurrentUser')->andReturn($user);
         $this->build_program->shouldReceive('buildExistingProgramProject')
             ->with($project->getID(), $user)
-            ->once()->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110));
+            ->once()->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user));
 
         $layout = \Mockery::mock(BaseLayout::class);
         $layout->shouldReceive('addCssAsset')->once();

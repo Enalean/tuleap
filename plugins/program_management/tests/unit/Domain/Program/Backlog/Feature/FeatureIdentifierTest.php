@@ -33,7 +33,7 @@ final class FeatureIdentifierTest extends TestCase
     public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
 
         self::assertNull(FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(false), 404, $user, $program));
     }
@@ -41,7 +41,7 @@ final class FeatureIdentifierTest extends TestCase
     public function testItBuildsAValidFeature(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
 
         $feature = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 87, $user, $program);
         self::assertSame(87, $feature->id);

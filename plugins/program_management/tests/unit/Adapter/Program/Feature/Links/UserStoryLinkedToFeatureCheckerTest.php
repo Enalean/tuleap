@@ -178,6 +178,6 @@ final class UserStoryLinkedToFeatureCheckerTest extends TestCase
 
     private function buildFeature(int $feature_id): FeatureIdentifier
     {
-        return FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), $feature_id, $this->user, ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110));
+        return FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), $feature_id, $this->user, ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user));
     }
 }

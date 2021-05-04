@@ -84,6 +84,6 @@ final class PlanProgramAdapter implements BuildPlanProgramConfiguration
             throw new UserCanNotAccessToProgramException((int) $program->getID(), (int) $user->getId(), $e->getMessage());
         }
 
-        return ProgramIdentifier::fromId($this->build_program, (int) $program->getID());
+        return ProgramIdentifier::fromId($this->build_program, (int) $program->getID(), $user);
     }
 }

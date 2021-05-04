@@ -103,7 +103,7 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         $status_field->shouldReceive('userCanRead')->andReturn(true);
         $tracker->shouldReceive('getStatusField')->andReturn($status_field);
 
-        $program_increments = $this->retriever->retrieveOpenProgramIncrements(self::buildProgram(), $user);
+        $program_increments = $this->retriever->retrieveOpenProgramIncrements(self::buildProgram($user), $user);
 
         self::assertEquals(
             [
@@ -121,7 +121,7 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         $this->dao->shouldReceive('searchOpenProgramIncrements')->andReturn([['id' => 403]]);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(null);
 
-        self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram(), $user));
+        self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram($user), $user));
     }
 
     public function testDoesNotRetrieveArtifactsWhereTheUserCannotReadTheTitle(): void
@@ -134,11 +134,11 @@ final class ProgramIncrementsRetrieverTest extends TestCase
 
         $artifact->shouldReceive('getTitle')->andReturn(null);
 
-        self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram(), $user));
+        self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram($user), $user));
     }
 
-    private static function buildProgram(): ProgramIdentifier
+    private static function buildProgram(\PFUser $user): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user);
     }
 }

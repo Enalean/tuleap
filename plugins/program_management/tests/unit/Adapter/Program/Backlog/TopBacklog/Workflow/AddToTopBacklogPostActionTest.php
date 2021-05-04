@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeP
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
@@ -95,7 +96,7 @@ final class AddToTopBacklogPostActionTest extends TestCase
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $tracker->shouldReceive('getGroupId')->andReturn('102');
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserTestBuilder::aUser()->build())
         );
 
         $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')->once();

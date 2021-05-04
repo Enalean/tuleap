@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 
@@ -47,10 +48,11 @@ final class ProgramIdentifier
 
     /**
      * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
      */
-    public static function fromId(BuildProgram $build_program, int $id): self
+    public static function fromId(BuildProgram $build_program, int $id, \PFUser $user): self
     {
-        $build_program->ensureProgramIsAProject($id);
+        $build_program->ensureProgramIsAProject($id, $user);
 
         return new self($id);
     }

@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeP
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AddToTopBacklogPostActionFactoryTest extends TestCase
@@ -93,7 +94,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
     public function testBuildsThePostAction(): void
     {
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserTestBuilder::aUser()->build())
         );
 
         $this->dao->shouldReceive('searchByTransitionID')->with($this->transition_id)->andReturn(['id' => 88]);
@@ -118,7 +119,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
     public function testWarmsUpTheCacheBeforeGettingThePostAction(): void
     {
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110)
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserTestBuilder::aUser()->build())
         );
 
         $this->dao->shouldReceive('searchByWorkflow')

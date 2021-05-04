@@ -99,8 +99,8 @@ final class FeatureAdditionProcessorTest extends TestCase
 
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
-        $program                    = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $user                       = UserTestBuilder::aUser()->build();
+        $program                    = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
         $program_increment          = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
         $feature                    = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
         $feature_addition           = FeatureAddition::fromFeature(
@@ -120,8 +120,8 @@ final class FeatureAdditionProcessorTest extends TestCase
 
     private function buildFeatureAddition(): FeatureAddition
     {
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110);
         $user              = UserTestBuilder::aUser()->build();
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
         $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 37, $user);
         $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 76, $user, $program);
         return FeatureAddition::fromFeature(

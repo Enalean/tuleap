@@ -96,7 +96,7 @@ final class PlanProgramAdapterTest extends TestCase
 
         $this->url_verification->shouldReceive('userCanAccessProject')->once();
 
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $program_increment->getID());
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $program_increment->getID(), $user);
         self::assertEquals($program, $this->adapter->buildProgramIdentifierFromTeamProject($project, $user));
     }
 

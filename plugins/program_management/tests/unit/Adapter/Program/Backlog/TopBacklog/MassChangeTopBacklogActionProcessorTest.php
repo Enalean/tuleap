@@ -69,8 +69,9 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
 
     public function testCanProcessMassAdditionToTheTopBacklog(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102));
-        $source_information = new MassChangeTopBacklogSourceInformation(102, [400, 401], UserTestBuilder::aUser()->build(), 'add');
+        $user = UserTestBuilder::aUser()->build();
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user));
+        $source_information = new MassChangeTopBacklogSourceInformation(102, [400, 401], $user, 'add');
 
         $expected_top_backlog_change = new TopBacklogChange([400, 401], [], false, null);
 
@@ -91,8 +92,9 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
 
     public function testCanProcessMassDeletionToTheTopBacklog(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102));
-        $source_information = new MassChangeTopBacklogSourceInformation(102, [402, 403], UserTestBuilder::aUser()->build(), 'remove');
+        $user = UserTestBuilder::aUser()->build();
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user));
+        $source_information = new MassChangeTopBacklogSourceInformation(102, [402, 403], $user, 'remove');
 
         $expected_top_backlog_change = new TopBacklogChange([], [402, 403], false, null);
 
@@ -113,8 +115,9 @@ final class MassChangeTopBacklogActionProcessorTest extends TestCase
 
     public function testDoesNothingWhenProcessingAMassChangeWithNoTopBacklogModification(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102));
-        $source_information = new MassChangeTopBacklogSourceInformation(102, [405], UserTestBuilder::aUser()->build(), 'unchanged');
+        $user = UserTestBuilder::aUser()->build();
+        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user));
+        $source_information = new MassChangeTopBacklogSourceInformation(102, [405], $user, 'unchanged');
 
         $this->top_backlog_change_processor->shouldNotReceive('processTopBacklogChangeForAProgram');
 
