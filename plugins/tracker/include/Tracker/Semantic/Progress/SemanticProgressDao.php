@@ -27,11 +27,11 @@ use Tuleap\DB\DataAccessObject;
 class SemanticProgressDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{total_effort_field_id: ?int, remaining_effort_field_id: ?int}|null
+     * @psalm-return array{total_effort_field_id: ?int, remaining_effort_field_id: ?int, artifact_link_type: ?string}|null
      */
     public function searchByTrackerId(int $tracker_id): ?array
     {
-        $sql = 'SELECT total_effort_field_id, remaining_effort_field_id
+        $sql = 'SELECT total_effort_field_id, remaining_effort_field_id, artifact_link_type
             FROM tracker_semantic_progress
                 WHERE tracker_id = ?';
 

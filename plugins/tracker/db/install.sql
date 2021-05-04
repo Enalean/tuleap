@@ -754,7 +754,8 @@ DROP TABLE IF EXISTS tracker_semantic_progress;
 CREATE TABLE tracker_semantic_progress (
     tracker_id int(11) NOT NULL PRIMARY KEY,
     total_effort_field_id int(11) NULL,
-    remaining_effort_field_id int(11) NULL
+    remaining_effort_field_id int(11) NULL,
+    artifact_link_type TEXT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_rule;

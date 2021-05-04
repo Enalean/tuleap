@@ -52,12 +52,20 @@ class SemanticProgressBuilder
 
         $total_effort_field_id     = $row['total_effort_field_id'];
         $remaining_effort_field_id = $row['remaining_effort_field_id'];
+        $artifact_link_type        = $row['artifact_link_type'];
 
-        if ($total_effort_field_id !== null && $remaining_effort_field_id !== null) {
+        if ($total_effort_field_id !== null && $remaining_effort_field_id !== null && $artifact_link_type === null) {
             return $this->buildEffortBasedSemanticProgress(
                 $tracker,
                 $total_effort_field_id,
                 $remaining_effort_field_id
+            );
+        }
+
+        if ($artifact_link_type !== null && $total_effort_field_id === null && $remaining_effort_field_id === null) {
+            return $this->buildChildCountBasedSemanticProgress(
+                $tracker,
+                $artifact_link_type
             );
         }
 
@@ -91,6 +99,14 @@ class SemanticProgressBuilder
         return new SemanticProgress(
             $tracker,
             $this->method_builder->buildMethodBasedOnEffort($tracker, $total_effort_field_id, $remaining_effort_field_id)
+        );
+    }
+
+    private function buildChildCountBasedSemanticProgress(Tracker $tracker, string $artifact_link_type): SemanticProgress
+    {
+        return new SemanticProgress(
+            $tracker,
+            $this->method_builder->buildMethodBasedOnChildCount($tracker, $artifact_link_type)
         );
     }
 }

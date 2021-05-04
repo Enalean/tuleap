@@ -26,7 +26,9 @@ use Luracast\Restler\RestException;
 use Psr\Log\LoggerInterface;
 use Tuleap\REST\Header;
 use Tuleap\Roadmap\RoadmapWidgetDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
@@ -103,7 +105,11 @@ final class RoadmapResource
                 $progress_dao,
                 new MethodBuilder(
                     $form_element_factory,
-                    $progress_dao
+                    $progress_dao,
+                    new NaturePresenterFactory(
+                        new NatureDao(),
+                        new ArtifactLinksUsageDao()
+                    )
                 )
             )
         );
