@@ -49,7 +49,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleField
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleValueAdapter as TitleValueAdapterAlias;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -82,7 +81,7 @@ class TaskBuilder
 
         $user_stories_planner         = new UserStoriesInMirroredMilestonesPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new FeatureToLinkBuilder(new ArtifactsLinkedToParentDao()),
+            new ArtifactsLinkedToParentDao(),
             Tracker_ArtifactFactory::instance(),
             new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
             new ContentDao(),

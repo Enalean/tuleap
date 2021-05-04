@@ -29,12 +29,10 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
@@ -73,11 +71,6 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
     private $tracker_artifact_factory;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FeatureToLinkBuilder
-     */
-    private $feature_to_plan_builder;
-
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PrioritizeFeaturesPermissionVerifier
      */
     private $prioritize_features_permission_verifier;
@@ -87,10 +80,15 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
      */
     private $retrieve_program_increment;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
+     */
+    private $artifacts_linked_dao;
+
     protected function setUp(): void
     {
         $db_transaction_executor                    = new DBTransactionExecutorPassthrough();
-        $this->feature_to_plan_builder              = \Mockery::mock(FeatureToLinkBuilder::class);
+        $this->artifacts_linked_dao                 = \Mockery::mock(ArtifactsLinkedToParentDao::class);
         $this->tracker_artifact_factory             = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->mirrored_milestone_retriever         = \Mockery::mock(MirroredMilestoneRetriever::class);
         $this->content_dao                          = \Mockery::mock(ContentDao::class);
@@ -98,7 +96,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 
         $this->planner = new UserStoriesInMirroredMilestonesPlanner(
             $db_transaction_executor,
-            $this->feature_to_plan_builder,
+            $this->artifacts_linked_dao,
             $this->tracker_artifact_factory,
             $this->mirrored_milestone_retriever,
             $this->content_dao,
@@ -114,10 +112,10 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 
         $feature_id = 1234;
         $this->content_dao->shouldReceive('searchContent')->once()
-            ->andReturn(['artifact_id' => 101]);
-        $this->feature_to_plan_builder->shouldReceive('buildFeatureChange')->andReturn(
-            new FeaturePlanChange([$feature_id])
-        );
+            ->andReturn([['artifact_id' => 101]]);
+        $this->artifacts_linked_dao->shouldReceive('getArtifactsLinkedToId')
+            ->once()
+            ->andReturn([['id' => $feature_id]]);
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
@@ -154,10 +152,10 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 
         $feature_id = 1234;
         $this->content_dao->shouldReceive('searchContent')->once()
-            ->andReturn(['artifact_id' => 101]);
-        $this->feature_to_plan_builder->shouldReceive('buildFeatureChange')->andReturn(
-            new FeaturePlanChange([$feature_id])
-        );
+            ->andReturn([['artifact_id' => 101]]);
+        $this->artifacts_linked_dao->shouldReceive('getArtifactsLinkedToId')
+            ->once()
+            ->andReturn([['id' => $feature_id]]);
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
@@ -181,10 +179,10 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 
         $feature_id = 1234;
         $this->content_dao->shouldReceive('searchContent')->once()
-            ->andReturn(['artifact_id' => 101]);
-        $this->feature_to_plan_builder->shouldReceive('buildFeatureChange')->andReturn(
-            new FeaturePlanChange([$feature_id])
-        );
+            ->andReturn([['artifact_id' => 101]]);
+        $this->artifacts_linked_dao->shouldReceive('getArtifactsLinkedToId')
+            ->once()
+            ->andReturn([['id' => $feature_id]]);
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
