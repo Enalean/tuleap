@@ -25,13 +25,15 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Luracast\Restler\RestException;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use function PHPUnit\Framework\assertTrue;
 
 class ProgramUserGroupTest extends TestCase
 {
     public function testRejectIfUgroupDoesNotExist(): void
     {
-        $program = new ProgramForManagement(101);
+        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), 101, UserTestBuilder::aUser()->build());
 
         $this->expectException(RestException::class);
         ProgramUserGroup::buildProgramUserGroup($this->getStubBuildProgramUserGroup(false), "123", $program);
@@ -39,7 +41,7 @@ class ProgramUserGroupTest extends TestCase
 
     public function testItBuildAProgramUserGroup(): void
     {
-        $program = new ProgramForManagement(101);
+        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), 101, UserTestBuilder::aUser()->build());
 
         $group = ProgramUserGroup::buildProgramUserGroup($this->getStubBuildProgramUserGroup(), "123", $program);
         self::assertEquals($program, $group->getProgram());
