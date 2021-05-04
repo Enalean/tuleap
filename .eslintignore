@@ -25,6 +25,5 @@ src/www/scripts/textboxlist/
 src/www/scripts/vendor/
 src/www/scripts/fieldDependencies.js
 src/www/scripts/filterlist.js
-src/www/scripts/user.js
 src/themes/tlp/src/types/
 plugins/mediawiki/www/

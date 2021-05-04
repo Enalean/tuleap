@@ -1432,6 +1432,9 @@ msgstr "Forums pour '%1$s'"
 msgid "General"
 msgstr "Général"
 
+msgid "Generate"
+msgstr "Générer"
+
 msgid "Generate an SVN token"
 msgstr "Générer un jeton SVN"
 
