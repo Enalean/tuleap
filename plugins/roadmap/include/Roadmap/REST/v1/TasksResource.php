@@ -24,7 +24,9 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
@@ -39,11 +41,11 @@ final class TasksResource
     public const ROUTE     = 'roadmap_tasks';
 
     /**
-     * @url OPTIONS {id}/tasks
+     * @url OPTIONS {id}/subtasks
      *
      * @param int $id Id of the roadmap
      */
-    public function optionsChildren(int $id): void
+    public function optionsSubtasks(int $id): void
     {
         Header::allowOptionsGet();
     }
@@ -51,13 +53,13 @@ final class TasksResource
     /**
      * Get the subtasks
      *
-     * Retrieve paginated children of a given roadmap task
+     * Retrieve paginated subtasks of a given roadmap task
      *
      * <pre>
      * /!\ Roadmap REST route is under construction and subject to changes /!\
      * </pre>
      *
-     * @url    GET {id}/children
+     * @url    GET {id}/subtasks
      * @access hybrid
      *
      * @param int $id     Id of the task
@@ -71,9 +73,9 @@ final class TasksResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getChildren(int $id, int $offset = 0, int $limit = self::MAX_LIMIT): array
+    public function getSubtasks(int $id, int $offset = 0, int $limit = self::MAX_LIMIT): array
     {
-        $this->optionsChildren($id);
+        $this->optionsSubtasks($id);
 
         $form_element_factory       = \Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
@@ -84,7 +86,7 @@ final class TasksResource
         $timeframe_builder = new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger());
         $progress_dao      = new SemanticProgressDao();
 
-        $retriever = new TaskChildrenRetriever(
+        $retriever = new SubtasksRetriever(
             \Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
             new TaskRepresentationBuilderForTrackerCache(
@@ -95,7 +97,11 @@ final class TasksResource
                     $progress_dao,
                     new MethodBuilder(
                         $form_element_factory,
-                        $progress_dao
+                        $progress_dao,
+                        new NaturePresenterFactory(
+                            new NatureDao(),
+                            new ArtifactLinksUsageDao()
+                        )
                     )
                 ),
             ),
