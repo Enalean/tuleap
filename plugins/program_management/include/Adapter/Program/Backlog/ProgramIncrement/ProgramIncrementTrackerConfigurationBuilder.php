@@ -36,21 +36,15 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
      */
     private $plan_configuration_builder;
     /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
      * @var PlanStore
      */
     private $plan_store;
 
     public function __construct(
         BuildPlanProgramIncrementConfiguration $plan_configuration_builder,
-        \Tracker_FormElementFactory $form_element_factory,
         PlanStore $plan_store
     ) {
         $this->plan_configuration_builder = $plan_configuration_builder;
-        $this->form_element_factory       = $form_element_factory;
         $this->plan_store                 = $plan_store;
     }
 
@@ -67,12 +61,6 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
         );
         $can_create_program_increment = $tracker->userCanSubmitArtifact($user);
 
-        $artifact_link_field_id = null;
-        $artifact_link_field    = $this->form_element_factory->getAnArtifactLinkField($user, $tracker->getFullTracker());
-        if ($artifact_link_field) {
-            $artifact_link_field_id = $artifact_link_field->getId();
-        }
-
         $program_increments_labels   = $this->plan_store->getProgramIncrementLabels($tracker->getTrackerId());
         $program_increment_label     = null;
         $program_increment_sub_label = null;
@@ -85,7 +73,6 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
         return new ProgramIncrementTrackerConfiguration(
             $tracker->getTrackerId(),
             $can_create_program_increment,
-            $artifact_link_field_id,
             $program_increment_label,
             $program_increment_sub_label
         );

@@ -165,7 +165,6 @@ final class DisplayProgramBacklogControllerTest extends TestCase
             new ProgramIncrementTrackerConfiguration(
                 $project->getId(),
                 true,
-                10,
                 "Program Increments",
                 "program increment"
             )
