@@ -22,14 +22,13 @@
 
 .project-with-background {
     .baseline-title-header {
-        @include background.project-background-title-header-typography($tlp-ui-white);
+        @include background.project-background-title-header-typography();
     }
 }
 
 body {
     @include background.apply-background(
         '.baseline-title-header',
-        $tlp-theme-sidebar-background-color,
         global-variables.$sidebar-expanded-width,
         global-variables.$sidebar-collapsed-width,
     );
