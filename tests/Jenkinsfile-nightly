@@ -161,7 +161,7 @@ pipeline {
                                 dir ('sources') {
                                     sh """
                                     mkdir -p ../results/psalm_php73/
-                                    scl enable php73 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm_php73/checkstyle.xml"
+                                    scl enable php73 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='./tests/psalm/psalm.xml' --no-cache --root='.' --report=../results/psalm_php73/checkstyle.xml"
                                     """
                                 }
                             }
