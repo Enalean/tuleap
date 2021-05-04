@@ -30,8 +30,6 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\TestManagement\REST\v1\CampaignArtifactUpdateFieldValuesBuilder;
-use Tuleap\TestManagement\REST\v1\CampaignUpdater;
 
 class OpenCampaignController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -40,14 +38,14 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
      */
     private $campaign_retriever;
     /**
-     * @var CampaignUpdater
+     * @var StatusUpdater
      */
-    private $campaign_updater;
+    private $status_updater;
 
-    public function __construct(CampaignRetriever $campaign_retriever, CampaignUpdater $campaign_updater)
+    public function __construct(CampaignRetriever $campaign_retriever, StatusUpdater $status_updater)
     {
         $this->campaign_retriever = $campaign_retriever;
-        $this->campaign_updater   = $campaign_updater;
+        $this->status_updater     = $status_updater;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -68,12 +66,11 @@ class OpenCampaignController implements DispatchableWithRequest, DispatchableWit
         $csrf_token = new CSRFSynchronizerToken(
             "/plugins/testmanagement/?group_id=" . (int) $project->getID()
         );
-        $csrf_token->check();
 
-        $this->campaign_updater->updateCampaign(
-            $user,
+        $this->status_updater->openCampaign(
             $campaign,
-            CampaignArtifactUpdateFieldValuesBuilder::STATUS_CHANGE_OPEN_VALUE
+            $user,
+            $csrf_token
         );
 
         $layout->addFeedback(
