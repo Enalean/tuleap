@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUse
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
@@ -38,6 +37,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrem
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 final class ContentModifier implements ModifyContent
@@ -100,19 +100,16 @@ final class ContentModifier implements ModifyContent
         if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
             throw new AddOrOrderMustBeSetException();
         }
-        $program_increment = ProgramIncrementIdentifier::fromId(
+        $program_increment   = ProgramIncrementIdentifier::fromId(
             $this->program_increment_checker,
             $program_increment_id,
             $user
         );
-        $program           = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user);
-        $has_permission    = $this->permission_verifier->canUserPrioritizeFeatures($program, $user);
+        $program             = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user);
+        $user_can_prioritize = UserCanPrioritize::fromUser($this->permission_verifier, $user, $program);
 
-        if (! $has_permission) {
-            throw new NotAllowedToPrioritizeException((int) $user->getId(), $program_increment->getId());
-        }
         if ($content_change->potential_feature_id_to_add !== null) {
-            $this->planFeature($content_change->potential_feature_id_to_add, $program_increment, $user, $program);
+            $this->planFeature($content_change->potential_feature_id_to_add, $program_increment, $user_can_prioritize, $program);
         }
         if ($content_change->elements_to_order !== null) {
             $this->reorderFeature($content_change->elements_to_order, $program_increment, $program);
@@ -130,10 +127,10 @@ final class ContentModifier implements ModifyContent
     private function planFeature(
         int $potential_feature_id_to_add,
         ProgramIncrementIdentifier $program_increment,
-        \PFUser $user,
+        UserCanPrioritize $user,
         ProgramIdentifier $program
     ): void {
-        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user, $program);
+        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user->getFullUser(), $program);
         if ($feature === null) {
             throw new FeatureNotFoundException($potential_feature_id_to_add);
         }

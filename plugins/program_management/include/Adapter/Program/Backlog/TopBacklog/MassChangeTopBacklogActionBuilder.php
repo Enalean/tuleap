@@ -28,8 +28,10 @@ use TemplateRenderer;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 class MassChangeTopBacklogActionBuilder
 {
@@ -66,11 +68,8 @@ class MassChangeTopBacklogActionBuilder
     {
         try {
             $program = $this->build_program->buildExistingProgramProject($source_information->project_id, $user);
-        } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
-            return null;
-        }
-
-        if (! $this->prioritize_features_permission_verifier->canUserPrioritizeFeatures($program, $user)) {
+            UserCanPrioritize::fromUser($this->prioritize_features_permission_verifier, $user, $program);
+        } catch (ProgramAccessException | ProjectIsNotAProgramException | NotAllowedToPrioritizeException $e) {
             return null;
         }
 

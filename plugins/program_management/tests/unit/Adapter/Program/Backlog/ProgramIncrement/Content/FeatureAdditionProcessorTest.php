@@ -31,10 +31,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Fea
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturePermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
@@ -107,7 +109,7 @@ final class FeatureAdditionProcessorTest extends TestCase
             new VerifyCanBePlannedInProgramIncrementStub(),
             $feature,
             $program_increment,
-            $user
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
         );
         $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturn($program_increment_artifact);
@@ -128,7 +130,7 @@ final class FeatureAdditionProcessorTest extends TestCase
             new VerifyCanBePlannedInProgramIncrementStub(),
             $feature,
             $program_increment,
-            $user
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
         );
     }
 }

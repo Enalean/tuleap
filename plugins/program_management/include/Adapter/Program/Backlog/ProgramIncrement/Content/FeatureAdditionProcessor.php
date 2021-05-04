@@ -56,7 +56,7 @@ final class FeatureAdditionProcessor implements AddFeature
         }
         try {
             $this->artifact_link_updater->updateArtifactLinks(
-                $feature_addition->user,
+                $feature_addition->user->getFullUser(),
                 $program_increment_artifact,
                 [$feature_addition->feature->id],
                 [],

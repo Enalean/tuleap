@@ -30,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
@@ -40,6 +39,7 @@ use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturePermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use function PHPUnit\Framework\assertTrue;
@@ -49,7 +49,7 @@ final class ContentModifierTest extends TestCase
     public function testItThrowsWhenUserCannotPrioritizeFeatures(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(false),
+            VerifyPrioritizeFeaturePermissionStub::cannotPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
@@ -68,7 +68,7 @@ final class ContentModifierTest extends TestCase
     public function testItThrowsWhenUserCannotSeeFeatureToAdd(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
+            VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(false),
@@ -87,7 +87,7 @@ final class ContentModifierTest extends TestCase
     public function testItThrowsWhenFeatureToAddCannotBePlanned(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
+            VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
@@ -106,7 +106,7 @@ final class ContentModifierTest extends TestCase
     public function testItSucceedsWhenThereIsOnlyFeatureToAdd(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
+            VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
@@ -125,7 +125,7 @@ final class ContentModifierTest extends TestCase
     public function testItFailedWhenThereIsNoFeatureToAddOrToOrder(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
+            VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
@@ -144,7 +144,7 @@ final class ContentModifierTest extends TestCase
     public function testItSucceedsWhenThereIsOnlyFeatureToReorder(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
+            VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
@@ -166,7 +166,7 @@ final class ContentModifierTest extends TestCase
     public function testItThrowsWhenFeatureToReorderIsNotInPlan(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
+            VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
@@ -188,7 +188,7 @@ final class ContentModifierTest extends TestCase
     public function testItThrowsWhenFeatureToReorderIsNotInProgramIncrement(): void
     {
         $modifier = new ContentModifier(
-            $this->getStubPermissionVerifier(),
+            VerifyPrioritizeFeaturePermissionStub::canPrioritize(),
             new CheckProgramIncrementStub(true),
             $this->getStubProgramSearcher(),
             new VerifyIsVisibleFeatureStub(),
@@ -232,24 +232,6 @@ final class ContentModifierTest extends TestCase
             public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool
             {
                 return $this->is_planned;
-            }
-        };
-    }
-
-    private function getStubPermissionVerifier($is_authorized = true): VerifyPrioritizeFeaturesPermission
-    {
-        return new class ($is_authorized) implements VerifyPrioritizeFeaturesPermission {
-            /** @var bool */
-            private $is_authorized;
-
-            public function __construct(bool $is_authorized)
-            {
-                $this->is_authorized = $is_authorized;
-            }
-
-            public function canUserPrioritizeFeatures(ProgramIdentifier $program, \PFUser $user): bool
-            {
-                return $this->is_authorized;
             }
         };
     }

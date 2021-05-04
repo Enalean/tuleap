@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Conte
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 /**
  * I am an order to plan a Feature in a Program Increment
@@ -37,7 +38,7 @@ final class FeatureAddition
      */
     public $feature;
     /**
-     * @var \PFUser
+     * @var UserCanPrioritize
      */
     public $user;
     /**
@@ -47,7 +48,7 @@ final class FeatureAddition
 
     private function __construct(
         FeatureIdentifier $feature,
-        \PFUser $user,
+        UserCanPrioritize $user,
         ProgramIncrementIdentifier $program_increment
     ) {
         $this->feature           = $feature;
@@ -62,7 +63,7 @@ final class FeatureAddition
         VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
         FeatureIdentifier $feature,
         ProgramIncrementIdentifier $program_increment,
-        \PFUser $user
+        UserCanPrioritize $user
     ): self {
         $can_be_planned = $can_be_planned_verifier->canBePlannedInProgramIncrement(
             $feature->id,

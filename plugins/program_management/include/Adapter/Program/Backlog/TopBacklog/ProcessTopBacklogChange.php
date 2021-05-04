@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUse
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
@@ -38,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
@@ -94,13 +96,15 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         \PFUser $user
     ): void {
         $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user) {
-            if (! $this->prioritize_features_permission_verifier->canUserPrioritizeFeatures($program, $user)) {
+            try {
+                $user_can_prioritize = UserCanPrioritize::fromUser($this->prioritize_features_permission_verifier, $user, $program);
+            } catch (NotAllowedToPrioritizeException $e) {
                 throw new CannotManipulateTopBacklog($program, $user);
             }
 
             $feature_add_removals = $this->filterFeaturesThatCanBeManipulated(
                 $top_backlog_change->potential_features_id_to_add,
-                $user,
+                $user_can_prioritize,
                 $program,
                 false
             );
@@ -118,7 +122,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 
             $feature_remove_removals = $this->filterFeaturesThatCanBeManipulated(
                 $top_backlog_change->potential_features_id_to_remove,
-                $user,
+                $user_can_prioritize,
                 $program,
                 true
             );
@@ -160,14 +164,14 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
      */
     private function filterFeaturesThatCanBeManipulated(
         array $features_id,
-        \PFUser $user,
+        UserCanPrioritize $user,
         ProgramIdentifier $program,
         bool $ignore_feature_cannot_be_retrieved
     ): array {
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
-            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user, $program);
+            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user->getFullUser(), $program);
             if (! $feature) {
                 if ($ignore_feature_cannot_be_retrieved) {
                     continue;
