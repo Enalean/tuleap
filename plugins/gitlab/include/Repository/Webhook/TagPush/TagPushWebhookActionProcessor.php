@@ -60,12 +60,23 @@ class TagPushWebhookActionProcessor
                     $tag_push_webhook_data
                 );
                 return;
+            } elseif ($tag_push_webhook_data->getBefore() === self::NO_REFERENCE) {
+                $this->push_webhook_create_action->createTagReferences(
+                    $gitlab_repository,
+                    $tag_push_webhook_data
+                );
+                return;
+            } else {
+                $this->push_webhook_delete_action->deleteTagReferences(
+                    $gitlab_repository,
+                    $tag_push_webhook_data
+                );
+                $this->push_webhook_create_action->createTagReferences(
+                    $gitlab_repository,
+                    $tag_push_webhook_data
+                );
+                return;
             }
-
-            $this->push_webhook_create_action->createTagReferences(
-                $gitlab_repository,
-                $tag_push_webhook_data
-            );
         });
     }
 }
