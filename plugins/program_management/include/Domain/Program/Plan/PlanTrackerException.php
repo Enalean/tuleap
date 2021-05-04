@@ -15,19 +15,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
-
-final class ConfigurationUserCanNotSeeProgramException extends \Exception implements PlanCheckException
+interface PlanTrackerException extends \Throwable
 {
-    public function __construct(int $user_id, int $tracker_id)
-    {
-        parent::__construct("User #$user_id can not view the the tracker #$tracker_id");
-    }
 }

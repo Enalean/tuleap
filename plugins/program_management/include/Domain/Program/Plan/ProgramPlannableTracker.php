@@ -38,7 +38,7 @@ final class ProgramPlannableTracker
     }
 
     /**
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
      */
     public static function build(
         BuildTracker $build_tracker,

@@ -20,8 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
-interface NatureAnalyzerException extends \Throwable
+final class ProgramNotFoundException extends \Exception implements NatureAnalyzerException
 {
+    public function __construct(int $team_id)
+    {
+        parent::__construct("Program of team project #$team_id not found");
+    }
 }

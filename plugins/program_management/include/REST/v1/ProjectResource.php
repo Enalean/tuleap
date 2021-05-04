@@ -43,19 +43,14 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupBuildAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Adapter\Team\TeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
@@ -65,7 +60,12 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCreator;
+use Tuleap\ProgramManagement\Domain\Team\TeamException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -265,9 +265,9 @@ final class ProjectResource extends AuthenticatedResource
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
             return array_slice($elements, $offset, $limit);
-        } catch (\Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException $e) {
+        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());
-        } catch (\Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException $e) {
+        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException $e) {
             throw new RestException(400, $e->getMessage());
         }
     }
@@ -419,9 +419,9 @@ final class ProjectResource extends AuthenticatedResource
         $user = $this->user_manager->getCurrentUser();
         try {
             $program_increments = $this->program_increments_builder->buildOpenProgramIncrements($id, $user);
-        } catch (\Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException $e) {
+        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());
-        } catch (\Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException $e) {
+        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException $e) {
             throw new RestException(400, $e->getMessage());
         }
 

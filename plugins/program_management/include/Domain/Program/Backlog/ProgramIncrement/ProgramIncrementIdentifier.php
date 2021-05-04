@@ -44,7 +44,7 @@ final class ProgramIncrementIdentifier
 
     /**
      * @throws ProgramIncrementNotFoundException
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
      */
     public static function fromId(
         CheckProgramIncrement $check_program_increment,

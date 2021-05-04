@@ -28,6 +28,8 @@ use Project_AccessProjectNotFoundException;
 use Project_AccessRestrictedException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\UserCanNotAccessToProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\Project\ProjectAccessSuspendedException;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProgramManagement\Adapter\Program;
+declare(strict_types=1);
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-final class ProgramUserGroupDoesNotExistException extends \RuntimeException implements InvalidProgramUserGroup
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
+
+final class ConfigurationUserCanNotSeeProgramException extends \Exception implements PlanCheckException
 {
-    public function __construct(string $raw_user_group_id)
+    public function __construct(int $user_id, int $tracker_id)
     {
-        parent::__construct(sprintf("The user group %s does not exist in the program", $raw_user_group_id));
+        parent::__construct("User #$user_id can not view the the tracker #$tracker_id");
     }
 }

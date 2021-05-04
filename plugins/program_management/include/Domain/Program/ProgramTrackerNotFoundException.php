@@ -20,16 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
-
-class PendingArtifactUserNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+final class ProgramTrackerNotFoundException extends \Exception implements ProgramTrackerException
 {
-    public function __construct(int $artifact_id, int $user_id)
+    public function __construct(int $tracker_id)
     {
-        parent::__construct(
-            "Could not find User #$user_id for program source artifact #$artifact_id"
-        );
+        parent::__construct("Tracker #$tracker_id is not found");
     }
 }

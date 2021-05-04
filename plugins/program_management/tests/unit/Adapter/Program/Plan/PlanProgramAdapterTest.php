@@ -26,6 +26,7 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessProjectNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\UserCanNotAccessToProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;

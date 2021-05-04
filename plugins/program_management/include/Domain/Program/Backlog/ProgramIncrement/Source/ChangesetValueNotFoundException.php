@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
-final class ProjectIsAProgramException extends \Exception implements TeamException
+final class ChangesetValueNotFoundException extends \Exception implements NatureAnalyzerException
 {
-    public function __construct(int $id)
+    public function __construct(int $artifact_id)
     {
-        parent::__construct("Project #$id is defined as a program project. It can not be used as team.");
+        parent::__construct("Artifact #$artifact_id does not have changeset value");
     }
 }

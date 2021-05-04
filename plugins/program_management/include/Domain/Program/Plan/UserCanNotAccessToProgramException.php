@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-final class ArtifactLinkFieldNotFoundException extends \Exception implements NatureAnalyzerException
+final class UserCanNotAccessToProgramException extends \Exception implements PlanTrackerException
 {
-    public function __construct(int $artifact_id)
+    public function __construct(int $program_id, int $user_id, string $message)
     {
-        parent::__construct("Artifact link field not found for artifact #$artifact_id");
+        parent::__construct("Program #$program_id is not accessible by user #$user_id: $message");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-final class TeamMustHaveExplicitBacklogEnabledException extends \RuntimeException implements TeamException
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+
+class PendingArtifactUserNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
-    public function __construct(\Project $project_wanted_as_a_team)
+    public function __construct(int $artifact_id, int $user_id)
     {
-        parent::__construct(sprintf('Project #%d cannot be a team because it is not in the explicit backlog mode', $project_wanted_as_a_team->getID()));
+        parent::__construct(
+            "Could not find User #$user_id for program source artifact #$artifact_id"
+        );
     }
 }

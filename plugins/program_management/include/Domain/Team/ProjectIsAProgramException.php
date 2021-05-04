@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-final class AtLeastOneTeamShouldBeDefinedException extends \Exception implements TeamException
+final class ProjectIsAProgramException extends \Exception implements TeamException
 {
-    public function __construct()
+    public function __construct(int $id)
     {
-        parent::__construct("You should define at least one team project.");
+        parent::__construct("Project #$id is defined as a program project. It can not be used as team.");
     }
 }

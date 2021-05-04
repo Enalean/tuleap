@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 
 final class CheckProgramIncrementStub implements CheckProgramIncrement
 {

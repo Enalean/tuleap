@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links;
 
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureIsNotPlannableException;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureNotAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\ProgramManagement\REST\v1\UserStoryRepresentation;
 
 interface RetrieveFeatureUserStories

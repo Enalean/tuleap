@@ -20,12 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-final class ChangesetValueNotFoundException extends \Exception implements NatureAnalyzerException
+interface TeamException extends \Throwable
 {
-    public function __construct(int $artifact_id)
-    {
-        parent::__construct("Artifact #$artifact_id does not have changeset value");
-    }
 }

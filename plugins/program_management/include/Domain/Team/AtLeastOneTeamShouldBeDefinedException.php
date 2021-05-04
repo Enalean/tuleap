@@ -20,8 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-interface TeamException extends \Throwable
+final class AtLeastOneTeamShouldBeDefinedException extends \Exception implements TeamException
 {
+    public function __construct()
+    {
+        parent::__construct("You should define at least one team project.");
+    }
 }
