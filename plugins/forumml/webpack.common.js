@@ -23,12 +23,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const entry = {
     "new-thread": "./scripts/new-thread.ts",
     style: "./themes/css/style.scss",
+    "forumml-style": "./themes/BurningParrot/css/forumml.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry[`style-forumml-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {
