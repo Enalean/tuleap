@@ -92,18 +92,18 @@
 
 .backlog-item-children {
     padding: var(--tlp-small-spacing);
-    border-right: 1px solid $tlp-ui-border-normal;
-    border-left: 1px solid $tlp-ui-border-normal;
-    background: lighten($tlp-theme-background-color, 2%);
+    border-right: 1px solid var(--tlp-ui-border-normal);
+    border-left: 1px solid var(--tlp-ui-border-normal);
+    background: var(--tlp-theme-background-color-lighter-02);
 }
 
 .backlog-item-show-children-handle {
     position: relative;
     height: 13px;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-top: 0;
     border-radius: 0 0 3px 3px;
-    background: lighten($tlp-theme-background-color, 2%);
+    background: var(--tlp-theme-background-color-lighter-02);
     cursor: pointer;
 
     &::before {
@@ -112,7 +112,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: darken($tlp-ui-border-dark, 5%);
+        color: var(--tlp-ui-border-dark-darker-05);
         font-family: 'Font Awesome 5 Free';
         font-size: 8px;
         font-weight: 900;
@@ -123,6 +123,6 @@
     }
 
     &:hover {
-        background: lighten($tlp-theme-background-color, 3%);
+        background: var(--tlp-theme-background-color-lighter-03);
     }
 }

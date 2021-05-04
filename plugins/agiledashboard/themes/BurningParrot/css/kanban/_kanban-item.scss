@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 $transition-duration: 100ms;
 $transition-delay: 500ms;
 $expand-collapse-bar-height: 8px;
@@ -82,7 +84,7 @@ $kanban-item-padding-height: 8px;
         }
     }
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} .kanban-item-content-type-border {
             border-left-color: map-get($colors, 'primary');
         }
@@ -121,8 +123,8 @@ $kanban-item-padding-height: 8px;
     &.card-created {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: pulse 500ms ease-in-out;
-        border-color: $tlp-ui-success;
-        background: transparentize($tlp-ui-success, .9);
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 }
 
@@ -130,14 +132,14 @@ kanban-item {
     display: flex;
     position: relative;
     border-radius: 4px;
-    background: $tlp-ui-white;
-    box-shadow: 0 4px 4px -3px transparentize($tlp-theme-sidebar-background-color, .9);
+    background: var(--tlp-ui-white);
+    box-shadow: 0 4px 4px -3px var(--tlp-theme-dark-background-color-transparent-90);
     cursor: move;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             background: map-get($colors, 'secondary');
-            box-shadow: inset 0 0 0 1px map-get($colors, 'border'), 0 4px 4px -3px transparentize($tlp-theme-sidebar-background-color, .85);
+            box-shadow: inset 0 0 0 1px map-get($colors, 'border'), 0 4px 4px -3px var(--tlp-theme-dark-background-color-transparent-85);
 
             .kanban-item-content-info-link,
             .kanban-item-content-clock,
@@ -191,7 +193,7 @@ kanban-item {
 
 .kanban-item-content-info-link {
     margin: 0 var(--tlp-small-spacing) 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .65rem;
     text-decoration: none;
     font-variant-numeric: tabular-nums;
@@ -222,7 +224,7 @@ kanban-item {
     width: 16px;
     height: 100%;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             opacity: .5;
             background-color: map-get($colors, 'text');
@@ -244,7 +246,7 @@ kanban-item {
     position: absolute;
     z-index: 3;
     right: var(--tlp-small-spacing);
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
     cursor: help;
 }
@@ -268,13 +270,13 @@ kanban-item {
     cursor: pointer;
 
     &:hover .kanban-item-content-expand-collapse-icon {
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 }
 
 .kanban-item-content-expand-collapse-icon {
     position: relative;
     top: -5px;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-weight: 600;
 }

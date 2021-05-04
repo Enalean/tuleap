@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 card-fields {
     width: 100%;
 }
@@ -42,7 +44,7 @@ card-fields {
 
 .extra-card-field-title {
     margin: 0 3px 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .extra-card-field-color {
@@ -52,7 +54,7 @@ card-fields {
     margin: 0 3px 0 0;
     border-radius: 50%;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.card-field-#{$color-name} {
             background-color: map-get($colors, 'primary');
         }

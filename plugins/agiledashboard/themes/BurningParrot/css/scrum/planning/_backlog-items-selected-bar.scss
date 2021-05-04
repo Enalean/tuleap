@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
+
 #backlog-items-selected-bar {
     position: fixed;
     z-index: 999;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 15px 0 15px $sidebar-expanded-width;
+    padding: 15px 0 15px global-variables.$sidebar-expanded-width;
     border-top: 1px solid #e0e0e0;
     background: rgba(255, 255, 255, .95);
     text-align: center;
@@ -52,5 +54,5 @@
 }
 
 .sidebar-collapsed #backlog-items-selected-bar {
-    padding-left: $sidebar-collapsed-width;
+    padding-left: global-variables.$sidebar-collapsed-width;
 }

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 @import '../../card-fields';
 @import 'backlog-item-moves';
 
@@ -26,12 +28,12 @@
     flex-direction: column;
     width: 100%;
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 3px;
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
     cursor: move;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             border-top-color: map-get($colors, 'border');
             border-right-color: map-get($colors, 'border');
@@ -60,11 +62,11 @@
     }
 
     &.closed {
-        border-color: transparentize($tlp-ui-border-normal, .5);
+        border-color: var(--tlp-ui-border-normal-transparent-50);
         background: transparent;
 
         .backlog-item-details-id {
-            color: transparentize($tlp-ui-dimmed, .4);
+            color: var(--tlp-ui-dimmed-transparent-40);
         }
 
         .backlog-item-details-type-border,
@@ -78,18 +80,18 @@
 
     @keyframes blink {
         0% {
-            border-color: $tlp-ui-border-normal;
-            background: $tlp-ui-white;
+            border-color: var(--tlp-ui-border-normal);
+            background: var(--tlp-ui-white);
         }
 
         50% {
-            border-color: $tlp-ui-info;
-            background: transparentize($tlp-ui-info, .9);
+            border-color: var(--tlp-ui-info);
+            background: var(--tlp-ui-info-transparent-90);
         }
 
         100% {
-            border-color: $tlp-ui-border-normal;
-            background: $tlp-ui-white;
+            border-color: var(--tlp-ui-border-normal);
+            background: var(--tlp-ui-white);
         }
     }
 
@@ -101,15 +103,15 @@
     &.updated {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: pulse 500ms ease-in-out;
-        border-color: $tlp-ui-success;
-        background: transparentize($tlp-ui-success, .9);
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 
     &.created {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: pulse 500ms ease-in-out;
-        border-color: $tlp-ui-success;
-        background: transparentize($tlp-ui-success, .9);
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 
     &:hover,
@@ -139,7 +141,7 @@
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             border-left-color: map-get($colors, 'primary');
         }
@@ -161,7 +163,7 @@
     margin: 0 0 0 5px;
     transition: transform 100ms ease-in-out 500ms;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             opacity: .5;
             background-color: map-get($colors, 'text');
@@ -184,7 +186,7 @@
     flex: 0 0 auto;
     margin: 0 7px 0 0;
     padding: 0 var(--tlp-small-spacing) 0 var(--tlp-small-spacing);
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
@@ -212,8 +214,8 @@
     line-height: 18px;
 }
 
-$backlog-item-details-parent-color: var(--project-color, darken($tlp-ui-dimmed, 10%));
-$backlog-item-details-parent-background: var(--project-color-background, $tlp-ui-border-normal);
+$backlog-item-details-parent-color: var(--project-color, var(--tlp-ui-dimmed-darker-10));
+$backlog-item-details-parent-background: var(--project-color-background, var(--tlp-ui-border-normal));
 
 .backlog-item-details-parent {
     display: flex;

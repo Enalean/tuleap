@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$milestone-background: var(--project-color-background-gradient-light, $tlp-ui-white);
+$milestone-background: var(--project-color-background-gradient-light, var(--tlp-ui-white));
 
 .milestone {
     margin: 0 0 var(--tlp-small-spacing);
-    border: 1px solid var(--project-color-border, $tlp-ui-border-normal);
+    border: 1px solid var(--project-color-border, var(--tlp-ui-border-normal));
     background: $milestone-background;
 }
 
-$border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-white, 2%));
+$border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-white-darker-02));
 
 .milestone-header {
     display: flex;
@@ -36,12 +36,12 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
     transition: background .1s linear;
     border-bottom: $border-element-separator;
     background: $milestone-background;
-    color: var(--project-color, $tlp-ui-dimmed);
+    color: var(--project-color, var(--tlp-ui-dimmed));
     cursor: pointer;
 
     &:hover {
         transition: background .1s linear;
-        background: var(--project-color-background-gradient-light-hover, darken($tlp-ui-white, 2%));
+        background: var(--project-color-background-gradient-light-hover, var(--tlp-ui-white-darker-02));
     }
 }
 
@@ -51,7 +51,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
 
 .milestone-header-label {
     flex: 0 0 auto;
-    color: var(--project-color, $tlp-ui-dimmed);
+    color: var(--project-color, var(--tlp-ui-dimmed));
 }
 
 .milestone-action-button {
@@ -72,7 +72,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
 }
 
 .milestone-header-dates {
-    color: var(--project-color, $tlp-ui-dimmed);
+    color: var(--project-color, var(--tlp-ui-dimmed));
     font-size: 12px;
 }
 
@@ -85,7 +85,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border-bottom: $border-element-separator;
-    background: var(--project-color-background-gradient, darken($tlp-ui-white, 2%));
+    background: var(--project-color-background-gradient, var(--tlp-ui-white-darker-02));
 }
 
 .milestone-info-badge {
@@ -123,15 +123,15 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
 
 .milestone-content {
     position: relative;
-    background: var(--project-color-background-gradient, $tlp-ui-white);
+    background: var(--project-color-background-gradient, var(--tlp-ui-white));
 }
 
 .milestone-backlog-items {
     min-height: 70px;
     padding: var(--tlp-medium-spacing);
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 3px;
-    background: lighten($tlp-theme-background-color, 2%);
+    background: var(--tlp-theme-background-color-lighter-02);
 }
 
 .empty-milestone {
@@ -139,7 +139,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
     top: 2px;
     left: 50%;
     transform: translate(-50%, 100%);
-    fill: transparentize($tlp-theme-color, .8);
+    fill: var(--tlp-theme-color-transparent-80);
 }
 
 .milestone-content-loading {

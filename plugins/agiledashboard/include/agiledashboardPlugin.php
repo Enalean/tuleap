@@ -755,9 +755,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         $variant = $params['variant'];
         if ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
-            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-style.css');
         } elseif ($this->isScrumAdminURL()) {
-            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('administration-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('administration-style.css');
         }
     }
 

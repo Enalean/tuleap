@@ -4,7 +4,7 @@
         margin: var(--tlp-medium-spacing) 10px;
         border-radius: 3px;
         opacity: 1;
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
 
         > kanban-item {
             display: none;
@@ -39,14 +39,14 @@
         height: 100%;
         margin: 0;
         border-radius: 0;
-        background: transparentize($tlp-theme-color, .9);
+        background: var(--tlp-theme-color-transparent-90);
     }
 
     &.wip-reached .kanban-item.gu-transit {
-        background: $tlp-ui-warning;
+        background: var(--tlp-ui-warning);
     }
 
     &.wip-reached.kanban-column-closed .kanban-item.gu-transit {
-        background: transparentize($tlp-ui-warning, .9);
+        background: var(--tlp-ui-warning-transparent-90);
     }
 }

@@ -18,7 +18,7 @@
  */
 
 @use '../../src/themes/common/css/project-background/background';
-@import '../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
 
 .project-with-background {
     .agiledashboard-administration-title {
@@ -33,8 +33,8 @@
 body {
     @include background.apply-background(
         '.agiledashboard-administration-title',
-        $sidebar-expanded-width,
-        $sidebar-collapsed-width,
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width,
     );
 }
 
@@ -75,7 +75,7 @@ body {
 }
 
 .agiledashboard-administration-scrum-planning-warning {
-    color: $tlp-ui-warning;
+    color: var(--tlp-ui-warning);
     font-size: 20px;
 }
 
