@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Conte
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 /**
  * I am an order to un-plan the Feature from all Program Increments
@@ -37,11 +38,11 @@ final class FeatureRemoval
      */
     public $feature_id;
     /**
-     * @var \PFUser
+     * @var UserCanPrioritize
      */
     public $user;
 
-    private function __construct(int $feature_id, \PFUser $user)
+    private function __construct(int $feature_id, UserCanPrioritize $user)
     {
         $this->feature_id = $feature_id;
         $this->user       = $user;
@@ -53,9 +54,9 @@ final class FeatureRemoval
     public static function fromFeature(
         VerifyLinkedUserStoryIsNotPlanned $story_verifier,
         FeatureIdentifier $feature,
-        \PFUser $user
+        UserCanPrioritize $user
     ): self {
-        if ($story_verifier->isLinkedToAtLeastOnePlannedUserStory($user, $feature)) {
+        if ($story_verifier->isLinkedToAtLeastOnePlannedUserStory($user->getFullUser(), $feature)) {
             throw new FeatureHasPlannedUserStoryException($feature->id);
         }
         return new self($feature->id, $user);

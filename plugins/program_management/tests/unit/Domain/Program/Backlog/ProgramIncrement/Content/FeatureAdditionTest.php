@@ -27,10 +27,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturePermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureAdditionTest extends TestCase
@@ -47,25 +49,25 @@ final class FeatureAdditionTest extends TestCase
             new VerifyCanBePlannedInProgramIncrementStub(false),
             $feature,
             $program_increment,
-            $user
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
         );
     }
 
     public function testItBuildsAValidPayload(): void
     {
-        $user              = UserTestBuilder::aUser()->build();
-        $program_increment = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
-        $feature           = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
-
-        $payload = FeatureAddition::fromFeature(
+        $user                = UserTestBuilder::aUser()->build();
+        $program_increment   = ProgramIncrementIdentifier::fromId(new CheckProgramIncrementStub(true), 89, $user);
+        $program             = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $feature             = FeatureIdentifier::fromId(new VerifyIsVisibleFeatureStub(), 741, $user, $program);
+        $user_can_prioritize = UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program);
+        $payload             = FeatureAddition::fromFeature(
             new VerifyCanBePlannedInProgramIncrementStub(),
             $feature,
             $program_increment,
-            $user
+            $user_can_prioritize
         );
         self::assertSame($feature, $payload->feature);
-        self::assertSame($user, $payload->user);
+        self::assertSame($user_can_prioritize, $payload->user);
         self::assertSame($program_increment, $payload->program_increment);
     }
 }

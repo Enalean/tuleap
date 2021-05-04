@@ -63,7 +63,7 @@ final class FeatureRemovalProcessor implements RemoveFeature
             }
             try {
                 $this->artifact_link_updater->updateArtifactLinks(
-                    $feature_removal->user,
+                    $feature_removal->user->getFullUser(),
                     $program_increment_artifact,
                     [],
                     [$feature_removal->feature_id],

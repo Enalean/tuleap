@@ -26,9 +26,11 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturePermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureRemovalTest extends TestCase
@@ -43,7 +45,7 @@ final class FeatureRemovalTest extends TestCase
         FeatureRemoval::fromFeature(
             new VerifyLinkedUserStoryIsNotPlannedStub(true),
             $feature,
-            $user
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
         );
     }
 
@@ -56,7 +58,7 @@ final class FeatureRemovalTest extends TestCase
         $payload = FeatureRemoval::fromFeature(
             new VerifyLinkedUserStoryIsNotPlannedStub(),
             $feature,
-            $user
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
         );
         self::assertSame(76, $payload->feature_id);
     }

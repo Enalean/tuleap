@@ -30,9 +30,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Fea
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturePermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
@@ -101,7 +103,7 @@ final class FeatureRemovalProcessorTest extends TestCase
         $this->artifact_link_updater->shouldReceive('updateArtifactLinks')
             ->once()
             ->with(
-                $feature_removal->user,
+                $feature_removal->user->getFullUser(),
                 $program_increment_artifact,
                 [],
                 [$feature_removal->feature_id],
@@ -166,7 +168,7 @@ final class FeatureRemovalProcessorTest extends TestCase
         return FeatureRemoval::fromFeature(
             new VerifyLinkedUserStoryIsNotPlannedStub(),
             $feature,
-            $user
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
         );
     }
 }
