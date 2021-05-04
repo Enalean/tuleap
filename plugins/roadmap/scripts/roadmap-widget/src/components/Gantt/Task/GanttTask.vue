@@ -44,7 +44,6 @@
             v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
             v-bind:is_error_sign_displayed_inside_bar="is_error_sign_displayed_inside_bar"
             v-bind:is_error_sign_displayed_outside_bar="is_error_sign_displayed_outside_bar"
-            v-bind:is_milestone="is_milestone"
             ref="bar"
         />
     </div>
@@ -199,7 +198,7 @@ export default class GanttTask extends Vue {
     get is_error_sign_displayed_outside_bar(): boolean {
         return (
             this.is_progress_in_error &&
-            (this.is_milestone ||
+            (this.task.is_milestone ||
                 this.dimensions.width < Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX)
         );
     }
@@ -207,21 +206,13 @@ export default class GanttTask extends Vue {
     get is_error_sign_displayed_inside_bar(): boolean {
         return (
             this.is_progress_in_error &&
-            !this.is_milestone &&
+            !this.task.is_milestone &&
             this.dimensions.width >= Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX
         );
     }
 
     get is_progress_in_error(): boolean {
         return this.task.progress_error_message.length > 0;
-    }
-
-    get is_milestone(): boolean {
-        return (
-            !this.task.start ||
-            !this.task.end ||
-            this.task.end.toISOString() === this.task.start.toISOString()
-        );
     }
 }
 </script>

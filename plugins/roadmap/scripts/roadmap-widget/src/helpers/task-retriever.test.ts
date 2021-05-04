@@ -78,4 +78,76 @@ describe("task-retriever", () => {
 
         expect(tasks.length).toBe(0);
     });
+
+    it("Marks a task as a milestone if it does not have a start date", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: null,
+                end: "2020-03-14T10:00:00+01:00",
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].is_milestone).toBe(true);
+    });
+
+    it("Marks a task as a milestone if it does not have an end date", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: "2020-03-01T10:00:00+01:00",
+                end: null,
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].is_milestone).toBe(true);
+    });
+
+    it("Marks a task as a milestone if it start date = end date", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: "2020-03-01T10:00:00+01:00",
+                end: "2020-03-01T10:00:00+01:00",
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].is_milestone).toBe(true);
+    });
+
+    it("Does not mark a task as a milestone if start date < end date", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: "2020-03-01T10:00:00+01:00",
+                end: "2020-03-14T10:00:00+01:00",
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].is_milestone).toBe(false);
+    });
 });

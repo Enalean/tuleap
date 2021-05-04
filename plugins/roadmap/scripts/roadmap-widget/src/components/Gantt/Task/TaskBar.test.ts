@@ -30,6 +30,7 @@ describe("TaskBar", () => {
             progress_error_message: "",
             start: new Date(2020, 3, 15),
             end: new Date(2020, 3, 20),
+            is_milestone: false,
         } as Task;
 
         const wrapper = shallowMount(TaskBar, {
@@ -43,7 +44,6 @@ describe("TaskBar", () => {
                 is_text_displayed_outside_bar: false,
                 is_error_sign_displayed_outside_bar: false,
                 is_error_sign_displayed_inside_bar: false,
-                is_milestone: false,
             },
         });
 
@@ -63,6 +63,7 @@ describe("TaskBar", () => {
                     progress_error_message: "",
                     start: new Date(2020, 3, 15),
                     end: new Date(2020, 3, 20),
+                    is_milestone: false,
                 } as Task,
                 left: 42,
                 width: 66,
@@ -72,7 +73,6 @@ describe("TaskBar", () => {
                 is_text_displayed_outside_bar: false,
                 is_error_sign_displayed_outside_bar: false,
                 is_error_sign_displayed_inside_bar: false,
-                is_milestone: false,
             },
         });
 
@@ -88,6 +88,7 @@ describe("TaskBar", () => {
                     start: null,
                     end: new Date(2020, 3, 20),
                     progress_error_message: "",
+                    is_milestone: true,
                 } as Task,
                 left: 42,
                 width: 21,
@@ -97,7 +98,6 @@ describe("TaskBar", () => {
                 is_text_displayed_outside_bar: false,
                 is_error_sign_displayed_outside_bar: false,
                 is_error_sign_displayed_inside_bar: false,
-                is_milestone: true,
             },
         });
 
@@ -114,6 +114,7 @@ describe("TaskBar", () => {
                         end: new Date(2020, 3, 20),
                         progress: 0.42,
                         progress_error_message: "",
+                        is_milestone: false,
                     } as Task,
                     left: 42,
                     width: 100,
@@ -123,7 +124,6 @@ describe("TaskBar", () => {
                     is_text_displayed_outside_bar: false,
                     is_error_sign_displayed_outside_bar: false,
                     is_error_sign_displayed_inside_bar: false,
-                    is_milestone: false,
                 },
             });
 
@@ -143,6 +143,7 @@ describe("TaskBar", () => {
                         end: new Date(2020, 3, 20),
                         progress: 0.98,
                         progress_error_message: "",
+                        is_milestone: false,
                     } as Task,
                     left: 42,
                     width: 100,
@@ -152,7 +153,6 @@ describe("TaskBar", () => {
                     is_text_displayed_outside_bar: false,
                     is_error_sign_displayed_outside_bar: false,
                     is_error_sign_displayed_inside_bar: false,
-                    is_milestone: false,
                 },
             });
 
@@ -174,6 +174,7 @@ describe("TaskBar", () => {
                         end: new Date(2020, 3, 20),
                         progress: 0.5,
                         progress_error_message: "",
+                        is_milestone: false,
                     } as Task,
                     left: 42,
                     width: 10,
@@ -183,7 +184,6 @@ describe("TaskBar", () => {
                     is_text_displayed_outside_bar: true,
                     is_error_sign_displayed_outside_bar: false,
                     is_error_sign_displayed_inside_bar: false,
-                    is_milestone: false,
                 },
             });
 
@@ -203,6 +203,7 @@ describe("TaskBar", () => {
                         end: new Date(2020, 3, 20),
                         progress: null,
                         progress_error_message: "You fucked up!",
+                        is_milestone: false,
                     } as Task,
                     left: 42,
                     width: 10,
@@ -212,7 +213,6 @@ describe("TaskBar", () => {
                     is_text_displayed_outside_bar: true,
                     is_error_sign_displayed_outside_bar: false,
                     is_error_sign_displayed_inside_bar: true,
-                    is_milestone: false,
                 },
             });
 
@@ -238,6 +238,7 @@ describe("TaskBar", () => {
                         end: new Date(2020, 3, 20),
                         progress: null,
                         progress_error_message: "You fucked up!",
+                        is_milestone: false,
                     } as Task,
                     left: 42,
                     width: 10,
@@ -247,7 +248,6 @@ describe("TaskBar", () => {
                     is_text_displayed_outside_bar: true,
                     is_error_sign_displayed_outside_bar: true,
                     is_error_sign_displayed_inside_bar: false,
-                    is_milestone: false,
                 },
             });
 

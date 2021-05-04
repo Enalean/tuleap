@@ -35,6 +35,7 @@ describe("BarPopover", () => {
                     end: new Date("2020-01-30T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "",
+                    is_milestone: false,
                 } as Task,
             },
             mocks: {
@@ -46,11 +47,38 @@ describe("BarPopover", () => {
             },
         });
 
+        expect(wrapper.classes()).not.toContain("roadmap-gantt-task-milestone-popover");
         expect(wrapper.text()).toContain("art #123");
         expect(wrapper.text()).toContain("Create button");
         expect(wrapper.text()).toContain("January 12, 2020");
         expect(wrapper.text()).toContain("January 30, 2020");
         expect(wrapper.find("[data-test=progress]").exists()).toBeFalsy();
+    });
+
+    it("should add special appearance for a milestone", async () => {
+        const wrapper = shallowMount(BarPopover, {
+            localVue: await createRoadmapLocalVue(),
+            propsData: {
+                task: {
+                    xref: "art #123",
+                    title: "Create button",
+                    start: new Date("2020-01-12T15:00:00.000Z"),
+                    end: new Date("2020-01-30T15:00:00.000Z"),
+                    progress: null,
+                    progress_error_message: "",
+                    is_milestone: true,
+                } as Task,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.classes()).toContain("roadmap-gantt-task-milestone-popover");
     });
 
     it("should display the progress", async () => {

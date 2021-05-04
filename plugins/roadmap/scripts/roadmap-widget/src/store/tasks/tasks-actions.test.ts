@@ -96,8 +96,8 @@ describe("tasks-actions", () => {
 
     it("should store the tasks in the store", async () => {
         const tasks = [
-            { id: 1, start: new Date(2020, 3, 15), end: null },
-            { id: 2, start: new Date(2020, 4, 15), end: null },
+            { id: 1, start: new Date(2020, 3, 15), end: null, is_milestone: true },
+            { id: 2, start: new Date(2020, 4, 15), end: null, is_milestone: true },
         ] as Task[];
         jest.spyOn(tlp, "recursiveGet").mockResolvedValue(tasks);
 
