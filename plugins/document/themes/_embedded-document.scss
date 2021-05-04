@@ -14,34 +14,46 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
+ *
  */
 
-.document-uploads-files-list {
-    padding: 0;
+.document-breadcrumb {
+    padding-bottom: var(--tlp-large-spacing);
 }
 
-.document-uploads-file {
+.embedded-document-container {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    justify-content: center;
-    min-width: 0;
-    margin: 0 var(--tlp-medium-spacing) 0 0;
+    padding-bottom: var(--tlp-medium-spacing);
+
+    > .document-header {
+        flex: 0 0 auto;
+    }
 }
 
-.document-uploads-file-title {
-    overflow: hidden;
-    line-height: 20px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+.embedded-document {
+    flex: 1 1 auto;
+    margin: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
 
-.document-uploads-file-error-message {
-    margin: var(--tlp-small-spacing) 0 0;
-    color: $tlp-ui-danger;
-}
+    h1 {
+        font-size: 36px;
+    }
 
-.document-uploads-modal-empty-state {
-    margin: 100px 0;
+    &.narrow {
+        justify-content: center;
+        background: var(--tlp-theme-background-color-lighter-50);
+
+        > .tlp-pane-container {
+            flex: 0 1 auto;
+            max-width: 800px;
+            padding: var(--tlp-jumbo-spacing);
+            background: var(--tlp-ui-white);
+        }
+    }
 }

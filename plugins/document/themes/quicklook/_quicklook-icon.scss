@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,30 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.quick-look-pane-highlighted .document-quick-look-folder-container {
+
+.quick-look-pane-highlighted .document-quick-look-icon-container {
     > .document-quick-look-dropzone-text {
         opacity: .85;
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 
-    > .document-folder-icon {
-        display: none;
-    }
-
-    > .document-drop-into-folder-icon {
-        display: block;
+    > .document-quick-look-icon {
         opacity: .85;
+        color: var(--tlp-theme-color);
+
+        &::after {
+            transform: scale(1);
+        }
     }
 }
 
-.quick-look-pane-highlighted-forbidden .document-quick-look-folder-container {
+
+.quick-look-pane-highlighted-forbidden .document-quick-look-icon-container {
     > .document-quick-look-dropzone-text {
         opacity: .85;
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
     }
 
-    > .document-folder-icon,
-    > .document-drop-into-folder-icon {
+    > .document-quick-look-icon {
         display: none;
     }
 
@@ -49,7 +50,7 @@
     }
 }
 
-.document-quick-look-folder-container {
+.document-quick-look-icon-container {
     display: flex;
     position: relative;
     flex-direction: column;
@@ -58,27 +59,42 @@
     transition: transform ease-in-out 100ms;
     text-align: center;
 
+    > .document-quick-look-dropzone-text {
+        position: absolute;
+        bottom: 0;
+        transform: translateY(100%);
+    }
+
     > .fa-ban {
         display: none;
         position: relative;
         top: -10px;
         transition: opacity ease-in-out 100ms;
         opacity: .85;
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
         font-size: 100px;
     }
 }
 
-.document-folder-icon {
-    > path {
-        fill: $tlp-swatch-inca-silver;
-    }
+.document-preview-item-is-locked-icon + .document-quick-look-icon-container {
+    margin: var(--tlp-x-large-spacing) 0 var(--tlp-medium-spacing);
 }
 
-.document-drop-into-folder-icon {
-    display: none;
+.document-quick-look-icon {
+    position: relative;
+    top: -10px;
+    transition: opacity ease-in-out 100ms;
+    font-size: 100px;
 
-    > path {
-        fill: $tlp-theme-color;
+    &::after {
+        content: '\f067'; // fa-plus
+        position: absolute;
+        top: -18px;
+        right: -18px;
+        transform: scale(0);
+        transition: opacity ease-in-out 100ms, transform ease-in-out 100ms;
+        font-family: 'Font Awesome 5 Free';
+        font-size: 40px;
+        font-weight: 900;
     }
 }

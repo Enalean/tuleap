@@ -35,7 +35,7 @@
 
 @mixin quick-look-pane-highlighted($color) {
     transition: box-shadow 100ms ease-in-out;
-    box-shadow: inset 0 0 0 var(--tlp-small-spacing) transparentize($color, .15);
+    box-shadow: inset 0 0 0 var(--tlp-small-spacing) $color;
 
     > .tlp-pane-container > .tlp-pane-section {
         margin: 0 var(--tlp-medium-spacing);
@@ -44,11 +44,11 @@
 }
 
 .quick-look-pane-highlighted {
-    @include quick-look-pane-highlighted($tlp-theme-color);
+    @include quick-look-pane-highlighted(var(--tlp-theme-color-transparent-15));
 }
 
 .quick-look-pane-highlighted-forbidden {
-    @include quick-look-pane-highlighted($tlp-ui-danger);
+    @include quick-look-pane-highlighted(var(--tlp-ui-danger-color-transparent-15));
 }
 
 .document-preview-spinner {

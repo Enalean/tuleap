@@ -17,58 +17,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 .document-folder-icon {
-    color: $tlp-swatch-inca-silver;
+    color: swatch-colors.$tlp-swatch-inca-silver;
 }
 
 .document-file-icon {
-    color: $tlp-swatch-chrome-silver;
+    color: swatch-colors.$tlp-swatch-chrome-silver;
 }
 
 .document-empty-icon {
-    color: $tlp-swatch-firemist-silver;
+    color: swatch-colors.$tlp-swatch-firemist-silver;
 }
 
 .document-link-icon {
-    color: $tlp-swatch-flamingo-pink;
+    color: swatch-colors.$tlp-swatch-flamingo-pink;
 }
 
 .document-audio-icon {
-    color: $tlp-swatch-lake-placid-blue;
+    color: swatch-colors.$tlp-swatch-lake-placid-blue;
 }
 
 .document-video-icon {
-    color: $tlp-swatch-ocean-turquoise;
+    color: swatch-colors.$tlp-swatch-ocean-turquoise;
 }
 
 .document-image-icon {
-    color: $tlp-swatch-graffiti-yellow;
+    color: swatch-colors.$tlp-swatch-graffiti-yellow;
 }
 
 .document-text-icon {
-    color: $tlp-swatch-inca-silver;
+    color: swatch-colors.$tlp-swatch-inca-silver;
 }
 
 .document-code-icon {
-    color: $tlp-swatch-daphne-blue;
+    color: swatch-colors.$tlp-swatch-daphne-blue;
 }
 
 .document-archive-icon {
-    color: $tlp-swatch-plum-crazy;
+    color: swatch-colors.$tlp-swatch-plum-crazy;
 }
 
 .document-pdf-icon {
-    color: $tlp-swatch-fiesta-red;
+    color: swatch-colors.$tlp-swatch-fiesta-red;
 }
 
 .document-document-icon {
-    color: $tlp-swatch-deep-blue;
+    color: swatch-colors.$tlp-swatch-deep-blue;
 }
 
 .document-presentation-icon {
-    color: $tlp-swatch-clockwork-orange;
+    color: swatch-colors.$tlp-swatch-clockwork-orange;
 }
 
 .document-spreadsheet-icon {
-    color: $tlp-swatch-sherwood-green;
+    color: swatch-colors.$tlp-swatch-sherwood-green;
 }

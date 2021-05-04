@@ -32,7 +32,7 @@
         opacity: .9;
 
         > .document-quick-look-dropzone-text {
-            color: $tlp-ui-danger;
+            color: var(--tlp-ui-danger);
         }
     }
 }
@@ -54,8 +54,8 @@
     height: 100%;
     transition: opacity ease-in-out 100ms;
     opacity: 0;
-    background: transparentize($tlp-ui-white, .1);
-    color: $tlp-theme-color;
+    background: var(--tlp-ui-white-transparent-10);
+    color: var(--tlp-theme-color);
     text-align: center;
     pointer-events: none;
 
@@ -83,7 +83,7 @@
     }
 
     > .fa-ban {
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
         font-size: 80px;
     }
 }

@@ -16,6 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+@use '../../../src/themes/BurningParrot/css/includes/global-variables';
+
 @import 'headers';
 @import 'icons';
 @import 'folder-content';
@@ -32,7 +35,6 @@
 @import 'modal-common';
 @import 'clipboard';
 @import 'permissions-modal';
-@import '../../../../../src/themes/BurningParrot/css/includes/global-variables';
 @import 'download-as-zip';
 @import 'project_background_header';
 
@@ -47,15 +49,15 @@
 }
 
 .has-visible-project-banner .document-app {
-    height: calc(100vh - #{$project-banner-base-height});
+    height: calc(100vh - #{global-variables.$project-banner-base-height});
 }
 
 .has-visible-platform-banner .document-app {
-    height: calc(100vh - #{$platform-banner-base-height});
+    height: calc(100vh - #{global-variables.$platform-banner-base-height});
 }
 
 .has-visible-project-banner.has-visible-platform-banner .document-app {
-    height: calc(100vh - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$extra-platform-banner-white-space-height});
+    height: calc(100vh - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height});
 }
 
 .document-error-modal-link {

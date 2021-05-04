@@ -30,7 +30,7 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -161,9 +161,9 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     private function includeCssFiles(BaseLayout $layout)
     {
         $layout->addCssAsset(
-            new CssAsset(
+            new CssAssetWithoutVariantDeclinaisons(
                 $this->getAssets(),
-                'style'
+                'document-style'
             )
         );
     }

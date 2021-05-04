@@ -30,12 +30,12 @@
 }
 
 #document-owner > .document-badge-avatar > .document-badge-avatar-username {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     word-break: break-word;
 }
 
 .document-quick-look-property-empty {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-style: italic;
 }
 
