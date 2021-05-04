@@ -96,7 +96,7 @@ final class Tuleap
 
         ForgeConfig::loadLocalInc();
         $output->writeln('<info>Regenerate configuration for fpm</info>');
-        $site_deploy_fpm = SiteDeployFPM::buildForPHP73(
+        $site_deploy_fpm = SiteDeployFPM::buildForPHP74(
             new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
             'codendiadm',
             false
