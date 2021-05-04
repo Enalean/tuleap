@@ -38,7 +38,7 @@
         left: 9px;
         width: 2px;
         height: 100%;
-        background: $tlp-ui-border-normal;
+        background: var(--tlp-ui-border-normal);
     }
 }
 
@@ -52,8 +52,8 @@
     > .tlp-label {
         position: relative;
         z-index: 2;
-        background: $tlp-ui-white;
-        box-shadow: 0 10px 5px $tlp-ui-white;
+        background: var(--tlp-ui-white);
+        box-shadow: 0 10px 5px var(--tlp-ui-white);
     }
 }
 
@@ -61,8 +61,8 @@
     position: relative;
     z-index: 2;
     margin: 12px 0 0;
-    background: $tlp-ui-white;
-    box-shadow: 0 3px 3px $tlp-ui-white, 0 -3px 3px $tlp-ui-white;
+    background: var(--tlp-ui-white);
+    box-shadow: 0 3px 3px var(--tlp-ui-white), 0 -3px 3px var(--tlp-ui-white);
 }
 
 .document-metadata-recursion-option-section {
@@ -76,7 +76,7 @@
         left: 9px;
         width: 2px;
         height: 70%;
-        background-image: linear-gradient(to bottom, $tlp-ui-border-normal, $tlp-theme-color);
+        background-image: linear-gradient(to bottom, var(--tlp-ui-border-normal), var(--tlp-theme-color));
     }
 
     > .document-metadata-recursion-option-arrow {
@@ -85,11 +85,11 @@
         left: 9px;
 
         > path {
-            fill: $tlp-theme-color;
+            fill: var(--tlp-theme-color);
         }
     }
 
     > .tlp-label {
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 }

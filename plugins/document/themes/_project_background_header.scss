@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-switch-to-docman {
-    padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    font-size: 14px;
+@use '../../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../src/themes/common/css/project-background/background';
+
+.project-with-background {
+    .document-header-title {
+        @include background.project-background-title-header-typography();
+    }
 }
 
-.document-switch-to-docman-link {
-    color: $tlp-ui-dimmed;
-}
-
-.document-switch-to-docman-icon {
-    margin: 0 5px 0 0;
+body {
+    @include background.apply-background(
+        '.document-header',
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
 }

@@ -18,12 +18,14 @@
  *
  */
 
+@use '../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 .document-new-item-type-selector {
     display: flex;
     justify-content: center;
     padding: var(--tlp-medium-spacing);
-    border-bottom: 1px solid $tlp-ui-border-normal;
-    background: $tlp-theme-background-color;
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    background: var(--tlp-theme-background-color);
 }
 
 .document-new-item-type {
@@ -34,10 +36,10 @@
     min-width: 96px;
     margin: var(--tlp-small-spacing);
     padding: var(--tlp-medium-spacing) var(--tlp-small-spacing);
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 3px;
-    background: $tlp-ui-white;
-    color: $tlp-ui-dimmed;
+    background: var(--tlp-ui-white);
+    color: var(--tlp-ui-dimmed);
     cursor: pointer;
 
     &:first-child {
@@ -49,7 +51,7 @@
     }
 
     &:focus {
-        box-shadow: $tlp-shadow-focus;
+        box-shadow: var(--tlp-shadow-focus);
     }
 }
 
@@ -60,28 +62,28 @@
     &.fa-file-pdf-o {
         position: relative;
         z-index: 1;
-        background: $tlp-ui-white;
-        color: $tlp-swatch-fiesta-red;
+        background: var(--tlp-ui-white);
+        color: swatch-colors.$tlp-swatch-fiesta-red;
     }
 
     &.fa-file-excel-o {
         position: absolute;
         transform: translate(-12px, -4px) rotate(-12deg);
-        color: $tlp-swatch-sherwood-green;
+        color: swatch-colors.$tlp-swatch-sherwood-green;
         font-size: 20px;
     }
 
     &.fa-file-word-o {
         position: absolute;
         transform: translate(-17px, 18px) rotate(-18deg);
-        color: $tlp-swatch-deep-blue;
+        color: swatch-colors.$tlp-swatch-deep-blue;
         font-size: 22px;
     }
 
     &.fa-file-image-o {
         position: absolute;
         transform: translate(22px, 10px) rotate(10deg);
-        color: $tlp-swatch-graffiti-yellow;
+        color: swatch-colors.$tlp-swatch-graffiti-yellow;
         font-size: 26px;
     }
 }
@@ -91,10 +93,10 @@
 }
 
 .document-new-item-type.document-new-item-type-checked {
-    border: 1px solid $tlp-theme-color;
+    border: 1px solid var(--tlp-theme-color);
 
     > .document-new-item-type-label {
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 
     &::before {
@@ -105,7 +107,7 @@
         height: 0;
         border-width: 0 10px 13px;
         border-style: solid;
-        border-color: transparent transparent $tlp-ui-border-normal transparent;
+        border-color: transparent transparent var(--tlp-ui-border-normal) transparent;
     }
 
     &::after {
@@ -116,7 +118,7 @@
         height: 0;
         border-width: 0 10px 13px;
         border-style: solid;
-        border-color: transparent transparent $tlp-ui-white transparent;
+        border-color: transparent transparent var(--tlp-ui-white) transparent;
     }
 }
 

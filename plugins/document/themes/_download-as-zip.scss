@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../src/themes/common/css/project-background/background';
-
-.project-with-background {
-    .document-header-title {
-        @include background.project-background-title-header-typography();
-    }
+.download-modal-multiple-warnings {
+    padding: var(--tlp-medium-spacing) 0;
 }
 
-body {
-    @include background.apply-background(
-        '.document-header',
-        $sidebar-expanded-width,
-        $sidebar-collapsed-width
-    );
+.download-modal-multiple-warnings-section {
+    padding: var(--tlp-medium-spacing);
+    overflow-y: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
+}
+
+.download-modal-warning-number {
+    margin: 0 4px 0 0;
+}
+
+.download-modal-multiple-warnings-content {
+    margin: 0 0 var(--tlp-medium-spacing) 13px;
 }

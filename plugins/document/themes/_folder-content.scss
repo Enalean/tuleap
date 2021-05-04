@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../../src/themes/BurningParrot/css/includes/global-variables';
 
 .document-tree-head-name {
     width: 100%;
@@ -34,7 +34,7 @@
 
 .document-tree-cell-owner,
 .document-tree-cell-updatedate {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
     white-space: nowrap;
 }
@@ -96,29 +96,29 @@
 
 @keyframes document-created-item-animation-odd {
     0% {
-        background: transparentize($tlp-ui-success, .9);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 
     80% {
-        background: transparentize($tlp-ui-success, .9);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 
     100% {
-        background: $tlp-table-row-background-odd;
+        background: var(--tlp-table-row-background-odd);
     }
 }
 
 @keyframes document-created-item-animation-even {
     0% {
-        background: transparentize($tlp-ui-success, .9);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 
     80% {
-        background: transparentize($tlp-ui-success, .9);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 
     100% {
-        background: $tlp-table-row-background-even;
+        background: var(--tlp-table-row-background-even);
     }
 }
 
@@ -142,7 +142,7 @@
 
 .document-badge-avatar-username {
     &:not(:hover) {
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 }
 
@@ -183,7 +183,7 @@
     position: relative;
     flex: 0 0 auto;
     margin: 0 5px 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     cursor: pointer;
 
     &:hover,
@@ -231,14 +231,14 @@
 
 .document-folder-right-container {
     position: sticky;
-    top: calc(#{$navbar-height} + var(--tlp-medium-spacing));
+    top: calc(#{global-variables.$navbar-height} + var(--tlp-medium-spacing));
     min-width: 400px;
     max-width: 35%;
     margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .has-visible-platform-banner .document-folder-right-container {
-    top: calc(#{$navbar-height} + var(--tlp-medium-spacing) + #{$platform-banner-base-height});
+    top: calc(#{global-variables.$navbar-height} + var(--tlp-medium-spacing) + #{global-variables.$platform-banner-base-height});
 }
 
 .document-folder-content-quick-look-and-item-uploading {

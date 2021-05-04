@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../src/themes/tlp/src/scss/variables/variables-green';
-@import 'document/document';
+.document-notification {
+    position: fixed;
+    z-index: 11000;
+    right: var(--tlp-small-spacing);
+    bottom: var(--tlp-small-spacing);
+    margin: 0;
+    opacity: 1;
+    background: var(--tlp-ui-success-lighter-70);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+}
+
+.document-notification-fadeout {
+    transition: opacity 1s ease-in-out;
+    opacity: 0;
+}
+
+.document-notification-fast-fadeout {
+    transition: opacity 250ms ease-in-out;
+    opacity: 0;
+}
+
+.document-new-item-under-the-fold-notification-icon {
+    margin: 0 0 0 5px;
+}

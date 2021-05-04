@@ -17,54 +17,54 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../../src/themes/BurningParrot/css/includes/global-variables';
 
 .document-upload-to-current-folder {
     position: fixed;
     z-index: 1000;
     top: 0;
-    left: $sidebar-expanded-width;
-    width: calc(100% - #{$sidebar-expanded-width});
+    left: global-variables.$sidebar-expanded-width;
+    width: calc(100% - #{global-variables.$sidebar-expanded-width});
     height: 100vh;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     transition: box-shadow 100ms ease-in-out;
     box-shadow: inset 0 0 0 var(--tlp-small-spacing) transparent;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     text-align: center;
     pointer-events: none;
 
     &.shown-success {
-        box-shadow: inset 0 0 0 var(--tlp-small-spacing) transparentize($tlp-theme-color, .15);
+        box-shadow: inset 0 0 0 var(--tlp-small-spacing) var(--tlp-shadow-theme-color);
 
         > .document-upload-to-current-folder-message {
             transform: translateY(calc(-1 * var(--tlp-small-spacing)));
-            background: transparentize($tlp-theme-color, .15);
+            background: var(--tlp-shadow-theme-color);
         }
     }
 
     &.shown-error {
-        box-shadow: inset 0 0 0 var(--tlp-small-spacing) transparentize($tlp-ui-danger, .15);
+        box-shadow: inset 0 0 0 var(--tlp-small-spacing) var(--tlp-shadow-danger-color);
 
         > .document-upload-to-current-folder-message {
             transform: translateY(calc(-1 * var(--tlp-small-spacing)));
-            background: transparentize($tlp-ui-danger, .15);
+            background: var(--tlp-shadow-danger-color);
         }
     }
 }
 
 .has-visible-project-banner .document-upload-to-current-folder {
-    top: $project-banner-base-height;
-    height: calc(100vh - #{$project-banner-base-height});
+    top: global-variables.$project-banner-base-height;
+    height: calc(100vh - #{global-variables.$project-banner-base-height});
 }
 
 .has-visible-platform-banner .document-upload-to-current-folder {
-    top: $platform-banner-base-height;
-    height: calc(100vh - #{$platform-banner-base-height});
+    top: global-variables.$platform-banner-base-height;
+    height: calc(100vh - #{global-variables.$platform-banner-base-height});
 }
 
 .has-visible-platform-banner.has-visible-project-banner .document-upload-to-current-folder {
-    top: calc(#{$project-banner-base-height} + #{$platform-banner-base-height} + #{$extra-platform-banner-white-space-height});
-    height: calc(100vh - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$extra-platform-banner-white-space-height});
+    top: calc(#{global-variables.$project-banner-base-height} + #{global-variables.$platform-banner-base-height} + #{global-variables.$extra-platform-banner-white-space-height});
+    height: calc(100vh - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height});
 }
 
 .document-upload-to-current-folder-message {
@@ -85,6 +85,6 @@
 }
 
 .sidebar-collapsed .document-upload-to-current-folder {
-    left: $sidebar-collapsed-width;
-    width: calc(100% - #{$sidebar-collapsed-width});
+    left: global-variables.$sidebar-collapsed-width;
+    width: calc(100% - #{global-variables.$sidebar-collapsed-width});
 }

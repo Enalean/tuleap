@@ -25,12 +25,8 @@ const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 
 const entry_points = {
     document: "./scripts/document/index.js",
+    "document-style": "./themes/document.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/document-${color}.scss`;
-}
 
 module.exports = [
     {
