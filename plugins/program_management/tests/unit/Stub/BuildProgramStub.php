@@ -32,15 +32,19 @@ class BuildProgramStub implements BuildProgram
 {
     /** @var bool */
     private $is_allowed;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $is_existing_program;
+    /** @var bool */
+    private $is_valid_program_for_management;
 
-    private function __construct(bool $is_allowed = true, bool $is_existing_program = false)
-    {
-        $this->is_allowed          = $is_allowed;
-        $this->is_existing_program = $is_existing_program;
+    private function __construct(
+        bool $is_allowed = true,
+        bool $is_existing_program = false,
+        bool $is_valid_program_for_management = false
+    ) {
+        $this->is_allowed                      = $is_allowed;
+        $this->is_existing_program             = $is_existing_program;
+        $this->is_valid_program_for_management = $is_valid_program_for_management;
     }
 
     public function ensureProgramIsAProject(int $program_increment_id): void
@@ -52,14 +56,18 @@ class BuildProgramStub implements BuildProgram
 
     public static function stubValidProgram(): self
     {
-        return new self(true, false);
+        return new self(true, false, false);
     }
 
     public static function stubExistingProgram(): self
     {
-        return new self(true, true);
+        return new self(true, true, false);
     }
 
+    public static function stubValidProgramForManagement(): self
+    {
+        return new self(true, false, true);
+    }
 
     public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier
     {
@@ -77,6 +85,14 @@ class BuildProgramStub implements BuildProgram
 
     public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
     {
+        throw new \LogicException("Not implemented");
+    }
+
+    public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void
+    {
+        if ($this->is_valid_program_for_management) {
+            return;
+        }
         throw new \LogicException("Not implemented");
     }
 }

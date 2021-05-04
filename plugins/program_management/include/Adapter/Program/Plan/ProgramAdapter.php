@@ -72,10 +72,7 @@ final class ProgramAdapter implements BuildProgram
      */
     public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
     {
-        $project = $this->getProjectForManagement($id, $user);
-        $this->ensureProgramIsAProject((int) $project->getID());
-
-        return new ProgramForManagement((int) $project->getID());
+        return ProgramForManagement::fromId($this, $id, $user);
     }
 
     /**
@@ -83,9 +80,8 @@ final class ProgramAdapter implements BuildProgram
      */
     public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
     {
-        $project = $this->getProjectForManagement($id, $user);
-
-        return new ToBeCreatedProgram((int) $project->getID());
+        $this->ensureUserIsAdminOfProject($id, $user);
+        return new ToBeCreatedProgram($id);
     }
 
     /**
@@ -98,14 +94,25 @@ final class ProgramAdapter implements BuildProgram
         }
     }
 
-    private function getProjectForManagement(int $id, \PFUser $user): \Project
+    /**
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
+     */
+    public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void
     {
-        $project = $this->getProject($id, $user);
+        $this->ensureUserIsAdminOfProject($id, $user);
+        $this->ensureProgramIsAProject($id);
+    }
+
+    /**
+     * @throws ProgramAccessException
+     */
+    private function ensureUserIsAdminOfProject(int $id, \PFUser $user): void
+    {
+        $this->getProject($id, $user);
         if (! $user->isAdmin($id)) {
             throw new ProgramAccessException();
         }
-
-        return $project;
     }
 
     private function getProject(int $id, \PFUser $user): \Project

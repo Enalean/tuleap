@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanCreatorTest extends TestCase
@@ -43,7 +44,7 @@ final class PlanCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $program = new ProgramForManagement($project_id);
+        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), $project_id, $user);
         $program_adapter->shouldReceive('buildExistingProgramProjectForManagement')
             ->with($project_id, $user)->once()
             ->andReturn($program);

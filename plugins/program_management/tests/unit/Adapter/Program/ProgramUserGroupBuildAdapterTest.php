@@ -25,7 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramUserGroupBuildAdapterTest extends TestCase
 {
@@ -48,7 +50,7 @@ final class ProgramUserGroupBuildAdapterTest extends TestCase
 
     public function testBuildProgramUserGroups(): void
     {
-        $program = new ProgramForManagement(102);
+        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), 102, UserTestBuilder::aUser()->build());
 
         $this->user_group_retriever->shouldReceive('getExistingUserGroup')->with('102_3')->andReturn(
             new \ProjectUGroup(['ugroup_id' => 3, 'group_id' => 102])
@@ -65,7 +67,7 @@ final class ProgramUserGroupBuildAdapterTest extends TestCase
 
     public function testRejectsUGroupOutsideOfTheProgram(): void
     {
-        $program = new ProgramForManagement(102);
+        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), 102, UserTestBuilder::aUser()->build());
 
         $this->user_group_retriever->shouldReceive('getExistingUserGroup')->with('103_3')->andReturn(
             new \ProjectUGroup(['ugroup_id' => 3, 'group_id' => 103])
@@ -77,7 +79,7 @@ final class ProgramUserGroupBuildAdapterTest extends TestCase
 
     public function testRejectIfUgroupIsNotInProgram(): void
     {
-        $program = new ProgramForManagement(65);
+        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), 102, UserTestBuilder::aUser()->build());
         $this->user_group_retriever->shouldReceive('getExistingUserGroup')->with('123_3')->andReturn(
             new \ProjectUGroup(['ugroup_id' => 3, 'group_id' => 123])
         );
