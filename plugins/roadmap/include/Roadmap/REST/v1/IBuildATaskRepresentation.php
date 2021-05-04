@@ -20,16 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Roadmap\REST;
+namespace Tuleap\Roadmap\REST\v1;
 
-use Tuleap\Roadmap\REST\v1\RoadmapResource;
-use Tuleap\Roadmap\REST\v1\TasksResource;
+use Tuleap\Tracker\Artifact\Artifact;
 
-final class ResourcesInjector
+interface IBuildATaskRepresentation
 {
-    public function populate(\Luracast\Restler\Restler $restler): void
-    {
-        $restler->addAPIClass(RoadmapResource::class, 'roadmaps');
-        $restler->addAPIClass(TasksResource::class, TasksResource::ROUTE);
-    }
+    public function buildRepresentation(Artifact $artifact, \PFUser $user): TaskRepresentation;
 }

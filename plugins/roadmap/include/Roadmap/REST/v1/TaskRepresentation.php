@@ -69,6 +69,10 @@ final class TaskRepresentation
      * @var array<string, int[]>
      */
     public $dependencies;
+    /**
+     * @var string
+     */
+    public $children_uri;
 
     /**
      * @param DependenciesByNature[] $dependencies
@@ -95,6 +99,7 @@ final class TaskRepresentation
         $this->end        = JsonCast::fromDateTimeToDate($end);
 
         $this->progress_error_message = $progress_error_message;
+        $this->children_uri           = TasksResource::ROUTE . '/' . $id . '/children';
 
         $this->dependencies = [];
         foreach ($dependencies as $dep) {
