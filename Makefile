@@ -138,7 +138,7 @@ tests_rest_setup_73:
 	$(MAKE) tests-rest DB=mysql57 SETUP_ONLY=1
 
 tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (73, 74). DB to select the database to use (mysql57, mariadb103)
-	$(eval PHP_VERSION ?= 73)
+	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
@@ -147,7 +147,7 @@ tests_soap_73:
 	$(MAKE) tests-soap DB=mysql57
 
 tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (73, 74). DB to select the database to use (mysql57, mariadb103)
-	$(eval PHP_VERSION ?= 73)
+	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
@@ -155,7 +155,7 @@ tests_db_73:
 	$(MAKE) tests-db DB=mysql57
 
 tests-db: ## Run all DB integration tests with PHP 7.3. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (73, 74). DB to select the database to use (mysql57, mariadb103)
-	$(eval PHP_VERSION ?= 73)
+	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
@@ -206,7 +206,7 @@ phpunit-docker-74:
 
 .PHONY: tests-unit-php
 tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (73, 74, 80). FILES to run specific tests.
-	$(eval PHP_VERSION ?= 73)
+	$(eval PHP_VERSION ?= 74)
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
