@@ -17,20 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type Direction = "BOTTOM" | "TOP" | "NEXT" | "PREVIOUS";
-export const BOTTOM: Direction = "BOTTOM";
-export const TOP: Direction = "TOP";
-export const NEXT: Direction = "NEXT";
-export const PREVIOUS: Direction = "PREVIOUS";
+import { clickOnElement, focusElement } from "./trigger-datashortcut-element";
+import { moveFocus } from "./move-focus";
 
-export interface GettextProvider {
-    getString(translatable_string: string, scope?: null, context?: string): string;
+import { NEXT } from "../type";
+import type { StatusButton } from "../type";
+
+export function markTestAndJumpToNext(doc: Document, status_button: StatusButton): void {
+    focusNextTest(doc);
+
+    clickOnElement(doc, status_button);
+
+    const focused_test_tab_selector = "[data-navigation-test-link]:focus";
+    clickOnElement(doc, focused_test_tab_selector);
 }
 
-export type StatusButton =
-    | "[data-shortcut-passed]"
-    | "[data-shortcut-blocked]"
-    | "[data-shortcut-not-run]";
-export const PASSED: StatusButton = "[data-shortcut-passed]";
-export const BLOCKED: StatusButton = "[data-shortcut-blocked]";
-export const NOTRUN: StatusButton = "[data-shortcut-not-run]";
+function focusNextTest(doc: Document): void {
+    const active_test_tab_selector = "[data-navigation-test-link][tabindex='0']";
+    focusElement(doc, active_test_tab_selector);
+
+    moveFocus(doc, NEXT);
+}

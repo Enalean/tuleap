@@ -21,29 +21,34 @@ import type { Shortcut, ShortcutsGroup } from "../setup-shortcuts";
 import type { GettextProvider } from "../type";
 
 import { clickOnElement, focusElement } from "../shortcuts-handles/trigger-datashortcut-element";
+import { markTestAndJumpToNext } from "../shortcuts-handles/mark-test";
+import { BLOCKED, NOTRUN, PASSED } from "../type";
 
-export function createTestExecutionShortcutsGroup(gettextCatalog: GettextProvider): ShortcutsGroup {
+export function createTestExecutionShortcutsGroup(
+    doc: Document,
+    gettextCatalog: GettextProvider
+): ShortcutsGroup {
     const mark_as_success: Shortcut = {
         keyboard_inputs: "m + p",
-        description: gettextCatalog.getString("Mark test as passed"),
+        description: gettextCatalog.getString("Mark test as passed and open next test"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-passed]");
+            markTestAndJumpToNext(doc, PASSED);
         },
     };
 
     const mark_as_blocked: Shortcut = {
         keyboard_inputs: "m + b",
-        description: gettextCatalog.getString("Mark test as blocked"),
+        description: gettextCatalog.getString("Mark test as blocked and open next test"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-blocked]");
+            markTestAndJumpToNext(doc, BLOCKED);
         },
     };
 
     const mark_as_not_run: Shortcut = {
         keyboard_inputs: "m + n",
-        description: gettextCatalog.getString("Mark test as not run"),
+        description: gettextCatalog.getString("Mark test as not run and open next test"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-not-run]");
+            markTestAndJumpToNext(doc, NOTRUN);
         },
     };
 
@@ -51,7 +56,7 @@ export function createTestExecutionShortcutsGroup(gettextCatalog: GettextProvide
         keyboard_inputs: "t + c",
         description: gettextCatalog.getString("Set focus in comment field"),
         handle: (): void => {
-            focusElement(document, "[data-shortcut-current-test-comment]");
+            focusElement(doc, "[data-shortcut-current-test-comment]");
         },
     };
 
@@ -59,7 +64,7 @@ export function createTestExecutionShortcutsGroup(gettextCatalog: GettextProvide
         keyboard_inputs: "t + e",
         description: gettextCatalog.getString("Edit test"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-edit-test]");
+            clickOnElement(doc, "[data-shortcut-edit-test]");
         },
     };
 
@@ -67,7 +72,7 @@ export function createTestExecutionShortcutsGroup(gettextCatalog: GettextProvide
         keyboard_inputs: "t + b",
         description: gettextCatalog.getString("Create a new bug"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-new-bug]");
+            clickOnElement(doc, "[data-shortcut-new-bug]");
         },
     };
 
@@ -75,7 +80,7 @@ export function createTestExecutionShortcutsGroup(gettextCatalog: GettextProvide
         keyboard_inputs: "t + l",
         description: gettextCatalog.getString("Link to an existing bug"),
         handle: (): void => {
-            clickOnElement(document, "[data-shortcut-link-bug]");
+            clickOnElement(doc, "[data-shortcut-link-bug]");
         },
     };
 
