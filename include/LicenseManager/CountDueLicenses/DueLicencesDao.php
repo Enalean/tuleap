@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Enalean\LicenseManager\CountDueLicenses;
 
+use ParagonIE\EasyDB\EasyStatement;
 use PFUser;
 use Tuleap\DB\DataAccessObject;
 
@@ -34,15 +35,23 @@ class DueLicencesDao extends DataAccessObject
         return count($result) === 1;
     }
 
-    public function getRealUsers($project_id): array
+    /**
+     * @param int[] $project_ids
+     */
+    public function getRealUsers(array $project_ids): array
     {
-        $sql = 'SELECT users.*
+        $projects = EasyStatement::open()->in('userlog.group_id NOT IN (0, ?*)', $project_ids);
+
+        $sql = "SELECT users.*
             FROM user as users
                 LEFT OUTER JOIN plugin_userlog_request AS userlog ON (users.user_id = userlog.user_id)
-                WHERE users.status = ?
-                AND userlog.group_id NOT IN (0, ?)
-            GROUP BY users.user_id';
+                WHERE $projects
+                AND users.status = ?
+            GROUP BY users.user_id";
 
-        return $this->getDB()->run($sql, PFUser::STATUS_ACTIVE, $project_id);
+        $parameters   = $projects->values();
+        $parameters[] = PFUser::STATUS_ACTIVE;
+
+        return $this->getDB()->safeQuery($sql, $parameters);
     }
 }

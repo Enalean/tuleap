@@ -70,7 +70,10 @@ class CountDueLicensesController
         $this->history_exporter = $history_exporter;
     }
 
-    public function countDueLicences(int $project_id): void
+    /**
+     * @param int[] $project_ids
+     */
+    public function countDueLicences(array $project_ids): void
     {
         $current_timestamp = new DateTimeImmutable("now");
 
@@ -78,7 +81,7 @@ class CountDueLicensesController
 
         $this->output->write("<info>- Retrieving user accesses</info>");
 
-        $real_users     = $this->due_licences_dao->getRealUsers($project_id);
+        $real_users     = $this->due_licences_dao->getRealUsers($project_ids);
         $real_users_ids = array_column($real_users, 'user_id');
 
         $this->output->writeln("<info> ... done</info>");

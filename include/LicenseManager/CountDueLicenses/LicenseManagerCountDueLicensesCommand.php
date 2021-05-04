@@ -80,20 +80,25 @@ class LicenseManagerCountDueLicensesCommand extends Command
         }
 
         $visitors_paramaters   = $this->getVisitorsParameters();
-        $visitors_project_id   = (int) $visitors_paramaters['visitors_project_id'];
+        $visitors_project_ids  = $visitors_paramaters['visitors_project_id'];
         $history_file_location = (string) $visitors_paramaters['csv_history_file_location'];
 
-        if (! $visitors_project_id || ! $history_file_location) {
+        if (! $visitors_project_ids || empty($visitors_project_ids) || ! $history_file_location) {
             $config_file_path = $this->config_path;
 
-            $output->writeln("<error>visitors_project_id and csv_history_file_location must be defined in $config_file_path</error>");
+            $output->writeln("<error>visitors_project_ids and csv_history_file_location must be defined in $config_file_path</error>");
             return 1;
         }
 
-        if (! $this->doesProjectExists($visitors_project_id)) {
-            $output->writeln('<error>The provided project ID does not match an existing project</error>');
+        $visitors_project_ids = $this->getProjectIds($visitors_project_ids);
 
-            return 1;
+
+        foreach ($visitors_project_ids as $project_id) {
+            if (! $this->doesProjectExists($project_id)) {
+                $output->writeln('<error>The provided project ID' . (string) $project_id . ' does not match an existing project</error>');
+
+                return 1;
+            }
         }
 
         $controller = new CountDueLicensesController(
@@ -104,7 +109,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
             new UserEvolutionHistoryExporter($output, $history_file_location)
         );
 
-        $controller->countDueLicences($visitors_project_id);
+        $controller->countDueLicences($visitors_project_ids);
 
         return 0;
     }
@@ -131,5 +136,21 @@ class LicenseManagerCountDueLicensesCommand extends Command
         $project = (ProjectManager::instance())->getProject($project_id);
 
         return ! $project->isError();
+    }
+
+    /**
+     * @param array | int | string $visitors_project_ids
+     * @return int[]
+     */
+    private function getProjectIds($visitors_project_ids): array
+    {
+        $visitors_project_ids = is_array($visitors_project_ids) ? $visitors_project_ids : [$visitors_project_ids];
+
+        $project_ids = [];
+        foreach ($visitors_project_ids as $project_id) {
+            $project_ids[] = (int) $project_id;
+        }
+
+        return $project_ids;
     }
 }
