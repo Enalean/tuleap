@@ -54,7 +54,7 @@ final class Planning
      */
     private $project_data;
 
-    public function __construct(
+    private function __construct(
         ProgramTracker $planning_tracker,
         int $id,
         string $name,

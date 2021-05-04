@@ -255,7 +255,6 @@ final class program_managementPlugin extends Plugin
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             new ProgramIncrementTrackerConfigurationBuilder(
                 $this->getPlanConfigurationBuilder(),
-                Tracker_FormElementFactory::instance(),
                 new PlanDao()
             ),
         );

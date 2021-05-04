@@ -38,11 +38,6 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_FormElementFactory
-     */
-    private $tracker_form_element_factory;
-
-    /**
      * @var ProgramIncrementTrackerConfigurationBuilder
      */
     private $configuration_builder;
@@ -58,14 +53,8 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->plan_builder                 = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
-        $this->tracker_form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->plan_store                   = Mockery::mock(PlanStore::class);
-
-        $this->tracker_form_element_factory
-            ->shouldReceive('getAnArtifactLinkField')
-            ->andReturn($this->getFieldLink())
-            ->byDefault();
+        $this->plan_builder = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
+        $this->plan_store   = Mockery::mock(PlanStore::class);
 
         $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
 
@@ -77,7 +66,6 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
 
         $this->configuration_builder = new ProgramIncrementTrackerConfigurationBuilder(
             $this->plan_builder,
-            $this->tracker_form_element_factory,
             $this->plan_store
         );
     }
@@ -94,7 +82,6 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
         $expected_configuration = new ProgramIncrementTrackerConfiguration(
             $project->getId(),
             false,
-            $this->getFieldLink()->getId(),
             "Program Increments",
             "program increment"
         );
@@ -114,28 +101,10 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends TestCase
         $expected_configuration = new ProgramIncrementTrackerConfiguration(
             $project->getId(),
             false,
-            $this->getFieldLink()->getId(),
             null,
             null
         );
 
         self::assertEquals($expected_configuration, $this->configuration_builder->build($user, $project));
-    }
-
-    private function getFieldLink(): \Tracker_FormElement_Field_ArtifactLink
-    {
-        return new \Tracker_FormElement_Field_ArtifactLink(
-            1,
-            101,
-            null,
-            "artlink",
-            "artlink",
-            "",
-            true,
-            "P",
-            false,
-            false,
-            10
-        );
     }
 }
