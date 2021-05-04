@@ -24,8 +24,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ArtifactsLinksSearch;
 
-class ArtifactsLinkedToParentDao extends DataAccessObject
+class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLinksSearch
 {
     /**
      * @psalm-return array{id:int}[]

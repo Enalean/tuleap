@@ -66,7 +66,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\FeatureToLinkBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\TrackerShouldPlanFeatureChecker;
@@ -100,11 +99,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ProgramManagement\ProgramService;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\RedirectParameterInjector;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -818,7 +817,7 @@ final class program_managementPlugin extends Plugin
 
         return new UserStoriesInMirroredMilestonesPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new FeatureToLinkBuilder(new ArtifactsLinkedToParentDao()),
+            new ArtifactsLinkedToParentDao(),
             $artifact_factory,
             new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
             new ContentDao(),
