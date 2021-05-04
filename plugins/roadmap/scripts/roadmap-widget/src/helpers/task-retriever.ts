@@ -30,6 +30,7 @@ export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
                     ...task,
                     start: task.start ? new Date(task.start) : null,
                     end: task.end ? new Date(task.end) : null,
+                    is_milestone: !task.start || !task.end || task.end === task.start,
                 };
             }
         )

@@ -34,6 +34,7 @@ describe("TaskHeader", () => {
             start: null,
             end: null,
             dependencies: {},
+            is_milestone: false,
         };
 
         const wrapper = shallowMount(TaskHeader, {

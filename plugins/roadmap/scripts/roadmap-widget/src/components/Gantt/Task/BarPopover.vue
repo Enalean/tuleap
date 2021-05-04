@@ -112,7 +112,7 @@ export default class BarPopover extends Vue {
     }
 
     get popover_class(): string {
-        return this.is_milestone ? "roadmap-gantt-task-milestone-popover" : "";
+        return this.task.is_milestone ? "roadmap-gantt-task-milestone-popover" : "";
     }
 
     get header_class(): string {
@@ -141,14 +141,6 @@ export default class BarPopover extends Vue {
         }
 
         return Math.round(Math.max(0, Math.min(100, this.task.progress * 100))) + "%";
-    }
-
-    get is_milestone(): boolean {
-        return (
-            !this.task.start ||
-            !this.task.end ||
-            this.task.end.toISOString() === this.task.start.toISOString()
-        );
     }
 }
 </script>

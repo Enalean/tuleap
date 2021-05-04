@@ -86,7 +86,6 @@ describe("GanttTask", () => {
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(70);
         expect(task_bar.props("left")).toBe(13);
-        expect(task_bar.props("is_milestone")).toBe(false);
     });
 
     it("Has a minimum width", () => {
@@ -109,7 +108,6 @@ describe("GanttTask", () => {
         const task_bar = wrapper.findComponent(TaskBar);
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
-        expect(task_bar.props("is_milestone")).toBe(true);
     });
 
     it("Doesn't know yet where to put a task without start and end date, so it puts it at the beginning of the period", () => {
@@ -119,27 +117,6 @@ describe("GanttTask", () => {
         expect(task_bar.exists()).toBe(true);
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
         expect(task_bar.props("left")).toBe(0);
-        expect(task_bar.props("is_milestone")).toBe(true);
-    });
-
-    it("Consider a task without a start date as a milestone", () => {
-        const wrapper = mountGanttTask({ start: null, end: new Date(2020, 3, 25) } as Task);
-
-        const task_bar = wrapper.findComponent(TaskBar);
-        expect(task_bar.exists()).toBe(true);
-        expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
-        expect(task_bar.props("left")).toBe(80);
-        expect(task_bar.props("is_milestone")).toBe(true);
-    });
-
-    it("Consider a task without an end date as a milestone", () => {
-        const wrapper = mountGanttTask({ start: new Date(2020, 3, 25), end: null } as Task);
-
-        const task_bar = wrapper.findComponent(TaskBar);
-        expect(task_bar.exists()).toBe(true);
-        expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
-        expect(task_bar.props("left")).toBe(80);
-        expect(task_bar.props("is_milestone")).toBe(true);
     });
 
     it("Displays no arrows if no dependencies", () => {
@@ -184,6 +161,7 @@ describe("GanttTask", () => {
                 start: new Date(2020, 3, 5),
                 end: new Date(2020, 3, 6),
                 progress: 0.42,
+                is_milestone: false,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
@@ -195,6 +173,7 @@ describe("GanttTask", () => {
                 start: new Date(2020, 3, 5),
                 end: new Date(2020, 6, 6),
                 progress: 0.42,
+                is_milestone: false,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
@@ -208,6 +187,7 @@ describe("GanttTask", () => {
                 start: new Date(2020, 3, 5),
                 end: new Date(2020, 6, 6),
                 progress: 0.98,
+                is_milestone: false,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
@@ -221,6 +201,7 @@ describe("GanttTask", () => {
                 start: new Date(2020, 3, 5),
                 end: new Date(2020, 3, 6),
                 progress: 0.5,
+                is_milestone: false,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
@@ -234,6 +215,7 @@ describe("GanttTask", () => {
                 start: new Date(2020, 3, 5),
                 end: new Date(2020, 3, 6),
                 progress: null,
+                is_milestone: false,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
@@ -251,6 +233,7 @@ describe("GanttTask", () => {
                 end: new Date(2020, 6, 6),
                 progress: null,
                 progress_error_message: "You fucked up!",
+                is_milestone: false,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
@@ -264,6 +247,7 @@ describe("GanttTask", () => {
                 end: new Date(2020, 3, 6),
                 progress: null,
                 progress_error_message: "You fucked up!",
+                is_milestone: false,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
@@ -277,6 +261,7 @@ describe("GanttTask", () => {
                 end: new Date(2020, 3, 5),
                 progress: null,
                 progress_error_message: "You fucked up!",
+                is_milestone: true,
             } as Task);
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();

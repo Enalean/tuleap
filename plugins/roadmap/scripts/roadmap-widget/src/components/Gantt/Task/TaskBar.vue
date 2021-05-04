@@ -20,7 +20,7 @@
 
 <template>
     <milestone-bar
-        v-if="is_milestone"
+        v-if="task.is_milestone"
         v-bind:task="task"
         v-bind:left="left"
         v-bind:class="container_classes"
@@ -119,9 +119,6 @@ export default class TaskBar extends Vue {
 
     @Prop({ required: true })
     readonly is_error_sign_displayed_inside_bar!: boolean;
-
-    @Prop({ required: true })
-    readonly is_milestone!: boolean;
 
     get container_classes(): string {
         return "roadmap-gantt-task-bar-container-" + this.task.color_name;
