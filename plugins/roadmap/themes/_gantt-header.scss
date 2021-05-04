@@ -42,8 +42,7 @@
 
 .roadmap-gantt-task-header {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: baseline;
     width: roadmap-variables.$task-header-width;
     min-width: roadmap-variables.$task-header-width;
     height: 100%;
@@ -59,10 +58,31 @@
     &:hover {
         text-decoration: none;
 
-        > .roadmap-gantt-task-header-title {
+        > .roadmap-gantt-task-header-text > .roadmap-gantt-task-header-title {
             text-decoration: underline;
         }
     }
+}
+
+.roadmap-gantt-task-header-caret {
+    $caret-width: 20px;
+
+    flex: 0 0 auto;
+    width: $caret-width;
+    font-size: .625rem;
+    line-height: .75rem;
+    text-align: center;
+
+    + .roadmap-gantt-task-header-text {
+        max-width: calc(#{roadmap-variables.$task-header-width - $caret-width} - var(--tlp-medium-spacing));
+    }
+}
+
+.roadmap-gantt-task-header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: calc(#{roadmap-variables.$task-header-width} - var(--tlp-medium-spacing));
 }
 
 .roadmap-gantt-task-header-xref {
@@ -86,7 +106,7 @@
     .roadmap-gantt-task-header-#{$color-name} {
         border-left: 4px solid map-get($colors, 'border');
 
-        > .roadmap-gantt-task-header-xref {
+        > .roadmap-gantt-task-header-text > .roadmap-gantt-task-header-xref {
             color: map-get($colors, 'text');
         }
     }

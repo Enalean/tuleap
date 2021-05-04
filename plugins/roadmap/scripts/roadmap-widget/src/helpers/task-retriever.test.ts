@@ -150,4 +150,61 @@ describe("task-retriever", () => {
 
         expect(tasks[0].is_milestone).toBe(false);
     });
+
+    it("should consider a task without _is_child dependencies as not having any sub tasks", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: "2020-03-01T10:00:00+01:00",
+                end: "2020-03-14T10:00:00+01:00",
+                dependencies: { depends_on: [124] },
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].has_subtasks).toBe(false);
+    });
+
+    it("should consider a task with empty _is_child dependencies not having any sub tasks", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: "2020-03-01T10:00:00+01:00",
+                end: "2020-03-14T10:00:00+01:00",
+                dependencies: { _is_child: [] },
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].has_subtasks).toBe(false);
+    });
+
+    it("should consider a task with filled _is_child dependencies as having sub tasks", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: "2020-03-01T10:00:00+01:00",
+                end: "2020-03-14T10:00:00+01:00",
+                dependencies: { _is_child: [124] },
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].has_subtasks).toBe(true);
+    });
 });
