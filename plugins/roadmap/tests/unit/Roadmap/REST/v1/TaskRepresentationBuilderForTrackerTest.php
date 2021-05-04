@@ -95,7 +95,7 @@ class TaskRepresentationBuilderForTrackerTest extends TestCase
         self::assertEquals('bug #42', $representation->xref);
         self::assertEquals(42, $representation->id);
         self::assertEquals('fiesta-red', $representation->color_name);
-        self::assertEquals('roadmap_tasks/42/children', $representation->children_uri);
+        self::assertEquals('roadmap_tasks/42/subtasks', $representation->subtasks_uri);
         self::assertEquals(null, $representation->progress);
     }
 

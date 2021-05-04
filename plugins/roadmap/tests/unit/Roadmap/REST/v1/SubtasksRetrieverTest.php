@@ -31,14 +31,14 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use UserManager;
 
-class TaskChildrenRetrieverTest extends TestCase
+class SubtasksRetrieverTest extends TestCase
 {
     use ForceStrictPHPUnitMock;
 
     private const TASK_ID = 42;
 
     /**
-     * @var TaskChildrenRetriever
+     * @var SubtasksRetriever
      */
     private $retriever;
     /**
@@ -79,7 +79,7 @@ class TaskChildrenRetrieverTest extends TestCase
                 };
             }
         };
-        $this->retriever              = new TaskChildrenRetriever(
+        $this->retriever              = new SubtasksRetriever(
             $this->artifact_factory,
             $user_manager,
             $representation_builder_cache

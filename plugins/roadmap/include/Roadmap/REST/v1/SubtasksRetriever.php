@@ -25,7 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\REST\I18NRestException;
 
-final class TaskChildrenRetriever
+final class SubtasksRetriever
 {
     /**
      * @var \Tracker_ArtifactFactory
@@ -63,12 +63,12 @@ final class TaskChildrenRetriever
             throw new I18NRestException(404, \dgettext('tuleap-roadmap', 'The task cannot be found.'));
         }
 
-        $children        = $parent->getChildrenForUser($user);
-        $total_size      = count($children);
-        $sliced_children = array_slice($children, $offset, $limit);
+        $subtasks        = $parent->getChildrenForUser($user);
+        $total_size      = count($subtasks);
+        $sliced_subtasks = array_slice($subtasks, $offset, $limit);
 
         $representations = [];
-        foreach ($sliced_children as $artifact) {
+        foreach ($sliced_subtasks as $artifact) {
             $representation_builder = $this->representation_builder_cache
                 ->getRepresentationBuilderForTracker($artifact->getTracker(), $user);
 

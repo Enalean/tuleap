@@ -50,5 +50,10 @@ class RoadmapResourceTest extends \RestBase
         $other_artifact = $tasks[1];
         self::assertEquals('Another artifact', $other_artifact['title']);
         self::assertEquals(['' => [$my_artifact['id']]], $other_artifact['dependencies']);
+
+        $subtasks_response = $this->getResponse($this->client->get($other_artifact['subtasks_uri']));
+
+        self::assertEquals(200, $subtasks_response->getStatusCode());
+        self::assertCount(0, $subtasks_response->json());
     }
 }
