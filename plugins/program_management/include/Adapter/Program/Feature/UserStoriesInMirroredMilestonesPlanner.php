@@ -135,7 +135,7 @@ class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirrore
                             )
                         );
                         $milestone->createNewChangeset(
-                            $fields_data->getFieldDataForChangesetCreationFormat(),
+                            $fields_data->getFieldDataForChangesetCreationFormat((int) $milestone->getTracker()->getGroupId()),
                             "",
                             $user
                         );

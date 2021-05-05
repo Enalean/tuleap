@@ -30,12 +30,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ArtifactsLinksSearch
 final class FeaturePlanChange
 {
     /**
-     * @var int[]
+     * @var FeatureChange[]
      */
     public $user_stories;
 
     /**
-     * @param int[] $user_stories
+     * @param FeatureChange[] $user_stories
      */
     private function __construct(array $user_stories)
     {
@@ -52,7 +52,7 @@ final class FeaturePlanChange
             $links = $searcher->getArtifactsLinkedToId((int) $feature_to_link['artifact_id'], $program_increment_tracker_id);
 
             foreach ($links as $link) {
-                $feature_change[] = $link['id'];
+                $feature_change[] = FeatureChange::fromRaw($link);
             }
         }
         return new self($feature_change);

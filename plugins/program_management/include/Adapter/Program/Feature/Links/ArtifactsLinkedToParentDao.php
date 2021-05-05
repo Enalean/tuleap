@@ -29,11 +29,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ArtifactsLinksSearch
 class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLinksSearch
 {
     /**
-     * @psalm-return array{id:int}[]
+     * @psalm-return array{id: int, project_id: int}[]
      */
     public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array
     {
-        $sql = "SELECT linked_art.id
+        $sql = "SELECT linked_art.id, t.group_id as project_id
                 FROM tracker_artifact AS parent_art
                          INNER JOIN tracker_field                           AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                          INNER JOIN tracker_changeset_value                 AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)

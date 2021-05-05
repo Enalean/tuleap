@@ -20,12 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content;
 
-interface ArtifactsLinksSearch
+/**
+ * @psalm-immutable
+ */
+final class FeatureChange
 {
     /**
-     * @psalm-return array{id: int, project_id: int}[]
+     * @var int
      */
-    public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array;
+    public $id;
+    /**
+     * @var int
+     */
+    public $project_id;
+
+    private function __construct(int $id, int $project_id)
+    {
+        $this->id         = $id;
+        $this->project_id = $project_id;
+    }
+
+    /**
+     * @psalm-param array{id: int, project_id: int} $link
+     */
+    public static function fromRaw(array $link): self
+    {
+        return new self($link['id'], $link['project_id']);
+    }
 }
