@@ -153,6 +153,10 @@ export default class GanttTask extends Vue {
     }
 
     get is_text_displayed_inside_progress_bar(): boolean {
+        if (this.task.is_milestone) {
+            return false;
+        }
+
         if (this.task.progress === null) {
             return false;
         }
@@ -165,6 +169,10 @@ export default class GanttTask extends Vue {
     }
 
     get is_text_displayed_outside_progress_bar(): boolean {
+        if (this.task.is_milestone) {
+            return false;
+        }
+
         if (this.task.progress === null) {
             return false;
         }
@@ -173,6 +181,10 @@ export default class GanttTask extends Vue {
     }
 
     get is_text_displayed_outside_bar(): boolean {
+        if (this.task.is_milestone) {
+            return false;
+        }
+
         if (this.task.progress === null) {
             return false;
         }
@@ -196,17 +208,23 @@ export default class GanttTask extends Vue {
     }
 
     get is_error_sign_displayed_outside_bar(): boolean {
+        if (this.task.is_milestone) {
+            return false;
+        }
+
         return (
             this.is_progress_in_error &&
-            (this.task.is_milestone ||
-                this.dimensions.width < Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX)
+            this.dimensions.width < Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX
         );
     }
 
     get is_error_sign_displayed_inside_bar(): boolean {
+        if (this.task.is_milestone) {
+            return false;
+        }
+
         return (
             this.is_progress_in_error &&
-            !this.task.is_milestone &&
             this.dimensions.width >= Styles.MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX
         );
     }
