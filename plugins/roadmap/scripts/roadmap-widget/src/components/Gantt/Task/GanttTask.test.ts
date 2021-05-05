@@ -224,6 +224,20 @@ describe("GanttTask", () => {
             expect(task_bar_props.is_text_displayed_outside_progress_bar).toBe(false);
             expect(task_bar_props.is_text_displayed_outside_bar).toBe(false);
         });
+
+        it("should display nothing if the task is a milestone", () => {
+            const wrapper = mountGanttTask({
+                start: new Date(2020, 3, 6),
+                end: new Date(2020, 3, 6),
+                progress: 0.5,
+                is_milestone: true,
+            } as Task);
+
+            const task_bar_props = wrapper.findComponent(TaskBar).props();
+            expect(task_bar_props.is_text_displayed_inside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_progress_bar).toBe(false);
+            expect(task_bar_props.is_text_displayed_outside_bar).toBe(false);
+        });
     });
 
     describe("progress in error", () => {
@@ -255,7 +269,7 @@ describe("GanttTask", () => {
             expect(task_bar_props.is_error_sign_displayed_outside_bar).toBe(true);
         });
 
-        it("should display the error sign outside the bar if we have a milestone", () => {
+        it("should not display an error sign if we have a milestone because it does not have any notion of progress", () => {
             const wrapper = mountGanttTask({
                 start: new Date(2020, 3, 5),
                 end: new Date(2020, 3, 5),
@@ -266,7 +280,7 @@ describe("GanttTask", () => {
 
             const task_bar_props = wrapper.findComponent(TaskBar).props();
             expect(task_bar_props.is_error_sign_displayed_inside_bar).toBe(false);
-            expect(task_bar_props.is_error_sign_displayed_outside_bar).toBe(true);
+            expect(task_bar_props.is_error_sign_displayed_outside_bar).toBe(false);
         });
     });
 });
