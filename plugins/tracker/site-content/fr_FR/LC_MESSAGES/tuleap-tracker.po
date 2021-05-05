@@ -1628,13 +1628,6 @@ msgstr ""
 "Si vous connaissez l'id de l'artefact, entrez-le manuellement dans le champs "
 "texte ci-dessous. Le champs attends une liste d'ids séparés par des virgules."
 
-msgid ""
-"Implementation of child count based semantic progress is ongoing. You cannot "
-"use it yet."
-msgstr ""
-"L'implémentation de la sémantique progression basée sur le comptage des "
-"enfants est en cours. Vous ne pouvez pas encore l'utiliser."
-
 msgid "Import"
 msgstr "Importer"
 

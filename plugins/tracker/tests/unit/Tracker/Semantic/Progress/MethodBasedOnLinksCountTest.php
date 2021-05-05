@@ -64,20 +64,79 @@ class MethodBasedOnLinksCountTest extends TestCase
         $this->assertFalse($this->method->isFieldUsedInComputation($random_field));
     }
 
-    public function testItDoesNotComputeProgressionYet(): void
+    public function testItDoesComputesTheProgressWhenItHasOpenAndClosedLinkedArtifacts(): void
     {
+        $tracker = \Mockery::mock(\Tracker::class, [
+            'getItemName' => 'stories',
+            'getGroupId' => 104,
+            'getId' => 113
+        ]);
+
+        $last_artifact_changeset = \Mockery::mock(
+            \Tracker_Artifact_ChangesetValue_ArtifactLink::class,
+            ['getValue' => [
+                '141' => $this->buildArtifactLinkInfo(141, "_is_child", $tracker, false), // 1 out of 4 children is closed
+                '142' => $this->buildArtifactLinkInfo(142, "is_subtask", $tracker, true),
+                '143' => $this->buildArtifactLinkInfo(143, "covered_by", $tracker, true),
+                '144' => $this->buildArtifactLinkInfo(144, "_is_child", $tracker, true),
+                '145' => $this->buildArtifactLinkInfo(145, "_is_child", $tracker, true),
+                '146' => $this->buildArtifactLinkInfo(146, "_is_child", $tracker, true)
+            ]]
+        );
+
+        $artifact = \Mockery::mock(Artifact::class);
+        $this->links_field->shouldReceive('getLastChangesetValue')
+            ->once()
+            ->with($artifact)
+            ->andReturn($last_artifact_changeset);
+
         $progression_result = $this->method->computeProgression(
-            \Mockery::mock(Artifact::class),
+            $artifact,
             \Mockery::mock(\PFUser::class)
         );
 
-        $this->assertEquals(
-            new ProgressionResult(
-                null,
-                'Implementation of child count based semantic progress is ongoing. You cannot use it yet.'
-            ),
-            $progression_result
+        $this->assertEquals(0.25, $progression_result->getValue());
+    }
+
+    /**
+     * @testWith [true, 0]
+     *           [false, 1]
+     */
+    public function testItComputesWhenItHasNoLinksOfGivenType(bool $is_artifact_open, float $expected_progress_value): void
+    {
+        $last_artifact_changeset = \Mockery::mock(
+            \Tracker_Artifact_ChangesetValue_ArtifactLink::class,
+            ['getValue' => []]
         );
+
+        $artifact = \Mockery::mock(Artifact::class, ['isOpen' => $is_artifact_open]);
+
+        $this->links_field->shouldReceive('getLastChangesetValue')
+            ->once()
+            ->with($artifact)
+            ->andReturn($last_artifact_changeset);
+
+        $progression_result = $this->method->computeProgression(
+            $artifact,
+            \Mockery::mock(\PFUser::class)
+        );
+
+        $this->assertEquals($expected_progress_value, $progression_result->getValue());
+    }
+
+    private function buildArtifactLinkInfo(int $artifact_id, string $nature, \Tracker $tracker, bool $is_artifact_open): \Tracker_ArtifactLinkInfo
+    {
+        $artifact = \Mockery::mock(
+            Artifact::class,
+            [
+                'getId'            => $artifact_id,
+                'getTracker'       => $tracker,
+                'getLastChangeset' => \Mockery::mock(\Tracker_Artifact_Changeset::class, ['getId' => 12451]),
+                'isOpen'           => $is_artifact_open
+            ]
+        );
+
+        return \Tracker_ArtifactLinkInfo::buildFromArtifact($artifact, $nature);
     }
 
     public function testItIsConfigured(): void

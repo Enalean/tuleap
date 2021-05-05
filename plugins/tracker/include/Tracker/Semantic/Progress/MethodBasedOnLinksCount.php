@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
+use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class MethodBasedOnLinksCount implements IComputeProgression
@@ -86,7 +87,48 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
-        return new ProgressionResult(null, $this->getErrorMessage());
+        $nb_total               = 0;
+        $nb_closed              = 0;
+        $linked_artifacts_value = $this->artifact_link_field->getLastChangesetValue($artifact);
+
+        if (! $linked_artifacts_value) {
+            return new ProgressionResult(
+                null,
+                ''
+            );
+        }
+
+        foreach ($linked_artifacts_value->getValue() as $link_info) {
+            \assert($link_info instanceof Tracker_ArtifactLinkInfo);
+            if ($link_info->getNature() !== $this->artifact_link_type) {
+                continue;
+            }
+
+            $linked_artifact = $link_info->getArtifact();
+            if ($linked_artifact === null) {
+                continue;
+            }
+
+            $nb_total++;
+
+            if (! $linked_artifact->isOpen()) {
+                $nb_closed++;
+            }
+        }
+
+        return $this->getProgressResult($artifact, $nb_total, $nb_closed);
+    }
+
+    private function getProgressResult(Artifact $artifact, int $nb_total, int $nb_closed): ProgressionResult
+    {
+        if ($nb_total === 0) {
+            return new ProgressionResult(
+                $artifact->isOpen() ? 0 : 1,
+                ''
+            );
+        }
+
+        return new ProgressionResult($nb_closed / $nb_total, '');
     }
 
     public function isConfigured(): bool
@@ -96,7 +138,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
     public function getErrorMessage(): string
     {
-        return dgettext('tuleap-tracker', 'Implementation of child count based semantic progress is ongoing. You cannot use it yet.');
+        return '';
     }
 
     public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation
