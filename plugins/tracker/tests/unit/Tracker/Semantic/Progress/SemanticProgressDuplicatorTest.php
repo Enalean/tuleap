@@ -110,7 +110,7 @@ class SemanticProgressDuplicatorTest extends TestCase
 
         $this->dao
             ->shouldReceive('save')
-            ->with(2, 1001, 1002)
+            ->with(2, 1001, 1002, null)
             ->once();
 
         $this->duplicator->duplicate(

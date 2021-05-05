@@ -174,25 +174,25 @@ class MethodBasedOnLinksCountTest extends TestCase
             $this->method->exportToREST(\Mockery::mock(\PFUser::class)),
         );
     }
-    public function testItDoesNotExportToXMLYet(): void
+    public function testItExportsItsConfigurationToXml(): void
     {
         $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';
         $root     = new \SimpleXMLElement($xml_data);
 
-        $this->method->exportToXMl($root, [
-            'F201' => 1001
-        ]);
+        $this->method->exportToXMl($root, []);
 
-        $this->assertCount(0, $root->children());
+        $this->assertCount(1, $root->children());
+        $this->assertEquals('progress', (string) $root->semantic['type']);
+        $this->assertEquals('_is_child', (string) $root->semantic->artifact_link_type['shortname']);
     }
 
-    public function testDoesNotSaveItsConfigurationYet(): void
+    public function testSavesItsConfiguration(): void
     {
         $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
 
-        $this->dao->shouldReceive('save')->never();
+        $this->dao->shouldReceive('save')->with(113, null, null, '_is_child')->once()->andReturn(true);
 
-        $this->assertFalse($this->method->saveSemanticForTracker($tracker));
+        $this->assertTrue($this->method->saveSemanticForTracker($tracker));
     }
 
     public function testItDoesNotDeleteItsConfigurationYet(): void

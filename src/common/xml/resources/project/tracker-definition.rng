@@ -865,18 +865,25 @@
         <attribute name="type">
           <value>progress</value>
         </attribute>
-        <group>
-          <element name="total_effort_field">
-            <attribute name="REF">
-              <data type="IDREF"/>
+        <choice>
+          <group>
+            <element name="total_effort_field">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+            <element name="remaining_effort_field">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </group>
+          <element name="artifact_link_type">
+            <attribute name="shortname">
+              <data type="string"/>
             </attribute>
           </element>
-          <element name="remaining_effort_field">
-            <attribute name="REF">
-              <data type="IDREF"/>
-            </attribute>
-          </element>
-        </group>
+        </choice>
       </group>
     </choice>
   </define>

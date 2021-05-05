@@ -65,6 +65,6 @@ class SemanticProgressDuplicator implements IDuplicateSemantic
             return;
         }
 
-        $this->dao->save((int) $to_tracker_id, $to_total_effort_field_id, $to_remaining_effort_field_id);
+        $this->dao->save((int) $to_tracker_id, $to_total_effort_field_id, $to_remaining_effort_field_id, null);
     }
 }

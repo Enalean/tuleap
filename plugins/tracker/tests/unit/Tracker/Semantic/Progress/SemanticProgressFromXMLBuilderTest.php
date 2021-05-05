@@ -159,4 +159,49 @@ class SemanticProgressFromXMLBuilderTest extends TestCase
 
         $this->assertNull($semantic);
     }
+
+    public function testBuildsSemanticProgressBasedOnLinksCountFromXML(): void
+    {
+        $tracker = \Mockery::mock(\Tracker::class);
+        $xml     = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+             <semantic type="progress">
+              <artifact_link_type shortname="_is_child"/>
+            </semantic>
+        '
+        );
+
+        $semantic = $this->builder->getInstanceFromXML(
+            $xml,
+            [],
+            $tracker
+        );
+
+        $this->assertNotNull($semantic);
+        $this->assertInstanceOf(SemanticProgress::class, $semantic);
+
+        $this->assertEquals(
+            MethodBasedOnLinksCount::getMethodName(),
+            $semantic->getComputationMethod()::getMethodName()
+        );
+    }
+
+    public function testItReturnsNullWhenArtifactLinkTypeNodeHasNoShortnameAttribute(): void
+    {
+        $xml = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+             <semantic type="progress">
+              <artifact_link_type />
+            </semantic>
+        '
+        );
+
+        $semantic = $this->builder->getInstanceFromXML(
+            $xml,
+            [],
+            \Mockery::mock(\Tracker::class, ['getId' => 113])
+        );
+
+        $this->assertNull($semantic);
+    }
 }

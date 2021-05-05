@@ -408,6 +408,10 @@ tracker =
                             attribute REF { xsd:IDREF }
                         }
                     )
+                    |
+                    element artifact_link_type {
+                        attribute shortname { xsd:string }
+                    }
                 )
             )
         )

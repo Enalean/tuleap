@@ -238,7 +238,7 @@ class MethodBasedOnEffortTest extends TestCase
     {
         $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
 
-        $this->dao->shouldReceive('save')->with(113, 1001, 1002)->once()->andReturn(true);
+        $this->dao->shouldReceive('save')->with(113, 1001, 1002, null)->once()->andReturn(true);
 
         $this->method->saveSemanticForTracker($tracker);
     }

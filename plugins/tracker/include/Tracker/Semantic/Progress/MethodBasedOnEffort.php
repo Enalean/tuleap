@@ -205,7 +205,8 @@ class MethodBasedOnEffort implements IComputeProgression
         return $this->dao->save(
             $tracker->getId(),
             $this->total_effort_field->getId(),
-            $this->remaining_effort_field->getId()
+            $this->remaining_effort_field->getId(),
+            null
         );
     }
 
