@@ -22,6 +22,7 @@ import type { TasksState } from "./type";
 import type { ActionContext } from "vuex";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { retrieveAllTasks } from "../../helpers/task-retriever";
+import type { Row } from "../../type";
 
 export async function loadTasks(
     context: ActionContext<TasksState, RootState>,
@@ -32,7 +33,10 @@ export async function loadTasks(
         if (tasks.length === 0) {
             context.commit("setShouldDisplayEmptyState", true);
         } else {
-            context.commit("setTasks", tasks);
+            context.commit(
+                "setRows",
+                tasks.map((task): Row => ({ task }))
+            );
         }
     } catch (e) {
         if (isFetchWrapperError(e)) {

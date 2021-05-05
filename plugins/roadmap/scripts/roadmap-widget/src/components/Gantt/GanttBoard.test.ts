@@ -55,11 +55,11 @@ describe("GanttBoard", () => {
                     state: {
                         locale_bcp47: "en-US",
                         tasks: {
-                            tasks: [
-                                { id: 1, dependencies: {} },
-                                { id: 2, dependencies: {} },
-                                { id: 3, dependencies: {} },
-                            ] as Task[],
+                            rows: [
+                                { task: { id: 1, dependencies: {} } as Task },
+                                { task: { id: 2, dependencies: {} } as Task },
+                                { task: { id: 3, dependencies: {} } as Task },
+                            ],
                         } as TasksState,
                     } as RootState,
                 }),
@@ -79,10 +79,22 @@ describe("GanttBoard", () => {
                     state: {
                         locale_bcp47: "en-US",
                         tasks: {
-                            tasks: [
-                                { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
-                                { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
-                            ] as Task[],
+                            rows: [
+                                {
+                                    task: {
+                                        id: 1,
+                                        start: new Date(2020, 3, 15),
+                                        dependencies: {},
+                                    } as Task,
+                                },
+                                {
+                                    task: {
+                                        id: 2,
+                                        start: new Date(2020, 3, 20),
+                                        dependencies: {},
+                                    } as Task,
+                                },
+                            ],
                         } as TasksState,
                     } as RootState,
                 }),
@@ -119,10 +131,22 @@ describe("GanttBoard", () => {
                     state: {
                         locale_bcp47: "en-US",
                         tasks: {
-                            tasks: [
-                                { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
-                                { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
-                            ] as Task[],
+                            rows: [
+                                {
+                                    task: {
+                                        id: 1,
+                                        start: new Date(2020, 3, 15),
+                                        dependencies: {},
+                                    } as Task,
+                                },
+                                {
+                                    task: {
+                                        id: 2,
+                                        start: new Date(2020, 3, 20),
+                                        dependencies: {},
+                                    } as Task,
+                                },
+                            ],
                         } as TasksState,
                     } as RootState,
                 }),
@@ -151,10 +175,22 @@ describe("GanttBoard", () => {
                     state: {
                         locale_bcp47: "en-US",
                         tasks: {
-                            tasks: [
-                                { id: 1, start: new Date(2020, 3, 15), dependencies: {} },
-                                { id: 2, start: new Date(2020, 3, 20), dependencies: {} },
-                            ] as Task[],
+                            rows: [
+                                {
+                                    task: {
+                                        id: 1,
+                                        start: new Date(2020, 3, 15),
+                                        dependencies: {},
+                                    } as Task,
+                                },
+                                {
+                                    task: {
+                                        id: 2,
+                                        start: new Date(2020, 3, 20),
+                                        dependencies: {},
+                                    } as Task,
+                                },
+                            ],
                         } as TasksState,
                     } as RootState,
                 }),
@@ -194,11 +230,11 @@ describe("GanttBoard", () => {
                     state: {
                         locale_bcp47: "en-US",
                         tasks: {
-                            tasks: [
-                                { id: 1, dependencies: {} },
-                                { id: 2, dependencies: {} },
-                                { id: 3, dependencies: {} },
-                            ] as Task[],
+                            rows: [
+                                { task: { id: 1, dependencies: {} } as Task },
+                                { task: { id: 2, dependencies: {} } as Task },
+                                { task: { id: 3, dependencies: {} } as Task },
+                            ],
                         } as TasksState,
                     } as RootState,
                 }),
@@ -224,11 +260,11 @@ describe("GanttBoard", () => {
                     state: {
                         locale_bcp47: "en-US",
                         tasks: {
-                            tasks: [
-                                { id: 1, dependencies: {} },
-                                { id: 2, dependencies: {} },
-                                { id: 3, dependencies: {} },
-                            ] as Task[],
+                            rows: [
+                                { task: { id: 1, dependencies: {} } as Task },
+                                { task: { id: 2, dependencies: {} } as Task },
+                                { task: { id: 3, dependencies: {} } as Task },
+                            ],
                         } as TasksState,
                     } as RootState,
                 }),

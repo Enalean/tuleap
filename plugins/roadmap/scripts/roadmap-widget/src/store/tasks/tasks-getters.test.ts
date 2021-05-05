@@ -25,11 +25,11 @@ describe("tasks-getters", () => {
     describe("does_at_least_one_task_have_subtasks", () => {
         it("should return false if there isn't any task with subtasks", () => {
             const state = {
-                tasks: [
-                    { id: 123, has_subtasks: false },
-                    { id: 124, has_subtasks: false },
-                    { id: 125, has_subtasks: false },
-                ] as Task[],
+                rows: [
+                    { task: { id: 123, has_subtasks: false } as Task },
+                    { task: { id: 124, has_subtasks: false } as Task },
+                    { task: { id: 125, has_subtasks: false } as Task },
+                ],
             } as TasksState;
 
             expect(getters.does_at_least_one_task_have_subtasks(state)).toBe(false);
@@ -37,11 +37,11 @@ describe("tasks-getters", () => {
 
         it("should return true if there are some tasks with subtasks", () => {
             const state = {
-                tasks: [
-                    { id: 123, has_subtasks: false },
-                    { id: 124, has_subtasks: true },
-                    { id: 125, has_subtasks: false },
-                ] as Task[],
+                rows: [
+                    { task: { id: 123, has_subtasks: false } as Task },
+                    { task: { id: 124, has_subtasks: true } as Task },
+                    { task: { id: 125, has_subtasks: false } as Task },
+                ],
             } as TasksState;
 
             expect(getters.does_at_least_one_task_have_subtasks(state)).toBe(true);

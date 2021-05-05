@@ -25,7 +25,7 @@
             v-else-if="should_display_error_state"
             v-bind:message="error_message"
         />
-        <gantt-board v-else-if="tasks.length" v-bind:visible_natures="visible_natures" />
+        <gantt-board v-else-if="rows.length" v-bind:visible_natures="visible_natures" />
         <loading-state v-else-if="is_loading" />
     </div>
 </template>
@@ -36,7 +36,7 @@ import { Component, Prop } from "vue-property-decorator";
 import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
-import type { Task, NaturesLabels } from "../type";
+import type { NaturesLabels, Row } from "../type";
 import LoadingState from "./LoadingState.vue";
 import { namespace } from "vuex-class";
 
@@ -65,7 +65,7 @@ export default class App extends Vue {
     private readonly loadTasks!: (roadmap_id: number) => Promise<void>;
 
     @tasks.State
-    private readonly tasks!: Task[];
+    private readonly rows!: Row[];
 
     @tasks.State
     private readonly is_loading!: boolean;

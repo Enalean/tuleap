@@ -76,6 +76,7 @@ import type {
     TasksDependencies,
     TaskDimensionMap,
     TimeScale,
+    Row,
 } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
@@ -116,7 +117,7 @@ export default class GanttBoard extends Vue {
     };
 
     @tasks.State
-    readonly tasks!: Task[];
+    readonly rows!: Row[];
 
     @State
     private readonly locale_bcp47!: string;
@@ -182,6 +183,10 @@ export default class GanttBoard extends Vue {
         const nb_visible_units = Math.ceil(width / Styles.TIME_UNIT_WIDTH_IN_PX);
 
         this.nb_additional_units = nb_visible_units - this.time_period.units.length - 1;
+    }
+
+    get tasks(): Task[] {
+        return this.rows.map((row) => row.task);
     }
 
     get time_period(): TimePeriod {
