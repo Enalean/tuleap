@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
-use Tuleap\ProgramManagement\Adapter\Team\ProjectIsAProgramException;
-use Tuleap\ProgramManagement\Adapter\Team\TeamAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
+use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
+use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 
 interface CreateTeam
 {

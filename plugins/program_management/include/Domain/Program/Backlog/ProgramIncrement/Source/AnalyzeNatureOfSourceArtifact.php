@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
 use PFUser;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\Tracker\Artifact\Artifact;
 
 interface AnalyzeNatureOfSourceArtifact

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-final class UserCanNotAccessToProgramException extends \Exception implements PlanTrackerException
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+
+final class PendingArtifactChangesetNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
-    public function __construct(int $program_id, int $user_id, string $message)
+    public function __construct(int $artifact_id, int $changeset_id)
     {
-        parent::__construct("Program #$program_id is not accessible by user #$user_id: $message");
+        parent::__construct("Could not find changeset #$changeset_id of source artifact #$artifact_id ");
     }
 }

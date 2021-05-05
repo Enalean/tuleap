@@ -56,8 +56,8 @@ final class FeatureElementsRetriever implements RetrieveFeatures
     /**
      * @return FeatureRepresentation[]
      *
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAccessException
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\ProjectIsNotAProgramException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException
      */
     public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array
     {

@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
-final class TeamAccessException extends \Exception implements TeamException
+final class ArtifactLinkFieldNotFoundException extends \Exception implements NatureAnalyzerException
 {
-    public function __construct(int $id)
+    public function __construct(int $artifact_id)
     {
-        parent::__construct("You must be project administrator of project #$id to define it as team.");
+        parent::__construct("Artifact link field not found for artifact #$artifact_id");
     }
 }

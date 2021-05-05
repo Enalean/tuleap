@@ -84,8 +84,8 @@ class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirrore
     }
 
     /**
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlannableTrackerCannotBeEmptyException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
      */
     public function plan(ProgramIncrementChanged $program_increment_changed): void
     {

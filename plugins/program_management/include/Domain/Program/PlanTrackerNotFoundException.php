@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program;
 
-final class ArtifactCreationException extends \Exception
+final class PlanTrackerNotFoundException extends \Exception implements ProgramTrackerException
 {
-    public function __construct()
+    public function __construct(int $tracker_id)
     {
-        parent::__construct('Could not create a new artifact');
+        parent::__construct("tracker #$tracker_id not found");
     }
 }

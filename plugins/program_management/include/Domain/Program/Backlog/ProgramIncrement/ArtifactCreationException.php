@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-final class FeatureIsNotPlannableException extends \Exception
+final class ArtifactCreationException extends \Exception
 {
-    public function __construct(int $id)
+    public function __construct()
     {
-        parent::__construct("Tracker id #$id is not a plannable tracker");
+        parent::__construct('Could not create a new artifact');
     }
 }

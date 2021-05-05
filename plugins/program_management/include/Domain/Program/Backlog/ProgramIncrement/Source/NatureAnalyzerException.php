@@ -20,12 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Tracker;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
-final class PlanTrackerNotFoundException extends \Exception implements ProgramTrackerException
+interface NatureAnalyzerException extends \Throwable
 {
-    public function __construct(int $tracker_id)
-    {
-        parent::__construct("tracker #$tracker_id not found");
-    }
 }

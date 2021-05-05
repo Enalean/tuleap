@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncrementTrackerConfiguration
 {
@@ -49,7 +49,7 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
     }
 
     /**
-     * @throws \Tuleap\ProgramManagement\Adapter\Program\Plan\PlanTrackerException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException
      * @throws ProgramTrackerException
      * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException
      */

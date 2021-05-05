@@ -43,8 +43,8 @@ final class Team
     }
 
     /**
-     * @throws \Tuleap\ProgramManagement\Adapter\Team\ProjectIsAProgramException
-     * @throws \Tuleap\ProgramManagement\Adapter\Team\TeamAccessException
+     * @throws \Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException
+     * @throws \Tuleap\ProgramManagement\Domain\Team\TeamAccessException
      */
     public static function build(BuildTeam $build_team, int $team_id, \PFUser $user): self
     {
@@ -55,8 +55,8 @@ final class Team
 
     /**
      * This method has meaning only while we can't do test initialization by xml import
-     * @throws \Tuleap\ProgramManagement\Adapter\Team\ProjectIsAProgramException
-     * @throws \Tuleap\ProgramManagement\Adapter\Team\TeamAccessException
+     * @throws \Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException
+     * @throws \Tuleap\ProgramManagement\Domain\Team\TeamAccessException
      */
     public static function buildForRestTest(BuildTeam $build_team, int $team_id, \PFUser $user): self
     {

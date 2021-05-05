@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-final class FeatureNotAccessException extends \Exception
+final class ProgramNotFoundException extends \Exception implements PlanTrackerException
 {
-    public function __construct()
+    public function __construct(int $id)
     {
-        parent::__construct("You can not see this feature.");
+        parent::__construct("Program tracker #$id is not found");
     }
 }

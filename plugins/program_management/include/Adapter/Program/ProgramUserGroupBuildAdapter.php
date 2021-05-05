@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistException;
 use Tuleap\Project\REST\UserGroupRetriever;
 
 final class ProgramUserGroupBuildAdapter implements BuildProgramUserGroup

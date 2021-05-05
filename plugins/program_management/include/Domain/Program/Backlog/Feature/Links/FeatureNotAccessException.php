@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-final class ProgramNotFoundException extends \Exception implements NatureAnalyzerException
+final class FeatureNotAccessException extends \Exception
 {
-    public function __construct(int $team_id)
+    public function __construct()
     {
-        parent::__construct("Program of team project #$team_id not found");
+        parent::__construct("You can not see this feature.");
     }
 }

@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\PlanTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 
 class ProgramIncrementTrackerTest extends TestCase
 {

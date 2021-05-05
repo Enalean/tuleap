@@ -20,12 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Tracker;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-final class PlanTrackerDoesNotBelongToProjectException extends \Exception implements ProgramTrackerException
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+
+class PendingArtifactNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
-    public function __construct(int $tracker_id, int $project_id)
+    public function __construct(int $artifact_id, int $user_id)
     {
-        parent::__construct("tracker #$tracker_id does not belong to project #$project_id ");
+        parent::__construct("Could not find Program source artifact #$artifact_id while creating program increments for user #$user_id");
     }
 }

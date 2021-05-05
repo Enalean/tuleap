@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Tracker;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-final class ProgramTrackerNotFoundException extends \Exception implements ProgramTrackerException
+final class PlannableTrackerCannotBeEmptyException extends \Exception implements PlanTrackerException
 {
-    public function __construct(int $tracker_id)
+    public function __construct()
     {
-        parent::__construct("Tracker #$tracker_id is not found");
+        parent::__construct("Plannable tracker id cannot be empty");
     }
 }

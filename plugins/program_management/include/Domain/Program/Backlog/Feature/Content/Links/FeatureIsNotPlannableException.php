@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links;
 
-final class ProjectIsNotAProgramException extends \Exception implements PlanTrackerException
+final class FeatureIsNotPlannableException extends \Exception
 {
     public function __construct(int $id)
     {
-        parent::__construct("You can only define plan from program projet, project #$id is not a program project.");
+        parent::__construct("Tracker id #$id is not a plannable tracker");
     }
 }

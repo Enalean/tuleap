@@ -20,14 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
-
-final class PendingArtifactChangesetNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+final class TeamAccessException extends \Exception implements TeamException
 {
-    public function __construct(int $artifact_id, int $changeset_id)
+    public function __construct(int $id)
     {
-        parent::__construct("Could not find changeset #$changeset_id of source artifact #$artifact_id ");
+        parent::__construct("You must be project administrator of project #$id to define it as team.");
     }
 }

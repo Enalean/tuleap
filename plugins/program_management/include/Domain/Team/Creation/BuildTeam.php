@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
-use Tuleap\ProgramManagement\Adapter\Team\ProjectIsAProgramException;
-use Tuleap\ProgramManagement\Adapter\Team\TeamAccessException;
-use Tuleap\ProgramManagement\Adapter\Team\TeamMustHaveExplicitBacklogEnabledException;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
+use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
+use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
+use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
 
 interface BuildTeam
 {

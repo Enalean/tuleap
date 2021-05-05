@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Program;
 
-final class ProgramNotFoundException extends \Exception implements PlanTrackerException
+final class PlanTrackerDoesNotBelongToProjectException extends \Exception implements ProgramTrackerException
 {
-    public function __construct(int $id)
+    public function __construct(int $tracker_id, int $project_id)
     {
-        parent::__construct("Program tracker #$id is not found");
+        parent::__construct("tracker #$tracker_id does not belong to project #$project_id ");
     }
 }

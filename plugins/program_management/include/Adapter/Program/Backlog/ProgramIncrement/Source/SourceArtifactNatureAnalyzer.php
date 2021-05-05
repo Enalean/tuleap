@@ -24,6 +24,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 use PFUser;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ArtifactLinkFieldNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ChangesetValueNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -59,12 +63,12 @@ class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
     {
         $artifact_link_field = $artifact->getAnArtifactLinkField($user);
         if (! $artifact_link_field) {
-            throw new ArtifactLinkFieldNotFoundException((int) $artifact->getId());
+            throw new ArtifactLinkFieldNotFoundException($artifact->getId());
         }
 
         $changeset_value = $artifact->getValue($artifact_link_field);
         if (! $changeset_value) {
-            throw new ChangesetValueNotFoundException((int) $artifact->getId());
+            throw new ChangesetValueNotFoundException($artifact->getId());
         }
 
         $program_increment = $this->team_store->getProgramIncrementOfTeam((int) $artifact->getTracker()->getGroupId());

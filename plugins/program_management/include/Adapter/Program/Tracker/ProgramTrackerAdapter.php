@@ -23,9 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Tracker;
 
 use TrackerFactory;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildTracker;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlannableTrackerCannotBeEmptyException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramPlannableTracker;
+use Tuleap\ProgramManagement\Domain\Program\PlanTrackerDoesNotBelongToProjectException;
+use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 final class ProgramTrackerAdapter implements BuildTracker
 {
