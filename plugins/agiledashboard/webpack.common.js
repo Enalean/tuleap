@@ -31,17 +31,10 @@ const entry_points = {
     "burnup-chart": "./themes/FlamingParrot/css/burnup-chart.scss",
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss",
+    "administration-style": "./themes/BurningParrot/css/administration.scss",
+    "scrum-style": "./themes/BurningParrot/css/scrum.scss",
+    "kanban-style": "./themes/BurningParrot/css/kanban.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-const bp_entry_points = ["administration", "kanban", "scrum"];
-for (const color of colors_burning_parrot) {
-    for (const entry_point_name of bp_entry_points) {
-        entry_points[
-            entry_point_name + "-" + color
-        ] = `./themes/BurningParrot/css/${entry_point_name}-${color}.scss`;
-    }
-}
 
 const webpack_config_for_themes = {
     entry: entry_points,

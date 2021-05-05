@@ -33,13 +33,13 @@
     position: relative;
     top: 20px;
     margin: 0 0 50px;
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: .9em;
     text-align: center;
 
     > span {
         padding: 10px;
-        background: $tlp-theme-background-color;
+        background: var(--tlp-theme-background-color);
     }
 
     &::after {
@@ -50,7 +50,7 @@
         left: 0;
         width: 100%;
         height: 50%;
-        border-bottom: 1px solid transparentize($tlp-theme-color, .85);
+        border-bottom: 1px solid var(--tlp-theme-color-transparent-85);
     }
 }
 
@@ -64,12 +64,12 @@
     flex-direction: column;
     align-items: center;
     margin: 0 0 var(--tlp-medium-spacing);
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: 14px;
     text-align: center;
 }
 
 .no-milestone-image {
     margin: var(--tlp-medium-spacing) 0 10px;
-    fill: transparentize($tlp-theme-color, .8);
+    fill: var(--tlp-theme-color-transparent-80);
 }

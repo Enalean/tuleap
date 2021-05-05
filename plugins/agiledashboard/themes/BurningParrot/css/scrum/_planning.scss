@@ -63,7 +63,7 @@
 
 .planning-arrows {
     opacity: .4;
-    fill: darken($tlp-theme-background-color, 20%);
+    fill: var(--tlp-theme-background-color-darker-20);
 }
 
 .planning-header {
@@ -75,7 +75,7 @@
 
 .planning-header-title {
     margin: 0;
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
     font-weight: 600;
 }
 
@@ -103,6 +103,6 @@
     margin-bottom: var(--tlp-medium-spacing);
     padding: var(--tlp-small-spacing);
     border-radius: 4px;
-    background: var(--project-color, $tlp-ui-dimmed);
-    color: $tlp-ui-white;
+    background: var(--project-color, var(--tlp-ui-dimmed));
+    color: var(--tlp-ui-white);
 }

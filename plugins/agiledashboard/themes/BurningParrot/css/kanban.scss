@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../../src/themes/BurningParrot/css/includes/global-variables';
+
 @import '../../../scripts/kanban/node_modules/@tuleap/plugin-tracker-artifact-modal';
 @import '../../../scripts/kanban/node_modules/ng-scrollbar/dist/ng-scrollbar';
 @import '../../../scripts/kanban/node_modules/dragular/dist/dragular';
 
-@import '../../../../../src/themes/BurningParrot/css/includes/global-variables';
 @import './highlight';
 
 @import 'kanban/socket';
@@ -53,36 +54,36 @@ $kanban-column-footer-height: 50px;
 .kanban {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$breadcrumb-height});
+    height: calc(100vh - #{global-variables.$breadcrumb-height});
 }
 
 .sidebar-collapsed .kanban {
-    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar});
+    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar});
 }
 
 .has-visible-project-banner .kanban {
-    height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height});
+    height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height});
 }
 
 .has-visible-project-banner.sidebar-collapsed .kanban {
-    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height});
+    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height});
 }
 
 .has-visible-platform-banner {
     .kanban {
-        height: calc(100vh - #{$breadcrumb-height} - #{$platform-banner-base-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$platform-banner-base-height});
     }
 
     &.sidebar-collapsed .kanban {
-        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$platform-banner-base-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$platform-banner-base-height});
     }
 
     &.has-visible-project-banner .kanban {
-        height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$extra-platform-banner-white-space-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height});
     }
 
     &.has-visible-project-banner.sidebar-collapsed .kanban {
-        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$extra-platform-banner-white-space-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{global-variables.$extra-platform-banner-white-space-height});
     }
 }
 
@@ -130,7 +131,7 @@ $kanban-column-footer-height: 50px;
     flex: 0 1 auto;
     width: 150px;
     margin: 0 0 0 var(--tlp-small-spacing);
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
 }
 
 .kanban-filtered-info {
@@ -150,9 +151,9 @@ $kanban-column-footer-height: 50px;
     flex-direction: column;
     align-items: center;
     transition: background 100ms;
-    border-bottom: 1px solid $tlp-ui-border-normal;
-    border-left: 1px solid $tlp-ui-border-normal;
-    background: $tlp-theme-background-color;
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    border-left: 1px solid var(--tlp-ui-border-normal);
+    background: var(--tlp-theme-background-color);
 
     &:hover,
     &:focus-within {
@@ -163,7 +164,7 @@ $kanban-column-footer-height: 50px;
     }
 
     &.archive {
-        border-right: 1px solid $tlp-ui-border-normal;
+        border-right: 1px solid var(--tlp-ui-border-normal);
     }
 
     &.kanban-column-open {
@@ -179,14 +180,14 @@ $kanban-column-footer-height: 50px;
         flex: 1 1 $kanban-column-closed-width;
         min-width: $kanban-column-closed-width;
         overflow: hidden;
-        background: $tlp-ui-white;
+        background: var(--tlp-ui-white);
         cursor: pointer;
 
         &:hover {
-            background: darken($tlp-ui-white, 2%);
+            background: var(--tlp-ui-white-darker-02);
 
             > .kanban-column-header {
-                background: darken($tlp-ui-white, 2%);
+                background: var(--tlp-ui-white-darker-02);
             }
         }
 
@@ -210,36 +211,36 @@ $kanban-column-footer-height: 50px;
     }
 
     &.wip-reached {
-        background: mix($tlp-ui-warning, $tlp-ui-white, 7%);
+        background: var(--tlp-ui-warning-lighter-07);
 
         &.kanban-column-closed {
-            background: mix($tlp-ui-warning, $tlp-ui-white, 7%);
+            background: var(--tlp-ui-warning-lighter-07);
 
             > .kanban-column-header {
-                background: mix($tlp-ui-warning, $tlp-ui-white, 7%);
+                background: var(--tlp-ui-warning-lighter-07);
             }
 
             &:hover {
-                background: mix($tlp-ui-warning, $tlp-ui-white, 12%);
+                background: var(--tlp-ui-warning-lighter-12);
 
                 // scss-lint:disable NestingDepth
                 > .kanban-column-header {
-                    background: mix($tlp-ui-warning, $tlp-ui-white, 12%);
+                    background: var(--tlp-ui-warning-lighter-12);
                 }
             }
         }
 
         > .kanban-column-header {
             border-bottom-width: 2px;
-            border-top-color: $tlp-ui-warning;
-            border-bottom-color: $tlp-ui-warning;
+            border-top-color: var(--tlp-ui-warning);
+            border-bottom-color: var(--tlp-ui-warning);
 
             > .kanban-column-header-label,
             > column-wip-header > .kanban-column-header-wip > .kanban-column-header-wip-count,
             > .kanban-column-header-wip-warning,
             > .kanban-column-header-toggle,
             > .kanban-column-label {
-                color: $tlp-ui-warning;
+                color: var(--tlp-ui-warning);
             }
         }
 
@@ -247,7 +248,7 @@ $kanban-column-footer-height: 50px;
             /* stylelint-disable-next-line selector-max-compound-selectors */
             &:hover > .ngsb-thumb,
             > .ngsb-thumb {
-                background: transparentize($tlp-ui-warning, .6);
+                background: var(--tlp-ui-warning-transparent-60);
             }
 
             &:active {
@@ -255,14 +256,14 @@ $kanban-column-footer-height: 50px;
 
                 /* stylelint-disable-next-line selector-max-compound-selectors */
                 > .ngsb-thumb {
-                    background: darken(transparentize($tlp-ui-warning, .6), 5%);
+                    background: var(--tlp-ui-warning-transparent-60-darker-05);
                 }
             }
         }
 
         > .kanban-column-label {
             opacity: .6;
-            color: $tlp-ui-warning;
+            color: var(--tlp-ui-warning);
         }
 
         .kanban-column-header-wip-count {
@@ -282,13 +283,13 @@ $kanban-column-footer-height: 50px;
     max-height: 50px;
     padding: 10px;
     transition: background 100ms;
-    border-top: 2px solid $tlp-theme-color;
-    border-bottom: 1px solid $tlp-ui-border-normal;
-    background: $tlp-ui-white;
+    border-top: 2px solid var(--tlp-theme-color);
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    background: var(--tlp-ui-white);
 }
 
 .kanban-column-header-toggle {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: .8125rem;
     cursor: pointer;
 }
@@ -302,7 +303,7 @@ $kanban-column-footer-height: 50px;
     flex: 1 1 auto;
     margin: 0 10px;
     overflow: hidden;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: .875rem;
     font-weight: 600;
     text-align: center;
@@ -342,7 +343,7 @@ $kanban-column-footer-height: 50px;
     margin: 0 5px 0 0;
     animation: none;
     opacity: .4;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 1.75rem;
     font-weight: 300;
 
@@ -376,15 +377,15 @@ kanban-column {
 .created-in-closed-column {
     @keyframes blink {
         0% {
-            background: $tlp-ui-white;
+            background: var(--tlp-ui-white);
         }
 
         50% {
-            background: transparentize($tlp-theme-color, .9);
+            background: var(--tlp-theme-color-transparent-90);
         }
 
         100% {
-            background: $tlp-ui-white;
+            background: var(--tlp-ui-white);
         }
     }
 
@@ -440,14 +441,14 @@ kanban-column {
                 > .ngsb-thumb {
                     width: 6px;
                     border-radius: 3px;
-                    background: $tlp-ui-border-dark;
+                    background: var(--tlp-ui-border-dark);
                 }
 
                 &:active {
                     background: none;
                     /* stylelint-disable-next-line max-nesting-depth */
                     > .ngsb-thumb {
-                        background: darken($tlp-ui-border-dark, 5%);
+                        background: var(--tlp-ui-border-dark-darker-05);
                     }
                 }
             }
@@ -465,7 +466,7 @@ kanban-column {
     z-index: 3;
     width: $kanban-column-closed-width;
     transform: scaleX(-1) scaleY(-1);
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: .875rem;
     font-weight: 600;
     line-height: $kanban-column-closed-width;
@@ -492,7 +493,7 @@ kanban-column {
 }
 
 .widget-kanban-empty-icon {
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: 100px;
 }
 

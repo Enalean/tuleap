@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 item-progress {
     position: absolute;
     bottom: -1px;
@@ -24,10 +26,10 @@ item-progress {
 }
 
 .item-progress {
-    border-bottom: 2px solid $tlp-theme-color;
+    border-bottom: 2px solid var(--tlp-theme-color);
     border-radius: 0 0 3px 3px;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             border-bottom-color: map-get($colors, 'primary');
         }

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
+
 @use '../../src/themes/common/css/project-background/background';
 
 .project-with-background .kanban:not(.widget-context) {
@@ -27,7 +29,7 @@
     }
 
     .kanban-column-header {
-        border-top: 1px solid $tlp-ui-border-normal;
+        border-top: 1px solid var(--tlp-ui-border-normal);
     }
 }
 
@@ -37,8 +39,8 @@
     @each $element-with-project-background in $elements-with-project-background {
         @include background.apply-background(
             $element-with-project-background,
-            $sidebar-expanded-width,
-            $sidebar-collapsed-width,
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width,
         );
     }
 }

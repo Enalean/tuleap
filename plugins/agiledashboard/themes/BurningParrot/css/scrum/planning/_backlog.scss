@@ -41,7 +41,7 @@
 
 .backlog-fully-loaded {
     padding: 30px 0 0;
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: .9em;
     text-align: center;
 }

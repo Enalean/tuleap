@@ -28,7 +28,7 @@ use Feedback;
 use HTTPRequest;
 use Tuleap\AgileDashboard\Kanban\KanbanURL;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -64,12 +64,12 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
 
         if (KanbanURL::isKanbanURL($request)) {
             $layout->addCssAsset(
-                new CssAsset(
+                new CssAssetWithoutVariantDeclinaisons(
                     new IncludeAssets(
                         __DIR__ . '/../../../../src/www/assets/agiledashboard',
                         '/assets/agiledashboard'
                     ),
-                    'kanban'
+                    'kanban-style'
                 )
             );
         }

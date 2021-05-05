@@ -23,7 +23,7 @@
         margin: var(--tlp-medium-spacing) 10px;
         border-radius: 3px;
         opacity: 1;
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
 
         > .backlog-item-show-children,
         > .backlog-item-details {
@@ -46,8 +46,8 @@
 
     &.appending-child {
         > .backlog-item-details {
-            border: 1px solid $tlp-ui-info;
-            background: transparentize($tlp-ui-info, .9);
+            border: 1px solid var(--tlp-ui-info);
+            background: var(--tlp-ui-info-transparent-90);
         }
     }
 }
@@ -60,15 +60,15 @@
 
     &.selected {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        border-color: $tlp-ui-info;
-        background: transparentize($tlp-ui-info, .9);
+        border-color: var(--tlp-ui-info);
+        background: var(--tlp-ui-info-transparent-90);
     }
 
     &.shaking {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: shake 750ms ease-in-out;
-        border-color: $tlp-ui-danger;
-        background-color: transparentize($tlp-ui-danger, .9);
+        border-color: var(--tlp-ui-danger);
+        background-color: var(--tlp-ui-danger-color-transparent-90);
     }
 
     &.multiple {
