@@ -141,7 +141,7 @@ export default class AccessTokenFormModal extends Vue {
 
     tokenAPIInformationMessage(): string {
         return this.$gettext(
-            "The access token will be used to configure project hooks and automatically write comments on GitLab commits and merge requests."
+            "The access token will be used to configure project hooks and automatically write comments on GitLab commits and merge requests. It's also needed to be able to extract Tuleap references from GitLab tag message."
         );
     }
 
