@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeP
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 class MassChangeTopBacklogActionProcessor
 {
@@ -62,7 +63,7 @@ class MassChangeTopBacklogActionProcessor
 
         $user = $source_information->user;
         try {
-            $program = $this->build_program->buildExistingProgramProject($source_information->project_id, $user);
+            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return;
         }

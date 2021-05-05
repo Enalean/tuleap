@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 final class FeatureElementsRetriever implements RetrieveFeatures
@@ -61,7 +62,7 @@ final class FeatureElementsRetriever implements RetrieveFeatures
      */
     public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array
     {
-        $program = $this->build_program->buildExistingProgramProject($program_id, $user);
+        $program = ProgramIdentifier::fromId($this->build_program, $program_id, $user);
 
         $to_be_planned_artifacts = $this->features_store->searchPlannableFeatures($program);
 

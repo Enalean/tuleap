@@ -32,6 +32,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -94,7 +95,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         }
 
         try {
-            $program = $this->build_program->buildExistingProgramProject((int) $project->getID(), $request->getCurrentUser());
+            $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $request->getCurrentUser());
         } catch (ProjectIsNotAProgramException $exception) {
             throw new ForbiddenException(
                 dgettext(

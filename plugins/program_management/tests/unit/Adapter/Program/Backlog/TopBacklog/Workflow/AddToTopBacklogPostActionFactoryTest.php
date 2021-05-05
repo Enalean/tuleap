@@ -27,11 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Transition;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AddToTopBacklogPostActionFactoryTest extends TestCase
@@ -43,14 +39,6 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AddToTopBacklogPostActionDAO
      */
     private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var AddToTopBacklogPostActionFactory
-     */
-    private $factory;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Workflow
      */
@@ -66,14 +54,7 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao           = \Mockery::mock(AddToTopBacklogPostActionDAO::class);
-        $this->build_program = \Mockery::mock(BuildProgram::class);
-
-        $this->factory = new AddToTopBacklogPostActionFactory(
-            $this->dao,
-            $this->build_program,
-            \Mockery::mock(TopBacklogChangeProcessor::class)
-        );
+        $this->dao = \Mockery::mock(AddToTopBacklogPostActionDAO::class);
 
         $workflow_id    = 112;
         $this->workflow = \Mockery::mock(
@@ -93,13 +74,15 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
 
     public function testBuildsThePostAction(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserTestBuilder::aUser()->build())
-        );
-
         $this->dao->shouldReceive('searchByTransitionID')->with($this->transition_id)->andReturn(['id' => 88]);
 
-        $post_actions = $this->factory->loadPostActions($this->transition);
+        $factory = new AddToTopBacklogPostActionFactory(
+            $this->dao,
+            BuildProgramStub::stubValidProgram(),
+            \Mockery::mock(TopBacklogChangeProcessor::class)
+        );
+
+        $post_actions = $factory->loadPostActions($this->transition);
         self::assertCount(1, $post_actions);
 
         self::assertInstanceOf(AddToTopBacklogPostAction::class, $post_actions[0]);
@@ -108,20 +91,20 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
 
     public function testDoesNotBuildThePostActionIfWeAreOutsideOfAProgram(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andThrow(new ProjectIsNotAProgramException(101));
-
         $this->dao->shouldNotReceive('searchByTransitionId');
 
-        $post_actions = $this->factory->loadPostActions($this->transition);
+        $factory = new AddToTopBacklogPostActionFactory(
+            $this->dao,
+            BuildProgramStub::stubInvalidProgram(),
+            \Mockery::mock(TopBacklogChangeProcessor::class)
+        );
+
+        $post_actions = $factory->loadPostActions($this->transition);
         self::assertEmpty($post_actions);
     }
 
     public function testWarmsUpTheCacheBeforeGettingThePostAction(): void
     {
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserTestBuilder::aUser()->build())
-        );
-
         $this->dao->shouldReceive('searchByWorkflow')
             ->with($this->workflow)
             ->andReturn(
@@ -138,8 +121,14 @@ final class AddToTopBacklogPostActionFactoryTest extends TestCase
             );
         $this->dao->shouldNotReceive('searchByTransitionId');
 
-        $this->factory->warmUpCacheForWorkflow($this->workflow);
-        $post_actions = $this->factory->loadPostActions($this->transition);
+        $factory = new AddToTopBacklogPostActionFactory(
+            $this->dao,
+            BuildProgramStub::stubValidProgram(),
+            \Mockery::mock(TopBacklogChangeProcessor::class)
+        );
+
+        $factory->warmUpCacheForWorkflow($this->workflow);
+        $post_actions = $factory->loadPostActions($this->transition);
         self::assertCount(1, $post_actions);
 
         self::assertInstanceOf(AddToTopBacklogPostAction::class, $post_actions[0]);

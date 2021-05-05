@@ -32,7 +32,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -77,14 +76,14 @@ class FeatureElementsRetrieverTest extends TestCase
     private $features_dao;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildProgram
+     * @var BuildProgram
      */
     private $build_program;
 
     protected function setUp(): void
     {
         $this->features_dao         = \Mockery::mock(FeaturesStore::class);
-        $this->build_program        = \Mockery::mock(BuildProgram::class);
+        $this->build_program        = BuildProgramStub::stubValidProgram();
         $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
@@ -107,9 +106,6 @@ class FeatureElementsRetrieverTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
 
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 202, $user)
-        );
         $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [
                 ['tracker_name' => 'User stories', 'artifact_id' => 1, 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],

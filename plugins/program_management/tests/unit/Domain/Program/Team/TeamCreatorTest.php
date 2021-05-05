@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -35,7 +34,7 @@ final class TeamCreatorTest extends TestCase
 
     public function testItCreatesAPlan(): void
     {
-        $program_adapter = \Mockery::mock(BuildProgram::class);
+        $program_adapter = BuildProgramStub::stubValidToBeCreatedProgram();
         $team_adapter    = \Mockery::mock(BuildTeam::class);
         $team_adapter->shouldReceive('checkProjectIsATeam')->once();
 
@@ -44,15 +43,14 @@ final class TeamCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), $project_id, UserTestBuilder::aUser()->build());
-        $program_adapter->shouldReceive('buildNewProgramProject')
-            ->with($project_id, $user)->once()
-            ->andReturn($program);
+        $program    = ToBeCreatedProgram::fromId($program_adapter, $project_id, $user);
         $collection = new TeamCollection([Team::build($team_adapter, $team_project_id, $user)], $program);
         $team_adapter->shouldReceive('buildTeamProject')
             ->with(
                 [$team_project_id],
-                $program,
+                \Mockery::on(function (ToBeCreatedProgram $to_be_created_program) use ($program) {
+                    return $to_be_created_program->getId() === $program->getId();
+                }),
                 $user
             )->once()
             ->andReturn($collection);
