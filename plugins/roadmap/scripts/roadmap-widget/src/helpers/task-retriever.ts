@@ -50,5 +50,16 @@ export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
             }
 
             return true;
+        })
+        .sort((a: Task, b: Task) => {
+            const start_of_a = a.start ? a.start : a.end;
+            const start_of_b = b.start ? b.start : b.end;
+
+            if (!start_of_a || !start_of_b) {
+                // should not happen, according to the filter above
+                return -1;
+            }
+
+            return start_of_a.getTime() - start_of_b.getTime();
         });
 }

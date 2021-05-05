@@ -207,4 +207,46 @@ describe("task-retriever", () => {
 
         expect(tasks[0].has_subtasks).toBe(true);
     });
+
+    describe("Sort tasks", () => {
+        it("should sort tasks by start date", async () => {
+            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                {
+                    id: 1231,
+                    start: "2020-03-02T10:00:00+01:00",
+                    end: "2020-03-14T10:00:00+01:00",
+                },
+                {
+                    id: 1232,
+                    start: "2020-03-01T10:00:00+01:00",
+                    end: "2020-03-14T10:00:00+01:00",
+                },
+            ]);
+
+            const tasks = await retrieveAllTasks(123);
+
+            expect(tasks[0].id).toBe(1232);
+            expect(tasks[1].id).toBe(1231);
+        });
+
+        it("should use the end date if there is no start date (milestone)", async () => {
+            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                {
+                    id: 1231,
+                    start: null,
+                    end: "2020-03-15T10:00:00+01:00",
+                },
+                {
+                    id: 1232,
+                    start: null,
+                    end: "2020-03-14T10:00:00+01:00",
+                },
+            ]);
+
+            const tasks = await retrieveAllTasks(123);
+
+            expect(tasks[0].id).toBe(1232);
+            expect(tasks[1].id).toBe(1231);
+        });
+    });
 });
