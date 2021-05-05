@@ -14,7 +14,7 @@
     "moment-timezone": "^0.5.33",
     "pretty-kibibytes": "^4.0.4",
     "sprintf-js": "^1.1.2",
-    "tus-js-client": "^2.2.0",
+    "tus-js-client": "^2.3.0",
     "vue": "^2.6.12",
     "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.12",
