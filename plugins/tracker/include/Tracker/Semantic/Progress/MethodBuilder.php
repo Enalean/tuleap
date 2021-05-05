@@ -135,7 +135,6 @@ class MethodBuilder
 
         return new MethodBasedOnLinksCount(
             $this->dao,
-            $artifact_links_fields[0],
             $link_type
         );
     }

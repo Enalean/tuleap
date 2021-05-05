@@ -133,7 +133,6 @@ class SemanticProgressBuilderTest extends TestCase
             ->andReturn(
                 new MethodBasedOnLinksCount(
                     $this->dao,
-                    \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class, ['getId' => 1003]),
                     'covered_by'
                 )
             )

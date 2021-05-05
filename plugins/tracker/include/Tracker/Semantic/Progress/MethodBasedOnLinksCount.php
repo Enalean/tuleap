@@ -34,22 +34,16 @@ class MethodBasedOnLinksCount implements IComputeProgression
      */
     private $dao;
     /**
-     * @var \Tracker_FormElement_Field_ArtifactLink
-     */
-    private $artifact_link_field;
-    /**
      * @var string
      */
     private $artifact_link_type;
 
     public function __construct(
         SemanticProgressDao $dao,
-        \Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
         string $artifact_link_nature
     ) {
-        $this->dao                 = $dao;
-        $this->artifact_link_field = $artifact_link_field;
-        $this->artifact_link_type  = $artifact_link_nature;
+        $this->dao                = $dao;
+        $this->artifact_link_type = $artifact_link_nature;
     }
 
     public static function getMethodName(): string
@@ -70,11 +64,6 @@ class MethodBasedOnLinksCount implements IComputeProgression
         );
     }
 
-    public function getArtifactLinkFieldId(): int
-    {
-        return $this->artifact_link_field->getId();
-    }
-
     public function getArtifactLinkType(): string
     {
         return $this->artifact_link_type;
@@ -82,20 +71,23 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
     public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool
     {
-        return $field->getId() === $this->artifact_link_field->getId();
+        return $field instanceof \Tracker_FormElement_Field_ArtifactLink;
     }
 
     public function computeProgression(Artifact $artifact, \PFUser $user): ProgressionResult
     {
-        $nb_total               = 0;
-        $nb_closed              = 0;
-        $linked_artifacts_value = $this->artifact_link_field->getLastChangesetValue($artifact);
+        $nb_total            = 0;
+        $nb_closed           = 0;
+        $artifact_link_field = $artifact->getAnArtifactLinkField($user);
+
+        if ($artifact_link_field === null) {
+            return $this->getNullProgressionResult();
+        }
+
+        $linked_artifacts_value = $artifact_link_field->getLastChangesetValue($artifact);
 
         if (! $linked_artifacts_value) {
-            return new ProgressionResult(
-                null,
-                ''
-            );
+            return $this->getNullProgressionResult();
         }
 
         foreach ($linked_artifacts_value->getValue() as $link_info) {
@@ -158,5 +150,13 @@ class MethodBasedOnLinksCount implements IComputeProgression
     public function deleteSemanticForTracker(\Tracker $tracker): bool
     {
         return false;
+    }
+
+    private function getNullProgressionResult(): ProgressionResult
+    {
+        return new ProgressionResult(
+            null,
+            ''
+        );
     }
 }
