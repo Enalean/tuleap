@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Folder, Repository } from "../type";
+import type { Folder, FormattedGitLabRepository, Repository } from "../type";
 
-function isFolder(item: Folder | Repository): item is Folder {
+function isFolder(item: Folder | Repository | FormattedGitLabRepository): item is Folder {
     return "is_folder" in item;
 }
 
 export function createHierarchy(
-    hierarchy: Folder | Repository,
+    hierarchy: Folder | Repository | FormattedGitLabRepository,
     path_part: string
-): Folder | Repository {
+): Folder | Repository | FormattedGitLabRepository {
     if (!isFolder(hierarchy)) {
         throw new Error(path_part + " not found in children");
     }
@@ -50,28 +50,37 @@ export function createHierarchy(
 }
 
 export function sortByLabelAlphabetically(
-    items: Array<Folder | Repository>
-): Array<Folder | Repository> {
-    return items.sort((a: Folder | Repository, b: Folder | Repository) =>
-        a.label.localeCompare(b.label, undefined, { numeric: true })
+    items: Array<Folder | Repository | FormattedGitLabRepository>
+): Array<Folder | Repository | FormattedGitLabRepository> {
+    return items.sort(
+        (
+            a: Folder | Repository | FormattedGitLabRepository,
+            b: Folder | Repository | FormattedGitLabRepository
+        ) => a.label.localeCompare(b.label, undefined, { numeric: true })
     );
 }
 
-export function checkRepositoryMatchQuery(repository: Repository, query: string): boolean {
+export function checkRepositoryMatchQuery(
+    repository: Folder | Repository | FormattedGitLabRepository,
+    query: string
+): boolean {
     return (
         repository.normalized_path !== undefined &&
         repository.normalized_path.toLowerCase().includes(query.toLowerCase())
     );
 }
 
-export function recursivelySortAlphabetically(folder: Folder | Repository): Folder {
+export function recursivelySortAlphabetically(
+    folder: Folder | Repository | FormattedGitLabRepository
+): Folder {
     const folders: Array<Folder> = [];
-    const repositories: Array<Repository> = [];
+    const repositories: Array<Folder | Repository | FormattedGitLabRepository> = [];
 
     if (!isFolder(folder)) {
         throw new Error(`${folder} is not a folder`);
     }
-    folder.children.forEach((value: Folder | Repository) => {
+
+    folder.children.forEach((value: Folder | Repository | FormattedGitLabRepository) => {
         if (isFolder(value)) {
             const sorted_folder = recursivelySortAlphabetically(value);
             folders.push(sorted_folder);
@@ -90,9 +99,11 @@ export function recursivelySortAlphabetically(folder: Folder | Repository): Fold
     };
 }
 
-export function groupRepositoriesByPath(repositories: Array<Repository>): Folder {
+export function groupRepositoriesByPath(
+    repositories: Array<Folder | Repository | FormattedGitLabRepository>
+): Folder {
     const grouped = repositories.reduce(
-        (accumulator: Folder, repository: Repository) => {
+        (accumulator: Folder, repository: Folder | Repository | FormattedGitLabRepository) => {
             if (repository.path_without_project) {
                 const split_path = repository.path_without_project.split("/");
                 const end_of_path = split_path.reduce(createHierarchy, accumulator);
@@ -122,7 +133,10 @@ export function filterAFolder(folder: Folder, query: string): Folder {
         throw new Error("Folder children should be an Array");
     }
     const filtered_children = folder.children.reduce(
-        (accumulator: Array<Folder | Repository>, child: Folder | Repository) => {
+        (
+            accumulator: Array<Folder | Repository | FormattedGitLabRepository>,
+            child: Folder | Repository | FormattedGitLabRepository
+        ) => {
             const filtered_child = filterAChild(child, query);
             if (filtered_child) {
                 accumulator.push(filtered_child);
@@ -139,9 +153,9 @@ export function filterAFolder(folder: Folder, query: string): Folder {
 }
 
 export function filterAChild(
-    child: Folder | Repository,
+    child: Folder | Repository | FormattedGitLabRepository,
     query: string
-): Folder | Repository | null {
+): Folder | Repository | FormattedGitLabRepository | null {
     if (isFolder(child)) {
         const filtered_folder = filterAFolder(child, query);
         if (filtered_folder.children instanceof Map) {
@@ -159,9 +173,18 @@ export function filterAChild(
     return child;
 }
 
-export function sortByLastUpdateDate(repositories: Array<Repository>): Array<Repository> {
+export function sortByLastUpdateDate(
+    repositories: Array<Folder | Repository | FormattedGitLabRepository>
+): Array<Folder | Repository | FormattedGitLabRepository> {
     return repositories.sort(
-        (a: Repository, b: Repository) =>
-            new Date(b.last_update_date).valueOf() - new Date(a.last_update_date).valueOf()
+        (
+            a: Folder | Repository | FormattedGitLabRepository,
+            b: Folder | Repository | FormattedGitLabRepository
+        ) => {
+            if (!("last_update_date" in a) || !("last_update_date" in b)) {
+                throw new Error("sortByLastUpdateDate is not applied on a correct objet");
+            }
+            return new Date(b.last_update_date).valueOf() - new Date(a.last_update_date).valueOf();
+        }
     );
 }
