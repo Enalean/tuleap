@@ -29,12 +29,8 @@ const output = webpack_configurator.configureOutput(
 const entry_points = {
     "project-admin-members": "./scripts/project-admin/project-admin-members.js",
     "project-admin-ugroups": "./scripts/project-admin/project-admin-ugroups.js",
+    "ldap-style": "./themes/css/ldap.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {
