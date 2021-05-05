@@ -22,29 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 
 interface BuildProgram
 {
-    /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     */
-    public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier;
-
-    /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     */
-    public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement;
-
-    /**
-     * @throws ProgramAccessException
-     */
-    public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram;
-
     /**
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException

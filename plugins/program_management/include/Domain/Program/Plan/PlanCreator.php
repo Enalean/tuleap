@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 final class PlanCreator implements CreatePlan
@@ -78,7 +79,7 @@ final class PlanCreator implements CreatePlan
         if (in_array($program_increment_id, $trackers_id, true)) {
             throw new CannotPlanIntoItselfException();
         }
-        $program_project            = $this->program_build->buildExistingProgramProjectForManagement($project_id, $user);
+        $program_project            = ProgramForManagement::fromId($this->program_build, $project_id, $user);
         $program_tracker            = ProgramIncrementTracker::buildProgramIncrementTracker(
             $this->build_tracker,
             $program_increment_id,

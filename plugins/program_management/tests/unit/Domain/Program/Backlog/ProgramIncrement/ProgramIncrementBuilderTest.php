@@ -38,7 +38,7 @@ final class ProgramIncrementBuilderTest extends TestCase
             }
         };
 
-        $program_increment_builder = new ProgramIncrementBuilder(BuildProgramStub::stubExistingProgram(), $retrieve_program_increments);
+        $program_increment_builder = new ProgramIncrementBuilder(BuildProgramStub::stubValidProgram(), $retrieve_program_increments);
         self::assertEquals([], $program_increment_builder->buildOpenProgramIncrements(12, UserTestBuilder::aUser()->build()));
     }
 }

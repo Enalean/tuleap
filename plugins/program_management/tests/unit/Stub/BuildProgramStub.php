@@ -24,9 +24,6 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 
 class BuildProgramStub implements BuildProgram
 {
@@ -41,60 +38,39 @@ class BuildProgramStub implements BuildProgram
 
     private function __construct(
         bool $is_allowed = true,
-        bool $is_existing_program = false,
         bool $is_valid_program_for_management = false,
         bool $is_valid_to_be_created_program = false
     ) {
         $this->is_allowed                      = $is_allowed;
-        $this->is_existing_program             = $is_existing_program;
         $this->is_valid_program_for_management = $is_valid_program_for_management;
         $this->is_valid_to_be_created_program  = $is_valid_to_be_created_program;
     }
 
-    public function ensureProgramIsAProject(int $program_increment_id, \PFUser $user): void
-    {
-        if (! $this->is_allowed) {
-            throw new ProjectIsNotAProgramException(1);
-        }
-    }
-
     public static function stubValidProgram(): self
     {
-        return new self(true, false, false, false);
+        return new self(true, false, false);
     }
 
-    public static function stubExistingProgram(): self
+    public static function stubInvalidProgram(): self
     {
-        return new self(true, true, false, false);
+        return new self(false, false, false);
     }
 
     public static function stubValidProgramForManagement(): self
     {
-        return new self(true, false, true, false);
+        return new self(true, true, false);
     }
 
     public static function stubValidToBeCreatedProgram(): self
     {
-        return new self(true, false, false, true);
+        return new self(true, false, true);
     }
 
-    public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier
+    public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
     {
-        if ($this->is_existing_program) {
-            return ProgramIdentifier::fromId(self::stubValidProgram(), $id, $user);
+        if (! $this->is_allowed) {
+            throw new ProjectIsNotAProgramException(1);
         }
-
-        throw new \LogicException("Not implemented");
-    }
-
-    public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
-    {
-        throw new \LogicException("Not implemented");
-    }
-
-    public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
-    {
-        throw new \LogicException("Not implemented");
     }
 
     public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void

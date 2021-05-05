@@ -28,8 +28,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -38,7 +36,7 @@ final class MassChangeTopBacklogActionBuilderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildProgram
+     * @var BuildProgram
      */
     private $build_program;
     /**
@@ -56,11 +54,51 @@ final class MassChangeTopBacklogActionBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->build_program                           = \Mockery::mock(BuildProgram::class);
+        $this->build_program                           = BuildProgramStub::stubValidProgram();
         $this->prioritize_features_permission_verifier = \Mockery::mock(PrioritizeFeaturesPermissionVerifier::class);
         $this->plan_store                              = \Mockery::mock(PlanStore::class);
+    }
 
-        $this->action_builder = new MassChangeTopBacklogActionBuilder(
+    public function testMassChangeTopBacklogActionCanBeProvidedWhenUserHasPermissionInAAppropriateTracker(): void
+    {
+        $source_information  = new TopBacklogActionMassChangeSourceInformation(140, 102);
+        $this->build_program = BuildProgramStub::stubValidProgram();
+        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
+        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
+
+        self::assertNotNull($this->getBuild()->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+    }
+
+    public function testNoMassChangeTopBacklogActionWhenTheProjectIsNotAProgram(): void
+    {
+        $source_information  = new TopBacklogActionMassChangeSourceInformation(240, 200);
+        $this->build_program = BuildProgramStub::stubInvalidProgram();
+
+        self::assertNull($this->getBuild()->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+    }
+
+    public function testNoMassChangeTopBacklogActionWhenTheUserCannotPrioritizeFeatures(): void
+    {
+        $source_information  = new TopBacklogActionMassChangeSourceInformation(403, 102);
+        $this->build_program = BuildProgramStub::stubValidProgram();
+        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(false);
+
+        self::assertNull($this->getBuild()->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+    }
+
+    public function testNoMassChangeTopBacklogActionWhenTheTrackerDoesNotContainsFeatures(): void
+    {
+        $source_information  = new TopBacklogActionMassChangeSourceInformation(600, 102);
+        $this->build_program = BuildProgramStub::stubValidProgram();
+        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
+        $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
+
+        self::assertNull($this->getBuild()->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+    }
+
+    private function getBuild(): MassChangeTopBacklogActionBuilder
+    {
+        return new MassChangeTopBacklogActionBuilder(
             $this->build_program,
             $this->prioritize_features_permission_verifier,
             $this->plan_store,
@@ -72,42 +110,5 @@ final class MassChangeTopBacklogActionBuilderTest extends TestCase
                 }
             }
         );
-    }
-
-    public function testMassChangeTopBacklogActionCanBeProvidedWhenUserHasPermissionInAAppropriateTracker(): void
-    {
-        $source_information = new TopBacklogActionMassChangeSourceInformation(140, 102);
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserTestBuilder::aUser()->build()));
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
-
-        self::assertNotNull($this->action_builder->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
-    }
-
-    public function testNoMassChangeTopBacklogActionWhenTheProjectIsNotAProgram(): void
-    {
-        $source_information = new TopBacklogActionMassChangeSourceInformation(240, 200);
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andThrow(new ProjectIsNotAProgramException(200));
-
-        self::assertNull($this->action_builder->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
-    }
-
-    public function testNoMassChangeTopBacklogActionWhenTheUserCannotPrioritizeFeatures(): void
-    {
-        $source_information = new TopBacklogActionMassChangeSourceInformation(403, 102);
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserTestBuilder::aUser()->build()));
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(false);
-
-        self::assertNull($this->action_builder->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
-    }
-
-    public function testNoMassChangeTopBacklogActionWhenTheTrackerDoesNotContainsFeatures(): void
-    {
-        $source_information = new TopBacklogActionMassChangeSourceInformation(600, 102);
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserTestBuilder::aUser()->build()));
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
-        $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
-
-        self::assertNull($this->action_builder->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
     }
 }

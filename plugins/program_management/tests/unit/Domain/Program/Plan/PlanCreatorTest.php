@@ -34,7 +34,7 @@ final class PlanCreatorTest extends TestCase
 
     public function testItCreatesAPlan(): void
     {
-        $program_adapter = \Mockery::mock(BuildProgram::class);
+        $program_adapter = BuildProgramStub::stubValidProgramForManagement();
         $tracker_adapter = \Mockery::mock(BuildTracker::class);
         $build_ugroups   = \Mockery::mock(BuildProgramUserGroup::class);
 
@@ -44,10 +44,7 @@ final class PlanCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), $project_id, $user);
-        $program_adapter->shouldReceive('buildExistingProgramProjectForManagement')
-            ->with($project_id, $user)->once()
-            ->andReturn($program);
+        $program = ProgramForManagement::fromId($program_adapter, $project_id, $user);
         $tracker_adapter->shouldReceive('checkTrackerIsValid')->twice();
         $tracker_adapter->shouldReceive('buildPlannableTrackerList')
             ->with([$plannable_tracker_id], $project_id)->once()

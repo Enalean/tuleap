@@ -63,6 +63,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCreator;
 use Tuleap\ProgramManagement\Domain\Team\TeamException;
@@ -338,7 +339,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $project_manager     = \ProjectManager::instance();
-        $program             = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao());
+        $program_adapter     = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao());
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $priority_manager    = \Tracker_Artifact_PriorityManager::build();
         $top_backlog_updater = new ProcessTopBacklogChange(
@@ -364,7 +365,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         try {
-            $program = $program->buildExistingProgramProject($id, $user);
+            $program = ProgramIdentifier::fromId($program_adapter, $id, $user);
             $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
                 new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove, $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog, $backlog_patch_representation->order),

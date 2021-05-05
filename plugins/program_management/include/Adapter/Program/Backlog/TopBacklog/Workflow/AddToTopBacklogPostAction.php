@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeP
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklogPostAction extends Transition_PostAction
@@ -96,10 +97,7 @@ class AddToTopBacklogPostAction extends Transition_PostAction
         $artifact = $changeset->getArtifact();
 
         try {
-            $program = $this->build_program->buildExistingProgramProject(
-                (int) $artifact->getTracker()->getGroupId(),
-                $user
-            );
+            $program = ProgramIdentifier::fromId($this->build_program, (int) $artifact->getTracker()->getGroupId(), $user);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return;
         }

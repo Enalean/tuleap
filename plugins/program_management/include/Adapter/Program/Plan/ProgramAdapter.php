@@ -26,10 +26,7 @@ use Project_AccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\Project\ProjectAccessChecker;
 
 final class ProgramAdapter implements BuildProgram
@@ -61,32 +58,6 @@ final class ProgramAdapter implements BuildProgram
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function buildExistingProgramProject(int $id, \PFUser $user): ProgramIdentifier
-    {
-        return ProgramIdentifier::fromId($this, $id, $user);
-    }
-
-    /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     */
-    public function buildExistingProgramProjectForManagement(int $id, \PFUser $user): ProgramForManagement
-    {
-        return ProgramForManagement::fromId($this, $id, $user);
-    }
-
-    /**
-     * @throws ProgramAccessException
-     */
-    public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
-    {
-        return ToBeCreatedProgram::fromId($this, $id, $user);
-    }
-
-    /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     */
     public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
     {
         $this->ensureUserCanAccessToProject($project_id, $user);
@@ -105,7 +76,9 @@ final class ProgramAdapter implements BuildProgram
         $this->ensureProgramIsAProject($id, $user);
     }
 
-
+    /**
+     * @throws ProgramAccessException
+     */
     public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void
     {
         $this->ensureUserIsAdminOfProject($id, $user);

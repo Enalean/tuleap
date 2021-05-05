@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
@@ -60,7 +61,7 @@ final class TeamCreator implements CreateTeam
      */
     public function create(\PFUser $user, int $project_id, array $team_ids): void
     {
-        $program_project = $this->program_build->buildNewProgramProject($project_id, $user);
+        $program_project = ToBeCreatedProgram::fromId($this->program_build, $project_id, $user);
 
         $team_collection = $this->build_team->buildTeamProject(
             $team_ids,

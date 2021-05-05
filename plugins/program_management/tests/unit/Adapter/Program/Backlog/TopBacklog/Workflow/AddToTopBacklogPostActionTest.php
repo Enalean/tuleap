@@ -30,10 +30,7 @@ use Tracker_FormElement_Field;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
@@ -43,39 +40,28 @@ final class AddToTopBacklogPostActionTest extends TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildProgram
+     * @var BuildProgram
      */
     private $build_program;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TopBacklogChangeProcessor
      */
     private $top_backlog_change_processor;
-    /**
-     * @var AddToTopBacklogPostAction
-     */
-    private $post_action;
 
     protected function setUp(): void
     {
-        $this->build_program                = \Mockery::mock(BuildProgram::class);
+        $this->build_program                = BuildProgramStub::stubValidProgram();
         $this->top_backlog_change_processor = \Mockery::mock(TopBacklogChangeProcessor::class);
-
-        $this->post_action = new AddToTopBacklogPostAction(
-            \Mockery::mock(\Transition::class),
-            1,
-            $this->build_program,
-            $this->top_backlog_change_processor
-        );
     }
 
     public function testHasAShortName(): void
     {
-        self::assertNotEmpty($this->post_action->getShortName());
+        self::assertNotEmpty($this->getPostAction()->getShortName());
     }
 
     public function testDoesNotBypassPermissions(): void
     {
-        self::assertFalse($this->post_action->bypassPermissions(\Mockery::mock(Tracker_FormElement_Field::class)));
+        self::assertFalse($this->getPostAction()->bypassPermissions(\Mockery::mock(Tracker_FormElement_Field::class)));
     }
 
     public function testTraverseVisitorAsAnExternalAction(): void
@@ -83,7 +69,7 @@ final class AddToTopBacklogPostActionTest extends TestCase
         $visitor = \Mockery::mock(Visitor::class);
         $visitor->shouldReceive('visitExternalActions')->once();
 
-        $this->post_action->accept($visitor);
+        $this->getPostAction()->accept($visitor);
     }
 
     public function testAddArtifactToTheTopBacklogOnceTheTransitionIsExecuted(): void
@@ -95,13 +81,10 @@ final class AddToTopBacklogPostActionTest extends TestCase
         $tracker = \Mockery::mock(Tracker::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $tracker->shouldReceive('getGroupId')->andReturn('102');
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserTestBuilder::aUser()->build())
-        );
 
         $this->top_backlog_change_processor->shouldReceive('processTopBacklogChangeForAProgram')->once();
 
-        $this->post_action->after($changeset);
+        $this->getPostAction()->after($changeset);
     }
 
     public function testDoesNothingIfSomeReasonWeTryToProcessAnArtifactThatIsNotPartOfAProgram(): void
@@ -112,10 +95,20 @@ final class AddToTopBacklogPostActionTest extends TestCase
         $tracker = \Mockery::mock(Tracker::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $tracker->shouldReceive('getGroupId')->andReturn('103');
-        $this->build_program->shouldReceive('buildExistingProgramProject')->andThrow(new ProjectIsNotAProgramException(103));
+        $this->build_program = BuildProgramStub::stubInvalidProgram();
 
         $this->top_backlog_change_processor->shouldNotReceive('processTopBacklogChangeForAProgram');
 
-        $this->post_action->after($changeset);
+        $this->getPostAction()->after($changeset);
+    }
+
+    private function getPostAction(): AddToTopBacklogPostAction
+    {
+        return new AddToTopBacklogPostAction(
+            \Mockery::mock(\Transition::class),
+            1,
+            $this->build_program,
+            $this->top_backlog_change_processor
+        );
     }
 }
