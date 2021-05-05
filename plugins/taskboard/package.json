@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
     "@tuleap/drag-and-drop": "file://../../src/scripts/lib/drag-and-drop",
     "dompurify": "^2.2.7",
     "fscreen": "^1.2.0",

@@ -3,6 +3,8 @@
 exports[`ChildrenSwimlane displays the parent card in its own cell and children in cells 1`] = `
 <div
   class="taskboard-swimlane"
+  data-navigation="swimlane"
+  tabindex="0"
 >
   <parent-cell-stub
     swimlane="[object Object]"

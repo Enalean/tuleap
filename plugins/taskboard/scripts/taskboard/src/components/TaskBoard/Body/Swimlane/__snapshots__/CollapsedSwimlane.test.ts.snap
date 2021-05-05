@@ -3,9 +3,12 @@
 exports[`CollapsedSwimlane displays a toggle icon and a card with minimal information 1`] = `
 <div
   class="taskboard-swimlane taskboard-swimlane-collapsed"
+  data-navigation="swimlane"
+  tabindex="0"
 >
   <div
     class="taskboard-cell taskboard-cell-swimlane-header"
+    data-navigation="cell"
   >
     <button
       class="taskboard-swimlane-toggle tlp-swatch-fiesta-red"
@@ -21,6 +24,8 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
      
     <div
       class="taskboard-card taskboard-card-collapsed taskboard-card-fiesta-red"
+      data-navigation="card"
+      tabindex="0"
     >
       <div
         class="taskboard-card-content"

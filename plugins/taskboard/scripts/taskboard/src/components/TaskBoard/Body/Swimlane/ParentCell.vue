@@ -24,6 +24,8 @@
             class="taskboard-cell-parent-card"
             v-bind:class="edit_mode_class"
             v-bind:card="swimlane.card"
+            tabindex="0"
+            data-navigation="card"
         />
         <no-mapping-message
             v-if="should_no_mapping_message_be_displayed"

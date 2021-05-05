@@ -25,6 +25,8 @@
         v-bind:data-card-id="card.id"
         v-bind:data-tracker-id="card.tracker_id"
         v-bind:draggable="!card.is_in_edit_mode"
+        tabindex="0"
+        data-navigation="card"
     >
         <base-card v-bind:card="card" />
         <edit-card-buttons

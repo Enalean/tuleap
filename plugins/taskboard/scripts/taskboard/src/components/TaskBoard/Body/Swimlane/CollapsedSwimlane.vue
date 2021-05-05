@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <div class="taskboard-swimlane taskboard-swimlane-collapsed">
+    <div
+        class="taskboard-swimlane taskboard-swimlane-collapsed"
+        data-navigation="swimlane"
+        tabindex="0"
+    >
         <swimlane-header v-bind:swimlane="swimlane">
             <template v-slot:toggle>
                 <button
@@ -36,6 +40,8 @@
             <template v-slot:default>
                 <div
                     class="taskboard-card taskboard-card-collapsed"
+                    tabindex="0"
+                    data-navigation="card"
                     v-bind:class="additional_card_classnames"
                 >
                     <div class="taskboard-card-content">

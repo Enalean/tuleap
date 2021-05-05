@@ -26,6 +26,7 @@
         v-bind:title="title"
         v-on:click="$emit('click')"
         data-test="add-in-place-button"
+        data-navigation="add-form"
     >
         <i class="fa" v-bind:class="icon_class" aria-hidden="true"></i>
         <span v-if="label">{{ label }}</span>
