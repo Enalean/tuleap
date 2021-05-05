@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@tuleap/tlp-fetch": "file://../tlp-fetch",
-    "tus-js-client": "^2.2.0"
+    "tus-js-client": "^2.3.0"
   },
   "devDependencies": {},
   "config": {
