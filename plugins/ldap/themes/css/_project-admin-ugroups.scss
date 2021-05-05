@@ -32,7 +32,7 @@
 
     &.loading {
         height: 100px;
-        background: $tlp-ui-white url('../images/spinner.gif') center center no-repeat;
+        background: var(--tlp-ui-white) url('../images/spinner.gif') center center no-repeat;
     }
 }
 

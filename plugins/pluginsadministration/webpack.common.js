@@ -22,12 +22,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 const entry_points = {
     pluginsadministration: "./scripts/pluginsadministration.js",
+    "pluginsadministration-style": "./themes/pluginsadministration.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {

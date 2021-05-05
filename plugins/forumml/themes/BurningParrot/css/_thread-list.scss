@@ -41,7 +41,7 @@
 .forumml-thread-list-entry-metadata {
     display: flex;
     align-items: center;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .75rem;
     line-height: 1.375rem;
 }
@@ -55,7 +55,7 @@
     align-items: center;
     justify-content: center;
     height: 100px;
-    background: $tlp-table-row-background-empty;
-    color: transparentize($tlp-theme-color, .7);
+    background: var(--tlp-table-row-background-empty);
+    color: var(--tlp-theme-color-transparent-70);
     font-style: italic;
 }

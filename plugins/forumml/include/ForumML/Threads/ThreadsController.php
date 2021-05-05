@@ -29,7 +29,7 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\ForumML\CurrentListBreadcrumbCollectionBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\MailingList\ServiceMailingList;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -142,7 +142,7 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
             (string) $request->get('search'),
         );
 
-        $layout->addCssAsset(new CssAsset($this->include_assets, 'style-forumml'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'forumml-style'));
         $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('new-thread.js'));
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 

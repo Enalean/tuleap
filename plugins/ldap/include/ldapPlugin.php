@@ -792,7 +792,7 @@ class LdapPlugin extends Plugin
             $collector->addModalContent($modal_content);
 
             $collector->setJavascriptFile($this->getAssets()->getFileURL('project-admin-members.js'));
-            $collector->setCssAsset(new \Tuleap\Layout\CssAsset($this->getAssets(), 'style'));
+            $collector->setCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'ldap-style'));
         }
     }
 
