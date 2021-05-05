@@ -29,6 +29,7 @@ export interface Task {
     readonly end: Date | null;
     readonly dependencies: Record<string, number[]>;
     readonly is_milestone: boolean;
+    readonly has_subtasks: boolean;
 }
 
 export type TimeScale = "month" | "quarter" | "week";

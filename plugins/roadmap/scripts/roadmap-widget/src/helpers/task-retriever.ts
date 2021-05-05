@@ -26,11 +26,17 @@ export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
     return tasks
         .map(
             (task: Task): Task => {
+                const has_subtasks =
+                    task.dependencies &&
+                    "_is_child" in task.dependencies &&
+                    task.dependencies._is_child.length > 0;
+
                 return {
                     ...task,
                     start: task.start ? new Date(task.start) : null,
                     end: task.end ? new Date(task.end) : null,
                     is_milestone: !task.start || !task.end || task.end === task.start,
+                    has_subtasks,
                 };
             }
         )

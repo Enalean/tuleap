@@ -24,8 +24,22 @@
         v-bind:href="task.html_url"
         v-bind:class="'roadmap-gantt-task-header-' + task.color_name"
     >
-        <span class="roadmap-gantt-task-header-xref">{{ task.xref }}</span>
-        <span class="roadmap-gantt-task-header-title">{{ task.title }}</span>
+        <div
+            class="roadmap-gantt-task-header-caret"
+            v-if="does_at_least_one_task_have_subtasks"
+            data-test="caret-container"
+        >
+            <i
+                class="fas fa-fw fa-caret-right"
+                aria-hidden="true"
+                v-if="task.has_subtasks"
+                data-test="caret"
+            ></i>
+        </div>
+        <div class="roadmap-gantt-task-header-text">
+            <span class="roadmap-gantt-task-header-xref">{{ task.xref }}</span>
+            <span class="roadmap-gantt-task-header-title">{{ task.title }}</span>
+        </div>
     </a>
 </template>
 
@@ -33,10 +47,16 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
+import { namespace } from "vuex-class";
+
+const tasks = namespace("tasks");
 
 @Component
 export default class TaskHeader extends Vue {
     @Prop({ required: true })
     readonly task!: Task;
+
+    @tasks.Getter
+    readonly does_at_least_one_task_have_subtasks!: boolean;
 }
 </script>

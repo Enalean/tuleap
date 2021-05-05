@@ -31,12 +31,14 @@
         <div class="roadmap-gantt">
             <div class="roadmap-gantt-header">
                 <span class="roadmap-gantt-task-header" v-for="index in 5" v-bind:key="index">
-                    <span class="roadmap-gantt-task-header-xref">
-                        <span class="tlp-skeleton-text"></span>
-                    </span>
-                    <span class="roadmap-gantt-task-header-title">
-                        <span class="tlp-skeleton-text"></span>
-                    </span>
+                    <div class="roadmap-gantt-task-header-text">
+                        <span class="roadmap-gantt-task-header-xref">
+                            <span class="tlp-skeleton-text"></span>
+                        </span>
+                        <span class="roadmap-gantt-task-header-title">
+                            <span class="tlp-skeleton-text"></span>
+                        </span>
+                    </div>
                 </span>
             </div>
             <div class="roadmap-gantt-scrolling-area">

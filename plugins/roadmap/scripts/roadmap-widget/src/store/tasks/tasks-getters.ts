@@ -17,25 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RootState } from "../type";
 import type { TasksState } from "./type";
-import type { Module } from "vuex";
-import * as mutations from "./tasks-mutations";
-import * as actions from "./tasks-actions";
-import * as getters from "./tasks-getters";
 
-export function createTaskModule(): Module<TasksState, RootState> {
-    return {
-        namespaced: true,
-        state: {
-            tasks: [],
-            is_loading: true,
-            should_display_empty_state: false,
-            should_display_error_state: false,
-            error_message: "",
-        },
-        mutations,
-        actions,
-        getters,
-    };
-}
+export const does_at_least_one_task_have_subtasks = (state: TasksState): boolean => {
+    return state.tasks.some((task) => task.has_subtasks);
+};
