@@ -47,7 +47,6 @@ class MethodBasedOnLinksCountTest extends TestCase
         $this->links_field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class, ['getId' => 1003]);
         $this->method      = new MethodBasedOnLinksCount(
             $this->dao,
-            $this->links_field,
             '_is_child'
         );
     }
@@ -59,7 +58,7 @@ class MethodBasedOnLinksCountTest extends TestCase
 
     public function testItReturnsFalseIfFieldIsNotUsed(): void
     {
-        $random_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getId' => 1007]);
+        $random_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
 
         $this->assertFalse($this->method->isFieldUsedInComputation($random_field));
     }
@@ -84,7 +83,12 @@ class MethodBasedOnLinksCountTest extends TestCase
             ]]
         );
 
-        $artifact = \Mockery::mock(Artifact::class);
+        $artifact = \Mockery::mock(
+            Artifact::class,
+            [
+                'getAnArtifactLinkField' => $this->links_field
+            ]
+        );
         $this->links_field->shouldReceive('getLastChangesetValue')
             ->once()
             ->with($artifact)
@@ -98,6 +102,23 @@ class MethodBasedOnLinksCountTest extends TestCase
         $this->assertEquals(0.25, $progression_result->getValue());
     }
 
+    public function testItDoesNotComputeTheProgressWhenThereIsNoLinkField(): void
+    {
+        $artifact = \Mockery::mock(
+            Artifact::class,
+            [
+                'getAnArtifactLinkField' => null
+            ]
+        );
+
+        $progression_result = $this->method->computeProgression(
+            $artifact,
+            \Mockery::mock(\PFUser::class)
+        );
+
+        $this->assertEquals(null, $progression_result->getValue());
+    }
+
     /**
      * @testWith [true, 0]
      *           [false, 1]
@@ -109,7 +130,10 @@ class MethodBasedOnLinksCountTest extends TestCase
             ['getValue' => []]
         );
 
-        $artifact = \Mockery::mock(Artifact::class, ['isOpen' => $is_artifact_open]);
+        $artifact = \Mockery::mock(Artifact::class, [
+            'isOpen' => $is_artifact_open,
+            'getAnArtifactLinkField' => $this->links_field
+        ]);
 
         $this->links_field->shouldReceive('getLastChangesetValue')
             ->once()
