@@ -26,6 +26,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Roadmap\REST\ResourcesInjector;
 use Tuleap\Roadmap\RoadmapProjectWidget;
 use Tuleap\Roadmap\RoadmapWidgetDao;
+use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -91,7 +92,9 @@ class RoadmapPlugin extends Plugin
                 new RoadmapWidgetDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
-                new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
+                new RoadmapWidgetPresenterBuilder(
+                    new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
+                ),
                 TrackerFactory::instance()
             ));
         }

@@ -27,7 +27,6 @@ use SimpleXMLElement;
 use TemplateRenderer;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Note\NoteDao;
 use Tuleap\Widget\Note\ProjectNote;
@@ -61,7 +60,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 Mockery::mock(RoadmapWidgetDao::class),
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
                 Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(NaturePresenterFactory::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
             ),
             new SimpleXMLElement(
@@ -92,7 +91,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 Mockery::mock(RoadmapWidgetDao::class),
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
                 Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(NaturePresenterFactory::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
             ),
             new SimpleXMLElement(
@@ -126,7 +125,7 @@ final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
                 $dao,
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
                 Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(NaturePresenterFactory::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
             ),
             new SimpleXMLElement(
