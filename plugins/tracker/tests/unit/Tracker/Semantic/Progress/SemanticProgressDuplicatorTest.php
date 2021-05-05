@@ -62,15 +62,25 @@ class SemanticProgressDuplicatorTest extends TestCase
         ]);
     }
 
-
-
-    public function testItDoesNotDuplicateIfThereIsNoRemainingEffortFieldInConfig(): void
-    {
+    /**
+     * @testWith [101, null, null]
+     *           [null, 102, null]
+     *           [null, null, null]
+     */
+    public function testItDoesNotDuplicateWhenConfigIsMessedUp(
+        ?int $total_effort_field_id,
+        ?int $remaining_effort_field_id,
+        ?string $link_type
+    ): void {
         $this->dao
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['total_effort_field_id' => 101, 'remaining_effort_field_id' => null]);
+            ->andReturn([
+                'total_effort_field_id' => $total_effort_field_id,
+                'remaining_effort_field_id' => $remaining_effort_field_id,
+                'artifact_link_type' => $link_type
+            ]);
 
         $this->dao
             ->shouldReceive('save')
@@ -82,31 +92,17 @@ class SemanticProgressDuplicatorTest extends TestCase
         ]);
     }
 
-    public function testItDoesNotDuplicateIfThereIsNoTotalEffortFieldInMapping(): void
+    public function testItDuplicatesEffortBasedSemantics(): void
     {
         $this->dao
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['total_effort_field_id' => null, 'remaining_effort_field_id' => 102]);
-
-        $this->dao
-            ->shouldReceive('save')
-            ->never();
-
-        $this->duplicator->duplicate(1, 2, [
-            ['from' => 101, 'to' => 1001],
-            ['from' => 102, 'to' => 1002]
-        ]);
-    }
-
-    public function testItDuplicates(): void
-    {
-        $this->dao
-            ->shouldReceive('searchByTrackerId')
-            ->with(1)
-            ->once()
-            ->andReturn(['total_effort_field_id' => 101, 'remaining_effort_field_id' => 102]);
+            ->andReturn([
+                'total_effort_field_id' => 101,
+                'remaining_effort_field_id' => 102,
+                'artifact_link_type' => null
+            ]);
 
         $this->dao
             ->shouldReceive('save')
@@ -120,6 +116,30 @@ class SemanticProgressDuplicatorTest extends TestCase
                 ['from' => 101, 'to' => 1001],
                 ['from' => 102, 'to' => 1002]
             ]
+        );
+    }
+
+    public function testItDuplicatesLinksCountBasedSemantics(): void
+    {
+        $this->dao
+            ->shouldReceive('searchByTrackerId')
+            ->with(1)
+            ->once()
+            ->andReturn([
+                'total_effort_field_id' => null,
+                'remaining_effort_field_id' => null,
+                'artifact_link_type' => "_is_child"
+            ]);
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(2, null, null, '_is_child')
+            ->once();
+
+        $this->duplicator->duplicate(
+            1,
+            2,
+            []
         );
     }
 }

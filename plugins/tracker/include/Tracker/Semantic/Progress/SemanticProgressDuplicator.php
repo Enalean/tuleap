@@ -49,6 +49,12 @@ class SemanticProgressDuplicator implements IDuplicateSemantic
 
         $from_total_effort_field_id     = $row['total_effort_field_id'];
         $from_remaining_effort_field_id = $row['remaining_effort_field_id'];
+        $artifact_link_type             = $row['artifact_link_type'];
+
+        if ($this->isLinksCountBased($from_total_effort_field_id, $from_remaining_effort_field_id, $artifact_link_type)) {
+            $this->dao->save((int) $to_tracker_id, null, null, $artifact_link_type);
+            return;
+        }
 
         $to_total_effort_field_id     = null;
         $to_remaining_effort_field_id = null;
@@ -66,5 +72,12 @@ class SemanticProgressDuplicator implements IDuplicateSemantic
         }
 
         $this->dao->save((int) $to_tracker_id, $to_total_effort_field_id, $to_remaining_effort_field_id, null);
+    }
+
+    private function isLinksCountBased(?int $from_total_effort_field_id, ?int $from_remaining_effort_field_id, ?string $artifact_link_type): bool
+    {
+        return $from_total_effort_field_id === null &&
+            $from_remaining_effort_field_id === null &&
+            $artifact_link_type !== null;
     }
 }
