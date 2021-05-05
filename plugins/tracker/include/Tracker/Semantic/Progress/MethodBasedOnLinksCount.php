@@ -140,11 +140,19 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
     public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void
     {
+        $xml_semantic_progress = $root->addChild('semantic');
+        $xml_semantic_progress->addAttribute('type', SemanticProgress::NAME);
+        $xml_semantic_progress->addChild('artifact_link_type')->addAttribute('shortname', $this->artifact_link_type);
     }
 
     public function saveSemanticForTracker(\Tracker $tracker): bool
     {
-        return false;
+        return $this->dao->save(
+            $tracker->getId(),
+            null,
+            null,
+            $this->artifact_link_type
+        );
     }
 
     public function deleteSemanticForTracker(\Tracker $tracker): bool

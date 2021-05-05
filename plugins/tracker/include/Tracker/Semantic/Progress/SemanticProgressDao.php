@@ -31,17 +31,29 @@ class SemanticProgressDao extends DataAccessObject
      */
     public function searchByTrackerId(int $tracker_id): ?array
     {
-        $sql = 'SELECT total_effort_field_id, remaining_effort_field_id, artifact_link_type
+        $sql = '
+            SELECT total_effort_field_id, remaining_effort_field_id, artifact_link_type
             FROM tracker_semantic_progress
-                WHERE tracker_id = ?';
+            WHERE tracker_id = ?
+        ';
 
         return $this->getDB()->row($sql, $tracker_id);
     }
 
-    public function save(int $tracker_id, int $total_effort, int $remaining_effort): bool
-    {
-        $sql    = 'REPLACE INTO tracker_semantic_progress(tracker_id, total_effort_field_id, remaining_effort_field_id) VALUES (?, ?, ?)';
-        $result = $this->getDB()->run($sql, $tracker_id, $total_effort, $remaining_effort);
+    public function save(
+        int $tracker_id,
+        ?int $total_effort,
+        ?int $remaining_effort,
+        ?string $link_type
+    ): bool {
+        $sql    = '
+            REPLACE INTO tracker_semantic_progress(
+                tracker_id,
+                total_effort_field_id,
+                remaining_effort_field_id,
+                artifact_link_type
+            ) VALUES (?, ?, ?, ?)';
+        $result = $this->getDB()->run($sql, $tracker_id, $total_effort, $remaining_effort, $link_type);
 
         return $result !== null;
     }

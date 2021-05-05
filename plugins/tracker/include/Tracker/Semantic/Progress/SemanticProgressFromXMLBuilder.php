@@ -45,6 +45,10 @@ class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
             return $this->buildEffortBasedSemanticProgress($xml, $xml_mapping, $tracker);
         }
 
+        if ($this->isLinksCountBased($xml)) {
+            return $this->buildLinksCountBasedSemanticProgress($xml, $tracker);
+        }
+
         return null;
     }
 
@@ -78,7 +82,9 @@ class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
 
     private function isEffortBased(SimpleXMLElement $xml): bool
     {
-        return isset($xml->total_effort_field) && isset($xml->remaining_effort_field);
+        return isset($xml->total_effort_field) &&
+            isset($xml->remaining_effort_field) &&
+            ! isset($xml->artifact_link_type);
     }
 
     private function getFieldTargetedInXMLFieldAttributes(array $xml_mapping, ?SimpleXMLElement $xml_field_attributes): ?\Tracker_FormElement_Field_Numeric
@@ -92,5 +98,28 @@ class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
         }
 
         return $xml_mapping[(string) $xml_field_attributes['REF']];
+    }
+
+    private function isLinksCountBased(SimpleXMLElement $xml): bool
+    {
+        return isset($xml->artifact_link_type) &&
+            ! isset($xml->total_effort_field) &&
+            ! isset($xml->remaining_effort_field);
+    }
+
+    private function buildLinksCountBasedSemanticProgress(SimpleXMLElement $xml, Tracker $tracker): ?SemanticProgress
+    {
+        $link_type = $xml->artifact_link_type->attributes();
+        if ($link_type === null || ! isset($link_type['shortname'])) {
+            return null;
+        }
+
+        return new SemanticProgress(
+            $tracker,
+            new MethodBasedOnLinksCount(
+                $this->dao,
+                (string) $link_type['shortname']
+            )
+        );
     }
 }
