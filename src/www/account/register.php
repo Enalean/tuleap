@@ -388,21 +388,29 @@ if ($request->isPost() && $request->exist('Register')) {
     }
 }
 
-$body_class = ['register-page'];
-if ($page == 'admin_creation') {
+$core_assets = new \Tuleap\Layout\IncludeCoreAssets();
+$body_class  = ['register-page'];
+if ($page === 'admin_creation') {
     $body_class[] = 'admin_register';
+    $GLOBALS['Response']->addJavascriptAsset(
+        new JavascriptAsset(
+            $core_assets,
+            'account/generate-pw.js'
+        )
+    );
 }
 
 // not valid registration, or first time to page
-$HTML->addJavascriptAsset(
+$GLOBALS['Response']->addJavascriptAsset(
     new JavascriptAsset(
-        new \Tuleap\Layout\IncludeCoreAssets(),
+        $core_assets,
         'account/check-pw.js'
     )
 );
-$HTML->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
-$HTML->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-$HTML->header(['title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class]);
+$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/register.js');
+$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
+$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
+$GLOBALS['Response']->header(['title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class]);
 
 
 if (! $confirmation_register || ! isset($presenter, $template)) {
@@ -413,4 +421,4 @@ if (! $confirmation_register || ! isset($presenter, $template)) {
     $renderer->renderToPage($template, $presenter);
 }
 
-$HTML->footer(['without_content' => true]);
+$GLOBALS['Response']->footer(['without_content' => true]);
