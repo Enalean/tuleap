@@ -61,6 +61,7 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
         $value = \Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $value->shouldReceive('getId')->andReturn(666);
         $value->shouldReceive('getLabel')->andReturn("label");
+        $value->shouldReceive('getDescription')->andReturn("description");
         $value->shouldReceive('isHidden')->andReturn(false);
 
         $decorator = \Mockery::mock(ColorpickerMountPointPresenter::class);
@@ -92,6 +93,8 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
         $value = \Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $value->shouldReceive('getId')->andReturn(100);
         $value->shouldReceive('getLabel')->andReturn("label");
+        $value->shouldReceive('getDescription')->andReturn("description");
+
         $value->shouldReceive('isHidden')->andReturn(false);
 
         $decorator = \Mockery::mock(ColorpickerMountPointPresenter::class);

@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
@@ -78,6 +79,11 @@ class FormElementListValueAdminViewPresenter
      */
     public $is_custom_value;
 
+    /**
+     * @var string
+     */
+    public $description;
+
     public function __construct(
         Tracker_FormElement_Field_List_Value $value,
         ?ColorpickerMountPointPresenter $decorator,
@@ -91,6 +97,7 @@ class FormElementListValueAdminViewPresenter
     ) {
         $this->id                   = $value->getId();
         $this->label                = self::getListValueLabel($value);
+        $this->description          = ($value instanceof Tracker_FormElement_Field_List_Bind_StaticValue) ? $value->getDescription() : "";
         $this->is_hidden            = (bool) $value->isHidden();
         $this->value_can_be_hidden  = $value_can_be_hidden;
         $this->value_can_be_deleted = $value_can_be_deleted;
