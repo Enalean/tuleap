@@ -806,8 +806,7 @@ class LdapPlugin extends Plugin
     public function burningParrotGetStylesheets(array $params): void
     {
         if ($this->currentRequestIsForProjectUgroupAdmin()) {
-            $variant                 = $params['variant'];
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('ldap-style.css');
         }
     }
 
