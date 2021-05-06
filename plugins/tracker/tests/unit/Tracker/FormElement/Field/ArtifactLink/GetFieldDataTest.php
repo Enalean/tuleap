@@ -27,11 +27,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactLinkInfo;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class GetFieldDataTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \Mockery\Mock&\Tracker_FormElement_Field_ArtifactLink
@@ -58,14 +60,14 @@ final class GetFieldDataTest extends TestCase
 
     public function testGetValuesFromArtifactChangesetWhenThereIsAnArtifact(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->with($this->last_changset_id)->once()->andReturn([]);
+        $this->field->shouldReceive('getChangesetValues')->with(\Mockery::any(), $this->last_changset_id)->once()->andReturn([]);
 
         $this->field->getFieldData('55', $this->artifact);
     }
 
     public function testDoesntFetchValuesWhenNoArtifactGiven(): void
     {
-        $this->field->shouldReceive('getChangesetValues')->with($this->last_changset_id)->never();
+        $this->field->shouldReceive('getChangesetValues')->with(\Mockery::any(), $this->last_changset_id)->never();
 
         $this->field->getFieldData('55');
     }
