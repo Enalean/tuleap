@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\Transition;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
@@ -32,7 +31,7 @@ use Tracker_FormElement_Field_Selectbox;
 use Transition;
 use Workflow;
 
-final class TransitionRetrieverTest extends TestCase
+final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,12 +24,11 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use BaseLanguage;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\GlobalLanguageMock;
 
-final class BindStaticXmlExporterTest extends TestCase
+final class BindStaticXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

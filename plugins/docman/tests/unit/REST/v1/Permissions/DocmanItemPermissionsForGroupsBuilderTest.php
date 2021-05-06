@@ -27,13 +27,12 @@ use Docman_PermissionsManager;
 use IPermissionsManagerNG;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use ProjectUGroup;
 use UGroupManager;
 
-final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
+final class DocmanItemPermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

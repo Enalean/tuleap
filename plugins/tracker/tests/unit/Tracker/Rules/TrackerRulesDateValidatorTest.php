@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_Rule_Date;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 
-class TrackerRulesDateValidatorTest extends TestCase
+class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

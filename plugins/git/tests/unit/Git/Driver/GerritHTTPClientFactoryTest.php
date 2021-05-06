@@ -25,10 +25,9 @@ namespace Tuleap\Git\Driver;
 use Git_RemoteServer_GerritServer;
 use Http\Mock\Client;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class GerritHTTPClientFactoryTest extends TestCase
+final class GerritHTTPClientFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

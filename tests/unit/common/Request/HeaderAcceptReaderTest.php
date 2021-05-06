@@ -24,9 +24,8 @@ namespace Tuleap\Request;
 
 use HTTPRequest;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-final class HeaderAcceptReaderTest extends TestCase
+final class HeaderAcceptReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

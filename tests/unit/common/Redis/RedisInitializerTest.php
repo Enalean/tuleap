@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Redis;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-class RedisInitializerTest extends TestCase
+class RedisInitializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,12 +25,11 @@ namespace Tuleap\Tracker\Artifact\Attachment;
 
 use ForgeConfig;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class TemporaryFileManagerSaveTest extends TestCase
+class TemporaryFileManagerSaveTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

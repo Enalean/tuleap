@@ -26,7 +26,6 @@ use AgileDashboard_PaneRedirectionExtractor;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_ArtifactLinker;
 use Planning_MilestoneFactory;
@@ -42,7 +41,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
+class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

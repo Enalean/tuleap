@@ -24,10 +24,9 @@ namespace Tuleap\Gitlab\Reference;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ReferenceManager;
 
-class TuleapReferenceRetrieverTest extends TestCase
+class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

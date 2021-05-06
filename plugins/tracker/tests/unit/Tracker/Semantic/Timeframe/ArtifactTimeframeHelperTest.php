@@ -22,9 +22,8 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ArtifactTimeframeHelperTest extends TestCase
+class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,9 +24,8 @@ namespace Tuleap\FRS;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class AgileDashboardPaneInfoTest extends TestCase
+final class AgileDashboardPaneInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,7 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 
 use Tuleap\Git\GlobalParameterDao;
 
-final class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
+final class ManagementDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

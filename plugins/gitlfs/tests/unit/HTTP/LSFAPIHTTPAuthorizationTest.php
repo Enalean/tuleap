@@ -21,7 +21,6 @@
 namespace Tuleap\GitLFS\HTTP;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
@@ -31,7 +30,7 @@ use Tuleap\GitLFS\Authorization\User\UserAuthorizationException;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
 
-final class LSFAPIHTTPAuthorizationTest extends TestCase
+final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

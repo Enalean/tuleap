@@ -24,7 +24,6 @@ use AgileDashBoard_Semantic_InitialEffort;
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
@@ -34,7 +33,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class BurnupCalculatorTest extends TestCase
+class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

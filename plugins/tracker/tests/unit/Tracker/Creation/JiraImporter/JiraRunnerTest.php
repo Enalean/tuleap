@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Cryptography\ConcealedString;
@@ -45,7 +44,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use UserManager;
 use XML_ParseException;
 
-final class JiraRunnerTest extends TestCase
+final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

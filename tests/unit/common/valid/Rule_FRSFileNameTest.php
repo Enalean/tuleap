@@ -20,12 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_FRSFileNameTest extends TestCase
+class Rule_FRSFileNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testNameValid(): void

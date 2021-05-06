@@ -24,13 +24,12 @@ namespace Tuleap\Project;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use UGroupBinding;
 
-final class UGroupBindingTest extends TestCase
+final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

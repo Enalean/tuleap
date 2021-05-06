@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

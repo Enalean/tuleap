@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\FRS;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class FRSFileDownloadOldURLRedirectionControllerTest extends TestCase
+final class FRSFileDownloadOldURLRedirectionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

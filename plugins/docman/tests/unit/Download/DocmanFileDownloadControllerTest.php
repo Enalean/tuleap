@@ -27,14 +27,13 @@ use Docman_Item;
 use Docman_ItemFactory;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Request\NotFoundException;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class DocmanFileDownloadControllerTest extends TestCase
+final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

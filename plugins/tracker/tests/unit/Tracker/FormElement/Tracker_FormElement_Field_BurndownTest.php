@@ -27,7 +27,6 @@ use Codendi_Request;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SystemEventManager;
 use TimePeriodWithoutWeekEnd;
@@ -40,7 +39,7 @@ use TrackerManager;
 use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_BurndownTest extends TestCase
+class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

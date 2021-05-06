@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PasswordPreUpdateEventTest extends TestCase
+final class PasswordPreUpdateEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testUserCannotChangePasswordIfTheyDoNotAlreadyHaveOne(): void
     {

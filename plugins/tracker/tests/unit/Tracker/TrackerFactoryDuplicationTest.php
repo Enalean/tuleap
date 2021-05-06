@@ -20,11 +20,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\MappingRegistry;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TrackerFactoryDuplicationTest extends TestCase
+class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

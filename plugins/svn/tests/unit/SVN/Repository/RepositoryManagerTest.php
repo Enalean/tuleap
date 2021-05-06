@@ -26,7 +26,6 @@ use EventManager;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Psr\Log\NullLogger;
@@ -39,7 +38,7 @@ use Tuleap\SVN\SvnAdmin;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class RepositoryManagerTest extends TestCase
+class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

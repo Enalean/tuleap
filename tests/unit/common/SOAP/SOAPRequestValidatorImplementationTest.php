@@ -26,14 +26,13 @@ use EventManager;
 use Exception;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessException;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
 use UserManager;
 
-final class SOAPRequestValidatorImplementationTest extends TestCase
+final class SOAPRequestValidatorImplementationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

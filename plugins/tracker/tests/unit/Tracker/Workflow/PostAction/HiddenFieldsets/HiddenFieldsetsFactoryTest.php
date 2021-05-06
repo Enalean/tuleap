@@ -24,10 +24,9 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class HiddenFieldsetsFactoryTest extends TestCase
+class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

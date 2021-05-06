@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
-use PHPUnit\Framework\TestCase;
 
-final class CommitPresenterTest extends TestCase
+final class CommitPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function test12HexDigitsAreKeptForShortReferences(): void
     {

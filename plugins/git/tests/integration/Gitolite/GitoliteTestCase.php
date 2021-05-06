@@ -40,7 +40,7 @@ use Mockery\MockInterface;
 use Tuleap\TemporaryTestDirectory;
 use UserManager;
 
-abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
+abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Step;
 
 use Luracast\Restler\RestException;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_Text;
 
-final class StepCheckerTest extends TestCase
+final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionWhenTheStepDoesNotHaveDescription(): void
     {

@@ -20,9 +20,8 @@
 
 namespace Tuleap\GitLFS\StreamFilter;
 
-use PHPUnit\Framework\TestCase;
 
-class StreamFilterWrapperTest extends TestCase
+class StreamFilterWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testIncorrectFilterIsRejected(): void
     {

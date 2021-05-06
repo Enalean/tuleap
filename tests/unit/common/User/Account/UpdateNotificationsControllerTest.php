@@ -29,10 +29,9 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
-use PHPUnit\Framework\TestCase;
 use UserManager;
 
-class UpdateNotificationsControllerTest extends TestCase
+class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

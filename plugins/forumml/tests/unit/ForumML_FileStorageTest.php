@@ -26,12 +26,11 @@ use ForumML_FileStorage;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
 include __DIR__ . '/bootstrap.php';
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-final class ForumML_FileStorageTest extends TestCase
+final class ForumML_FileStorageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

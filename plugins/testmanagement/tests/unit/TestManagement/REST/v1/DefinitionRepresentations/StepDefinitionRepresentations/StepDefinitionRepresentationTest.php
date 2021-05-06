@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations;
 
-use PHPUnit\Framework\TestCase;
 
-class StepDefinitionRepresentationTest extends TestCase
+class StepDefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testAddTheCommonmarkDescriptionInRepresentationIfNotNull(): void

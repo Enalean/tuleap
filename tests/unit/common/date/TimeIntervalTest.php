@@ -19,10 +19,9 @@
  *
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TimeIntervalTest extends TestCase
+class TimeIntervalTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItRefusesNegativeTimeStamps(): void

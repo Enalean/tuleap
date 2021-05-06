@@ -21,12 +21,11 @@
 namespace Tuleap\PullRequest;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\TemporaryTestDirectory;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class GitExecTest extends TestCase
+class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

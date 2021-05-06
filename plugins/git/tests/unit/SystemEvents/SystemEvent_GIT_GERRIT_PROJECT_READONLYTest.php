@@ -21,7 +21,7 @@
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends \PHPUnit\Framework\TestCase
+class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

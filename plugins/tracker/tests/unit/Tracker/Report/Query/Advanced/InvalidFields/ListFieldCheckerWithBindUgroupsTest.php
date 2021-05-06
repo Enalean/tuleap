@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_List;
@@ -35,7 +34,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldCheck
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class ListFieldCheckerWithBindUgroupsTest extends TestCase
+class ListFieldCheckerWithBindUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

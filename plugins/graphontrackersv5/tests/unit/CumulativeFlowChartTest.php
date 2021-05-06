@@ -27,13 +27,12 @@ namespace Tuleap\GraphOnTrackersV5;
 use GraphOnTrackersV5_CumulativeFlow_DataBuilder;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Report_Criteria;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class CumulativeFlowChartTest extends TestCase
+class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

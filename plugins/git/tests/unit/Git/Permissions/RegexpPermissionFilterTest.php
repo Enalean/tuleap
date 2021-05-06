@@ -21,13 +21,12 @@
 namespace Tuleap\Git\Permissions;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\User\UserGroup\NameTranslator;
 use GitRepository;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class RegexpPermissionFilterTest extends TestCase
+class RegexpPermissionFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

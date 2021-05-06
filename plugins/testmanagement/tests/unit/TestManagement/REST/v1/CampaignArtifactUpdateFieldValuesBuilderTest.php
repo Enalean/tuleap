@@ -24,7 +24,6 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
@@ -36,7 +35,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 
-class CampaignArtifactUpdateFieldValuesBuilderTest extends TestCase
+class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

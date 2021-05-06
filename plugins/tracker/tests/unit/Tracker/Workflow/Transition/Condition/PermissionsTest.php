@@ -24,7 +24,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Workflow_WorkflowUser;
 use Transition;
@@ -32,7 +31,7 @@ use Workflow_Transition_Condition_Permissions;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-class PermissionsTest extends TestCase
+class PermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

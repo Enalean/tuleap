@@ -23,9 +23,8 @@ namespace Tuleap\PluginsAdministration;
 require_once __DIR__ . '/bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class PluginDisablerVerifierTest extends TestCase
+class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

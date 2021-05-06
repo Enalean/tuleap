@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\Authorization;
 use GitRepoNotFoundException;
 use GitRepositoryFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
@@ -34,7 +33,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 
-class PullRequestPermissionCheckerTest extends TestCase
+class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

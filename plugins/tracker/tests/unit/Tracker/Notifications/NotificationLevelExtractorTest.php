@@ -25,10 +25,9 @@ require_once __DIR__ . '/../../bootstrap.php';
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 
-class NotificationLevelExtractorTest extends TestCase
+class NotificationLevelExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

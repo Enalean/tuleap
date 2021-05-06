@@ -24,9 +24,8 @@ namespace Tuleap\Docman\Metadata;
 
 use Docman_SubItemsWritableVisitor;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class MetadataRecursiveUpdatorTest extends TestCase
+class MetadataRecursiveUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

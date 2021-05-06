@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
@@ -50,7 +49,7 @@ use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use function PHPUnit\Framework\assertFalse;
 
-class FieldChangeXMLExporterTest extends TestCase
+class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

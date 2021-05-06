@@ -20,9 +20,8 @@
 
 namespace Tuleap\GitLFS\StreamFilter;
 
-use PHPUnit\Framework\TestCase;
 
-class FilterHandleTest extends TestCase
+class FilterHandleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFilterHandleCanBeCreatedFromAStreamFilter()
     {

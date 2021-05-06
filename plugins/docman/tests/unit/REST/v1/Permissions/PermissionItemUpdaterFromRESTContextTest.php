@@ -28,10 +28,9 @@ use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 
-final class PermissionItemUpdaterFromRESTContextTest extends TestCase
+final class PermissionItemUpdaterFromRESTContextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

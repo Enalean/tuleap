@@ -26,11 +26,10 @@ namespace Tuleap\Docman\ExternalLinks;
 use Docman_HTTPController;
 use Docman_ItemDao;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class DocmanHTTPControllerProxyTest extends TestCase
+final class DocmanHTTPControllerProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

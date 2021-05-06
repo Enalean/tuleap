@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -31,7 +30,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 
-final class VerifyOAuth2AccessTokenEventTest extends TestCase
+final class VerifyOAuth2AccessTokenEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReturnsGivenValues(): void
     {

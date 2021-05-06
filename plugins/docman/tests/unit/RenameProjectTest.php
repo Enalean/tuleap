@@ -25,9 +25,8 @@ namespace Tuleap\Docman;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
-use PHPUnit\Framework\TestCase;
 
-class RenameProjectTest extends TestCase
+class RenameProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

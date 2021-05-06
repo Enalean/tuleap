@@ -22,9 +22,8 @@
 namespace Tuleap\Dashboard\Widget;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class WidgetDeletorTest extends TestCase
+class WidgetDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

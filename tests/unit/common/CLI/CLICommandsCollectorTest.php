@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 
-final class CLICommandsCollectorTest extends TestCase
+final class CLICommandsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testALoadedCommandCanBeFoundInTheApplication(): void
     {

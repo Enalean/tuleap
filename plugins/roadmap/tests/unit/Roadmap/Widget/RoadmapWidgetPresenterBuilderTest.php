@@ -22,17 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
-use Tuleap\Test\PHPUnit\ForceStrictPHPUnitMock;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
-class RoadmapWidgetPresenterBuilderTest extends TestCase
+class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForceStrictPHPUnitMock;
-
     public function testItReturnsAPresenterThatExcludesIsChildFromVisibleNatures(): void
     {
         $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);

@@ -23,7 +23,7 @@ declare(strict_types=1);
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
+final class SystemEventDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

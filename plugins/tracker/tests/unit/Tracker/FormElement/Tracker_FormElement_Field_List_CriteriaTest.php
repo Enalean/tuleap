@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
@@ -34,7 +33,7 @@ use Tracker_Report_Criteria;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_List_CriteriaTest extends TestCase
+class Tracker_FormElement_Field_List_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

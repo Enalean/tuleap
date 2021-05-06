@@ -27,7 +27,6 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Luracast\Restler\Restler;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -37,7 +36,7 @@ use Tuleap\REST\RestlerFactory;
 use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinition;
 use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 
-final class SwaggerJsonControllerTest extends TestCase
+final class SwaggerJsonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

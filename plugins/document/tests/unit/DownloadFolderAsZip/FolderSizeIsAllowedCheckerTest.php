@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\DownloadFolderAsZip;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor;
 use Tuleap\Document\Config\FileDownloadLimits;
 
-final class FolderSizeIsAllowedCheckerTest extends TestCase
+final class FolderSizeIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var FolderSizeIsAllowedChecker

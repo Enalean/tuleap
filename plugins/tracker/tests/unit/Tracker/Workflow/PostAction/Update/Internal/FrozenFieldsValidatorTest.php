@@ -22,13 +22,12 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
 
-class FrozenFieldsValidatorTest extends TestCase
+class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

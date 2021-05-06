@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
@@ -45,7 +44,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserXMLExporter;
 use Workflow;
 
-final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

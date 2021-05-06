@@ -24,9 +24,8 @@ namespace Tuleap\layout\NewDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class CurrentContextSectionToHeaderOptionsInserterTest extends TestCase
+class CurrentContextSectionToHeaderOptionsInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

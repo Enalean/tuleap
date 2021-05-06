@@ -26,12 +26,11 @@ use Http\Mock\Client;
 use HudsonJobURLFileException;
 use HudsonJobURLFileNotFoundException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class HudsonJobBuilderTest extends TestCase
+class HudsonJobBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

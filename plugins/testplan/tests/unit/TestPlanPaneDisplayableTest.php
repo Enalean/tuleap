@@ -28,14 +28,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use testmanagementPlugin;
 use Tracker;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
 
-final class TestPlanPaneDisplayableTest extends TestCase
+final class TestPlanPaneDisplayableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

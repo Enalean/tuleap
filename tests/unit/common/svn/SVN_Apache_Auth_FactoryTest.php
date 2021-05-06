@@ -17,12 +17,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\SvnCore\Cache\Parameters;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SVN_Apache_Auth_FactoryTest extends TestCase
+class SVN_Apache_Auth_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsModPerlByDefault(): void
     {

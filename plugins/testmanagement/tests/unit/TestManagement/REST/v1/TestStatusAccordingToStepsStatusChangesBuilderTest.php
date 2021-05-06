@@ -28,7 +28,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class TestStatusAccordingToStepsStatusChangesBuilderTest extends \PHPUnit\Framework\TestCase
+class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var TestStatusAccordingToStepsStatusChangesBuilder

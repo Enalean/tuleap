@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Glyph;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class GlyphLocationsCollectorTest extends TestCase
+class GlyphLocationsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

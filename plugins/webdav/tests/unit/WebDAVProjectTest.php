@@ -26,14 +26,13 @@ namespace Tuleap\WebDAV;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Sabre\DAV\Exception\NotFound;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVProject;
 
-final class WebDAVProjectTest extends TestCase
+final class WebDAVProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

@@ -22,14 +22,13 @@ namespace Tuleap\Tracker\Workflow\Transition\Condition\CommentNotEmpty;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Value;
 use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 use Workflow_Transition_Condition_CommentNotEmpty_Factory;
 
-class CommentNotEmptyFactoryTest extends TestCase
+class CommentNotEmptyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

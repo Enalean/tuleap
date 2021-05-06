@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
-final class XmlReportTableExporterTest extends TestCase
+final class XmlReportTableExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCreatesATableRenderer(): void
     {

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class DBFactoryTest extends TestCase
+final class DBFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

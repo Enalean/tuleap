@@ -22,11 +22,10 @@ namespace Tuleap\Tracker\Action;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class MoveTitleSemanticCheckerTest extends TestCase
+class MoveTitleSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

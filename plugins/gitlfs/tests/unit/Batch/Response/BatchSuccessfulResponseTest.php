@@ -21,10 +21,9 @@
 namespace Tuleap\GitLFS\Batch\Response;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\Transfer\Transfer;
 
-class BatchSuccessfulResponseTest extends TestCase
+class BatchSuccessfulResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

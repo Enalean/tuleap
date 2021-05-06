@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
-use PHPUnit\Framework\TestCase;
 
-final class AcceptableTenantForAuthenticationConfigurationTest extends TestCase
+final class AcceptableTenantForAuthenticationConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValueUsedByTheAuthenticationFlowIsTheIdentifierWhenUsersOutsideOfTheSpecificTenantCanAuthenticate(): void
     {

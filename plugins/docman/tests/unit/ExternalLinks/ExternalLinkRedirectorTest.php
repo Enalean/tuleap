@@ -23,10 +23,9 @@ namespace Tuleap\Docman\ExternalLinks;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-class ExternalLinkRedirectorTest extends TestCase
+class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

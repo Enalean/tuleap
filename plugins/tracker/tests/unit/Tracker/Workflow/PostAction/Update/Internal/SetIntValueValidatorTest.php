@@ -24,10 +24,9 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 
-class SetIntValueValidatorTest extends TestCase
+class SetIntValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

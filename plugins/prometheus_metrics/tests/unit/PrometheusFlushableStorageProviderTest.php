@@ -22,10 +22,9 @@ namespace Tuleap\PrometheusMetrics;
 
 use Enalean\Prometheus\Storage\NullStore;
 use ForgeConfig;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class PrometheusFlushableStorageProviderTest extends TestCase
+final class PrometheusFlushableStorageProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

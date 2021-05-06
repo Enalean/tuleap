@@ -24,7 +24,6 @@ namespace Tuleap\OAuth2Server\AccessToken;
 
 use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -43,7 +42,7 @@ use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class OAuth2AccessTokenVerifierTest extends TestCase
+final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends \PHPUnit\Framework\TestCase
+abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

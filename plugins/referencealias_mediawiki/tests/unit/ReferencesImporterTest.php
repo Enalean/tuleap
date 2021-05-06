@@ -24,14 +24,13 @@ namespace Tuleap\ReferenceAliasMediawiki;
 
 use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
 
 include __DIR__ . '/bootstrap.php';
 
-class ReferencesImporterTest extends TestCase
+class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

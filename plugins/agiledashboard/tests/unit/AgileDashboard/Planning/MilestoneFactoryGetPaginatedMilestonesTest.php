@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\Milestone\Request\FilteringQuery;
@@ -36,7 +35,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerColor;
 
-final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
+final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

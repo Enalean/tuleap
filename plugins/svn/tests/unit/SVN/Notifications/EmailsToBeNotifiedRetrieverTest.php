@@ -22,13 +22,12 @@ namespace Tuleap\SVN\Notifications;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Repository\Repository;
 
-class EmailsToBeNotifiedRetrieverTest extends TestCase
+class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

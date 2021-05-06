@@ -23,14 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertArrayNotHasKey;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertSame;
 
-class PermissionsOnArtifactUGroupRetrieverTest extends TestCase
+class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItAddsMissingUgroupsKeyIfFieldIsMandatoryAndContentIsNotProvided(): void
     {

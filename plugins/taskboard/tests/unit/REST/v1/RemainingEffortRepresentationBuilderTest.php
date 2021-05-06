@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 
-class RemainingEffortRepresentationBuilderTest extends TestCase
+class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

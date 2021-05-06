@@ -26,7 +26,6 @@ use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_CannedResponseFactory;
@@ -51,7 +50,7 @@ use Workflow;
 use WorkflowFactory;
 use WorkflowManager;
 
-class TrackerPermissionsTest extends TestCase
+class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

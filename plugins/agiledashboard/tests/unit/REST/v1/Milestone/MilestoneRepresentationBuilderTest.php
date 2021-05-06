@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -33,7 +32,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
-final class MilestoneRepresentationBuilderTest extends TestCase
+final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

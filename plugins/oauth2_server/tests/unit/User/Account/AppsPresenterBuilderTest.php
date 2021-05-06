@@ -24,7 +24,6 @@ namespace Tuleap\OAuth2Server\User\Account;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
@@ -36,7 +35,7 @@ use Tuleap\OAuth2Server\User\AuthorizedScopeFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
-final class AppsPresenterBuilderTest extends TestCase
+final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

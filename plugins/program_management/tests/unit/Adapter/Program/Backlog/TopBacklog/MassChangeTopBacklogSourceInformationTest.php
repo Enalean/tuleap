@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\TrackerColor;
 
-final class MassChangeTopBacklogSourceInformationTest extends TestCase
+final class MassChangeTopBacklogSourceInformationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsSourceInformationFromEvent(): void
     {

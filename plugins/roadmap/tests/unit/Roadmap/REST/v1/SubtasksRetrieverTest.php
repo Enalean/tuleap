@@ -24,18 +24,14 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\PHPUnit\ForceStrictPHPUnitMock;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use UserManager;
 
-class SubtasksRetrieverTest extends TestCase
+final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForceStrictPHPUnitMock;
-
     private const TASK_ID                      = 42;
     private const OUT_OF_PAGINATION_SUBTASK_ID = 1001;
     private const EXPECTED_SUBTASK_ID          = 1002;

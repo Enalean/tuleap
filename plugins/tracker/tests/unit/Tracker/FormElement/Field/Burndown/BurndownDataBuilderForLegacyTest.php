@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
@@ -30,7 +29,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
-class BurndownDataBuilderForLegacyTest extends TestCase
+class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\Presenters;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Reference\CrossReferenceCollection;
 
-class CrossReferenceByNaturePresenterBuilderTest extends TestCase
+class CrossReferenceByNaturePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

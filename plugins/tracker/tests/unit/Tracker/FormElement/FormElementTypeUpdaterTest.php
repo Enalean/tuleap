@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class FormElementTypeUpdaterTest extends TestCase
+class FormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;

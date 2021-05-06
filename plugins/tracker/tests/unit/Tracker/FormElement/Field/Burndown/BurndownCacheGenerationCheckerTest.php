@@ -22,14 +22,13 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
-class BurndownCacheGenerationCheckerTest extends TestCase
+class BurndownCacheGenerationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\Date\XML;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use function PHPUnit\Framework\assertEquals;
 
-final class XMLDateValueTest extends TestCase
+final class XMLDateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasAttributes(): void
     {

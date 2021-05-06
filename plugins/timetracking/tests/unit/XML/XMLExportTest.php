@@ -25,7 +25,6 @@ namespace Tuleap\Timetracking\XML;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_ArtifactFactory;
@@ -40,7 +39,7 @@ use UserXMLExporter;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
-final class XMLExportTest extends TestCase
+final class XMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

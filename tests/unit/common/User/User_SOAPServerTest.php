@@ -22,7 +22,7 @@ declare(strict_types=1);
 use Tuleap\User\SessionNotCreatedException;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class User_SOAPServerTest extends \PHPUnit\Framework\TestCase
+final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

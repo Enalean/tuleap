@@ -27,7 +27,6 @@ use FRSPackage;
 use FRSRelease;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\Exception\MethodNotAllowed;
 use Sabre\DAV\Exception\NotFound;
@@ -38,7 +37,7 @@ require_once __DIR__ . '/bootstrap.php';
 /**
  * This is the unit test of WebDAVFRSPackage
  */
-class WebDAVFRSPackageTest extends TestCase
+class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

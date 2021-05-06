@@ -27,7 +27,7 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestCase
+class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

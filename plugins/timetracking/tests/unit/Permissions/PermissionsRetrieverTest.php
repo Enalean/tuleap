@@ -25,11 +25,10 @@ namespace Tuleap\Timetracking\Permissions;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 
-class PermissionsRetrieverTest extends TestCase
+class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

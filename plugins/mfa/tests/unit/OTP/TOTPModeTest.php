@@ -20,9 +20,8 @@
 
 namespace Tuleap\MFA\OTP;
 
-use PHPUnit\Framework\TestCase;
 
-class TOTPModeTest extends TestCase
+class TOTPModeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testInstantiateTOTPMode()
     {

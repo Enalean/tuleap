@@ -24,10 +24,9 @@ namespace Tuleap\Project\Admin\Routing;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Request\ForbiddenException;
 
-final class ProjectAdministratorCheckerTest extends TestCase
+final class ProjectAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

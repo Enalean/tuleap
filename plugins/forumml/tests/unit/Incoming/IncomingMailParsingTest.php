@@ -20,9 +20,8 @@
 
 namespace Tuleap\ForumML\Incoming;
 
-use PHPUnit\Framework\TestCase;
 
-class IncomingMailParsingTest extends TestCase
+class IncomingMailParsingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const HTML_ONLY_BODY                   = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>

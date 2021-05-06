@@ -25,9 +25,8 @@ namespace Tuleap\AgileDashboard\Kanban;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class KanbanURLTest extends TestCase
+final class KanbanURLTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

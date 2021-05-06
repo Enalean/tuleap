@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class User_PasswordExpirationCheckerTest extends \PHPUnit\Framework\TestCase
+final class User_PasswordExpirationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\GlobalLanguageMock;

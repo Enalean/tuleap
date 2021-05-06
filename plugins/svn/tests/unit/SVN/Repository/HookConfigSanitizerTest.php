@@ -20,9 +20,8 @@
 
 namespace Tuleap\SVN\Repository;
 
-use PHPUnit\Framework\TestCase;
 
-class HookConfigSanitizerTest extends TestCase
+class HookConfigSanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItFilterImproperValuesForHookConfig(): void
     {

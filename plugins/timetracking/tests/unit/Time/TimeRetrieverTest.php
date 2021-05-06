@@ -21,12 +21,11 @@
 namespace Tuleap\Timetracking\Time;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class TimeRetrieverTest extends TestCase
+class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

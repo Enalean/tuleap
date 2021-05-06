@@ -27,7 +27,6 @@ use BaseLanguage;
 use ConfigNotificationAssignedTo;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -37,7 +36,7 @@ use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use UserHelper;
 
-class NotifierCustomSenderTest extends TestCase
+class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

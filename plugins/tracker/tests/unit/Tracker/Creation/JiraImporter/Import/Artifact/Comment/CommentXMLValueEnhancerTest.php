@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
-class CommentXMLValueEnhancerTest extends TestCase
+class CommentXMLValueEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     protected function tearDown(): void
     {

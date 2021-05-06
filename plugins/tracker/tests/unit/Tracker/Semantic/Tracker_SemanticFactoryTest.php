@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Semantic_Contributor;
 use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_Status;
@@ -35,7 +34,7 @@ use Tracker_Tooltip;
 use Tracker_TooltipFactory;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_SemanticFactoryTest extends TestCase
+class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

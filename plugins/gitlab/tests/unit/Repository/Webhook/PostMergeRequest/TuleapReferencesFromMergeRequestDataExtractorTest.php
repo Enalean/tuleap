@@ -24,11 +24,10 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferenceCollection;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
-class TuleapReferencesFromMergeRequestDataExtractorTest extends TestCase
+class TuleapReferencesFromMergeRequestDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

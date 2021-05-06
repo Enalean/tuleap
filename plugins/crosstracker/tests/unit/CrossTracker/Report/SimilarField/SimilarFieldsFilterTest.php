@@ -24,12 +24,11 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
 
-class SimilarFieldsFilterTest extends TestCase
+class SimilarFieldsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

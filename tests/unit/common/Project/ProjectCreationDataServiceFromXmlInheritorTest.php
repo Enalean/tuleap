@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Service;
 
-final class ProjectCreationDataServiceFromXmlInheritorTest extends TestCase
+final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

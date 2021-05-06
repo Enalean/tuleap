@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Artifact;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
@@ -30,7 +29,7 @@ use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ExistingArtifactSourceIdFromTrackerExtractorTest extends TestCase
+class ExistingArtifactSourceIdFromTrackerExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,13 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertTrue;
 
-final class JiraEpicIssuesRetrieverFromAPITest extends TestCase
+final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCallsTheEpicsIssueURL(): void
     {

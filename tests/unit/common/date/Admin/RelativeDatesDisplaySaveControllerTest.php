@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\date\Admin;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Test\Builders\LayoutBuilder;
 
-final class RelativeDatesDisplaySaveControllerTest extends TestCase
+final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

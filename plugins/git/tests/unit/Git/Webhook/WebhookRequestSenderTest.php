@@ -26,7 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Webhook\Emitter;
 use UserHelper;
 
-class WebhookRequestSenderTest extends \PHPUnit\Framework\TestCase
+class WebhookRequestSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

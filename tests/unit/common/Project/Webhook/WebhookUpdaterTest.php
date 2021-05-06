@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Webhook;
 
-final class WebhookUpdaterTest extends \PHPUnit\Framework\TestCase
+final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

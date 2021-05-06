@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class TrackerHierarchyFactoryGetAllAncestorsTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class TrackerHierarchyFactoryGetAllAncestorsTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

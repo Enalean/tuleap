@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Password\Reset;
 
-use PHPUnit\Framework\TestCase;
 
-final class LostPasswordDAOTest extends TestCase
+final class LostPasswordDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TEST_USER_ID = 102;
 

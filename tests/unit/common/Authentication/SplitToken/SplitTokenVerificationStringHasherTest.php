@@ -21,10 +21,9 @@
 namespace Tuleap\Authentication\SplitToken;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-class SplitTokenVerificationStringHasherTest extends TestCase
+class SplitTokenVerificationStringHasherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

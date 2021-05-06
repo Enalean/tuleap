@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tracker\Creation\JiraImporter;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectCollection;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 
-final class JiraProjectBuilderTest extends TestCase
+final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

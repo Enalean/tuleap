@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\XML;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use XML_SimpleXMLCDATAFactory;
 
-class SimpleXMLCDATAFactoryTest extends TestCase
+class SimpleXMLCDATAFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItAddACDATAContentToXML(): void
     {

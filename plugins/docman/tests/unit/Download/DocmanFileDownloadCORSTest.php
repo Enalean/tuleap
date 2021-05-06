@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Download;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class DocmanFileDownloadCORSTest extends TestCase
+final class DocmanFileDownloadCORSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

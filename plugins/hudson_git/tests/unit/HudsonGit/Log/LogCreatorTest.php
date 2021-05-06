@@ -25,14 +25,13 @@ namespace Tuleap\HudsonGit\Log;
 use GitRepository;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class LogCreatorTest extends TestCase
+class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -31,14 +31,13 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
 
     use Mockery as M;
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use PHPUnit\Framework\TestCase;
-    use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
+        use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
     use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
     use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
     use Tuleap\Test\Builders\UserTestBuilder;
     use Tuleap\Test\Network\HTTPHeaderStack;
 
-    final class ProjectMilestonesResourceTest extends TestCase
+    final class ProjectMilestonesResourceTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         use MockeryPHPUnitIntegration;
 

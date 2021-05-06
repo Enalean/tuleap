@@ -21,9 +21,8 @@
 namespace Tuleap\Dashboard\Project;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ProjectDashboardRetrieverTest extends TestCase
+class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

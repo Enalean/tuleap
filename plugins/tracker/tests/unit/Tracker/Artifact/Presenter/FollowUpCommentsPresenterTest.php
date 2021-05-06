@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Presenter;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Followup_Item;
 
-class FollowUpCommentsPresenterTest extends TestCase
+class FollowUpCommentsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,7 @@ namespace Tuleap\Project\Hierarchy;
 
 use Project_HierarchyManager;
 
-final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
+final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

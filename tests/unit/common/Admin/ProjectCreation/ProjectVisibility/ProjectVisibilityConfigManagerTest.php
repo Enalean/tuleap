@@ -27,11 +27,10 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 
-final class ProjectVisibilityConfigManagerTest extends TestCase
+final class ProjectVisibilityConfigManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

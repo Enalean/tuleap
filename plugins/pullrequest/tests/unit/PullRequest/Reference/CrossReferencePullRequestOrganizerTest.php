@@ -26,7 +26,6 @@ use GitRepositoryFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\GlobalLanguageMock;
@@ -41,7 +40,7 @@ use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use UserHelper;
 use UserManager;
 
-class CrossReferencePullRequestOrganizerTest extends TestCase
+class CrossReferencePullRequestOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

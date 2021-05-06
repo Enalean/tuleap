@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field;
 use Tuleap\ForgeConfigSandbox;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-class HiddenFieldsetCheckerTest extends TestCase
+class HiddenFieldsetCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

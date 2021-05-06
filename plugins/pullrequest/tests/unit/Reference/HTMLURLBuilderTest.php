@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\PullRequest\PullRequest;
 
-final class HTMLURLBuilderTest extends TestCase
+final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

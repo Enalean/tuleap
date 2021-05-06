@@ -25,14 +25,13 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase
+final class UnplannedReportCriterionMatchingIdsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Notification\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -32,7 +31,7 @@ use Tuleap\PullRequest\Notification\NotificationToProcess;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
-final class PullRequestNotificationSendMailTest extends TestCase
+final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

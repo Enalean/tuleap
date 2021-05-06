@@ -20,9 +20,8 @@
 
 namespace Tuleap\Git\Permissions;
 
-use PHPUnit\Framework\TestCase;
 
-final class FineGrainedRegexpValidatorTest extends TestCase
+final class FineGrainedRegexpValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidatesPattern(): void
     {

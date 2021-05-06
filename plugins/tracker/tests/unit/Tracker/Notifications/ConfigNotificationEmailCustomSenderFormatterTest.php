@@ -20,9 +20,8 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use PHPUnit\Framework\TestCase;
 
-class ConfigNotificationEmailCustomSenderFormatterTest extends TestCase
+class ConfigNotificationEmailCustomSenderFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const FIELD1_DATA = "123456";
     public const FIELD2_DATA = "abcdef";

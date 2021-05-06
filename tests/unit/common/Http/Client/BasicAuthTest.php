@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Client\Authentication;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class BasicAuthTest extends TestCase
+final class BasicAuthTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @see RFC7617 section 2 (test vector included) https://tools.ietf.org/html/rfc7617#section-2

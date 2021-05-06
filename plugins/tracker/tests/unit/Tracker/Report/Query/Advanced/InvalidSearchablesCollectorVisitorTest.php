@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Text;
@@ -62,7 +61,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanOrEqualCompar
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotEqualComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
 
-final class InvalidSearchablesCollectorVisitorTest extends TestCase
+final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

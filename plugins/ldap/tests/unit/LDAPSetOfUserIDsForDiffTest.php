@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use PHPUnit\Framework\TestCase;
 
-final class LDAPSetOfUserIDsForDiffTest extends TestCase
+final class LDAPSetOfUserIDsForDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValuesArePreserved(): void
     {

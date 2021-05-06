@@ -27,13 +27,12 @@ use Cardwall_OnTop_Config_ColumnFactory;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_Milestone;
 use Tracker;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
-class ColumnPresenterCollectionRetrieverTest extends TestCase
+class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

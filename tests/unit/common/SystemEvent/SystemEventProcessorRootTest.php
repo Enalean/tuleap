@@ -31,7 +31,6 @@ use Exception;
 use ForgeConfig;
 use Mockery as M;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use SiteCache;
 use SystemEvent;
@@ -43,7 +42,7 @@ use Tuleap\DB\DBConnection;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Svn\ApacheConfGenerator;
 
-class SystemEventProcessorRootTest extends TestCase
+class SystemEventProcessorRootTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

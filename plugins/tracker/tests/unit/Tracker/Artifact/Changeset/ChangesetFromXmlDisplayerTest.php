@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 
-final class ChangesetFromXmlDisplayerTest extends TestCase
+final class ChangesetFromXmlDisplayerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
-final class ContentChangeTest extends TestCase
+final class ContentChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsWhenBothFeatureToAddAndReorderAreNull(): void
     {

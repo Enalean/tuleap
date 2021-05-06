@@ -24,12 +24,11 @@ namespace Tuleap\XML;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\GlobalLanguageMock;
 use XMLImportHelper;
 
-class XMLImportHelperTest extends TestCase
+class XMLImportHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

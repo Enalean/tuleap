@@ -23,10 +23,9 @@ namespace Tuleap\Gitlab\Repository;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-final class GitlabRepositoryFactoryTest extends TestCase
+final class GitlabRepositoryFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

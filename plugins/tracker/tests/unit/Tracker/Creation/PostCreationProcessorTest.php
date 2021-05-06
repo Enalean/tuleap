@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
-final class PostCreationProcessorTest extends TestCase
+final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

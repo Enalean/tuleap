@@ -28,7 +28,6 @@ use Feedback;
 use HTTPRequest;
 use Mockery as M;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Service;
 use ServiceDao;
@@ -38,7 +37,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
 
-final class DeleteControllerTest extends TestCase
+final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

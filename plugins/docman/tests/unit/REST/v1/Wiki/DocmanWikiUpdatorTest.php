@@ -28,14 +28,13 @@ use Docman_Wiki;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 
-class DocmanWikiUpdatorTest extends TestCase
+class DocmanWikiUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

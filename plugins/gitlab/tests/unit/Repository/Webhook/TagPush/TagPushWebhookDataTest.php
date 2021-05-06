@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
-use PHPUnit\Framework\TestCase;
 
-class TagPushWebhookDataTest extends TestCase
+class TagPushWebhookDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTagNameFromPath(): void
     {

@@ -21,11 +21,10 @@
 namespace Tuleap\Git\Gerrit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\GlobalLanguageMock;
 
-class ReplicationHTTPUserAuthenticatorTest extends TestCase
+class ReplicationHTTPUserAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

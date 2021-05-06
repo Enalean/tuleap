@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\FakeDataAccessResult;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class UserMappingManagerTest extends TestCase
+final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

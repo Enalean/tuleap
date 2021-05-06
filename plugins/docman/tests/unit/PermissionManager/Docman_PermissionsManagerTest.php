@@ -26,12 +26,11 @@ namespace Tuleap\Docman\PermissionManager;
 use Docman_PermissionsManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Project\ProjectAccessChecker;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_PermissionsManagerTest extends TestCase
+class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

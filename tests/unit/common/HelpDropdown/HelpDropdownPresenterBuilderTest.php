@@ -24,14 +24,13 @@ namespace Tuleap\HelpDropdown;
 use ForgeConfig;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
 use Tuleap\Sanitizer\URISanitizer;
 
-class HelpDropdownPresenterBuilderTest extends TestCase
+class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

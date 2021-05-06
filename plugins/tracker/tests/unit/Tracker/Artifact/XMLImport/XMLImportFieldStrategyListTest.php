@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact\XMLImport;
 use DataAccessResult;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategyList;
 use Tracker_FormElement_Field_List;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class XMLImportFieldStrategyListTest extends TestCase
+class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

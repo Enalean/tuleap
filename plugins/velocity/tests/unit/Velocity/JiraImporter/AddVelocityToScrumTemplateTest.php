@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Velocity\JiraImporter;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\JiraImport\JiraAgile\ScrumTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\XML\XMLTracker;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
-final class AddVelocityToScrumTemplateTest extends TestCase
+final class AddVelocityToScrumTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportVelocityFieldAndSemantic(): void
     {

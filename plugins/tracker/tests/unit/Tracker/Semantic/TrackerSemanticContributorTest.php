@@ -23,13 +23,12 @@ namespace Tuleap\Tracker\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Contributor;
 
-class TrackerSemanticContributorTest extends TestCase
+class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

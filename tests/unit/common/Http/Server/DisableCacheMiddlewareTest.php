@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Server;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class DisableCacheMiddlewareTest extends TestCase
+final class DisableCacheMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testResponseExplicitAskToNotBePutInACache(): void
     {

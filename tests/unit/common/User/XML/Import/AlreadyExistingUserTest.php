@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
-final class AlreadyExistingUserTest extends \PHPUnit\Framework\TestCase
+final class AlreadyExistingUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AlreadyExistingUser */
     private $user;

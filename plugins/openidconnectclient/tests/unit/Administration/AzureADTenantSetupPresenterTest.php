@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Administration;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
-final class AzureADTenantSetupPresenterTest extends TestCase
+final class AzureADTenantSetupPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildPresentersFromSetOfValues(): void
     {

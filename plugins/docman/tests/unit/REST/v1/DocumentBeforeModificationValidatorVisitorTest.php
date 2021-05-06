@@ -32,10 +32,9 @@ use Docman_PermissionsManager;
 use Docman_Wiki;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 
-class DocumentBeforeModificationValidatorVisitorTest extends TestCase
+class DocumentBeforeModificationValidatorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,12 +25,11 @@ namespace Tuleap\TestManagement\REST;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class FormattedChangesetValueForIntFieldRetrieverTest extends TestCase
+class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

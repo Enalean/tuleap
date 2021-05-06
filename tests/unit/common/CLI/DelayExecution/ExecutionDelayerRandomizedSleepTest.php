@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CLI\DelayExecution;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 
-final class ExecutionDelayerRandomizedSleepTest extends TestCase
+final class ExecutionDelayerRandomizedSleepTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNegativeDelayIsRejected(): void
     {

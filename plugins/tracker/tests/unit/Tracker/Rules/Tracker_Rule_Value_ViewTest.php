@@ -23,12 +23,11 @@ namespace Tuleap\Tracker\Rule;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Rule_List;
 use Tracker_Rule_List_View;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_Rule_List_ViewTest extends TestCase
+class Tracker_Rule_List_ViewTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

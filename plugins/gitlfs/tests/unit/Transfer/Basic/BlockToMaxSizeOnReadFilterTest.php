@@ -20,10 +20,9 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 
-final class BlockToMaxSizeOnReadFilterTest extends TestCase
+final class BlockToMaxSizeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFilterBlocksOnceMaximumExpectedSizeIsReached()
     {

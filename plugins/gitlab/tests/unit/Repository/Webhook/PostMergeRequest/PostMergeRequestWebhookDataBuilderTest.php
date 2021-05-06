@@ -21,11 +21,10 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
-class PostMergeRequestWebhookDataBuilderTest extends TestCase
+class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

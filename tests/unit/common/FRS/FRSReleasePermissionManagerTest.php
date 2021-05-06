@@ -22,9 +22,8 @@
 namespace Tuleap\FRS;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class FRSReleasePermissionManagerTest extends TestCase
+class FRSReleasePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

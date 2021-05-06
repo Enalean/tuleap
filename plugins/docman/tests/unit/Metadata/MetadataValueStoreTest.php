@@ -26,10 +26,9 @@ use ArrayIterator;
 use Docman_MetadataValueDao;
 use Docman_MetadataValueList;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use ReferenceManager;
 
-class MetadataValueStoreTest extends TestCase
+class MetadataValueStoreTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

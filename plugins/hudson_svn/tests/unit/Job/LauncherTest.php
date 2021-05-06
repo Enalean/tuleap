@@ -21,11 +21,10 @@
 namespace Tuleap\HudsonSvn\Job;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Repository\SvnRepository;
 
-class LauncherTest extends TestCase
+class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,14 +22,13 @@ namespace Tuleap\Tracker\FormElement\Field;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Rule_NoCr;
 use Rule_String;
 use Tracker_FormElement_Field_String;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class TrackerFormElementFieldStringTest extends TestCase
+class TrackerFormElementFieldStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

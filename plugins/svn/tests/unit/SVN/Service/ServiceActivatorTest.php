@@ -22,11 +22,10 @@ namespace Tuleap\SVN\Service;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use ProjectCreationData;
 use Service;
 
-class ServiceActivatorTest extends TestCase
+class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,10 +25,9 @@ namespace Tuleap\DAO;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use ParagonIE\EasyDB\EasyDB;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
 
-final class DBTablesDaoTest extends TestCase
+final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -27,10 +27,9 @@ use League\CommonMark\Block\Renderer\FencedCodeRenderer;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
-class EnhancedCodeBlockRendererTest extends TestCase
+class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

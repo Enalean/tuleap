@@ -26,12 +26,11 @@ use JsonException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Queue\WorkerEvent;
 
-final class TaskWorkerProcessCommandTest extends TestCase
+final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

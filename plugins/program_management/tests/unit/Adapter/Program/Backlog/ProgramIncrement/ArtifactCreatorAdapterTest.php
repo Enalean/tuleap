@@ -39,7 +39,7 @@ use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ArtifactCreatorAdapterTest extends \PHPUnit\Framework\TestCase
+final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

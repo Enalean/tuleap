@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
-final class AccessKeyScopeBuilderCollectorTest extends TestCase
+final class AccessKeyScopeBuilderCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
@@ -34,7 +33,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeSco
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO;
 
-final class OAuth2AuthorizationCodeDAOTest extends TestCase
+final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var int

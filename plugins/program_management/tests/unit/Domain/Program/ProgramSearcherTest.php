@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ProgramSearcherTest extends TestCase
+final class ProgramSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAProgramFromAProgramIncrementID(): void
     {

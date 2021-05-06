@@ -21,9 +21,8 @@
 namespace Tuleap\Git\Permissions;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class AccessControlVerifierTest extends TestCase
+final class AccessControlVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

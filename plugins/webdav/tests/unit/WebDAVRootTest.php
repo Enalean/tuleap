@@ -26,7 +26,6 @@ namespace Tuleap\WebDAV;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project_AccessPrivateException;
 use ProjectManager;
 use Sabre\DAV\Exception\Forbidden;
@@ -36,7 +35,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use WebDAVRoot;
 
-final class WebDAVRootTest extends TestCase
+final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

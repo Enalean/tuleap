@@ -21,10 +21,9 @@
 namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
-class TokenResponseTest extends TestCase
+class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

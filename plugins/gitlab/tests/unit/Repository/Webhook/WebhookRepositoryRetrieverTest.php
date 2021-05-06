@@ -24,12 +24,11 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 
-class WebhookRepositoryRetrieverTest extends TestCase
+class WebhookRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -19,7 +19,7 @@
  *
  */
 
-class SiteCacheTest extends \PHPUnit\Framework\TestCase
+class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;

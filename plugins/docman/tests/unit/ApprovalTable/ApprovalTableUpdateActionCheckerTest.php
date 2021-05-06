@@ -25,10 +25,9 @@ namespace Tuleap\Docman\ApprovalTable;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 
-class ApprovalTableUpdateActionCheckerTest extends TestCase
+class ApprovalTableUpdateActionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,12 +24,11 @@ use Exception;
 use Http\Mock\Client;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-class JenkinsCSRFCrumbRetrieverTest extends TestCase
+class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

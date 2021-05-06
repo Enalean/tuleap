@@ -25,7 +25,6 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ThemeVariant;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Request\ForbiddenException;
@@ -33,7 +32,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 
-class UpdateAppearancePreferencesTest extends TestCase
+class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

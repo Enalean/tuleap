@@ -23,12 +23,11 @@ namespace Tuleap\Cardwall\Semantic;
 use Cardwall_Semantic_CardFields;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
 
-final class CardFieldXmlExporterTest extends TestCase
+final class CardFieldXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\DB;
 
-use PHPUnit\Framework\TestCase;
 
-final class DBTransactionExecutorPassthroughTest extends TestCase
+final class DBTransactionExecutorPassthroughTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCallableIsCalled(): void
     {

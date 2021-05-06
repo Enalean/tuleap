@@ -25,14 +25,13 @@ namespace Tuleap\Docman\REST\v1\Permissions;
 use Docman_Item;
 use Luracast\Restler\RestException;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use ProjectUGroup;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Project\REST\UserGroupRetriever;
 use UGroupManager;
 
-final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
+final class DocmanItemPermissionsForGroupsSetFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

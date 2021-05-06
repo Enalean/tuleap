@@ -25,11 +25,10 @@ namespace Tuleap\FRS\REST\v1;
 
 use FRSRelease;
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermissionManager;
 
-final class ReleasePermissionsForGroupsBuilderTest extends TestCase
+final class ReleasePermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

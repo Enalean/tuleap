@@ -24,12 +24,11 @@ namespace Tuleap\Project\Registration\Template;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 
-final class TemplateFromProjectForCreationTest extends TestCase
+final class TemplateFromProjectForCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

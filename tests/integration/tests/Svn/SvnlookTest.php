@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Svn;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SVN_Svnlook;
 use Tuleap\TemporaryTestDirectory;
 
-final class SvnlookTest extends TestCase
+final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

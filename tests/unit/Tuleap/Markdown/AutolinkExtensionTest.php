@@ -24,9 +24,8 @@ namespace Tuleap\Markdown;
 
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
-use PHPUnit\Framework\TestCase;
 
-final class AutolinkExtensionTest extends TestCase
+final class AutolinkExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var CommonMarkConverter

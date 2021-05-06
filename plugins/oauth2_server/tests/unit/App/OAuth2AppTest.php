@@ -22,9 +22,8 @@ namespace Tuleap\OAuth2Server\App;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class OAuth2AppTest extends TestCase
+class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

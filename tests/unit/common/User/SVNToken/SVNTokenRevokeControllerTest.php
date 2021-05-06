@@ -23,14 +23,13 @@ namespace Tuleap\User\SVNToken;
 
 use Feedback;
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class SVNTokenRevokeControllerTest extends TestCase
+final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -27,10 +27,9 @@ namespace Tuleap\Date;
 use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 
-class TimePeriodWithoutWeekEndTest extends TestCase
+class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

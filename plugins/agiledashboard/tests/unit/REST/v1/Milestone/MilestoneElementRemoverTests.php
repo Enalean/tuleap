@@ -26,14 +26,13 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 use Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\BacklogRemoveRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class MilestoneElementRemoverTests extends TestCase
+final class MilestoneElementRemoverTests extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

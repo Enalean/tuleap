@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
-final class OpenIDConnectSigningKeyFactoryTest extends TestCase
+final class OpenIDConnectSigningKeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

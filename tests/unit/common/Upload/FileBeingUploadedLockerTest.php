@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
 
-class FileBeingUploadedLockerTest extends TestCase
+class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

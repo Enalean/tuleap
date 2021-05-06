@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
-use PHPUnit\Framework\TestCase;
 
-final class UserCanModifyProjectBackgroundPermissionTest extends TestCase
+final class UserCanModifyProjectBackgroundPermissionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPermissionHoldsAnInstanceOfTheAuthorizedProject(): void
     {

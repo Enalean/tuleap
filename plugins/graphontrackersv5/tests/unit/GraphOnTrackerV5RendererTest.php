@@ -28,13 +28,12 @@ use GraphOnTrackersV5_ChartFactory;
 use GraphOnTrackersV5_Renderer;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tracker_Report;
 use UserManager;
 
-class GraphOnTrackerV5RendererTest extends TestCase
+class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

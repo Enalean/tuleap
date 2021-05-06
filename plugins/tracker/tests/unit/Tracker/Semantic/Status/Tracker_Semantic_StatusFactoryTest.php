@@ -23,12 +23,11 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_StatusFactory;
 
-class Tracker_Semantic_StatusFactoryTest extends TestCase
+class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Language\Gettext;
 
-final class POTEntryCollectionTest extends \PHPUnit\Framework\TestCase
+final class POTEntryCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoEntriesByDefault(): void
     {

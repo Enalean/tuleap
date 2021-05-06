@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\AgileDashboard\Planning\Admin;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\ModificationBan;
@@ -34,7 +33,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PlanningEditionPresenterBuilderTest extends TestCase
+final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

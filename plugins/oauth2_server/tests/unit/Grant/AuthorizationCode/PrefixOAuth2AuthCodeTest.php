@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use PHPUnit\Framework\TestCase;
 
-final class PrefixOAuth2AuthCodeTest extends TestCase
+final class PrefixOAuth2AuthCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasSpecificPrefix(): void
     {

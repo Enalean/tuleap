@@ -20,12 +20,11 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class PermissionsManagerSavePermissionsCommonTest extends TestCase
+class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

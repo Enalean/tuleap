@@ -31,12 +31,11 @@ use EventManager;
 use Luracast\Restler\RestException;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
-final class DocmanItemMoverTest extends TestCase
+final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

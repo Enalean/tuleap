@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Project\UGroups\Membership;
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
 
-class MemberRemoverTest extends TestCase
+class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

@@ -21,9 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference;
 
-use PHPUnit\Framework\TestCase;
 
-class GitlabReferenceExtractorTest extends TestCase
+class GitlabReferenceExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsANullRepositoryNameAndANullSha1WhenTheStringDoesNotContainAPath(): void
     {

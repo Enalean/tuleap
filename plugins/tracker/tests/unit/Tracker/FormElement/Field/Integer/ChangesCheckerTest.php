@@ -26,7 +26,7 @@ use Tracker_Artifact_ChangesetValue_Integer;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-class ChangesCheckerTest extends \PHPUnit\Framework\TestCase
+class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

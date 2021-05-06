@@ -29,7 +29,6 @@ use MediawikiManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Psr\Log\LoggerInterface;
@@ -37,7 +36,7 @@ use SimpleXMLElement;
 use Tuleap\Project\XML\Export\ZipArchive;
 use UGroupManager;
 
-class XMLMediaWikiExporterTest extends TestCase
+class XMLMediaWikiExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

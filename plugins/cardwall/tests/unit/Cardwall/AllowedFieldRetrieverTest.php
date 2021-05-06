@@ -22,11 +22,10 @@ namespace Tuleap\Cardwall;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 
-class AllowedFieldRetrieverTest extends TestCase
+class AllowedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

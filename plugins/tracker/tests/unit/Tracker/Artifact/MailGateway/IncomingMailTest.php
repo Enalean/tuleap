@@ -22,9 +22,8 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 
-class IncomingMailTest extends TestCase
+class IncomingMailTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider mailProvider

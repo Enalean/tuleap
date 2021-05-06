@@ -24,12 +24,11 @@ namespace Tuleap\layout\NewDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
-class NewDropdownPresenterBuilderTest extends TestCase
+class NewDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

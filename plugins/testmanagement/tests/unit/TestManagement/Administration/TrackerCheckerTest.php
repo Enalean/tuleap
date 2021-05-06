@@ -24,7 +24,6 @@ namespace Tuleap\TestManagement\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use TrackerFactory;
@@ -34,7 +33,7 @@ use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 
-class TrackerCheckerTest extends TestCase
+class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

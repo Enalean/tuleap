@@ -30,7 +30,6 @@ use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use SVN_AccessFile_Writer;
@@ -49,7 +48,7 @@ use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RuleName;
 use UserManager;
 
-class XMLRepositoryImporterTest extends TestCase
+class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

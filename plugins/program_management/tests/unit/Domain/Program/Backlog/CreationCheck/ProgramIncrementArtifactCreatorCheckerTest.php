@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Psr\Log\NullLogger;
@@ -49,7 +48,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
+final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

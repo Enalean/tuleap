@@ -20,7 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/../../../../bin/DocmanImport/Trees.class.php');
 
@@ -28,7 +27,7 @@ require_once(__DIR__ . '/../../../../bin/DocmanImport/Trees.class.php');
  * Unit tests for the Trees utility class
  */
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TreesTest extends TestCase
+class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testNodeListToTree(): void

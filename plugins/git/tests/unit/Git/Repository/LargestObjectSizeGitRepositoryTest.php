@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Git\Repository;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class LargestObjectSizeGitRepositoryTest extends TestCase
+final class LargestObjectSizeGitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

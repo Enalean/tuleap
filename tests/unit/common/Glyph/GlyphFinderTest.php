@@ -25,10 +25,9 @@ namespace Tuleap\Glyph;
 use EventManager;
 use Mockery;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-class GlyphFinderTest extends TestCase
+class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

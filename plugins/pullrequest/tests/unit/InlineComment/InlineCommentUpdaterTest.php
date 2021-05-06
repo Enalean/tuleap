@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileNullDiff;
 use Tuleap\PullRequest\UniDiffLine;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class WhenSourceChangesTest extends TestCase
+class WhenSourceChangesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var InlineCommentUpdater

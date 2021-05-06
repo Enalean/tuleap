@@ -24,7 +24,7 @@ use Mockery as M;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders as B;
 
-final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
+final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

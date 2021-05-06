@@ -24,13 +24,12 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_Date;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Workflow;
 
-class SetDateValueJsonParserTest extends TestCase
+class SetDateValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

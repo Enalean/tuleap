@@ -18,12 +18,11 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\Registration\LimitedToSiteAdministratorsException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class SOAPServerTest extends TestCase
+class SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

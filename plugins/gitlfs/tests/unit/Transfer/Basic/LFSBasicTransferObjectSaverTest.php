@@ -22,7 +22,6 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 
 use League\Flysystem\FilesystemOperator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
@@ -30,7 +29,7 @@ use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
-class LFSBasicTransferObjectSaverTest extends TestCase
+class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

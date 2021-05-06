@@ -24,9 +24,8 @@ namespace Tuleap\Docman\XML\Export;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class PermissionsExporterTest extends TestCase
+class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

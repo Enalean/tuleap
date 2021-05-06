@@ -21,14 +21,13 @@
 namespace Tuleap\Dashboard\Project;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Tuleap\Project\MappingRegistry;
 
-class ProjectDashboardDuplicatorTest extends TestCase
+class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

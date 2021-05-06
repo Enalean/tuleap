@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\InlineComment;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class InlineCommentRetrieverTest extends TestCase
+final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

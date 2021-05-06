@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Luracast\Restler\RestException;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
@@ -33,7 +32,7 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\Taskboard\Swimlane\SwimlaneChildrenRetriever;
 use UserManager;
 
-final class CellPatcherTest extends TestCase
+final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

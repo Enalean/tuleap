@@ -24,10 +24,9 @@ namespace Tuleap\User;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Users;
 
-final class UsersTest extends TestCase
+final class UsersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

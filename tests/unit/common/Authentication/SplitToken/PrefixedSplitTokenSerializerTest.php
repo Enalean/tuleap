@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Authentication\SplitToken;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-final class PrefixedSplitTokenSerializerTest extends TestCase
+final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

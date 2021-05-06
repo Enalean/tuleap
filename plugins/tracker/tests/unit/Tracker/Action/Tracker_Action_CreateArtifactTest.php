@@ -23,7 +23,7 @@ declare(strict_types=1);
 use Tuleap\Tracker\Artifact\Artifact;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCase
+final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

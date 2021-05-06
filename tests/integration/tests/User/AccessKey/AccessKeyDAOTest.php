@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBFactory;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 
-final class AccessKeyDAOTest extends TestCase
+final class AccessKeyDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var AccessKeyDAO

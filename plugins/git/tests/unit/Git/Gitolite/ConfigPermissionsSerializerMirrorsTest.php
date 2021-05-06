@@ -26,12 +26,11 @@ use Git_Mirror_Mirror;
 use GitRepository;
 use Mockery;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ConfigPermissionsSerializerMirrorsTest extends TestCase
+class ConfigPermissionsSerializerMirrorsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

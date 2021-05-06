@@ -24,7 +24,6 @@ namespace Tuleap\HudsonGit\Hook;
 
 use Http\Mock\Client;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -32,7 +31,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
-final class JenkinsClientTest extends TestCase
+final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

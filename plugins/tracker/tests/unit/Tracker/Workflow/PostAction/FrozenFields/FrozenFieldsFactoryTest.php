@@ -26,10 +26,9 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-final class FrozenFieldsFactoryTest extends TestCase
+final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

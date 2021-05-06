@@ -21,14 +21,13 @@
 namespace Tuleap\Timetracking\ArtifactView;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use timetrackingPlugin;
 use Tracker;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
 
-class ArtifactViewBuilderTest extends TestCase
+class ArtifactViewBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

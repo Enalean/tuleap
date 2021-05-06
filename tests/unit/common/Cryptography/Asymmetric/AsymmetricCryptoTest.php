@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Cryptography\Asymmetric;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidSignatureException;
 
-final class AsymmetricCryptoTest extends TestCase
+final class AsymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

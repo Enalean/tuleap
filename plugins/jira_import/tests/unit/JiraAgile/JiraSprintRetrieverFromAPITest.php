@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
@@ -36,7 +35,7 @@ use function PHPUnit\Framework\assertNull;
  * @covers \Tuleap\JiraImport\JiraAgile\JiraSprint
  * @covers \Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI
  */
-final class JiraSprintRetrieverFromAPITest extends TestCase
+final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoSprints()
     {

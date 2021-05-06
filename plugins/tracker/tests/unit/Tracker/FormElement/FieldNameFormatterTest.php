@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use PHPUnit\Framework\TestCase;
 
-class FieldNameFormatterTest extends TestCase
+class FieldNameFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItFormatsFieldName(): void
     {

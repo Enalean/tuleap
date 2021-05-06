@@ -23,12 +23,11 @@ namespace Tuleap\AgileDashboard\Widget;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Mockery;
 use Tuleap\XML\MappingsRegistry;
 
-class WidgetKanbanXMLImporterTest extends TestCase
+class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var MappingsRegistry

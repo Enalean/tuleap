@@ -27,7 +27,6 @@ use FRSFileFactory;
 use Mockery;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +37,7 @@ use Tuleap\REST\RESTCurrentUserMiddleware;
 use URLVerification;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class FRSFileDownloadControllerTest extends TestCase
+final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

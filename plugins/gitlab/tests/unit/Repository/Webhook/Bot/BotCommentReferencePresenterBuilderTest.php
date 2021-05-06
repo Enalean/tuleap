@@ -24,11 +24,10 @@ namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\InstanceBaseURLBuilder;
 
-class BotCommentReferencePresenterBuilderTest extends TestCase
+class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

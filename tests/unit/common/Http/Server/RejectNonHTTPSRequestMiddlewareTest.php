@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Http\Server;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class RejectNonHTTPSRequestMiddlewareTest extends TestCase
+final class RejectNonHTTPSRequestMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

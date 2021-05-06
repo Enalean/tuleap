@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
@@ -41,7 +40,7 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class AdditionalArtifactActionBuilderTest extends TestCase
+final class AdditionalArtifactActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

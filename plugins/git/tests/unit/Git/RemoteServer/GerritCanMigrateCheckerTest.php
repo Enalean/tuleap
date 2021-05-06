@@ -21,13 +21,12 @@
 namespace Tuleap\Git;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use EventManager;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-class GerritCanMigrateCheckerTest extends TestCase
+class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
-use PHPUnit\Framework\TestCase;
 
-class TimezoneRetrieverTest extends TestCase
+class TimezoneRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

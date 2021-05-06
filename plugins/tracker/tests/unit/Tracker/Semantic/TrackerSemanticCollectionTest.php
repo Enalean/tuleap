@@ -22,11 +22,10 @@ namespace Tuleap\Tracker\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Semantic;
 use Tracker_SemanticCollection;
 
-class TrackerSemanticCollectionTest extends TestCase
+class TrackerSemanticCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

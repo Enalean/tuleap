@@ -22,7 +22,7 @@ namespace Tuleap\GitLFS\Statistics;
 
 use Mockery;
 
-class CollectorTest extends \PHPUnit\Framework\TestCase
+class CollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

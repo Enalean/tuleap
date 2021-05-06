@@ -22,9 +22,8 @@
 namespace Tuleap\FRS\PermissionsPerGroup;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class PaneCollectorTest extends TestCase
+class PaneCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,7 +23,7 @@
  */
 require_once __DIR__ . '/../bootstrap.php';
 
-class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
+class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

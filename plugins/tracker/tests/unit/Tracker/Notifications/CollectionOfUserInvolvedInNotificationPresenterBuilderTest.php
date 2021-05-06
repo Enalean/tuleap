@@ -21,10 +21,9 @@
 namespace Tuleap\Tracker\Notifications;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use UserManager;
 
-class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCase
+class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,9 +25,8 @@ namespace Tuleap\Git\CommonMarkExtension;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class LinkToGitFileExtensionTest extends TestCase
+final class LinkToGitFileExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

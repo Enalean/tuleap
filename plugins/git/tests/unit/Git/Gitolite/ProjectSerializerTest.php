@@ -30,13 +30,12 @@ use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\InstanceBaseURLBuilder;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ProjectSerializerTest extends TestCase
+class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

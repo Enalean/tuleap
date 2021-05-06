@@ -22,11 +22,10 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference\Commit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 
-class GitlabCommitFactoryTest extends TestCase
+class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

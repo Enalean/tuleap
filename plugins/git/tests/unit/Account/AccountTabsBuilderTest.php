@@ -26,10 +26,9 @@ use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
-class AccountTabsBuilderTest extends TestCase
+class AccountTabsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

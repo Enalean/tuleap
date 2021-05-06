@@ -23,9 +23,8 @@
  *
  */
 
-use PHPUnit\Framework\TestCase;
 
-class Valid_Widget_OwnerTest extends TestCase
+class Valid_Widget_OwnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testOk(): void

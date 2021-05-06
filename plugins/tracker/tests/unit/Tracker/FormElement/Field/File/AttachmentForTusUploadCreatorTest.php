@@ -25,12 +25,11 @@ namespace Tuleap\Tracker\FormElement\Field\File;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 
-class AttachmentForTusUploadCreatorTest extends TestCase
+class AttachmentForTusUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Git\Repository;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-final class RepositoriesWithObjectsOverTheLimitCommandTest extends TestCase
+final class RepositoriesWithObjectsOverTheLimitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

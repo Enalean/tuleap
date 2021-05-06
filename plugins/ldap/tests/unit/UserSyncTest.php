@@ -26,9 +26,8 @@ namespace Tuleap\LDAP;
 use LDAP_UserSync;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
-class UserSyncTest extends TestCase
+class UserSyncTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

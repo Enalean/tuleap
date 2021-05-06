@@ -28,10 +28,9 @@ use Backend;
 use BackendCVS;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\TemporaryTestDirectory;
 
-final class BackendCVSTest extends TestCase
+final class BackendCVSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

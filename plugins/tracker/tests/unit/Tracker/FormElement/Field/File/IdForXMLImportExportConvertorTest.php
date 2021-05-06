@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use PHPUnit\Framework\TestCase;
 
-class IdForXMLImportExportConvertorTest extends TestCase
+class IdForXMLImportExportConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItConvertsForXMLExport(): void
     {

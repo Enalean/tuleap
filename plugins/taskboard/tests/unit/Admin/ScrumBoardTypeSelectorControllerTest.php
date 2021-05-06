@@ -24,10 +24,9 @@ namespace Tuleap\Taskboard\AgileDashboard;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;
 
-class ScrumBoardTypeSelectorControllerTest extends TestCase
+class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

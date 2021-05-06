@@ -30,7 +30,6 @@ use Docman_VersionFactory;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
@@ -40,7 +39,7 @@ use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 use Tuleap\Docman\Version\LinkVersionDataUpdator;
 
-class DocmanLinkVersionCreatorTest extends TestCase
+class DocmanLinkVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class ExecutionChangesExtractorTest extends TestCase
+class ExecutionChangesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

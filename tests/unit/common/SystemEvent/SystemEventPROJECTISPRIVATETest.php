@@ -28,7 +28,6 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use ProjectUGroup;
@@ -37,7 +36,7 @@ use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManage
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\UserRemover;
 
-final class SystemEventPROJECTISPRIVATETest extends TestCase
+final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

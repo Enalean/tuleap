@@ -25,10 +25,9 @@ namespace Tuleap\LDAP;
 require_once __DIR__ . '/bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 
-final class GroupAutocompleteControllerTest extends TestCase
+final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

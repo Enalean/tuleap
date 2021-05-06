@@ -24,14 +24,13 @@ namespace Tuleap\PullRequest\Reviewer\Autocompleter;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 use UserDao;
 use UserManager;
 
-final class PotentialReviewerRetrieverTest extends TestCase
+final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

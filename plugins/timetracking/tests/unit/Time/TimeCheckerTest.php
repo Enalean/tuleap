@@ -21,14 +21,13 @@
 namespace Tuleap\Timetracking\Time;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class TimeCheckerTest extends TestCase
+class TimeCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

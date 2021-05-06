@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML\Exporter\ChangesetValue;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-final class ExternalExporterCollectorTest extends TestCase
+final class ExternalExporterCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

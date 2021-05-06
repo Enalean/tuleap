@@ -22,11 +22,10 @@ namespace Tuleap\DynamicCredentials\REST;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
 use Tuleap\DynamicCredentials\Plugin\PluginInfo;
 
-class RequestSignatureVerifierTest extends TestCase
+class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

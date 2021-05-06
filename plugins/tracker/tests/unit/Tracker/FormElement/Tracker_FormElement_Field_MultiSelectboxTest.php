@@ -26,7 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
@@ -36,7 +35,7 @@ use TrackerFactory;
 use UserManager;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_MultiSelectboxTest extends TestCase
+class Tracker_FormElement_Field_MultiSelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

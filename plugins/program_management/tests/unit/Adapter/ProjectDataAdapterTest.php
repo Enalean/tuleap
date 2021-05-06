@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
 
-final class ProjectDataAdapterTest extends TestCase
+final class ProjectDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

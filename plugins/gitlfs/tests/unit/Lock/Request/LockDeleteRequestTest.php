@@ -20,9 +20,8 @@
 
 namespace Tuleap\GitLFS\Lock\Request;
 
-use PHPUnit\Framework\TestCase;
 
-class LockDeleteRequestTest extends TestCase
+class LockDeleteRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testParsingRequest()

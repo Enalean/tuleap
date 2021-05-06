@@ -22,9 +22,8 @@
 namespace Tuleap\Tracker\Report;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class TrackerReportExtractorTest extends TestCase
+class TrackerReportExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

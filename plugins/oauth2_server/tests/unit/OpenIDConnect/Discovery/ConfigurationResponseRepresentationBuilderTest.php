@@ -24,14 +24,13 @@ namespace Tuleap\OAuth2Server\OpenIDConnect\Discovery;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 
-final class ConfigurationResponseRepresentationBuilderTest extends TestCase
+final class ConfigurationResponseRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
     use MockeryPHPUnitIntegration;

@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Reviewer;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 
-final class ReviewerChangeTimelineEventRepresentationTest extends TestCase
+final class ReviewerChangeTimelineEventRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 

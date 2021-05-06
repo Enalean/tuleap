@@ -24,14 +24,13 @@ namespace Tuleap\Tracker;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tracker_MasschangeDataValueExtractor;
 use Tuleap\GlobalLanguageMock;
 
-final class MasschangeDataValueExtractorTest extends TestCase
+final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

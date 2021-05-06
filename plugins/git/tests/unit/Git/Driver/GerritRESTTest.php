@@ -29,12 +29,11 @@ use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
 use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectDeletionException;
 use Psr\Http\Message\RequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class GerritRESTTest extends TestCase
+final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

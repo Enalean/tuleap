@@ -30,7 +30,7 @@ use UserXMLExportedCollection;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
-final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
+final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

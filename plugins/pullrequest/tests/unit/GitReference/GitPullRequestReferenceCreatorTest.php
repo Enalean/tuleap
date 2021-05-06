@@ -23,11 +23,10 @@ namespace Tuleap\PullRequest\GitReference;
 require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
-class GitPullRequestReferenceCreatorTest extends TestCase
+class GitPullRequestReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

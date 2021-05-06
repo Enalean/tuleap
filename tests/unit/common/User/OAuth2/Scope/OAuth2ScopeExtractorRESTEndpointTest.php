@@ -24,12 +24,11 @@ namespace Tuleap\User\OAuth2\Scope;
 
 use Luracast\Restler\Data\ApiMethodInfo;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
-final class OAuth2ScopeExtractorRESTEndpointTest extends TestCase
+final class OAuth2ScopeExtractorRESTEndpointTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

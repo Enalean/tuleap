@@ -26,13 +26,12 @@ namespace Tuleap\Markdown;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Project\Routing\ProjectRetrieverMiddleware;
 use Tuleap\Request\ProjectRetriever;
 
-final class CommonMarkInterpreterControllerTest extends TestCase
+final class CommonMarkInterpreterControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

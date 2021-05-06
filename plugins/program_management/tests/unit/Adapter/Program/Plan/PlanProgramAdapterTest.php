@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessProjectNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\UserCanNotAccessToProgramException;
@@ -32,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PlanProgramAdapterTest extends TestCase
+final class PlanProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

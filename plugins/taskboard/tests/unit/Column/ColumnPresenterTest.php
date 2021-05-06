@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
 
-final class ColumnPresenterTest extends TestCase
+final class ColumnPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

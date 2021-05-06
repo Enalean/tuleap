@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin;
 
-use PHPUnit\Framework\TestCase;
 use Project;
 
-final class ProjectVisibilityOptionsForPresenterGeneratorTest extends TestCase
+final class ProjectVisibilityOptionsForPresenterGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGeneratedOptionsWhenRestrictedUsersAreNotAllowed(): void
     {

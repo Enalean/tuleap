@@ -25,7 +25,6 @@ namespace Tuleap\REST;
 use Luracast\Restler\Data\ApiMethodInfo;
 use Luracast\Restler\InvalidAuthCredentials;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Rest_Exception_InvalidTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
@@ -33,7 +32,7 @@ use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\OAuth2\OAuth2Exception;
 use User_LoginException;
 
-final class RESTAuthenticationFlowIsAllowedTest extends TestCase
+final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

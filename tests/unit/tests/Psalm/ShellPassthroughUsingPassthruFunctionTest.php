@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Psalm;
 
-use PHPUnit\Framework\TestCase;
 
-final class ShellPassthroughUsingPassthruFunctionTest extends TestCase
+final class ShellPassthroughUsingPassthruFunctionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @testWith [0]

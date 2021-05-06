@@ -22,12 +22,11 @@ namespace Tuleap\Tracker\Action;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class MoveDescriptionSemanticCheckerTest extends TestCase
+class MoveDescriptionSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

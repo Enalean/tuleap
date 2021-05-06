@@ -24,12 +24,11 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use TrackerFromXmlException;
 
-class CreateTrackerFromXMLCheckerTest extends TestCase
+class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

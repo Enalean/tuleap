@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Asymmetric;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
 
-final class SignaturePublicKeyTest extends TestCase
+final class SignaturePublicKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSignaturePublicKeyCanBeConstructed(): void
     {

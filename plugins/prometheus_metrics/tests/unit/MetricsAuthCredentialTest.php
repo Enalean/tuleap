@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\PrometheusMetrics;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Server\Authentication\LoginCredentialSet;
 
-final class MetricsAuthCredentialTest extends TestCase
+final class MetricsAuthCredentialTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCredentialDoesNotMatchWhenNoneWereSet(): void
     {

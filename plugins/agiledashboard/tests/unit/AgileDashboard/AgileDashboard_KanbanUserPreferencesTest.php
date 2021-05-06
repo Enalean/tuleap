@@ -19,7 +19,7 @@
  */
 
 //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class AgileDashboard_KanbanUserPreferencesTest extends \PHPUnit\Framework\TestCase
+class AgileDashboard_KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

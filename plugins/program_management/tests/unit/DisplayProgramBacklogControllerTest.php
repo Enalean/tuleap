@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TrackerFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
@@ -39,7 +38,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class DisplayProgramBacklogControllerTest extends TestCase
+final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

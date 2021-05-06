@@ -27,9 +27,8 @@ use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
-final class RestlerFactoryTest extends TestCase
+final class RestlerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

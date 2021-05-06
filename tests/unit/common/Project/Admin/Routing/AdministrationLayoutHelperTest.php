@@ -24,12 +24,11 @@ namespace Tuleap\Project\Admin\Routing;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\Admin\Navigation\FooterDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\ProjectRetriever;
 
-final class AdministrationLayoutHelperTest extends TestCase
+final class AdministrationLayoutHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

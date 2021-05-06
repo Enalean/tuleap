@@ -22,7 +22,6 @@ namespace Tuleap\Dashboard;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Dashboard\Project\ProjectDashboardPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumnPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetLinePresenter;
@@ -32,7 +31,7 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 
-class AssetsIncluderTest extends TestCase
+class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

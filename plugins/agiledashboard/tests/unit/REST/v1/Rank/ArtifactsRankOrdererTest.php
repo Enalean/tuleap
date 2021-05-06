@@ -25,12 +25,11 @@ namespace Tuleap\AgileDashboard\REST\v1\Rank;
 use Luracast\Restler\RestException;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 
-final class ArtifactsRankOrdererTest extends TestCase
+final class ArtifactsRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Redirect;
 
-final class RedirectTest extends TestCase
+final class RedirectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @testWith ["/base/url"]

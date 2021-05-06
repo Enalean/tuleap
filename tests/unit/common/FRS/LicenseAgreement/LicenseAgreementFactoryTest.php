@@ -26,10 +26,9 @@ namespace Tuleap\FRS\LicenseAgreement;
 use ForgeConfig;
 use FRSPackage;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-class LicenseAgreementFactoryTest extends TestCase
+class LicenseAgreementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

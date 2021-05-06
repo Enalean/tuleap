@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class BoundDecoratorSaverTest extends TestCase
+final class BoundDecoratorSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

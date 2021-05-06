@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer\Change;
 
 use ParagonIE\EasyDB\EasyStatement;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBFactory;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 
-final class ReviewerChangeDAOTest extends TestCase
+final class ReviewerChangeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var int */
     private static $pr_reviewer_1_id;

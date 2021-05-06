@@ -22,10 +22,9 @@ namespace Tuleap\Project\Banner;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-class BannerPermissionsCheckerTest extends TestCase
+class BannerPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

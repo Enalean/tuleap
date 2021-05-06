@@ -25,11 +25,10 @@ namespace Tuleap\Project\UGroups;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\GlobalLanguageMock;
 
-final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends TestCase
+final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

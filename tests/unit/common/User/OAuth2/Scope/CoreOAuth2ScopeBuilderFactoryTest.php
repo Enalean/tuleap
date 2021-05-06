@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\Scope;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 
-final class CoreOAuth2ScopeBuilderFactoryTest extends TestCase
+final class CoreOAuth2ScopeBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCoreOAuth2ScopeBuilderFactoryCanBeBuilt(): void
     {

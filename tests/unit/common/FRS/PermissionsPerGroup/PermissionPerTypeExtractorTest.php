@@ -20,8 +20,6 @@
 
 namespace Tuleap\FRS\PerGroup;
 
-use PHPUnit\Framework\TestCase;
-use Project;
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\FRSPermissionFactory;
@@ -29,11 +27,10 @@ use Tuleap\FRS\PermissionsPerGroup\FRSPermissionPerGroupURLBuilder;
 use Tuleap\FRS\PermissionsPerGroup\PermissionPerTypeExtractor;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupCollection;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UGroupManager;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-class PermissionPerTypeExtractorTest extends TestCase
+final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var FRSPermission
@@ -120,7 +117,7 @@ class PermissionPerTypeExtractorTest extends TestCase
             ]
         );
 
-        $this->project = $this->createMock(Project::class);
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItAlwaysAddFRSAdminPermissionForFRSAdmin()

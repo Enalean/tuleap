@@ -23,7 +23,7 @@ namespace Tuleap\User\Admin;
 use ForgeAccess;
 use ForgeConfig;
 
-class UserStatusCheckerTest extends \PHPUnit\Framework\TestCase
+class UserStatusCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

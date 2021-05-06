@@ -24,7 +24,6 @@ namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
@@ -33,7 +32,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
-final class ListAppsControllerTest extends TestCase
+final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

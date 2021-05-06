@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant\RefreshToken;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
@@ -43,7 +42,7 @@ use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
+final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

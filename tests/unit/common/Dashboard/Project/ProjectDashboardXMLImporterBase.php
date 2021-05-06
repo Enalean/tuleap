@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Dashboard\Project;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Widget\WidgetFactory;
 use Tuleap\XML\MappingsRegistry;
 
-class ProjectDashboardXMLImporterBase extends TestCase
+class ProjectDashboardXMLImporterBase extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

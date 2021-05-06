@@ -21,12 +21,11 @@
 namespace Tuleap\Git\HTTP;
 
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator;
 use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyMisusageException;
 
-final class HTTPAccessControlTest extends TestCase
+final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

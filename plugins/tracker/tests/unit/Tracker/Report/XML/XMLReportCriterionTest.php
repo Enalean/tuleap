@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\XML;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceByLabel;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
@@ -33,7 +32,7 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNull;
 
-final class XMLReportCriterionTest extends TestCase
+final class XMLReportCriterionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItSimpleSearchWhenThereIsOnlyOneValueSelected(): void
     {

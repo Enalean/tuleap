@@ -25,7 +25,7 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_GIT_REPO_DELETETest extends \PHPUnit\Framework\TestCase
+class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

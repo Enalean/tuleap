@@ -21,11 +21,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
-class PostPushCommitWebhookDataExtractorTest extends TestCase
+class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var PostPushCommitWebhookDataExtractor

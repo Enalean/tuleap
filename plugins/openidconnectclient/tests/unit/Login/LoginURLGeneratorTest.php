@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Login;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-final class LoginURLGeneratorTest extends TestCase
+final class LoginURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

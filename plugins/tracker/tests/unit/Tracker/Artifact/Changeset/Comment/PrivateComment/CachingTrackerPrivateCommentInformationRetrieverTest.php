@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class CachingTrackerPrivateCommentInformationRetrieverTest extends TestCase
+final class CachingTrackerPrivateCommentInformationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRetrievesInformationFromCache(): void
     {

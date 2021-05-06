@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 
-class ProgramIncrementTrackerTest extends TestCase
+class ProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
     {

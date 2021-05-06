@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class GetFieldDataTest extends TestCase
+final class GetFieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

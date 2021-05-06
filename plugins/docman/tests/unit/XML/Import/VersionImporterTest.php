@@ -30,13 +30,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tuleap\xml\InvalidDateException;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class VersionImporterTest extends TestCase
+class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

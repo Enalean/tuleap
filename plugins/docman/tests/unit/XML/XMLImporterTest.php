@@ -26,14 +26,13 @@ use Docman_Item;
 use Docman_ItemFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\XML\Import\NodeImporter;
 use XML_RNGValidator;
 
-class XMLImporterTest extends TestCase
+class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

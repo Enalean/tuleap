@@ -21,7 +21,6 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\SVN\Admin\MailNotification;
@@ -29,7 +28,7 @@ use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\SVN\Repository\Repository;
 
-class NotificationUpdateCheckerTest extends TestCase
+class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

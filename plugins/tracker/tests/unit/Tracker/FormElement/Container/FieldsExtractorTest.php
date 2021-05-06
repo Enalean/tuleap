@@ -22,14 +22,13 @@ namespace Tuleap\Tracker\FormElement\Container;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Container;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class FieldsExtractorTest extends TestCase
+class FieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

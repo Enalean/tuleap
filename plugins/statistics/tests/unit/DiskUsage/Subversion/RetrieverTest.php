@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Statistics\DiskUsage\Subversion;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Statistics_DiskUsageDao;
 
-final class RetrieverTest extends TestCase
+final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

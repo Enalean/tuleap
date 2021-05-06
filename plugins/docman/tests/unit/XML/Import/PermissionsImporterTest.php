@@ -25,12 +25,11 @@ namespace Tuleap\Docman\XML\Import;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 
-class PermissionsImporterTest extends TestCase
+class PermissionsImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

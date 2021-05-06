@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Authentication\Authorization;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OpenIDConnectClient\Authentication\State;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-final class AuthorizationRequestCreatorTest extends TestCase
+final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

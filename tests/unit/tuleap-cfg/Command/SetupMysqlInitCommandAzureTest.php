@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
-final class SetupMysqlInitCommandAzureTest extends TestCase
+final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var string

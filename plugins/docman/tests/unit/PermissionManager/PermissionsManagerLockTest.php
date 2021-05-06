@@ -27,10 +27,9 @@ use Docman_LockFactory;
 use Docman_PermissionsManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class PermissionsManagerLockTest extends TestCase
+class PermissionsManagerLockTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

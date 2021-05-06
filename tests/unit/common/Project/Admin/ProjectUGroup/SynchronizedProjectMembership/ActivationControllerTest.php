@@ -24,14 +24,13 @@ namespace Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Request\ProjectRetriever;
 
-final class ActivationControllerTest extends TestCase
+final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

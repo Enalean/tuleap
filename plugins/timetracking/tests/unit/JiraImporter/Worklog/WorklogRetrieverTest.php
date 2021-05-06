@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
-class WorklogRetrieverTest extends TestCase
+class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItBuildsWorklogsFromAPIResponse(): void

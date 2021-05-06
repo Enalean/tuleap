@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Request;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class TopMilestoneRequestTest extends TestCase
+final class TopMilestoneRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueIfItsFilteringQueryIsFuture(): void
     {

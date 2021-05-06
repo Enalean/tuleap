@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Network;
 
-use PHPUnit\Framework\TestCase;
 
-final class HTTPResponseFunctionsOverloadTest extends TestCase
+final class HTTPResponseFunctionsOverloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function tearDown(): void
     {

@@ -26,7 +26,6 @@ use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -35,7 +34,7 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
 use URLVerification;
 
-final class StatusPatcherTest extends TestCase
+final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

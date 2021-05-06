@@ -26,7 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Notification;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
@@ -37,7 +36,7 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class InvalidCredentialsNotifierTest extends TestCase
+class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

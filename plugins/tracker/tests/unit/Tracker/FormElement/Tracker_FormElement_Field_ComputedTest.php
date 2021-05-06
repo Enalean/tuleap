@@ -26,7 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ValueDao;
@@ -41,7 +40,7 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_FormElement_Field_ComputedTest extends TestCase
+final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-use PHPUnit\Framework\TestCase;
 
-class FileToUploadTest extends TestCase
+class FileToUploadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testGetDownloadHref()

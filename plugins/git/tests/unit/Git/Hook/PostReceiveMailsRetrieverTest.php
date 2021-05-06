@@ -28,7 +28,7 @@ use PFUser;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 
-class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
+class PostReceiveMailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

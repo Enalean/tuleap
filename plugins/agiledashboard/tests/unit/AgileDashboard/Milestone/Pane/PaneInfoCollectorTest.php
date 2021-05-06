@@ -25,9 +25,8 @@ namespace Tuleap\AgileDashboard\Milestone\Pane;
 use AgileDashboard_Pane;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class PaneInfoCollectorTest extends TestCase
+class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

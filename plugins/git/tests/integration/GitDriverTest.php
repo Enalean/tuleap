@@ -29,7 +29,7 @@ use GitRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\TemporaryTestDirectory;
 
-final class GitDriverTest extends \PHPUnit\Framework\TestCase
+final class GitDriverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

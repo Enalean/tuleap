@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Cryptography;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class KeyFactoryTest extends TestCase
+final class KeyFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

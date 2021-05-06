@@ -25,13 +25,12 @@ namespace Tuleap\Git\Reference;
 use GitRepository;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Head;
 use Tuleap\Git\GitPHP\Tag;
 use Tuleap\User\UserEmailCollection;
 
-class CommitDetailsRetrieverTest extends TestCase
+class CommitDetailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

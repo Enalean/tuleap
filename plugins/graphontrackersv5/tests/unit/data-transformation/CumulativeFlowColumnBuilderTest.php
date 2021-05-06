@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 
-final class CumulativeFlowColumnBuilderTest extends TestCase
+final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

@@ -25,13 +25,12 @@ namespace Tuleap\Tracker\Report;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Report_Renderer;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_ReportFactoryTest extends TestCase
+final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

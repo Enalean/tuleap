@@ -27,7 +27,6 @@ use Git;
 use Git_LogDao;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
@@ -35,7 +34,7 @@ use Tuleap\Project\XML\ArchiveException;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\TemporaryTestDirectory;
 
-class GitXMLExporterTest extends TestCase
+class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

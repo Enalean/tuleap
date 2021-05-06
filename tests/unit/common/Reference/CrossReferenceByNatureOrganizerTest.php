@@ -25,14 +25,13 @@ namespace Tuleap\Reference;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessException;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferenceByNatureOrganizerTest extends TestCase
+class CrossReferenceByNatureOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

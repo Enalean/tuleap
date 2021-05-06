@@ -25,7 +25,6 @@ namespace Tuleap\TestPlan;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
@@ -35,7 +34,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-class TestPlanControllerTest extends TestCase
+class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

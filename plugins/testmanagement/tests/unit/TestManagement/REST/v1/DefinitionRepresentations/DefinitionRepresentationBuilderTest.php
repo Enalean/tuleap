@@ -26,7 +26,6 @@ namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Markdown\ContentInterpretor;
@@ -34,7 +33,7 @@ use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\REST\v1\RequirementRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class DefinitionRepresentationBuilderTest extends TestCase
+class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

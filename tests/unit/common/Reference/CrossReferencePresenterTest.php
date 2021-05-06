@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Reference\Metadata\CreatedByPresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferencePresenterTest extends TestCase
+class CrossReferencePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

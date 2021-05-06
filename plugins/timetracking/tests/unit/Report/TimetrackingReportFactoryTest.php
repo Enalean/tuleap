@@ -28,13 +28,12 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Report;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Timetracking\Exceptions\TimetrackingReportNotFoundException;
 use Tuleap\Timetracking\Time\TimetrackingReport;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimetrackingReportFactory;
 
-class TimetrackingReportFactoryTest extends TestCase
+class TimetrackingReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,6 @@ namespace TestManagement\REST\v1\Execution;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
@@ -30,7 +29,7 @@ use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
 
-class StepsResultsFilterTest extends TestCase
+class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var StepsResultsFilter */
     private $filter;

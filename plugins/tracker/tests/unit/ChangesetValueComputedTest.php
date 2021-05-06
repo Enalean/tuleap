@@ -21,9 +21,8 @@
 namespace Tuleap\Tracker\Artifact;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class ChangesetValueComputedTest extends TestCase
+class ChangesetValueComputedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

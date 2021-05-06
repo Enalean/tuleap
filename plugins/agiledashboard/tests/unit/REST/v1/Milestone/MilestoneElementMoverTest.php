@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use MilestoneParentLinker;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -36,7 +35,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
-class MilestoneElementMoverTest extends TestCase
+class MilestoneElementMoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_Rule_Date_DateTest extends \PHPUnit\Framework\TestCase
+final class Tracker_Rule_Date_DateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      *

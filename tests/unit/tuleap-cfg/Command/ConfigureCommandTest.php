@@ -27,7 +27,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
+class ConfigureCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     /**

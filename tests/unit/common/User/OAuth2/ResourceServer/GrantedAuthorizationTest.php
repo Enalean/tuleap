@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\ResourceServer;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class GrantedAuthorizationTest extends TestCase
+final class GrantedAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReturnsGivenValues(): void
     {

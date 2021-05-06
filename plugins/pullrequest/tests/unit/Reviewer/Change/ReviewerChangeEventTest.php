@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Change;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 
-final class ReviewerChangeEventTest extends TestCase
+final class ReviewerChangeEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {

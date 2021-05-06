@@ -24,14 +24,13 @@ use AgileDashBoard_Semantic_InitialEffort;
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class MoveSemanticInitialEffortCheckerTest extends TestCase
+class MoveSemanticInitialEffortCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

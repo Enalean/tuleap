@@ -32,7 +32,7 @@ use Tuleap\Git\GitPHP\Project;
 use Tuleap\Git\GitPHP\Tag;
 use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
-class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
+class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -20,9 +20,8 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class DateTimeValueRounderTest extends TestCase
+final class DateTimeValueRounderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

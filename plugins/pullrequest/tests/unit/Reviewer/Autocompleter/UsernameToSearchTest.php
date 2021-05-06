@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Autocompleter;
 
-use PHPUnit\Framework\TestCase;
 
-final class UsernameToSearchTest extends TestCase
+final class UsernameToSearchTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNameToSearchWithALongEnoughLength(): void
     {

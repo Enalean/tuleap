@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
-final class ToBeCreatedUserTest extends \PHPUnit\Framework\TestCase
+final class ToBeCreatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var ToBeCreatedUser */
     private $user;

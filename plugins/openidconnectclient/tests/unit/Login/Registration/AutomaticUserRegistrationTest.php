@@ -21,11 +21,10 @@
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
-class AutomaticUserRegistrationTest extends TestCase
+class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

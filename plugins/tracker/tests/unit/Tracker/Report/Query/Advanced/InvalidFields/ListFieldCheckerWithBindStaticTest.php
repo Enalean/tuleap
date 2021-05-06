@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
@@ -34,7 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
-class ListFieldCheckerWithBindStaticTest extends TestCase
+class ListFieldCheckerWithBindStaticTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -32,7 +32,7 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-class VelocityComputationCheckerTest extends \PHPUnit\Framework\TestCase
+class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

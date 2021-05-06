@@ -24,9 +24,8 @@ namespace Tuleap\DB;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ParagonIE\EasyDB\EasyDB;
-use PHPUnit\Framework\TestCase;
 
-final class DataAccessObjectTest extends TestCase
+final class DataAccessObjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\REST\Specification\Swagger;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -30,7 +29,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 
-final class SwaggerJsonOAuth2SecurityDefinitionTest extends TestCase
+final class SwaggerJsonOAuth2SecurityDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

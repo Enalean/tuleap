@@ -23,11 +23,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class PreCommitMessageTest extends TestCase
+class PreCommitMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

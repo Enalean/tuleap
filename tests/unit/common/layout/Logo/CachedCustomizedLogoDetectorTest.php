@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\layout\Logo;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\ForgeConfigSandbox;
 
-class CachedCustomizedLogoDetectorTest extends TestCase
+class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

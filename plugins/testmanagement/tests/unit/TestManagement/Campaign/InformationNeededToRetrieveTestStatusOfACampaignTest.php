@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Campaign;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
 
-final class InformationNeededToRetrieveTestStatusOfACampaignTest extends TestCase
+final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

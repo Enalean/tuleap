@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Semantic\Progress\InvalidMethod;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 
-class SemanticProgressAdminPresenterBuilderTest extends TestCase
+class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

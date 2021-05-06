@@ -22,13 +22,12 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use TrackerFactory;
 
-class CampaignCreatorTest extends TestCase
+class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -27,7 +27,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessRestrictedException;
 use ProjectUGroup;
@@ -36,7 +35,7 @@ use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\ProjectAccessChecker;
 use UGroupDao;
 
-class BackendSVNTest extends TestCase
+class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

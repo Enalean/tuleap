@@ -19,7 +19,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
+final class AdminVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

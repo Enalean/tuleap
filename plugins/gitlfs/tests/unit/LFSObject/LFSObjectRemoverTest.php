@@ -23,10 +23,9 @@ namespace Tuleap\GitLFS\LFSObject;
 use League\Flysystem\FilesystemWriter;
 use League\Flysystem\UnableToDeleteFile;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class LFSObjectRemoverTest extends TestCase
+class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

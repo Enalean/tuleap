@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Workflow;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tracker;
@@ -44,7 +43,7 @@ use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 use WorkflowFactory;
 
-class WorkflowFactoryTest extends TestCase
+class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -27,7 +27,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
 use Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException;
@@ -35,7 +34,7 @@ use Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class XMLImportFieldStrategyAttachmentTest extends TestCase
+class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

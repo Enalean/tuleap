@@ -28,7 +28,6 @@ use MilestoneReportCriterionDao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
@@ -39,7 +38,7 @@ use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class ConfigurationUpdaterTest extends TestCase
+class ConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

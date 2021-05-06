@@ -22,13 +22,12 @@ namespace Tuleap\GraphOnTrackersV5;
 
 use GraphOnTrackersV5_Burndown_Data;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Burndown;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class GraphOnTrackersV5BurndownDataTest extends TestCase
+class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

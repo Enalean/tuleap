@@ -21,10 +21,9 @@
 namespace Tuleap\Tracker\FormElement\Field;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_String;
 
-class TrackerFormElementFieldStringRESTTest extends TestCase
+class TrackerFormElementFieldStringRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

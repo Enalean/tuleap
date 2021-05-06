@@ -32,7 +32,7 @@ use ProjectManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
-final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
+final class GitForkCrossProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

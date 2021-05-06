@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class FileURLSubstitutorTest extends TestCase
+class FileURLSubstitutorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

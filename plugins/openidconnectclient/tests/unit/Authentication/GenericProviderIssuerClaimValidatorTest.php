@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 
-class GenericProviderIssuerClaimValidatorTest extends TestCase
+class GenericProviderIssuerClaimValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var GenericProviderIssuerClaimValidator

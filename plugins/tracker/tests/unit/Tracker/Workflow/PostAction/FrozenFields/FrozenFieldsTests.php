@@ -24,12 +24,11 @@ namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Transition;
 
-class FrozenFieldsTests extends TestCase
+class FrozenFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use PHPUnit\Framework\TestCase;
 
-final class PromptParameterValuesExtractorTest extends TestCase
+final class PromptParameterValuesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var PromptParameterValuesExtractor

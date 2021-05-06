@@ -25,12 +25,11 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Workflow;
 
-class SetIntValueJsonParserTest extends TestCase
+class SetIntValueJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

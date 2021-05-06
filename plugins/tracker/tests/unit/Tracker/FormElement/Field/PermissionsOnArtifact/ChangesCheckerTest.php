@@ -28,7 +28,7 @@ use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-final class ChangesCheckerTest extends \PHPUnit\Framework\TestCase
+final class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

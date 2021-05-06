@@ -26,7 +26,6 @@ use Mockery;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -35,7 +34,7 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extends TestCase
+final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

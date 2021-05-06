@@ -28,10 +28,9 @@ use Docman_VersionFactory;
 use EventManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_VersionFactoryTest extends TestCase
+class Docman_VersionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

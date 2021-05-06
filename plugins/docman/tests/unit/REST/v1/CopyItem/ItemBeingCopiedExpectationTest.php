@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
-use PHPUnit\Framework\TestCase;
 
-final class ItemBeingCopiedExpectationTest extends TestCase
+final class ItemBeingCopiedExpectationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExpectedTitleIsNotModified(): void
     {

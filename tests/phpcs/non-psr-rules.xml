@@ -156,6 +156,15 @@
     <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"/>
     <!-- Forbid `array(...)` -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <!-- Force usage of Tuleap's TestCase instead of PHPUnit's TestCase -->
+    <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">
+        <properties>
+            <property name="forbiddenExtends" type="array">
+                <element key="PHPUnit\Framework\TestCase" value="Tuleap\Test\PHPUnit\TestCase"/>
+            </property>
+        </properties>
+        <exclude-pattern>tests/lib/PHPUnit/TestCase.php</exclude-pattern>
+    </rule>
 
     <!-- Ensure code is compatible with the targeted version of PHP -->
     <rule ref="PHPCompatibility"/>

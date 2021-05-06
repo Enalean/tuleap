@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Heartbeat;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
@@ -34,7 +33,7 @@ use Tuleap\Tracker\TrackerColor;
 use UserHelper;
 use UserManager;
 
-final class LatestHeartbeatsCollectorTest extends TestCase
+final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

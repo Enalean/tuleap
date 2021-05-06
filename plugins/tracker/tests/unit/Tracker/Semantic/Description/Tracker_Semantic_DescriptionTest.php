@@ -22,13 +22,12 @@ namespace Tuleap\Tracker;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
 
-class SemanticDescriptionTest extends TestCase
+class SemanticDescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

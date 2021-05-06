@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use PHPUnit\Framework\TestCase;
 
-final class NotFoundExceptionTest extends TestCase
+final class NotFoundExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNotFoundExceptionIsAssociatedWithA404Code(): void
     {

@@ -25,11 +25,10 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class TagPushWebhookActionProcessorTest extends TestCase
+class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

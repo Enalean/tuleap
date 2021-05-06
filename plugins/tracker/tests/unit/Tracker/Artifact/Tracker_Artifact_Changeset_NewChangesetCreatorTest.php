@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_AfterSaveException;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
@@ -38,7 +37,7 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 
-final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

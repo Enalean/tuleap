@@ -24,13 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\FormElement;
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tracker_FormElement;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
-final class PermissionsForGroupsBuilderTest extends TestCase
+final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

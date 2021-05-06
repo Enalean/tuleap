@@ -25,9 +25,8 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
-use PHPUnit\Framework\TestCase;
 
-class PackTest extends TestCase
+class PackTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

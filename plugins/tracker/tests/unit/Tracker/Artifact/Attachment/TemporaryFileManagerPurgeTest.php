@@ -25,13 +25,12 @@ namespace Tuleap\Tracker\Artifact\Attachment;
 
 use ForgeConfig;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use System_Command;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\FakeDataAccessResult;
 
-class TemporaryFileManagerPurgeTest extends TestCase
+class TemporaryFileManagerPurgeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

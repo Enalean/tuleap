@@ -24,10 +24,9 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-class URLBuilderTest extends TestCase
+class URLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

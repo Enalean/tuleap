@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
 use Tuleap\JiraImport\JiraAgile\Board\Backlog\BacklogIssueRepresentation;
@@ -42,7 +41,7 @@ use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
 
-final class JiraAgileImporterTest extends TestCase
+final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasASprintTracker(): void
     {

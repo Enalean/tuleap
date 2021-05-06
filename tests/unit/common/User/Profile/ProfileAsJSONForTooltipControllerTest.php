@@ -27,14 +27,13 @@ use Http\Factory\Guzzle\StreamFactory;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Http\Response\JSONResponseBuilder;
 
-class ProfileAsJSONForTooltipControllerTest extends TestCase
+class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

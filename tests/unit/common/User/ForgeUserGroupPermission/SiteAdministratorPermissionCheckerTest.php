@@ -20,7 +20,7 @@
 
 namespace Tuleap\User\ForgeUserGroupPermission;
 
-class SiteAdministratorPermissionCheckerTest extends \PHPUnit\Framework\TestCase
+class SiteAdministratorPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Platform\Banner;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class BannerRemoverTest extends TestCase
+final class BannerRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

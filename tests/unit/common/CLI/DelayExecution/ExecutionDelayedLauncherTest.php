@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\DelayExecution;
 
-use PHPUnit\Framework\TestCase;
 
-final class ExecutionDelayedLauncherTest extends TestCase
+final class ExecutionDelayedLauncherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDelayIsAppliedBeforeRunningTheRestOfTheCode(): void
     {

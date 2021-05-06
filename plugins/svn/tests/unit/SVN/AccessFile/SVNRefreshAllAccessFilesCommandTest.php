@@ -25,13 +25,12 @@ namespace Tuleap\SVN\AccessControl;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryByProjectCollection;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-class SVNRefreshAllAccessFilesCommandTest extends TestCase
+class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

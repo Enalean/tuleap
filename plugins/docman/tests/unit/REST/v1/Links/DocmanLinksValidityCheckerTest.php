@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1;
 
 use Luracast\Restler\RestException;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 
-class DocmanLinksValidityCheckerTest extends TestCase
+class DocmanLinksValidityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var DocmanLinksValidityChecker

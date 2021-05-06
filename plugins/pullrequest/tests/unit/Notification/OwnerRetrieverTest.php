@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDAO;
 use UserManager;
 
-final class OwnerRetrieverTest extends TestCase
+final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

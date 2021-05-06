@@ -20,12 +20,11 @@
 namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_File;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class TrackerArtifactChangesetValueFileTest extends TestCase
+class TrackerArtifactChangesetValueFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

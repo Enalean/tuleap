@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\Redis;
 
-use PHPUnit\Framework\TestCase;
 
-final class BackOffDelayFailedMessageTest extends TestCase
+final class BackOffDelayFailedMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider dataProviderAttempts

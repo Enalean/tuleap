@@ -24,7 +24,6 @@ namespace Tuleap\Taskboard\Board;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Taskboard\Column\ColumnPresenter;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
@@ -33,7 +32,7 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TitleFieldPresenter;
 use Tuleap\Taskboard\Tracker\TrackerPresenter;
 
-final class BoardPresenterTest extends TestCase
+final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

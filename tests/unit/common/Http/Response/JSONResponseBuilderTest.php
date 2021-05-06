@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Http\Response;
 
 use JsonException;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class JSONResponseBuilderTest extends TestCase
+final class JSONResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCreateAJSONResponse(): void
     {

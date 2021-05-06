@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
@@ -36,7 +35,7 @@ use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\XML\ProjectXMLMerger;
 
-final class ProjectRegistrationPresenterBuilderTest extends TestCase
+final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

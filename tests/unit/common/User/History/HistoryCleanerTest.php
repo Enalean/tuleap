@@ -20,7 +20,7 @@
 
 namespace Tuleap\User\History;
 
-class HistoryCleanerTest extends \PHPUnit\Framework\TestCase
+class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

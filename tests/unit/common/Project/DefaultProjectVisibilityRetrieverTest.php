@@ -24,11 +24,10 @@ namespace Tuleap\Project;
 
 use ForgeAccess;
 use ForgeConfig;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 
-final class DefaultProjectVisibilityRetrieverTest extends TestCase
+final class DefaultProjectVisibilityRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

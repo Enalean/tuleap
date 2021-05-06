@@ -23,7 +23,6 @@ namespace Tuleap\CrossTracker\Widget;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
@@ -32,7 +31,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class WidgetPermissionCheckerTest extends TestCase
+class WidgetPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,11 +25,10 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class AddValidatorTest extends TestCase
+final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

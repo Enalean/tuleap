@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use PHPUnit\Framework\TestCase;
 
-final class FilterUserFromCollectionTest extends TestCase
+final class FilterUserFromCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSpecificUserCanBeRemovedFromTheCollection(): void
     {

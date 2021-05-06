@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 
-final class TrackerColorTest extends TestCase
+final class TrackerColorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testColorCanBeBuiltFromAValidColorName(): void
     {

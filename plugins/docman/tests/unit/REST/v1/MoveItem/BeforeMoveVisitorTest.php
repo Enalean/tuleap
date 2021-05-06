@@ -33,11 +33,10 @@ use Docman_Link;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
-final class BeforeMoveVisitorTest extends TestCase
+final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

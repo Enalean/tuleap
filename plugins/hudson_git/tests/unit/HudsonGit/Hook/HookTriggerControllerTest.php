@@ -26,7 +26,6 @@ use DateTimeImmutable;
 use GitRepository;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
@@ -35,7 +34,7 @@ use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPlugi
 use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\PollingResponse;
 
-class HookTriggerControllerTest extends TestCase
+class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

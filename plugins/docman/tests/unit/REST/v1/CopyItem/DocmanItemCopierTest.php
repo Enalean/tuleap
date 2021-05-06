@@ -34,14 +34,13 @@ use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use RuntimeException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
-final class DocmanItemCopierTest extends TestCase
+final class DocmanItemCopierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

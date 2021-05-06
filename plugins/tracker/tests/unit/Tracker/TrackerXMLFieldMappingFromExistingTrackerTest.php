@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
@@ -31,7 +30,7 @@ use Tracker_FormElement_Field_Text;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
+class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-final class SessionManagerTest extends \PHPUnit\Framework\TestCase
+final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

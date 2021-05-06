@@ -21,9 +21,8 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class NatureValidatorTest extends TestCase
+final class NatureValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

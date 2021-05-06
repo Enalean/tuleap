@@ -24,14 +24,13 @@ namespace Tuleap\GitLFS\Download;
 
 use League\Flysystem\FilesystemReader;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
 
-final class FileDownloaderControllerTest extends TestCase
+final class FileDownloaderControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

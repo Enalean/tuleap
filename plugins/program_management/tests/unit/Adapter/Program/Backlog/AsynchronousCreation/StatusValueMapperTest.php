@@ -37,7 +37,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
-final class StatusValueMapperTest extends \PHPUnit\Framework\TestCase
+final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

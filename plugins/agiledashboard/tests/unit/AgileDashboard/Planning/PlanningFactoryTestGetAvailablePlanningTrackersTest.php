@@ -26,12 +26,11 @@ namespace Tuleap\AgileDashboard\Planning;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use TrackerFactory;
 
-final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends TestCase
+final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

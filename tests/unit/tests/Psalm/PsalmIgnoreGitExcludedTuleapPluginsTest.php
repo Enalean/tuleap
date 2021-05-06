@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Test\Psalm;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use System_Command_CommandException;
 
-final class PsalmIgnoreGitExcludedTuleapPluginsTest extends TestCase
+final class PsalmIgnoreGitExcludedTuleapPluginsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

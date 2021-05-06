@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Reference;
@@ -34,7 +33,7 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
-class CrossReferenceFromMergeRequestCreatorTest extends TestCase
+class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

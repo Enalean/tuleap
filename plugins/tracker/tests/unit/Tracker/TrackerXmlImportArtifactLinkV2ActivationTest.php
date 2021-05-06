@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TrackerXmlImportArtifactLinkV2ActivationTest extends TestCase
+class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Admin;
 
-use PHPUnit\Framework\TestCase;
 
-final class SiteAdministrationAddOptionTest extends TestCase
+final class SiteAdministrationAddOptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRetrievesPluginOptionsSortedByName(): void
     {

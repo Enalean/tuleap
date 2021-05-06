@@ -23,9 +23,8 @@ namespace Tuleap\Hudson;
 require_once __DIR__ . '/bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class HudsonJobLazyExceptionHandlerTest extends TestCase
+class HudsonJobLazyExceptionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\RefreshToken;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class OAuth2RefreshTokenTest extends TestCase
+final class OAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsValidRefreshToken(): void
     {
@@ -93,7 +92,7 @@ final class OAuth2RefreshTokenTest extends TestCase
 
             public function __construct()
             {
-                $this->identifier = OAuth2ScopeIdentifier::fromIdentifierKey('refresh_token_test');
+        $this->identifier = OAuth2ScopeIdentifier::fromIdentifierKey('refresh_token_test');
             }
 
             /**
@@ -101,7 +100,7 @@ final class OAuth2RefreshTokenTest extends TestCase
              */
             public static function fromItself(): AuthenticationScope
             {
-                throw new \LogicException('Not supposed to be called during the tests');
+        throw new \LogicException('Not supposed to be called during the tests');
             }
 
             /**
@@ -109,23 +108,23 @@ final class OAuth2RefreshTokenTest extends TestCase
              */
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
-                throw new \LogicException('Not supposed to be called during the tests');
+        throw new \LogicException('Not supposed to be called during the tests');
             }
 
             public function getIdentifier(): AuthenticationScopeIdentifier
             {
-                return $this->identifier;
+        return $this->identifier;
             }
 
             public function getDefinition(): AuthenticationScopeDefinition
             {
-                throw new \LogicException('Not supposed to be called during the tests');
+        throw new \LogicException('Not supposed to be called during the tests');
             }
 
 
             public function covers(AuthenticationScope $scope): bool
             {
-                return $this->identifier->toString() === $scope->getIdentifier()->toString();
+        return $this->identifier->toString() === $scope->getIdentifier()->toString();
             }
         };
         // phpcs:enable

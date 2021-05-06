@@ -20,9 +20,8 @@
 
 namespace Tuleap\Svn;
 
-use PHPUnit\Framework\TestCase;
 
-final class SHA1CollisionDetectorTest extends TestCase
+final class SHA1CollisionDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDetectsKnownCollision(): void
     {

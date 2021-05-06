@@ -23,11 +23,10 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class TrackerCheckerTest extends TestCase
+class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,13 +24,12 @@ namespace Tuleap\Tracker\Report\Query;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use function PHPUnit\Framework\assertInstanceOf;
 
-final class CommentFromWhereBuilderFactoryTest extends TestCase
+final class CommentFromWhereBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

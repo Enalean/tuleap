@@ -24,12 +24,11 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
-final class FreestyleMappingFactoryTest extends TestCase
+final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

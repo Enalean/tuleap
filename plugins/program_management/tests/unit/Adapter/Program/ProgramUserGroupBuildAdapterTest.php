@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistException;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ProgramUserGroupBuildAdapterTest extends TestCase
+final class ProgramUserGroupBuildAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

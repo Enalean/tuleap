@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Symmetric;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
 
-final class EncryptionKeyTest extends TestCase
+final class EncryptionKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEncryptionKeyConstruction(): void
     {

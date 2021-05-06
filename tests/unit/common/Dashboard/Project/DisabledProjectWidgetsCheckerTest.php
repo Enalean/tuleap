@@ -24,11 +24,10 @@ namespace Tuleap\Dashboard\Project;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Dashboard\User\UserDashboard;
 use Widget;
 
-class DisabledProjectWidgetsCheckerTest extends TestCase
+class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

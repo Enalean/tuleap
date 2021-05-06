@@ -24,10 +24,9 @@ namespace Tuleap\FRS;
 use DirectoryIterator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
+class CorrectFrsRepositoryPermissionsCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

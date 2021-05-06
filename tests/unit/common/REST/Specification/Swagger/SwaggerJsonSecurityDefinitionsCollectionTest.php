@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\REST\Specification\Swagger;
 
-use PHPUnit\Framework\TestCase;
 
-final class SwaggerJsonSecurityDefinitionsCollectionTest extends TestCase
+final class SwaggerJsonSecurityDefinitionsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddsASecurityDefinition(): void
     {

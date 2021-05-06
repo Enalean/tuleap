@@ -24,12 +24,11 @@ namespace Tuleap\Project\Routing;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ProjectRetriever;
 
-final class ProjectRetrieverMiddlewareTest extends TestCase
+final class ProjectRetrieverMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

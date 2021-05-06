@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap;
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\UpdatePasswordController;
 use UserManager;
 
-final class URLVerificationExpiredPasswordTest extends TestCase
+final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

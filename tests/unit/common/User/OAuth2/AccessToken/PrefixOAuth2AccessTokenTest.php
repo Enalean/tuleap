@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
-use PHPUnit\Framework\TestCase;
 
-final class PrefixOAuth2AccessTokenTest extends TestCase
+final class PrefixOAuth2AccessTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasSpecificPrefix(): void
     {

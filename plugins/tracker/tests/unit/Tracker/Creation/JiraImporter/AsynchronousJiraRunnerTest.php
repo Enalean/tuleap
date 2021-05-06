@@ -24,11 +24,10 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Queue\WorkerEvent;
 
-class AsynchronousJiraRunnerTest extends TestCase
+class AsynchronousJiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

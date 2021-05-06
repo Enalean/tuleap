@@ -24,7 +24,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 use Cardwall_Semantic_CardFields;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindDecorator;
@@ -35,7 +34,7 @@ use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
 
-class BackgroundColorBuilderTest extends TestCase
+class BackgroundColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var BackgroundColorBuilder */
     private $background_color_builder;

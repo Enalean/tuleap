@@ -25,13 +25,12 @@ namespace Tuleap\Taskboard\REST\v1\Columns;
 use Luracast\Restler\RestException;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Rest_Exception_InvalidTokenException;
 use UserManager;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 
-final class ColumnsGetterTest extends TestCase
+final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

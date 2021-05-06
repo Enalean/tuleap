@@ -26,9 +26,8 @@ namespace Tuleap\Docman;
 use CodendiDataAccess;
 use Docman_SqlFilter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class SqlFilterChoiceTest extends TestCase
+class SqlFilterChoiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

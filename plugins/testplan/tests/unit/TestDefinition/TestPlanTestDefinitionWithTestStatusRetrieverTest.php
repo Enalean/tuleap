@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\TestDefinition;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends TestCase
+final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

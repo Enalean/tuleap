@@ -25,7 +25,6 @@ namespace Tuleap\common\Project\Admin\Service;
 
 use EventManager;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use ReferenceManager;
 use ServiceDao;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
@@ -33,7 +32,7 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 
-final class ProjectServiceActivatorTest extends TestCase
+final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

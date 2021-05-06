@@ -25,7 +25,6 @@ namespace Tuleap\Roadmap\REST\v1;
 use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectManager;
@@ -45,7 +44,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerColor;
 
-class RoadmapTasksRetrieverTest extends TestCase
+class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

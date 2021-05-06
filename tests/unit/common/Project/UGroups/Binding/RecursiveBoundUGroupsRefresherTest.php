@@ -24,9 +24,8 @@ namespace Tuleap\Project\UGroups\Binding;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class RecursiveBoundUGroupsRefresherTest extends TestCase
+final class RecursiveBoundUGroupsRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

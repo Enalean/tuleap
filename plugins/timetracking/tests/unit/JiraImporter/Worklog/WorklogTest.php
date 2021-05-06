@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
-use PHPUnit\Framework\TestCase;
 
-class WorklogTest extends TestCase
+class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAWorklogObjectFromAPIResponse(): void
     {

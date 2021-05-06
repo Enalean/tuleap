@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GetStateVisitorTest extends TestCase
+class GetStateVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
     public const STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;

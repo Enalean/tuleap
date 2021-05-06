@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
-use PHPUnit\Framework\TestCase;
 use stdClass;
 
-final class DocmanValidateRepresentationForCopyTest extends TestCase
+final class DocmanValidateRepresentationForCopyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidCopyRepresentation(): void
     {

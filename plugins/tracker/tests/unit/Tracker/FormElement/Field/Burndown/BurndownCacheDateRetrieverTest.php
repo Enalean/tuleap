@@ -21,10 +21,9 @@
 namespace Tuleap\Tracker\FormElement;
 
 use DateTime;
-use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 
-class BurndownCacheDateRetrieverTest extends TestCase
+class BurndownCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var BurndownCacheDateRetriever

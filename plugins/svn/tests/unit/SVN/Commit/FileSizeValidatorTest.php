@@ -26,7 +26,6 @@ namespace Tuleap\SVN\Commit;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -34,7 +33,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-final class FileSizeValidatorTest extends TestCase
+final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

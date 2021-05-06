@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-final class BindDecoratorExporterTest extends TestCase
+final class BindDecoratorExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var BindDecoratorExporter

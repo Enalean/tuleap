@@ -27,7 +27,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_FormElement_Field_Integer;
 
-final class Tracker_Artifact_ChangesetValue_IntegerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_ChangesetValue_IntegerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

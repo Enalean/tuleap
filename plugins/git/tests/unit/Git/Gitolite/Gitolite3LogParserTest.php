@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use UserDao;
 use Tuleap\Git\History\Dao;
 
-class Gitolite3LogParserTest extends \PHPUnit\Framework\TestCase
+class Gitolite3LogParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

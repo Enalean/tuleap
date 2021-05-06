@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
@@ -31,7 +30,7 @@ use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
-final class JiraBoardBacklogRetrieverFromAPITest extends TestCase
+final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCatchesIfJiraReturnsAPayloadWeCannotWorkWith(): void
     {

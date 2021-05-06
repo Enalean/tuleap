@@ -22,7 +22,6 @@ namespace Tuleap\GitLFS\Batch\Response;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
@@ -35,7 +34,7 @@ use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
 
-class BatchSuccessfulResponseBuilderTest extends TestCase
+class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

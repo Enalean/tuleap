@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
-final class EmailDoesNotMatchUserTest extends \PHPUnit\Framework\TestCase
+final class EmailDoesNotMatchUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var EmailDoesNotMatchUser */
     private $user;

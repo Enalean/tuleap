@@ -21,11 +21,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once 'bootstrap.php';
 
-final class Git_PostReceiveMailManagerTest extends TestCase
+final class Git_PostReceiveMailManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,7 +23,6 @@ namespace Tuleap\TestManagement\XML;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\TestManagement\Administration\TrackerChecker;
@@ -34,7 +33,7 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\MissingArtifactLinkException;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
-final class XMLImportTest extends TestCase
+final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,9 +25,8 @@ namespace Tuleap\Tracker\Creation;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
-class DefaultTemplatesCollectionBuilderTest extends TestCase
+class DefaultTemplatesCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

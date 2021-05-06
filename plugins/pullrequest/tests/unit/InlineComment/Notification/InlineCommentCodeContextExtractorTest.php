@@ -24,14 +24,13 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use GitRepositoryFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\UniDiffLine;
 
-final class InlineCommentCodeContextExtractorTest extends TestCase
+final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

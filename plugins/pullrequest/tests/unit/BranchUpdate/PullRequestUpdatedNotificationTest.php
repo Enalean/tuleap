@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\BranchUpdate;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Project;
@@ -34,7 +33,7 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\TemporaryTestDirectory;
 use UserHelper;
 
-final class PullRequestUpdatedNotificationTest extends TestCase
+final class PullRequestUpdatedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

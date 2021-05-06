@@ -27,7 +27,6 @@ use Feedback;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Reference;
 use ReferenceManager;
@@ -41,7 +40,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 
-class MarkTrackerAsDeletedControllerTest extends TestCase
+class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

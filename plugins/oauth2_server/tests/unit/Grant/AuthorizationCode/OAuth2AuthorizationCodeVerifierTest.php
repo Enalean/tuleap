@@ -24,7 +24,6 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -33,7 +32,7 @@ use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class OAuth2AuthorizationCodeVerifierTest extends TestCase
+final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

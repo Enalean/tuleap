@@ -21,10 +21,9 @@
 namespace Tuleap\SVN\AccessControl;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\SVN\Repository\Repository;
 
-class AccessFileReaderTest extends TestCase
+class AccessFileReaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

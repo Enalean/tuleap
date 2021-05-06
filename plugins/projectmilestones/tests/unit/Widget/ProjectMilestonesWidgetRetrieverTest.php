@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use PHPUnit\Framework\TestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery;
 use Tuleap\Project\ProjectAccessChecker;
@@ -37,7 +36,7 @@ use Project_AccessProjectNotFoundException;
 use Planning;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 
-class ProjectMilestonesWidgetRetrieverTest extends TestCase
+class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

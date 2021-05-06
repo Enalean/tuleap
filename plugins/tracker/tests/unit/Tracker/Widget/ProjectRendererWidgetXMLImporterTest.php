@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Widget;
 use Codendi_Request;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use SimpleXMLElement;
 use Tracker_Report_Renderer;
@@ -33,7 +32,7 @@ use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\XML\MappingsRegistry;
 use Widget;
 
-class ProjectRendererWidgetXMLImporterTest extends TestCase
+class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

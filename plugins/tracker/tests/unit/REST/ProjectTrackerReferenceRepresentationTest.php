@@ -22,12 +22,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-final class ProjectTrackerReferenceRepresentationTest extends TestCase
+final class ProjectTrackerReferenceRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

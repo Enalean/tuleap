@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Glyph;
 
-use PHPUnit\Framework\TestCase;
 
-class GlyphLocationTest extends TestCase
+class GlyphLocationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItGetsTheSimplifiedPath(): void
     {

@@ -24,14 +24,13 @@ namespace Tuleap\AgileDashboard\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 
-class SemanticDoneLoaderTest extends TestCase
+class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

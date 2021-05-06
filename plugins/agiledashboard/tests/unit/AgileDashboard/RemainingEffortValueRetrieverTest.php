@@ -23,10 +23,9 @@ namespace Tuleap\AgileDashboard;
 require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 
-class RemainingEffortValueRetrieverTest extends TestCase
+class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var \PFUser */
     private $user;

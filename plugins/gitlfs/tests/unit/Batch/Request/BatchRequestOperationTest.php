@@ -20,9 +20,8 @@
 
 namespace Tuleap\GitLFS\Batch\Request;
 
-use PHPUnit\Framework\TestCase;
 
-class BatchRequestOperationTest extends TestCase
+class BatchRequestOperationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidOperation()
     {

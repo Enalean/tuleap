@@ -26,7 +26,6 @@ use HTTPRequest;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
@@ -35,7 +34,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\ProjectRetriever;
 
-final class ProjectMembersControllerTest extends TestCase
+final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

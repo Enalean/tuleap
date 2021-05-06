@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\FRS\Upload\Tus;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 
-class FileBeingUploadedInformationProviderTest extends TestCase
+class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

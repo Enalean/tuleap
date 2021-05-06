@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ProgramIncrementBuilderTest extends TestCase
+final class ProgramIncrementBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsOpenProgramIncrements(): void
     {

@@ -26,7 +26,6 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Tuleap\ForgeConfigSandbox;
@@ -36,7 +35,7 @@ use UGroupDao;
 use UGroupManager;
 use UGroupUserDao;
 
-class UGroupManagerTest extends TestCase
+class UGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

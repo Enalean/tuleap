@@ -18,23 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-class FileImporter_PathTest extends \PHPUnit\Framework\TestCase
+final class FileImporter_PathTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|Tuleap\ProFTPd\Xferlog\Dao
+     */
+    private $dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|UserDao
+     */
+    private $user_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var Project
+     */
+    private $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao             = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Dao')->disableOriginalConstructor()->getMock();
+        $this->dao = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Dao')->disableOriginalConstructor()->getMock();
+        $this->dao->method('searchLatestEntryTimestamp')->willReturn(0);
         $this->parser          = new Tuleap\ProFTPd\Xferlog\Parser();
         $this->user_manager    = $this->getMockBuilder('UserManager')->disableOriginalConstructor()->getMock();
         $this->project_manager = $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock();
         $this->user_dao        = $this->getMockBuilder(UserDao::class)->disableOriginalConstructor()->getMock();
 
-        $user          = $this->getMockBuilder('PFUser')->disableOriginalConstructor()->getMock();
-        $this->project = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
+        $user          = \Tuleap\Test\Builders\UserTestBuilder::aUser()->build();
+        $this->project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
         $this->user_manager->expects($this->any())->method('getUserByUserName')->will($this->returnValue($user));
 
@@ -48,15 +64,19 @@ class FileImporter_PathTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItFetchTheProjectNameWhenPathIsRelative()
+    public function testItFetchTheProjectNameWhenPathIsRelative(): void
     {
+        $this->dao->method('store');
+        $this->user_dao->method('storeLastAccessDate');
         $this->project_manager->expects($this->once())->method('getProjectByUnixName')->with($this->equalTo('gpig'))->will($this->returnValue($this->project));
 
         $this->file_importer->import(__DIR__ . '/_fixtures/xferlog_relative');
     }
 
-    public function testItStoresRelativeFilePathWhenPathIsRelative()
+    public function testItStoresRelativeFilePathWhenPathIsRelative(): void
     {
+        $this->user_dao->method('storeLastAccessDate');
+        $this->project_manager->method('getProjectByUnixName')->willReturn($this->project);
         $this->dao
             ->expects($this->once())
             ->method('store')
@@ -71,15 +91,19 @@ class FileImporter_PathTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testItFetchTheProjectNameWhenPathIsAbsolute()
+    public function testItFetchTheProjectNameWhenPathIsAbsolute(): void
     {
+        $this->dao->method('store');
+        $this->user_dao->method('storeLastAccessDate');
         $this->project_manager->expects($this->once())->method('getProjectByUnixName')->with($this->equalTo('gpig'))->will($this->returnValue($this->project));
 
         $this->file_importer->import(__DIR__ . '/_fixtures/xferlog_absolute');
     }
 
-    public function testItStoresRelativeFilePathWhenPathIsAbsolute()
+    public function testItStoresRelativeFilePathWhenPathIsAbsolute(): void
     {
+        $this->project_manager->method('getProjectByUnixName')->willReturn($this->project);
+        $this->user_dao->method('storeLastAccessDate');
         $this->dao
             ->expects($this->once())
             ->method('store')

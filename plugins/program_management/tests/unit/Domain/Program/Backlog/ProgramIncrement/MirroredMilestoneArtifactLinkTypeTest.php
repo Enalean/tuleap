@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use PHPUnit\Framework\TestCase;
 
-final class MirroredMilestoneArtifactLinkTypeTest extends TestCase
+final class MirroredMilestoneArtifactLinkTypeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasAMirroredMilestoneArtifactLinkType(): void
     {

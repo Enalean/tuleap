@@ -24,12 +24,11 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class JenkinsServerDeleterTest extends TestCase
+class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

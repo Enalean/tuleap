@@ -27,9 +27,8 @@ use Docman_ApprovalTableItemFactory;
 use Docman_VersionFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ApprovalTableRetrieverTest extends TestCase
+class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

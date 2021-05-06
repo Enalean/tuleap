@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\URI;
 
-use PHPUnit\Framework\TestCase;
 
-class URIModifierTest extends TestCase
+class URIModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRemovesDotSegmentsOfRelativeURIs(): void
     {

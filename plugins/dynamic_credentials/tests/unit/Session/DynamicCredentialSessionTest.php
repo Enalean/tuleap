@@ -22,13 +22,12 @@ namespace Tuleap\DynamicCredentials\Session;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DynamicCredentials\Credential\Credential;
 use Tuleap\DynamicCredentials\Credential\CredentialAuthenticationException;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 
-class DynamicCredentialSessionTest extends TestCase
+class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

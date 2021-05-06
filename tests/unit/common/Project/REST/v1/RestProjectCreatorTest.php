@@ -28,7 +28,6 @@ use ForgeConfig;
 use Luracast\Restler\RestException;
 use Mockery as M;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectCreator;
 use ProjectManager;
@@ -56,7 +55,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\ProjectXMLMerger;
 
-class RestProjectCreatorTest extends TestCase
+class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

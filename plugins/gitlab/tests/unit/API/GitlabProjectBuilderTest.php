@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\API;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
-final class GitlabProjectBuilderTest extends TestCase
+final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

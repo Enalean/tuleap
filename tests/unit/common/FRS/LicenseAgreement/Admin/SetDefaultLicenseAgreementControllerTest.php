@@ -25,7 +25,6 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\InvalidLicenseAgreementException;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
@@ -34,7 +33,7 @@ use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ProjectRetriever;
 
-final class SetDefaultLicenseAgreementControllerTest extends TestCase
+final class SetDefaultLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

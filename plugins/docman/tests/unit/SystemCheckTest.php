@@ -29,13 +29,12 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Plugin;
 use PluginConfigChecker;
 use Psr\Log\LoggerInterface;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_SystemCheckTest extends TestCase
+class Docman_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

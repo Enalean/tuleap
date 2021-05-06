@@ -22,12 +22,11 @@
 namespace Tuleap\AgileDashboard;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\ForgeConfigSandbox;
 
-class ScrumForMonoMilestoneCheckerTest extends TestCase
+class ScrumForMonoMilestoneCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

@@ -24,12 +24,11 @@ namespace Tuleap\Git\Reference;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CommitDetailsCrossReferenceInformationBuilderTest extends TestCase
+class CommitDetailsCrossReferenceInformationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

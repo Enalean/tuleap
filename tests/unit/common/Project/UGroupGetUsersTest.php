@@ -18,11 +18,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupGetUsersTest extends TestCase
+class UGroupGetUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

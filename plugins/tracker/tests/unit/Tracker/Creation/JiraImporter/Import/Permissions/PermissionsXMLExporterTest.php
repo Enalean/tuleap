@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tracker\Creation\JiraImporter\Import\Permissions;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
@@ -31,7 +30,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerat
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
-class PermissionsXMLExporterTest extends TestCase
+class PermissionsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsDefaultPermissionsForFieldsInMapping(): void
     {

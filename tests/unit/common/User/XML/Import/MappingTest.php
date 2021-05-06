@@ -24,7 +24,7 @@ namespace User\XML\Import;
 
 use PFUser;
 
-final class MappingTest extends \PHPUnit\Framework\TestCase
+final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

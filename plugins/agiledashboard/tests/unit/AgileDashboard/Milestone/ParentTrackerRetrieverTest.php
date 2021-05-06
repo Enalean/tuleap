@@ -23,13 +23,12 @@ namespace Tuleap\AgileDashboard\Milestone;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_Milestone;
 use PlanningFactory;
 use Tracker;
 
-final class ParentTrackerRetrieverTest extends TestCase
+final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

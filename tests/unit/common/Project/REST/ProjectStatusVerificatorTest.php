@@ -22,13 +22,12 @@ namespace Tuleap\Project\REST;
 
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\REST\ProjectStatusVerificator;
 
-class ProjectStatusVerificatorTest extends TestCase
+class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

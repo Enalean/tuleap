@@ -21,10 +21,9 @@
 namespace Tuleap\SvnCore\Cache;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TestHelper;
 
-class ParameterRetrieverTest extends TestCase
+class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

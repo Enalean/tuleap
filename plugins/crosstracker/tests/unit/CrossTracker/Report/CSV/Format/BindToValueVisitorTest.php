@@ -24,10 +24,9 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 
-class BindToValueVisitorTest extends TestCase
+class BindToValueVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

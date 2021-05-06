@@ -25,7 +25,7 @@ use ForgeConfig;
 use PFUser;
 use Tuleap\GlobalLanguageMock;
 
-class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
+class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

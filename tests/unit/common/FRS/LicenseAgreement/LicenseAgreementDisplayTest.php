@@ -26,12 +26,11 @@ namespace Tuleap\FRS\LicenseAgreement;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Templating\Mustache\MustacheEngine;
 
-class LicenseAgreementDisplayTest extends TestCase
+class LicenseAgreementDisplayTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

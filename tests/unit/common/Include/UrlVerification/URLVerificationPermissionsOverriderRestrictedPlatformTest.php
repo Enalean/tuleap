@@ -26,9 +26,8 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class URLVerificationPermissionsOverriderRestrictedPlatformTest extends TestCase
+final class URLVerificationPermissionsOverriderRestrictedPlatformTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

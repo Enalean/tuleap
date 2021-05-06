@@ -23,11 +23,10 @@ namespace Tuleap\Mediawiki;
 use ForgeConfig;
 use MediawikiLanguageManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require 'bootstrap.php';
 
-class MediawikiLanguageManagerTest extends TestCase
+class MediawikiLanguageManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ namespace Tuleap\GitLFS\Lock;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 
-class LockDestructorTest extends TestCase
+class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

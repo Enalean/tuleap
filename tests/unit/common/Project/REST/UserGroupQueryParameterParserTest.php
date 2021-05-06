@@ -21,13 +21,12 @@
 
 namespace Tuleap\Project\REST;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\REST\v1\UserGroupQueryParameterParser;
 use Tuleap\REST\Exceptions\InvalidJsonException;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonDecoder;
 
-class UserGroupQueryParameterParserTest extends TestCase
+class UserGroupQueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     /**

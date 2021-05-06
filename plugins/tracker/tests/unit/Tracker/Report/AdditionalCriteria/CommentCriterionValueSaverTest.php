@@ -20,10 +20,9 @@
 namespace Tuleap\Tracker\Report\AdditionalCriteria;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Report_AdditionalCriterion;
 
-final class CommentCriterionValueSaverTest extends TestCase
+final class CommentCriterionValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

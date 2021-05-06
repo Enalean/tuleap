@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer;
 
 use ParagonIE\EasyDB\EasyStatement;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBFactory;
 
-final class ReviewerDAOTest extends TestCase
+final class ReviewerDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var int[]

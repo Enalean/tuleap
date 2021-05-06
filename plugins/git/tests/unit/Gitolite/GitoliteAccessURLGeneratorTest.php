@@ -20,11 +20,10 @@
 
 namespace Tuleap\Git\Gitolite;
 
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class GitoliteAccessURLGeneratorTest extends TestCase
+class GitoliteAccessURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

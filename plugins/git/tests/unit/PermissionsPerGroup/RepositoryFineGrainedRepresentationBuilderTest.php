@@ -23,15 +23,13 @@ namespace Tuleap\Git\PermissionsPerGroup;
 use Git;
 use GitPermissionsManager;
 use GitRepository;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-require_once dirname(__FILE__) . '/../bootstrap.php';
-
-class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
+final class RepositoryFineGrainedRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var int
@@ -92,7 +90,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         $this->repository = $this->createMock(GitRepository::class);
         $this->repository->method('getId')->willReturn(1);
         $this->repository->method('getFullName')->willReturn('repo name');
-        $this->project = $this->createMock(Project::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $this->project_member_id = ProjectUGroup::PROJECT_MEMBERS;
         $this->project_admin_id  = ProjectUGroup::PROJECT_ADMIN;
@@ -152,7 +150,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         $expected = new RepositoryFineGrainedRepresentation(
             [$this->project_admin_id],
             'repo name',
-            '/plugins/git/?action=repo_management&repo_id=1&pane=perms',
+            '/plugins/git/?action=repo_management&group_id=102&repo_id=1&pane=perms',
             [$expected__branch_fine_grained_representation, $expected__tag_fine_grained_representation]
         );
         $result   = $this->representation_builder->build(
@@ -255,7 +253,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         $expected = new RepositoryFineGrainedRepresentation(
             [$this->project_admin_id],
             'repo name',
-            '/plugins/git/?action=repo_management&repo_id=1&pane=perms',
+            '/plugins/git/?action=repo_management&group_id=102&repo_id=1&pane=perms',
             [$expected__branch_fine_grained_representation]
         );
         $result   = $this->representation_builder->build(
@@ -304,7 +302,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
         $expected = new RepositoryFineGrainedRepresentation(
             [$this->project_admin_id],
             'repo name',
-            '/plugins/git/?action=repo_management&repo_id=1&pane=perms',
+            '/plugins/git/?action=repo_management&group_id=102&repo_id=1&pane=perms',
             []
         );
         $result   = $this->representation_builder->build(

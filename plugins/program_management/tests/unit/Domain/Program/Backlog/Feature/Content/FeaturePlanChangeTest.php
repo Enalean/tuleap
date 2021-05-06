@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ArtifactsLinksSearch;
 
-class FeaturePlanChangeTest extends TestCase
+class FeaturePlanChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetUserStoriesLinkedToFeature(): void
     {

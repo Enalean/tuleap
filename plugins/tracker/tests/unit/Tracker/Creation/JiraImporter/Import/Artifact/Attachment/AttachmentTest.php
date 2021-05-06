@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
-use PHPUnit\Framework\TestCase;
 
-class AttachmentTest extends TestCase
+class AttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAnAttachmentFromIssueRESTResponseAPI(): void
     {

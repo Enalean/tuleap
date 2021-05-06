@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 
-final class AddToBacklogPostActionAllPowerfulUserTest extends TestCase
+final class AddToBacklogPostActionAllPowerfulUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 

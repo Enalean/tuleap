@@ -21,10 +21,9 @@
 namespace Tuleap\ProjectOwnership\ProjectOwner;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class ProjectOwnerUpdaterTest extends TestCase
+class ProjectOwnerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

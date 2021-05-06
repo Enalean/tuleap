@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerAvailability;
 
-final class AsynchronousArtifactsDeletionActionsRunnerTest extends TestCase
+final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

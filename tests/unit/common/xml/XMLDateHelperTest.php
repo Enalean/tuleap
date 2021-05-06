@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\xml;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class XMLDateHelperTest extends TestCase
+class XMLDateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

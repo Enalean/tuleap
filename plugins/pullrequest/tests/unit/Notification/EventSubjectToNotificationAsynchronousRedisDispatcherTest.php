@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerAvailability;
 
-final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends TestCase
+final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

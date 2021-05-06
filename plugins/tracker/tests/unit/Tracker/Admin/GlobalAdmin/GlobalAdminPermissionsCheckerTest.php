@@ -24,11 +24,10 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 
-class GlobalAdminPermissionsCheckerTest extends TestCase
+class GlobalAdminPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

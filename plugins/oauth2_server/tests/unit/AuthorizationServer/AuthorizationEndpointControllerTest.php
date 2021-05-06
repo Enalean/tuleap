@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -47,7 +46,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class AuthorizationEndpointControllerTest extends TestCase
+final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

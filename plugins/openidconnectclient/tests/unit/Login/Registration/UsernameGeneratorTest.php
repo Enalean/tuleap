@@ -21,11 +21,10 @@
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/../../bootstrap.php');
 
-class UsernameGeneratorTest extends TestCase
+class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

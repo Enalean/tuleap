@@ -20,10 +20,9 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-final class StateStorageTest extends TestCase
+final class StateStorageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testStoredStateIsRetrieved(): void
     {

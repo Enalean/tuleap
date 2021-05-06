@@ -24,12 +24,11 @@ namespace Tuleap\AgileDashboard\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TestHelper;
 use Tracker_Semantic_StatusDao;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 
-class SemanticDoneDuplicatorTest extends TestCase
+class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

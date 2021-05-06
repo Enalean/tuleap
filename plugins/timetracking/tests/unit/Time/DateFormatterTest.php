@@ -21,11 +21,10 @@
 namespace Tuleap\Timetracking\Time;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class DateFormatterTest extends TestCase
+class DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

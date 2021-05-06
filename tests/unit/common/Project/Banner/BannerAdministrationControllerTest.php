@@ -25,13 +25,12 @@ namespace Tuleap\Project\Banner;
 use HTTPRequest;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
-final class BannerAdministrationControllerTest extends TestCase
+final class BannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

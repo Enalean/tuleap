@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
@@ -34,7 +33,7 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 
-class WebhookCreatorTest extends TestCase
+class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

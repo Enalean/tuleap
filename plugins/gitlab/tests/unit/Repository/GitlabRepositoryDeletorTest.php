@@ -27,7 +27,6 @@ use GitUserNotAdminException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
@@ -39,7 +38,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class GitlabRepositoryDeletorTest extends TestCase
+class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,7 +23,6 @@ namespace Tuleap\SVN;
 use Backend;
 use Mockery;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tuleap\GlobalSVNPollution;
@@ -36,7 +35,7 @@ use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RuleName;
 
-final class XMLImporterTest extends TestCase
+final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

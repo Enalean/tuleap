@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\User;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -37,7 +36,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 use Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware;
 
-final class UserInfoControllerTest extends TestCase
+final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

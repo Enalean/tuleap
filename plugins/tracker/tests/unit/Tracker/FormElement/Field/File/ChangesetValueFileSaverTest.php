@@ -25,12 +25,11 @@ namespace Tuleap\Tracker\FormElement\Field\File;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_File;
 use Tuleap\ForgeConfigSandbox;
 
-class ChangesetValueFileSaverTest extends TestCase
+class ChangesetValueFileSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

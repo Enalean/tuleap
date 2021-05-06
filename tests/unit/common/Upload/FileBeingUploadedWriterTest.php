@@ -24,12 +24,11 @@ namespace Tuleap\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
 
-class FileBeingUploadedWriterTest extends TestCase
+class FileBeingUploadedWriterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

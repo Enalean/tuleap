@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\FormElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
@@ -33,7 +32,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
-class BurnupDataBuilderTest extends TestCase
+class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,12 +25,11 @@ namespace Tuleap\Project\Admin;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 use UserDao;
 
-final class RestrictedUsersProjectCounterTest extends TestCase
+final class RestrictedUsersProjectCounterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

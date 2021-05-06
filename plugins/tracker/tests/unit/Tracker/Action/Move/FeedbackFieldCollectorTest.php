@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Action\Move;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_Integer;
@@ -30,7 +29,7 @@ use Tracker_FormElement_Field_Text;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class FeedbackFieldCollectorTest extends TestCase
+class FeedbackFieldCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

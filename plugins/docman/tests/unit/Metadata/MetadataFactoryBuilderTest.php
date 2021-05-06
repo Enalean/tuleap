@@ -25,9 +25,8 @@ namespace Tuleap\Docman\Metadata;
 use Docman_Item;
 use Docman_MetadataFactory;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-final class MetadataFactoryBuilderTest extends TestCase
+final class MetadataFactoryBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

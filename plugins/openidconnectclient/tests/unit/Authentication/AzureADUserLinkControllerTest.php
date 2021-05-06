@@ -21,11 +21,10 @@
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Login\Controller;
 
-final class AzureADUserLinkControllerTest extends TestCase
+final class AzureADUserLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class RoadmapTasksOutOfDateFilterTest extends TestCase
+final class RoadmapTasksOutOfDateFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRemovesArtifactsThatAreOutOfDate(): void
     {

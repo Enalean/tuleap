@@ -25,9 +25,8 @@ namespace Tuleap\FRS\Events;
 use FRSRelease;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class GetReleaseNotesLinkTest extends TestCase
+final class GetReleaseNotesLinkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

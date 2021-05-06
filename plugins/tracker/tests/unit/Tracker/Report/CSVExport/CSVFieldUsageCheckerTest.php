@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\CSVExport;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class CSVFieldUsageCheckerTest extends TestCase
+class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,10 +22,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class UgroupLabelConverterTest extends TestCase
+final class UgroupLabelConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

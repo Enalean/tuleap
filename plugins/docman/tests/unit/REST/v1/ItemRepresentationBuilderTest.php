@@ -34,7 +34,7 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
 use Tuleap\GlobalLanguageMock;
 
-class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
+class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

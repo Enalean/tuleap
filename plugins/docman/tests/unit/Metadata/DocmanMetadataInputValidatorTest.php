@@ -25,9 +25,8 @@ namespace Tuleap\Docman\Metadata;
 use DateTime;
 use Docman_Metadata;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class DocmanMetadataInputValidatorTest extends TestCase
+class DocmanMetadataInputValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

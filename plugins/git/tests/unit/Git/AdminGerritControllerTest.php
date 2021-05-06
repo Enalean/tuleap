@@ -26,12 +26,11 @@ use Git_RemoteServer_GerritServer;
 use Git_RemoteServer_GerritServerFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Response;
 use Tuleap\Layout\IncludeAssets;
 use User_SSHKeyValidator;
 
-class AdminGerritControllerTest extends TestCase
+class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

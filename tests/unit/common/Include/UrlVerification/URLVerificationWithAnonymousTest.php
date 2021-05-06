@@ -27,9 +27,8 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class URLVerificationWithAnonymousTest extends TestCase
+class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

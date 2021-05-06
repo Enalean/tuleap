@@ -21,14 +21,13 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Webhook\ArtifactPayload;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
-final class WebhookNotificationTaskTest extends TestCase
+final class WebhookNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

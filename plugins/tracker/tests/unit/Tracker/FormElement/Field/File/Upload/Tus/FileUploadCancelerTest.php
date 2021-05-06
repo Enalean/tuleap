@@ -24,12 +24,11 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload\Tus;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\PathAllocator;
 
-class FileUploadCancelerTest extends TestCase
+class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

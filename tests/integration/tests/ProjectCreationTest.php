@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tests\Integration;
 
 use ForgeConfig;
-use PHPUnit\Framework\TestCase;
 use ProjectCreator;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
@@ -33,7 +32,7 @@ use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\TemporaryTestDirectory;
 
-class ProjectCreationTest extends TestCase
+class ProjectCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
     use GlobalSVNPollution;

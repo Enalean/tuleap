@@ -24,7 +24,6 @@ namespace Tuleap\OpenIDConnectClient\Login;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequest;
@@ -35,7 +34,7 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-final class RedirectToProviderForAuthorizationControllerTest extends TestCase
+final class RedirectToProviderForAuthorizationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

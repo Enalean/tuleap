@@ -24,12 +24,11 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ProjectRetriever;
 
-final class AddLicenseAgreementControllerTest extends TestCase
+final class AddLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

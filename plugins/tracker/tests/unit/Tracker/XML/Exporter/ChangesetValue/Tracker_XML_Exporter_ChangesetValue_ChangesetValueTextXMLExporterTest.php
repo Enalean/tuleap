@@ -23,7 +23,7 @@ declare(strict_types=1);
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest extends \PHPUnit\Framework\TestCase
+final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

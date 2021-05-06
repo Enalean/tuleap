@@ -24,9 +24,8 @@ namespace Tuleap\Document;
 
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class DocumentUsageRetrieverTest extends TestCase
+class DocumentUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

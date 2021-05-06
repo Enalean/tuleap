@@ -19,11 +19,10 @@
  */
 
 use Guzzle\Http\Client;
-use PHPUnit\Framework\TestCase;
 use Test\Rest\Cache;
 use Test\Rest\RequestWrapper;
 
-class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     protected $base_url = 'https://localhost/api/v1';
     private $setup_url  = 'https://localhost/api/v1';

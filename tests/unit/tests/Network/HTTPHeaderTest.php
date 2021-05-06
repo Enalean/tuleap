@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Network;
 
-use PHPUnit\Framework\TestCase;
 
-final class HTTPHeaderTest extends TestCase
+final class HTTPHeaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSavedValuesCanBeRetrieved(): void
     {

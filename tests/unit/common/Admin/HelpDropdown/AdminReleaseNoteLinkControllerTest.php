@@ -27,14 +27,13 @@ use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class AdminReleaseNoteLinkControllerTest extends TestCase
+class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

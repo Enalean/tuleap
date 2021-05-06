@@ -24,11 +24,10 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Valid_HTTPURI;
 
-class JenkinsServerAdderTest extends TestCase
+class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

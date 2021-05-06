@@ -26,12 +26,11 @@ use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Gitolite_ConfigPermissionsSerializer;
 use Mockery;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ConfigPermissionsSerializerGerritTest extends TestCase
+class ConfigPermissionsSerializerGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

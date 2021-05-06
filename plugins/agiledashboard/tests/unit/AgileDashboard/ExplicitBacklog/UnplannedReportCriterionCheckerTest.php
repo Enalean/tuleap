@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use AgileDashboard_Milestone_MilestoneReportCriterionProvider;
-use PHPUnit\Framework\TestCase;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
 
-final class UnplannedReportCriterionCheckerTest extends TestCase
+final class UnplannedReportCriterionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFalseIfAdditionalCriterionIsNotProvided(): void
     {

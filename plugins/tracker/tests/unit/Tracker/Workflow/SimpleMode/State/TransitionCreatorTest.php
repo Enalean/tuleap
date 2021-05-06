@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Transition;
 use TransitionFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Workflow;
 
-class TransitionCreatorTest extends TestCase
+class TransitionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

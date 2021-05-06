@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\PHPUnit\ForceStrictPHPUnitMock;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
@@ -33,10 +31,8 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class TaskRepresentationBuilderForTrackerTest extends TestCase
+class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForceStrictPHPUnitMock;
-
     /**
      * @var \PFUser
      */

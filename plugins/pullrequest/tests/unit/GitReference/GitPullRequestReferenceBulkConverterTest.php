@@ -24,11 +24,10 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 
-class GitPullRequestReferenceBulkConverterTest extends TestCase
+class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

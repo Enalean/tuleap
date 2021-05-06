@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TrackerFactory;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 
-class TrackerFactoryTest extends TestCase
+class TrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -18,26 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../bootstrap.php';
+use Tuleap\ProFTPd\Xferlog\Dao;
 
-class FileImporterTest extends \PHPUnit\Framework\TestCase
+final class FileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|UserDao
+     */
+    private $user_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao             = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Dao')->disableOriginalConstructor()->getMock();
+        $this->dao             = $this->createMock(Dao::class);
         $this->parser          = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Parser')->getMock();
         $this->user_manager    = $this->getMockBuilder('UserManager')->disableOriginalConstructor()->getMock();
         $this->project_manager = $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock();
         $this->user_dao        = $this->getMockBuilder(UserDao::class)->disableOriginalConstructor()->getMock();
 
-        $user    = $this->getMockBuilder('PFUser')->disableOriginalConstructor()->getMock();
-        $project = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
+        $user    = \Tuleap\Test\Builders\UserTestBuilder::aUser()->build();
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
         $this->user_manager->expects($this->any())->method('getUserByUserName')->will($this->returnValue($user));
-        $this->project_manager->expects($this->any())->method('getProject')->will($this->returnValue($project));
+        $this->project_manager->expects($this->any())->method('getProjectByUnixName')->will($this->returnValue($project));
 
         $this->file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter(
             $this->dao,
@@ -49,8 +54,9 @@ class FileImporterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testParseAndImportLines()
+    public function testParseAndImportLines(): void
     {
+        $this->dao->method('searchLatestEntryTimestamp')->willReturn(0);
         $this->parser
             ->expects($this->exactly(5))
             ->method('extract')
@@ -65,16 +71,18 @@ class FileImporterTest extends \PHPUnit\Framework\TestCase
         $this->file_importer->import(__DIR__ . '/_fixtures/xferlog');
     }
 
-    public function testItIgnoreOldLogs()
+    public function testItIgnoreOldLogs(): void
     {
         $this->dao
             ->expects($this->once())
             ->method('searchLatestEntryTimestamp')
-            ->will($this->returnValue(1389687000));
+            ->willReturn(1389687000);
 
         $this->dao
             ->expects($this->exactly(3))
             ->method('store');
+
+        $this->user_dao->expects(self::once())->method('storeLastAccessDate');
 
         $file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter(
             $this->dao,

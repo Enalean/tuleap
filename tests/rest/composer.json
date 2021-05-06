@@ -2,7 +2,8 @@
     "name": "tuleap/test-rest",
     "autoload": {
         "psr-4": {
-            "Tuleap\\REST\\": ["lib/"]
+            "Tuleap\\REST\\": ["lib/"],
+            "Tuleap\\Test\\PHPUnit\\": ["../lib/PHPUnit/"]
         },
         "classmap": ["lib/"]
     },

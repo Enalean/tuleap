@@ -23,13 +23,12 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Workflow;
 
-class HiddenFieldsetsJsonParserTest extends TestCase
+class HiddenFieldsetsJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

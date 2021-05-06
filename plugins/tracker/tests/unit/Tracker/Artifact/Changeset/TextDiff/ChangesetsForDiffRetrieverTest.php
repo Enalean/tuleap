@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-final class ChangesetsForDiffRetrieverTest extends TestCase
+final class ChangesetsForDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

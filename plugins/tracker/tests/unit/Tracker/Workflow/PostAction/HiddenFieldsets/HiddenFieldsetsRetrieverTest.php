@@ -24,11 +24,10 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
 
-class HiddenFieldsetsRetrieverTest extends TestCase
+class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

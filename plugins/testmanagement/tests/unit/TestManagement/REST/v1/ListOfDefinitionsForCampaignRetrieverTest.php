@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\TestManagement\ArtifactDao;
@@ -29,7 +28,7 @@ use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\REST\v1\Execution\ListOfDefinitionsForCampaignRetriever;
 
-class ListOfDefinitionsForCampaignRetrieverTest extends TestCase
+class ListOfDefinitionsForCampaignRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

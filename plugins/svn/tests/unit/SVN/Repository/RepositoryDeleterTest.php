@@ -22,12 +22,11 @@ namespace Tuleap\SVN\Repository;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotDeleteRepositoryException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class RepositoryDeleterTest extends TestCase
+class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

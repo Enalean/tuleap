@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ProgramIncrementIdentifierTest extends TestCase
+final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
     {

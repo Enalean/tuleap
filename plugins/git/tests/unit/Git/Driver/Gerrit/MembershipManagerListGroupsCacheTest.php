@@ -19,11 +19,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MembershipManagerListGroupsCacheTest extends TestCase
+class MembershipManagerListGroupsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

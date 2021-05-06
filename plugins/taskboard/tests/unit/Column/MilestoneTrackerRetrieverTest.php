@@ -26,11 +26,10 @@ use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use TrackerFactory;
 
-final class MilestoneTrackerRetrieverTest extends TestCase
+final class MilestoneTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

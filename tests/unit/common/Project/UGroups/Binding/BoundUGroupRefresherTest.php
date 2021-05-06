@@ -24,11 +24,10 @@ namespace Tuleap\Project\UGroups\Binding;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
-final class BoundUGroupRefresherTest extends TestCase
+final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

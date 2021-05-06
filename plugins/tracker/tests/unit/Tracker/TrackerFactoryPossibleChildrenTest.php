@@ -20,11 +20,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalResponseMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TrackerFactoryPossibleChildrenTest extends TestCase
+class TrackerFactoryPossibleChildrenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

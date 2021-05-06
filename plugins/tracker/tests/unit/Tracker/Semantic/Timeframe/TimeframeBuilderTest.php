@@ -29,7 +29,6 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_Artifact_ChangesetValue_Date;
@@ -39,7 +38,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class TimeframeBuilderTest extends TestCase
+final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

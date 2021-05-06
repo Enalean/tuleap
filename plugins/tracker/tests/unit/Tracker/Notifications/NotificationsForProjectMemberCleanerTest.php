@@ -23,9 +23,8 @@ namespace Tuleap\Tracker\Notifications;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class NotificationsForProjectMemberCleanerTest extends TestCase
+class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

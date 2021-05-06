@@ -22,12 +22,11 @@ namespace Tuleap\ArchiveDeletedItems;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class FileCopierTest extends TestCase
+class FileCopierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

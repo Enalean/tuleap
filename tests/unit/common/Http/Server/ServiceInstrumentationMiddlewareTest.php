@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Http\Server;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\ServiceAccessEvent;
 
-final class ServiceInstrumentationMiddlewareTest extends TestCase
+final class ServiceInstrumentationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

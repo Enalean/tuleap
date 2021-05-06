@@ -34,7 +34,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 
-class TrackerCreationBreadCrumbsBuilderTest extends \PHPUnit\Framework\TestCase
+class TrackerCreationBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

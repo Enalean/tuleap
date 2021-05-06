@@ -26,10 +26,9 @@ namespace Tuleap\Markdown;
 use League\CommonMark\Block\Element\FencedCode;
 use League\CommonMark\Block\Renderer\BlockRendererInterface;
 use League\CommonMark\Environment;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Markdown\BlockRenderer\EnhancedCodeBlockRenderer;
 
-final class EnhancedCodeBlockExtensionTest extends TestCase
+final class EnhancedCodeBlockExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddsTheEnhancedCodeBlockRendererToTheEnvironmentAndOverridesDefaultCodeBlockRenderer(): void
     {

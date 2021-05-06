@@ -24,7 +24,6 @@ namespace Tuleap\OAuth2Server\AccessToken;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
@@ -36,7 +35,7 @@ use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 
-final class OAuth2AccessTokenRevokerTest extends TestCase
+final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

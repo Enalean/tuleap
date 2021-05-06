@@ -20,9 +20,8 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use PHPUnit\Framework\TestCase;
 
-final class ArtifactValuesRepresentionTest extends TestCase
+final class ArtifactValuesRepresentionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotFindAValueWhenNoneIsProvided(): void
     {

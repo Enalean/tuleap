@@ -23,8 +23,9 @@
  */
 
 use Tuleap\ProFTPd\Admin\PermissionsManager;
+use Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL;
 
-class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
+final class SystemEvent_PROFTPD_UPDATE_ACLTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
 
@@ -47,7 +48,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->event       = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL')->setMethods(['done'])->disableOriginalConstructor()->getMock();
+        $this->event       = $this->createPartialMock(PROFTPD_UPDATE_ACL::class, ['done']);
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 
         $group_unix_name            = "project_name";
@@ -64,6 +65,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
 
         $project       = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
         $this->project = $project;
+        $this->project->method('isError')->willReturn(false);
         $this->project
              ->expects($this->any())
              ->method('getUnixName')
@@ -74,6 +76,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
              ->will($this->returnValue($this->group_unix_name));
 
         $mixed_case_project = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
+        $mixed_case_project->method('isError')->willReturn(false);
         $mixed_case_project
              ->expects($this->any())
              ->method('getUnixName')
@@ -117,6 +120,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
 
         $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
 
+        $this->event->expects(self::once())->method('done');
+
         $this->event->process();
     }
 
@@ -140,13 +145,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
             ->method('recursivelyApplyACL')
             ->with($this->not_mixed_case_path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
 
-        $this->event->process();
-    }
+        $this->event->expects(self::once())->method('done');
 
-    public function testItMarksAsDone()
-    {
-        $this->event->setParameters($this->group_unix_name);
-        $this->event->expects($this->once())->method('done');
         $this->event->process();
     }
 }

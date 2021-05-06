@@ -23,9 +23,8 @@ namespace Tuleap\Git\CommitStatus;
 require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class CommitStatusWithKnownStatusTest extends TestCase
+class CommitStatusWithKnownStatusTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

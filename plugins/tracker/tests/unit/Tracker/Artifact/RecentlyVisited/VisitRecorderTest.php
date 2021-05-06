@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class VisitRecorderTest extends TestCase
+final class VisitRecorderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

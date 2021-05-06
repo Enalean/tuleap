@@ -28,7 +28,7 @@ use UserHelper;
 use UserImport;
 use UserManager;
 
-final class UserImportTest extends \PHPUnit\Framework\TestCase
+final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

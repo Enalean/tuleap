@@ -30,7 +30,6 @@ use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
@@ -49,7 +48,7 @@ use Project_AccessProjectNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use AgileDashboardPlugin;
 
-class ProjectMilestonesPresenterBuilderTest extends TestCase
+class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

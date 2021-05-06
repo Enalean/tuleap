@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\Routing;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Project;
@@ -33,7 +32,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 
-class MilestoneExtractorTest extends TestCase
+class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

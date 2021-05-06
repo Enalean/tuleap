@@ -25,9 +25,8 @@ declare(strict_types=1);
 namespace Tuleap\common\date;
 
 use DateHelper;
-use PHPUnit\Framework\TestCase;
 
-final class DateHelperDistanceTest extends TestCase
+final class DateHelperDistanceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $today_at_midnight;
 

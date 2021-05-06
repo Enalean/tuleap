@@ -24,14 +24,13 @@ namespace Tuleap\OAuth2Server\OpenIDConnect\JWK;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\SigningPublicKey;
 
-final class JWKSDocumentEndpointControllerTest extends TestCase
+final class JWKSDocumentEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

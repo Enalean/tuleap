@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace Tuleap;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
-class TmpWatchTest extends TestCase
+class TmpWatchTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $target_dir;
 

@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Statistics;
 
-use PHPUnit\Framework\TestCase;
 use Statistics_DiskUsageDao;
 use Statistics_DiskUsagePurger;
 
-class DiskUsagePurgerTest extends TestCase
+class DiskUsagePurgerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Statistics_DiskUsagePurger */
     private $disk_data_purger;

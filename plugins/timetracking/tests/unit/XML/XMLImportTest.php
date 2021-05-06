@@ -25,7 +25,6 @@ namespace Tuleap\Timetracking\XML;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Psr\Log\LoggerInterface;
@@ -39,7 +38,7 @@ use UGroupManager;
 use User\XML\Import\IFindUserFromXMLReference;
 use XML_RNGValidator;
 
-final class XMLImportTest extends TestCase
+final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

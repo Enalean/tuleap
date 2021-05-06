@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\SVN\DiskUsage;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Statistics_DiskUsageDao;
@@ -30,7 +29,7 @@ use Statistics_DiskUsageManager;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-final class DiskUsageRetrieverTest extends TestCase
+final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -20,9 +20,8 @@
 
 namespace Tuleap\GitLFS\Batch\Request;
 
-use PHPUnit\Framework\TestCase;
 
-class BatchRequestTest extends TestCase
+class BatchRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testParsingRequestWithAllProperties()
     {

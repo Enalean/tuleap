@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
-use PHPUnit\Framework\TestCase;
 
-final class PrefixAccessKeyTest extends TestCase
+final class PrefixAccessKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasSpecificPrefix(): void
     {

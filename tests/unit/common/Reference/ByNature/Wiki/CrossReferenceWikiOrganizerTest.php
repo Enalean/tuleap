@@ -25,13 +25,12 @@ namespace Tuleap\Reference\ByNature\Wiki;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\PHPWiki\WikiPage;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferenceWikiOrganizerTest extends TestCase
+class CrossReferenceWikiOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,13 +25,12 @@ namespace Tuleap\Project\Registration\Template;
 
 use Mockery as M;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\XML\ProjectXMLMerger;
 
-class TemplateFactoryTest extends TestCase
+class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

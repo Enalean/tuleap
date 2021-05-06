@@ -24,7 +24,6 @@ namespace Tuleap\PrometheusMetrics;
 
 use Mockery;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -34,7 +33,7 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 /**
  * @covers \Tuleap\PrometheusMetrics\MetricsAuthentication
  */
-final class MetricsAuthenticationTest extends TestCase
+final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

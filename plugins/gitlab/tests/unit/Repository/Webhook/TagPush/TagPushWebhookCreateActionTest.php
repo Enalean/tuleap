@@ -26,7 +26,6 @@ use CrossReference;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\NullLogger;
 use Reference;
@@ -44,7 +43,7 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
-class TagPushWebhookCreateActionTest extends TestCase
+class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

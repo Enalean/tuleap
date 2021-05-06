@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use TemplateRenderer;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsNotXmlException;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsResultPATCHRepresentation;
 use Tuleap\TestManagement\REST\v1\ExtractedTestResultFromJunit;
 use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 
-class TestsDataFromJunitExtractorTest extends TestCase
+class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

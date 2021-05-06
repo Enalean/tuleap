@@ -35,7 +35,6 @@ use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
@@ -43,7 +42,7 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Project;
 use Tuleap\REST\I18NRestException;
 
-class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
+class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

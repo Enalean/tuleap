@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\language;
 
-use PHPUnit\Framework\TestCase;
 
-final class LanguageTagFormatterTest extends TestCase
+final class LanguageTagFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider dataProviderLanguageTags

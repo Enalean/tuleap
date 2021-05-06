@@ -25,11 +25,10 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use XML_SimpleXMLCDATAFactory;
 
-class AttachmentXMLExporterTest extends TestCase
+class AttachmentXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

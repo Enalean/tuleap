@@ -24,7 +24,6 @@ namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -34,7 +33,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 
-final class AccessKeyVerifierTest extends TestCase
+final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertEquals;
 
-final class IssuesLinkedToEpicsRetrieverTest extends TestCase
+final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsIssuesLinkedToOneEpic(): void
     {

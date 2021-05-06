@@ -27,12 +27,11 @@ declare(strict_types=1);
 namespace Tuleap\Statistics;
 
 use ParagonIE\EasyDB\EasyDB;
-use PHPUnit\Framework\TestCase;
 use Statistics_DiskUsageDao;
 use Statistics_DiskUsagePurger;
 use Tuleap\DB\DBFactory;
 
-class DiskUsagePurgerIntegrationTest extends TestCase
+class DiskUsagePurgerIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Statistics_DiskUsageDao */
     private $disk_usage_dao;

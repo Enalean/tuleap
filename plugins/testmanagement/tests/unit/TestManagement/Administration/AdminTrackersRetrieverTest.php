@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Administration;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use TrackerFactory;
@@ -32,7 +31,7 @@ use Tuleap\TestManagement\MissingArtifactLinkException;
 use Tuleap\TestManagement\TrackerDefinitionNotValidException;
 use Tuleap\TestManagement\TrackerExecutionNotValidException;
 
-class AdminTrackersRetrieverTest extends TestCase
+class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

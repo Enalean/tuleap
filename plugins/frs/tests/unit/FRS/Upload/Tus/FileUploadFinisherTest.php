@@ -31,7 +31,6 @@ use FRSReleaseFactory;
 use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
@@ -39,7 +38,7 @@ use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 
-final class FileUploadFinisherTest extends TestCase
+final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

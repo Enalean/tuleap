@@ -26,11 +26,10 @@ namespace Tuleap\AgileDashboard\Planning;
 use ArtifactNode;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning_MilestoneFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class MilestoneFactoryGetMilestoneFromArtifactWithPlannedArtifactsTest extends TestCase
+final class MilestoneFactoryGetMilestoneFromArtifactWithPlannedArtifactsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

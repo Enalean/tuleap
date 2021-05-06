@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class CanRemoveUserMappingCheckerTest extends TestCase
+final class CanRemoveUserMappingCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var CanRemoveUserMappingChecker

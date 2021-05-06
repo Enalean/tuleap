@@ -23,13 +23,12 @@ namespace Tuleap\Timetracking\Time;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class TimeControllerTest extends TestCase
+class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

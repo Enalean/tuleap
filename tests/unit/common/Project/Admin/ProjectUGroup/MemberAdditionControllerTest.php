@@ -25,14 +25,13 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Request\ProjectRetriever;
 
-final class MemberAdditionControllerTest extends TestCase
+final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

@@ -22,9 +22,8 @@ namespace Tuleap\Project\REST;
 
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class UserRESTReferenceRetrieverTest extends TestCase
+class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

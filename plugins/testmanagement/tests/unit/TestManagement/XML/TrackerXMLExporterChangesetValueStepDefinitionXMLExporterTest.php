@@ -24,7 +24,6 @@ namespace Tuleap\TestManagement\XML;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
@@ -32,7 +31,7 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 use XML_SimpleXMLCDATAFactory;
 
-final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extends TestCase
+final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

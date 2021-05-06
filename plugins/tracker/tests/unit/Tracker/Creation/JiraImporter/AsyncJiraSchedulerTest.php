@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
@@ -34,7 +33,7 @@ use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
-class AsyncJiraSchedulerTest extends TestCase
+class AsyncJiraSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

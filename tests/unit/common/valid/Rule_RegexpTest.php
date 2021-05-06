@@ -19,10 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_RegexpTest extends TestCase
+class Rule_RegexpTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPattern(): void
     {

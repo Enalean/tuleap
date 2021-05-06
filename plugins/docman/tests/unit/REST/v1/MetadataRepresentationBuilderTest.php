@@ -26,13 +26,12 @@ use Docman_Metadata;
 use Docman_MetadataFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use UserHelper;
 
-class MetadataRepresentationBuilderTest extends TestCase
+class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -32,7 +32,7 @@ use Tuleap\Widget\Note\NoteDao;
 use Tuleap\Widget\Note\ProjectNote;
 use Tuleap\XML\MappingsRegistry;
 
-final class RoadmapConfigureAtXMLImportTest extends \PHPUnit\Framework\TestCase
+final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

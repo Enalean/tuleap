@@ -26,11 +26,10 @@ use Git_Gitolite_ConfigPermissionsSerializer;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 
-class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
+class ConfigPermissionsSerializerFineGrainedPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

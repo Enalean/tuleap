@@ -22,10 +22,9 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Report\Query\FromWhere;
 
-class ReportArtifactFactoryTest extends TestCase
+class ReportArtifactFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

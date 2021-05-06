@@ -28,7 +28,6 @@ use Luracast\Restler\RestException;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_REST_Artifact_ArtifactUpdater;
@@ -43,7 +42,7 @@ use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class CardMappedFieldUpdaterTest extends TestCase
+final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

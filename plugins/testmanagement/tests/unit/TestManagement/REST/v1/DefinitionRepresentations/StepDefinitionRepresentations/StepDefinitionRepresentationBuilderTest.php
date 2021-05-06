@@ -25,13 +25,12 @@ namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinition
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class StepDefinitionRepresentationBuilderTest extends TestCase
+class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

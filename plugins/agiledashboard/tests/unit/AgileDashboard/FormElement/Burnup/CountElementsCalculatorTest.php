@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
@@ -33,7 +32,7 @@ use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class CountElementsCalculatorTest extends TestCase
+final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 
-final class XmlReportDefaultCriteriaExporterTest extends TestCase
+final class XmlReportDefaultCriteriaExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsCriteriaWithNoSelectedValues(): void
     {

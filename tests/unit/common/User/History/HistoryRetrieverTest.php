@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\User\History;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class HistoryRetrieverTest extends TestCase
+class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

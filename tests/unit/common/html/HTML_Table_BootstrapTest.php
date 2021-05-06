@@ -22,10 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class HTML_Table_BoostrapTest extends TestCase
+class HTML_Table_BoostrapTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     /**

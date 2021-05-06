@@ -23,13 +23,12 @@ namespace Tuleap\Gitlab\Reference\Commit;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class GitlabCommitCrossReferenceEnhancerTest extends TestCase
+class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

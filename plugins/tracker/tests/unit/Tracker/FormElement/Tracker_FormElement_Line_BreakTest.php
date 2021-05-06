@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-final class Tracker_FormElement_Line_BreakTest extends \PHPUnit\Framework\TestCase
+final class Tracker_FormElement_Line_BreakTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;

@@ -22,12 +22,11 @@ namespace Tuleap\Tracker\Report;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_Report_Renderer_Table;
 
-class TrackerReportRendererTableTest extends TestCase
+class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

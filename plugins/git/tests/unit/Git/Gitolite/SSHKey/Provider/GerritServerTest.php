@@ -26,7 +26,7 @@ use Tuleap\Git\Gitolite\SSHKey\Key;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-class GerritServerTest extends \PHPUnit\Framework\TestCase
+class GerritServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

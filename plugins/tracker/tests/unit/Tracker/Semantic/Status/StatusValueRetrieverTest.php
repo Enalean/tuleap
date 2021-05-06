@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Semantic\Status;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
@@ -36,7 +35,7 @@ use Tuleap\Tracker\TrackerColor;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertSame;
 
-class StatusValueRetrieverTest extends TestCase
+class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

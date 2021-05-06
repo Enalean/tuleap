@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\Label;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\LabeledItemCollection;
@@ -32,7 +31,7 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Factory;
 
-class LabeledItemCollectorTest extends TestCase
+class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

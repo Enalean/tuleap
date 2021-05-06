@@ -25,11 +25,10 @@ namespace Tuleap\TestPlan\REST\v1;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_ArtifactLink;
 
-class BacklogItemRepresentationTest extends TestCase
+class BacklogItemRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

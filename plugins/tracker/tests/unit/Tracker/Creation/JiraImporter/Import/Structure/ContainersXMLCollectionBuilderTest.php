@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use PHPUnit\Framework\TestCase;
 
-class ContainersXMLCollectionBuilderTest extends TestCase
+class ContainersXMLCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsAFieldset(): void
     {

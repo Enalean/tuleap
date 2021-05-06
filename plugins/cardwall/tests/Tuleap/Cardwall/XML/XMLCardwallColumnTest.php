@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\XML;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class XMLCardwallColumnTest extends TestCase
+class XMLCardwallColumnTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsColumnWithoutIdAndColours(): void
     {

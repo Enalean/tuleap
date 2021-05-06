@@ -21,13 +21,12 @@
 namespace Tuleap\DynamicCredentials\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DynamicCredentials\Credential\Credential;
 use Tuleap\DynamicCredentials\Credential\CredentialNotFoundException;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSessionNotInitializedException;
 
-class DynamicUserCreatorTest extends TestCase
+class DynamicUserCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

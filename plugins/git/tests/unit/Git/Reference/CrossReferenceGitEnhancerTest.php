@@ -24,14 +24,13 @@ namespace Tuleap\Git\Reference;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\User\UserEmailCollection;
 
-class CrossReferenceGitEnhancerTest extends TestCase
+class CrossReferenceGitEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

@@ -25,11 +25,10 @@ namespace Tuleap\RSS;
 use Http\Client\Exception;
 use Http\Mock\Client;
 use Laminas\Feed\Exception\RuntimeException as FeedRuntimeException;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class FeedHTTPClientTest extends TestCase
+final class FeedHTTPClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var Client

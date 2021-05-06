@@ -24,11 +24,10 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class FileUploadCleanerTest extends TestCase
+class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

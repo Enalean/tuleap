@@ -22,10 +22,9 @@ namespace Tuleap\GitLFS\Lock\Response;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\Lock\Lock;
 
-class LockResponseBuilderTest extends TestCase
+class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

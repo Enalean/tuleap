@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Rule;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Rule_Date;
@@ -32,7 +31,7 @@ use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
-class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
+class TrackerRulesManagerIsUsedInFieldDependencyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

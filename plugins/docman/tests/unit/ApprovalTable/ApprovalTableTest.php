@@ -23,10 +23,9 @@
  *
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class ApprovalTableTest extends TestCase
+final class ApprovalTableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testTableStateRejected(): void

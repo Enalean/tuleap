@@ -37,11 +37,10 @@ use Tuleap\User\Account\DisplayAccountInformationController;
 use Tuleap\User\Account\EmailNotSentException;
 use Tuleap\User\Account\EmailUpdater;
 use Tuleap\User\Account\UpdateAccountInformationController;
-use PHPUnit\Framework\TestCase;
 use Tuleap\User\Profile\AvatarGenerator;
 use UserManager;
 
-final class UpdateAccountInformationControllerTest extends TestCase
+final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

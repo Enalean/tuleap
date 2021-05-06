@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Importer;
 
-use PHPUnit\Framework\TestCase;
 
-class ImportedChangesetMappingTest extends TestCase
+class ImportedChangesetMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGet()
     {

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ForgeAccess;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-class ForgeAccessTest extends TestCase
+class ForgeAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

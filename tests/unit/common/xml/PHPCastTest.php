@@ -21,9 +21,8 @@
 namespace Tuleap\XML;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class PHPCastTest extends TestCase
+class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

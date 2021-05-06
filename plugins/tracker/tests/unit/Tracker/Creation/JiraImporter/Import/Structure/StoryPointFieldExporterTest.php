@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace unit\Tracker\Creation\JiraImporter\Import\Structure;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
@@ -38,7 +37,7 @@ use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
-final class StoryPointFieldExporterTest extends TestCase
+final class StoryPointFieldExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var StoryPointFieldExporter

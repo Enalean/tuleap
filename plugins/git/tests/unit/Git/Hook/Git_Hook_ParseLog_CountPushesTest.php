@@ -24,7 +24,7 @@
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class Git_Hook_ParseLog_CountPushesTest extends \PHPUnit\Framework\TestCase
+class Git_Hook_ParseLog_CountPushesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

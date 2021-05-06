@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Luracast\Restler\RestException;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use function PHPUnit\Framework\assertTrue;
 
-class ProgramUserGroupTest extends TestCase
+class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRejectIfUgroupDoesNotExist(): void
     {

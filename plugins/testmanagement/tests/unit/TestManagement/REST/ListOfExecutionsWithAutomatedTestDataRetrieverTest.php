@@ -24,7 +24,6 @@ namespace Tuleap\TestManagement\REST;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_ArtifactFactory;
@@ -37,7 +36,7 @@ use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestDataProvider;
 use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends TestCase
+class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

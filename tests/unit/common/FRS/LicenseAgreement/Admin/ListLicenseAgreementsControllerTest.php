@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use TemplateRendererFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
@@ -32,7 +31,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Templating\Mustache\MustacheEngine;
 
-final class ListLicenseAgreementsControllerTest extends TestCase
+final class ListLicenseAgreementsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

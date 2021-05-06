@@ -24,11 +24,10 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Http\Mock\Client;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-final class JWKSKeyFetcherTest extends TestCase
+final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

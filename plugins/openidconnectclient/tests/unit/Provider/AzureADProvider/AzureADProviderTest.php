@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
-use PHPUnit\Framework\TestCase;
 
-final class AzureADProviderTest extends TestCase
+final class AzureADProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAuthenticationAndTokenEndpointsAreBuiltFromTheAcceptableTenantForAuthenticationConfiguration(): void
     {

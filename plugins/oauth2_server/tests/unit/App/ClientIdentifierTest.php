@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-final class ClientIdentifierTest extends TestCase
+final class ClientIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testIdentifierKeyIsHeldAsIs(): void
     {

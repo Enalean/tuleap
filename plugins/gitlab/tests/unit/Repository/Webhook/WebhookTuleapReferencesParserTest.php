@@ -21,10 +21,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
-final class WebhookTuleapReferencesParserTest extends TestCase
+final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var WebhookTuleapReferencesParser

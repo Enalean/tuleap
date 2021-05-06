@@ -19,10 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_ArrayTest extends TestCase
+class Rule_ArrayTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTestsWetherTheArgumentIsAnArray(): void
     {
