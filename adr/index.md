@@ -6,6 +6,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 
 * [ADR-0001](0001-supported-browser-versions.md) - Supported browser list
 * [ADR-0002](0002-ban-typescript-enum.md) - Ban TypeScript Enum syntax
+* [ADR-0003](0003-favor-phpunit-mock-over-mockery.md) - Favor PHPUnit mock system over Mockery
 
 <!-- adrlogstop -->
 
