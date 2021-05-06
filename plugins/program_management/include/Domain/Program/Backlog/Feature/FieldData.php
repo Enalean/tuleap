@@ -22,17 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
+
 /**
  * @psalm-immutable
  */
 final class FieldData
 {
     /**
-     * @var array
+     * @var FeatureChange[]
      */
     private $user_stories_to_add;
     /**
-     * @var array
+     * @var int[]
      */
     private $user_stories_to_remove;
     /**
@@ -40,6 +42,10 @@ final class FieldData
      */
     private $artifact_link_field;
 
+    /**
+     * @param FeatureChange[] $user_stories_to_add
+     * @param int[] $user_stories_to_remove
+     */
     public function __construct(array $user_stories_to_add, array $user_stories_to_remove, int $artifact_link_field)
     {
         $this->user_stories_to_add    = $user_stories_to_add;
@@ -47,10 +53,10 @@ final class FieldData
         $this->artifact_link_field    = $artifact_link_field;
     }
 
-    public function getFieldDataForChangesetCreationFormat(): array
+    public function getFieldDataForChangesetCreationFormat(int $milestone_project_id): array
     {
         $fields_data                                               = [];
-        $fields_data[$this->artifact_link_field]['new_values']     = implode(",", $this->user_stories_to_add);
+        $fields_data[$this->artifact_link_field]['new_values']     = implode(",", $this->getFeatureChangeToAdd($this->user_stories_to_add, $milestone_project_id));
         $fields_data[$this->artifact_link_field]['removed_values'] =
             $this->getUserStoriesThatAreLinkedToMilestoneAndNoLongerInArtifactLinkList($this->user_stories_to_remove);
 
@@ -58,14 +64,29 @@ final class FieldData
     }
 
     /**
-     * @return array
+     * @param FeatureChange[] $feature_changes
+     * @return int[]
+     */
+    private function getFeatureChangeToAdd(array $feature_changes, int $milestone_project_id): array
+    {
+        $feature_to_add = [];
+        foreach ($feature_changes as $feature_change) {
+            if ($feature_change->project_id === $milestone_project_id) {
+                $feature_to_add[] = $feature_change->id;
+            }
+        }
+        return $feature_to_add;
+    }
+
+    /**
+     * @psalm-return array<int|string, int|string>
      */
     private function getUserStoriesThatAreLinkedToMilestoneAndNoLongerInArtifactLinkList(
         array $user_stories_linked_to_milestones
     ): array {
         $user_stories_to_remove = [];
         foreach ($user_stories_linked_to_milestones as $key => $value) {
-            if (! in_array($key, $this->user_stories_to_add, true)) {
+            if (! in_array($key, array_column($this->user_stories_to_add, "id"), true)) {
                 $user_stories_to_remove[$key] = $key;
             }
         }

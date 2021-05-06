@@ -24,6 +24,7 @@ namespace Adapter\Program\Feature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Monolog\Test\TestCase;
+use Project;
 use Psr\Log\Test\TestLogger;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -33,6 +34,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMi
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
@@ -40,6 +42,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredMilestone\MirroredMilestone;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 {
@@ -111,11 +114,12 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
         $change = new ProgramIncrementChanged(1, 10, $user);
 
         $feature_id = 1234;
+        $raw_link   = ['id' => $feature_id, 'project_id' => 101];
         $this->content_dao->shouldReceive('searchContent')->once()
             ->andReturn([['artifact_id' => 101]]);
         $this->artifacts_linked_dao->shouldReceive('getArtifactsLinkedToId')
             ->once()
-            ->andReturn([['id' => $feature_id]]);
+            ->andReturn([$raw_link]);
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
@@ -123,6 +127,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 
         $milestone = \Mockery::mock(Artifact::class);
         $milestone->shouldReceive('getId')->andReturn($milestone_id);
+        $milestone->shouldReceive('getTracker')->andReturn(TrackerTestBuilder::aTracker()->withProject(Project::buildForTest())->build());
         $field_artifact_link = \Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $field_artifact_link->shouldReceive('getId')->andReturn(1);
         $milestone->shouldReceive('getAnArtifactLinkField')->andReturn($field_artifact_link);
@@ -135,12 +140,12 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
         );
 
         $fields_data = new FieldData(
-            [1234],
+            [FeatureChange::fromRaw($raw_link)],
             [],
             1
         );
 
-        $milestone->shouldReceive('createNewChangeset')->with($fields_data->getFieldDataForChangesetCreationFormat(), "", $user)->once();
+        $milestone->shouldReceive('createNewChangeset')->with($fields_data->getFieldDataForChangesetCreationFormat(101), "", $user)->once();
 
         $this->planner->plan($change);
     }
@@ -155,7 +160,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
             ->andReturn([['artifact_id' => 101]]);
         $this->artifacts_linked_dao->shouldReceive('getArtifactsLinkedToId')
             ->once()
-            ->andReturn([['id' => $feature_id]]);
+            ->andReturn([['id' => $feature_id, 'project_id' => 101]]);
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
@@ -182,7 +187,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
             ->andReturn([['artifact_id' => 101]]);
         $this->artifacts_linked_dao->shouldReceive('getArtifactsLinkedToId')
             ->once()
-            ->andReturn([['id' => $feature_id]]);
+            ->andReturn([['id' => $feature_id, 'project_id' => 101]]);
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
@@ -190,6 +195,57 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 
         $this->tracker_artifact_factory->shouldReceive('getArtifactById')
             ->once()->with($milestone_id)->andReturn([]);
+
+        $this->planner->plan($change);
+    }
+
+    public function testItDoesNotAddUserStoryIfUserStoryIsNotInProject(): void
+    {
+        $user   = UserTestBuilder::aUser()->build();
+        $change = new ProgramIncrementChanged(1, 10, $user);
+
+        $this->content_dao->shouldReceive('searchContent')->once()
+            ->andReturn([['artifact_id' => 101]]);
+        $this->artifacts_linked_dao->shouldReceive('getArtifactsLinkedToId')
+            ->once()
+            ->andReturn([['id' => 1234, 'project_id' => 122]]);
+
+        $milestone_id = 666;
+        $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
+            ->once()->andReturn([new MirroredMilestone($milestone_id)]);
+
+        $milestone = \Mockery::mock(Artifact::class);
+        $milestone->shouldReceive('getId')->andReturn($milestone_id);
+        $milestone->shouldReceive('getTracker')->andReturn(TrackerTestBuilder::aTracker()->withProject(Project::buildForTest())->build());
+        $field_artifact_link = new Tracker_FormElement_Field_ArtifactLink(
+            1,
+            70,
+            null,
+            'field_artlink',
+            'Field ArtLink',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+        $milestone->shouldReceive('getAnArtifactLinkField')->andReturn($field_artifact_link);
+        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->with($milestone_id)->andReturn(
+            $milestone
+        );
+
+        $this->features_linked_to_milestone_builder->shouldReceive('build')->andReturn(
+            [1234 => 1]
+        );
+
+        $fields_data = new FieldData(
+            [],
+            [],
+            1
+        );
+
+        $milestone->shouldReceive('createNewChangeset')->with($fields_data->getFieldDataForChangesetCreationFormat(122), "", $user)->once();
 
         $this->planner->plan($change);
     }

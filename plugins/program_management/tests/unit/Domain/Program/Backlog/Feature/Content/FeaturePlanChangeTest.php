@@ -36,7 +36,10 @@ class FeaturePlanChangeTest extends TestCase
 
         $feature_plan_change = FeaturePlanChange::fromRaw($this->getStubArtifactsLinkSearch(), $feature_to_links, 1);
 
-        self::assertEquals([789, 910], $feature_plan_change->user_stories);
+        self::assertEquals(789, $feature_plan_change->user_stories[0]->id);
+        self::assertEquals(101, $feature_plan_change->user_stories[0]->project_id);
+        self::assertEquals(910, $feature_plan_change->user_stories[1]->id);
+        self::assertEquals(156, $feature_plan_change->user_stories[1]->project_id);
     }
 
     private function getStubArtifactsLinkSearch(): ArtifactsLinksSearch
@@ -45,10 +48,10 @@ class FeaturePlanChangeTest extends TestCase
             public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array
             {
                 if ($artifact_id === 123) {
-                    return [['id' => 789]];
+                    return [['id' => 789, 'project_id' => 101]];
                 }
                 if ($artifact_id === 456) {
-                    return [['id' => 910]];
+                    return [['id' => 910, 'project_id' => 156]];
                 }
                 return [];
             }
