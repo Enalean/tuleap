@@ -44,6 +44,9 @@ msgstr[1] "Éditer les assignés"
 msgid "Edit card"
 msgstr "Modifier la carte"
 
+msgid "Edit remaining efforts"
+msgstr "Éditer l'effort restant"
+
 msgid "Expand"
 msgstr "Étendre"
 
@@ -84,11 +87,8 @@ msgstr "Aller à la première carte de la cellule de gauche"
 msgid "Move to the first card of right cell"
 msgstr "Aller à la première carte de la cellule de droite"
 
-msgid "Moving cards"
-msgstr "Déplacement des cartes"
-
-msgid "Navigation"
-msgstr "Navigation"
+msgid "Navigation in Taskboard"
+msgstr "Navigation dans Taskboard"
 
 msgid "New remaining effort"
 msgstr "Nouvel effort restant"
@@ -114,11 +114,17 @@ msgstr ""
 "Veuillez éditer la carte pour changer son statut, ou ajouter des enfants si "
 "possible."
 
+msgid "Quick access"
+msgstr "Accès rapide"
+
 msgid "Reload the page"
 msgstr "Recharger la page"
 
 msgid "Remaining effort"
 msgstr "Effort restant"
+
+msgid "Return to parent card or swimlane"
+msgstr "Retourner à la carte parente ou à la ligne"
 
 msgid "Save"
 msgstr "Sauver"
@@ -156,6 +162,9 @@ msgstr "Ce tableau de tâches n'est pas correctement configuré"
 
 msgid "This taskboard is not ready to be used"
 msgstr "Ce tableau de tâches n'est pas prêt à être utilisé"
+
+msgid "Toggle closed items"
+msgstr "Afficher ou cacher les éléments clos"
 
 msgid "Toggle fullscreen mode"
 msgstr "Basculer le mode plein écran"

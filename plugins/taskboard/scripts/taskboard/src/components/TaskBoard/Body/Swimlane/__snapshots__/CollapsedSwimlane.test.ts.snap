@@ -25,6 +25,7 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
     <div
       class="taskboard-card taskboard-card-collapsed taskboard-card-fiesta-red"
       data-navigation="card"
+      data-shortcut="parent-card"
       tabindex="0"
     >
       <div

@@ -35,6 +35,7 @@
             data-test="card-edit-button"
             type="button"
             v-bind:title="$gettext('Edit card')"
+            data-shortcut="edit-card"
         >
             <i class="fas fa-pencil-alt" aria-hidden="true"></i>
         </button>

@@ -26,6 +26,7 @@
             v-bind:card="swimlane.card"
             tabindex="0"
             data-navigation="card"
+            data-shortcut="parent-card"
         />
         <no-mapping-message
             v-if="should_no_mapping_message_be_displayed"

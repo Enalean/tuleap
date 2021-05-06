@@ -30,6 +30,7 @@
             v-bind:draggable="!swimlane.card.is_in_edit_mode"
             tabindex="0"
             data-navigation="card"
+            data-shortcut="parent-card"
         />
     </drop-container-cell>
 </template>
