@@ -108,6 +108,12 @@ VALUES (30, 'git', 'plugin_git:reference_commit_desc_key', '/plugins/git/index.p
 INSERT INTO reference_group (reference_id, group_id, is_active)
 SELECT 30, group_id, 1 FROM groups WHERE group_id;
 
+INSERT INTO reference (id, keyword, description, link, scope, service_short_name, nature)
+VALUES (33, 'git_tag', 'plugin_git:reference_tag_desc_key', '/plugins/git/index.php/$group_id/view/$1/?a=tag&h=$2', 'S', 'plugin_git', 'git_tag');
+
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT 33, group_id, 1 FROM groups WHERE group_id;
+
 INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
 VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_READ', 3, 0),

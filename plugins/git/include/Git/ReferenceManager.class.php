@@ -23,6 +23,8 @@
  */
 
 use Tuleap\Git\Reference\CommitInfoFromReferenceValue;
+use Tuleap\Git\Reference\TagInfoFromReferenceValue;
+use Tuleap\Git\Reference\ReferenceDao;
 
 /**
  * I'm able to understand cross reference grammar related to git commits and to
@@ -40,18 +42,25 @@ class Git_ReferenceManager
      */
     private $reference_manager;
 
-    public function __construct(GitRepositoryFactory $repository_factory, ReferenceManager $reference_manager)
-    {
+    /**
+     * @var ReferenceDao
+     */
+    private $reference_dao;
+
+    public function __construct(
+        GitRepositoryFactory $repository_factory,
+        ReferenceManager $reference_manager,
+        ReferenceDao $reference_dao
+    ) {
         $this->repository_factory = $repository_factory;
         $this->reference_manager  = $reference_manager;
+        $this->reference_dao      = $reference_dao;
     }
 
     /**
      * Return a reference that match keyword and value
-     * @param String $keyword
-     * @param String $value
      */
-    public function getReference(Project $project, $keyword, $value): ?Reference
+    public function getCommitReference(Project $project, string $keyword, string $value): ?Reference
     {
         $commit_info = $this->getCommitInfoFromReferenceValue($project, $value);
         if (! $commit_info->getRepository()) {
@@ -67,9 +76,36 @@ class Git_ReferenceManager
         return $reference;
     }
 
+    public function getTagReference(Project $project, string $keyword, string $value): ?Reference
+    {
+        $existing_reference_row = $this->reference_dao->searchExistingProjectReference(
+            $keyword,
+            (int) $project->getID()
+        );
+        if ($existing_reference_row !== null) {
+            //Keep the behaviour of the already existing project reference
+            return $this->reference_manager->buildReference(
+                $existing_reference_row
+            );
+        }
+
+        $commit_info = $this->getTagInfoFromReferenceValue($project, $value);
+        if (! $commit_info->getRepository()) {
+            return null;
+        }
+
+        $args      = [$commit_info->getRepository()->getId(), $commit_info->getTagName()];
+        $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);
+        if ($reference) {
+            $reference->replaceLink($args);
+        }
+
+        return $reference;
+    }
+
     public function getCommitInfoFromReferenceValue(Project $project, string $value): CommitInfoFromReferenceValue
     {
-        [$repository_name, $sha1] = $this->splitRepositoryAndSha1($value);
+        [$repository_name, $sha1] = $this->splitRepositoryAndValue($value);
 
         $repository = $this->repository_factory
             ->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
@@ -77,7 +113,17 @@ class Git_ReferenceManager
         return new CommitInfoFromReferenceValue($repository, $sha1);
     }
 
-    private function splitRepositoryAndSha1($value)
+    private function getTagInfoFromReferenceValue(Project $project, string $value): TagInfoFromReferenceValue
+    {
+        [$repository_name, $sha1] = $this->splitRepositoryAndValue($value);
+
+        $repository = $this->repository_factory
+            ->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
+
+        return new TagInfoFromReferenceValue($repository, $sha1);
+    }
+
+    private function splitRepositoryAndValue(string $value): array
     {
         $last_slash_position = strrpos($value, '/');
         $repository_name     = substr($value, 0, $last_slash_position);
