@@ -20,7 +20,7 @@
 import type { Modal } from "tlp";
 
 export interface State {
-    repositories_for_owner: string;
+    repositories_for_owner: RepositoriesForOwner;
     filter: string;
     selected_owner_id: string | number;
     error_message_type: number;
@@ -35,6 +35,10 @@ export interface State {
     unlink_gitlab_repository_modal: null | Modal;
     unlink_gitlab_repository: null | Repository;
 }
+
+export type RepositoriesForOwner = {
+    [key in number | string]: Array<Repository | FormattedGitLabRepository | Folder>;
+};
 
 export interface Repository {
     id: string | number;
@@ -56,6 +60,18 @@ export interface Repository {
     };
     server: null | string;
     html_url: string;
+    gitlab_data?: null | GitLabData;
+}
+
+export interface FormattedGitLabRepository {
+    id: string | number;
+    integration_id: string | number;
+    description: string;
+    label: string;
+    last_update_date: string;
+    additional_information: [];
+    normalized_path?: string;
+    path_without_project: string;
     gitlab_data?: null | GitLabData;
 }
 
@@ -85,7 +101,11 @@ export interface GitLabDataWithToken extends GitLabData {
 export interface Folder {
     is_folder: boolean;
     label: string;
-    children: Map<string, Folder | Repository> | Array<Folder | Repository>;
+    children:
+        | Map<string, Folder | Repository | FormattedGitLabRepository>
+        | Array<Folder | Repository | FormattedGitLabRepository>;
+    normalized_path?: string;
+    path_without_project?: string;
 }
 
 export interface GitLabCredentials {
@@ -104,18 +124,6 @@ export interface GitLabRepository {
     id: number;
     last_push_date: string;
     name: string;
-}
-
-export interface FormattedGitLabRepository {
-    id: string | number;
-    integration_id: string | number;
-    description: string;
-    label: string;
-    last_update_date: string;
-    additional_information: [];
-    normalized_path?: string;
-    path_without_project: string;
-    gitlab_data?: null | GitLabData;
 }
 
 export interface RepositoryOwner {

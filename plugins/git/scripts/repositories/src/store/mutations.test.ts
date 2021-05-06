@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,17 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import mutations from "./mutations.js";
+import mutations from "./mutations";
 import {
     PROJECT_KEY,
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH,
 } from "../constants";
+import type {
+    FormattedGitLabRepository,
+    GitLabRepository,
+    RepositoriesForOwner,
+    Repository,
+    State,
+} from "../type";
 
 describe("Store mutations", () => {
     describe("setDisplayMode", () => {
         it("saves the new mode", () => {
-            const state = {};
+            const state = {} as State;
 
             mutations.setDisplayMode(state, REPOSITORIES_SORTED_BY_LAST_UPDATE);
             expect(state.display_mode).toBe(REPOSITORIES_SORTED_BY_LAST_UPDATE);
@@ -37,7 +44,7 @@ describe("Store mutations", () => {
         });
 
         it("defaults to last update date", () => {
-            const state = {};
+            const state = {} as State;
 
             mutations.setDisplayMode(state, "whatever");
             expect(state.display_mode).toBe(REPOSITORIES_SORTED_BY_LAST_UPDATE);
@@ -49,7 +56,7 @@ describe("Store mutations", () => {
             const state = {
                 repositories_for_owner: {},
                 selected_owner_id: 101,
-            };
+            } as State;
 
             mutations.pushRepositoriesForCurrentOwner(state, []);
 
@@ -67,13 +74,13 @@ describe("Store mutations", () => {
                     label: "archiplasm",
                     path_without_project: "",
                     path: "myproject/archiplasm.git",
-                },
+                } as Repository,
             ];
 
             const state = {
                 repositories_for_owner: {},
                 selected_owner_id: PROJECT_KEY,
-            };
+            } as State;
 
             mutations.pushRepositoriesForCurrentOwner(state, repositories);
 
@@ -89,13 +96,13 @@ describe("Store mutations", () => {
                     label: "boobstrap4",
                     path_without_project: "boobs/straps",
                     path: "myproject/boobs/straps/boobstrap4.git",
-                },
+                } as Repository,
                 {
                     name: "angular.js",
                     label: "angular.js",
                     path_without_project: "u/johnpapa",
                     path: "myproject/u/johnpapa/angular.js.git",
-                },
+                } as Repository,
             ];
 
             const state = {
@@ -107,11 +114,11 @@ describe("Store mutations", () => {
                             path: "myproject/vuex.git",
                             path_without_project: "",
                             normalized_path: "vuex",
-                        },
+                        } as Repository,
                     ],
-                },
+                } as RepositoriesForOwner,
                 selected_owner_id: 101,
-            };
+            } as State;
 
             mutations.pushRepositoriesForCurrentOwner(state, repositories);
 
@@ -123,21 +130,21 @@ describe("Store mutations", () => {
                         path: "myproject/vuex.git",
                         path_without_project: "",
                         normalized_path: "vuex",
-                    },
+                    } as Repository,
                     {
                         label: "boobstrap4",
                         name: "boobs/straps/boobstrap4",
                         path: "myproject/boobs/straps/boobstrap4.git",
                         path_without_project: "boobs/straps",
                         normalized_path: "boobs/straps/boobstrap4",
-                    },
+                    } as Repository,
                     {
                         label: "angular.js",
                         name: "angular.js",
                         path: "myproject/u/johnpapa/angular.js.git",
                         path_without_project: "u/johnpapa",
                         normalized_path: "u/johnpapa/angular.js",
-                    },
+                    } as Repository,
                 ],
             });
         });
@@ -147,7 +154,7 @@ describe("Store mutations", () => {
             const state = {
                 repositories_for_owner: {},
                 selected_owner_id: 101,
-            };
+            } as State;
 
             mutations.pushGitlabRepositoriesForCurrentOwner(state, []);
 
@@ -167,13 +174,13 @@ describe("Store mutations", () => {
                     description: "This is my description.",
                     gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     last_push_date: "2020-10-28T15:13:13+01:00",
-                },
+                } as GitLabRepository,
             ];
 
             const state = {
                 repositories_for_owner: {},
                 selected_owner_id: PROJECT_KEY,
-            };
+            } as State;
 
             mutations.pushGitlabRepositoriesForCurrentOwner(state, repositories);
 
@@ -202,7 +209,7 @@ describe("Store mutations", () => {
                     description: "This is my description.",
                     gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     last_push_date: "2020-10-28T15:13:13+01:00",
-                },
+                } as GitLabRepository,
             ];
 
             const state = {
@@ -214,11 +221,11 @@ describe("Store mutations", () => {
                             path: "myproject/vuex.git",
                             path_without_project: "",
                             normalized_path: "vuex",
-                        },
+                        } as Repository,
                     ],
-                },
+                } as RepositoriesForOwner,
                 selected_owner_id: 101,
-            };
+            } as State;
 
             mutations.pushGitlabRepositoriesForCurrentOwner(state, repositories);
 
@@ -264,7 +271,7 @@ describe("Store mutations", () => {
                     gitlab_repository_id: 1,
                 },
                 additional_information: [],
-            };
+            } as FormattedGitLabRepository;
 
             const state = {
                 repositories_for_owner: {
@@ -275,12 +282,12 @@ describe("Store mutations", () => {
                             path: "myproject/vuex.git",
                             path_without_project: "",
                             normalized_path: "vuex",
-                        },
+                        } as Repository,
                         repository_to_remove,
                     ],
-                },
+                } as RepositoriesForOwner,
                 selected_owner_id: 101,
-            };
+            } as State;
 
             mutations.removeRepository(state, repository_to_remove);
 
