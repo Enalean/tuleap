@@ -840,7 +840,6 @@ class RoadmapTasksRetrieverTest extends TestCase
         $this->tasks_filter->shouldReceive('filterOutOfDateArtifacts')
             ->with(
                 $artifacts,
-                $tracker,
                 Mockery::type(\DateTimeImmutable::class),
                 $this->user
             )

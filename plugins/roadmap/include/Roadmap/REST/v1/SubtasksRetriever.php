@@ -39,15 +39,21 @@ final class SubtasksRetriever
      * @var ICacheTaskRepresentationBuilderForTracker
      */
     private $representation_builder_cache;
+    /**
+     * @var IDetectIfArtifactIsOutOfDate
+     */
+    private $out_of_date_detector;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
         \UserManager $user_manager,
-        ICacheTaskRepresentationBuilderForTracker $representation_builder_cache
+        ICacheTaskRepresentationBuilderForTracker $representation_builder_cache,
+        IDetectIfArtifactIsOutOfDate $out_of_date_detector
     ) {
         $this->artifact_factory             = $artifact_factory;
         $this->user_manager                 = $user_manager;
         $this->representation_builder_cache = $representation_builder_cache;
+        $this->out_of_date_detector         = $out_of_date_detector;
     }
 
     /**
@@ -67,12 +73,18 @@ final class SubtasksRetriever
         $total_size      = count($subtasks);
         $sliced_subtasks = array_slice($subtasks, $offset, $limit);
 
+        $now = new \DateTimeImmutable();
+
         $representations = [];
         foreach ($sliced_subtasks as $artifact) {
             $representation_builder = $this->representation_builder_cache
                 ->getRepresentationBuilderForTracker($artifact->getTracker(), $user);
 
             if (! $representation_builder) {
+                continue;
+            }
+
+            if ($this->out_of_date_detector->isArtifactOutOfDate($artifact, $now, $user)) {
                 continue;
             }
 

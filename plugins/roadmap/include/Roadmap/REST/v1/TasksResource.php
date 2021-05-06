@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -105,6 +106,11 @@ final class TasksResource
                     )
                 ),
             ),
+            new TaskOutOfDateDetector(
+                new SemanticStatusRetriever(),
+                $timeframe_builder,
+                \BackendLogger::getDefaultLogger(),
+            )
         );
 
         $tasks = $retriever->getTasks($id, $limit, $offset);
