@@ -168,10 +168,11 @@ class MethodBasedOnLinksCountTest extends TestCase
         $this->assertTrue($this->method->isConfigured());
     }
 
-    public function testItDoesNotExportsToRESTYet(): void
+    public function testItExportsToREST(): void
     {
-        self::assertNull(
-            $this->method->exportToREST(\Mockery::mock(\PFUser::class)),
+        self::assertEquals(
+            new SemanticProgressBasedOnLinksCountRepresentation('_is_child'),
+            $this->method->exportToREST(\Mockery::mock(\PFUser::class))
         );
     }
     public function testItExportsItsConfigurationToXml(): void

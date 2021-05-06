@@ -172,13 +172,13 @@ class MethodBasedOnEffort implements IComputeProgression
         return '';
     }
 
-    public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation
+    public function exportToREST(\PFUser $user): ?IRepresentSemanticProgress
     {
         if (! $this->canUserReadBothFields($user)) {
             return null;
         }
 
-        return new SemanticProgressRepresentation(
+        return new SemanticProgressBasedOnEffortRepresentation(
             $this->total_effort_field->getId(),
             $this->remaining_effort_field->getId()
         );

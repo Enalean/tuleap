@@ -133,9 +133,11 @@ class MethodBasedOnLinksCount implements IComputeProgression
         return '';
     }
 
-    public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation
+    public function exportToREST(\PFUser $user): ?IRepresentSemanticProgress
     {
-        return null;
+        return new SemanticProgressBasedOnLinksCountRepresentation(
+            $this->artifact_link_type
+        );
     }
 
     public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void

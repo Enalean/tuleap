@@ -173,7 +173,7 @@ class MethodBasedOnEffortTest extends TestCase
         $this->remaining_effort_field->shouldReceive('userCanRead')->with($this->user)->once()->andReturn(true);
 
         self::assertEquals(
-            new SemanticProgressRepresentation(1001, 1002),
+            new SemanticProgressBasedOnEffortRepresentation(1001, 1002),
             $this->method->exportToREST($this->user),
         );
     }
