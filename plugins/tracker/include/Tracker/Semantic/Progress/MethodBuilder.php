@@ -150,6 +150,11 @@ class MethodBuilder
                     (int) $request->get('total-effort-field-id'),
                     (int) $request->get('remaining-effort-field-id'),
                 );
+            case MethodBasedOnLinksCount::getMethodName():
+                return $this->buildMethodBasedOnChildCount(
+                    $tracker,
+                    \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                );
             default:
                 return new InvalidMethod(
                     dgettext(

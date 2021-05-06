@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
+use Tuleap\Tracker\Semantic\Progress\MethodBasedOnLinksCount;
 
 /**
  * @psalm-immutable
@@ -69,6 +70,18 @@ final class SemanticProgressAdminPresenter
      * @var bool
      */
     public $is_method_effort_based;
+    /**
+     * @var bool
+     */
+    public $is_method_links_count_based;
+    /**
+     * @var bool
+     */
+    public $has_a_link_field;
+    /**
+     * @var string
+     */
+    public $tracker_fields_admin_url;
 
     public function __construct(
         \Tracker $tracker,
@@ -79,7 +92,8 @@ final class SemanticProgressAdminPresenter
         \CSRFSynchronizerToken $csrf_token,
         array $total_effort_options,
         array $remaining_effort_options,
-        array $available_computation_methods
+        array $available_computation_methods,
+        bool $has_a_link_field
     ) {
         $this->semantic_usages_description   = $semantic_usages_description;
         $this->is_semantic_defined           = $is_semantic_defined;
@@ -90,10 +104,18 @@ final class SemanticProgressAdminPresenter
         $this->remaining_effort_options      = $remaining_effort_options;
         $this->available_computation_methods = $available_computation_methods;
         $this->is_method_effort_based        = $current_method === MethodBasedOnEffort::getMethodName();
+        $this->is_method_links_count_based   = $current_method === MethodBasedOnLinksCount::getMethodName();
+        $this->has_a_link_field              = $has_a_link_field;
         $this->tracker_semantic_admin_url    = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func' => 'admin-semantic'
+            ]
+        );
+        $this->tracker_fields_admin_url      = TRACKER_BASE_URL . '/?' . http_build_query(
+            [
+                'tracker' => $tracker->getId(),
+                'func' => 'admin-formElements'
             ]
         );
     }

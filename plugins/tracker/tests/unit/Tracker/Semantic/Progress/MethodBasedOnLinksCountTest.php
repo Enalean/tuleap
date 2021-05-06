@@ -195,13 +195,13 @@ class MethodBasedOnLinksCountTest extends TestCase
         $this->assertTrue($this->method->saveSemanticForTracker($tracker));
     }
 
-    public function testItDoesNotDeleteItsConfigurationYet(): void
+    public function testItDeletesItsConfiguration(): void
     {
         $tracker = \Mockery::mock(\Tracker::class, ['getId' => 113]);
 
-        $this->dao->shouldReceive('delete')->never();
+        $this->dao->shouldReceive('delete')->with(113)->once()->andReturn(true);
 
-        $this->assertFalse(
+        $this->assertTrue(
             $this->method->deleteSemanticForTracker($tracker)
         );
     }

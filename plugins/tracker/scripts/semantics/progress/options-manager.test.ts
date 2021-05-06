@@ -50,15 +50,22 @@ describe("options-manager", () => {
     let method_selector: HTMLSelectElement,
         total_effort_selector: HTMLSelectElement,
         remaining_effort_selector: HTMLSelectElement,
-        effort_based_section: HTMLElement;
+        effort_based_section: HTMLElement,
+        links_count_based_section: HTMLElement,
+        update_semantic_progress_button: HTMLElement;
 
     beforeEach(() => {
+        update_semantic_progress_button = document.createElement("button");
         effort_based_section = document.createElement("div");
+        links_count_based_section = document.createElement("div");
         method_selector = document.createElement("select");
         total_effort_selector = document.createElement("select");
         remaining_effort_selector = document.createElement("select");
 
-        populateSelectBox(method_selector, [{ value: "effort-based", name: "effort-based" }]);
+        populateSelectBox(method_selector, [
+            { value: "effort-based", name: "effort-based" },
+            { value: "artifacts-links-count-based", name: "artifacts-links-count-based" },
+        ]);
         populateSelectBox(total_effort_selector, [
             { value: "field_1001", name: "field-1001" },
             { value: "field_1002", name: "field-1002" },
@@ -78,10 +85,12 @@ describe("options-manager", () => {
 
         it("should make selectors listen for value change events", () => {
             init(
+                update_semantic_progress_button,
                 method_selector,
                 effort_based_section,
                 total_effort_selector,
-                remaining_effort_selector
+                remaining_effort_selector,
+                links_count_based_section
             );
 
             expect(method_selector.addEventListener).toHaveBeenCalledWith(
@@ -103,10 +112,12 @@ describe("options-manager", () => {
             getNamedOption(remaining_effort_selector, "field-1002").selected = true;
 
             init(
+                update_semantic_progress_button,
                 method_selector,
                 effort_based_section,
                 total_effort_selector,
-                remaining_effort_selector
+                remaining_effort_selector,
+                links_count_based_section
             );
 
             expect(getNamedOption(total_effort_selector, "field-1002").disabled).toBe(true);
@@ -117,28 +128,74 @@ describe("options-manager", () => {
     describe("<select> management", () => {
         beforeEach(() => {
             init(
+                update_semantic_progress_button,
                 method_selector,
                 effort_based_section,
                 total_effort_selector,
-                remaining_effort_selector
+                remaining_effort_selector,
+                links_count_based_section
             );
         });
 
         describe("toggleComputationMethodConfigSection", () => {
-            it("should toggle the right configuration section", () => {
-                getNamedOption(method_selector, "effort-based").selected = true;
+            it("should toggle the right configuration section and disable/enable required inputs if needed", () => {
+                const effort_based_option = getNamedOption(method_selector, "effort-based");
+                const links_based_option = getNamedOption(
+                    method_selector,
+                    "artifacts-links-count-based"
+                );
+
+                effort_based_option.selected = true;
                 method_selector.dispatchEvent(new Event("change"));
 
                 expect(
                     effort_based_section.classList.contains("selected-computation-method-config")
                 ).toBe(true);
+                expect(
+                    links_count_based_section.classList.contains(
+                        "selected-computation-method-config"
+                    )
+                ).toBe(false);
 
-                getNamedOption(method_selector, "effort-based").selected = false;
+                expect(total_effort_selector.getAttribute("disabled")).toBeNull();
+                expect(remaining_effort_selector.getAttribute("disabled")).toBeNull();
+
+                links_based_option.selected = true;
                 method_selector.dispatchEvent(new Event("change"));
 
                 expect(
                     effort_based_section.classList.contains("selected-computation-method-config")
                 ).toBe(false);
+                expect(
+                    links_count_based_section.classList.contains(
+                        "selected-computation-method-config"
+                    )
+                ).toBe(true);
+
+                expect(total_effort_selector.getAttribute("disabled")).toEqual("disabled");
+                expect(remaining_effort_selector.getAttribute("disabled")).toEqual("disabled");
+            });
+
+            it("should disable the submit button when the links count section is active and config cannot be defined", () => {
+                links_count_based_section.classList.add("links-count-based-config-impossible");
+
+                const effort_based_option = getNamedOption(method_selector, "effort-based");
+                const links_based_option = getNamedOption(
+                    method_selector,
+                    "artifacts-links-count-based"
+                );
+
+                links_based_option.selected = true;
+                method_selector.dispatchEvent(new Event("change"));
+
+                expect(update_semantic_progress_button.getAttribute("disabled")).toEqual(
+                    "disabled"
+                );
+
+                effort_based_option.selected = true;
+                method_selector.dispatchEvent(new Event("change"));
+
+                expect(update_semantic_progress_button.getAttribute("disabled")).toBeNull();
             });
         });
 

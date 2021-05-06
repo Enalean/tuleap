@@ -24,19 +24,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const total_effort_selector = document.getElementById("total-effort");
     const remaining_effort_selector = document.getElementById("remaining-effort");
     const effort_based_config_section = document.getElementById("effort-based-config");
+    const links_count_based_config_section = document.getElementById("links-count-based-config");
+    const update_semantic_progress_button = document.getElementById(
+        "update-semantic-progress-button"
+    );
 
     if (
         !(computation_method_selector instanceof HTMLSelectElement) ||
         !(total_effort_selector instanceof HTMLSelectElement) ||
         !(remaining_effort_selector instanceof HTMLSelectElement) ||
-        !(effort_based_config_section instanceof HTMLElement)
+        !(effort_based_config_section instanceof HTMLElement) ||
+        !(links_count_based_config_section instanceof HTMLElement) ||
+        !(update_semantic_progress_button instanceof HTMLElement)
     ) {
         return;
     }
     init(
+        update_semantic_progress_button,
         computation_method_selector,
         effort_based_config_section,
         total_effort_selector,
-        remaining_effort_selector
+        remaining_effort_selector,
+        links_count_based_config_section
     );
 });

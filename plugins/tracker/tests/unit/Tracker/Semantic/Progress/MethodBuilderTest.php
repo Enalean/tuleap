@@ -157,6 +157,36 @@ class MethodBuilderTest extends TestCase
         );
     }
 
+    public function testItBuildsAMethodBasedOnLinksCountFromRequest(): void
+    {
+        $request = \Mockery::mock(\Codendi_Request::class);
+        $request->shouldReceive('get')->with('computation-method')->andReturn(MethodBasedOnLinksCount::getMethodName());
+
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+            ->with($this->tracker)
+            ->once()
+            ->andReturn([
+                \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)
+            ]);
+
+        $this->natures_factory->shouldReceive('getTypeEnabledInProjectFromShortname')
+            ->with($this->project, '_is_child')
+            ->once()
+            ->andReturn(
+                new NaturePresenter('_is_child', 'Parent', 'Child', true)
+            );
+
+        $method = $this->method_builder->buildMethodFromRequest(
+            $this->tracker,
+            $request
+        );
+
+        $this->assertInstanceOf(
+            MethodBasedOnLinksCount::class,
+            $method
+        );
+    }
+
     public function testItBuildsAnInvalidMethodFromRequestWhenTotalEffortIdIsMissing(): void
     {
         $request = \Mockery::mock(\Codendi_Request::class);

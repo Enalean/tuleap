@@ -27,7 +27,11 @@
                         <span class="highlight">*</span>
                     </label>
                     <div class="controls">
-                        <select id="total-effort" name="total-effort-field-id" required>
+                        <select id="total-effort"
+                                name="total-effort-field-id"
+                                {{^ is_method_effort_based }} disabled {{/ is_method_effort_based }}
+                                required
+                        >
                             <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
                             {{# total_effort_options }}
                                 <option value="{{ id }}"
@@ -42,7 +46,11 @@
                         <span class="highlight">*</span>
                     </label>
                     <div class="controls">
-                        <select id="remaining-effort" name="remaining-effort-field-id" required>
+                        <select id="remaining-effort"
+                                name="remaining-effort-field-id"
+                                {{^ is_method_effort_based }} disabled {{/ is_method_effort_based }}
+                                required
+                        >
                             <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
                             {{# remaining_effort_options }}
                                 <option value="{{ id }}"
@@ -52,8 +60,37 @@
                     </div>
                 </div>
             </div>
+            <div
+                id="links-count-based-config"
+                class="
+                    semantic-progress-computation-method-config
+                    {{# is_method_links_count_based }} selected-computation-method-config {{/ is_method_links_count_based }}
+                    {{^ has_a_link_field }} links-count-based-config-impossible {{/ has_a_link_field }}
+                "
+            >
+                {{# has_a_link_field }}
+                    <div class="alert alert-info">
+                        {{# dgettext }}
+                            tuleap-tracker
+                            | Only artifacts linked with the type "Child" will be taken into account in the computation of the progress.
+                        {{/ dgettext }}
+                        <br>
+                        {{# dgettext }}
+                            tuleap-tracker
+                            | The progress will be computed by dividing the total number of direct children by the number of closed direct children.
+                        {{/ dgettext }}
+                    </div>
+                {{/ has_a_link_field }}
+                {{^ has_a_link_field }}
+                    <div class="alert alert-error">
+                        {{# dgettext }} tuleap-tracker
+                            | Please <a href="{{ tracker_fields_admin_url }}">add an artifact link field</a> to your tracker first.
+                        {{/ dgettext }}
+                    </div>
+                {{/ has_a_link_field }}
+            </div>
             <div>
-                <button class="btn btn-primary" type="submit" name="update-semantic-progress">
+                <button id="update-semantic-progress-button" class="btn btn-primary" type="submit" name="update-semantic-progress">
                     {{# dgettext }} tuleap-tracker | Save your modifications {{/ dgettext }}
                 </button>
                 {{# is_semantic_defined }}

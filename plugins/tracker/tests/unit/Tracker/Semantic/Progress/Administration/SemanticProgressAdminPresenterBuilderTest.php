@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Semantic\Progress\InvalidMethod;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
+use Tuleap\Tracker\Semantic\Progress\MethodBasedOnLinksCount;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 
@@ -88,15 +89,18 @@ class SemanticProgressAdminPresenterBuilderTest extends TestCase
 
         $this->assertSame(
             [
-                ['name' => MethodBasedOnEffort::getMethodName(), 'label' => 'Effort based', 'is_selected' => false],
+                ['name' => MethodBasedOnEffort::getMethodName(), 'label' => MethodBasedOnEffort::getMethodLabel(), 'is_selected' => false],
+                ['name' => MethodBasedOnLinksCount::getMethodName(), 'label' => MethodBasedOnLinksCount::getMethodLabel(), 'is_selected' => false],
             ],
             $presenter->available_computation_methods
         );
+
+        $this->assertTrue($presenter->has_a_link_field);
     }
 
     public function testItBuildsTheAdministrationPresenterForAnInvalidSemantic(): void
     {
-        $this->mockFormElementFactory();
+        $this->mockFormElementFactory(false);
 
         $presenter = $this->builder->build(
             $this->tracker,
@@ -127,10 +131,13 @@ class SemanticProgressAdminPresenterBuilderTest extends TestCase
 
         $this->assertSame(
             [
-                ['name' => MethodBasedOnEffort::getMethodName(), 'label' => 'Effort based', 'is_selected' => false],
+                ['name' => MethodBasedOnEffort::getMethodName(), 'label' => MethodBasedOnEffort::getMethodLabel(), 'is_selected' => false],
+                ['name' => MethodBasedOnLinksCount::getMethodName(), 'label' => MethodBasedOnLinksCount::getMethodLabel(), 'is_selected' => false],
             ],
             $presenter->available_computation_methods
         );
+
+        $this->assertFalse($presenter->has_a_link_field);
     }
 
     public function testItBuildsTheAdministrationPresenterForAnEffortBasedSemantic(): void
@@ -170,10 +177,40 @@ class SemanticProgressAdminPresenterBuilderTest extends TestCase
 
         $this->assertSame(
             [
-                ['name' => MethodBasedOnEffort::getMethodName(), 'label' => 'Effort based', 'is_selected' => true],
+                ['name' => MethodBasedOnEffort::getMethodName(), 'label' => MethodBasedOnEffort::getMethodLabel(), 'is_selected' => true],
+                ['name' => MethodBasedOnLinksCount::getMethodName(), 'label' => MethodBasedOnLinksCount::getMethodLabel(), 'is_selected' => false],
             ],
             $presenter->available_computation_methods
         );
+
+        $this->assertTrue($presenter->has_a_link_field);
+    }
+
+    public function testItBuildsTheAdministrationPresenterForALinksCountBasedSemantic(): void
+    {
+        $this->mockFormElementFactory();
+
+        $presenter = $this->builder->build(
+            $this->tracker,
+            "Used in the Roadmap widget",
+            false,
+            "url/to/updater",
+            \Mockery::mock(\CSRFSynchronizerToken::class),
+            new MethodBasedOnLinksCount(
+                \Mockery::mock(SemanticProgressDao::class),
+                '_is_child'
+            )
+        );
+
+        $this->assertSame(
+            [
+                ['name' => MethodBasedOnEffort::getMethodName(), 'label' => MethodBasedOnEffort::getMethodLabel(), 'is_selected' => false],
+                ['name' => MethodBasedOnLinksCount::getMethodName(), 'label' => MethodBasedOnLinksCount::getMethodLabel(), 'is_selected' => true],
+            ],
+            $presenter->available_computation_methods
+        );
+
+        $this->assertTrue($presenter->has_a_link_field);
     }
 
     private function getNumericFieldMock(int $id, string $label)
@@ -187,8 +224,14 @@ class SemanticProgressAdminPresenterBuilderTest extends TestCase
         );
     }
 
-    private function mockFormElementFactory(): void
+    private function mockFormElementFactory(bool $has_a_links_field = true): void
     {
+        $links_fields = $has_a_links_field ? [\Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)] : [];
+
+        $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
+            ->with($this->tracker)
+            ->andReturn($links_fields);
+
         $this->form_element_factory->shouldReceive('getUsedFormElementsByType')
             ->with(
                 $this->tracker,
