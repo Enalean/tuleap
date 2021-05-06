@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,30 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use DateTimeImmutable;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class RoadmapTasksOutOfDateFilter
+interface IDetectIfArtifactIsOutOfDate
 {
-    /**
-     * @var IDetectIfArtifactIsOutOfDate
-     */
-    private $out_of_date_detector;
-
-    public function __construct(
-        IDetectIfArtifactIsOutOfDate $out_of_date_detector
-    ) {
-        $this->out_of_date_detector = $out_of_date_detector;
-    }
-
-    /**
-     * @param Artifact[] $artifacts
-     * @return Artifact[]
-     */
-    public function filterOutOfDateArtifacts(
-        array $artifacts,
-        DateTimeImmutable $now,
-        \PFUser $user
-    ): array {
-        return array_filter($artifacts, function ($artifact) use ($user, $now) {
-            return ! $this->out_of_date_detector->isArtifactOutOfDate($artifact, $now, $user);
-        });
-    }
+    public function isArtifactOutOfDate(Artifact $artifact, DateTimeImmutable $now, \PFUser $user): bool;
 }

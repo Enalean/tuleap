@@ -97,9 +97,11 @@ final class RoadmapResource
             \Tracker_ArtifactFactory::instance(),
             new DependenciesRetriever(new NatureDao()),
             new RoadmapTasksOutOfDateFilter(
-                new SemanticStatusRetriever(),
-                $timeframe_builder,
-                $this->getLogger()
+                new TaskOutOfDateDetector(
+                    new SemanticStatusRetriever(),
+                    $timeframe_builder,
+                    $this->getLogger(),
+                ),
             ),
             new SemanticProgressBuilder(
                 $progress_dao,

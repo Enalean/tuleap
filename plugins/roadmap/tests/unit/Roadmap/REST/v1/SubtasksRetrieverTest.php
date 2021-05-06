@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use PHPUnit\Framework\TestCase;
 use Tracker;
@@ -35,7 +36,10 @@ class SubtasksRetrieverTest extends TestCase
 {
     use ForceStrictPHPUnitMock;
 
-    private const TASK_ID = 42;
+    private const TASK_ID                      = 42;
+    private const OUT_OF_PAGINATION_SUBTASK_ID = 1001;
+    private const EXPECTED_SUBTASK_ID          = 1002;
+    private const OUT_OF_DATE_SUBTASK_ID       = 1003;
 
     /**
      * @var SubtasksRetriever
@@ -79,10 +83,29 @@ class SubtasksRetrieverTest extends TestCase
                 };
             }
         };
-        $this->retriever              = new SubtasksRetriever(
+
+        $out_of_date_detector = new class (self::OUT_OF_DATE_SUBTASK_ID) implements IDetectIfArtifactIsOutOfDate {
+            /**
+             * @var int
+             */
+            private $out_of_date_artifact_id;
+
+            public function __construct(int $out_of_date_artifact_id)
+            {
+                $this->out_of_date_artifact_id = $out_of_date_artifact_id;
+            }
+
+            public function isArtifactOutOfDate(Artifact $artifact, DateTimeImmutable $now, \PFUser $user): bool
+            {
+                return $artifact->getId() === $this->out_of_date_artifact_id;
+            }
+        };
+
+        $this->retriever = new SubtasksRetriever(
             $this->artifact_factory,
             $user_manager,
-            $representation_builder_cache
+            $representation_builder_cache,
+            $out_of_date_detector,
         );
 
         $this->user = UserTestBuilder::aUser()->build();
@@ -116,18 +139,20 @@ class SubtasksRetrieverTest extends TestCase
         $this->artifact_factory
             ->method('getChildren')
             ->with($artifact)
-            ->willReturn([
-                $this->aSubtask(1001, $artifact->getTracker()),
-                $this->aSubtask(1002, $artifact->getTracker()),
-                $this->aSubtask(1003, $artifact->getTracker()),
-            ]);
+            ->willReturn(
+                [
+                    $this->aSubtask(self::OUT_OF_PAGINATION_SUBTASK_ID, $artifact->getTracker()),
+                    $this->aSubtask(self::EXPECTED_SUBTASK_ID, $artifact->getTracker()),
+                    $this->aSubtask(self::OUT_OF_DATE_SUBTASK_ID, $artifact->getTracker()),
+                ]
+            );
 
-        $tasks = $this->retriever->getTasks(self::TASK_ID, 1, 1);
+        $tasks = $this->retriever->getTasks(self::TASK_ID, 2, 1);
 
         $representations = $tasks->getRepresentations();
         self::assertCount(1, $representations);
         self::assertEquals(3, $tasks->getTotalSize());
-        self::assertEquals(1002, $representations[0]->id);
+        self::assertEquals(self::EXPECTED_SUBTASK_ID, $representations[0]->id);
     }
 
     private function aSubtask(int $id, Tracker $tracker): Artifact
