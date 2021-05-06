@@ -30,7 +30,6 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
@@ -47,11 +46,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
-     */
-    private $features_linked_to_milestone_builder;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ContentDao
@@ -90,12 +84,11 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
 
     protected function setUp(): void
     {
-        $db_transaction_executor                    = new DBTransactionExecutorPassthrough();
-        $this->artifacts_linked_dao                 = \Mockery::mock(ArtifactsLinkedToParentDao::class);
-        $this->tracker_artifact_factory             = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->mirrored_milestone_retriever         = \Mockery::mock(MirroredMilestoneRetriever::class);
-        $this->content_dao                          = \Mockery::mock(ContentDao::class);
-        $this->features_linked_to_milestone_builder = \Mockery::mock(UserStoriesLinkedToMilestoneBuilder::class);
+        $db_transaction_executor            = new DBTransactionExecutorPassthrough();
+        $this->artifacts_linked_dao         = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $this->tracker_artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->mirrored_milestone_retriever = \Mockery::mock(MirroredMilestoneRetriever::class);
+        $this->content_dao                  = \Mockery::mock(ContentDao::class);
 
         $this->planner = new UserStoriesInMirroredMilestonesPlanner(
             $db_transaction_executor,
@@ -103,7 +96,6 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
             $this->tracker_artifact_factory,
             $this->mirrored_milestone_retriever,
             $this->content_dao,
-            $this->features_linked_to_milestone_builder,
             new TestLogger()
         );
     }
@@ -135,8 +127,8 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
             $milestone
         );
 
-        $this->features_linked_to_milestone_builder->shouldReceive('build')->andReturn(
-            [1234 => 1]
+        $this->artifacts_linked_dao->shouldReceive('getUserStoriesOfMirroredMilestoneThatAreNotLinkedToASprint')->andReturn(
+            [['id' => 1234]]
         );
 
         $fields_data = new FieldData(
@@ -235,8 +227,8 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
             $milestone
         );
 
-        $this->features_linked_to_milestone_builder->shouldReceive('build')->andReturn(
-            [1234 => 1]
+        $this->artifacts_linked_dao->shouldReceive('getUserStoriesOfMirroredMilestoneThatAreNotLinkedToASprint')->andReturn(
+            [['id' => 1234]]
         );
 
         $fields_data = new FieldData(
