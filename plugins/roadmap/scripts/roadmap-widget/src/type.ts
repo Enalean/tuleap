@@ -55,3 +55,7 @@ export class TasksDependencies extends WeakMap<Task, TasksByNature> {}
 export class NaturesLabels extends Map<string, string> {}
 
 export class NbUnitsPerYear extends Map<number, number> {}
+
+export interface Row {
+    readonly task: Task;
+}

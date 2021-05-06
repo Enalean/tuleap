@@ -95,15 +95,26 @@ describe("tasks-actions", () => {
     });
 
     it("should store the tasks in the store", async () => {
-        const tasks = [
-            { id: 1, start: new Date(2020, 3, 15), end: null, is_milestone: true },
-            { id: 2, start: new Date(2020, 4, 15), end: null, is_milestone: true },
-        ] as Task[];
-        jest.spyOn(tlp, "recursiveGet").mockResolvedValue(tasks);
+        const task_1 = {
+            id: 1,
+            start: new Date(2020, 3, 15),
+            end: null,
+            is_milestone: true,
+        } as Task;
+        const task_2 = {
+            id: 2,
+            start: new Date(2020, 4, 15),
+            end: null,
+            is_milestone: true,
+        } as Task;
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([task_1, task_2]);
 
         await actions.loadTasks(context, 123);
 
-        expect(context.commit).toHaveBeenCalledWith("setTasks", tasks);
+        expect(context.commit).toHaveBeenCalledWith("setRows", [
+            { task: task_1 },
+            { task: task_2 },
+        ]);
         expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
     });
 });

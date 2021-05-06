@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Task } from "../../type";
+import type { Row } from "../../type";
 
 export interface TasksState {
-    tasks: Task[];
+    rows: Row[];
     is_loading: boolean;
     should_display_empty_state: boolean;
     should_display_error_state: boolean;

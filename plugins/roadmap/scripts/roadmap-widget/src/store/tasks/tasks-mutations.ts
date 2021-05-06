@@ -18,7 +18,7 @@
  */
 
 import type { TasksState } from "./type";
-import type { Task } from "../../type";
+import type { Row } from "../../type";
 
 export function setIsLoading(state: TasksState, is_loading: boolean): void {
     state.is_loading = is_loading;
@@ -42,6 +42,6 @@ export function setShouldDisplayErrorState(
     state.should_display_error_state = should_display_error_state;
 }
 
-export function setTasks(state: TasksState, tasks: Task[]): void {
-    state.tasks = tasks;
+export function setRows(state: TasksState, rows: Row[]): void {
+    state.rows = rows;
 }

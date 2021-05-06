@@ -19,6 +19,7 @@
 
 import type { TasksState } from "./type";
 import * as mutations from "./tasks-mutations";
+import type { Row, Task } from "../../type";
 
 describe("tasks-mutations", () => {
     it("setIsLoading set the corresponding boolean", () => {
@@ -59,5 +60,16 @@ describe("tasks-mutations", () => {
         mutations.setErrorMessage(state, "This is not right!");
 
         expect(state.error_message).toBe("This is not right!");
+    });
+
+    it("setRoms stores the task rows", () => {
+        const state: TasksState = {
+            rows: [] as Row[],
+        } as TasksState;
+
+        const rows: Row[] = [{ task: { id: 123 } as Task }, { task: { id: 124 } as Task }];
+        mutations.setRows(state, rows);
+
+        expect(state.rows).toBe(rows);
     });
 });
