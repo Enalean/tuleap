@@ -189,26 +189,26 @@ export default class GanttBoard extends Vue {
         return this.rows.map((row) => row.task);
     }
 
+    get first_date(): Date {
+        return getFirstDate(this.tasks, this.now);
+    }
+
+    get last_date(): Date {
+        return getLastDate(this.tasks, this.now);
+    }
+
     get time_period(): TimePeriod {
         if (this.timescale === "week") {
-            return new TimePeriodWeek(
-                getFirstDate(this.tasks, this.now),
-                getLastDate(this.tasks, this.now),
-                this
-            );
+            return new TimePeriodWeek(this.getFirstDateWithOffset(7), this.last_date, this);
         }
 
         if (this.timescale === "quarter") {
-            return new TimePeriodQuarter(
-                getFirstDate(this.tasks, this.now),
-                getLastDate(this.tasks, this.now),
-                this
-            );
+            return new TimePeriodQuarter(this.getFirstDateWithOffset(90), this.last_date, this);
         }
 
         return new TimePeriodMonth(
-            getFirstDate(this.tasks, this.now),
-            getLastDate(this.tasks, this.now),
+            this.getFirstDateWithOffset(30),
+            this.last_date,
             this.locale_bcp47
         );
     }
@@ -227,6 +227,15 @@ export default class GanttBoard extends Vue {
 
     get header_class(): string {
         return this.is_scrolling ? "roadmap-gantt-header-is-scrolling" : "";
+    }
+
+    getFirstDateWithOffset(nb_days_to_substract: number): Date {
+        const first_date_with_offset = new Date(this.first_date);
+        first_date_with_offset.setUTCDate(
+            first_date_with_offset.getUTCDate() - nb_days_to_substract
+        );
+
+        return first_date_with_offset;
     }
 }
 </script>

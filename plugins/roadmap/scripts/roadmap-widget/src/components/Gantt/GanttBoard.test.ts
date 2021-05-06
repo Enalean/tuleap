@@ -110,7 +110,7 @@ describe("GanttBoard", () => {
         expect(time_period_header.exists()).toBe(true);
         expect(
             time_period_header.props("time_period").units.map((month: Date) => month.toDateString())
-        ).toStrictEqual(["Wed Apr 01 2020", "Fri May 01 2020"]);
+        ).toStrictEqual(["Sun Mar 01 2020", "Wed Apr 01 2020", "Fri May 01 2020"]);
         expect(time_period_header.props("nb_additional_units")).toBe(0);
     });
 
@@ -206,7 +206,7 @@ describe("GanttBoard", () => {
         expect(time_period_header.exists()).toBe(true);
         expect(
             time_period_header.props("time_period").units.map((month: Date) => month.toDateString())
-        ).toStrictEqual(["Wed Apr 01 2020", "Fri May 01 2020"]);
+        ).toStrictEqual(["Sun Mar 01 2020", "Wed Apr 01 2020", "Fri May 01 2020"]);
         expect(time_period_header.props("nb_additional_units")).toBe(0);
 
         const observerCallback = mockResizeObserver.mock.calls[0][0];
@@ -217,7 +217,7 @@ describe("GanttBoard", () => {
             } as unknown) as ResizeObserverEntry,
         ]);
 
-        expect(time_period_header.props("nb_additional_units")).toBe(2);
+        expect(time_period_header.props("nb_additional_units")).toBe(1);
     });
 
     it("Use a different time period if user chose a different timescale", async () => {
