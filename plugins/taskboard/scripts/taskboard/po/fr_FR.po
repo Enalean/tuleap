@@ -66,6 +66,12 @@ msgstr ""
 msgid "John"
 msgstr "Jean"
 
+msgid "Move card to the left cell"
+msgstr "Déplacer la carte à gauche"
+
+msgid "Move card to the right cell"
+msgstr "Déplacer la carte à droite"
+
 msgid "Move from one swimlane or card to the next one"
 msgstr "Aller d'une ligne ou d'une carte à la suivante"
 
@@ -78,8 +84,11 @@ msgstr "Aller à la première carte de la cellule de gauche"
 msgid "Move to the first card of right cell"
 msgstr "Aller à la première carte de la cellule de droite"
 
-msgid "Navigation in Taskboard"
-msgstr "Navigation dans Taskboard"
+msgid "Moving cards"
+msgstr "Déplacement des cartes"
+
+msgid "Navigation"
+msgstr "Navigation"
 
 msgid "New remaining effort"
 msgstr "Nouvel effort restant"

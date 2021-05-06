@@ -31,7 +31,6 @@ import Vuex from "vuex";
 import type { UserState } from "./src/store/user/type";
 import type { RootState } from "./src/store/type";
 import type { ColumnState } from "./src/store/column/type";
-import { setupTaskboardShortcuts } from "./src/keyboard-navigation/keyboard-navigation";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -119,10 +118,4 @@ document.addEventListener("DOMContentLoaded", async () => {
             ticking = true;
         });
     }
-
-    const gettext_provider = {
-        $gettext: Vue.prototype.$gettext,
-        $pgettext: Vue.prototype.$pgettext,
-    };
-    setupTaskboardShortcuts(document, gettext_provider);
 });

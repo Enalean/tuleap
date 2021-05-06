@@ -27,6 +27,8 @@ import type { RootState } from "../../store/type";
 import * as drekkenov from "@tuleap/drag-and-drop";
 import ErrorModal from "../GlobalError/ErrorModal.vue";
 
+jest.mock("../../keyboard-navigation/keyboard-navigation");
+
 async function createWrapper(
     swimlanes: Swimlane[],
     are_closed_items_displayed: boolean
