@@ -105,7 +105,14 @@ export default class DependencyArrow extends Vue {
     }
 
     get is_task_ends_after_dependency_start(): boolean {
-        return this.right_of_task > this.left_of_dependency;
+        const end_of_task = this.task.end || this.task.start;
+        const start_of_dependency = this.dependency.start || this.dependency.end;
+
+        if (!end_of_task || !start_of_dependency) {
+            return false;
+        }
+
+        return end_of_task > start_of_dependency;
     }
 
     get is_task_and_text_end_after_dependency_start(): boolean {
