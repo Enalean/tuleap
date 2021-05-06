@@ -25,6 +25,7 @@
 
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
+use Tuleap\Git\Hook\CrossReferencesExtractor;
 use Tuleap\Git\Webhook\GitWebhookStatusLogger;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -100,7 +101,7 @@ $post_receive = new Git_Hook_PostReceive(
         new Git_Hook_LogPushes(
             $git_dao
         ),
-        new Git_Hook_ExtractCrossReferences(
+        new CrossReferencesExtractor(
             $git_exec,
             ReferenceManager::instance()
         ),

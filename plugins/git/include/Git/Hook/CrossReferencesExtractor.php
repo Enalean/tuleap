@@ -22,12 +22,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Git\Hook;
+
+use Git;
+use Git_Exec;
+use Git_Hook_PushDetails;
+use ReferenceManager;
+
 /**
  * Extract references usage in commit messages
  */
-class Git_Hook_ExtractCrossReferences
+class CrossReferencesExtractor
 {
-
     /**
      * @var Git_Exec
      */
@@ -44,7 +52,7 @@ class Git_Hook_ExtractCrossReferences
         $this->reference_manager = $reference_manager;
     }
 
-    public function execute(Git_Hook_PushDetails $push_details, $commit_sha1)
+    public function extractCommitReference(Git_Hook_PushDetails $push_details, string $commit_sha1): void
     {
         $rev_id = $push_details->getRepository()->getFullName() . '/' . $commit_sha1;
         $text   = $this->git_exec->catFile($commit_sha1);
@@ -52,8 +60,28 @@ class Git_Hook_ExtractCrossReferences
             $text,
             $rev_id,
             Git::REFERENCE_NATURE,
-            $push_details->getRepository()->getProject()->getId(),
-            $push_details->getUser()->getId()
+            (int) $push_details->getRepository()->getProject()->getId(),
+            (int) $push_details->getUser()->getId()
+        );
+    }
+
+    public function extractTagReference(Git_Hook_PushDetails $push_details): void
+    {
+        $tag_reference = $push_details->getRefname();
+        if (strpos($tag_reference, 'refs/tags') === 0) {
+            $tag_name = str_replace('refs/tags/', '', $tag_reference);
+        } else {
+            $tag_name = $tag_reference;
+        }
+
+        $rev_id = $push_details->getRepository()->getFullName() . '/' . $tag_name;
+        $text   = $this->git_exec->catFile($tag_name);
+        $this->reference_manager->extractCrossRef(
+            $text,
+            $rev_id,
+            Git::TAG_REFERENCE_NATURE,
+            (int) $push_details->getRepository()->getProject()->getId(),
+            (int) $push_details->getUser()->getId()
         );
     }
 }
