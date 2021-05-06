@@ -26,14 +26,15 @@ use Project;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
+use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
-use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
-use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
-use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
+use UserNotExistException;
 
 class PostPushWebhookActionProcessor
 {
@@ -70,6 +71,10 @@ class PostPushWebhookActionProcessor
      * @var PostPushCommitBotCommenter
      */
     private $commenter;
+    /**
+     * @var PostPushWebhookCloseArtifactHandler
+     */
+    private $close_artifact_handler;
 
     public function __construct(
         WebhookTuleapReferencesParser $commit_tuleap_references_parser,
@@ -78,7 +83,8 @@ class PostPushWebhookActionProcessor
         ReferenceManager $reference_manager,
         TuleapReferenceRetriever $tuleap_reference_retriever,
         LoggerInterface $logger,
-        PostPushCommitBotCommenter $commenter
+        PostPushCommitBotCommenter $commenter,
+        PostPushWebhookCloseArtifactHandler $close_artifact_handler
     ) {
         $this->commit_tuleap_references_parser     = $commit_tuleap_references_parser;
         $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
@@ -87,6 +93,7 @@ class PostPushWebhookActionProcessor
         $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
         $this->logger                              = $logger;
         $this->commenter                           = $commenter;
+        $this->close_artifact_handler              = $close_artifact_handler;
     }
 
     public function process(GitlabRepository $gitlab_repository, PostPushWebhookData $webhook_data): void
@@ -132,9 +139,14 @@ class PostPushWebhookActionProcessor
                     $projects
                 );
 
+                $this->close_artifact_handler->handleArtifactClosure(
+                    $tuleap_reference,
+                    $commit_webhook_data
+                );
+
                 $good_references[] = $tuleap_reference;
-            } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $reference_exception) {
-                $this->logger->error($reference_exception->getMessage());
+            } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException | UserNotExistException $exception) {
+                $this->logger->error($exception->getMessage());
             }
         }
 

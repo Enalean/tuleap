@@ -23,17 +23,26 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 class WebhookTuleapReferencesParser
 {
+    private const RESOLVE_KEYWORD_REGEX = "resolve\s?|resolves\s?";
+
     public function extractCollectionOfTuleapReferences(
         string $message
     ): WebhookTuleapReferenceCollection {
         $matches = [];
-        $pattern = '/(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';
+        $pattern = '/(' . self::RESOLVE_KEYWORD_REGEX . ')?(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';
         preg_match_all($pattern, $message, $matches);
 
+
         $parsed_tuleap_references = [];
-        if (isset($matches[1])) {
-            foreach ($matches[1] as $id) {
-                $parsed_tuleap_references[] = new WebhookTuleapReference((int) $id);
+        if (isset($matches[2])) {
+            for ($match_index = 0; $match_index < count($matches[2]); $match_index++) {
+                $close_artifact_keyword = preg_replace('/\s+/', '', $matches[1][$match_index]);
+                $artifact_id            = $matches[2][$match_index];
+                if ($close_artifact_keyword === '') {
+                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, null);
+                } else {
+                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, $close_artifact_keyword);
+                }
             }
         }
 

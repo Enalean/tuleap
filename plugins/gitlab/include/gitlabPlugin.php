@@ -27,6 +27,7 @@ use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
+use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
@@ -61,6 +62,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookCloseArtifactHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
@@ -93,6 +95,7 @@ use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class gitlabPlugin extends Plugin
@@ -138,7 +141,7 @@ class gitlabPlugin extends Plugin
 
     public function getDependencies(): array
     {
-        return ['git'];
+        return ['git', 'tracker'];
     }
 
     public function getExternalUsedServiceEvent(GetExternalUsedServiceEvent $event): void
@@ -225,6 +228,15 @@ class gitlabPlugin extends Plugin
             ),
         );
 
+        $commenter = new PostPushCommitBotCommenter(
+            $comment_sender,
+            new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+            $logger,
+            new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+            TemplateRendererFactory::build(),
+            UserManager::instance()
+        );
+
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -254,12 +266,13 @@ class gitlabPlugin extends Plugin
                     $reference_manager,
                     $tuleap_reference_retriever,
                     $logger,
-                    new PostPushCommitBotCommenter(
-                        $comment_sender,
-                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
-                        $logger,
-                        new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
-                        TemplateRendererFactory::build()
+                    $commenter,
+                    new PostPushWebhookCloseArtifactHandler(
+                        $commenter,
+                        new ArtifactRetriever(Tracker_ArtifactFactory::instance()),
+                        UserManager::instance(),
+                        Tracker_Semantic_StatusFactory::instance(),
+                        $logger
                     )
                 ),
                 new PostMergeRequestWebhookActionProcessor(
