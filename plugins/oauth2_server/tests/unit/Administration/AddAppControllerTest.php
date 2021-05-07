@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -35,39 +33,38 @@ use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var AddAppController
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
      */
     private $app_dao;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|LastGeneratedClientSecretStore
+     * @var \PHPUnit\Framework\MockObject\MockObject|LastGeneratedClientSecretStore
      */
     private $client_secret_store;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
+     * @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
 
     protected function setUp(): void
     {
-        $this->app_dao             = M::mock(AppDao::class);
-        $this->client_secret_store = M::mock(LastGeneratedClientSecretStore::class);
-        $this->redirector          = M::mock(RedirectWithFeedbackFactory::class);
-        $this->csrf_token          = M::mock(\CSRFSynchronizerToken::class);
+        $this->app_dao             = $this->createMock(AppDao::class);
+        $this->client_secret_store = $this->createMock(LastGeneratedClientSecretStore::class);
+        $this->redirector          = $this->createMock(RedirectWithFeedbackFactory::class);
+        $this->csrf_token          = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller          = new AddAppController(
             HTTPFactoryBuilder::responseFactory(),
             $this->app_dao,
@@ -75,9 +72,9 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->client_secret_store,
             $this->redirector,
             $this->csrf_token,
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
-        $this->csrf_token->shouldReceive('check');
+        $this->csrf_token->method('check');
     }
 
     /**
@@ -88,11 +85,10 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request  = $this->buildProjectAdminRequest()->withParsedBody($parsed_body);
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->redirector->shouldReceive('createResponseForUser')
-            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
-            ->once()
-            ->andReturn($response);
-        $this->app_dao->shouldNotReceive('create');
+        $this->redirector->expects(self::once())->method('createResponseForUser')
+            ->with(self::isInstanceOf(\PFUser::class), '/plugins/oauth2_server/project/102/admin', self::isInstanceOf(NewFeedback::class))
+            ->willReturn($response);
+        $this->app_dao->expects(self::never())->method('create');
 
         $this->assertSame($response, $this->controller->handle($request));
     }
@@ -112,13 +108,11 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleCreatesProjectAppAndRedirects(array $body): void
     {
         $request = $this->buildProjectAdminRequest()->withParsedBody($body);
-        $this->app_dao->shouldReceive('create')
-            ->once()
-            ->with(M::type(NewOAuth2App::class))
-            ->andReturn(1);
-        $this->client_secret_store->shouldReceive('storeLastGeneratedClientSecret')
-            ->once()
-            ->with(1, M::type(SplitTokenVerificationString::class));
+        $this->app_dao->expects(self::once())->method('create')
+            ->with(self::isInstanceOf(NewOAuth2App::class))
+            ->willReturn(1);
+        $this->client_secret_store->expects(self::once())->method('storeLastGeneratedClientSecret')
+            ->with(1, self::isInstanceOf(SplitTokenVerificationString::class));
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -131,13 +125,11 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testHandleCreatesSiteAppAndRedirects(array $body): void
     {
         $request = $this->buildSiteAdminRequest()->withParsedBody($body);
-        $this->app_dao->shouldReceive('create')
-            ->once()
-            ->with(M::type(NewOAuth2App::class))
-            ->andReturn(1);
-        $this->client_secret_store->shouldReceive('storeLastGeneratedClientSecret')
-            ->once()
-            ->with(1, M::type(SplitTokenVerificationString::class));
+        $this->app_dao->expects(self::once())->method('create')
+            ->with(self::isInstanceOf(NewOAuth2App::class))
+            ->willReturn(1);
+        $this->client_secret_store->expects(self::once())->method('storeLastGeneratedClientSecret')
+            ->with(1, self::isInstanceOf(SplitTokenVerificationString::class));
 
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
@@ -154,10 +146,7 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProjectAdminGetUrl(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(102)
-            ->getMock();
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $this->assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getProjectAdminURL($project));
     }

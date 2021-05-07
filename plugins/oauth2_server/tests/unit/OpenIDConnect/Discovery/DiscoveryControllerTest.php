@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\Discovery;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -32,7 +30,6 @@ use Tuleap\Http\Server\NullServerRequest;
 
 final class DiscoveryControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
@@ -40,27 +37,26 @@ final class DiscoveryControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ConfigurationResponseRepresentationBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|ConfigurationResponseRepresentationBuilder
      */
     private $representation_builder;
 
     protected function setUp(): void
     {
-        $this->representation_builder = M::mock(ConfigurationResponseRepresentationBuilder::class);
+        $this->representation_builder = $this->createMock(ConfigurationResponseRepresentationBuilder::class);
 
         \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
         $this->controller = new DiscoveryController(
             $this->representation_builder,
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 
     public function testReturnsAJSONObject(): void
     {
-        $this->representation_builder->shouldReceive('build')
-            ->once()
-            ->andReturn(new ConfigurationResponseRepresentation(['en-US'], ['openid']));
+        $this->representation_builder->expects(self::once())->method('build')
+            ->willReturn(new ConfigurationResponseRepresentation(['en-US'], ['openid']));
         $response = $this->controller->handle(new NullServerRequest());
 
         $this->assertEquals(200, $response->getStatusCode());

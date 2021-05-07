@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -32,8 +30,6 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var AuthorizationFormPresenterBuilder
      */
@@ -60,9 +56,9 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
                 return 'Test scope';
             }
         };
-        $foobar_scope      = M::mock(AuthenticationScope::class);
-        $foobar_scope->shouldReceive('getDefinition')->once()->andReturn($foobar_definition);
-        $foobar_scope->shouldReceive('getIdentifier')->once()->andReturn($foobar_identifier);
+        $foobar_scope      = $this->createMock(AuthenticationScope::class);
+        $foobar_scope->expects(self::once())->method('getDefinition')->willReturn($foobar_definition);
+        $foobar_scope->expects(self::once())->method('getIdentifier')->willReturn($foobar_identifier);
         $typevalue_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
         $typevalue_definition = new class implements AuthenticationScopeDefinition {
             public function getName(): string
@@ -75,9 +71,9 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
                 return 'Other test scope';
             }
         };
-        $typevalue_scope      = M::mock(AuthenticationScope::class);
-        $typevalue_scope->shouldReceive('getDefinition')->once()->andReturn($typevalue_definition);
-        $typevalue_scope->shouldReceive('getIdentifier')->once()->andReturn($typevalue_identifier);
+        $typevalue_scope      = $this->createMock(AuthenticationScope::class);
+        $typevalue_scope->expects(self::once())->method('getDefinition')->willReturn($typevalue_definition);
+        $typevalue_scope->expects(self::once())->method('getIdentifier')->willReturn($typevalue_identifier);
         $redirect_uri        = 'https://example.com';
         $state_value         = 'xyz';
         $pkce_code_challenge = 'pkce_code_challenge';
@@ -91,7 +87,7 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
                 true,
                 new \Project(['group_id' => 101, 'group_name' => 'Test Project'])
             ),
-            M::mock(\CSRFSynchronizerToken::class),
+            $this->createMock(\CSRFSynchronizerToken::class),
             $redirect_uri,
             $state_value,
             $pkce_code_challenge,

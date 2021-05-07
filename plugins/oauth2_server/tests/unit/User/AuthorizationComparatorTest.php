@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
 use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
 use Tuleap\OAuth2Server\App\OAuth2App;
@@ -31,18 +29,16 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var AuthorizationComparator */
     private $comparator;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizedScopeFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizedScopeFactory
      */
     private $factory;
 
     protected function setUp(): void
     {
-        $this->factory    = M::mock(AuthorizedScopeFactory::class);
+        $this->factory    = $this->createMock(AuthorizedScopeFactory::class);
         $this->comparator = new AuthorizationComparator($this->factory);
     }
 
@@ -56,10 +52,9 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $user = UserTestBuilder::anAnonymousUser()->build();
         $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
-        $this->factory->shouldReceive('getAuthorizedScopes')
+        $this->factory->expects(self::once())->method('getAuthorizedScopes')
             ->with($user, $app)
-            ->once()
-            ->andReturn($saved_scopes);
+            ->willReturn($saved_scopes);
         $this->assertSame(
             $expected_result,
             $this->comparator->areRequestedScopesAlreadyGranted($user, $app, $requested_scopes)

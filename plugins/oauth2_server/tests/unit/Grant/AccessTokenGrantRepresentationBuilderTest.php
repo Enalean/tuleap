@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -38,18 +37,16 @@ use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 
 final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenCreator
      */
     private $access_token_creator;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2RefreshTokenCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenCreator
      */
     private $refresh_token_creator;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OpenIDConnectIDTokenCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject|OpenIDConnectIDTokenCreator
      */
     private $id_token_creator;
     /**
@@ -59,9 +56,9 @@ final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUn
 
     protected function setUp(): void
     {
-        $this->access_token_creator  = \Mockery::mock(OAuth2AccessTokenCreator::class);
-        $this->refresh_token_creator = \Mockery::mock(OAuth2RefreshTokenCreator::class);
-        $this->id_token_creator      = \Mockery::mock(OpenIDConnectIDTokenCreator::class);
+        $this->access_token_creator  = $this->createMock(OAuth2AccessTokenCreator::class);
+        $this->refresh_token_creator = $this->createMock(OAuth2RefreshTokenCreator::class);
+        $this->id_token_creator      = $this->createMock(OpenIDConnectIDTokenCreator::class);
 
         $this->builder = new AccessTokenGrantRepresentationBuilder(
             $this->access_token_creator,
@@ -72,11 +69,11 @@ final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUn
 
     public function testGeneratesSuccessfulRequestRepresentationFromAuthorizationCode(): void
     {
-        $this->access_token_creator->shouldReceive('issueAccessToken')->andReturn(
+        $this->access_token_creator->method('issueAccessToken')->willReturn(
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20'))
         );
-        $this->refresh_token_creator->shouldReceive('issueRefreshTokenIdentifierFromAuthorizationCode')->andReturn(new ConcealedString('rt_token'));
-        $this->id_token_creator->shouldReceive('issueIDTokenFromAuthorizationCode')->andReturn('jwt_id_token');
+        $this->refresh_token_creator->method('issueRefreshTokenIdentifierFromAuthorizationCode')->willReturn(new ConcealedString('rt_token'));
+        $this->id_token_creator->method('issueIDTokenFromAuthorizationCode')->willReturn('jwt_id_token');
 
         $representation = $this->builder->buildRepresentationFromAuthorizationCode(
             new \DateTimeImmutable('@10'),
@@ -95,11 +92,11 @@ final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUn
 
     public function testGeneratesSuccessfulRequestRepresentationFromRefreshToken(): void
     {
-        $this->access_token_creator->shouldReceive('issueAccessToken')->andReturn(
+        $this->access_token_creator->method('issueAccessToken')->willReturn(
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20'))
         );
-        $this->refresh_token_creator->shouldReceive('issueRefreshTokenIdentifierFromExistingRefreshToken')->andReturn(new ConcealedString('rt_token'));
-        $this->id_token_creator->shouldNotReceive('issueIDTokenFromAuthorizationCode');
+        $this->refresh_token_creator->method('issueRefreshTokenIdentifierFromExistingRefreshToken')->willReturn(new ConcealedString('rt_token'));
+        $this->id_token_creator->expects(self::never())->method('issueIDTokenFromAuthorizationCode');
 
         $representation = $this->builder->buildRepresentationFromRefreshToken(
             new \DateTimeImmutable('@10'),

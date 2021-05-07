@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\User;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -38,7 +36,6 @@ use Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware;
 
 final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
@@ -51,7 +48,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
         $this->controller = new UserInfoController(
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            M::mock(EmitterInterface::class)
+            $this->createMock(EmitterInterface::class)
         );
     }
 

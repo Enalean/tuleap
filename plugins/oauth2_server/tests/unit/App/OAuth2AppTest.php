@@ -20,20 +20,17 @@
 
 namespace Tuleap\OAuth2Server\App;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider dataProviderInvalidData
      */
     public function testFromAppDataThrowsWhenDataIsInvalid(string $app_id, string $app_name): void
     {
         $this->expectException(InvalidAppDataException::class);
-        OAuth2App::fromProjectAdministrationData($app_id, $app_name, '', true, M::mock(\Project::class));
+        OAuth2App::fromProjectAdministrationData($app_id, $app_name, '', true, ProjectTestBuilder::aProject()->build());
     }
 
     public function dataProviderInvalidData(): array
@@ -57,7 +54,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $app_id      = '75';
         $app_name    = 'Jenkins';
-        $project     = M::mock(\Project::class);
+        $project     = ProjectTestBuilder::aProject()->build();
         $updated_app = OAuth2App::fromProjectAdministrationData($app_id, $app_name, $redirect_uri, $use_pkce, $project);
         $this->assertSame(75, $updated_app->getId());
         $this->assertSame($app_name, $updated_app->getName());

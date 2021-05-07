@@ -22,26 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Scope;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
 final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var ScopeExtractor */
     private $scope_extractor;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthenticationScopeBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthenticationScopeBuilder
      */
     private $scope_builder;
 
     protected function setUp(): void
     {
-        $this->scope_builder   = M::mock(AuthenticationScopeBuilder::class);
+        $this->scope_builder   = $this->createMock(AuthenticationScopeBuilder::class);
         $this->scope_extractor = new ScopeExtractor($this->scope_builder);
     }
 
@@ -53,16 +49,15 @@ final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExtractScopesThrowsWhenScopeHasUnknownIdentifier(): void
     {
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
+        $this->scope_builder->expects(self::once())->method('buildAuthenticationScopeFromScopeIdentifier')
             ->with(
-                M::on(
+                self::callback(
                     static function (AuthenticationScopeIdentifier $scope_identifier): bool {
                         return 'unknown:scope' === $scope_identifier->toString();
                     }
                 )
             )
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(InvalidOAuth2ScopeException::class);
         $this->scope_extractor->extractScopes('unknown:scope');
@@ -70,22 +65,16 @@ final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExtractScopesFromQueryAndSplitsOnSpaceCharacter(): void
     {
-        $foobar_scope    = M::mock(AuthenticationScope::class);
-        $typevalue_scope = M::mock(AuthenticationScope::class);
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
-            M::on(
+        $foobar_scope    = $this->createMock(AuthenticationScope::class);
+        $typevalue_scope = $this->createMock(AuthenticationScope::class);
+        $this->scope_builder->expects(self::exactly(2))->method('buildAuthenticationScopeFromScopeIdentifier')->with(
+            self::callback(
                 static function (AuthenticationScopeIdentifier $scope_identifier): bool {
-                    return 'foo:bar' === $scope_identifier->toString();
+                    $raw_scope_identifier = $scope_identifier->toString();
+                    return 'foo:bar' === $raw_scope_identifier || 'type:value' === $raw_scope_identifier;
                 }
             )
-        )->once()->andReturn($foobar_scope);
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
-            M::on(
-                static function (AuthenticationScopeIdentifier $scope_identifier): bool {
-                    return 'type:value' === $scope_identifier->toString();
-                }
-            )
-        )->once()->andReturn($foobar_scope);
+        )->willReturn($foobar_scope);
 
         $scopes = $this->scope_extractor->extractScopes('foo:bar type:value');
         $this->assertEquals([$foobar_scope, $typevalue_scope], $scopes);
@@ -93,14 +82,14 @@ final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExtractScopeFromQueryWithoutDuplicates(): void
     {
-        $foobar_scope = M::mock(AuthenticationScope::class);
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
-            M::on(
+        $foobar_scope = $this->createMock(AuthenticationScope::class);
+        $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')->with(
+            self::callback(
                 static function (AuthenticationScopeIdentifier $scope_identifier): bool {
                     return 'foo:bar' === $scope_identifier->toString();
                 }
             )
-        )->once()->andReturn($foobar_scope);
+        )->willReturn($foobar_scope);
 
         $scopes = $this->scope_extractor->extractScopes('foo:bar foo:bar');
         $this->assertEquals([$foobar_scope], $scopes);

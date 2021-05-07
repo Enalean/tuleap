@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Scope;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -31,14 +30,12 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 
 final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeIdentifierSearcherDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeIdentifierSearcherDAO
      */
     private $scope_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthenticationScopeBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthenticationScopeBuilder
      */
     private $scope_builder;
     /**
@@ -48,29 +45,30 @@ final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->scope_dao     = \Mockery::mock(OAuth2ScopeIdentifierSearcherDAO::class);
-        $this->scope_builder = \Mockery::mock(AuthenticationScopeBuilder::class);
+        $this->scope_dao     = $this->createMock(OAuth2ScopeIdentifierSearcherDAO::class);
+        $this->scope_builder = $this->createMock(AuthenticationScopeBuilder::class);
 
         $this->retriever = new OAuth2ScopeRetriever($this->scope_dao, $this->scope_builder);
     }
 
     public function testRetrievesScopesAssociatedWithAToken(): void
     {
-        $this->scope_dao->shouldReceive('searchScopeIdentifiersByOAuth2SplitTokenID')->andReturn([
+        $this->scope_dao->method('searchScopeIdentifiersByOAuth2SplitTokenID')->willReturn([
             ['scope_key' => 'profile'],
             ['scope_key' => 'somethingspecific:read'],
         ]);
 
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
-            \Mockery::on(static function (AuthenticationScopeIdentifier $scope_identifier): bool {
-                return 'profile' === $scope_identifier->toString();
-            })
-        )->once()->andReturn(\Mockery::mock(AuthenticationScope::class));
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
-            \Mockery::on(static function (AuthenticationScopeIdentifier $scope_identifier): bool {
-                return 'somethingspecific:read' === $scope_identifier->toString();
-            })
-        )->once()->andReturn(\Mockery::mock(AuthenticationScope::class));
+        $auth_scope = $this->createMock(AuthenticationScope::class);
+        $this->scope_builder->expects(self::exactly(2))->method('buildAuthenticationScopeFromScopeIdentifier')
+            ->willReturnCallback(
+                static function (AuthenticationScopeIdentifier $scope_identifier) use ($auth_scope): AuthenticationScope {
+                    $raw_scope_identifier = $scope_identifier->toString();
+                    if ($raw_scope_identifier === 'profile' || $raw_scope_identifier === 'somethingspecific:read') {
+                        return $auth_scope;
+                    }
+                    throw new \LogicException('Do not expect the scope identifier ' . $raw_scope_identifier);
+                }
+            );
 
         $scopes = $this->retriever->getScopesBySplitToken($this->buildToken());
 
@@ -79,11 +77,11 @@ final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testOnlyRetrievesBuildableScopes(): void
     {
-        $this->scope_dao->shouldReceive('searchScopeIdentifiersByOAuth2SplitTokenID')->andReturn([
+        $this->scope_dao->method('searchScopeIdentifiersByOAuth2SplitTokenID')->willReturn([
             ['scope_key' => 'unknown']
         ]);
 
-        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->andReturn(null);
+        $this->scope_builder->method('buildAuthenticationScopeFromScopeIdentifier')->willReturn(null);
 
         $scopes = $this->retriever->getScopesBySplitToken($this->buildToken());
 

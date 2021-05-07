@@ -22,32 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var AuthorizationRevoker
      */
     private $authorization_revoker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeDAO
      */
     private $auth_code_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthorizationDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationDao
      */
     private $authorization_dao;
 
     protected function setUp(): void
     {
-        $this->auth_code_dao     = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
-        $this->authorization_dao = \Mockery::mock(AuthorizationDao::class);
+        $this->auth_code_dao     = $this->createMock(OAuth2AuthorizationCodeDAO::class);
+        $this->authorization_dao = $this->createMock(AuthorizationDao::class);
 
         $this->authorization_revoker = new AuthorizationRevoker(
             $this->auth_code_dao,
@@ -59,10 +56,9 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesAuthorizationExistReturnsTrue(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->authorization_dao->shouldReceive('searchAuthorization')
+        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
             ->with($user, 13)
-            ->once()
-            ->andReturn(46);
+            ->willReturn(46);
 
         $this->assertTrue($this->authorization_revoker->doesAuthorizationExist($user, 13));
     }
@@ -70,10 +66,9 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDoesAuthorizationExistReturnsFalse(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->authorization_dao->shouldReceive('searchAuthorization')
+        $this->authorization_dao->expects(self::once())->method('searchAuthorization')
             ->with($user, 13)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->assertFalse($this->authorization_revoker->doesAuthorizationExist($user, 13));
     }
@@ -81,8 +76,8 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRevokeAppAuthorization(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $this->authorization_dao->shouldReceive('deleteAuthorizationByUserAndAppID')->with($user, 12)->once();
-        $this->auth_code_dao->shouldReceive('deleteAuthorizationCodeByUserAndAppID')->with($user, 12)->once();
+        $this->authorization_dao->expects(self::once())->method('deleteAuthorizationByUserAndAppID')->with($user, 12);
+        $this->auth_code_dao->expects(self::once())->method('deleteAuthorizationCodeByUserAndAppID')->with($user, 12);
 
         $this->authorization_revoker->revokeAppAuthorization($user, 12);
     }
