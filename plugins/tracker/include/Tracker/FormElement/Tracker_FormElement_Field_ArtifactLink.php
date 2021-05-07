@@ -140,7 +140,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         $arr    = [];
-        $values = $this->getChangesetValues($changeset_id);
+        $values = $this->getChangesetValues($this->getCurrentUser(), $changeset_id);
         foreach ($values as $artifact_link_info) {
             $arr[] = $artifact_link_info->getLink();
         }
@@ -162,9 +162,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             new HTMLOutputStrategy(Codendi_HTMLPurifier::instance())
         );
 
+        $current_user = $this->getCurrentUser();
+
         return $value_formatter->fetchFormattedValue(
-            UserManager::instance()->getCurrentUser(),
-            $this->getChangesetValues($changeset_id),
+            $current_user,
+            $this->getChangesetValues($current_user, $changeset_id),
             $nature,
             $format
         );
@@ -183,7 +185,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
     {
         $arr    = [];
-        $values = $this->getChangesetValues($changeset_id);
+        $values = $this->getChangesetValues($this->getCurrentUser(), $changeset_id);
         foreach ($values as $artifact_link_info) {
             $arr[] = $artifact_link_info->getArtifactId();
         }
@@ -198,9 +200,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             new CSVOutputStrategy(Codendi_HTMLPurifier::instance())
         );
 
+        $current_user = $this->getCurrentUser();
+
         return $value_formatter->fetchFormattedValue(
-            UserManager::instance()->getCurrentUser(),
-            $this->getChangesetValues($changeset_id),
+            $current_user,
+            $this->getChangesetValues($current_user, $changeset_id),
             $nature,
             $format
         );
@@ -342,8 +346,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     {
         $link_ids = [];
 
+        $current_user = $this->getCurrentUser();
+
         if ($artifact && $artifact->getLastChangeset()) {
-            foreach ($this->getChangesetValues((int) $artifact->getLastChangeset()->getId()) as $link_info) {
+            foreach ($this->getChangesetValues($current_user, (int) $artifact->getLastChangeset()->getId()) as $link_info) {
                 $link_ids[] = $link_info->getArtifactId();
             }
         }
@@ -1362,7 +1368,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return Tracker_ArtifactLinkInfo[]
      */
-    protected function getChangesetValues($changeset_id)
+    protected function getChangesetValues(PFUser $user, $changeset_id): array
     {
         if (! isset($this->artifact_links_by_changeset[$changeset_id])) {
             $this->artifact_links_by_changeset[$changeset_id] = [];
@@ -1384,7 +1390,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     ORDER BY val.artifact_id";
             $dao          = new DataAccessObject();
             foreach ($dao->retrieve($sql) as $row) {
-                $this->artifact_links_by_changeset[$row['changeset_id']][] = new Tracker_ArtifactLinkInfo(
+                $artifact_link_info = new Tracker_ArtifactLinkInfo(
                     $row['artifact_id'],
                     $row['keyword'],
                     $row['group_id'],
@@ -1392,6 +1398,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     $row['last_changeset_id'],
                     $row['nature']
                 );
+
+                if (! $artifact_link_info->userCanView($user)) {
+                    continue;
+                }
+
+                $this->artifact_links_by_changeset[$row['changeset_id']][] = $artifact_link_info;
             }
         }
         return $this->artifact_links_by_changeset[$changeset_id];
