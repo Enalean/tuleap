@@ -29,9 +29,9 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends \Tuleap\Test\PHPUnit\T
     public function testItHasJsonRepresentation(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('system', 'datefmt')
-            ->andReturn('d/m/Y H:i');
+            ->willReturn('d/m/Y H:i');
 
         $artifact  = Mockery::mock(Artifact::class);
         $timestamp = mktime(1, 1, 1, 9, 25, 2013);

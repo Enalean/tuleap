@@ -30,13 +30,13 @@ class UGroupGetsNameTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->with('project_ugroup', 'ugroup_project_members')
-            ->andReturn('membre_de_projet');
-
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->with('project_ugroup', 'ugroup_project_admins')
-            ->andReturn('administrateur_de_le_projet');
+        $GLOBALS['Language']->method('getText')
+            ->willReturnMap(
+                [
+                    ['project_ugroup', 'ugroup_project_members', '', 'membre_de_projet'],
+                    ['project_ugroup', 'ugroup_project_admins', '', 'administrateur_de_le_projet'],
+                ]
+            );
     }
 
     public function testItReturnsProjectMembers(): void

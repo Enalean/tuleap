@@ -79,7 +79,7 @@ final class UGroupListPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $GLOBALS['Language']->shouldReceive(['getText' => 'whatever']);
+        $GLOBALS['Language']->method('getText')->willReturn('whatever');
     }
 
     public function testItBuildsASynchronizedProjectMembershipPresenterForPublicProject(): void

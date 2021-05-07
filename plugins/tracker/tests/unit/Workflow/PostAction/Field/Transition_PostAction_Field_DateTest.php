@@ -43,7 +43,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
     protected function setUp(): void
     {
-        $GLOBALS['Language']->shouldReceive('getText')->with('system', 'datefmt_short')->andReturns(Tracker_FormElement_DateFormatter::DATE_FORMAT);
+        $GLOBALS['Language']->method('getText')->with('system', 'datefmt_short')->willReturn(Tracker_FormElement_DateFormatter::DATE_FORMAT);
 
         $this->current_user = \Mockery::spy(\PFUser::class);
 

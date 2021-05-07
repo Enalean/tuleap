@@ -50,7 +50,7 @@ final class PermissionPerGroupBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ugroup_manager = \Mockery::mock(\UGroupManager::class);
         $this->builder        = new PermissionPerGroupBuilder($this->ugroup_manager);
-        $GLOBALS['Language']->shouldReceive(['getText' => 'whatever']);
+        $GLOBALS['Language']->method('getText')->willReturn('whatever');
     }
 
     public function testItAddsAnonymousUgroupIfPlatformAllowsThem(): void

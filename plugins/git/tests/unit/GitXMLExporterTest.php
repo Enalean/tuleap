@@ -20,8 +20,6 @@
 
 namespace Tuleap\Git;
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
-
 use ForgeConfig;
 use Git;
 use Git_LogDao;
@@ -87,7 +85,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         }
         touch($this->getTmpDir() . '/export/MyRepo.bundle');
 
-        $GLOBALS['Language']->shouldReceive('getText')->andReturns('projects-admins');
+        $GLOBALS['Language']->method('getText')->willReturn('projects-admins');
 
         $this->permission_manager = \Mockery::spy(\GitPermissionsManager::class);
         $this->permission_manager->shouldReceive('getCurrentGitAdminUgroups')->andReturns([

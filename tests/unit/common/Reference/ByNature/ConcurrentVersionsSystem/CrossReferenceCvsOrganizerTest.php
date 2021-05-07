@@ -101,9 +101,9 @@ class CrossReferenceCvsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class, ['getCurrentUser' => $user]);
 
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('system', 'datefmt')
-            ->andReturn('d/m/Y H:i');
+            ->willReturn('d/m/Y H:i');
     }
 
     public function testItRemovesCrossReferenceIfCommitIsNotFound(): void

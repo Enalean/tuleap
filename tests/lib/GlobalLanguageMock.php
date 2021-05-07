@@ -22,24 +22,28 @@
 namespace Tuleap;
 
 use BaseLanguage;
-use Mockery;
 
 trait GlobalLanguageMock
 {
     /**
      * @before
      */
-    protected function mockLanguage()
+    protected function mockLanguage(): void
     {
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
+        $GLOBALS['Language'] = $this->getMockBuilder(BaseLanguage::class)
+                ->disableOriginalConstructor()
+                ->disableOriginalClone()
+                ->disableArgumentCloning()
+                ->disallowMockingUnknownTypes()
+                ->enableAutoReturnValueGeneration()
+                ->getMock();
     }
 
     /**
      * @after
      */
-    protected function clearLanguage()
+    protected function clearLanguage(): void
     {
         unset($GLOBALS['Language']);
-        Mockery::close();
     }
 }

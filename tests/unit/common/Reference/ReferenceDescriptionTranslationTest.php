@@ -49,8 +49,8 @@ final class ReferenceDescriptionTranslationTest extends \Tuleap\Test\PHPUnit\Tes
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
         $expected_translation = 'Plugin ref description';
-        $GLOBALS['Language']->shouldReceive('hasText')->andReturn(true);
-        $GLOBALS['Language']->shouldReceive('getOverridableText')->with('plugin_aaaaa', 'myref_build_desc_key')->andReturn($expected_translation);
+        $GLOBALS['Language']->method('hasText')->willReturn(true);
+        $GLOBALS['Language']->method('getOverridableText')->with('plugin_aaaaa', 'myref_build_desc_key')->willReturn($expected_translation);
 
         $this->assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
@@ -63,8 +63,8 @@ final class ReferenceDescriptionTranslationTest extends \Tuleap\Test\PHPUnit\Tes
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
         $expected_translation = 'Project ref description';
-        $GLOBALS['Language']->shouldReceive('hasText')->andReturn(true);
-        $GLOBALS['Language']->shouldReceive('getOverridableText')->with('project_reference', 'projectref_desc_key')->andReturn($expected_translation);
+        $GLOBALS['Language']->method('hasText')->willReturn(true);
+        $GLOBALS['Language']->method('getOverridableText')->with('project_reference', 'projectref_desc_key')->willReturn($expected_translation);
 
         $this->assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
@@ -80,7 +80,7 @@ final class ReferenceDescriptionTranslationTest extends \Tuleap\Test\PHPUnit\Tes
 
         $reference_description_translation = new ReferenceDescriptionTranslation($reference);
 
-        $GLOBALS['Language']->shouldReceive('hasText')->andReturn(false);
+        $GLOBALS['Language']->method('hasText')->willReturn(false);
 
         $this->assertEquals($raw_description, $reference_description_translation->getTranslatedDescription());
     }

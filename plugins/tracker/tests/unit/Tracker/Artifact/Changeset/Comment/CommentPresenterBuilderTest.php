@@ -67,9 +67,9 @@ class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_helper = \Mockery::spy(\UserHelper::class);
 
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('system', 'datefmt')
-            ->andReturn('d/m/Y H:i');
+            ->willReturn('d/m/Y H:i');
 
         $this->builder = new CommentPresenterBuilder($this->permission_checker, $this->user_helper);
     }

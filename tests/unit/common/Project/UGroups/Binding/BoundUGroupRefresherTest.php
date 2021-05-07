@@ -66,8 +66,8 @@ final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturnFalse();
 
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->andReturn('Error message');
+        $GLOBALS['Language']->method('getText')
+            ->willReturn('Error message');
 
         $GLOBALS['Response']->shouldReceive('addFeedback')
             ->with('warning', 'Error message')

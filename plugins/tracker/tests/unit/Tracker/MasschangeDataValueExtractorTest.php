@@ -57,7 +57,7 @@ final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         $form_element_factory->shouldReceive('getFieldById')->withArgs([$list_field_1_id])->andReturn($list_field_1);
         $form_element_factory->shouldReceive('getFieldById')->withArgs([$list_field_2_id])->andReturn($list_field_2);
 
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('Unchanged');
+        $GLOBALS['Language']->method('getText')->willReturn('Unchanged');
 
         $masschange_data = [
             $text_field_1_id => 'Unchanged',

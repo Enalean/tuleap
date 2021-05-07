@@ -57,9 +57,9 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('system', 'datefmt')
-            ->andReturn('d/m/Y H:i');
+            ->willReturn('d/m/Y H:i');
     }
 
     public function testItEnhancesTheReferenceAndRetrievesTheCommitterAccountOnTuleap(): void

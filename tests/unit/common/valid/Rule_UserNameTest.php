@@ -181,96 +181,96 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserNameNotExists(): void
     {
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->andReturns(null);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getUserByUserName')->willReturn(null);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getUserManager']);
+        $r->method('_getUserManager')->willReturn($um);
 
         $this->assertFalse($r->isAlreadyUserName("usertest"));
     }
 
     public function testUserNameExists(): void
     {
-        $u = \Mockery::spy(\PFUser::class);
+        $u = \Tuleap\Test\Builders\UserTestBuilder::aUser()->build();
 
-        $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getUserByUserName')->with("usertest")->andReturns($u);
+        $um = $this->createMock(\UserManager::class);
+        $um->method('getUserByUserName')->with("usertest")->willReturn($u);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getUserManager')->andReturns($um);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getUserManager']);
+        $r->method('_getUserManager')->willReturn($um);
 
         $this->assertTrue($r->isAlreadyUserName("usertest"));
     }
 
     public function testProjectNameNotExists(): void
     {
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
+        $pm = $this->createMock(\ProjectManager::class);
+        $pm->method('getProjectByUnixName')->willReturn(null);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getProjectManager']);
+        $r->method('_getProjectManager')->willReturn($pm);
 
         $this->assertFalse($r->isAlreadyProjectName("usertest"));
     }
 
     public function testProjectNameExists(): void
     {
-        $p = \Mockery::spy(\Project::class);
+        $p = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
-        $pm = \Mockery::spy(\ProjectManager::class);
-        $pm->shouldReceive('getProjectByUnixName')->with("usertest")->andReturns($p);
+        $pm = $this->createMock(\ProjectManager::class);
+        $pm->method('getProjectByUnixName')->with("usertest")->willReturn($p);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getProjectManager')->andReturns($pm);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getProjectManager']);
+        $r->method('_getProjectManager')->willReturn($pm);
 
         $this->assertTrue($r->isAlreadyProjectName("usertest"));
     }
 
     public function testUnixUserExists(): void
     {
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(true);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
+        $backend = $this->createMock(\Backend::class);
+        $backend->method('unixUserExists')->willReturn(true);
+        $backend->method('unixGroupExists')->willReturn(false);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getBackend')->andReturns($backend);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
+        $r->method('_getBackend')->willReturn($backend);
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
     public function testUnixGroupExists(): void
     {
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(true);
+        $backend = $this->createMock(\Backend::class);
+        $backend->method('unixUserExists')->willReturn(false);
+        $backend->method('unixGroupExists')->willReturn(true);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getBackend')->andReturns($backend);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
+        $r->method('_getBackend')->willReturn($backend);
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
     public function testUnixUserAndGroupExists(): void
     {
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(true);
-        $backend->shouldReceive('unixGroupExists')->andReturns(true);
+        $backend = $this->createMock(\Backend::class);
+        $backend->method('unixUserExists')->willReturn(true);
+        $backend->method('unixGroupExists')->willReturn(true);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getBackend')->andReturns($backend);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
+        $r->method('_getBackend')->willReturn($backend);
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
     public function testNoUnixUserOrGroupExists(): void
     {
-        $backend = \Mockery::spy(\Backend::class);
-        $backend->shouldReceive('unixUserExists')->andReturns(false);
-        $backend->shouldReceive('unixGroupExists')->andReturns(false);
+        $backend = $this->createMock(\Backend::class);
+        $backend->method('unixUserExists')->willReturn(false);
+        $backend->method('unixGroupExists')->willReturn(false);
 
-        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $r->shouldReceive('_getBackend')->andReturns($backend);
+        $r = $this->createPartialMock(\Rule_UserName::class, ['_getBackend']);
+        $r->method('_getBackend')->willReturn($backend);
 
         $this->assertFalse($r->isSystemName("usertest"));
     }
