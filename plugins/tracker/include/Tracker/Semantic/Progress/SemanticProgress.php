@@ -152,7 +152,7 @@ class SemanticProgress extends \Tracker_Semantic
         $this->method->exportToXMl($root, $xml_mapping);
     }
 
-    public function exportToREST(PFUser $user): ?SemanticProgressRepresentation
+    public function exportToREST(PFUser $user): ?IRepresentSemanticProgress
     {
         return $this->method->exportToREST($user);
     }

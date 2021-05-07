@@ -38,7 +38,7 @@ interface IComputeProgression
 
     public function getErrorMessage(): string;
 
-    public function exportToREST(\PFUser $user): ?SemanticProgressRepresentation;
+    public function exportToREST(\PFUser $user): ?IRepresentSemanticProgress;
 
     public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void;
 
