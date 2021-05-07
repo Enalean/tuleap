@@ -174,6 +174,8 @@ function initModalAddUserToUGroupAndProjectMembers(): void {
         if (!selected_user) {
             return;
         }
+        const selected_user_label =
+            selected_user_element.options[selected_user_element.selectedIndex].text;
         const icon = document.getElementById(
             "project-administration-add-to-ugroup-and-project-members-icon"
         );
@@ -189,11 +191,11 @@ function initModalAddUserToUGroupAndProjectMembers(): void {
             throw new Error("No selected user in element to add user");
         }
         user_select.value = selected_user;
-        await initModalOrSendForm(selected_user);
+        await initModalOrSendForm(selected_user, selected_user_label);
     });
 }
 
-function openConfirmationModal(selected_user: string): void {
+function openConfirmationModal(selected_user_label: string): void {
     const button = document.getElementById("project-admin-add-to-ugroup-and-project-members-modal");
     if (!(button instanceof HTMLElement)) {
         throw new Error("No button to add user");
@@ -225,8 +227,8 @@ function openConfirmationModal(selected_user: string): void {
     }
     confirmation_message = sprintf(
         gettext_provider.gettext("You are about to add <b>%s</b> in <b>%s</b> users group."),
-        selected_user,
-        ugroup_name
+        escaper.html(selected_user_label),
+        escaper.html(ugroup_name)
     );
 
     const message_confirmation_add_element = document.getElementById(
@@ -243,7 +245,7 @@ function openConfirmationModal(selected_user: string): void {
     icon.classList.remove("fa-spin", "fa-spinner");
 }
 
-async function initModalOrSendForm(identifier: string): Promise<void> {
+async function initModalOrSendForm(identifier: string, label: string): Promise<void> {
     const button = document.getElementById("project-admin-add-to-ugroup-and-project-members-modal");
     if (!(button instanceof HTMLElement)) {
         throw new Error("No button to add user");
@@ -261,7 +263,7 @@ async function initModalOrSendForm(identifier: string): Promise<void> {
     const users = await response.json();
 
     if (users.length === 0) {
-        openConfirmationModal(identifier);
+        openConfirmationModal(label);
     } else {
         const form_to_add_user = document.getElementById("add-user-to-ugroup-and-project-members");
         if (!(form_to_add_user instanceof HTMLFormElement)) {
