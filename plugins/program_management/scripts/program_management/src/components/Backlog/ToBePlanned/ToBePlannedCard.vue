@@ -19,7 +19,12 @@
 
 <template>
     <div class="element-backlog-items" draggable="true" v-bind:data-element-id="feature.id">
-        <div class="element-card" v-bind:class="additional_classnames">
+        <div
+            class="element-card"
+            v-bind:class="additional_classnames"
+            data-test="to-be-planned-card"
+            ref="to_be_planned_card"
+        >
             <div class="element-card-content">
                 <div class="element-card-xref-label">
                     <a
@@ -46,14 +51,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Ref, Watch } from "vue-property-decorator";
 import type { Feature } from "../../../type";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import {
     getAccessibilityClasses,
     showAccessibilityPattern,
 } from "../../../helpers/element-card-css-extractor";
+import { onGoingMoveFeature } from "../../../helpers/on-going-move-feature-helper";
 
 const configuration = namespace("configuration");
 
@@ -69,6 +75,33 @@ export default class ToBePlannedCard extends Vue {
 
     @configuration.State
     readonly can_create_program_increment!: boolean;
+
+    @State
+    readonly ongoing_move_elements_id!: number[];
+
+    @Ref("to_be_planned_card")
+    readonly to_be_planned_card!: Element;
+
+    private is_moving = false;
+
+    @Watch("ongoing_move_elements_id")
+    feature_after_moving(ongoing_move_elements_id: number[]): void {
+        this.is_moving = onGoingMoveFeature(
+            ongoing_move_elements_id,
+            this.to_be_planned_card,
+            this.feature.id,
+            this.is_moving
+        );
+    }
+
+    mounted(): void {
+        this.is_moving = onGoingMoveFeature(
+            this.ongoing_move_elements_id,
+            this.to_be_planned_card,
+            this.feature.id,
+            this.is_moving
+        );
+    }
 
     get show_accessibility_pattern(): boolean {
         return showAccessibilityPattern(this.feature, this.accessibility);

@@ -27,7 +27,12 @@
             v-bind:data-tlp-tooltip="reason_why_feature_is_not_draggable"
             v-bind:class="additional_tooltip_classnames"
         >
-            <div class="element-card" v-bind:class="additional_classnames">
+            <div
+                class="element-card"
+                v-bind:class="additional_classnames"
+                data-test="feature-card"
+                ref="feature_card"
+            >
                 <div class="element-card-content">
                     <div class="element-card-xref-label">
                         <a
@@ -56,8 +61,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { Component, Prop, Ref, Watch } from "vue-property-decorator";
+import { namespace, State } from "vuex-class";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { Feature } from "../../../type";
@@ -65,6 +70,7 @@ import {
     getAccessibilityClasses,
     showAccessibilityPattern,
 } from "../../../helpers/element-card-css-extractor";
+import { onGoingMoveFeature } from "../../../helpers/on-going-move-feature-helper";
 
 const configuration = namespace("configuration");
 
@@ -83,6 +89,33 @@ export default class FeatureCard extends Vue {
 
     @configuration.State
     readonly can_create_program_increment!: boolean;
+
+    @State
+    readonly ongoing_move_elements_id!: number[];
+
+    @Ref("feature_card")
+    readonly feature_card!: Element;
+
+    private is_moving = false;
+
+    @Watch("ongoing_move_elements_id")
+    feature_after_moving(ongoing_move_elements_id: number[]): void {
+        this.is_moving = onGoingMoveFeature(
+            ongoing_move_elements_id,
+            this.feature_card,
+            this.feature.id,
+            this.is_moving
+        );
+    }
+
+    mounted(): void {
+        this.is_moving = onGoingMoveFeature(
+            this.ongoing_move_elements_id,
+            this.feature_card,
+            this.feature.id,
+            this.is_moving
+        );
+    }
 
     get show_accessibility_pattern(): boolean {
         return showAccessibilityPattern(this.feature, this.accessibility);
