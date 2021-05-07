@@ -72,6 +72,9 @@ class Git extends PluginController
     public const REFERENCE_KEYWORD = 'git';
     public const REFERENCE_NATURE  = 'git_commit';
 
+    public const TAG_REFERENCE_KEYWORD = 'git_tag';
+    public const TAG_REFERENCE_NATURE  = 'git_tag';
+
     public const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 
     /**

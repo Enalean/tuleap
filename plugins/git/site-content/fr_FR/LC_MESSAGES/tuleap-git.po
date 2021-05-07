@@ -625,6 +625,9 @@ msgstr "Le service Git est désactivé."
 msgid "Git settings template"
 msgstr "Modèle des dépôts Git"
 
+msgid "Git tag"
+msgstr "Étiquette Git"
+
 msgid "Git trigger"
 msgstr "Evénement Git"
 
@@ -1318,6 +1321,14 @@ msgstr "La notification est déja activée pour l'adresse mail %1$s"
 msgid "The pattern %1$s is not well formed. Skipping."
 msgstr ""
 "L'expression %1$s n'est pas bien formée. Elle ne sera pas pris en compte."
+
+#, php-format
+msgid ""
+"The project reference based on the keyword '%s' is overriding the system "
+"reference used by the Git plugin."
+msgstr ""
+"La référence de projet basée sur le mot-clé '%s' surcharge la référence système "
+"utilisée par le plugin Git."
 
 msgid "The regular expressions option has been disabled at plateform level."
 msgstr ""

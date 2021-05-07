@@ -266,7 +266,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             $reference_dao = $this->_getReferenceDao();
             $dar           = $reference_dao->searchByGroupID($group_id);
             while ($row = $dar->getRow()) {
-                $p[] = $this->_buildReference($row);
+                $p[] = $this->buildReference($row);
             }
             $this->referencesByProject[$group_id] = $p;
         }
@@ -437,7 +437,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         $dar           = $reference_dao->searchByKeywordAndGroupID($keyword, $group_id);
         $ref           = null;
         while ($row = $dar->getRow()) {
-            $ref = $this->_buildReference($row, $val);
+            $ref = $this->buildReference($row, $val);
             if ($ref->getNumParam() == $num_args) {
                 return $ref;
             }
@@ -454,7 +454,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             return null;
         }
 
-        return $this->_buildReference($dar, $reference_id);
+        return $this->buildReference($dar, $reference_id);
     }
 
     public function loadReference($refid, $group_id)
@@ -463,7 +463,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         $dar           = $reference_dao->searchByIdAndGroupID($refid, $group_id);
         $ref           = null;
         if ($row = $dar->getRow()) {
-            $ref = $this->_buildReference($row);
+            $ref = $this->buildReference($row);
         }
         return $ref;
     }
@@ -587,7 +587,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             || $keyword == self::KEYWORD_ARTIFACT_SHORT;
     }
 
-    protected function _buildReference($row, $val = null) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    public function buildReference($row, $val = null): Reference
     {
         if (isset($row['reference_id'])) {
             $refid = $row['reference_id'];
@@ -1254,7 +1254,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             $reference_dao = $this->_getReferenceDao();
             $dar           = $reference_dao->searchActiveByGroupID($group_id);
             while ($row = $dar->getRow()) {
-                $ref      = $this->_buildReference($row);
+                $ref      = $this->buildReference($row);
                 $num_args = $ref->getNumParam();
                 if (! isset($p[$ref->getKeyword()])) {
                     $p[$ref->getKeyword()] = [];

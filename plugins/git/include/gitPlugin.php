@@ -118,6 +118,8 @@ use Tuleap\Git\Reference\CommitProvider;
 use Tuleap\Git\Reference\CrossReferenceGitEnhancer;
 use Tuleap\Git\Reference\CrossReferenceGitOrganizer;
 use Tuleap\Git\Reference\OrganizeableGitCrossReferencesAndTheContributorsCollector;
+use Tuleap\Git\Reference\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Git\Reference\ReferenceDao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
@@ -162,6 +164,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentat
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
+use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 use Tuleap\Project\Event\ProjectUnixNameIsEditable;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -317,6 +320,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(PermissionPerGroupDisplayEvent::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+        $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -704,6 +708,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function getReferenceKeywords($params)
     {
         $params['keywords'][] = Git::REFERENCE_KEYWORD;
+        $params['keywords'][] = Git::TAG_REFERENCE_KEYWORD;
     }
 
     public function getAvailableReferenceNatures(NatureCollection $natures): void
@@ -717,28 +722,54 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 true
             )
         );
+        $natures->addNature(
+            Git::TAG_REFERENCE_NATURE,
+            new Nature(
+                Git::TAG_REFERENCE_KEYWORD,
+                'fas fa-tlp-versioning-git',
+                dgettext('tuleap-git', 'Git tag'),
+                true
+            )
+        );
     }
 
     public function getReference(GetReferenceEvent $event): void
     {
+        $reference             = null;
+        $git_reference_manager = new Git_ReferenceManager(
+            $this->getRepositoryFactory(),
+            $event->getReferenceManager(),
+            new ReferenceDao()
+        );
+
         if ($event->getKeyword() == Git::REFERENCE_KEYWORD) {
-            $reference = null;
             if ($event->getProject()) {
-                $git_reference_manager = new Git_ReferenceManager(
-                    $this->getRepositoryFactory(),
-                    $event->getReferenceManager()
-                );
-                $reference             = $git_reference_manager->getReference(
+                $reference = $git_reference_manager->getCommitReference(
                     $event->getProject(),
                     $event->getKeyword(),
                     $event->getValue()
                 );
             }
-
-            if ($reference !== null) {
-                $event->setReference($reference);
+        } elseif ($event->getKeyword() == Git::TAG_REFERENCE_KEYWORD) {
+            if ($event->getProject()) {
+                $reference = $git_reference_manager->getTagReference(
+                    $event->getProject(),
+                    $event->getKeyword(),
+                    $event->getValue()
+                );
             }
         }
+
+        if ($reference !== null) {
+            $event->setReference($reference);
+        }
+    }
+
+    public function referenceAdministrationWarningsCollectorEvent(
+        ReferenceAdministrationWarningsCollectorEvent $event
+    ): void {
+        (new ReferenceAdministrationWarningsCollectorEventHandler())
+            ->handle($event);
     }
 
     public function changeProjectRepositoriesAccess($params)
@@ -2843,6 +2874,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     new Git_ReferenceManager(
                         $this->getRepositoryFactory(),
                         ReferenceManager::instance(),
+                        new ReferenceDao()
                     ),
                     new CommitProvider(),
                     new CommitDetailsRetriever(

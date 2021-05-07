@@ -41,6 +41,8 @@ DROP TABLE IF EXISTS plugin_git_change_build_status_permissions;
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;
 DELETE FROM reference WHERE id=30;
+DELETE FROM reference_group WHERE reference_id=33;
+DELETE FROM reference WHERE id=33;
 DELETE FROM user_access_key_scope WHERE scope_key = 'write:git_repository';
 
 DELETE FROM permissions_values WHERE permission_type IN ('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS', 'PLUGIN_GIT_ADMIN');
