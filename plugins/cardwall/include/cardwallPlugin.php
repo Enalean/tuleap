@@ -25,6 +25,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
+use Tuleap\Cardwall\REST\v1\MilestonesCardwallResource;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
@@ -591,20 +592,10 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
-    private function buildRightVersionOfMilestonesCardwallResource($version)
-    {
-        $class_with_right_namespace = '\\Tuleap\\Cardwall\\REST\\' . $version . '\\MilestonesCardwallResource';
-        if (! class_exists($class_with_right_namespace)) {
-            throw new LogicException("$class_with_right_namespace does not exist");
-        }
-        return new $class_with_right_namespace($this->getConfigFactory());
-    }
-
     public function agiledashboard_event_rest_get_cardwall($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $milestones_cardwall = $this->buildRightVersionOfMilestonesCardwallResource($params['version']);
-
-        $params['cardwall'] = $milestones_cardwall->get($params['milestone']);
+        $milestones_cardwall = new MilestonesCardwallResource($this->getConfigFactory());
+        $params['cardwall']  = $milestones_cardwall->get($params['milestone']);
     }
 
     /**

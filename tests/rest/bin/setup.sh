@@ -34,6 +34,7 @@ setup_tuleap() {
 	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
 
 	install -m 00755 -o codendiadm -g codendiadm -d /var/lib/tuleap/tracker
+	install -m 00755 -o codendiadm -g codendiadm -d /var/lib/tuleap/gitolite/admin
 }
 
 setup_database() {
@@ -57,8 +58,12 @@ setup_database() {
         --app-user="$MYSQL_USER" \
         --app-password="$MYSQL_PASSWORD"
 
-    $MYSQLROOT $MYSQL_DBNAME < /usr/share/tuleap/src/db/mysql/database_structure.sql
-    $MYSQLROOT $MYSQL_DBNAME < /usr/share/tuleap/src/db/mysql/database_initvalues.sql
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php  setup:mysql \
+        --host="$DB_HOST" \
+        --dbname="$MYSQL_DBNAME" \
+        --password="$MYSQL_PASSWORD" \
+        "$MYSQL_PASSWORD" \
+        "localhost.localdomain"
 
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-group-list' INTO TABLE wiki_group_list CHARACTER SET ascii"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-page' INTO TABLE wiki_page CHARACTER SET ascii"

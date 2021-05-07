@@ -141,7 +141,8 @@ tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION
 	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
-	SETUP_ONLY="$(SETUP_ONLY)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
+	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
+	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests_soap_73:
 	$(MAKE) tests-soap DB=mysql57

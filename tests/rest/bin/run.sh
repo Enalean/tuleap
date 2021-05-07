@@ -26,7 +26,15 @@ setup_runner_account
 /usr/share/tuleap/tests/rest/bin/setup.sh
 
 if [ "${1:-0}" != "setup" ]; then
-    sudo -E -u runner "/usr/share/tuleap/tests/rest/bin/test_suite.sh"
+    if sudo -E -u runner "/usr/share/tuleap/tests/rest/bin/test_suite.sh"; then
+        echo "Nginx error log"
+        cat /var/log/nginx/error.log
+    else
+        mkdir -p /output/nginx /output/tuleap
+        cp -r /var/log/nginx/* /output/nginx
+        cp -ar /var/log/tuleap/* /output/tuleap
+        exit 1
+    fi
 else
     set +x # No longer need debug, will make output below messy
     PHPUNIT=/usr/share/tuleap/tests/rest/vendor/bin/phpunit
