@@ -20,5 +20,5 @@
 import type { TasksState } from "./type";
 
 export const does_at_least_one_task_have_subtasks = (state: TasksState): boolean => {
-    return state.rows.some((row) => row.task.has_subtasks);
+    return state.rows.some((row) => "task" in row && row.task.has_subtasks);
 };

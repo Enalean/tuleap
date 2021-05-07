@@ -72,4 +72,45 @@ describe("tasks-mutations", () => {
 
         expect(state.rows).toBe(rows);
     });
+
+    it("activateIsLoadingSubtasks should add some skeletons", () => {
+        const task = { id: 123, is_loading_subtasks: false } as Task;
+        const state: TasksState = {
+            rows: [{ task }] as Row[],
+        } as TasksState;
+
+        mutations.activateIsLoadingSubtasks(state, task);
+
+        expect(state.rows.length).toBe(3);
+        expect("task" in state.rows[0] && state.rows[0].task.is_loading_subtasks).toBe(true);
+        expect("is_skeleton" in state.rows[1] && state.rows[1].for_task.id === 123).toBe(true);
+        expect("is_skeleton" in state.rows[2] && state.rows[2].for_task.id === 123).toBe(true);
+    });
+
+    it("deactivateIsLoadingSubtasks should remove skeletons", () => {
+        const task_1 = { id: 123, is_loading_subtasks: false } as Task;
+        const task_2 = { id: 124, is_loading_subtasks: false } as Task;
+        const state: TasksState = {
+            rows: [
+                { task: task_1 },
+                { for_task: task_1, is_skeleton: true, is_last_one: false },
+                { for_task: task_1, is_skeleton: true, is_last_one: true },
+                { task: task_2 },
+            ] as Row[],
+        } as TasksState;
+
+        mutations.deactivateIsLoadingSubtasks(state, task_1);
+
+        expect(state.rows.length).toBe(2);
+        expect(
+            "task" in state.rows[0] &&
+                state.rows[0].task.id === 123 &&
+                state.rows[0].task.is_loading_subtasks === false
+        ).toBe(true);
+        expect(
+            "task" in state.rows[1] &&
+                state.rows[1].task.id === 124 &&
+                state.rows[1].task.is_loading_subtasks === false
+        ).toBe(true);
+    });
 });

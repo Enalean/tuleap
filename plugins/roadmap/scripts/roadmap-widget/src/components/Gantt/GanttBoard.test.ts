@@ -29,6 +29,8 @@ import ScrollingArea from "./ScrollingArea.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { TasksState } from "../../store/tasks/type";
+import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
+import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -67,6 +69,36 @@ describe("GanttBoard", () => {
         });
 
         expect(wrapper.findAllComponents(GanttTask).length).toBe(3);
+    });
+
+    it("Displays subtasks skeleton", () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                        tasks: {
+                            rows: [
+                                { task: { id: 1, dependencies: {} } as Task },
+                                {
+                                    for_task: { id: 1, dependencies: {} } as Task,
+                                    is_skeleton: true,
+                                    is_last_one: true,
+                                },
+                                { task: { id: 3, dependencies: {} } as Task },
+                            ],
+                        } as TasksState,
+                    } as RootState,
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
+        expect(wrapper.findAllComponents(SubtaskSkeletonBar).length).toBe(1);
+        expect(wrapper.findAllComponents(SubtaskSkeletonHeader).length).toBe(1);
     });
 
     it("Displays months according to tasks", async () => {

@@ -19,28 +19,25 @@
   -->
 
 <template>
-    <a
-        class="roadmap-gantt-task-header"
-        v-bind:href="task.html_url"
-        v-bind:class="'roadmap-gantt-task-header-' + task.color_name"
-    >
+    <div class="roadmap-gantt-task-header" v-bind:class="classes" v-on:click="toggle">
         <div
             class="roadmap-gantt-task-header-caret"
             v-if="does_at_least_one_task_have_subtasks"
             data-test="caret-container"
         >
             <i
-                class="fas fa-fw fa-caret-right"
+                class="fas fa-fw"
+                v-bind:class="caret_class"
                 aria-hidden="true"
                 v-if="task.has_subtasks"
                 data-test="caret"
             ></i>
         </div>
-        <div class="roadmap-gantt-task-header-text">
-            <span class="roadmap-gantt-task-header-xref">{{ task.xref }}</span>
-            <span class="roadmap-gantt-task-header-title">{{ task.title }}</span>
-        </div>
-    </a>
+        <a v-bind:href="task.html_url" class="roadmap-gantt-task-header-link">
+            <span class="roadmap-gantt-task-header-xref" data-test="xref">{{ task.xref }}</span>
+            <span class="roadmap-gantt-task-header-title" data-test="title">{{ task.title }}</span>
+        </a>
+    </div>
 </template>
 
 <script lang="ts">
@@ -58,5 +55,37 @@ export default class TaskHeader extends Vue {
 
     @tasks.Getter
     readonly does_at_least_one_task_have_subtasks!: boolean;
+
+    @tasks.Action
+    readonly toggleSubtasks!: (task: Task) => void;
+
+    get caret_class(): string {
+        return this.task.is_loading_subtasks ? "fa-caret-down" : "fa-caret-right";
+    }
+
+    get classes(): string[] {
+        const classes = ["roadmap-gantt-task-header-" + this.task.color_name];
+
+        if (this.task.has_subtasks) {
+            classes.push("roadmap-gantt-task-header-with-subtasks");
+        }
+
+        return classes;
+    }
+
+    toggle(event: Event): void {
+        if (
+            event.target instanceof HTMLElement &&
+            event.target.closest(
+                ".roadmap-gantt-task-header-xref, .roadmap-gantt-task-header-title"
+            )
+        ) {
+            return;
+        }
+
+        if (this.task.has_subtasks) {
+            this.toggleSubtasks(this.task);
+        }
+    }
 }
 </script>

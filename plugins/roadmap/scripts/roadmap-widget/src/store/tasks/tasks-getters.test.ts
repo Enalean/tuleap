@@ -18,7 +18,7 @@
  */
 
 import * as getters from "./tasks-getters";
-import type { Task } from "../../type";
+import type { Row, Task } from "../../type";
 import type { TasksState } from "./type";
 
 describe("tasks-getters", () => {
@@ -28,8 +28,9 @@ describe("tasks-getters", () => {
                 rows: [
                     { task: { id: 123, has_subtasks: false } as Task },
                     { task: { id: 124, has_subtasks: false } as Task },
+                    { for_task: { id: 124 } as Task, is_skeleton: true, is_last_one: true },
                     { task: { id: 125, has_subtasks: false } as Task },
-                ],
+                ] as Row[],
             } as TasksState;
 
             expect(getters.does_at_least_one_task_have_subtasks(state)).toBe(false);
@@ -40,8 +41,9 @@ describe("tasks-getters", () => {
                 rows: [
                     { task: { id: 123, has_subtasks: false } as Task },
                     { task: { id: 124, has_subtasks: true } as Task },
+                    { for_task: { id: 124 } as Task, is_skeleton: true, is_last_one: true },
                     { task: { id: 125, has_subtasks: false } as Task },
-                ],
+                ] as Row[],
             } as TasksState;
 
             expect(getters.does_at_least_one_task_have_subtasks(state)).toBe(true);

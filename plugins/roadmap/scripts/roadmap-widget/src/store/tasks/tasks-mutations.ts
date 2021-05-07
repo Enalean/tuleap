@@ -18,7 +18,9 @@
  */
 
 import type { TasksState } from "./type";
-import type { Row } from "../../type";
+import type { Row, Task } from "../../type";
+
+const NB_SKELETONS_FOR_SUBTASKS = 2;
 
 export function setIsLoading(state: TasksState, is_loading: boolean): void {
     state.is_loading = is_loading;
@@ -44,4 +46,34 @@ export function setShouldDisplayErrorState(
 
 export function setRows(state: TasksState, rows: Row[]): void {
     state.rows = rows;
+}
+
+export function activateIsLoadingSubtasks(state: TasksState, task: Task): void {
+    const index = findTaskIndex(state, task);
+    if (index === -1) {
+        return;
+    }
+
+    const task_with_skeletons: Row[] = [{ task: { ...task, is_loading_subtasks: true } }];
+    for (let i = 0; i < NB_SKELETONS_FOR_SUBTASKS; i++) {
+        const is_last_one = i === NB_SKELETONS_FOR_SUBTASKS - 1;
+        task_with_skeletons.push({ for_task: task, is_skeleton: true, is_last_one });
+    }
+
+    state.rows.splice(index, 1, ...task_with_skeletons);
+}
+
+export function deactivateIsLoadingSubtasks(state: TasksState, task: Task): void {
+    const index = findTaskIndex(state, task);
+    if (index === -1) {
+        return;
+    }
+
+    state.rows.splice(index, 1 + NB_SKELETONS_FOR_SUBTASKS, {
+        task: { ...task, is_loading_subtasks: false },
+    });
+}
+
+function findTaskIndex(state: TasksState, task: Task): number {
+    return state.rows.findIndex((row) => "task" in row && row.task.id === task.id);
 }

@@ -20,7 +20,7 @@
 import DependencyArrow from "./DependencyArrow.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Task } from "../../../type";
+import type { Task, TaskRow } from "../../../type";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
 
@@ -43,7 +43,10 @@ describe("DependencyArrow", () => {
             propsData: {
                 task,
                 dependency,
-                dimensions_map: getDimensionsMap(tasks, time_period),
+                dimensions_map: getDimensionsMap(
+                    tasks.map((task): TaskRow => ({ task })),
+                    time_period
+                ),
                 percentage,
                 is_text_displayed_outside_bar,
                 is_error_sign_displayed_outside_bar,

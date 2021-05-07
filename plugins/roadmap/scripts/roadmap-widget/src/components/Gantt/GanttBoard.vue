@@ -29,7 +29,10 @@
         </div>
         <div class="roadmap-gantt">
             <div class="roadmap-gantt-header" v-bind:class="header_class" data-test="gantt-header">
-                <task-header v-for="task of tasks" v-bind:key="task.id" v-bind:task="task" />
+                <template v-for="(row, index) in rows">
+                    <task-header v-if="isTaskRow(row)" v-bind:key="index" v-bind:task="row.task" />
+                    <subtask-skeleton-header v-else v-bind:key="index" v-bind:skeleton="row" />
+                </template>
             </div>
             <scrolling-area
                 v-bind:time_period="time_period"
@@ -42,17 +45,25 @@
                     v-bind:nb_additional_units="nb_additional_units"
                     ref="time_period"
                 />
-                <gantt-task
-                    v-for="task of tasks"
-                    v-bind:key="task.id"
-                    v-bind:task="task"
-                    v-bind:time_period="time_period"
-                    v-bind:nb_additional_units="nb_additional_units"
-                    v-bind:dependencies="dependencies"
-                    v-bind:dimensions_map="dimensions_map"
-                    v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
-                    v-bind:popover_element_id="getIdForPopover(task)"
-                />
+                <template v-for="(row, index) in rows">
+                    <gantt-task
+                        v-if="isTaskRow(row)"
+                        v-bind:key="index"
+                        v-bind:task="row.task"
+                        v-bind:time_period="time_period"
+                        v-bind:nb_additional_units="nb_additional_units"
+                        v-bind:dependencies="dependencies"
+                        v-bind:dimensions_map="dimensions_map"
+                        v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
+                        v-bind:popover_element_id="getIdForPopover(row.task)"
+                    />
+                    <subtask-skeleton-bar
+                        v-else
+                        v-bind:key="index"
+                        v-bind:time_period="time_period"
+                        v-bind:nb_additional_units="nb_additional_units"
+                    />
+                </template>
             </scrolling-area>
             <bar-popover
                 v-for="task of tasks"
@@ -77,6 +88,7 @@ import type {
     TaskDimensionMap,
     TimeScale,
     Row,
+    TaskRow,
 } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
@@ -96,11 +108,15 @@ import ScrollingArea from "./ScrollingArea.vue";
 import BarPopover from "./Task/BarPopover.vue";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
 import { namespace, State } from "vuex-class";
+import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
+import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
 
 const tasks = namespace("tasks");
 
 @Component({
     components: {
+        SubtaskSkeletonBar,
+        SubtaskSkeletonHeader,
         BarPopover,
         ScrollingArea,
         TaskHeader,
@@ -186,7 +202,13 @@ export default class GanttBoard extends Vue {
     }
 
     get tasks(): Task[] {
-        return this.rows.map((row) => row.task);
+        return this.rows.reduce((tasks: Task[], row: Row) => {
+            if (this.isTaskRow(row)) {
+                tasks.push(row.task);
+            }
+
+            return tasks;
+        }, []);
     }
 
     get first_date(): Date {
@@ -218,7 +240,7 @@ export default class GanttBoard extends Vue {
     }
 
     get dimensions_map(): TaskDimensionMap {
-        return getDimensionsMap(this.tasks, this.time_period);
+        return getDimensionsMap(this.rows, this.time_period);
     }
 
     get available_natures(): NaturesLabels {
@@ -236,6 +258,10 @@ export default class GanttBoard extends Vue {
         );
 
         return first_date_with_offset;
+    }
+
+    isTaskRow(row: Row): row is TaskRow {
+        return "task" in row;
     }
 }
 </script>

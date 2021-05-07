@@ -208,6 +208,25 @@ describe("task-retriever", () => {
         expect(tasks[0].has_subtasks).toBe(true);
     });
 
+    it("should init the task as not loading its subtasks", async () => {
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: "2020-03-01T10:00:00+01:00",
+                end: "2020-03-14T10:00:00+01:00",
+                dependencies: { _is_child: [124] },
+            },
+        ]);
+
+        const tasks = await retrieveAllTasks(123);
+
+        expect(tasks[0].is_loading_subtasks).toBe(false);
+    });
+
     describe("Sort tasks", () => {
         it("should sort tasks by start date", async () => {
             jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
