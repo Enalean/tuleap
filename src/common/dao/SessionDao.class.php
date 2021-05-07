@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,15 +21,16 @@
 class SessionDao extends DataAccessObject
 {
 
-    public function create($user_id, $token, $ip_address, $current_time)
+    public function create($user_id, $token, $ip_address, $current_time, string $user_agent)
     {
         $user_id      = $this->getDa()->escapeInt($user_id);
         $token        = $this->getDa()->quoteSmart($token);
         $ip_address   = $this->getDa()->quoteSmart($ip_address);
         $current_time = $this->getDa()->escapeInt($current_time);
+        $user_agent   = $this->getDa()->quoteSmart($user_agent);
 
-        $sql = "INSERT INTO session(user_id, session_hash, ip_addr, time)
-                VALUES($user_id, $token, $ip_address, $current_time)";
+        $sql = "INSERT INTO session(user_id, session_hash, ip_addr, time, user_agent)
+                VALUES($user_id, $token, $ip_address, $current_time, $user_agent)";
 
         return $this->updateAndGetLastId($sql);
     }

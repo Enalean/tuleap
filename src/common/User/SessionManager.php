@@ -95,7 +95,8 @@ class SessionManager
             $user->getId(),
             $hashed_token,
             $request->getIPAddress(),
-            $current_time
+            $current_time,
+            $request->getFromServer('HTTP_USER_AGENT') ?: ''
         );
 
         if ($session_id === null) {

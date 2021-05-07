@@ -687,6 +687,7 @@ CREATE TABLE session (
   session_hash CHAR(64) NOT NULL,
   ip_addr varchar(45) NOT NULL default '',
   time int(11) NOT NULL default '0',
+  user_agent TEXT NOT NULL DEFAULT '',
   KEY idx_session_user_id (user_id),
   KEY idx_session_time (time)
 ) ENGINE=InnoDB;
