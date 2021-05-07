@@ -31,7 +31,7 @@
         <div class="roadmap-gantt">
             <div class="roadmap-gantt-header">
                 <span class="roadmap-gantt-task-header" v-for="index in 5" v-bind:key="index">
-                    <div class="roadmap-gantt-task-header-text">
+                    <div class="roadmap-gantt-task-header-link">
                         <span class="roadmap-gantt-task-header-xref">
                             <span class="tlp-skeleton-text"></span>
                         </span>

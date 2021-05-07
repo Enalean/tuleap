@@ -37,6 +37,7 @@ export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
                     end: task.end ? new Date(task.end) : null,
                     is_milestone: !task.start || !task.end || task.end === task.start,
                     has_subtasks,
+                    is_loading_subtasks: false,
                 };
             }
         )

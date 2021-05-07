@@ -66,7 +66,7 @@ describe("GanttTask", () => {
                 task: my_task,
                 time_period,
                 nb_additional_units: 2,
-                dimensions_map: getDimensionsMap([my_task], time_period),
+                dimensions_map: getDimensionsMap([{ task: my_task }], time_period),
                 dependencies,
                 dependencies_nature_to_display,
                 popover_element_id: "roadmap-gantt-bar-popover-1-123",

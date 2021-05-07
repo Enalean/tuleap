@@ -22,7 +22,7 @@ import type { TasksState } from "./type";
 import type { ActionContext } from "vuex";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { retrieveAllTasks } from "../../helpers/task-retriever";
-import type { Row } from "../../type";
+import type { Row, Task } from "../../type";
 
 export async function loadTasks(
     context: ActionContext<TasksState, RootState>,
@@ -46,6 +46,14 @@ export async function loadTasks(
         }
     } finally {
         context.commit("setIsLoading", false);
+    }
+}
+
+export function toggleSubtasks(context: ActionContext<TasksState, RootState>, task: Task): void {
+    if (task.is_loading_subtasks) {
+        context.commit("deactivateIsLoadingSubtasks", task);
+    } else {
+        context.commit("activateIsLoadingSubtasks", task);
     }
 }
 

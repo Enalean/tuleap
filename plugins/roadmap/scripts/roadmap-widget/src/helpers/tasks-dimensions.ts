@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Task, TaskDimension, TimePeriod } from "../type";
+import type { Row, Task, TaskDimension, TimePeriod } from "../type";
 import { getLeftForDate } from "./left-postion";
 import { Styles } from "./styles";
 import { TaskDimensionMap } from "../type";
@@ -30,17 +30,20 @@ export function getDimensions(task: Task, dimensions_map: TaskDimensionMap): Tas
     return dimensions;
 }
 
-export function getDimensionsMap(tasks: Task[], time_period: TimePeriod): TaskDimensionMap {
+export function getDimensionsMap(rows: Row[], time_period: TimePeriod): TaskDimensionMap {
     const map = new TaskDimensionMap();
-    for (const [index, task] of tasks.entries()) {
-        const left = getLeftForTask(task, time_period);
 
-        map.set(task, {
-            index,
-            left,
-            width: getWidthForTask(task, time_period, left),
-        });
-    }
+    rows.forEach((row, index) => {
+        if ("task" in row) {
+            const left = getLeftForTask(row.task, time_period);
+
+            map.set(row.task, {
+                index,
+                left,
+                width: getWidthForTask(row.task, time_period, left),
+            });
+        }
+    });
 
     return map;
 }

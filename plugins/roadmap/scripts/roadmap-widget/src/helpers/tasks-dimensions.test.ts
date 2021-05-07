@@ -33,7 +33,7 @@ describe("tasks-dimensions", () => {
                 "en-US"
             );
 
-            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+            expect(getDimensionsMap([{ task }], time_period).get(task)).toStrictEqual({
                 index: 0,
                 left: 0,
                 width: Styles.MILESTONE_WIDTH_IN_PX,
@@ -48,7 +48,7 @@ describe("tasks-dimensions", () => {
                 "en-US"
             );
 
-            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+            expect(getDimensionsMap([{ task }], time_period).get(task)).toStrictEqual({
                 index: 0,
                 left: 63,
                 width: Styles.MILESTONE_WIDTH_IN_PX,
@@ -63,7 +63,7 @@ describe("tasks-dimensions", () => {
                 "en-US"
             );
 
-            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+            expect(getDimensionsMap([{ task }], time_period).get(task)).toStrictEqual({
                 index: 0,
                 left: 63,
                 width: Styles.MILESTONE_WIDTH_IN_PX,
@@ -78,7 +78,7 @@ describe("tasks-dimensions", () => {
                 "en-US"
             );
 
-            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+            expect(getDimensionsMap([{ task }], time_period).get(task)).toStrictEqual({
                 index: 0,
                 left: 63,
                 width: Styles.MILESTONE_WIDTH_IN_PX,
@@ -96,7 +96,7 @@ describe("tasks-dimensions", () => {
                 "en-US"
             );
 
-            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+            expect(getDimensionsMap([{ task }], time_period).get(task)).toStrictEqual({
                 index: 0,
                 left: 31,
                 width: 35,
@@ -111,7 +111,7 @@ describe("tasks-dimensions", () => {
                 "en-US"
             );
 
-            expect(getDimensionsMap([task], time_period).get(task)).toStrictEqual({
+            expect(getDimensionsMap([{ task }], time_period).get(task)).toStrictEqual({
                 index: 0,
                 left: 30,
                 width: Styles.TASK_BAR_MIN_WIDTH_IN_PX,
@@ -127,12 +127,21 @@ describe("tasks-dimensions", () => {
                 "en-US"
             );
 
-            const dimensions_map = getDimensionsMap([task_1, task_2], time_period);
+            const dimensions_map = getDimensionsMap(
+                [
+                    { task: task_1 },
+                    { for_task: task_1, is_skeleton: true, is_last_one: false },
+                    { for_task: task_1, is_skeleton: true, is_last_one: true },
+                    { task: task_2 },
+                    { for_task: task_2, is_skeleton: true, is_last_one: true },
+                ],
+                time_period
+            );
             const dimensions_task_1 = getDimensions(task_1, dimensions_map);
             const dimensions_task_2 = getDimensions(task_2, dimensions_map);
 
             expect(dimensions_task_1.index).toBe(0);
-            expect(dimensions_task_2.index).toBe(1);
+            expect(dimensions_task_2.index).toBe(3);
         });
     });
 

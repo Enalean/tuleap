@@ -30,6 +30,7 @@ export interface Task {
     readonly dependencies: Record<string, number[]>;
     readonly is_milestone: boolean;
     readonly has_subtasks: boolean;
+    readonly is_loading_subtasks: boolean;
 }
 
 export type TimeScale = "month" | "quarter" | "week";
@@ -56,6 +57,14 @@ export class NaturesLabels extends Map<string, string> {}
 
 export class NbUnitsPerYear extends Map<number, number> {}
 
-export interface Row {
+export interface TaskRow {
     readonly task: Task;
 }
+
+export interface SkeletonRow {
+    readonly for_task: Task;
+    readonly is_skeleton: true;
+    readonly is_last_one: boolean;
+}
+
+export type Row = TaskRow | SkeletonRow;
