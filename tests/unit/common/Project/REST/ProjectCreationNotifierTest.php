@@ -26,13 +26,12 @@ namespace Tuleap\Project\REST;
 use Codendi_Mail;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\ProjectCreationNotifier;
 use TuleapRegisterMail;
 
-class ProjectCreationNotifierTest extends TestCase
+class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

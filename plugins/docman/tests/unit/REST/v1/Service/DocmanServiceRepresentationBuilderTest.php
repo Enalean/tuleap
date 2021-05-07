@@ -25,11 +25,10 @@ namespace Tuleap\Docman\REST\v1\Service;
 use Docman_PermissionsManager;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 
-final class DocmanServiceRepresentationBuilderTest extends TestCase
+final class DocmanServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

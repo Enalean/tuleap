@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Event;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class ArtifactDeletedTest extends TestCase
+final class ArtifactDeletedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

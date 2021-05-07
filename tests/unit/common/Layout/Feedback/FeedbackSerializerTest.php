@@ -24,10 +24,9 @@ namespace Tuleap\layout\Feedback;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class FeedbackSerializerTest extends TestCase
+final class FeedbackSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

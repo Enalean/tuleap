@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class PermissionSerializerTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -26,11 +26,10 @@ use ForgeConfig;
 use Git_LogDao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Statistics_DiskUsageManager;
 
-class CollectorTest extends TestCase
+class CollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
@@ -33,7 +32,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use UserManager;
 
-final class SiteAdminListAppsControllerTest extends TestCase
+final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

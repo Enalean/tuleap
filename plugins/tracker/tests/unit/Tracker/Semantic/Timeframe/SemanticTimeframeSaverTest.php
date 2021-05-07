@@ -24,12 +24,11 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
 
-class SemanticTimeframeSaverTest extends TestCase
+class SemanticTimeframeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

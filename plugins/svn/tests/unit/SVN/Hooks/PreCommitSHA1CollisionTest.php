@@ -21,14 +21,13 @@
 namespace Tuleap\SVN\Hooks;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\SVN\Commit\CollidingSHA1Validator;
 use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\Svn\SHA1CollisionException;
 
-class PreCommitSHA1CollisionTest extends TestCase
+class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

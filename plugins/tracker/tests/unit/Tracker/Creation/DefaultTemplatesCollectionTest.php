@@ -24,9 +24,8 @@ namespace Tuleap\Tracker\Creation;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class DefaultTemplatesCollectionTest extends TestCase
+class DefaultTemplatesCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

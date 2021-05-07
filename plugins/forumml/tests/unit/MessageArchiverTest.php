@@ -21,11 +21,10 @@
 namespace Tuleap\ForumML;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForumML\Incoming\IncomingAttachment;
 use Tuleap\ForumML\Incoming\IncomingMail;
 
-class MessageArchiverTest extends TestCase
+class MessageArchiverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

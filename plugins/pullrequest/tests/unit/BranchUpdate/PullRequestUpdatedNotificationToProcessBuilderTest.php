@@ -27,7 +27,6 @@ use GitRepository;
 use GitRepositoryFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\GitExec;
@@ -39,7 +38,7 @@ use Tuleap\TemporaryTestDirectory;
 use UserHelper;
 use UserManager;
 
-final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
+final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

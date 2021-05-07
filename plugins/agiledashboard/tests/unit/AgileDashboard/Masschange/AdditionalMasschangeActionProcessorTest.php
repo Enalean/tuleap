@@ -26,7 +26,6 @@ use Codendi_Request;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
@@ -36,7 +35,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\GlobalResponseMock;
 
-class AdditionalMasschangeActionProcessorTest extends TestCase
+class AdditionalMasschangeActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

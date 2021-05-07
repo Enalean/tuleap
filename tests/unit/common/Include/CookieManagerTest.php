@@ -22,7 +22,7 @@ namespace Tuleap;
 
 use ForgeConfig;
 
-class CookieManagerTest extends \PHPUnit\Framework\TestCase
+class CookieManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

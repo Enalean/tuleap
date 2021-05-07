@@ -20,10 +20,9 @@
 
 namespace XMLDateUpdater;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\CreateTestEnv\XMLDateUpdater\DateUpdater;
 
-class DateUpdaterTest extends TestCase
+class DateUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItUpdatesTheDatesInTheXMLFileWithDateInArtifacts()

@@ -24,11 +24,10 @@ namespace Tuleap\GitLFS;
 
 use HTTPRequest;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
-class LFSJSONHTTPDispatchableTest extends TestCase
+class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

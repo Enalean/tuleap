@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
+final class SOAP_RequestLimitatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

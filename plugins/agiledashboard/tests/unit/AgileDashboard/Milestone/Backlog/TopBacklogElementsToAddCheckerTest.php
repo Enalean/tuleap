@@ -26,14 +26,13 @@ namespace Tuleap\AgileDashboard\Milestone\Backlog;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class TopBacklogElementsToAddCheckerTest extends TestCase
+class TopBacklogElementsToAddCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

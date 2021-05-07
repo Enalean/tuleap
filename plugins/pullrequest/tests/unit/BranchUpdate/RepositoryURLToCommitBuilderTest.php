@@ -24,9 +24,8 @@ namespace Tuleap\PullRequest\BranchUpdate;
 
 use Git_GitRepositoryUrlManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class RepositoryURLToCommitBuilderTest extends TestCase
+final class RepositoryURLToCommitBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

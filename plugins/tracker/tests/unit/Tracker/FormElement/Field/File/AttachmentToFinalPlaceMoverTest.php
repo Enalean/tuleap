@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class AttachmentToFinalPlaceMoverTest extends TestCase
+class AttachmentToFinalPlaceMoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

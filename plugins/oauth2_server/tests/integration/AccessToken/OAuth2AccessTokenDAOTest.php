@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AccessToken;
 
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
@@ -30,7 +29,7 @@ use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 
-final class OAuth2AccessTokenDAOTest extends TestCase
+final class OAuth2AccessTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var int

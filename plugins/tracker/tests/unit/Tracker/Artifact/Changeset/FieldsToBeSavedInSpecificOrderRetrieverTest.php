@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_Integer;
@@ -32,7 +31,7 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class FieldsToBeSavedInSpecificOrderRetrieverTest extends TestCase
+class FieldsToBeSavedInSpecificOrderRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

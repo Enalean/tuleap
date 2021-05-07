@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_Workflow_Trigger_RulesManager;
@@ -30,7 +29,7 @@ use Tuleap\GlobalResponseMock;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-class ArtifactLinkValueSaverTest extends TestCase
+class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

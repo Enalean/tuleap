@@ -19,12 +19,11 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Permissions\FineGrainedDao;
 
 require_once 'bootstrap.php';
 
-final class GitPermissionsManagerTest extends TestCase
+final class GitPermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

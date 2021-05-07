@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Project\REST;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 
-final class UserGroupRepresentationTest extends TestCase
+final class UserGroupRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @testWith ["102_3"]

@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Renderer;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\BrowserDetection\DetectedBrowserTest;
 use Tuleap\ForgeConfigSandbox;
 
-class ListPickerIncluderTest extends TestCase
+class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

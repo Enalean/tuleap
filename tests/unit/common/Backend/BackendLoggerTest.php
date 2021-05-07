@@ -22,13 +22,12 @@ namespace Tuleap\Backend;
 
 use BackendLogger;
 use ForgeConfig;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use TruncateLevelLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 
-class BackendLoggerTest extends TestCase
+class BackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;

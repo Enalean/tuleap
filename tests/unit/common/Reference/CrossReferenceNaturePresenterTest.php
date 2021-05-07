@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferenceNaturePresenterTest extends TestCase
+class CrossReferenceNaturePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testWithAdditionalCrossReference(): void
     {

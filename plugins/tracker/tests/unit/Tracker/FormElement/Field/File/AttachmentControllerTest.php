@@ -26,7 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,7 +45,7 @@ use Tuleap\Upload\PathAllocator;
 use URLVerification;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-class AttachmentControllerTest extends TestCase
+class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

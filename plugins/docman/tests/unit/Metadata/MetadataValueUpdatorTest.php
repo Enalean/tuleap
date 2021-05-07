@@ -26,9 +26,8 @@ use Docman_Metadata;
 use Docman_MetadataValueDao;
 use Docman_MetadataValueList;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class MetadataValueUpdatorTest extends TestCase
+class MetadataValueUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

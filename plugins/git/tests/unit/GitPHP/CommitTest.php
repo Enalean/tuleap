@@ -21,9 +21,8 @@
 namespace Tuleap\Git\GitPHP;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class CommitTest extends TestCase
+class CommitTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

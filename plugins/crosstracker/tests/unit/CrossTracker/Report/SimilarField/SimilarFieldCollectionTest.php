@@ -21,9 +21,8 @@
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class SimilarFieldCollectionTest extends TestCase
+class SimilarFieldCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

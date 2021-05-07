@@ -25,14 +25,13 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload\Tus;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-class FileUploadFinisherTest extends TestCase
+class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

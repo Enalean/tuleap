@@ -24,11 +24,10 @@ namespace Tuleap\PullRequest\BranchUpdate;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 use Tuleap\PullRequest\PullRequest;
 
-final class PulRequestUpdatedEventTest extends TestCase
+final class PulRequestUpdatedEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

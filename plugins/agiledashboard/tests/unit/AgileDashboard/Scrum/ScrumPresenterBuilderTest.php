@@ -28,7 +28,6 @@ use AgileDashboard_ConfigurationManager;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_PlanningAdminPresenter;
 use PlanningFactory;
@@ -38,7 +37,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalLanguageMock;
 
-class ScrumPresenterBuilderTest extends TestCase
+class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

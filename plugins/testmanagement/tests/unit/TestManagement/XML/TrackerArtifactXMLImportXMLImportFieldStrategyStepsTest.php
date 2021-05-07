@@ -23,12 +23,11 @@ namespace Tuleap\TestManagement\XML;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends TestCase
+class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -26,12 +26,11 @@ use Http\Client\Exception;
 use Http\Mock\Client;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-class PwnedPasswordRangeRetrieverTest extends TestCase
+class PwnedPasswordRangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

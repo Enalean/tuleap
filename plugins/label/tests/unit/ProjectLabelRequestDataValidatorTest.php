@@ -21,11 +21,10 @@
 namespace Tuleap\Label\Widget;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class ProjectLabelRequestDataValidatorTest extends TestCase
+class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

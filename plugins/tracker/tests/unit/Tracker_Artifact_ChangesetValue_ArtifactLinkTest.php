@@ -31,7 +31,7 @@ use Tracker_ArtifactLinkInfo;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
-class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \PHPUnit\Framework\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;

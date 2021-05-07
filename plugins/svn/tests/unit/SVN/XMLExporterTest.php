@@ -22,7 +22,6 @@ namespace Tuleap\SVN;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalSVNPollution;
@@ -31,7 +30,7 @@ use Tuleap\SVN\AccessControl\AccessFileReader;
 use Tuleap\SVN\Admin\MailNotification;
 use XML_SimpleXMLCDATAFactory;
 
-final class XMLExporterTest extends TestCase
+final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

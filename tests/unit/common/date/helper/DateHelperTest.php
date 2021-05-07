@@ -27,13 +27,12 @@ namespace Tuleap\common\date\helper;
 use DateHelper;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class DateHelperTest extends TestCase
+final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

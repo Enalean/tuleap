@@ -23,7 +23,6 @@ namespace Tuleap\Cardwall\AccentColor;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Tracker;
 use Tracker_FormElementFactory;
@@ -33,7 +32,7 @@ use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
 
-class AccentColorBuilderTest extends TestCase
+class AccentColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var AccentColorBuilder */
     private $accent_color_builder;

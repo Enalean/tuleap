@@ -20,14 +20,13 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\TemporaryTestDirectory;
 
 require_once 'bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_Backend_GitoliteTest extends TestCase
+class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

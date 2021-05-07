@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Token;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-class GitlabBotApiTokenTest extends TestCase
+class GitlabBotApiTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

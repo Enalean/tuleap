@@ -30,7 +30,6 @@ use ForgeConfig;
 use HTTPRequest;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -45,7 +44,7 @@ use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
-class ProjectDetailsControllerTest extends TestCase
+class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

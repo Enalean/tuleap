@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Date;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -29,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValu
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 
-final class DateTimeFieldCheckerTest extends TestCase
+final class DateTimeFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

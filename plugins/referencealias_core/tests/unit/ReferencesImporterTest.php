@@ -22,12 +22,11 @@ namespace Tuleap\ReferenceAliasCore;
 
 use DataAccessResult;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\XML\Import\ImportConfig;
 
 include 'bootstrap.php';
 
-class ReferencesImporterTest extends TestCase
+class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

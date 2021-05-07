@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TrackerFactory;
 use Tuleap\Layout\BaseLayout;
@@ -34,7 +33,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
-class PromoteTrackersControllerTest extends TestCase
+class PromoteTrackersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

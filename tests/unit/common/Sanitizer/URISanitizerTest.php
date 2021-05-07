@@ -21,10 +21,9 @@
 namespace Tuleap\Sanitizer;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Valid_HTTPURI;
 
-class URISanitizerTest extends TestCase
+class URISanitizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

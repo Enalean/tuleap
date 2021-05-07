@@ -27,7 +27,6 @@ use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_MilestoneFactory;
 use PlanningFactory;
@@ -41,7 +40,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
-final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
+final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

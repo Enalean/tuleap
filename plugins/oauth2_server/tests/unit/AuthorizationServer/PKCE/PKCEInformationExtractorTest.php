@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\OAuth2Server\App\OAuth2App;
 
-final class PKCEInformationExtractorTest extends TestCase
+final class PKCEInformationExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var PKCEInformationExtractor

@@ -25,7 +25,6 @@ namespace Tuleap\Timetracking\JiraImporter;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Timetracking\JiraImporter\Worklog\Worklog;
@@ -37,7 +36,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use XML_SimpleXMLCDATAFactory;
 
-final class JiraXMLExportTest extends TestCase
+final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

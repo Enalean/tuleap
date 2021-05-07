@@ -22,9 +22,8 @@ namespace Tuleap\DynamicCredentials\Credential;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 
-class CredentialIdentifierExtractorTest extends TestCase
+class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExtractionOfTheIdentifierFromProperlyFormattedUsername()
     {

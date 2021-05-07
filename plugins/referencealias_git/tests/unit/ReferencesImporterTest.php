@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ReferenceAliasGit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\XML\Import\ImportConfig;
 
 include __DIR__ . '/bootstrap.php';
 
-class ReferencesImporterTest extends TestCase
+class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

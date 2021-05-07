@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Webhook\Log;
 
-final class StatusTest extends \PHPUnit\Framework\TestCase
+final class StatusTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItUsesGivenInformation(): void
     {

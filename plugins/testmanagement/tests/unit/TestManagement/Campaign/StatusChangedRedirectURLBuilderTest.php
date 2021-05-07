@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Campaign;
 
 use HTTPRequest;
-use PHPUnit\Framework\TestCase;
 use Project;
 use function PHPUnit\Framework\assertSame;
 
-class StatusChangedRedirectURLBuilderTest extends TestCase
+class StatusChangedRedirectURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsRedirectToCampaignURL(): void
     {

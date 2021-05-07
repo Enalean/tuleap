@@ -23,7 +23,6 @@ namespace Tuleap\Tracker;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Psr\Log\LoggerInterface;
@@ -57,7 +56,7 @@ use User\XML\Import\IFindUserFromXMLReference;
 use WorkflowFactory;
 use XML_RNGValidator;
 
-final class TrackerXmlImportTest extends TestCase
+final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

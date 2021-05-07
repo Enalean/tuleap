@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use LDAP_UserGroupManager;
 use LDAP_GroupManager;
 
 require_once __DIR__ . '/bootstrap.php';
 
-final class UserGroupManagerTest extends TestCase
+final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

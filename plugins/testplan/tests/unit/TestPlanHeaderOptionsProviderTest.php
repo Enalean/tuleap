@@ -24,7 +24,6 @@ namespace Tuleap\TestPlan;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use TrackerFactory;
@@ -35,7 +34,7 @@ use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
-class TestPlanHeaderOptionsProviderTest extends TestCase
+class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

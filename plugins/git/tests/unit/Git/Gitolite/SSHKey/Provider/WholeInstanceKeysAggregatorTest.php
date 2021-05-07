@@ -22,7 +22,7 @@ namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
 use Mockery;
 
-class WholeInstanceKeysAggregatorTest extends \PHPUnit\Framework\TestCase
+class WholeInstanceKeysAggregatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

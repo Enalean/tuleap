@@ -19,7 +19,7 @@
  *
  */
 
-class FRSFileTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class FRSFileTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     public function testGetContentWholeFile()

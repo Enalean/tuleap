@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -35,7 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 use function PHPUnit\Framework\assertEquals;
 
-final class JiraToTuleapFieldTypeMapperTest extends TestCase
+final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

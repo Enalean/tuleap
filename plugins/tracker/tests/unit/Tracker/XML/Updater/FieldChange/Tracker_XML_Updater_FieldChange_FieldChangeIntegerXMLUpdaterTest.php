@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdaterTest extends \PHPUnit\Framework\TestCase
+final class Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater */
     private $updater;

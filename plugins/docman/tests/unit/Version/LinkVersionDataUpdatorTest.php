@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Version;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class LinkVersionDataUpdatorTest extends TestCase
+class LinkVersionDataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

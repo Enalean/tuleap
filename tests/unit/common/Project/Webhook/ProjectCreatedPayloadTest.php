@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Project\Webhook;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ProjectCreatedPayloadTest extends TestCase
+final class ProjectCreatedPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

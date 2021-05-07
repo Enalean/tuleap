@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use TrackerXmlImport;
 
-class TestmanagementTrackersCreatorTest extends TestCase
+class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
+final class User_SSHKeyDumperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;

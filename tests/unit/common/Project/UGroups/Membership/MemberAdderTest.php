@@ -27,7 +27,6 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Tuleap\ForgeConfigSandbox;
@@ -37,7 +36,7 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutSt
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
-final class MemberAdderTest extends TestCase
+final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Commit;
 
 use ForgeConfig;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Symfony\Component\Process\Process;
 use Tuleap\ForgeConfigSandbox;
@@ -32,7 +31,7 @@ use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\TemporaryTestDirectory;
 use function PHPUnit\Framework\assertEquals;
 
-final class SvnlookTest extends TestCase
+final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;
     use ForgeConfigSandbox;

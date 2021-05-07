@@ -21,9 +21,8 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
 
-class TokenTest extends TestCase
+class TokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

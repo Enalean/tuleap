@@ -24,10 +24,9 @@ use GitRepository;
 use GitRepositoryFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Reference;
 
-class ReferencesBuilderTest extends TestCase
+class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

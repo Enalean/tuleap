@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CLI\DelayExecution;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-final class ConditionalTuleapCronEnvExecutionDelayerTest extends TestCase
+final class ConditionalTuleapCronEnvExecutionDelayerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

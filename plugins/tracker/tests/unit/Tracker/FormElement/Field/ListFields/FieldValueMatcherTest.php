@@ -25,13 +25,12 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use XMLImportHelper;
 
-final class FieldValueMatcherTest extends TestCase
+final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -18,12 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/../../../../bin/DocmanImport/DateParser.class.php');
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class DateParserTest extends TestCase
+class DateParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testParseIso8601(): void

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class IssuerTest extends TestCase
+final class IssuerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

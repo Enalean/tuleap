@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\common\Project\Admin\DescriptionFields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectCreationData;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
@@ -35,7 +34,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
-final class FieldUpdatorTest extends TestCase
+final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

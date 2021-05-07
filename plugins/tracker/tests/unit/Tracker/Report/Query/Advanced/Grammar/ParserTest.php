@@ -20,9 +20,8 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ParserTest extends TestCase
+final class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

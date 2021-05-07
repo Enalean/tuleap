@@ -26,11 +26,10 @@ use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanNotFoundException;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\KanbanUserCantAddArtifactException;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
-class NewDropdownCurrentContextSectionForKanbanProviderTest extends TestCase
+class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

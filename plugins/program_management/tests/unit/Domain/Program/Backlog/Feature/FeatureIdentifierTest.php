@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class FeatureIdentifierTest extends TestCase
+final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
     {

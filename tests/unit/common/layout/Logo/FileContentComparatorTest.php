@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Layout\Logo;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class FileContentComparatorTest extends TestCase
+class FileContentComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

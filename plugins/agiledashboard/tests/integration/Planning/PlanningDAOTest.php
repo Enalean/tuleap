@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBFactory;
 
-final class PlanningDAOTest extends TestCase
+final class PlanningDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var PlanningDao

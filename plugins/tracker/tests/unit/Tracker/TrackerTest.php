@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 
-class TrackerTest extends TestCase
+class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

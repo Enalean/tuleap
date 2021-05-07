@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
 
-final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
+final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

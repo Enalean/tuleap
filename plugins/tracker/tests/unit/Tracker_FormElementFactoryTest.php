@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 
-final class Tracker_FormElementFactoryTest extends PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use Tuleap\GlobalLanguageMock;

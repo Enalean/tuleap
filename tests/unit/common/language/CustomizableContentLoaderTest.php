@@ -26,7 +26,7 @@ namespace Tuleap\Language;
 use ForgeConfig;
 use PFUser;
 
-final class CustomizableContentLoaderTest extends \PHPUnit\Framework\TestCase
+final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

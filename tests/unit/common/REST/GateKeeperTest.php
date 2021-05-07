@@ -24,9 +24,8 @@ namespace Tuleap\REST;
 use HTTPRequest;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
-final class GateKeeperTest extends TestCase
+final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

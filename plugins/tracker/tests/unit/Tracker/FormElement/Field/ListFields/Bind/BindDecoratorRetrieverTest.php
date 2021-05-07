@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use LogicException;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 
-final class BindDecoratorRetrieverTest extends TestCase
+final class BindDecoratorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var BindDecoratorRetriever */
     private $decorator_retriever;
@@ -113,6 +112,7 @@ final class BindDecoratorRetrieverTest extends TestCase
         $this->artifact->expects($this->once())->method('getLastChangeset')->willReturn($this->changeset);
         $this->list_field->expects($this->once())->method('getDecorators')->willReturn($decorators);
         $this->list_field->expects($this->once())->method('getBind')->willReturn($this->bind_static);
+        $this->bind_static->method('getChangesetValues')->willReturn([]);
         $this->decorator->tlp_color_name = 'plum_crazy';
 
         $this->expectException(NoChangesetValueException::class);
@@ -125,6 +125,7 @@ final class BindDecoratorRetrieverTest extends TestCase
         $this->artifact->expects($this->once())->method('getLastChangeset')->willReturn($this->changeset);
         $this->list_field->expects($this->once())->method('getDecorators')->willReturn([]);
         $this->list_field->expects($this->once())->method('getBind')->willReturn(null);
+        $this->list_field->method('getId')->willReturn(789);
 
         $this->expectException(LogicException::class);
 
@@ -133,6 +134,7 @@ final class BindDecoratorRetrieverTest extends TestCase
 
     public function testItThrowsWhenNoChangeset(): void
     {
+        $this->artifact->method('getLastChangeset')->willReturn(null);
         $this->expectException(NoChangesetException::class);
 
         $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);

@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\unit\Tracker\XML\Exporter\FieldChange;
 
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use XML_SimpleXMLCDATAFactory;
 
-class FieldChangeDateBuilderTest extends TestCase
+class FieldChangeDateBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var FieldChangeDateBuilder

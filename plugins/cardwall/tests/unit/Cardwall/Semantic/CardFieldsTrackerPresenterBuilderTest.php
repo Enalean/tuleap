@@ -22,7 +22,6 @@ namespace Tuleap\Cardwall\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Users;
@@ -31,7 +30,7 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 
-class CardFieldsTrackerPresenterBuilderTest extends TestCase
+class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

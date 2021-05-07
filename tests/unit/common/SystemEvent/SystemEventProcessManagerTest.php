@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\SystemEvent;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEventProcessManager;
 
-class SystemEventProcessManagerTest extends TestCase
+class SystemEventProcessManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

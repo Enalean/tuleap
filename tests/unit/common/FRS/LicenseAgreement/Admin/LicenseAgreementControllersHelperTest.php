@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use TemplateRendererFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Templating\Mustache\MustacheEngine;
 
-class LicenseAgreementControllersHelperTest extends TestCase
+class LicenseAgreementControllersHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

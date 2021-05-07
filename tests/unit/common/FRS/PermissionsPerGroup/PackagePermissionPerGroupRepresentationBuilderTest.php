@@ -33,11 +33,8 @@ use ProjectUGroup;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentation;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
-use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
+final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var []
@@ -331,7 +328,7 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
         $this->assertEquals($expected_packages, $representation);
     }
 
-    public function testItDoesNotDisplayPackageWhenPackageHasNotTheFilteredPermission()
+    public function testItDoesNotDisplayPackageWhenPackageHasNotTheFilteredPermission(): void
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
@@ -340,6 +337,8 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
         )->willReturnOnConsecutiveCalls([ProjectUGroup::PROJECT_MEMBERS]);
 
         $this->release_factory->method('getFRSReleasesFromDb')->willReturn([]);
+
+        $this->ugroup_representation_builder->method('build')->willReturn(null);
 
         $expected_packages = [];
 

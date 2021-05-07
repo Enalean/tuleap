@@ -26,12 +26,11 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use TestHelper;
 use Tuleap\ForgeConfigSandbox;
 use UserGroupDao;
 
-final class RestrictedProjectsUserCounterTest extends TestCase
+final class RestrictedProjectsUserCounterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

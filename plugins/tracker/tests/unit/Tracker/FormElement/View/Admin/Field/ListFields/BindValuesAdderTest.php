@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\View\Admin\Field\ListFields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\GlobalLanguageMock;
 
-final class BindValuesAdderTest extends TestCase
+final class BindValuesAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

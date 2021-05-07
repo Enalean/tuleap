@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class LDAPTest extends TestCase
+final class LDAPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

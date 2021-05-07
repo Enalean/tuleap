@@ -22,7 +22,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \PHPUnit\Framework\TestCase
+class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

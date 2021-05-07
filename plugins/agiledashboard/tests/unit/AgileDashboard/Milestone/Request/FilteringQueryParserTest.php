@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Request;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 
-final class FilteringQueryParserTest extends TestCase
+final class FilteringQueryParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var FilteringQueryParser

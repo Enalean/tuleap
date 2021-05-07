@@ -23,11 +23,10 @@ namespace Tuleap\Git\Permissions;
 use Codendi_Request;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class FineGrainedPermissionFactoryTest extends TestCase
+class FineGrainedPermissionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

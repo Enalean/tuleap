@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-final class BacklogItemPresenterCollectionTest extends \PHPUnit\Framework\TestCase
+final class BacklogItemPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

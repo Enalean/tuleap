@@ -27,7 +27,7 @@ use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
-final class ChangesetValueComputedXMLExporterTest extends \PHPUnit\Framework\TestCase
+final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

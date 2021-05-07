@@ -25,11 +25,10 @@ namespace Tuleap\Webdav;
 
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Webdav_URLVerification;
 
-class WebdavURLVerificationTest extends TestCase
+class WebdavURLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

@@ -20,13 +20,12 @@
 
 namespace Tuleap\User\Password\Reset;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 
-class ResetTokenSerializerTest extends TestCase
+class ResetTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanSerializeAndUnserializeAToken()
     {

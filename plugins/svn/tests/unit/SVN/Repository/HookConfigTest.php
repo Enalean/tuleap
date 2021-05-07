@@ -21,11 +21,10 @@
 namespace Tuleap\SVN\Repository;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
 
-class HookConfigTest extends TestCase
+class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

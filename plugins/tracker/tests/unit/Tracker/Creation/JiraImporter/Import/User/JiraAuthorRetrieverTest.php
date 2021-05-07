@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
-final class JiraAuthorRetrieverTest extends TestCase
+final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager

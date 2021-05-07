@@ -21,9 +21,8 @@
 namespace Tuleap\GitLFS\GitPHPDisplay;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class DetectorTest extends TestCase
+class DetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

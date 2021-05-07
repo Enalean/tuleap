@@ -23,7 +23,6 @@ namespace Tuleap\Reference\ByNature\News;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\News\Exceptions\NewsNotFoundException;
 use Tuleap\News\Exceptions\RestrictedNewsAccessException;
 use Tuleap\News\NewsItem;
@@ -32,7 +31,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferenceNewsOrganizerTest extends TestCase
+class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

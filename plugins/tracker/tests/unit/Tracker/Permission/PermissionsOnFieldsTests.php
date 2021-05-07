@@ -24,13 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 
-class PermissionsOnFieldsTests extends TestCase
+class PermissionsOnFieldsTests extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

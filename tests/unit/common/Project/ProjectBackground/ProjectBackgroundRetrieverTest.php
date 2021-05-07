@@ -24,9 +24,8 @@ namespace Tuleap\Project\ProjectBackground;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ProjectBackgroundRetrieverTest extends TestCase
+final class ProjectBackgroundRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

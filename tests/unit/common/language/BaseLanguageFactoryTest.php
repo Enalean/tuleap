@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-final class BaseLanguageFactoryTest extends \PHPUnit\Framework\TestCase
+final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;

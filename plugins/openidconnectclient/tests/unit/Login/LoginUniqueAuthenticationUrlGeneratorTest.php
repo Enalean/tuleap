@@ -21,11 +21,10 @@
 namespace Tuleap\OpenIDConnectClient\Login;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
-class LoginUniqueAuthenticationUrlGeneratorTest extends TestCase
+class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

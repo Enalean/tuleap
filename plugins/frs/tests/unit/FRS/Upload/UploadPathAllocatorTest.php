@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Upload;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-class UploadPathAllocatorTest extends TestCase
+class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID(): void
     {

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\MergeRequest;
 
-class GitlabMergeRequestTest extends \PHPUnit\Framework\TestCase
+class GitlabMergeRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReturnsFalseIfAuthorNameIsNull(): void
     {

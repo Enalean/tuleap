@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\XML;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-final class XMLPlanningTest extends TestCase
+final class XMLPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsPlanningInXML(): void
     {

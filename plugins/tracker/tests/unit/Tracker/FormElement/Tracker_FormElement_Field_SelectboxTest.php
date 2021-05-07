@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
@@ -33,7 +32,7 @@ use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_FormElement_Field_SelectboxTest extends TestCase
+final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

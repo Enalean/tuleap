@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBFactory;
 
-final class OpenIDConnectSigningKeyDAOTest extends TestCase
+final class OpenIDConnectSigningKeyDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var OpenIDConnectSigningKeyDAO

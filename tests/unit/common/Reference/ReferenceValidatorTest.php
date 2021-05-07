@@ -21,9 +21,8 @@
 namespace Tuleap\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ReferenceValidatorTest extends TestCase
+final class ReferenceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

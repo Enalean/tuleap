@@ -21,9 +21,8 @@
 namespace Tuleap\SVN\Repository;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class RuleNameTest extends TestCase
+class RuleNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

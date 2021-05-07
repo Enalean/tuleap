@@ -25,9 +25,8 @@ namespace Tuleap\Platform\Banner;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
-final class BannerRetrieverTest extends TestCase
+final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

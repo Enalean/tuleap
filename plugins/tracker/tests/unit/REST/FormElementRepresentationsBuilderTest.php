@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\REST;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
@@ -31,7 +30,7 @@ use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
-class FormElementRepresentationsBuilderTest extends TestCase
+class FormElementRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

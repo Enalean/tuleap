@@ -25,7 +25,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\IProvideKey;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class AuthorizedKeysFileCreatorTest extends \PHPUnit\Framework\TestCase
+class AuthorizedKeysFileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

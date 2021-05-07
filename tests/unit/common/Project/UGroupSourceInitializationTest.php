@@ -18,10 +18,9 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,
-class UGroupSourceInitializationTest extends TestCase
+class UGroupSourceInitializationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

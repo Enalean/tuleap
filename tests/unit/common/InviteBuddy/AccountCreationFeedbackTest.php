@@ -24,11 +24,10 @@ namespace Tuleap\InviteBuddy;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use UserManager;
 
-class AccountCreationFeedbackTest extends TestCase
+class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

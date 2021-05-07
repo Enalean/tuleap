@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use ParagonIE\EasyDB\EasyStatement;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBFactory;
 
-final class SemanticTimeframeDaoTest extends TestCase
+final class SemanticTimeframeDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var int

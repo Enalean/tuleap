@@ -22,10 +22,9 @@ namespace Tuleap\PrometheusMetrics;
 
 use Enalean\Prometheus\Storage\FlushableStorage;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-final class ClearPrometheusMetricsCommandTest extends TestCase
+final class ClearPrometheusMetricsCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -21,12 +21,11 @@
 declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends TestCase
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

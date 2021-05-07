@@ -25,7 +25,7 @@ namespace User\XML\Import;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
 
-final class MappingFileOptimusPrimeTransformerTest extends \PHPUnit\Framework\TestCase
+final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tuleap\DB\DBFactory;
 
-class PriorityDaoTest extends TestCase
+class PriorityDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /** @var Tracker_Artifact_PriorityDao */
     private $dao;

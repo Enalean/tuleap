@@ -21,9 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\HelpDropdown;
 
-use PHPUnit\Framework\TestCase;
 
-class VersionNumberExtractorTest extends TestCase
+class VersionNumberExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider dataProviderTuleapVersions

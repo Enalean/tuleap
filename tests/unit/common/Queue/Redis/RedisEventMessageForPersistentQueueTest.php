@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue\Redis;
 
-use PHPUnit\Framework\TestCase;
 
-final class RedisEventMessageForPersistentQueueTest extends TestCase
+final class RedisEventMessageForPersistentQueueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildMessageFromTopicAndPayload(): void
     {

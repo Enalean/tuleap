@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Statistics;
 
-use PHPUnit\Framework\TestCase;
 use Statistics_Formatter;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-final class Statistics_FormatterTest extends TestCase
+final class Statistics_FormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsCsv(): void
     {

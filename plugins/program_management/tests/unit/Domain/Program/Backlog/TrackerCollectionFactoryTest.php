@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Project;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
@@ -36,7 +35,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerCollectionFactoryTest extends TestCase
+final class TrackerCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

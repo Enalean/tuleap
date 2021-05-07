@@ -25,12 +25,11 @@ namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 use Codendi_Diff;
 use Codendi_UnifiedDiffFormatter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
 
-final class TextDiffRetrieverTest extends TestCase
+final class TextDiffRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -26,14 +26,13 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_ChangesetValue_ArtifactLinkDiff;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
-class ArtifactLinkDiffTest extends TestCase
+class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

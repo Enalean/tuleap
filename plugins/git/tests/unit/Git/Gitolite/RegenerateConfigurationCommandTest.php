@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Git\Gitolite;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class RegenerateConfigurationCommandTest extends TestCase
+class RegenerateConfigurationCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

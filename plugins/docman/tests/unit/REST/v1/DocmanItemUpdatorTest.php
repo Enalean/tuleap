@@ -27,12 +27,11 @@ use Docman_Item;
 use Docman_ItemFactory;
 use Docman_LockFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\Version\Version;
 
-class DocmanItemUpdatorTest extends TestCase
+class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

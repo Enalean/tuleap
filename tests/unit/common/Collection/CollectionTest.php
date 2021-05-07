@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Collection;
 
 use Collection;
-use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class CollectionTest extends TestCase
+class CollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEmptyCollection()
     {

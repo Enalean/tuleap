@@ -29,7 +29,6 @@ use FRSRelease;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Sabre\DAV\Exception;
 use Sabre\DAV\Exception\Forbidden;
@@ -44,7 +43,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 /**
  * This is the unit test of WebDAVFRSRelease
  */
-class WebDAVFRSReleaseTest extends TestCase
+class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

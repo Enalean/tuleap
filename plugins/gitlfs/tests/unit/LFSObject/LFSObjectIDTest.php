@@ -20,9 +20,8 @@
 
 namespace Tuleap\GitLFS\LFSObject;
 
-use PHPUnit\Framework\TestCase;
 
-class LFSObjectIDTest extends TestCase
+class LFSObjectIDTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanConstructValidOID()
     {

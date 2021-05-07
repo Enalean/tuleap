@@ -25,7 +25,6 @@ namespace Tuleap\REST;
 use Exception;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Rest_Exception_InvalidTokenException;
@@ -36,7 +35,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\User\AccessKey\AccessKeyException;
 use User_StatusInvalidException;
 
-final class RESTCurrentUserMiddlewareTest extends TestCase
+final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

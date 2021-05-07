@@ -26,9 +26,8 @@ use FRSPackage;
 use FRSPackageFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
-class FRSPackagePermissionManagerTest extends TestCase
+class FRSPackagePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

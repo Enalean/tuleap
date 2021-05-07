@@ -33,7 +33,6 @@ use Exception;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_Controller;
 use Planning_MilestoneFactory;
 use PlanningFactory;
@@ -54,7 +53,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-final class PlanningControllerTest extends TestCase
+final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

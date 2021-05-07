@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement;
 
 use EventManager;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tracker;
@@ -34,7 +33,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class TrackerFormElementFactoryTest extends TestCase
+class TrackerFormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;

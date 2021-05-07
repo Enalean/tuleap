@@ -24,7 +24,7 @@ use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class KeyTest extends \PHPUnit\Framework\TestCase
+class KeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

@@ -21,14 +21,13 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ChartConfigurationFieldRetrieverTest extends TestCase
+class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

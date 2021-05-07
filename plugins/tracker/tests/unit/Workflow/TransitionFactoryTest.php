@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Admin;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ForbiddenException;
 
-final class RejectNonSiteAdministratorMiddlewareTest extends TestCase
+final class RejectNonSiteAdministratorMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

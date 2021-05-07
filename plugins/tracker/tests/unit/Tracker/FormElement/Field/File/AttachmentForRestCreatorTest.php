@@ -24,12 +24,11 @@ namespace Tuleap\Tracker\FormElement\Field\File;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Attachment_TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_FormElement_Field_File;
 
-class AttachmentForRestCreatorTest extends TestCase
+class AttachmentForRestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

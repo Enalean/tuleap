@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Collection;
 
-use PHPUnit\Framework\TestCase;
 use PrioritizedList;
 use stdClass;
 
-class PrioritizedListTest extends TestCase
+class PrioritizedListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testOrder(): void
     {

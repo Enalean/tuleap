@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Heartbeat;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Artifact\Heartbeat\OverrideArtifactsInFavourOfAnOther;
 
-final class HeartbeatArtifactOverriderTest extends TestCase
+final class HeartbeatArtifactOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

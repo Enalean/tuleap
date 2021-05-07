@@ -24,10 +24,9 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-final class UnplannedCriterionOptionsProviderTest extends TestCase
+final class UnplannedCriterionOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

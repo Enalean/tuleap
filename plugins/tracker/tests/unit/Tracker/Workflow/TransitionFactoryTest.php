@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
@@ -36,7 +35,7 @@ use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 use Workflow_TransitionDao;
 
-class TransitionFactoryTest extends TestCase
+class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

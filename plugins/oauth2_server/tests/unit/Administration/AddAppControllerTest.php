@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\Administration;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -38,7 +37,7 @@ use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AddAppControllerTest extends TestCase
+final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class AccessKeyRevokerTest extends TestCase
+final class AccessKeyRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

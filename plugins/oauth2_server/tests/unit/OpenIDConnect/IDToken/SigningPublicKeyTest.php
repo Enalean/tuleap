@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
-use PHPUnit\Framework\TestCase;
 
-final class SigningPublicKeyTest extends TestCase
+final class SigningPublicKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const SIGNING_PUBLIC_KEY_FINGERPRINT = '13e908c0c14b52fa364f6573cda85971d16de83b17d6ef8793447724c464c01c';
     private const SIGNING_PUBLIC_KEY             = <<<EOT

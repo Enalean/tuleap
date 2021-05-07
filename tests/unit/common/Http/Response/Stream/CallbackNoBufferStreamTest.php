@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Response\Stream;
 
-use PHPUnit\Framework\TestCase;
 
-final class CallbackNoBufferStreamTest extends TestCase
+final class CallbackNoBufferStreamTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanOutput(): void
     {

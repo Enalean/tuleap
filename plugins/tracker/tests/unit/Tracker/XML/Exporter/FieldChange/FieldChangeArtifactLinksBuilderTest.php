@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Exporter\FieldChange;
 
-use PHPUnit\Framework\TestCase;
 
-final class FieldChangeArtifactLinksBuilderTest extends TestCase
+final class FieldChangeArtifactLinksBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     /**

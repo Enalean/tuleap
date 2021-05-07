@@ -27,11 +27,10 @@ use Backend;
 use BackendSVN;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use SVNAccessFile;
 
-final class BackendSVNTest extends TestCase
+final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;

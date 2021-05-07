@@ -30,11 +30,10 @@ use LDAPResult;
 use LDAPResultIterator;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class LDAPGroupManagerTest extends TestCase
+class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

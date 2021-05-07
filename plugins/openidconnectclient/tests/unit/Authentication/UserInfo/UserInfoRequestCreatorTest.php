@@ -21,12 +21,11 @@
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestFactoryInterface;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenResponse;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class UserInfoRequestCreatorTest extends TestCase
+class UserInfoRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,12 +23,11 @@ namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 use ForgeAccess;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElement_Field_PermissionsOnArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

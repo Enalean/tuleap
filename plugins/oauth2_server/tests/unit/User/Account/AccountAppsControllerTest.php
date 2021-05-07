@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\User\Account;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -37,7 +36,7 @@ use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
-final class AccountAppsControllerTest extends TestCase
+final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

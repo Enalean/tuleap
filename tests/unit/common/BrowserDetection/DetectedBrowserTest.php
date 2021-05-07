@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\BrowserDetection;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class DetectedBrowserTest extends TestCase
+final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

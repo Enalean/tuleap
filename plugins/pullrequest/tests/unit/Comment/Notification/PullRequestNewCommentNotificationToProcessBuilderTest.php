@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\Comment\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
@@ -36,7 +35,7 @@ use Tuleap\PullRequest\StateStatus\PullRequestAbandonedNotificationToProcessBuil
 use UserHelper;
 use UserManager;
 
-final class PullRequestNewCommentNotificationToProcessBuilderTest extends TestCase
+final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

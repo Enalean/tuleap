@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 
-final class DiffProcessorTest extends TestCase
+final class DiffProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

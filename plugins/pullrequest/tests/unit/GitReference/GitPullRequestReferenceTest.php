@@ -22,9 +22,8 @@ namespace Tuleap\PullRequest\GitReference;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 
-class GitPullRequestReferenceTest extends TestCase
+class GitPullRequestReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testInvalidStatusIsRejected()
     {

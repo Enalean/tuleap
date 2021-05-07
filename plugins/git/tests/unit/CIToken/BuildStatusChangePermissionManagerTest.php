@@ -22,9 +22,8 @@ declare(strict_types=1);
 namespace Tuleap\Git\CIBuilds;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class BuildStatusChangePermissionManagerTest extends TestCase
+class BuildStatusChangePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

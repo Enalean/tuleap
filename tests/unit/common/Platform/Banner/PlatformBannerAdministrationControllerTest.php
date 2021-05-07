@@ -25,13 +25,12 @@ namespace Tuleap\Platform\Banner;
 use HTTPRequest;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
 
-final class PlatformBannerAdministrationControllerTest extends TestCase
+final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

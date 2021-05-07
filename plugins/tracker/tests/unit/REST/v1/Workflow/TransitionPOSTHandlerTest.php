@@ -24,7 +24,6 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -35,7 +34,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use UserManager;
 
-class TransitionPOSTHandlerTest extends TestCase
+class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

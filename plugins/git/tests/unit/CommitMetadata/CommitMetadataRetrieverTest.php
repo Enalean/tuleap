@@ -21,13 +21,12 @@
 namespace Tuleap\Git\CommitMetadata;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\CommitStatus\CommitStatus;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\User\UserEmailCollection;
 
-class CommitMetadataRetrieverTest extends TestCase
+class CommitMetadataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

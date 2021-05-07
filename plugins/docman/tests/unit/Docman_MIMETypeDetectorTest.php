@@ -19,10 +19,9 @@
  *
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Docman_MIMETypeDetectorTest extends TestCase
+final class Docman_MIMETypeDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItReturnsTheRightOfficeMimeType(): void

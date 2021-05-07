@@ -22,7 +22,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
+final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

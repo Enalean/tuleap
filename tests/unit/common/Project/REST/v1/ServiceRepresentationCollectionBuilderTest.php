@@ -24,12 +24,11 @@ namespace Tuleap\Project\REST\v1;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Service;
 use ServiceManager;
 
-class ServiceRepresentationCollectionBuilderTest extends TestCase
+class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

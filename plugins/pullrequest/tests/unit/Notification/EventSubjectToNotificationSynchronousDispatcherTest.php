@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
@@ -33,7 +32,7 @@ use Tuleap\PullRequest\Notification\EventSubjectToNotificationSynchronousDispatc
 use Tuleap\PullRequest\Notification\NotificationToProcess;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
 
-final class EventSubjectToNotificationSynchronousDispatcherTest extends TestCase
+final class EventSubjectToNotificationSynchronousDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

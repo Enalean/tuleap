@@ -26,11 +26,10 @@ namespace Tuleap\Docman\REST\v1\Files;
 use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Upload\Version\VersionToUpload;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
-class DocmanFileVersionCreatorTest extends TestCase
+class DocmanFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

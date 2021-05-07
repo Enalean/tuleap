@@ -23,11 +23,10 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 use Git_Gitolite_SSHKeyDumper;
 use Git_Gitolite_SSHKeyMassDumper;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class DumperFactoryTest extends TestCase
+class DumperFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

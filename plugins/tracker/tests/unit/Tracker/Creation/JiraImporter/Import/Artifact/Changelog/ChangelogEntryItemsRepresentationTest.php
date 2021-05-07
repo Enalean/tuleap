@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
-use PHPUnit\Framework\TestCase;
 
-class ChangelogEntryItemsRepresentationTest extends TestCase
+class ChangelogEntryItemsRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsARepresentationFromAPIResponse(): void
     {

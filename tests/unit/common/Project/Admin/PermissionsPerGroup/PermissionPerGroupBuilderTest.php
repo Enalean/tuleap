@@ -29,7 +29,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use UGroupManager;
 
-final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
+final class PermissionPerGroupBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

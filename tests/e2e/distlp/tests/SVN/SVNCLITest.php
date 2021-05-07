@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tests\Selenium\SVN;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class SVNCLITest extends TestCase
+class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $init_pwd;
 

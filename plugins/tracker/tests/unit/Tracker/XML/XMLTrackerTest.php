@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
@@ -81,7 +80,7 @@ use function PHPUnit\Framework\assertTrue;
  * @covers \Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset
  * @covers \Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue
  */
-class XMLTrackerTest extends TestCase
+class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExportsOneTracker(): void
     {

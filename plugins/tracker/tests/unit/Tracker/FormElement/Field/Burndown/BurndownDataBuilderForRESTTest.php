@@ -23,14 +23,13 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
-class BurndownDataBuilderForRESTTest extends TestCase
+class BurndownDataBuilderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

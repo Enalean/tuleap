@@ -23,13 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\AnonymousJiraUser;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertInstanceOf;
 
-class ChangelogEntryValueRepresentationTest extends TestCase
+class ChangelogEntryValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsARepresentationFromAPIResponse(): void
     {

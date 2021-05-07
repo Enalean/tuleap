@@ -27,7 +27,6 @@ namespace Tuleap\Tracker\FormElement;
 use BaseLanguage;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
@@ -43,7 +42,7 @@ use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XMLImportHelper;
 
-final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

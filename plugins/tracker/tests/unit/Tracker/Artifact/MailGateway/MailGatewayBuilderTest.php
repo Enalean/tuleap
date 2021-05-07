@@ -19,12 +19,11 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MailGatewayBuilderTest extends TestCase
+class MailGatewayBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

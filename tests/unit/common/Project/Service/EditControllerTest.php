@@ -24,12 +24,11 @@ namespace Tuleap\Project\Service;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
 
-final class EditControllerTest extends TestCase
+final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -21,9 +21,8 @@
 namespace Tuleap\SVN\Repository;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class HookConfigCheckerTest extends TestCase
+class HookConfigCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

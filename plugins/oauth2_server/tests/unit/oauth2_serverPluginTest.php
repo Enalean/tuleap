@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server;
 
-use PHPUnit\Framework\TestCase;
 
-final class oauth2_serverPluginTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class oauth2_serverPluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testBuildPluginInformation(): void
     {

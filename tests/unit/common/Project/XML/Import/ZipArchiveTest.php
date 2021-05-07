@@ -24,7 +24,7 @@ namespace Tuleap\Project\XML\Import;
 
 use Tuleap\TemporaryTestDirectory;
 
-final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
+final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

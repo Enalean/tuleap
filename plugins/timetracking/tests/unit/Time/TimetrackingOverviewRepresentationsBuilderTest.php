@@ -26,7 +26,6 @@
 namespace Tuleap\Timetracking\Time;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_REST_TrackerRestBuilder;
@@ -37,7 +36,7 @@ use Tuleap\Timetracking\REST\v1\TimetrackingOverviewRepresentationsBuilder;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
 
-class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
+class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

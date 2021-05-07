@@ -24,12 +24,11 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\MFA\OTP\TOTPMode;
 use Tuleap\MFA\OTP\TOTPValidator;
 
-class TOTPEnrollerTest extends TestCase
+class TOTPEnrollerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

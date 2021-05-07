@@ -22,12 +22,11 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ChartConfigurationValueRetrieverTest extends TestCase
+class ChartConfigurationValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

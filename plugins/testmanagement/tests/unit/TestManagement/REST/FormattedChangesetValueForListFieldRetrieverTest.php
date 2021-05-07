@@ -26,14 +26,13 @@ use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class FormattedChangesetValueForListFieldRetrieverTest extends TestCase
+class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

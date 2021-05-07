@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Document\Config;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class HistoryEnforcementSettingsBuilderTest extends TestCase
+final class HistoryEnforcementSettingsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

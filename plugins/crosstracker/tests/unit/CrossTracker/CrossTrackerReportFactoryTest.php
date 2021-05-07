@@ -21,9 +21,8 @@
 namespace Tuleap\CrossTracker;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class CrossTrackerReportFactoryTest extends TestCase
+class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

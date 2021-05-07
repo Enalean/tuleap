@@ -24,9 +24,8 @@ namespace Tuleap\Project;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
-final class DelegatedUserAccessForProjectTest extends TestCase
+final class DelegatedUserAccessForProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

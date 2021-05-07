@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
@@ -39,7 +38,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
-final class CreateProgramIncrementsRunnerTest extends TestCase
+final class CreateProgramIncrementsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

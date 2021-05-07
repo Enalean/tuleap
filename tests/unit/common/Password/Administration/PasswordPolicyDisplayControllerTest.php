@@ -22,7 +22,6 @@ namespace Tuleap\Password\Administration;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Password\Configuration\PasswordConfiguration;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
@@ -31,7 +30,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 
-final class PasswordPolicyDisplayControllerTest extends TestCase
+final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

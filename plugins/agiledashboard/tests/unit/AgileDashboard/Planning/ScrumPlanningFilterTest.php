@@ -21,11 +21,10 @@
 namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
-class ScrumPlanningFilterTest extends TestCase
+class ScrumPlanningFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

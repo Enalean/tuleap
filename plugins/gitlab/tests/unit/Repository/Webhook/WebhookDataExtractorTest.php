@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDataBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -35,7 +34,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 
-class WebhookDataExtractorTest extends TestCase
+class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

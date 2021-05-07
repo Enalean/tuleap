@@ -22,10 +22,9 @@
  *
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_ErrorPermissionDeniedTest extends TestCase
+class Docman_ErrorPermissionDeniedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testUrlTransformMiddle(): void

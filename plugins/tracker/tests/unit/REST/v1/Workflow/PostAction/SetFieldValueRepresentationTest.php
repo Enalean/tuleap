@@ -21,10 +21,9 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
-use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_Date;
 
-class SetFieldValueRepresentationTest extends TestCase
+class SetFieldValueRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testForDate()
     {

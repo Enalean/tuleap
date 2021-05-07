@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Http\Server\Authentication;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @see https://tools.ietf.org/html/rfc7617
  * @see https://tools.ietf.org/html/rfc7235#section-4.2
  */
-final class BasicAuthLoginExtractorTest extends TestCase
+final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

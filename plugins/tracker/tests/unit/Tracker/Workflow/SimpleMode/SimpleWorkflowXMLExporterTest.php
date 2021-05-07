@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\State;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow;
 use Workflow_Transition_ConditionsCollection;
 
-class SimpleWorkflowXMLExporterTest extends TestCase
+class SimpleWorkflowXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

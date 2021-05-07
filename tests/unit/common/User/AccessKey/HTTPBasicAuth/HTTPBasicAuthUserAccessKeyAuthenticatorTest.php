@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey\HTTPBasicAuth;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
 use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
@@ -33,7 +32,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 
-final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends TestCase
+final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

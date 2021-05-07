@@ -24,13 +24,12 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
-class SemanticTimeframeTest extends TestCase
+class SemanticTimeframeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

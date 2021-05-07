@@ -24,10 +24,9 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalResponseMock;
 
-class SemanticTimeframeUpdatorTest extends TestCase
+class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

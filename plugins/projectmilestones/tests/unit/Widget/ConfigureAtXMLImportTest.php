@@ -25,10 +25,9 @@ namespace Tuleap\ProjectMilestones\Widget;
 
 use Codendi_Request;
 use Tuleap\Widget\Event\ConfigureAtXMLImport as ConfigureAtXMLImportEvent;
-use PHPUnit\Framework\TestCase;
 use Tuleap\XML\MappingsRegistry;
 
-final class ConfigureAtXMLImportTest extends TestCase
+final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesntCreateTheWidgetThatIsNotProjectMilestone(): void
     {

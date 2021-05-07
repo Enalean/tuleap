@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\XML;
 
-use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertFalse;
 
-final class XMLFormElementImplTest extends TestCase
+final class XMLFormElementImplTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItUseItTrueIsTheDefaultThereforeNoNeedToAddIt(): void
     {

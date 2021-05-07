@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -31,7 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
-final class ArtifactLinkValidatorTest extends TestCase
+final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
-final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\TestCase
+final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

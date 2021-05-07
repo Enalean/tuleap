@@ -22,11 +22,10 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_String;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class TrackerFormElementJsonTest extends TestCase
+class TrackerFormElementJsonTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

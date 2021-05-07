@@ -24,13 +24,12 @@ namespace Tuleap\Project\Admin\Categories;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectHistoryDao;
 use TroveCat;
 use TroveCatFactory;
 
-class ProjectCategoriesUpdaterTest extends TestCase
+class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

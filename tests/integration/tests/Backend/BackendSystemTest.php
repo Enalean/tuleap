@@ -32,7 +32,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 
-final class BackendSystemTest extends \PHPUnit\Framework\TestCase
+final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;

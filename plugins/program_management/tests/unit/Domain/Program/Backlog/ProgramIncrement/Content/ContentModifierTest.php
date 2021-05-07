@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
@@ -44,7 +43,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use function PHPUnit\Framework\assertTrue;
 
-final class ContentModifierTest extends TestCase
+final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsWhenUserCannotPrioritizeFeatures(): void
     {

@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tus;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class TusServerTest extends TestCase
+final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,14 +24,13 @@ namespace Tuleap\Request;
 use FastRoute;
 use Mockery;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use PluginManager;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
-class FrontRouterTest extends TestCase
+class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

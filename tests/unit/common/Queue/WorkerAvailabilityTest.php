@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class WorkerAvailabilityTest extends TestCase
+final class WorkerAvailabilityTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

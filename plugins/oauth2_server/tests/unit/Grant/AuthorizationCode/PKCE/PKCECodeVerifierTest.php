@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\CodeVerifierDoesNotMatchChallengeException;
@@ -32,7 +31,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PKCECodeVerifierTest extends TestCase
+final class PKCECodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var PKCECodeVerifier

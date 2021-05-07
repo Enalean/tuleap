@@ -22,7 +22,7 @@
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 
-final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
+final class Transition_PostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

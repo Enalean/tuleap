@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
-class InviteBuddyConfigurationTest extends TestCase
+class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

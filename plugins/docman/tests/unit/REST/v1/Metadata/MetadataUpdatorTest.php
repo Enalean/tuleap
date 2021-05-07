@@ -25,7 +25,6 @@ use Docman_Metadata;
 use LogicException;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
@@ -35,7 +34,7 @@ use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\REST\I18NRestException;
 
-final class MetadataUpdatorTest extends TestCase
+final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -26,11 +26,10 @@
 namespace Tuleap\Timetracking\Time;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Timetracking\REST\v1\TimetrackingQueryChecker;
 use Luracast\Restler\RestException;
 
-class TimetrackingQueryCheckerTest extends TestCase
+class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

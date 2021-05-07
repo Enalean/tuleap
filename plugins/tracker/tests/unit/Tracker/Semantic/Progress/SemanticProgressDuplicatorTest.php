@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class SemanticProgressDuplicatorTest extends TestCase
+class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

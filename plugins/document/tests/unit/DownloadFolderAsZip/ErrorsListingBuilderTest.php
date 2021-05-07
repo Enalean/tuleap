@@ -24,10 +24,9 @@ namespace Tuleap\Document\DownloadFolderAsZip;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ZipStream\ZipStream;
 
-final class ErrorsListingBuilderTest extends TestCase
+final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

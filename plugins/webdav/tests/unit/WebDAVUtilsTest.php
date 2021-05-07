@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\WebDAV;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVUtils
  */
-class WebDAVUtilsTest extends TestCase
+class WebDAVUtilsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

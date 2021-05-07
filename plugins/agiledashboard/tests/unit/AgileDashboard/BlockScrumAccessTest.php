@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
-use PHPUnit\Framework\TestCase;
 
-final class BlockScrumAccessTest extends TestCase
+final class BlockScrumAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testScrumAccessIsEnabledByDefault(): void
     {

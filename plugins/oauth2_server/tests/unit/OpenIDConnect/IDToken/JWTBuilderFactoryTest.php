@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
 use Lcobucci\JWT\Builder;
-use PHPUnit\Framework\TestCase;
 
-final class JWTBuilderFactoryTest extends TestCase
+final class JWTBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsCleanBuilder(): void
     {

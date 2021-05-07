@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
@@ -33,7 +32,7 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\TemporaryTestDirectory;
 use UserHelper;
 
-final class PullRequestNewInlineCommentNotificationTest extends TestCase
+final class PullRequestNewInlineCommentNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

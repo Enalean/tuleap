@@ -21,11 +21,10 @@
 namespace Tuleap\CrossTracker\Permission;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class CrossTrackerPermissionGateTest extends TestCase
+class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

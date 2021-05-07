@@ -26,7 +26,6 @@ use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_Float;
@@ -38,7 +37,7 @@ use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class CardPatcherTest extends TestCase
+class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

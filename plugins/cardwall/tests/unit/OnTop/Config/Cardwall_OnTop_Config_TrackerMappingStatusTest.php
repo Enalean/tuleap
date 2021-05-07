@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \PHPUnit\Framework\TestCase
+final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

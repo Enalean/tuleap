@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Platform\Banner;
 
-use PHPUnit\Framework\TestCase;
 
-final class BannerDisplayTest extends TestCase
+final class BannerDisplayTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testVisibleBanner(): void
     {

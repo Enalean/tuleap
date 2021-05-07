@@ -24,7 +24,6 @@ use AgileDashBoard_Semantic_InitialEffort;
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
@@ -35,7 +34,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class MoveChangesetXMLUpdaterTest extends TestCase
+class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

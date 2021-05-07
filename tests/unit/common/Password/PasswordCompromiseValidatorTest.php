@@ -20,10 +20,9 @@
 
 namespace Tuleap\Password;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Password\HaveIBeenPwned\PwnedPasswordChecker;
 
-class PasswordCompromiseValidatorTest extends TestCase
+class PasswordCompromiseValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPasswordAcceptation()
     {

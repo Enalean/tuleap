@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class UserInfoResponseRepresentationTest extends TestCase
+final class UserInfoResponseRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

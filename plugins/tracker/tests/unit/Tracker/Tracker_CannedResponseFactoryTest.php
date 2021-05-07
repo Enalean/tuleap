@@ -23,14 +23,13 @@ namespace Tuleap\Tracker;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_CannedResponse;
 use Tracker_CannedResponseFactory;
 use TrackerFactory;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_CannedResponseFactoryTest extends TestCase
+class Tracker_CannedResponseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -28,7 +28,6 @@ use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanManager;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_Report;
@@ -39,7 +38,7 @@ use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
-final class FirstKanbanCreatorTest extends TestCase
+final class FirstKanbanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

@@ -24,7 +24,6 @@ namespace Tuleap\Project;
 
 use ForgeConfig;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project_InvalidFullName_Exception;
 use Project_InvalidShortName_Exception;
 use ProjectCreator;
@@ -44,7 +43,7 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use UserManager;
 
-final class ProjectCreatorTest extends TestCase
+final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Password\HaveIBeenPwned;
 
-use PHPUnit\Framework\TestCase;
 
-final class PwnedPasswordCheckerTest extends TestCase
+final class PwnedPasswordCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const API_RESPONSE_EXAMPLE = <<<EOF
 63DBC31449BE0453A859936BD1BC9957642:15

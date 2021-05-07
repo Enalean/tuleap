@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use GuzzleHttp\Psr7\Uri;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -35,7 +34,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class AuthorizationFormRendererTest extends TestCase
+final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

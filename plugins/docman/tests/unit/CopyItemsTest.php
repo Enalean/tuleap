@@ -22,7 +22,6 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Test how items are copied.
@@ -40,7 +39,7 @@ use PHPUnit\Framework\TestCase;
  *     - for list of values, the same value exist in both projects.
  */
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class CopyItemsTest extends TestCase
+class CopyItemsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

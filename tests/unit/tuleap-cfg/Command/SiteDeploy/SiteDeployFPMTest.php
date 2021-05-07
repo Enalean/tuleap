@@ -24,13 +24,12 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\SiteDeploy;
 
 use Psr\Log\NullLogger;
-use PHPUnit\Framework\TestCase;
 use Tuleap\TemporaryTestDirectory;
 use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionFiles;
 use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionRedis;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 
-final class SiteDeployFPMTest extends TestCase
+final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;
 

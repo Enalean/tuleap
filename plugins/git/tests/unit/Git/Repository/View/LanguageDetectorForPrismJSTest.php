@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Repository\View;
 
-use PHPUnit\Framework\TestCase;
 
-final class LanguageDetectorForPrismJSTest extends TestCase
+final class LanguageDetectorForPrismJSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDetectLanguageFromTheFileName(): void
     {

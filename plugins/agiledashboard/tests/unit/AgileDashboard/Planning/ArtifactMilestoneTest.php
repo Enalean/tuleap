@@ -24,7 +24,6 @@ use ArtifactNode;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_ArtifactMilestone;
 use Project;
@@ -34,7 +33,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-final class ArtifactMilestoneTest extends TestCase
+final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

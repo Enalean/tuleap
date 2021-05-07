@@ -21,11 +21,10 @@
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MailGatewayFilterTest extends TestCase
+class MailGatewayFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

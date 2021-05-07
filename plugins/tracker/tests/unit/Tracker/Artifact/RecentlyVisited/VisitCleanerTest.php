@@ -21,9 +21,8 @@
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class VisitCleanerTest extends TestCase
+final class VisitCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

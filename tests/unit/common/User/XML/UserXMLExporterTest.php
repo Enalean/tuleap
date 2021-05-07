@@ -26,7 +26,7 @@ use PFUser;
 use SimpleXMLElement;
 use UserXMLExporter;
 
-final class UserXMLExporterTest extends \PHPUnit\Framework\TestCase
+final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

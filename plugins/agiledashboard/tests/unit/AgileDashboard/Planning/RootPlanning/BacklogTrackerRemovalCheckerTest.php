@@ -24,13 +24,12 @@ namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningParameters;
 use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 
-final class BacklogTrackerRemovalCheckerTest extends TestCase
+final class BacklogTrackerRemovalCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

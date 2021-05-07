@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace User\XML\Import;
 
-final class ReadyToBeImportedUsersCollectionTest extends \PHPUnit\Framework\TestCase
+final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

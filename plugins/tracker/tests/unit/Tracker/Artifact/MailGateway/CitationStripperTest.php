@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class CitationStripperTest extends TestCase
+class CitationStripperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     private $fixtures_dir;

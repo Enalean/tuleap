@@ -24,7 +24,6 @@ namespace Tuleap\SVN\AccessControl;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectHistoryDao;
 use SVN_AccessFile_Writer;
 use Tuleap\GlobalLanguageMock;
@@ -32,7 +31,7 @@ use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVN\Repository\Repository;
 
-class AccessFileHistoryCreatorTest extends TestCase
+class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

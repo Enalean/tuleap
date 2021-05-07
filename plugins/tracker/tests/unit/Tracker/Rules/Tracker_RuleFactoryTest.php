@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Rule;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
@@ -37,7 +36,7 @@ use Tracker_RuleDao;
 use Tracker_RuleFactory;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_RuleFactoryTest extends TestCase
+class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

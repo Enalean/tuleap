@@ -22,7 +22,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class ArtifactRuleValueTest extends \PHPUnit\Framework\TestCase
+final class ArtifactRuleValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testApplyTo(): void
     {

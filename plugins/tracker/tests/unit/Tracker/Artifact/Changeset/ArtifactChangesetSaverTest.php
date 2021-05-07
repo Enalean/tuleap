@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetDao;
 use Tracker_ArtifactDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
-final class ArtifactChangesetSaverTest extends TestCase
+final class ArtifactChangesetSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

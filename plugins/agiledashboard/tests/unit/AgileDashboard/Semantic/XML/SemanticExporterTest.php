@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Semantic\XML;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
@@ -36,7 +35,7 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
 
-final class SemanticExporterTest extends TestCase
+final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCatchWhenProvidedXMLIsInvalid(): void
     {

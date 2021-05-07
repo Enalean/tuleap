@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 
-final class TeamProjectsCollectionTest extends TestCase
+final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetTeamProjectsReturnsProjects(): void
     {

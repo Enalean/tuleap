@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Data\
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\TimeFrameFields;
 
-final class TimeFrameFieldsTest extends \PHPUnit\Framework\TestCase
+final class TimeFrameFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCanBeAStartDateAndDuration(): void
     {

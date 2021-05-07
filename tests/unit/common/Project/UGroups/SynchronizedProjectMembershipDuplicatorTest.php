@@ -24,10 +24,9 @@ namespace Tuleap\Project\UGroups;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-final class SynchronizedProjectMembershipDuplicatorTest extends TestCase
+final class SynchronizedProjectMembershipDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

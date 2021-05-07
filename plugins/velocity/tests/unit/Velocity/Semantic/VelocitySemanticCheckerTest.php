@@ -21,12 +21,11 @@
 namespace Tuleap\Velocity\Semantic;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class VelocitySemanticCheckerTest extends TestCase
+class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

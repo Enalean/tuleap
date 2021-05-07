@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\StateStatus;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Notification\FilterUserFromCollection;
@@ -34,7 +33,7 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 use UserManager;
 
-final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCase
+final class PullRequestAbandonedNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

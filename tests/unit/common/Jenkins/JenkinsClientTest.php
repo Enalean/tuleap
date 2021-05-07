@@ -27,12 +27,11 @@ use Http\Mock\Client;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class JenkinsClientTest extends TestCase
+final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

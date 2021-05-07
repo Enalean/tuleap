@@ -25,7 +25,6 @@ use DataAccessResult;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
@@ -37,7 +36,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class TrackerFormElementFieldFileTest extends TestCase
+final class TrackerFormElementFieldFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

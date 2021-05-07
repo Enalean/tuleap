@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\App;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class OAuth2AppRemoverTest extends TestCase
+final class OAuth2AppRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

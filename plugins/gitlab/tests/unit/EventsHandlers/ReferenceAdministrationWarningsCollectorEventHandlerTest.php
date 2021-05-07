@@ -22,12 +22,11 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\EventsHandlers;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 
-class ReferenceAdministrationWarningsCollectorEventHandlerTest extends TestCase
+class ReferenceAdministrationWarningsCollectorEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

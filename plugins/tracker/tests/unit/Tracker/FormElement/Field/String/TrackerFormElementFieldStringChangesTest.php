@@ -22,12 +22,11 @@ namespace Tuleap\Tracker\FormElement\Field;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_String;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class TrackerFormElementFieldStringChangesTest extends TestCase
+class TrackerFormElementFieldStringChangesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

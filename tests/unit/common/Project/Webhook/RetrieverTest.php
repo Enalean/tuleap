@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Webhook;
 
-final class RetrieverTest extends \PHPUnit\Framework\TestCase
+final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

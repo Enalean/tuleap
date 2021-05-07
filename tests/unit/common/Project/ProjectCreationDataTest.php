@@ -23,12 +23,11 @@
 declare(strict_types=1);
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
-final class ProjectCreationDataTest extends TestCase
+final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

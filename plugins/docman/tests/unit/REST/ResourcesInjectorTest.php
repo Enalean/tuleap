@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ResourcesInjectorTest extends TestCase
+final class ResourcesInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

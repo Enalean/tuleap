@@ -20,9 +20,8 @@
 
 namespace Tuleap\GitLFS\Authorization\User\Operation;
 
-use PHPUnit\Framework\TestCase;
 
-class UserOperationFactoryTest extends TestCase
+class UserOperationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCreationOfAUnknownOperationIsRejected()
     {

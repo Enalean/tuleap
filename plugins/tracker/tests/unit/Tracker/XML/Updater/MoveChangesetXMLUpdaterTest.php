@@ -24,7 +24,6 @@ use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tracker;
@@ -42,7 +41,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MoveChangesetXMLUpdaterTest extends TestCase
+class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

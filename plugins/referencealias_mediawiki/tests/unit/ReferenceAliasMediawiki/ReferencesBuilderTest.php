@@ -22,12 +22,11 @@ namespace Tuleap\ReferenceAliasMediawiki;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Reference;
 
-class ReferencesBuilderTest extends TestCase
+class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

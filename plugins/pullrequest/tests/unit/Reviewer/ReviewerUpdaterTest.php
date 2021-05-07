@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest\Reviewer;
 use GitRepoNotFoundException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -33,7 +32,7 @@ use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 
-final class ReviewerUpdaterTest extends TestCase
+final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
-use PHPUnit\Framework\TestCase;
 
-final class ConcealedStringTest extends TestCase
+final class ConcealedStringTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValueIsNotAltered(): void
     {

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
-use PHPUnit\Framework\TestCase;
 
-final class InstanceBaseURLBuilderTest extends TestCase
+final class InstanceBaseURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

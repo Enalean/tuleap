@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Step\Definition\Field\XML;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertTrue;
 
-final class XMLStepDefinitionTest extends TestCase
+final class XMLStepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItsExportedAsAnExternalField(): void

@@ -26,12 +26,11 @@ use Docman_Version;
 use Docman_VersionFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UserXMLExporter;
 
-class XMLExportVisitorTest extends TestCase
+class XMLExportVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

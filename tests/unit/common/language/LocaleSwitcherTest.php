@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Language;
 
-use PHPUnit\Framework\TestCase;
 
-final class LocaleSwitcherTest extends TestCase
+final class LocaleSwitcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanSetLocaleForSpecificExecutionContext(): void
     {

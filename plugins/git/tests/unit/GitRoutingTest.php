@@ -33,7 +33,6 @@ use GitRepositoryFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
@@ -45,7 +44,7 @@ use UserDao;
 /**
  * @group GitRoutingTest
  */
-class GitRoutingTest extends TestCase
+class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

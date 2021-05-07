@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Authentication\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-final class AggregateAuthenticationScopeBuilderTest extends TestCase
+final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Project\XML;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use PluginFactory;
 
-final class ServiceEnableForXmlImportRetrieverTest extends TestCase
+final class ServiceEnableForXmlImportRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

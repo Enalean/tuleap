@@ -23,9 +23,8 @@ namespace Tuleap\GitLFS\StreamFilter;
 require_once __DIR__ . '/ReplaceDataFilter.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class StreamFilterTest extends TestCase
+class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

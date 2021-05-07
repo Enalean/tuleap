@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\TemporaryTestDirectory;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class FileUniDiffBuilderTest extends TestCase
+class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

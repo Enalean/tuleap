@@ -26,7 +26,6 @@ namespace Tuleap\SVN\Hooks;
 
 use ForgeConfig;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReferenceManager;
@@ -41,7 +40,7 @@ use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\Repository;
 
-class PreCommitTest extends TestCase
+class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -24,9 +24,8 @@ namespace Tuleap\Taskboard\Swimlane;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class SwimlaneChildrenRetrieverTest extends TestCase
+final class SwimlaneChildrenRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

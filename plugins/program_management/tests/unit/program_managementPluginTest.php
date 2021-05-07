@@ -20,13 +20,12 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class program_managementPluginTest extends TestCase
+final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testProvidesArtLinkTypes(): void
     {

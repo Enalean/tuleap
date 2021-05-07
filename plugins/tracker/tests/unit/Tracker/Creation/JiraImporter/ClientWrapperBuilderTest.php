@@ -26,11 +26,10 @@ namespace Tracker\Creation\JiraImporter;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
-final class ClientWrapperBuilderTest extends TestCase
+final class ClientWrapperBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

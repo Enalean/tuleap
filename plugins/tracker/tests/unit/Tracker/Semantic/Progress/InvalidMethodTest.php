@@ -25,10 +25,9 @@ namespace Tuleap\Tracker\Semantic\Progress;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class InvalidMethodTest extends TestCase
+final class InvalidMethodTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

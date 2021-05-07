@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\Reviewer\Autocompleter;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -38,7 +37,7 @@ use Tuleap\Request\NotFoundException;
 use UserManager;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class ReviewerAutocompleterControllerTest extends TestCase
+final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

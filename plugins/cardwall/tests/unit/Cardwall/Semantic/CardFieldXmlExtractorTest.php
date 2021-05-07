@@ -24,9 +24,8 @@
 namespace Tuleap\Cardwall\Semantic;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class CardFieldXmlExtractorTest extends TestCase
+class CardFieldXmlExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

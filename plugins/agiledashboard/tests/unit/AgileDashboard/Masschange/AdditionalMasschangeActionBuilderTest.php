@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Masschange;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use Project;
@@ -35,7 +34,7 @@ use Tracker;
 use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 
-final class AdditionalMasschangeActionBuilderTest extends TestCase
+final class AdditionalMasschangeActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

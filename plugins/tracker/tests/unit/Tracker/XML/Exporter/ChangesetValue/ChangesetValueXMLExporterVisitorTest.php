@@ -24,7 +24,7 @@ declare(strict_types=1);
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 
-final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

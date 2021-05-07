@@ -25,7 +25,7 @@ namespace Tuleap\User\Password\Reset;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class CreatorTest extends \PHPUnit\Framework\TestCase
+final class CreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

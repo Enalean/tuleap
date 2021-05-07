@@ -19,14 +19,13 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\CssAsset;
 
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Response class.
  */
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class LayoutTest extends TestCase
+class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;

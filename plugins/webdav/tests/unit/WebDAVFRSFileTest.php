@@ -26,7 +26,6 @@ namespace Tuleap\WebDAV;
 use FRSFileFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Sabre\DAV\Exception\Forbidden;
 use Tuleap\GlobalLanguageMock;
@@ -35,7 +34,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVFRSFile;
 use WebDAVUtils;
 
-final class WebDAVFRSFileTest extends TestCase
+final class WebDAVFRSFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

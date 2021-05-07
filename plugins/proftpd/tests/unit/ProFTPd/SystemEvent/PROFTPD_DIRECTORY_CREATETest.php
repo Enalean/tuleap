@@ -22,7 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCase
+use Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE;
+
+class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
 
@@ -40,7 +42,7 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
     public function setUp(): void
     {
         parent::setUp();
-        $this->event       = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE')->setMethods(['done'])->disableOriginalConstructor()->getMock();
+        $this->event       = $this->createPartialMock(PROFTPD_DIRECTORY_CREATE::class, ['done']);
         $this->backend     = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 
@@ -59,14 +61,19 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
         rmdir($this->path);
     }
 
-    public function testItCreatesDirectory()
+    public function testItCreatesDirectory(): void
     {
+        $this->backend->method('changeOwnerGroupMode');
+        $this->acl_updater->method('recursivelyApplyACL');
+        $this->event->expects(self::once())->method('done');
         $this->event->process();
         $this->assertTrue(file_exists($this->path));
     }
 
-    public function testItSetsPermissionsOnDirectory()
+    public function testItSetsPermissionsOnDirectory(): void
     {
+        $this->acl_updater->method('recursivelyApplyACL');
+        $this->event->expects(self::once())->method('done');
         $this->backend->expects($this->once())->method('changeOwnerGroupMode')->with(
             $this->path,
             "dummy",
@@ -77,16 +84,12 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
         $this->event->process();
     }
 
-    public function testItSetsACLOnDirectory()
+    public function testItSetsACLOnDirectory(): void
     {
+        $this->event->expects(self::once())->method('done');
+        $this->backend->method('changeOwnerGroupMode');
         $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, ForgeConfig::get('sys_http_user'), '', '');
 
-        $this->event->process();
-    }
-
-    public function testItMarkProcessAsDone()
-    {
-        $this->event->expects($this->once())->method('done');
         $this->event->process();
     }
 }

@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_NoPlanningsException;
 use PlanningFactory;
@@ -33,7 +32,7 @@ use PlanningPermissionsManager;
 use Tracker;
 use TrackerFactory;
 
-final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
+final class PlanningFactoryTestGetVirtualTopPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

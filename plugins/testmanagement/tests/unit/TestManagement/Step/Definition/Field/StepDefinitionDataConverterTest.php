@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_Text;
 
-final class StepDefinitionDataConverterTest extends TestCase
+final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItConvertsStepDefinitionRESTFormatToDBCompatibleFormat(): void
     {

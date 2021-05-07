@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Metadata;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToUpdate;
 use Tuleap\Docman\REST\v1\Metadata\PUTCustomMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\PUTRecursiveStatusRepresentation;
 
-class ItemImpactedByMetadataChangeCollectionTest extends TestCase
+class ItemImpactedByMetadataChangeCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

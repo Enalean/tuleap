@@ -29,11 +29,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\FRS\FRSPermissionCreator;
 
-class ForgePropertiesManagerTest extends TestCase
+class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

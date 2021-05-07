@@ -21,11 +21,10 @@
 namespace Tuleap\AgileDashboard\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class BurnupCacheDateRetrieverTest extends TestCase
+class BurnupCacheDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

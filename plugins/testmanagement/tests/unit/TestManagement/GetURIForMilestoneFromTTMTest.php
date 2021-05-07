@@ -24,9 +24,8 @@ namespace Tuleap\TestManagement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class GetURIForMilestoneFromTTMTest extends TestCase
+class GetURIForMilestoneFromTTMTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

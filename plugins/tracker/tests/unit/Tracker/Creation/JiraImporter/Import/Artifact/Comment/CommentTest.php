@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
-use PHPUnit\Framework\TestCase;
 
-class CommentTest extends TestCase
+class CommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsACommentFromAPIResponse(): void
     {

@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Test\PHPUnit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class NoMockeryMockInDataProviderExtensionTest extends TestCase
+final class NoMockeryMockInDataProviderExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use Codendi_Request;
-use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
-final class HomeServiceRedirectionExtractorTest extends TestCase
+final class HomeServiceRedirectionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueIfRequestMustRedirectToADHomepage(): void
     {

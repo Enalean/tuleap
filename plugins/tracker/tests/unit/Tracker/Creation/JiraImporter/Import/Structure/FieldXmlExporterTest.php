@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use XML_SimpleXMLCDATAFactory;
 
-final class FieldXmlExporterTest extends TestCase
+final class FieldXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

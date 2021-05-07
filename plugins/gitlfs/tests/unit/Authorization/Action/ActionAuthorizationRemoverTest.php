@@ -25,10 +25,9 @@ use League\Flysystem\DirectoryListing;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemOperator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 
-class ActionAuthorizationRemoverTest extends TestCase
+class ActionAuthorizationRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

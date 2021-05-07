@@ -25,7 +25,6 @@ namespace Tuleap\TestManagement\Campaign;
 use CSRFSynchronizerToken;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
@@ -34,7 +33,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
-class StatusUpdaterTest extends TestCase
+class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

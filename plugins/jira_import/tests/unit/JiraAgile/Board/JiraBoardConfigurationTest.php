@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile\Board;
 
-use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 
-final class JiraBoardConfigurationTest extends TestCase
+final class JiraBoardConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAConfigurationWithColumns(): void
     {

@@ -21,12 +21,11 @@
 namespace Tuleap\GitLFS\Authorization\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 
-class UserTokenCreatorTest extends TestCase
+class UserTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

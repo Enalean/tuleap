@@ -24,7 +24,7 @@
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
+class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

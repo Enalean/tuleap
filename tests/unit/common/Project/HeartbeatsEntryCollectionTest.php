@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use PHPUnit\Framework\TestCase;
 
-final class HeartbeatsEntryCollectionTest extends TestCase
+final class HeartbeatsEntryCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

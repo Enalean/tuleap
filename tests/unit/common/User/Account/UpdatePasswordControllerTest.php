@@ -25,7 +25,6 @@ namespace Tuleap\User\Account;
 
 use Feedback;
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\PasswordSanityChecker;
@@ -39,7 +38,7 @@ use Tuleap\User\PasswordVerifier;
 use User_StatusInvalidException;
 use User_UserStatusManager;
 
-final class UpdatePasswordControllerTest extends TestCase
+final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

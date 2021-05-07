@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class AccessTokenGrantErrorResponseBuilderTest extends TestCase
+final class AccessTokenGrantErrorResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var AccessTokenGrantErrorResponseBuilder

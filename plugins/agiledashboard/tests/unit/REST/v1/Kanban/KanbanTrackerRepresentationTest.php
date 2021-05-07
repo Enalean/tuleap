@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class KanbanTrackerRepresentationTest extends TestCase
+final class KanbanTrackerRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

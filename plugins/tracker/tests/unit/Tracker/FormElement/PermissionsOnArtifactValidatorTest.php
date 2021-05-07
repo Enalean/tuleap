@@ -21,11 +21,10 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 
-final class PermissionsOnArtifactValidatorTest extends TestCase
+final class PermissionsOnArtifactValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

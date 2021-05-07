@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_Static;
@@ -35,7 +34,7 @@ use Tracker_FormElement_Field_Selectbox;
 use UserXMLExporter;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
+class Tracker_FormElement_Field_List_Bind_StaticTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

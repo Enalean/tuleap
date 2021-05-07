@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use PHPUnit\Framework\TestCase;
 
-class WebhookDataBranchNameExtractorTest extends TestCase
+class WebhookDataBranchNameExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testParseRefToExtractBranchNameWithSlash(): void
     {

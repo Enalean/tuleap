@@ -22,7 +22,7 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class PluginManagerTest extends \PHPUnit\Framework\TestCase
+final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;

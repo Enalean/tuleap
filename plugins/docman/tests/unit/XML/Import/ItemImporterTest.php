@@ -27,10 +27,9 @@ use Docman_ItemFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class ItemImporterTest extends TestCase
+class ItemImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

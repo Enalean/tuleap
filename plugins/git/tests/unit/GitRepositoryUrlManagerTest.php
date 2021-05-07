@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Git;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\InstanceBaseURLBuilder;
 
-final class GitRepositoryUrlManagerTest extends TestCase
+final class GitRepositoryUrlManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

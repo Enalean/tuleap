@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 
-final class AccessKeyCreatorTest extends TestCase
+final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

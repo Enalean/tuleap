@@ -24,7 +24,6 @@ namespace Tuleap\Project\Service;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Service;
 use Tuleap\ForgeConfigSandbox;
@@ -32,7 +31,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ServiceUrlCollector;
 
-final class ServicePOSTDataBuilderTest extends TestCase
+final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

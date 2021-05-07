@@ -24,14 +24,13 @@ namespace Tuleap\Tracker\XML\Exporter;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FileInfo;
 use Tracker_XML_Exporter_FilePathXMLExporter;
 use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class FileInfoXMLExporterTest extends TestCase
+class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

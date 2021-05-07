@@ -22,10 +22,9 @@ namespace Tuleap\Tracker\Admin;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 
-class HeaderPresenterTest extends TestCase
+class HeaderPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

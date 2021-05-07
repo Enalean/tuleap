@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ItemsDatasetBuilderTest extends TestCase
+class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

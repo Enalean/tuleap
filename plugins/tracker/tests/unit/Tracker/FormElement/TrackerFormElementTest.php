@@ -24,7 +24,6 @@ use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_FormElement_Field_Selectbox;
@@ -34,7 +33,7 @@ use TrackerManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
-class TrackerFormElementTest extends TestCase
+class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

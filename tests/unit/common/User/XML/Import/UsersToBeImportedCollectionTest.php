@@ -24,7 +24,7 @@ namespace User\XML\Import;
 
 use org\bovigo\vfs\vfsStream;
 
-final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
+final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

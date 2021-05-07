@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Hierarchy;
 
 use Codendi_Request;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
@@ -34,7 +33,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class HierarchyControllerTest extends TestCase
+final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;

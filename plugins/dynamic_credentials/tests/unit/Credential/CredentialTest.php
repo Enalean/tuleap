@@ -22,9 +22,8 @@ namespace Tuleap\DynamicCredentials\Credential;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 
-class CredentialTest extends TestCase
+class CredentialTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCredentialExpiration()
     {

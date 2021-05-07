@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 
-final class ProgramPlannableTrackerTest extends TestCase
+final class ProgramPlannableTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
     {

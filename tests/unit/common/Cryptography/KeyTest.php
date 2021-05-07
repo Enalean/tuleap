@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
 
-final class KeyTest extends TestCase
+final class KeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRawKeyMaterialCanBeRetrieved(): void
     {

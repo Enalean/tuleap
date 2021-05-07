@@ -31,7 +31,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\ProjectAccessChecker;
 use UserManager;
 
-final class MailFilterTest extends \PHPUnit\Framework\TestCase
+final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

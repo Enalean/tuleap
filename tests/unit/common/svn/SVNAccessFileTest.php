@@ -18,13 +18,12 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class SVNAccessFileTest extends TestCase
+class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

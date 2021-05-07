@@ -28,7 +28,6 @@ use Docman_FileStorage;
 use Docman_Version;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
@@ -37,7 +36,7 @@ use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 
-class EmbeddedFileVersionCreatorTest extends TestCase
+class EmbeddedFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

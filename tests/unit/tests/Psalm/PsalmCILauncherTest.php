@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Test\Psalm;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-final class PsalmCILauncherTest extends TestCase
+final class PsalmCILauncherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

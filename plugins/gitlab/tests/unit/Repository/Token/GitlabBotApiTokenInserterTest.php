@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Token;
 
-use PHPUnit\Framework\TestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\KeyFactory;
 use Mockery;
@@ -31,7 +30,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
-class GitlabBotApiTokenInserterTest extends TestCase
+class GitlabBotApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

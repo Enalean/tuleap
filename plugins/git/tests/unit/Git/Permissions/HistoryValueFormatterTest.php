@@ -22,12 +22,11 @@ namespace Tuleap\Git\Permissions;
 
 use GitRepository;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Git;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class HistoryValueFormatterTest extends TestCase
+class HistoryValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

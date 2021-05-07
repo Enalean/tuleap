@@ -26,7 +26,6 @@ use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
@@ -37,7 +36,7 @@ use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
-class HeaderOptionsForPlanningProviderTest extends TestCase
+class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

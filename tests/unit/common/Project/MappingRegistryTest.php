@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use PHPUnit\Framework\TestCase;
 
-class MappingRegistryTest extends TestCase
+class MappingRegistryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetUgroupMapping(): void
     {

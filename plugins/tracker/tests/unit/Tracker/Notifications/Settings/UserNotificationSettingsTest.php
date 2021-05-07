@@ -24,11 +24,10 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Tracker\Notifications\GlobalNotification;
 
-class UserNotificationSettingsTest extends TestCase
+class UserNotificationSettingsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testNoNotificationWhenTrackerModeIsNoNotifications(): void

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Changeset\Validation;
 
-final class NullChangesetValidationContextTest extends \PHPUnit\Framework\TestCase
+final class NullChangesetValidationContextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDefaultsArtifactLinkToManualAction(): void
     {

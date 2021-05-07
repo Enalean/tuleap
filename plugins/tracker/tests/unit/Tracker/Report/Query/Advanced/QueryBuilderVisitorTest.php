@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use CodendiDataAccess;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Selectbox;
@@ -45,7 +44,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\CommentWithoutPrivateCheckFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\FromWhere;
 
-final class QueryBuilderVisitorTest extends TestCase
+final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

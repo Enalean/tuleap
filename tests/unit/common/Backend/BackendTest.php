@@ -30,12 +30,11 @@ use BackendSVN;
 use Event;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalSVNPollution;
 use Backend;
 use EventManager;
 
-final class BackendTest extends TestCase
+final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class DocumentIconPresenterBuilderTest extends TestCase
+class DocumentIconPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

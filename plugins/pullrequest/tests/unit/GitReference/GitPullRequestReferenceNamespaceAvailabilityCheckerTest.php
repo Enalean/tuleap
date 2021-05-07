@@ -20,12 +20,11 @@
 
 namespace Tuleap\PullRequest\GitReference;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\GitExec;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class GitPullRequestReferenceNamespaceAvailabilityCheckerTest extends TestCase
+class GitPullRequestReferenceNamespaceAvailabilityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

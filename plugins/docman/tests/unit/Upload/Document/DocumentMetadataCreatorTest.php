@@ -26,11 +26,10 @@ use Docman_MetadataDao;
 use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TestHelper;
 use Tuleap\Docman\Metadata\MetadataValueCreator;
 
-class DocumentMetadataCreatorTest extends TestCase
+class DocumentMetadataCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

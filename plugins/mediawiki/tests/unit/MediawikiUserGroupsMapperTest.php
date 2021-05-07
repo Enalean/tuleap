@@ -25,12 +25,11 @@ namespace Tuleap\Mediawiki;
 use MediawikiUserGroupsMapper;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 require_once 'bootstrap.php';
 
-final class MediawikiUserGroupsMapperTest extends TestCase
+final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

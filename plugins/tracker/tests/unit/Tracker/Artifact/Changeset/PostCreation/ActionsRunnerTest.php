@@ -22,14 +22,13 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerAvailability;
 
-final class ActionsRunnerTest extends TestCase
+final class ActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

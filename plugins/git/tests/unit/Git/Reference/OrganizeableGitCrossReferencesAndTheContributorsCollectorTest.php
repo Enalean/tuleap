@@ -25,13 +25,12 @@ namespace Tuleap\Git\Reference;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\User\UserEmailCollection;
 use UserManager;
 
-class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends TestCase
+class OrganizeableGitCrossReferencesAndTheContributorsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

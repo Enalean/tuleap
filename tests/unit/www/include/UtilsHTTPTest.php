@@ -20,11 +20,10 @@
 
 namespace Tuleap;
 
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
-class UtilsHTTPTest extends TestCase
+class UtilsHTTPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItExtractBody()

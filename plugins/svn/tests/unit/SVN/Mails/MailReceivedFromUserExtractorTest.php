@@ -20,11 +20,10 @@
 
 namespace Tuleap\SVN\Admin;
 
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class MailReceivedFromUserExtractorTest extends TestCase
+class MailReceivedFromUserExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testItVerifyThatMailListIsValid(): void

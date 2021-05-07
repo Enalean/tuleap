@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\Scope;
 
-use PHPUnit\Framework\TestCase;
 
-final class OAuth2ScopeIdentifierTest extends TestCase
+final class OAuth2ScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider dataProviderValidIdentifierKey

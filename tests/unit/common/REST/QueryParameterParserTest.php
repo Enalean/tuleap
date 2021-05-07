@@ -21,9 +21,8 @@
 namespace Tuleap\REST;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class QueryParameterParserTest extends TestCase
+class QueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

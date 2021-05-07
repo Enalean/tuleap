@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\date;
 
-use PHPUnit\Framework\TestCase;
 
-class SelectedDateDisplayPreferenceValidatorTest extends TestCase
+class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var SelectedDateDisplayPreferenceValidator

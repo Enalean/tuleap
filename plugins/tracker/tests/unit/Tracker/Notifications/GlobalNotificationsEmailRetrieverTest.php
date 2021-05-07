@@ -25,13 +25,12 @@ require_once __DIR__ . '/../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tracker;
 use Tracker_GlobalNotification;
 use TrackerFactory;
 
-class GlobalNotificationsEmailRetrieverTest extends TestCase
+class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

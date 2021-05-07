@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-use PHPUnit\Framework\TestCase;
 use StandardPasswordHandler;
 use Tuleap\Cryptography\ConcealedString;
 
-final class StandardPasswordHandlerTest extends TestCase
+final class StandardPasswordHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const HASHED_WORD = 'Tuleap';
     private const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';

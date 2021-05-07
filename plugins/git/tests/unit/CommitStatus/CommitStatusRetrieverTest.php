@@ -22,9 +22,8 @@ namespace Tuleap\Git\CommitStatus;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 
-class CommitStatusRetrieverTest extends TestCase
+class CommitStatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

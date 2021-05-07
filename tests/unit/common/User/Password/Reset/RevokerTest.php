@@ -22,7 +22,7 @@ namespace Tuleap\User\Password\Reset;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class RevokerTest extends \PHPUnit\Framework\TestCase
+final class RevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

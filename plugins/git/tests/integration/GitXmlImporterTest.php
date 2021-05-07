@@ -40,7 +40,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use PluginFactory;
 use PluginManager;
 use PluginResourceRestrictor;
@@ -56,7 +55,7 @@ use UGroupManager;
 use UserManager;
 use XMLImportHelper;
 
-final class GitXmlImporterTest extends TestCase
+final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

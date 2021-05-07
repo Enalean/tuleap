@@ -23,13 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllNaturesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
-final class ArtifactLinkTypeImporterTest extends TestCase
+final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCatchesWhenDataReturnedByJiraIsNotWellFormed(): void
     {

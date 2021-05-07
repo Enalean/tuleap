@@ -21,10 +21,9 @@
 namespace Tuleap\XML;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\TemporaryTestDirectory;
 
-class ProjectXMLMergerTest extends TestCase
+class ProjectXMLMergerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

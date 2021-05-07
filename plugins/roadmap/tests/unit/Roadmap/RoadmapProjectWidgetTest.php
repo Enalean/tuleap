@@ -24,13 +24,12 @@ namespace Tuleap\Roadmap;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class RoadmapProjectWidgetTest extends TestCase
+final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

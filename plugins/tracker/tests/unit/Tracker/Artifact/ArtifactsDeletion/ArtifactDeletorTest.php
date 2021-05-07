@@ -24,13 +24,12 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectHistoryDao;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_ArtifactDao;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 
-final class ArtifactDeletorTest extends TestCase
+final class ArtifactDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

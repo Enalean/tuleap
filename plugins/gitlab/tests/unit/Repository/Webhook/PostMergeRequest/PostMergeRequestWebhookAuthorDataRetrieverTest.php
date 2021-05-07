@@ -23,13 +23,12 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
-class PostMergeRequestWebhookAuthorDataRetrieverTest extends TestCase
+class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

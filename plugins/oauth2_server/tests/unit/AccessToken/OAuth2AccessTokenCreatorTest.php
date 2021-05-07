@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AccessToken;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
@@ -32,7 +31,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class OAuth2AccessTokenCreatorTest extends TestCase
+final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

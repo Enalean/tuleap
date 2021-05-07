@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
-final class JiraTuleapUsersMappingTest extends TestCase
+final class JiraTuleapUsersMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

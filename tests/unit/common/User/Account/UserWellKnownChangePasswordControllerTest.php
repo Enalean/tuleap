@@ -26,14 +26,13 @@ namespace Tuleap\User\Account;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class UserWellKnownChangePasswordControllerTest extends TestCase
+final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

@@ -24,12 +24,11 @@ namespace Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Transition;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class AddToTopBacklogValueUpdaterTest extends TestCase
+class AddToTopBacklogValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,6 @@
 namespace Tuleap\User\SVNToken;
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
@@ -33,7 +32,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class SVNTokenCreateControllerTest extends TestCase
+final class SVNTokenCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

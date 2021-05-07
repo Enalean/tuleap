@@ -33,7 +33,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\BaseLayout;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class DispatchablePSR15CompatibleTest extends TestCase
+final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

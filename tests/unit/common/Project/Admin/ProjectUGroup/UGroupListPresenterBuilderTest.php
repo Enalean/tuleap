@@ -24,11 +24,10 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
-final class UGroupListPresenterBuilderTest extends TestCase
+final class UGroupListPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

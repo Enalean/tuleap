@@ -24,7 +24,6 @@ use DocmanPlugin;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
@@ -32,7 +31,7 @@ use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-final class DocumentToUploadCreatorTest extends TestCase
+final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -27,7 +27,6 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessException;
 use ProjectDao;
@@ -39,7 +38,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use UserManager;
 
-final class ProjectManagerTest extends TestCase
+final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

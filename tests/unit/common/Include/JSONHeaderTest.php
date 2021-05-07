@@ -20,9 +20,8 @@
 
 namespace Tuleap;
 
-use PHPUnit\Framework\TestCase;
 
-final class JSONHeaderTest extends TestCase
+final class JSONHeaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testStartsWithHeaderInfo(): void
     {

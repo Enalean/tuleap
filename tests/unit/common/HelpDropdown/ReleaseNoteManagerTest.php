@@ -23,11 +23,10 @@ namespace Tuleap\HelpDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use UserPreferencesDao;
 
-class ReleaseNoteManagerTest extends TestCase
+class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

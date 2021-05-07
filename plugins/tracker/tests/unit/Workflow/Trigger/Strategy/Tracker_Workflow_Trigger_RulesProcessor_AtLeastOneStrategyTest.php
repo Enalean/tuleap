@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategyTest extends \PHPUnit\Framework\TestCase
+final class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItAlwaysApplyRuleWhenAtLeastOneValueIsSet(): void
     {

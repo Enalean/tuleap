@@ -35,7 +35,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 
-final class ProgramIncrementFieldsDataTest extends \PHPUnit\Framework\TestCase
+final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
     {

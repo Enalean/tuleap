@@ -24,12 +24,11 @@ namespace Tuleap\OpenIDConnectClient;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class AdminRouterTest extends TestCase
+class AdminRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

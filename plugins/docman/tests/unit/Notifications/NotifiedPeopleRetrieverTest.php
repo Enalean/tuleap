@@ -22,11 +22,10 @@ namespace Tuleap\Docman\Notifications;
 
 use Docman_ItemFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use UGroupManager;
 
-class NotifiedPeopleRetrieverTest extends TestCase
+class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

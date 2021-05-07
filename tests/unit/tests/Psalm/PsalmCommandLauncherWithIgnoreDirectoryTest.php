@@ -26,9 +26,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-use PHPUnit\Framework\TestCase;
 
-final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
+final class PsalmCommandLauncherWithIgnoreDirectoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

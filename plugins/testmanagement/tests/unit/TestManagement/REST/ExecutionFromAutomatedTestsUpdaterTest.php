@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsResultPATCHRepresentation;
@@ -35,7 +34,7 @@ use Tuleap\TestManagement\REST\v1\ListOfExecutionsWithAutomatedTestDataRetriever
 use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
+class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

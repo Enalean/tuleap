@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\Planning;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Planning_MilestoneController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
@@ -35,7 +34,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-class MilestoneControllerTest extends TestCase
+class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -29,7 +29,6 @@ use IRunInAMutex;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEvent;
@@ -37,7 +36,7 @@ use SystemEventProcess;
 use SystemEventProcessorMutex;
 use Tuleap\DB\DBConnection;
 
-class SystemEventProcessorMutexTest extends TestCase
+class SystemEventProcessorMutexTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

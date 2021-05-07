@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-final class Tracker_REST_Artifact_ArtifactValidator_Test extends \PHPUnit\Framework\TestCase
+final class Tracker_REST_Artifact_ArtifactValidator_Test extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

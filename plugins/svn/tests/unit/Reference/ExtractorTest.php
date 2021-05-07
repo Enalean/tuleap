@@ -22,13 +22,12 @@
 namespace Tuleap\SVN\Reference;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\SVN\Repository\CoreRepository;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-class ExtractorTest extends TestCase
+class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -26,10 +26,9 @@ namespace Tuleap\Docman\Metadata\Owner;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use UserManager;
 
-final class OwnerRetrieverTest extends TestCase
+final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\date;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends TestCase
+class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 

@@ -24,10 +24,9 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Upload\PathAllocator;
 
-class EmptyFileToUploadFinisherTest extends TestCase
+class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

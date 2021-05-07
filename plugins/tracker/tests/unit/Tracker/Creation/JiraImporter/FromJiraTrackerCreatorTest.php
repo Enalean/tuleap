@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use TrackerFactory;
@@ -36,7 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 
-class FromJiraTrackerCreatorTest extends TestCase
+class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\Artifact\XMLImport;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker;
@@ -38,7 +37,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCase
+class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

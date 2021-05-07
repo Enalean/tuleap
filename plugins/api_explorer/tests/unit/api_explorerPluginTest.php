@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\APIExplorer;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
 
-final class api_explorerPluginTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class api_explorerPluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testBuildsPluginInformation(): void
     {

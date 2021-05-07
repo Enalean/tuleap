@@ -24,14 +24,13 @@ namespace Tuleap\PullRequest\InlineComment;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
 
-final class InlineCommentCreatorTest extends TestCase
+final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

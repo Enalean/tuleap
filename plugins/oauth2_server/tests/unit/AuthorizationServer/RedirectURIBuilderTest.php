@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class RedirectURIBuilderTest extends TestCase
+final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var RedirectURIBuilder

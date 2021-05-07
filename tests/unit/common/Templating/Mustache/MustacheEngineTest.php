@@ -20,7 +20,7 @@
 
 namespace Tuleap\Templating\Mustache;
 
-final class MustacheEngineTest extends \PHPUnit\Framework\TestCase
+final class MustacheEngineTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

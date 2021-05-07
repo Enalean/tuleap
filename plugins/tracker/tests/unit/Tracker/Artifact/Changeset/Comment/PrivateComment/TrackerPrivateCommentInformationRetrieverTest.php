@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerPrivateCommentInformationRetrieverTest extends TestCase
+final class TrackerPrivateCommentInformationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

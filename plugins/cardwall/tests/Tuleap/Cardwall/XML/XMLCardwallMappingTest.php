@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\XML;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class XMLCardwallMappingTest extends TestCase
+class XMLCardwallMappingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportMappingValue(): void
     {

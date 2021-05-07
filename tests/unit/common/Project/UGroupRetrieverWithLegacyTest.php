@@ -22,12 +22,11 @@ namespace Tuleap\Project;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use UGroupManager;
 
-class UGroupRetrieverWithLegacyTest extends TestCase
+class UGroupRetrieverWithLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

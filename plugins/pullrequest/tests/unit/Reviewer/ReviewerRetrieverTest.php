@@ -25,13 +25,12 @@ namespace Tuleap\PullRequest\Reviewer;
 use GitRepoNotFoundException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 
-final class ReviewerRetrieverTest extends TestCase
+final class ReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

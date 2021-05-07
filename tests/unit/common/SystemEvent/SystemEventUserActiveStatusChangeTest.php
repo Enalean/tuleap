@@ -28,14 +28,13 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use TestHelper;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\UserRemover;
 use UserGroupDao;
 use UserManager;
 
-final class SystemEventUserActiveStatusChangeTest extends TestCase
+final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

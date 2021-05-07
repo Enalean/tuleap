@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Layout\BaseLayout;
@@ -34,7 +33,7 @@ use Tuleap\Project\UGroups\Membership\MemberRemover;
 use Tuleap\Project\UserRemover as ProjectMemberRemover;
 use Tuleap\Request\ProjectRetriever;
 
-final class MemberRemovalControllerTest extends TestCase
+final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

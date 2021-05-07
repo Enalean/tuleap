@@ -24,9 +24,8 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class OAuth2AuthorizationCodeRevokerTest extends TestCase
+final class OAuth2AuthorizationCodeRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

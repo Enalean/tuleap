@@ -27,12 +27,11 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\ForgeConfigSandbox;
 use UserManager;
 
-final class ProjectGroupManagerRestrictedUserFilterTest extends TestCase
+final class ProjectGroupManagerRestrictedUserFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

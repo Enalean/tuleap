@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\Scope;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 
-final class OAuth2ScopeBuilderCollectorTest extends TestCase
+final class OAuth2ScopeBuilderCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testNoBuildersAreCollectedByDefault(): void
     {

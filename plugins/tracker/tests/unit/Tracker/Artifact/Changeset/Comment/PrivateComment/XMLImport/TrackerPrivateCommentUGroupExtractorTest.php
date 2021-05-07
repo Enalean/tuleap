@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 
-class TrackerPrivateCommentUGroupExtractorTest extends TestCase
+class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

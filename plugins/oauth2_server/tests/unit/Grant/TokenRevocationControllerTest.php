@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\Grant;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -36,7 +35,7 @@ use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\User\OAuth2\OAuth2Exception;
 
-final class TokenRevocationControllerTest extends TestCase
+final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

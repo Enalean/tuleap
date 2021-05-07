@@ -28,7 +28,7 @@ use Tuleap\Label\LabelableDao;
 use Tuleap\Label\UnknownLabelException;
 use Tuleap\Project\Label\LabelDao;
 
-final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
+final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\User\OAuth2\AccessToken;
 
 use Laminas\Cache\Exception\LogicException;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends TestCase
+final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testRequiredScopeIsKept(): void
     {

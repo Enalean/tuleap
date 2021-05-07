@@ -25,12 +25,11 @@ namespace Tuleap\SVN\DiskUsage;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Statistics_DiskUsageDao;
 use SvnPlugin;
 
-class DiskUsageCollectorTest extends TestCase
+class DiskUsageCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

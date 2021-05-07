@@ -21,9 +21,8 @@
 namespace Tuleap\Tracker\Admin;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ArtifactLinksUsageDuplicatorTest extends TestCase
+final class ArtifactLinksUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

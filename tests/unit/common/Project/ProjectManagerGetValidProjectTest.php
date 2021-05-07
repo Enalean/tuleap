@@ -23,11 +23,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\ProjectAccessChecker;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class ProjectManagerGetValidProjectTest extends TestCase
+class ProjectManagerGetValidProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

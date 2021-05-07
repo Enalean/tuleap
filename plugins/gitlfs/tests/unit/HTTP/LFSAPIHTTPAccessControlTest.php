@@ -21,13 +21,12 @@
 namespace Tuleap\GitLFS\HTTP;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Request\NotFoundException;
 
-class LFSAPIHTTPAccessControlTest extends TestCase
+class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

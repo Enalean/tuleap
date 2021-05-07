@@ -22,7 +22,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
@@ -39,7 +38,7 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Templating\TemplateCache;
 
-class PostMergeRequestBotCommenterTest extends TestCase
+class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

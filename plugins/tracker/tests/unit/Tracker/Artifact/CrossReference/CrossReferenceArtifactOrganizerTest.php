@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\CrossReference;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
@@ -33,7 +32,7 @@ use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
-class CrossReferenceArtifactOrganizerTest extends TestCase
+class CrossReferenceArtifactOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

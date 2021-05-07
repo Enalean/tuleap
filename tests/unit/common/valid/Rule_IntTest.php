@@ -23,10 +23,9 @@
  *
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_IntTest extends TestCase
+class Rule_IntTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public function testIsInteger(): void

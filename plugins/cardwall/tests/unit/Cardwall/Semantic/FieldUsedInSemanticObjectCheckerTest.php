@@ -21,9 +21,8 @@
 namespace Tuleap\Cardwall\Semantic;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class FieldUsedInSemanticObjectCheckerTest extends TestCase
+class FieldUsedInSemanticObjectCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

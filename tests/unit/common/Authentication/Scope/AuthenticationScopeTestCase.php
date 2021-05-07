@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Authentication\Scope;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 
-abstract class AuthenticationScopeTestCase extends TestCase
+abstract class AuthenticationScopeTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @psalm-return class-string<AuthenticationScope>

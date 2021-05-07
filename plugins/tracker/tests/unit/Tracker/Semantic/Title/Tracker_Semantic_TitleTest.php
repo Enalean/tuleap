@@ -23,14 +23,13 @@ namespace Tuleap\Tracker\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Title;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_Semantic_TitleTest extends TestCase
+class Tracker_Semantic_TitleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualExpression;
 
 use CodendiDataAccess;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -29,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison\ForText;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
 
-final class ForTextTest extends TestCase
+final class ForTextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

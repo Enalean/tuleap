@@ -25,13 +25,12 @@ namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 
-class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends TestCase
+class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

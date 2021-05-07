@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace ReviewerChangeTest;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 
-final class ReviewerChangeTest extends TestCase
+final class ReviewerChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReviewerChangeCanBeConstructed(): void
     {

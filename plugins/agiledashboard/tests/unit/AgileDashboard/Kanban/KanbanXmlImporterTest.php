@@ -23,12 +23,11 @@ namespace Tuleap\AgileDashboard\Kanban;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class KanbanXmlImporterTest extends TestCase
+class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

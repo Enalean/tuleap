@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_ArtifactFactory;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
-class VisitRetrieverTest extends TestCase
+class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

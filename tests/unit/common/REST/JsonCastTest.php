@@ -26,9 +26,8 @@ namespace Tuleap\REST;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
-use PHPUnit\Framework\TestCase;
 
-final class JsonCastTest extends TestCase
+final class JsonCastTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testDoesNotReturnNullIfValueIsInt(): void
     {

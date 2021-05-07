@@ -24,10 +24,9 @@ namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-final class InvitationLimitCheckerTest extends TestCase
+final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

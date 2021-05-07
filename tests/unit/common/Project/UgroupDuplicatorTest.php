@@ -26,7 +26,6 @@ namespace Tuleap\Project;
 use Event;
 use Mockery as M;
 use EventManager;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
@@ -35,7 +34,7 @@ use UGroupBinding;
 use UGroupDao;
 use UGroupManager;
 
-class UgroupDuplicatorTest extends TestCase
+class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

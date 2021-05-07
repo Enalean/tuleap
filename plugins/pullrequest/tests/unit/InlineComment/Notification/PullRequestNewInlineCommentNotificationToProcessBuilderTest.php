@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\InlineComment\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\InlineComment\InlineComment;
@@ -36,7 +35,7 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 use UserManager;
 
-final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends TestCase
+final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

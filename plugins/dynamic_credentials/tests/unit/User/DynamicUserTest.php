@@ -23,10 +23,9 @@ namespace Tuleap\DynamicCredentials\User;
 require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-class DynamicUserTest extends TestCase
+class DynamicUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

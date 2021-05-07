@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tracker;
@@ -34,7 +33,7 @@ use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class DirectArtifactLinkCleanerTest extends TestCase
+class DirectArtifactLinkCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ namespace Tuleap\User\Account;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
-class UserAvatarSaverTest extends TestCase
+class UserAvatarSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

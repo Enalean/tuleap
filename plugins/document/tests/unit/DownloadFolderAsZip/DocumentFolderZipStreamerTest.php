@@ -25,7 +25,6 @@ namespace Tuleap\Document\DownloadFolderAsZip;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -34,7 +33,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class DocumentFolderZipStreamerTest extends TestCase
+final class DocumentFolderZipStreamerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

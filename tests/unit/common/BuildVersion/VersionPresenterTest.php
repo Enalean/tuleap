@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\BuildVersion;
 
-use PHPUnit\Framework\TestCase;
 
-final class VersionPresenterTest extends TestCase
+final class VersionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsEnterpriseVersionPresenter(): void
     {

@@ -24,11 +24,10 @@ namespace Tuleap\OAuth2Server\User\Account;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\User\Account\AccountTabPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
-final class AppsTabAdderTest extends TestCase
+final class AppsTabAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

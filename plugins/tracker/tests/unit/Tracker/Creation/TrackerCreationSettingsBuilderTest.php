@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
-final class TrackerCreationSettingsBuilderTest extends TestCase
+final class TrackerCreationSettingsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

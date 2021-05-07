@@ -30,12 +30,11 @@ use Mockery;
 use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 
-final class DocmanFileDownloadResponseGeneratorTest extends TestCase
+final class DocmanFileDownloadResponseGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

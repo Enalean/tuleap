@@ -24,7 +24,6 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TemplateRendererFactory;
 use Tracker;
 use Tuleap\GlobalLanguageMock;
@@ -32,7 +31,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Tracker\TrackerColor;
 
-final class RedirectParameterInjectorTest extends TestCase
+final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

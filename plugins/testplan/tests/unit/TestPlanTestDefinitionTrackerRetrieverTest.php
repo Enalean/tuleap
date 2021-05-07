@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TrackerFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
 
-final class TestPlanTestDefinitionTrackerRetrieverTest extends TestCase
+final class TestPlanTestDefinitionTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -21,10 +21,9 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class TrackerFormElementExportPermissionsToXmlTest extends TestCase
+class TrackerFormElementExportPermissionsToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

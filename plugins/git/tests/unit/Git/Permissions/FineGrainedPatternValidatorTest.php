@@ -20,11 +20,10 @@
 
 namespace Tuleap\Git\Permissions;
 
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class FineGrainedPatternValidatorTest extends TestCase
+class FineGrainedPatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItValidatesPattern(): void
     {

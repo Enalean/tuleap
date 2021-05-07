@@ -25,12 +25,11 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use UserManager;
 
-class PendingJiraImportBuilderTest extends TestCase
+class PendingJiraImportBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

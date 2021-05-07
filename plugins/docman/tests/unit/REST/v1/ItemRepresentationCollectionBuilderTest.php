@@ -34,7 +34,7 @@ use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCase
+class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

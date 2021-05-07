@@ -22,7 +22,6 @@ namespace Tuleap\CrossTracker\Report\CSV;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue;
 use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
@@ -31,7 +30,7 @@ use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class SimilarFieldsFormatterTest extends TestCase
+class SimilarFieldsFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

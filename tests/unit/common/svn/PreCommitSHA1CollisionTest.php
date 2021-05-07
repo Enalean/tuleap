@@ -21,10 +21,9 @@
 namespace Tuleap\SvnCore;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SVN_Hook_PreCommit;
 
-class PreCommitSHA1CollisionTest extends TestCase
+class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

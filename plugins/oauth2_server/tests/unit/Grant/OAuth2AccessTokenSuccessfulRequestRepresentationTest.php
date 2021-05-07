@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
 
-final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends TestCase
+final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildsSuccessfulRequestRepresentationThatCanBeJSONEncoded(): void
     {

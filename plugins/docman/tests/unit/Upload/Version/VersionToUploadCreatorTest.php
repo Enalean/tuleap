@@ -24,13 +24,12 @@ namespace Tuleap\Docman\Upload\Version;
 
 use DocmanPlugin;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class VersionToUploadCreatorTest extends TestCase
+class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

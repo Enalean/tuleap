@@ -24,9 +24,8 @@ namespace Tuleap\Project\UGroups\Membership;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class MembershipUpdateVerifierTest extends TestCase
+final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

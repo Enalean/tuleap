@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\BrowserDetection;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class BrowserDeprecationMessageTest extends TestCase
+final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

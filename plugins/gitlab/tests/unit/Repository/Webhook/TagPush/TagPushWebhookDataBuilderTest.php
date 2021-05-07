@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
-class TagPushWebhookDataBuilderTest extends TestCase
+class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionIfRefIsNotInContent(): void
     {

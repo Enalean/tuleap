@@ -21,9 +21,8 @@
 namespace Tuleap\Layout;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ThemeVariationTest extends TestCase
+final class ThemeVariationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

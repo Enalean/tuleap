@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;

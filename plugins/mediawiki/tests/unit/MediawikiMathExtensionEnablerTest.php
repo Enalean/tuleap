@@ -22,11 +22,10 @@ namespace Tuleap\Mediawiki;
 
 use Mediawiki_Migration_MediawikiMigrator;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class MediawikiMathExtensionEnablerTest extends TestCase
+class MediawikiMathExtensionEnablerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -26,7 +26,6 @@ namespace Tuleap\AgileDashboard\Planning;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
@@ -34,7 +33,7 @@ use Planning_NoMilestone;
 use Project;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
+final class MilestoneFactoryGetMilestoneWithAncestorsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

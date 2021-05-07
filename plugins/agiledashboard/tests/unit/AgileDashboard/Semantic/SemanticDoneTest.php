@@ -21,11 +21,10 @@
 namespace Tuleap\AgileDashboard\Semantic;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 
-class SemanticDoneTest extends TestCase
+class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

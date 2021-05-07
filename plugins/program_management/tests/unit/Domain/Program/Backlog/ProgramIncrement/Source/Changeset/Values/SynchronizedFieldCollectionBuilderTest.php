@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Data\
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
@@ -34,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Sour
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class SynchronizedFieldCollectionBuilderTest extends TestCase
+final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

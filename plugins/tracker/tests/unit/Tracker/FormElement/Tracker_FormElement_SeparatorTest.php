@@ -21,11 +21,10 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_StaticField_Separator;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_SeparatorTest extends TestCase
+class Tracker_FormElement_SeparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFetchDescription()
     {

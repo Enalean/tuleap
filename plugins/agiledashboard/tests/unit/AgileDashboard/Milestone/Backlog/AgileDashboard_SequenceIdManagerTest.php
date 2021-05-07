@@ -30,10 +30,9 @@ use AgileDashboard_Milestone_Backlog_DescendantItemsCollection;
 use AgileDashboard_SequenceIdManager;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class AgileDashboard_SequenceIdManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

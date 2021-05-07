@@ -24,12 +24,11 @@ namespace Tuleap\Tracker\NewDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\layout\NewDropdown\DataAttributePresenter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownProjectLinksCollector;
 
-class TrackerLinksInNewDropdownCollectorTest extends TestCase
+class TrackerLinksInNewDropdownCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

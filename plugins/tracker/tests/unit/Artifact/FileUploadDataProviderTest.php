@@ -25,13 +25,12 @@ namespace Tuleap\Tracker\Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FileInfo;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
-class FileUploadDataProviderTest extends TestCase
+class FileUploadDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

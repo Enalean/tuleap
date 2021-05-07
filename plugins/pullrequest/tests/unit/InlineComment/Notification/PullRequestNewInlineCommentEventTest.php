@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\InlineComment\Notification;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 
-final class PullRequestNewInlineCommentEventTest extends TestCase
+final class PullRequestNewInlineCommentEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {

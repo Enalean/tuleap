@@ -25,7 +25,6 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
@@ -33,7 +32,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 
-class DisplayEditionControllerTest extends TestCase
+class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;

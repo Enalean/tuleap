@@ -24,14 +24,13 @@ use Docman_ItemFactory;
 use Docman_VersionFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
-final class DocumentUploadFinisherTest extends TestCase
+final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

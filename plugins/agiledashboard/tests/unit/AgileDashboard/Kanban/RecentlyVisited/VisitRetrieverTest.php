@@ -29,14 +29,13 @@ use AgileDashboard_KanbanNotFoundException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use TrackerFactory;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
-class VisitRetrieverTest extends TestCase
+class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

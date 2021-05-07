@@ -21,12 +21,11 @@
 namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 
-class GenericProviderManagerTest extends TestCase
+class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

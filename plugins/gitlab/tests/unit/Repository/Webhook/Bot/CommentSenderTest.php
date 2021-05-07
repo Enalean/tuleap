@@ -24,13 +24,12 @@ namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
-class CommentSenderTest extends TestCase
+class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

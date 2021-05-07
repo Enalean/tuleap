@@ -21,12 +21,11 @@
 namespace Tuleap\ReferenceAliasTracker;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\XML\Import\ImportConfig;
 
 include __DIR__ . '/bootstrap.php';
 
-final class ReferencesImporterTest extends TestCase
+final class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

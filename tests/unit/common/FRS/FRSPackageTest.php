@@ -19,7 +19,7 @@
  *
  */
 
-class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class FRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     public function testIsActive()

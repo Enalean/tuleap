@@ -30,9 +30,8 @@ use Docman_Folder;
 use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
-use PHPUnit\Framework\TestCase;
 
-final class DoesItemHasExpectedTypeVisitorTest extends TestCase
+final class DoesItemHasExpectedTypeVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const VISITOR_PROCESSABLE_CLASSES = [
         Docman_Folder::class,

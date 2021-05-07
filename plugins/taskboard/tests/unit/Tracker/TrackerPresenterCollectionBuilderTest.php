@@ -25,13 +25,12 @@ namespace Tuleap\Taskboard\Tracker;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Tracker;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 
-final class TrackerPresenterCollectionBuilderTest extends TestCase
+final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

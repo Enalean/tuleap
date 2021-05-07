@@ -23,11 +23,10 @@ namespace Tuleap\Docman\view;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 
-class DocumentFooterPresenterBuilderTest extends TestCase
+class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

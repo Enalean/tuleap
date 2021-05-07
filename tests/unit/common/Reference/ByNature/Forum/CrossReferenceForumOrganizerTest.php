@@ -25,7 +25,6 @@ namespace Tuleap\Reference\ByNature\Forum;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\Forum\Forum;
 use Tuleap\Forum\ForumRetriever;
@@ -37,7 +36,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferenceForumOrganizerTest extends TestCase
+class CrossReferenceForumOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

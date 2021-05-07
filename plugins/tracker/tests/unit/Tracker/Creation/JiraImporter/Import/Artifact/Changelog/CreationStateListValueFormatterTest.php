@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
-use PHPUnit\Framework\TestCase;
 
-class CreationStateListValueFormatterTest extends TestCase
+class CreationStateListValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var CreationStateListValueFormatter

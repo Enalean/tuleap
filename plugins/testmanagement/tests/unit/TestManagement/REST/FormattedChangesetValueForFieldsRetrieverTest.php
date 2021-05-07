@@ -26,7 +26,6 @@ use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
@@ -34,7 +33,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 
-class FormattedChangesetValueForFieldsRetrieverTest extends TestCase
+class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

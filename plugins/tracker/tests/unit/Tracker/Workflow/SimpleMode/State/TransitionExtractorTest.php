@@ -24,11 +24,10 @@ namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
-class TransitionExtractorTest extends TestCase
+class TransitionExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\Reviewer\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
@@ -33,7 +32,7 @@ use Tuleap\PullRequest\Reviewer\Change\ReviewerChangePullRequestAssociation;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
 use UserHelper;
 
-final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
+final class ReviewerChangeNotificationToProcessBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

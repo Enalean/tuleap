@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Document\Config;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-class FileDownloadLimitsBuilderTest extends TestCase
+class FileDownloadLimitsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

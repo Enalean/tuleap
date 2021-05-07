@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class AdditionalBadgePresenterTest extends TestCase
+class AdditionalBadgePresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

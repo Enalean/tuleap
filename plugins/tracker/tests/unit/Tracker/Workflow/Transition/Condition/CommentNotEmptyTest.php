@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\Workflow\Transition\Condition;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Transition;
 use Tuleap\Tracker\Artifact\Artifact;
 use Workflow_Transition_Condition_CommentNotEmpty;
@@ -31,7 +30,7 @@ use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 require_once __DIR__ . '/../../../../bootstrap.php';
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class CommentNotEmpty_validateTest extends TestCase
+class CommentNotEmpty_validateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

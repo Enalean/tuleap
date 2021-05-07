@@ -28,10 +28,9 @@ use Docman_PermissionsManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 
-class RestLockUpdaterTest extends TestCase
+class RestLockUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

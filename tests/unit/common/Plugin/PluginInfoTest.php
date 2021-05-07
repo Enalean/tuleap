@@ -20,7 +20,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class PluginInfoTest extends \PHPUnit\Framework\TestCase
+final class PluginInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -26,10 +26,9 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\HeartbeatsEntryCollection;
 
-class LatestHeartbeatsCollectorTest extends TestCase
+class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

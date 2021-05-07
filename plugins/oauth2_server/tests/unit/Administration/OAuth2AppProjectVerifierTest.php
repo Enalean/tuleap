@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\OAuth2Server\App\AppDao;
 
-final class OAuth2AppProjectVerifierTest extends TestCase
+final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

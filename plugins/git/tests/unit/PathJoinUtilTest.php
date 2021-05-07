@@ -23,11 +23,10 @@
 namespace Tuleap\Git;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once 'bootstrap.php';
 
-class PathJoinUtilTest extends TestCase
+class PathJoinUtilTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

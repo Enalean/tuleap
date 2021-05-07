@@ -29,9 +29,8 @@ use Docman_VersionFactory;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ItemRepresentationVisitorTest extends TestCase
+class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

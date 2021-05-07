@@ -24,10 +24,9 @@ namespace Tuleap\Taskboard\AgileDashboard;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 
-class TaskboardPaneInfoBuilderTest extends TestCase
+class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

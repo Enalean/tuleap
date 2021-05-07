@@ -24,7 +24,7 @@
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
+class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;

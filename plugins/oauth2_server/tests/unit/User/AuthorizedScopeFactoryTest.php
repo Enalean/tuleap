@@ -24,7 +24,6 @@ namespace Tuleap\OAuth2Server\User;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
@@ -32,7 +31,7 @@ use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AuthorizedScopeFactoryTest extends TestCase
+final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

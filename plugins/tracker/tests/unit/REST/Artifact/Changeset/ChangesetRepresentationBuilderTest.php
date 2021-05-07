@@ -33,7 +33,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
 
-final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
+final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

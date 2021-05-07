@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
-use PHPUnit\Framework\TestCase;
 
-final class AccessKeyScopeIdentifierTest extends TestCase
+final class AccessKeyScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testIdentifierKeyIsHoldAsIs(): void
     {

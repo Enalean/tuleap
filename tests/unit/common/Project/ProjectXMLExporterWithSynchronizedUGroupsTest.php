@@ -26,7 +26,6 @@ namespace Tuleap\Project;
 use EventManager;
 use Mockery as M;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use ProjectXMLExporter;
@@ -39,7 +38,7 @@ use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
 
-class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
+class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -24,13 +24,12 @@ namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class StepDefinitionTest extends TestCase
+final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

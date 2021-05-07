@@ -27,7 +27,6 @@ use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Plugin;
 use Project_AccessRestrictedException;
 use Tuleap\Project\ProjectAccessChecker;
@@ -36,7 +35,7 @@ use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use URL;
 use URLVerification;
 
-class URLVerificationRedirectionTests extends TestCase
+class URLVerificationRedirectionTests extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

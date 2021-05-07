@@ -24,9 +24,8 @@ namespace Tuleap\Docman\Metadata;
 
 use Docman_MetadataListOfValuesElement;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class MetadataValueObjectFactoryTest extends TestCase
+class MetadataValueObjectFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

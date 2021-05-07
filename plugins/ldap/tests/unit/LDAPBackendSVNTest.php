@@ -26,13 +26,12 @@ use Event;
 use EventManager;
 use LDAP_SVN_Apache_ModPerl;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SVN_Apache_Auth_Factory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalSVNPollution;
 
-class LDAPBackendSVNTest extends TestCase
+class LDAPBackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

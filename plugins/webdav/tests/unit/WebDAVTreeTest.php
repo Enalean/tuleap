@@ -28,7 +28,6 @@ use FRSPackage;
 use FRSRelease;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Sabre\DAV\Exception\MethodNotAllowed;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -41,7 +40,7 @@ use WebDAVTree;
 
 require_once __DIR__ . '/bootstrap.php';
 
-final class WebDAVTreeTest extends TestCase
+final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

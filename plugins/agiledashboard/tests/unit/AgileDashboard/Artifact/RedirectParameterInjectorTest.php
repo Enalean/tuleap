@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\Artifact;
 use AgileDashboard_PaneRedirectionExtractor;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TemplateRendererFactory;
 use Tracker;
 use Tuleap\GlobalResponseMock;
@@ -34,7 +33,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
-class RedirectParameterInjectorTest extends TestCase
+class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

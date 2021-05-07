@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
@@ -35,7 +34,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
 
-final class SaveLicenseAgreementControllerTest extends TestCase
+final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

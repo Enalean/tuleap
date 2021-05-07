@@ -29,7 +29,7 @@ use ProjectManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
 
-final class JiraTrackersListControllerTest extends \PHPUnit\Framework\TestCase
+final class JiraTrackersListControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Authentication\Scope;
 
-use PHPUnit\Framework\TestCase;
 
-final class AuthenticationScopeBuilderFromClassNamesTest extends TestCase
+final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testStopLookingForTheAccessKeyScopeAsSoonAsOneItBuilt(): void
     {

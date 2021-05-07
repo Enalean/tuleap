@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Users;
@@ -37,7 +36,7 @@ use UserManager;
 
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
-class ListFieldCheckerWithBindUsersTest extends TestCase
+class ListFieldCheckerWithBindUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

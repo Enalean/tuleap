@@ -25,13 +25,12 @@ namespace Tuleap\Taskboard\AgileDashboard;
 use Cardwall_OnTop_Dao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use PluginManager;
 use Project;
 use taskboardPlugin;
 
-class MilestoneIsAllowedCheckerTest extends TestCase
+class MilestoneIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

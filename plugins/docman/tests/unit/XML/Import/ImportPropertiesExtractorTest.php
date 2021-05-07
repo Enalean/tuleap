@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Docman\XML\Import;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class ImportPropertiesExtractorTest extends TestCase
+class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

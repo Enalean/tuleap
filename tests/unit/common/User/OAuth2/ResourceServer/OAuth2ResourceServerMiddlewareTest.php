@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\User\OAuth2\ResourceServer;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -43,7 +42,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 use User_LoginException;
 use User_LoginManager;
 
-final class OAuth2ResourceServerMiddlewareTest extends TestCase
+final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

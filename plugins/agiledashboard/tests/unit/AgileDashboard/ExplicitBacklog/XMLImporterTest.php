@@ -25,7 +25,6 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -34,7 +33,7 @@ use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
 use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 
-final class XMLImporterTest extends TestCase
+final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

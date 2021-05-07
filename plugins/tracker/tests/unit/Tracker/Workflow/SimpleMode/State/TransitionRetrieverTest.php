@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
@@ -33,7 +32,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 use Workflow;
 
-final class TransitionRetrieverTest extends TestCase
+final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

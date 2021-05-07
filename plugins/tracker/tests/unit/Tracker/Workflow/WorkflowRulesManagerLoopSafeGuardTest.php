@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
+final class WorkflowRulesManagerLoopSafeGuardTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

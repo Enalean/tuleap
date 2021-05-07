@@ -24,12 +24,11 @@ namespace Tuleap\PullRequest\Reviewer\Change;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 
-final class ReviewerChangeRetrieverTest extends TestCase
+final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

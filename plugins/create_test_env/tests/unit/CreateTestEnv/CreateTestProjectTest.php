@@ -22,10 +22,9 @@
 namespace Tuleap\CreateTestEnv;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 
-final class CreateTestProjectTest extends TestCase
+final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

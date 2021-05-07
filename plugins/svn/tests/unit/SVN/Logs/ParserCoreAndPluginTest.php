@@ -20,11 +20,10 @@
 
 namespace Tuleap\SVN\Logs;
 
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ParserCoreAndPluginTest extends TestCase
+class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsLogsFromCoreAndPlugin()
     {

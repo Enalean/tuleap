@@ -25,12 +25,11 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_MilestoneFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
-final class MilestoneFactoryPlannedArtifactsTest extends TestCase
+final class MilestoneFactoryPlannedArtifactsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

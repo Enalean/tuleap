@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Request;
 
-use PHPUnit\Framework\TestCase;
 
-final class PeriodQueryTest extends TestCase
+final class PeriodQueryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCreatesCurrent(): void
     {

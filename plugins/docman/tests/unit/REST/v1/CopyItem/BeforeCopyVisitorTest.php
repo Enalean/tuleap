@@ -34,11 +34,10 @@ use Docman_Wiki;
 use LogicException;
 use Luracast\Restler\RestException;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
-final class BeforeCopyVisitorTest extends TestCase
+final class BeforeCopyVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2;
 
-use PHPUnit\Framework\TestCase;
 
-final class BearerTokenHeaderParserTest extends TestCase
+final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider dataProviderValidHeaderLines

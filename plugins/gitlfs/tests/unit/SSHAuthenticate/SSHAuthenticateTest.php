@@ -25,13 +25,12 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\Authorization\User\Operation\UnknownUserOperationException;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
 
-class SSHAuthenticateTest extends TestCase
+class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

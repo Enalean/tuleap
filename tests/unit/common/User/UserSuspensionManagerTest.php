@@ -31,7 +31,6 @@ use Hamcrest\Matchers;
 use MailPresenterFactory;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use TemplateRenderer;
 use Tuleap\Dao\UserSuspensionDao;
@@ -41,7 +40,7 @@ use Tuleap\Mail\MailAccountSuspensionAlertPresenter;
 use Tuleap\Mail\MailAccountSuspensionPresenter;
 use UserManager;
 
-class UserSuspensionManagerTest extends TestCase
+class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

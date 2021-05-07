@@ -29,7 +29,7 @@ use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Project\MappingRegistry;
 
-final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
+final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

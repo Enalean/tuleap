@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Container\Fieldset\XML;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
-final class XMLFieldsetTest extends TestCase
+final class XMLFieldsetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasAttributes(): void
     {

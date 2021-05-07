@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Data\
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 
-final class SynchronizedFieldsTest extends \PHPUnit\Framework\TestCase
+final class SynchronizedFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAnArrayOfFields(): void
     {

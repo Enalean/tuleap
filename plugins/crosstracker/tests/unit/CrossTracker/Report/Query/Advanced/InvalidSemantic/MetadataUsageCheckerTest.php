@@ -34,7 +34,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\Submitted
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
-class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
+class MetadataUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var Tracker_Semantic_ContributorDao

@@ -21,9 +21,8 @@
 namespace Tuleap\GitLFS\LFSObject;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class LFSObjectTest extends TestCase
+class LFSObjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

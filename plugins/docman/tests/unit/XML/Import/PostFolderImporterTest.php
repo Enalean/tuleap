@@ -25,10 +25,9 @@ namespace Tuleap\Docman\XML\Import;
 use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class PostFolderImporterTest extends TestCase
+class PostFolderImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,7 +24,6 @@ namespace Tuleap\OAuth2Server\Grant;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -32,7 +31,7 @@ use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 
-final class AccessTokenGrantControllerTest extends TestCase
+final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

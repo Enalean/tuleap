@@ -22,15 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Chart {
 
-    use PHPUnit\Framework\TestCase;
-    use Tuleap\Test\Network\HTTPHeaderStack;
+        use Tuleap\Test\Network\HTTPHeaderStack;
 
     function header($header, $replace = true, $http_response_code = null): void
     {
         \Tuleap\header($header, $replace, $http_response_code);
     }
 
-    final class ChartTest extends TestCase
+    final class ChartTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // See https://tools.ietf.org/html/rfc2083#section-12.11
         private const PNG_FILE_SIGNATURE = "\x89PNG\r\n\x1a\n";

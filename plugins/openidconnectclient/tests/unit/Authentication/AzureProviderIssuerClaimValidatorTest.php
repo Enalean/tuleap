@@ -21,12 +21,11 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
-final class AzureProviderIssuerClaimValidatorTest extends TestCase
+final class AzureProviderIssuerClaimValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var AzureProviderIssuerClaimValidator

@@ -24,10 +24,9 @@ namespace Tuleap\Tracker\NewDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TrackerFactory;
 
-class TrackerInNewDropdownRetrieverTest extends TestCase
+class TrackerInNewDropdownRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

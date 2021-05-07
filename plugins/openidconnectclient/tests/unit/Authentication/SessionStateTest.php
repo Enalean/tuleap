@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-final class SessionStateTest extends TestCase
+final class SessionStateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @dataProvider dataProviderSessionStates

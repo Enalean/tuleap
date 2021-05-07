@@ -21,12 +21,11 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_String;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\GlobalLanguageMock;
 
-class TrackerFormElementUserPermissionsTest extends TestCase
+class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 

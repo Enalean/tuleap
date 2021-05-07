@@ -22,12 +22,11 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class SubmittedValueConvertorTest extends TestCase
+final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

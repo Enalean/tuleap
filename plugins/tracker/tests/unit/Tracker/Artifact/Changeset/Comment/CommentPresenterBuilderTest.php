@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset_Comment;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 
-class CommentPresenterBuilderTest extends TestCase
+class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

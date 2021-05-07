@@ -21,9 +21,8 @@
 namespace Tuleap\ProjectOwnership\ProjectOwner;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ProjectOwnerRetrieverTest extends TestCase
+class ProjectOwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

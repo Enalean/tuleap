@@ -24,14 +24,13 @@ namespace Tuleap\PullRequest\Reviewer\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\TemporaryTestDirectory;
 use UserHelper;
 
-final class ReviewerAddedNotificationTest extends TestCase
+final class ReviewerAddedNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

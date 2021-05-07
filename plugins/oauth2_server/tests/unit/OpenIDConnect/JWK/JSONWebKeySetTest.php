@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\JWK;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\SigningPublicKey;
 
-final class JSONWebKeySetTest extends TestCase
+final class JSONWebKeySetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PUBLIC_KEY = <<<EOT
         -----BEGIN PUBLIC KEY-----

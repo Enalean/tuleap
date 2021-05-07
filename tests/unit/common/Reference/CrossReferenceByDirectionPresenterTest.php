@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use PHPUnit\Framework\TestCase;
 
-class CrossReferenceByDirectionPresenterTest extends TestCase
+class CrossReferenceByDirectionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSortCrossReferenceNatureAlphabetically(): void
     {

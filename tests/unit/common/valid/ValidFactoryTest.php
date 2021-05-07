@@ -24,9 +24,8 @@ namespace Tuleap\valid;
 
 use ValidFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ValidFactoryTest extends TestCase
+class ValidFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

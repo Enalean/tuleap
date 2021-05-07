@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\API\Tag;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 
-class GitlabTagTest extends TestCase
+class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsATagRepresentation(): void
     {

@@ -27,7 +27,6 @@ use FRSReleaseFactory;
 use HTTPRequest;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TemplateRenderer;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
@@ -43,7 +42,7 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\NotFoundException;
 
-final class ReleaseNotesControllerTest extends TestCase
+final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

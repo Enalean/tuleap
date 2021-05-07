@@ -26,7 +26,7 @@ use Tuleap\User\BeforeLogin;
 use Tuleap\User\UserAuthenticationSucceeded;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
+final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;

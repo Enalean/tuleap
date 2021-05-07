@@ -19,10 +19,9 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 
-class TruncateLevelLoggerTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use MockeryPHPUnitIntegration;
 

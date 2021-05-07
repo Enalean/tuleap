@@ -22,11 +22,10 @@ namespace Tuleap\TestManagement\Nature;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class NatureCoveredByOverriderTest extends TestCase
+class NatureCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

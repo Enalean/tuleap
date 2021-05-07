@@ -20,9 +20,8 @@
 
 namespace Tuleap\Tracker\Import;
 
-use PHPUnit\Framework\TestCase;
 
-class SpotterTest extends TestCase
+class SpotterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNotHaveImportRunningByDefault()
     {

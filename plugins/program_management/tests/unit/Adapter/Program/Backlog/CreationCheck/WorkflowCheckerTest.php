@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
@@ -33,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\Progra
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class WorkflowCheckerTest extends TestCase
+final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -25,11 +25,10 @@ namespace Tuleap\FRS\REST\v1;
 
 use FRSPackage;
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermissionManager;
 
-final class PackageRepresentationBuilderTest extends TestCase
+final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

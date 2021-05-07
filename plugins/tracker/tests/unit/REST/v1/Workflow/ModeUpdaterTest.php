@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
@@ -36,7 +35,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Workflow;
 use Workflow_Dao;
 
-class ModeUpdaterTest extends TestCase
+class ModeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

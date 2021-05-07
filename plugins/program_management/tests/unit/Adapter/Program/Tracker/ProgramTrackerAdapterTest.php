@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Tracker;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlannableTrackerCannotBeEmptyException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramPlannableTracker;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerDoesNotBelongToProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ProgramTrackerAdapterTest extends TestCase
+final class ProgramTrackerAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

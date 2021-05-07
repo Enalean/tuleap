@@ -24,7 +24,6 @@ namespace Tuleap\Reference\ByNature\ConcurrentVersionsSystem;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Tuleap\ConcurrentVersionsSystem\CvsDao;
@@ -36,7 +35,7 @@ use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use UserHelper;
 use UserManager;
 
-class CrossReferenceCvsOrganizerTest extends TestCase
+class CrossReferenceCvsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

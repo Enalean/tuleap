@@ -30,12 +30,11 @@ namespace Tuleap\Timetracking\Report;
 use DateTime;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Timetracking\REST\v1\DateTrackingTimesPeriod;
 use Tuleap\Timetracking\REST\v1\TimetrackingDatesExtractor;
 
-class TimetrackingDatesExtractorTest extends TestCase
+class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

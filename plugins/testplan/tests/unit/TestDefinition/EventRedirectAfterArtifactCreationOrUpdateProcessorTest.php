@@ -24,13 +24,12 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
-final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
+final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

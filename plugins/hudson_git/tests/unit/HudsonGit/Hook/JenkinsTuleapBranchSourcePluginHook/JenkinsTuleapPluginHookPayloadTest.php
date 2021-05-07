@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class JenkinsTuleapPluginHookPayloadTest extends TestCase
+class JenkinsTuleapPluginHookPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

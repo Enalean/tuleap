@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\AgileDashboard;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class TaskboardUsageTest extends TestCase
+class TaskboardUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey\REST;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\REST\AccessKeyHeaderExtractor;
 use Tuleap\User\AccessKey\AccessKeyMetadata;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 
-final class UserAccessKeyRepresentationRetrieverTest extends TestCase
+final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -24,11 +24,10 @@ use EventManager;
 use Git_Gitolite_ConfigPermissionsSerializer;
 use Git_Mirror_Mirror;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
+class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -25,10 +25,9 @@
 namespace Tuleap\Tracker\Tests;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 
-class ProjectAdminPermissionPerGroupPresenterBuilderTest extends TestCase
+class ProjectAdminPermissionPerGroupPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

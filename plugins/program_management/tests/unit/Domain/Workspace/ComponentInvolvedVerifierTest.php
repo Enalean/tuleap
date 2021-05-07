@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\ProgramManagement\Domain\Project;
 
-final class ComponentInvolvedVerifierTest extends TestCase
+final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

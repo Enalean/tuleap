@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\GlobalResponseMock;
 use Tuleap\TestManagement\Config;
@@ -32,7 +31,7 @@ use Tuleap\TestManagement\TrackerDefinitionNotValidException;
 use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Valid_UInt;
 
-class AdminControllerTest extends TestCase
+class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;

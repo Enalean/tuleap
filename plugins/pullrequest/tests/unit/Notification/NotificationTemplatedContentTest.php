@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class NotificationTemplatedContentTest extends TestCase
+final class NotificationTemplatedContentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

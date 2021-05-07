@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Test\Psalm\Plugin\ConcealedString;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\IssueBuffer;
@@ -31,7 +30,7 @@ use Psalm\Plugin\EventHandler\Event\MethodReturnTypeProviderEvent;
 use Psalm\StatementsSource;
 use Tuleap\Cryptography\ConcealedString;
 
-final class PreventConcealedStringMisusesTest extends TestCase
+final class PreventConcealedStringMisusesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

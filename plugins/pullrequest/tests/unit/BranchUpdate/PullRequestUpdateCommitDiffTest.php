@@ -24,9 +24,8 @@ namespace Tuleap\PullRequest\BranchUpdate;
 
 use Git_Command_Exception;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class PullRequestUpdateCommitDiffTest extends TestCase
+final class PullRequestUpdateCommitDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

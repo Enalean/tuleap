@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
@@ -31,7 +30,7 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
-final class JiraSprintIssuesRetrieverFromAPITest extends TestCase
+final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCatchesIfJiraReturnsAPayloadWeCannotWorkWith(): void
     {

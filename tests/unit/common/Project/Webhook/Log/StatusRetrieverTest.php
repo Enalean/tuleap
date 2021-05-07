@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Webhook\Log;
 
-final class StatusRetrieverTest extends \PHPUnit\Framework\TestCase
+final class StatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

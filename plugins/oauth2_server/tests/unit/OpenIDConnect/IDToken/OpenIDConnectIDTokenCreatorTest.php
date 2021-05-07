@@ -28,7 +28,6 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Validator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -39,7 +38,7 @@ use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class OpenIDConnectIDTokenCreatorTest extends TestCase
+final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
     use MockeryPHPUnitIntegration;

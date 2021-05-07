@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
@@ -40,7 +39,7 @@ use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 
-final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
+final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

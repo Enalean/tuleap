@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\Transfer;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
-class BytesAmountHandledLFSObjectInstrumentationFilterTest extends TestCase
+class BytesAmountHandledLFSObjectInstrumentationFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReceivedBytesAreCounted(): void
     {

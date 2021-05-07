@@ -24,7 +24,6 @@ namespace Tuleap\ForumML\Threads;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use System_Command;
 use Tuleap\ForgeConfigSandbox;
@@ -38,7 +37,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 
-class ThreadsControllerTest extends TestCase
+class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

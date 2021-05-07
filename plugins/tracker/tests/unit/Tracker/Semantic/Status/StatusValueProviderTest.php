@@ -25,12 +25,11 @@ namespace Tuleap\Tracker\Semantic\Status;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class StatusValueProviderTest extends TestCase
+class StatusValueProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

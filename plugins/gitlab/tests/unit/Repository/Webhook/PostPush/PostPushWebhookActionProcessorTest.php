@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Reference;
@@ -37,7 +36,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 
-final class PostPushWebhookActionProcessorTest extends TestCase
+final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

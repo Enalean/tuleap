@@ -28,11 +28,10 @@ use Event;
 use EventManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use System_Alias;
 use Tuleap\ForgeConfigSandbox;
 
-final class BackendAliasesTest extends TestCase
+final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

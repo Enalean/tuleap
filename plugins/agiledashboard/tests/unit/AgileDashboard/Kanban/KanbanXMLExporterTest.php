@@ -27,9 +27,8 @@ use AgileDashboard_ConfigurationDao;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanFactory;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-final class KanbanXMLExporterTest extends TestCase
+final class KanbanXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

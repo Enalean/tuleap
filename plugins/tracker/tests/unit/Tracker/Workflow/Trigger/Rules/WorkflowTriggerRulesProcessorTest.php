@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\Trigger;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Workflow_Trigger_FieldValue;
@@ -36,7 +35,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
-final class WorkflowTriggerRulesProcessorTest extends TestCase
+final class WorkflowTriggerRulesProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

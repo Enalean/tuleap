@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use XML_ParseError;
 
-class TrackerCreatorXmlErrorPresenterBuilderTest extends TestCase
+class TrackerCreatorXmlErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -21,11 +21,10 @@
 namespace Tuleap\PHPWiki\PermissionsPerGroup;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 
-class PHPWikiPermissionPerGroupPaneBuilderTest extends TestCase
+class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

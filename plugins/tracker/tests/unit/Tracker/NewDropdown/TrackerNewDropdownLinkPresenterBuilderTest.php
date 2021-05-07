@@ -24,10 +24,9 @@ namespace Tuleap\Tracker\NewDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\layout\NewDropdown\DataAttributePresenter;
 
-class TrackerNewDropdownLinkPresenterBuilderTest extends TestCase
+class TrackerNewDropdownLinkPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

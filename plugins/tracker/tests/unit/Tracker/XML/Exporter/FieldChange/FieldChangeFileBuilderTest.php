@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Exporter\FieldChange;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class FieldChangeFileBuilderTest extends TestCase
+class FieldChangeFileBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var FieldChangeFileBuilder

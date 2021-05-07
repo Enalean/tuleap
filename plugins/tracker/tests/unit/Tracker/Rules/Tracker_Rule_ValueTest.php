@@ -21,10 +21,9 @@
 
 namespace Tuleap\Tracker\Rule;
 
-use PHPUnit\Framework\TestCase;
 use Tracker_Rule_List;
 
-class Tracker_Rule_ListTest extends TestCase
+class Tracker_Rule_ListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testApplyTo()
     {

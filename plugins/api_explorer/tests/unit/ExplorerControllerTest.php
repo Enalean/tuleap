@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\APIExplorer;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Templating\TemplateCache;
 
-final class ExplorerControllerTest extends TestCase
+final class ExplorerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

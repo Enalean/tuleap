@@ -24,7 +24,6 @@ use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_UserWithReadAllPermission;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
-class BurndownRemainingEffortAdderForLegacyTest extends TestCase
+class BurndownRemainingEffortAdderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

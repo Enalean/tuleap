@@ -18,11 +18,10 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class GraphOnTrackersV5_InSessionChartSorterTest extends TestCase
+class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

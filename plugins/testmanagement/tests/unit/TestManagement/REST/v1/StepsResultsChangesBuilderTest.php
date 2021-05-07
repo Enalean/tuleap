@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
@@ -36,7 +35,7 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-final class StepsResultsChangesBuilderTest extends TestCase
+final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $form_element_factory;
     private $execution_dao;
@@ -58,12 +57,14 @@ final class StepsResultsChangesBuilderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->user                       = $this->createMock(PFUser::class);
-        $this->execution_artifact         = $this->createMock(Artifact::class);
-        $this->definition_artifact        = $this->createMock(Artifact::class);
-        $this->form_element_factory       = $this->createMock(Tracker_FormElementFactory::class);
-        $this->execution_dao              = $this->createMock(ExecutionDao::class);
-        $this->execution_field            = $this->createMock(StepExecution::class);
+        $this->user               = $this->createMock(PFUser::class);
+        $this->execution_artifact = $this->createMock(Artifact::class);
+        $this->execution_artifact->method('getId')->willReturn(789);
+        $this->definition_artifact  = $this->createMock(Artifact::class);
+        $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $this->execution_dao        = $this->createMock(ExecutionDao::class);
+        $this->execution_field      = $this->createMock(StepExecution::class);
+        $this->execution_field->method('getId')->willReturn(147);
         $this->execution_status_field     = $this->createMock(Tracker_FormElement_Field_List::class);
         $this->definition_field           = $this->createMock(StepDefinition::class);
         $this->definition_changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
@@ -95,7 +96,9 @@ final class StepsResultsChangesBuilderTest extends TestCase
         $value_map = [
             [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
         ];
-        $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
+        $this->definition_artifact->method('getValue')->willReturnMap($value_map);
+
+        $this->execution_artifact->method('getValue')->willReturn(null);
 
         $step1 = $this->getStep(1);
         $step2 = $this->getStep(2);
@@ -142,6 +145,8 @@ final class StepsResultsChangesBuilderTest extends TestCase
         $step2 = $this->getStep(2);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
+        $this->execution_artifact->method('getValue')->willReturn(null);
+
         $submitted_steps_results = [
             $this->getStepResultRepresentation(1, 'passed'),
             $this->getStepResultRepresentation(2, 'blocked'),
@@ -173,6 +178,8 @@ final class StepsResultsChangesBuilderTest extends TestCase
         $step1 = $this->getStep(1);
         $step2 = $this->getStep(2);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
+
+        $this->execution_artifact->method('getValue')->willReturn(null);
 
         $submitted_steps_results = [
             $this->getStepResultRepresentation(1, 'passed'),
@@ -289,6 +296,8 @@ final class StepsResultsChangesBuilderTest extends TestCase
         $step2 = $this->getStep(2);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
+        $this->execution_artifact->method('getValue')->willReturn(null);
+
         $this->definition_artifact->expects($this->never())->method('getLastChangeset');
 
         $submitted_steps_results = [];
@@ -313,6 +322,8 @@ final class StepsResultsChangesBuilderTest extends TestCase
         $step1 = $this->getStep(1);
         $step2 = $this->getStep(2);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
+
+        $this->execution_artifact->method('getValue')->willReturn(null);
 
         $this->definition_artifact->expects($this->never())->method('getChangeset');
 

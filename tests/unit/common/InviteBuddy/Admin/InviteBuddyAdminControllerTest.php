@@ -24,14 +24,13 @@ namespace Tuleap\InviteBuddy\Admin;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 
-class InviteBuddyAdminControllerTest extends TestCase
+class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

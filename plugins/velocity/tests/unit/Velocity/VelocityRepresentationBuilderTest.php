@@ -23,7 +23,6 @@ namespace Tuleap\Velocity;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tracker;
@@ -38,7 +37,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 
-class VelocityRepresentationBuilderTest extends TestCase
+class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

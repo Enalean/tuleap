@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Layout;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
-final class JavascriptAssetTest extends TestCase
+final class JavascriptAssetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsHashedFileURL(): void
     {

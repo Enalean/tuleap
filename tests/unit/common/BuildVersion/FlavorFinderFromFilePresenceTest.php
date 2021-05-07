@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\BuildVersion;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
-final class FlavorFinderFromFilePresenceTest extends TestCase
+final class FlavorFinderFromFilePresenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var string

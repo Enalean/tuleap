@@ -23,7 +23,6 @@ namespace Tuleap\Timetracking\REST\v1;
 
 use Luracast\Restler\RestException;
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
@@ -34,7 +33,7 @@ use Tuleap\Timetracking\REST\v1\Exception\UserCannotSeeTrackedTimeException;
 use Tuleap\Timetracking\Time\Time;
 use Tuleap\Timetracking\Time\TimeRetriever;
 
-class ArtifactTimeRetrieverTest extends TestCase
+class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

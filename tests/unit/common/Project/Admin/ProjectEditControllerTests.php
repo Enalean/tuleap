@@ -27,7 +27,6 @@ use Feedback;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -37,7 +36,7 @@ use Tuleap\admin\ProjectEdit\ProjectEditDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
-class ProjectEditControllerTests extends TestCase
+class ProjectEditControllerTests extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

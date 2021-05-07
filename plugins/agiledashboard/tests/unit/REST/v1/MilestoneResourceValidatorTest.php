@@ -24,11 +24,10 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_ArtifactMilestone;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
-final class MilestoneResourceValidatorTest extends TestCase
+final class MilestoneResourceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

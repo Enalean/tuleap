@@ -24,14 +24,13 @@ namespace Tuleap\Git\RemoteServer\Gerrit;
 use GitRepository;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Git_SystemEventManager;
 use Git_RemoteServer_NotFoundException;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class MigrationHandlerTest extends TestCase
+class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

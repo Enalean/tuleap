@@ -26,7 +26,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class AgileDashboardScrumConfigurationUpdaterTest extends \PHPUnit\Framework\TestCase
+final class AgileDashboardScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

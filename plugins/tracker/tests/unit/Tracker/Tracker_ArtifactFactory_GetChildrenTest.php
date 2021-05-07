@@ -29,14 +29,13 @@ namespace Tuleap\Tracker;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_ArtifactFactory_GetChildrenTest extends TestCase
+class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

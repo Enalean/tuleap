@@ -25,10 +25,9 @@ namespace Tuleap\Collection;
 
 use Collection;
 use Map;
-use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class MapTest extends TestCase
+class MapTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEmptyMap(): void
     {

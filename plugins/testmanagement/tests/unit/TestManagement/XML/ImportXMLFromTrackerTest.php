@@ -21,14 +21,13 @@
 namespace Tuleap\TestManagement\XML;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XML_RNGValidator;
 
-final class ImportXMLFromTrackerTest extends TestCase
+final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

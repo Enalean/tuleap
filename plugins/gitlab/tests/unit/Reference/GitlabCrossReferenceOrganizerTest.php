@@ -25,7 +25,6 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
@@ -43,7 +42,7 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class GitlabCrossReferenceOrganizerTest extends TestCase
+class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

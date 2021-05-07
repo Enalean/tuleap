@@ -26,13 +26,12 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 use DataAccessObject;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 
-class BindListUserValueGetterTest extends TestCase
+class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -20,7 +20,7 @@
 
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
 
-final class AgileDashboard_XMLimporterTest extends \PHPUnit\Framework\TestCase
+final class AgileDashboard_XMLimporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-class UploadPathAllocatorTest extends TestCase
+class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

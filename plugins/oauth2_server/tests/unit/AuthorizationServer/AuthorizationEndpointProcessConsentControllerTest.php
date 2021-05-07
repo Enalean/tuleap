@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -39,7 +38,7 @@ use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AuthorizationEndpointProcessConsentControllerTest extends TestCase
+final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

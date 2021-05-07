@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\Project\HeartbeatsEntry;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\TrackerColor;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class LatestHeartbeatsCollectorTest extends TestCase
+class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

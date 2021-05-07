@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Request;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 
-final class FilteringQueryTest extends TestCase
+final class FilteringQueryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testCanBeBuiltFromStatusQuery(): void
     {

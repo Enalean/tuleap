@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use DateTimeImmutable;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
@@ -38,7 +37,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
-class ChangelogSnapshotBuilderTest extends TestCase
+class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

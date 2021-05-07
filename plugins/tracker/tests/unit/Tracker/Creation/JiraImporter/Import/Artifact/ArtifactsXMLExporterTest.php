@@ -25,7 +25,6 @@ namespace Tracker\Creation\JiraImporter\Import\Artifact;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
@@ -68,7 +67,7 @@ use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-class ArtifactsXMLExporterTest extends TestCase
+class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

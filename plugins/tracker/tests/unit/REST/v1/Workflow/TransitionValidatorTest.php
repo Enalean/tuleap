@@ -24,11 +24,10 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 
-class TransitionValidatorTest extends TestCase
+class TransitionValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

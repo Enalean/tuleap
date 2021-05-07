@@ -26,7 +26,6 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
@@ -36,7 +35,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
-class PostActionsMapperTest extends TestCase
+class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

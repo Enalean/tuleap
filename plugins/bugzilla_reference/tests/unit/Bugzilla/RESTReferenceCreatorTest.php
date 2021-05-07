@@ -25,14 +25,13 @@ namespace Tuleap\Bugzilla;
 use CrossReference;
 use Http\Mock\Client;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Bugzilla\Reference\Reference;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class RESTReferenceCreatorTest extends TestCase
+final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

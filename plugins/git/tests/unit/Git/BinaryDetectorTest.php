@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-use PHPUnit\Framework\TestCase;
 
-final class BinaryDetectorTest extends TestCase
+final class BinaryDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @testWith ["Tuleap"]

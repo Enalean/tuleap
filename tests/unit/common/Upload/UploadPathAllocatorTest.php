@@ -20,9 +20,8 @@
 
 namespace Tuleap\Upload;
 
-use PHPUnit\Framework\TestCase;
 
-class UploadPathAllocatorTest extends TestCase
+class UploadPathAllocatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID()
     {

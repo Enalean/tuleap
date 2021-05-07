@@ -24,9 +24,8 @@ namespace Tuleap\User\Account\Appearance;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class LanguagePresenterBuilderTest extends TestCase
+class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

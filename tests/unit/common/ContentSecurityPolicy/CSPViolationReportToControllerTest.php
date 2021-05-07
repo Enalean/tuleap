@@ -21,12 +21,11 @@
 namespace Tuleap\ContentSecurityPolicy;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\Test\TestLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 
-final class CSPViolationReportToControllerTest extends TestCase
+final class CSPViolationReportToControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \Psr\Http\Message\StreamFactoryInterface

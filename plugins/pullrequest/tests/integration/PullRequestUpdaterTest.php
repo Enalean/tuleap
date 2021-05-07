@@ -23,7 +23,6 @@ namespace Tuleap\PullRequest;
 
 use GitRepositoryFactory;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
@@ -33,7 +32,7 @@ use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDAO;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
-class PullRequestUpdaterTest extends TestCase
+class PullRequestUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     /**

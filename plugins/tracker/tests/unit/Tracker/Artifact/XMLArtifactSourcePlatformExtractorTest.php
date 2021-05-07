@@ -23,14 +23,13 @@ namespace Tuleap\Tracker\Artifact;
 
 use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Valid_HTTPURI;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class XMLArtifactSourcePlatformExtractorTest extends TestCase
+class XMLArtifactSourcePlatformExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

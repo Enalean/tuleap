@@ -26,7 +26,6 @@ use Enalean\Prometheus\Storage\FlushableStorage;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
@@ -37,7 +36,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Queue\Worker;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class MetricsControllerTest extends TestCase
+final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

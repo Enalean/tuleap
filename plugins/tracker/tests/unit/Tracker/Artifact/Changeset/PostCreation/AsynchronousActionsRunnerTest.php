@@ -21,10 +21,9 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Queue\WorkerEvent;
 
-class AsynchronousActionsRunnerTest extends TestCase
+class AsynchronousActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

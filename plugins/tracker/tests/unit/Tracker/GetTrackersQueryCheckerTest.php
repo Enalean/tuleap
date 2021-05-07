@@ -28,11 +28,10 @@ namespace Tuleap\Tracker;
 use EventManager;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\REST\Event\GetAdditionalCriteria;
 use Tuleap\Tracker\REST\v1\GetTrackersQueryChecker;
 
-class GetTrackersQueryCheckerTest extends TestCase
+class GetTrackersQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

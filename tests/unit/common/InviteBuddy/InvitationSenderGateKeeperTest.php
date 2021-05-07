@@ -25,9 +25,8 @@ namespace Tuleap\InviteBuddy;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
-class InvitationSenderGateKeeperTest extends TestCase
+class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

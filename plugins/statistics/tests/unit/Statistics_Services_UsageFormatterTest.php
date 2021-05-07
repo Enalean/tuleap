@@ -25,12 +25,11 @@ namespace Tuleap\Statistics;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Statistics_Formatter;
 use Statistics_Services_UsageFormatter;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-final class Statistics_Services_UsageFormatterTest extends TestCase
+final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

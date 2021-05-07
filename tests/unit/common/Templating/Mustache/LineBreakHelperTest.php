@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Templating\Mustache;
 
-use PHPUnit\Framework\TestCase;
 
-final class LineBreakHelperTest extends TestCase
+final class LineBreakHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddsNewLines(): void
     {

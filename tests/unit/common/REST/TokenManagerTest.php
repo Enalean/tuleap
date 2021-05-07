@@ -22,13 +22,12 @@ declare(strict_types=1);
 namespace Tuleap\REST;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Rest_Token;
 use Rest_TokenDao;
 use Rest_TokenFactory;
 use Rest_TokenManager;
 
-final class TokenManagerTest extends TestCase
+final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -26,14 +26,13 @@ use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
 use Tuleap\xml\InvalidDateException;
 use User\XML\Import\UserNotFoundException;
 
-class NodeImporterTest extends TestCase
+class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

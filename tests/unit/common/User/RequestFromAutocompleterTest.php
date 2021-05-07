@@ -27,7 +27,7 @@ use ProjectUGroup;
 use Rule_Email;
 use Tuleap\GlobalResponseMock;
 
-final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
+final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;

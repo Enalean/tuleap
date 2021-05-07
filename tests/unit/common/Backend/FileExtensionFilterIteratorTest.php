@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Backend;
 
-use PHPUnit\Framework\TestCase;
 use RecursiveIteratorIterator;
 
-final class FileExtensionFilterIteratorTest extends TestCase
+final class FileExtensionFilterIteratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItGetsAllTheFiles(): void
     {

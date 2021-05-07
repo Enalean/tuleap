@@ -27,7 +27,6 @@ use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
@@ -42,7 +41,7 @@ use Tracker_RuleFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class MasschangeUpdaterTest extends TestCase
+final class MasschangeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\unit\Tracker\XML\Exporter\FieldChange;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use XML_SimpleXMLCDATAFactory;
 
-class FieldChangeTextBuilderTest extends TestCase
+class FieldChangeTextBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var FieldChangeTextBuilder

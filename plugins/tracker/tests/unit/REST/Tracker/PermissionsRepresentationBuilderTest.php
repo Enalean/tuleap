@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Tracker;
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tracker;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 
-final class PermissionsRepresentationBuilderTest extends TestCase
+final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

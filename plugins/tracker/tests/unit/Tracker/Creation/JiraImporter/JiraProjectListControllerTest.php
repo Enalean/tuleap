@@ -30,7 +30,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
 
-final class JiraProjectListControllerTest extends \PHPUnit\Framework\TestCase
+final class JiraProjectListControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

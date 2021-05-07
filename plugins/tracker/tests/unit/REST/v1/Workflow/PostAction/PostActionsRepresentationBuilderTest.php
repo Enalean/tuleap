@@ -25,7 +25,6 @@ use EventManager;
 use Jenkins_Client;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Transition;
@@ -36,7 +35,7 @@ use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
-class PostActionsRepresentationBuilderTest extends TestCase
+class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

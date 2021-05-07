@@ -26,13 +26,12 @@ namespace Tuleap\User\Account;
 use CSRFSynchronizerToken;
 use Mockery as M;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class UpdateSessionPreferencesControllerTest extends TestCase
+final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -24,7 +24,7 @@
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase
+class ProFTPd_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     public $system_event_manager;

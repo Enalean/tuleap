@@ -22,9 +22,8 @@
 namespace Tuleap\Project\XML;
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 
-class ConsistencyCheckerTest extends TestCase
+class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -25,14 +25,13 @@ namespace Tuleap\FRS\REST\v1;
 
 use Luracast\Restler\RestException;
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 
-final class ServiceRepresentationBuilderTest extends TestCase
+final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

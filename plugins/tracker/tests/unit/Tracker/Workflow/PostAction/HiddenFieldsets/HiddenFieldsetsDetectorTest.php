@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
-final class HiddenFieldsetsDetectorTest extends TestCase
+final class HiddenFieldsetsDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

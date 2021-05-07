@@ -21,7 +21,6 @@
 namespace Tuleap\User\Password\Change;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -29,7 +28,7 @@ use Tuleap\User\Account\PasswordUserPostUpdateEvent;
 use Tuleap\User\Password\Reset\Revoker;
 use Tuleap\User\SessionManager;
 
-class PasswordChangerTest extends TestCase
+class PasswordChangerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

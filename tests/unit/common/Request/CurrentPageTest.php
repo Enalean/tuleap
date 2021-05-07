@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-final class CurrentPageTest extends \PHPUnit\Framework\TestCase
+final class CurrentPageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

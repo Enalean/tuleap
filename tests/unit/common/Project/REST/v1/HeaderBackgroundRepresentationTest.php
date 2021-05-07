@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 
-final class HeaderBackgroundRepresentationTest extends TestCase
+final class HeaderBackgroundRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildHeaderBackgroundRepresentationFromIdentifier(): void
     {

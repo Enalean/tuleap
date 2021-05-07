@@ -24,9 +24,8 @@ namespace Tuleap\Docman\ExternalLinks;
 
 use HTTPRequest;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class ExternalLinkParametersExtractorTest extends TestCase
+class ExternalLinkParametersExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

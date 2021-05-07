@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-class EnableUniqueAuthenticationEndpointVerifierTest extends TestCase
+class EnableUniqueAuthenticationEndpointVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -22,14 +22,13 @@ namespace Tuleap\Tracker;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_DateReminder;
 use Tracker_DateReminderManager;
 use Tracker_FormElement_Field_Date;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_DateReminderManagerTest extends TestCase
+class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

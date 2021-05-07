@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\REST;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
@@ -30,7 +29,7 @@ use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestData;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestDataProvider;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class ExecutionWithAutomatedTestDataProviderTest extends TestCase
+class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

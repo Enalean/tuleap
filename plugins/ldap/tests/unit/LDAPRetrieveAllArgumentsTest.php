@@ -26,7 +26,6 @@ use ForgeConfig;
 use LDAP;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
 require_once __DIR__ . '/bootstrap.php';
@@ -38,7 +37,7 @@ require_once __DIR__ . '/bootstrap.php';
  *
  * @see https://tuleap.net/plugins/tracker/?aid=7151
  */
-class LDAPRetrieveAllArgumentsTest extends TestCase
+class LDAPRetrieveAllArgumentsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

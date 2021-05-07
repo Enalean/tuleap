@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Project\ProjectBackground;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ProjectBackgroundUpdaterTest extends TestCase
+final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

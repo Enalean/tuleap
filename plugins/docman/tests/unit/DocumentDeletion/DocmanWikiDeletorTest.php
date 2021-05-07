@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Docman;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\DocumentDeletion\DocmanWikiDeletor;
 use Tuleap\PHPWiki\WikiPage;
 
-class DocmanWikiDeletorTest extends TestCase
+class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

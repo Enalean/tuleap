@@ -25,13 +25,12 @@ namespace Tuleap\Tracker\FormElement\View\Reference;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Reference\CrossReferenceByDirectionPresenter;
 use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class CrossReferenceFieldPresenterBuilderTest extends TestCase
+class CrossReferenceFieldPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

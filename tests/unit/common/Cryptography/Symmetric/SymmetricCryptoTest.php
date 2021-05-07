@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Symmetric;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 
-final class SymmetricCryptoTest extends TestCase
+final class SymmetricCryptoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCannotBeInstantiated(): void
     {

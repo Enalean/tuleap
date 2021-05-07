@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Http\Server;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class MiddlewareDispatcherTest extends TestCase
+final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

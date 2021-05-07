@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\XML;
 
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class XMLCardwallTest extends TestCase
+class XMLCardwallTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExportsCardwallWithTracker(): void
     {

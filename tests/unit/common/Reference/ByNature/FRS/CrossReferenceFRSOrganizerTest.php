@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature\FRS;
 
-use PHPUnit\Framework\TestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery;
 use PFUser;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class CrossReferenceFRSOrganizerTest extends TestCase
+class CrossReferenceFRSOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

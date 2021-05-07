@@ -22,12 +22,11 @@ namespace Tuleap\Project;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use UserManager;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UGroupLiteralizerTest extends TestCase
+class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

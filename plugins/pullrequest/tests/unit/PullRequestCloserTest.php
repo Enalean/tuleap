@@ -25,7 +25,6 @@ namespace Tuleap\PullRequest;
 use GitRepository;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
@@ -33,7 +32,7 @@ use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
 use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
-final class PullRequestCloserTest extends TestCase
+final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

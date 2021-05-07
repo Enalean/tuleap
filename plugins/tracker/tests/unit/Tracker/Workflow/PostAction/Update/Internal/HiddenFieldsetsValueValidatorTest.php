@@ -24,10 +24,9 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 
-final class HiddenFieldsetsValueValidatorTest extends TestCase
+final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

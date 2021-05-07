@@ -26,12 +26,11 @@ use Cardwall_OnTop_Config;
 use Cardwall_OnTop_ConfigFactory;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_Milestone;
 use Tracker;
 
-final class TrackerCollectionRetrieverTest extends TestCase
+final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

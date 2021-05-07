@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ConfigurationUserCanNotSeeProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramNotFoundException;
@@ -33,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PlanConfigurationBuilderTest extends TestCase
+final class PlanConfigurationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

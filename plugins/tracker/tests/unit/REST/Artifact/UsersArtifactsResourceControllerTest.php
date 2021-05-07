@@ -26,13 +26,12 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Luracast\Restler\RestException;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tracker_Semantic_Title;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\TrackerColor;
 
-class UsersArtifactsResourceControllerTest extends TestCase
+class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

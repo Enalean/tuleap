@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\Date\XML;
 
-use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 
-final class XMLDateFieldTest extends TestCase
+final class XMLDateFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoPropertiesByDefault(): void
     {

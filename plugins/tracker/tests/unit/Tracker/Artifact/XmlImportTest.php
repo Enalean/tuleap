@@ -26,7 +26,6 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Response;
@@ -59,7 +58,7 @@ use XMLImportHelper;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class XmlImportTest extends TestCase
+class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

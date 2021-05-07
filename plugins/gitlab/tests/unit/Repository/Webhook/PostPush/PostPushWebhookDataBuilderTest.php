@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class PostPushWebhookDataBuilderTest extends TestCase
+class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var PostPushWebhookDataBuilder

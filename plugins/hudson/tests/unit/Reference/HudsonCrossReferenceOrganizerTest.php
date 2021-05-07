@@ -20,14 +20,13 @@
 
 namespace Tuleap\Hudson\Reference;
 
-use PHPUnit\Framework\TestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery;
 use ProjectManager;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class HudsonCrossReferenceOrganizerTest extends TestCase
+class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

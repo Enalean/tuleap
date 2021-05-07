@@ -26,10 +26,9 @@ require_once(__DIR__ . "/TransitionFactory.php");
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
 
-class PostActionCollectionUpdaterTest extends TestCase
+class PostActionCollectionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

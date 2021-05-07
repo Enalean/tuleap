@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Notifications;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Selectbox;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
 
-final class RecipientsManagerTest extends TestCase
+final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\RefreshToken;
 
-use PHPUnit\Framework\TestCase;
 
-final class PrefixOAuth2RefreshTokenTest extends TestCase
+final class PrefixOAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasSpecificPrefix(): void
     {

@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Collection;
 
 use LinkedList;
-use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class LinkedListTest extends TestCase
+class LinkedListTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testOrder(): void
     {

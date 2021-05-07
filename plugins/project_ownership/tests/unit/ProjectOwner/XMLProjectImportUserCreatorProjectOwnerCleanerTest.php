@@ -25,12 +25,11 @@ namespace Tuleap\ProjectOwnership\ProjectOwner;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 
-final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends TestCase
+final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

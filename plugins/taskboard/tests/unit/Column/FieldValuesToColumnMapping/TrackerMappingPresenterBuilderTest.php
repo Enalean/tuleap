@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 use Cardwall_Column;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Tracker;
 use Tracker_FormElement_Field_Selectbox;
@@ -33,7 +32,7 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TrackerCollection;
 use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
 
-final class TrackerMappingPresenterBuilderTest extends TestCase
+final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

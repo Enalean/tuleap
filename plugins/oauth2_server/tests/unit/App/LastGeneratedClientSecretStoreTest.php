@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
-final class LastGeneratedClientSecretStoreTest extends TestCase
+final class LastGeneratedClientSecretStoreTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var LastGeneratedClientSecretStore

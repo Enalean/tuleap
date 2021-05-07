@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\svn\Event;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class UpdateProjectAccessFilesSchedulerTest extends TestCase
+final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -19,13 +19,12 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MilestoneReportCriterionProviderTest extends TestCase
+class MilestoneReportCriterionProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

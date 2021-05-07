@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\GenericProvider;
 
-use PHPUnit\Framework\TestCase;
 
-final class GenericProviderTest extends TestCase
+final class GenericProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testReturnsNullJWKSEndpointURLIsEmpty(): void
     {

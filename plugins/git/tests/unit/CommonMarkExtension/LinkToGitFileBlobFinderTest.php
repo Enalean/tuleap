@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Git\CommonMarkExtension;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Git\GitPHP\Blob;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Project;
 
-final class LinkToGitFileBlobFinderTest extends TestCase
+final class LinkToGitFileBlobFinderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

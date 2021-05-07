@@ -20,9 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-use PHPUnit\Framework\TestCase;
 
-class ParametrizedFromTest extends TestCase
+class ParametrizedFromTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testArrayUniqueOfArrayOfParametrizedFromObjectsExcludSameObjects()
     {

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use PHPUnit\Framework\TestCase;
 
-final class ForbiddenExceptionTest extends TestCase
+final class ForbiddenExceptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testForbiddenExceptionIsAssociatedWithA403Code(): void
     {

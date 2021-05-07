@@ -22,10 +22,9 @@ namespace Tuleap\TestManagement\REST\v1;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 
-class AssignedToRepresentationBuilderTest extends TestCase
+class AssignedToRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAssignedToRepresentationCanBeBuiltWhenThereIsNoAssignedToField()
     {

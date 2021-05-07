@@ -24,14 +24,13 @@ namespace Tuleap\AgileDashboard\Workflow\REST\v1;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
 use Tuleap\REST\I18NRestException;
 use Workflow;
 
-class AddToTopBacklogJsonParserTest extends TestCase
+class AddToTopBacklogJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

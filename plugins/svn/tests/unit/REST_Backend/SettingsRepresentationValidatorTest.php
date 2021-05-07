@@ -20,9 +20,8 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use PHPUnit\Framework\TestCase;
 
-class SettingsRepresentationValidatorTest extends TestCase
+class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var SettingsRepresentationValidator

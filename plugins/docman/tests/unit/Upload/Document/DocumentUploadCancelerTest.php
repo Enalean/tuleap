@@ -24,11 +24,10 @@ namespace Tuleap\Docman\Upload\Document;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
-class DocumentUploadCancelerTest extends TestCase
+class DocumentUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,9 +23,8 @@ namespace Tuleap\Tracker\Reference;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class ReferenceCreatorTest extends TestCase
+class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

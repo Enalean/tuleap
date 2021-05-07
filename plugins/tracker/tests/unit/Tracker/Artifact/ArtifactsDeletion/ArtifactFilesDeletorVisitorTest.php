@@ -24,13 +24,12 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class ArtifactFilesDeletorVisitorTest extends TestCase
+class ArtifactFilesDeletorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -21,11 +21,10 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
 
-final class ChartCachedDaysComparatorTest extends TestCase
+final class ChartCachedDaysComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,14 +23,13 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Chart_Data_Burndown;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 
-class BurndownRemainingEffortAdderForRESTTest extends TestCase
+class BurndownRemainingEffortAdderForRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

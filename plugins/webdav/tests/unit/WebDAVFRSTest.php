@@ -29,7 +29,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\Exception\MethodNotAllowed;
@@ -42,7 +41,7 @@ use WebDAVUtils;
 /**
  * This is the unit test of WebDAVProject
  */
-final class WebDAVFRSTest extends TestCase
+final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

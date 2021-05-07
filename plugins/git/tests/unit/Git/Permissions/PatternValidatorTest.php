@@ -21,12 +21,11 @@
 namespace Tuleap\Git\Permissions;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use GitRepository;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class PatternValidatorTest extends TestCase
+class PatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

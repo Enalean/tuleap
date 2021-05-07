@@ -25,7 +25,7 @@ namespace Tuleap\Templating\Mustache;
 use Hamcrest\Matchers;
 use Tuleap\Language\Gettext\POTEntry;
 
-final class GettextCollectorTest extends \PHPUnit\Framework\TestCase
+final class GettextCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

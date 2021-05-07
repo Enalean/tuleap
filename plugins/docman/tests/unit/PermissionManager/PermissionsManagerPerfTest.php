@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tuleap\Docman\PermissionManager;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Docman_PermissionsManager;
 use Mockery;
 use PermissionsManager;
@@ -34,7 +33,7 @@ use Project;
 use Tuleap\Project\ProjectAccessChecker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class PermissionsManagerPerfTest extends TestCase
+class PermissionsManagerPerfTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

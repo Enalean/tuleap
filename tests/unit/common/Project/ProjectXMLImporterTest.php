@@ -23,7 +23,6 @@
 declare(strict_types=1);
 
 use Mockery as M;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
@@ -32,7 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import;
 
-class ProjectXMLImporterTest extends TestCase
+class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

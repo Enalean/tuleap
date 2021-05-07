@@ -20,7 +20,6 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
@@ -29,7 +28,7 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Templating\TemplateCache;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class NotificationsManager_MoveTest extends TestCase
+class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;

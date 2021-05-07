@@ -21,9 +21,8 @@
 namespace Tuleap\Tracker\Artifact;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
-class PermissionsCacheTest extends TestCase
+class PermissionsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

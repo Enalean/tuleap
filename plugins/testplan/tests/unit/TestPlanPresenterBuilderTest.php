@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning_ArtifactMilestone;
 use Planning_MilestonePaneFactory;
 use TrackerFactory;
@@ -31,7 +30,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
 
-final class TestPlanPresenterBuilderTest extends TestCase
+final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -43,14 +43,13 @@ namespace TuleapCodingStandard\Http\Response;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class RedirectWithFeedbackFactoryTest extends TestCase
+final class RedirectWithFeedbackFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

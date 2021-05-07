@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 
-final class ArchiveAndDeleteArtifactTaskTest extends TestCase
+final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

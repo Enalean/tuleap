@@ -24,13 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
 
-class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Artifact_ChavesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

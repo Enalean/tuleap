@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TrackerDao;
 use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerColor;
 
-final class TrackerCreationPresenterBuilderTest extends TestCase
+final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

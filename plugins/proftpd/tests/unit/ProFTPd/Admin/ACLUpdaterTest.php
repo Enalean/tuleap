@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class ACLUpdaterTest extends PHPUnit\Framework\TestCase
+final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
 
     private $backend;
@@ -86,6 +86,7 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
 
     public function testItSetsACLOnDirectoryWhenNoReaders(): void
     {
+        $this->backend->method('resetacl');
         $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, '');
@@ -93,6 +94,7 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
 
     public function testItSetsACLOnDirectoryWhenNoWriters(): void
     {
+        $this->backend->method('resetacl');
         $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', $this->readers);
@@ -100,6 +102,7 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
 
     public function testItSetsACLOnDirectoryWhenNoReadersNorWriters(): void
     {
+        $this->backend->method('resetacl');
         $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,u:httpuser:rwx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', '');

@@ -21,9 +21,8 @@
 namespace Tuleap\GitLFS\Lock\Request;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class LockListRequestTest extends TestCase
+final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

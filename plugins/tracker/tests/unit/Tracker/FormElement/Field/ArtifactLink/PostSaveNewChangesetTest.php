@@ -26,11 +26,10 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class PostSaveNewChangesetTest extends TestCase
+final class PostSaveNewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

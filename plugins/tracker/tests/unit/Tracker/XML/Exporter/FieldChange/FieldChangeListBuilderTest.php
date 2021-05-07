@@ -25,12 +25,11 @@ namespace Tuleap\Tracker\XML\Exporter\FieldChange;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-class FieldChangeListBuilderTest extends TestCase
+class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -28,11 +28,10 @@ use Docman_ItemFactory;
 use Docman_LinkVersionFactory;
 use LogicException;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 
-final class DestinationCloneItemTest extends TestCase
+final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

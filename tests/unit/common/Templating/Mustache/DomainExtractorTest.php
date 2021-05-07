@@ -22,10 +22,9 @@
 namespace Tuleap\Templating\Mustache;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Language\Gettext\POTFileDumper;
 
-final class DomainExtractorTest extends TestCase
+final class DomainExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var string

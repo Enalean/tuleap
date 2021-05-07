@@ -26,7 +26,6 @@ use GraphOnTrackersV5_Chart;
 use GraphOnTrackersV5_ChartFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker_Report;
 use Tracker_Report_RendererFactory;
 use Tracker_ReportFactory;
@@ -36,7 +35,7 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ChartDataControllerTest extends TestCase
+final class ChartDataControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

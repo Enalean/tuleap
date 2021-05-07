@@ -23,10 +23,9 @@ namespace Tuleap\Tracker\Notifications;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tracker;
 
-class GlobalNotificationSubscribersFilterTest extends TestCase
+class GlobalNotificationSubscribersFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

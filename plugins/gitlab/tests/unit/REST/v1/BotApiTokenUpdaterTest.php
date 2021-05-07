@@ -26,7 +26,6 @@ use GitPermissionsManager;
 use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
@@ -41,7 +40,7 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
 
-class BotApiTokenUpdaterTest extends TestCase
+class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

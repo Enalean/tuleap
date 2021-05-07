@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\Events;
 
-use PHPUnit\Framework\TestCase;
 
-final class GetWhitelistedKeysTest extends TestCase
+final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetKeysWithAnnotationsOnClasses(): void
     {

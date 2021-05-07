@@ -20,9 +20,8 @@
 
 namespace Tuleap\AgileDashboard\Planning\Admin;
 
-use PHPUnit\Framework\TestCase;
 
-final class UpdateRequestValidatorTest extends TestCase
+final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var UpdateRequestValidator

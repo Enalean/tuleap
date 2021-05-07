@@ -21,7 +21,6 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
@@ -35,7 +34,7 @@ use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\Settings;
 
-class RepositoryResourceUpdaterTest extends TestCase
+class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalSVNPollution;

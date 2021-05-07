@@ -24,12 +24,11 @@ namespace Tuleap\Reference;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
 
-class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
+class CrossReferenceByDirectionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

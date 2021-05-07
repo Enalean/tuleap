@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Layout;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 
-final class IncludeAssetsTest extends TestCase
+final class IncludeAssetsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var string

@@ -21,12 +21,11 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

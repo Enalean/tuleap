@@ -24,11 +24,10 @@ namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 
-final class RootPlanningEditionHandlerTest extends TestCase
+final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

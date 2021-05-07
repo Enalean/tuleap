@@ -27,7 +27,6 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectDao;
 use ProjectManager;
@@ -38,7 +37,7 @@ use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\LimitedToSiteAdministratorsException;
 use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
 
-class ProjectRegistrationUserPermissionCheckerTest extends TestCase
+class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

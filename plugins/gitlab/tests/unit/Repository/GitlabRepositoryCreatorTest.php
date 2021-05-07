@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
@@ -34,7 +33,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class GitlabRepositoryCreatorTest extends TestCase
+class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

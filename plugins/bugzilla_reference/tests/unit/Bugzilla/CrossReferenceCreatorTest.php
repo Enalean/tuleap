@@ -21,11 +21,10 @@
 namespace Tuleap\Bugzilla;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class CrossReferenceCreatorTest extends TestCase
+class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

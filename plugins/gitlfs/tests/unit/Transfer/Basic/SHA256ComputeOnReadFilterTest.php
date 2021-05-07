@@ -20,10 +20,9 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 
-class SHA256ComputeOnReadFilterTest extends TestCase
+class SHA256ComputeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testSHA256IsComputed()
     {

@@ -40,7 +40,7 @@ use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class OAuth2ClientAuthenticationMiddlewareTest extends TestCase
+final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

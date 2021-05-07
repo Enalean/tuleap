@@ -21,10 +21,9 @@
 
 namespace Tuleap\Reference;
 
-use PHPUnit\Framework\TestCase;
 use Reference;
 
-final class ReferenceTest extends TestCase
+final class ReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testScope(): void
     {

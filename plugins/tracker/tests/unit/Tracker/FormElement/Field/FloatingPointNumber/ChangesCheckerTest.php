@@ -24,7 +24,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_ChangesetValue_Float;
 
-class ChangesCheckerTest extends \PHPUnit\Framework\TestCase
+class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

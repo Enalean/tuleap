@@ -21,11 +21,10 @@
 namespace Tuleap\Captcha;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 
-final class ClientTest extends TestCase
+final class ClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testValidRequestIsAccepted(): void
     {

@@ -21,12 +21,11 @@
 namespace Tuleap\Git\Permissions;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Git;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class PermissionChangesDetectorForProjectTest extends TestCase
+class PermissionChangesDetectorForProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

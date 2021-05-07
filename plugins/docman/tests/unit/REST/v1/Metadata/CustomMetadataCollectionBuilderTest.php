@@ -24,10 +24,9 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Docman_MetadataListOfValuesElement;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 
-class CustomMetadataCollectionBuilderTest extends TestCase
+class CustomMetadataCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

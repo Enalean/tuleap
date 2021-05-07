@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\OAuth2Server\OAuth2TestScope;
 
-final class OAuth2AuthorizationCodeTest extends TestCase
+final class OAuth2AuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildValidAuthorizationCode(): void
     {

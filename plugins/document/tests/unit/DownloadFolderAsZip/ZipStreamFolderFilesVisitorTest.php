@@ -31,13 +31,12 @@ use Docman_Version;
 use Docman_Wiki;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use PrioritizedList;
 use ZipStream\Exception\FileNotFoundException;
 use ZipStream\Exception\FileNotReadableException;
 use ZipStream\ZipStream;
 
-class ZipStreamFolderFilesVisitorTest extends TestCase
+class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

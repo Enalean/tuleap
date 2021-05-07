@@ -21,14 +21,13 @@
 namespace Tuleap\Tracker\Rule;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
-class TrackerRulesManagerForbiddenTest extends TestCase
+class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

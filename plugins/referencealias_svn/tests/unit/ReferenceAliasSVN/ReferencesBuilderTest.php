@@ -22,7 +22,6 @@ namespace Tuleap\ReferenceAliasSVN;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_NotFoundException;
 use ProjectManager;
@@ -30,7 +29,7 @@ use Reference;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
-class ReferencesBuilderTest extends TestCase
+class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

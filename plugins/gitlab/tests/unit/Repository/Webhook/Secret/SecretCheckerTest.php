@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
@@ -34,7 +33,7 @@ use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 
-class SecretCheckerTest extends TestCase
+class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

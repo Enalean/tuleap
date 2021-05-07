@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\XML;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tracker;
@@ -40,7 +39,7 @@ use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use UserManager;
 
-final class TrackerExportToXmlTest extends TestCase
+final class TrackerExportToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

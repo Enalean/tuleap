@@ -23,11 +23,10 @@ namespace Tuleap\Git;
 require_once 'bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use SimpleXMLElement;
 
-class XmlUgroupRetrieverTest extends TestCase
+class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

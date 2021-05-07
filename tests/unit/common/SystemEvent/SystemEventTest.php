@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEventTest extends TestCase
+class SystemEventTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItRetrievesAParameterByItsIndex(): void
     {

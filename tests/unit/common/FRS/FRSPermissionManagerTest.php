@@ -22,11 +22,10 @@
 namespace Tuleap\FRS;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project_AccessException;
 use Tuleap\Project\ProjectAccessChecker;
 
-class FRSPermissionManagerTest extends TestCase
+class FRSPermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

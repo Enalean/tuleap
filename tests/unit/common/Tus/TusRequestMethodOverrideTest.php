@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tus;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\AlwaysSuccessfulRequestHandler;
 
-final class TusRequestMethodOverrideTest extends TestCase
+final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

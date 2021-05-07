@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class PlanningAdapterTest extends TestCase
+final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

@@ -24,9 +24,8 @@ namespace Tuleap\Docman\XML\Import;
 
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 
-class ImportPropertiesTest extends TestCase
+class ImportPropertiesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

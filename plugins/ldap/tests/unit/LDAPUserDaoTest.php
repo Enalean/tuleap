@@ -30,12 +30,11 @@ use DataAccessResult;
 use LDAP_UserDao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class LDAPUserDaoTest extends TestCase
+class LDAPUserDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

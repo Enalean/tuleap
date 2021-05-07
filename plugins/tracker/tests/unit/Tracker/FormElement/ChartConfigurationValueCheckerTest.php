@@ -22,13 +22,12 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Chart_Field_Exception;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-final class ChartConfigurationValueCheckerTest extends TestCase
+final class ChartConfigurationValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

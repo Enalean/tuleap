@@ -24,9 +24,8 @@ namespace Tuleap\FRS;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-final class ArtifactViewTest extends TestCase
+final class ArtifactViewTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

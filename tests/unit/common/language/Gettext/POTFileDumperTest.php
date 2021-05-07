@@ -24,7 +24,7 @@ namespace Tuleap\Language\Gettext;
 
 use org\bovigo\vfs\vfsStream;
 
-final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
+final class POTFileDumperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var string

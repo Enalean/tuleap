@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
@@ -36,7 +35,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class MilestoneElementAdderTest extends TestCase
+final class MilestoneElementAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

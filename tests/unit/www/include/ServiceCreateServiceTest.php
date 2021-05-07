@@ -22,12 +22,11 @@ namespace Tuleap;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 
 require_once __DIR__ . '/../../../../src/www/include/service.php';
 
-class ServiceCreateServiceTest extends TestCase
+class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

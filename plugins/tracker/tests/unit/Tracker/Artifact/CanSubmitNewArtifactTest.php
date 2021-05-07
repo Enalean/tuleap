@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class CanSubmitNewArtifactTest extends TestCase
+final class CanSubmitNewArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

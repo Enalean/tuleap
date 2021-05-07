@@ -25,10 +25,9 @@ namespace Tuleap\Project\XML\Import;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-class ExternalFieldsExtractorTest extends TestCase
+class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

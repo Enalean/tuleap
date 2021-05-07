@@ -25,12 +25,11 @@ namespace Tuleap\InviteBuddy;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\ForgeConfigSandbox;
 use UserManager;
 
-class InvitationSenderTest extends TestCase
+class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

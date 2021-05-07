@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-class PasswordVerifierTest extends TestCase
+class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

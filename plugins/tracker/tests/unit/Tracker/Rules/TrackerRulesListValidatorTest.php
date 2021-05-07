@@ -22,13 +22,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Rule;
 
 use Mockery;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalResponseMock;
 
-class TrackerRulesListValidatorTest extends TestCase
+class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;

@@ -24,11 +24,10 @@ namespace Tuleap\Request;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 
-final class ProjectRetrieverTest extends TestCase
+final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

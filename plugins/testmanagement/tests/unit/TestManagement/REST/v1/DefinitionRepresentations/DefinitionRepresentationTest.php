@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Markdown\ContentInterpretor;
 
-class DefinitionRepresentationTest extends TestCase
+class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

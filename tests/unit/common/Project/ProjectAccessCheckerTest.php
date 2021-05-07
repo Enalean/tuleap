@@ -27,7 +27,6 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessDeletedException;
 use Project_AccessPrivateException;
@@ -36,7 +35,7 @@ use Project_AccessRestrictedException;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
-class ProjectAccessCheckerTest extends TestCase
+class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;

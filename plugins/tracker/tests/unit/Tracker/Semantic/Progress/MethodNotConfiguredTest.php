@@ -25,10 +25,9 @@ namespace Tuleap\Tracker\Semantic\Progress;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class MethodNotConfiguredTest extends TestCase
+final class MethodNotConfiguredTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

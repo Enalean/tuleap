@@ -25,7 +25,6 @@ namespace Tuleap\Tests\Integration\TrackersV3ToV5;
 
 use ArtifactType;
 use PermissionsManager;
-use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use ProjectUGroup;
 use Tracker;
@@ -44,7 +43,7 @@ use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GlobalLanguageMock;
 
-class DefectTrackerTest extends TestCase
+class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 

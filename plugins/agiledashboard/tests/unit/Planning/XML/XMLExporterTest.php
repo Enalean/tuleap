@@ -26,14 +26,13 @@ namespace Tuleap\AgileDashboard\Planning\XML;
 use AgileDashboard_XMLExporterUnableToGetValueException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningParameters;
 use PlanningPermissionsManager;
 use SimpleXMLElement;
 use Tracker;
 
-class XMLExporterTest extends TestCase
+class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

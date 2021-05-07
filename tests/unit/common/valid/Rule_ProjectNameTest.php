@@ -19,12 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalSVNPollution;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_ProjectNameTest extends TestCase
+class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
     use GlobalSVNPollution;

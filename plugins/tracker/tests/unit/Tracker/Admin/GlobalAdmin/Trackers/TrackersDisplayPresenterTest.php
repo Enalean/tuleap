@@ -25,10 +25,9 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 use CSRFSynchronizerToken;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Project;
 
-final class TrackersDisplayPresenterTest extends TestCase
+final class TrackersDisplayPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

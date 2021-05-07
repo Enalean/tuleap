@@ -20,7 +20,7 @@
 
 namespace Tuleap\Templating\Mustache;
 
-final class GettextHelperTest extends \PHPUnit\Framework\TestCase
+final class GettextHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

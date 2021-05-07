@@ -24,11 +24,10 @@ namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 
-final class UpdateIsAllowedCheckerTest extends TestCase
+final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
