@@ -569,16 +569,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * Add some additionnal information beside the criteria.
-     * This is up to the field. It can be html or inline javascript
-     * to enhance the user experience
-     * @return string
-     */
-    public function fetchCriteriaAdditionnalInfo($criteria)
-    {
-        return ''; //$this->getBind()->fetchDecoratorsAsJavascript();
-    }
-    /**
      * Add some additionnal information beside the field in the artifact form.
      * This is up to the field. It can be html or inline javascript
      * to enhance the user experience

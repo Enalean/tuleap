@@ -278,7 +278,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($advanced_criteria) {
             $html .= '</div></td></tr></tbody></table>';
         }
-        $html .= $this->fetchCriteriaAdditionnalInfo($criteria);
         return $html;
     }
 
@@ -289,17 +288,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function getParent()
     {
         return Tracker_FormElementFactory::instance()->getFieldById($this->parent_id);
-    }
-
-    /**
-     * Add some additionnal information beside the criteria.
-     * This is up to the field. It can be html or inline javascript
-     * to enhance the user experience
-     * @return string
-     */
-    public function fetchCriteriaAdditionnalInfo($criteria)
-    {
-        return '';
     }
 
     /**

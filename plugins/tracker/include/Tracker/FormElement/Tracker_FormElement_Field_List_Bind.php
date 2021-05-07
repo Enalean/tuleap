@@ -400,20 +400,6 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     abstract public function getQueryGroupby();
 
-    public function fetchDecoratorsAsJavascript()
-    {
-        $html = '';
-        if (is_array($this->decorators) && count($this->decorators)) {
-            $html .= '<script type="text/javascript">' . PHP_EOL;
-            $html .= 'codendi.tracker.decorator.decorators[' . $this->field->id . '] = [];' . PHP_EOL;
-            foreach ($this->decorators as $d) {
-                $html .= 'codendi.tracker.decorator.decorators[' . $this->field->id . '][' . $d->value_id . '] = ' . $d->toJSON() . ';' . PHP_EOL;
-            }
-            $html .= '</script>';
-        }
-        return $html;
-    }
-
     public function getSelectOptionStyles($value_id)
     {
         $default_styles = ['classes' => '', 'inline-styles' => ''];
