@@ -128,6 +128,10 @@ $border-width: 4px;
         &:last-child {
             box-shadow: inset 0 -1px 0 var(--tlp-ui-border-normal);
         }
+
+        > .roadmap-gantt-task-header-link::before {
+            bottom: 2px;
+        }
     }
 
     &::before {
@@ -141,23 +145,22 @@ $border-width: 4px;
     }
 
     > .roadmap-gantt-task-header-link {
-        padding: calc(var(--tlp-small-spacing) - 2px) 0 calc(var(--tlp-small-spacing) - 2px) var(--tlp-small-spacing);
+        position: relative;
+        padding: calc(var(--tlp-small-spacing) - 2px) 0 calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) + #{$border-width});
 
-        &.roadmap-gantt-task-header-link-skeleton {
-            position: relative;
-            padding: calc(var(--tlp-small-spacing) - 2px) 0 calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) + #{$border-width});
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: $border-width;
+        }
 
-            &::before {
-                content: '';
-                display: block;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                width: $border-width;
-                animation: skeletonBlink 750ms linear infinite alternate;
-                background: var(--tlp-ui-border-normal);
-            }
+        &.roadmap-gantt-task-header-link-skeleton::before {
+            animation: skeletonBlink 750ms linear infinite alternate;
+            background: var(--tlp-ui-border-normal);
         }
     }
 }
@@ -177,9 +180,15 @@ $border-width: 4px;
         &.roadmap-gantt-subtask-header::before {
             background: transparentize(map-get($colors, 'border'), .85);
         }
+    }
 
-        > .roadmap-gantt-task-header-link > .roadmap-gantt-task-header-xref {
+    .roadmap-gantt-task-header-link-#{$color-name} {
+        > .roadmap-gantt-task-header-xref {
             color: map-get($colors, 'text');
         }
+    }
+
+    .roadmap-gantt-subtask-header > .roadmap-gantt-task-header-link-#{$color-name}::before {
+        background: map-get($colors, 'border');
     }
 }

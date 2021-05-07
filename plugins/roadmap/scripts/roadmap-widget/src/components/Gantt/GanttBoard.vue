@@ -31,6 +31,11 @@
             <div class="roadmap-gantt-header" v-bind:class="header_class" data-test="gantt-header">
                 <template v-for="(row, index) in rows">
                     <task-header v-if="isTaskRow(row)" v-bind:key="index" v-bind:task="row.task" />
+                    <subtask-header
+                        v-else-if="isSubtaskRow(row)"
+                        v-bind:key="index"
+                        v-bind:row="row"
+                    />
                     <subtask-skeleton-header v-else v-bind:key="index" v-bind:skeleton="row" />
                 </template>
             </div>
@@ -56,6 +61,17 @@
                         v-bind:dimensions_map="dimensions_map"
                         v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
                         v-bind:popover_element_id="getIdForPopover(row.task)"
+                    />
+                    <gantt-task
+                        v-else-if="isSubtaskRow(row)"
+                        v-bind:key="index"
+                        v-bind:task="row.subtask"
+                        v-bind:time_period="time_period"
+                        v-bind:nb_additional_units="nb_additional_units"
+                        v-bind:dependencies="dependencies"
+                        v-bind:dimensions_map="dimensions_map"
+                        v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
+                        v-bind:popover_element_id="getIdForPopover(row.subtask)"
                     />
                     <subtask-skeleton-bar
                         v-else
@@ -89,6 +105,7 @@ import type {
     TimeScale,
     Row,
     TaskRow,
+    SubtaskRow,
 } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
@@ -110,11 +127,13 @@ import { getUniqueId } from "../../helpers/uniq-id-generator";
 import { namespace, State } from "vuex-class";
 import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
 import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
+import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
 
 const tasks = namespace("tasks");
 
 @Component({
     components: {
+        SubtaskHeader,
         SubtaskSkeletonBar,
         SubtaskSkeletonHeader,
         BarPopover,
@@ -132,7 +151,7 @@ export default class GanttBoard extends Vue {
         time_period: TimePeriodHeader;
     };
 
-    @tasks.State
+    @tasks.Getter
     readonly rows!: Row[];
 
     @State
@@ -207,6 +226,10 @@ export default class GanttBoard extends Vue {
                 tasks.push(row.task);
             }
 
+            if (this.isSubtaskRow(row)) {
+                tasks.push(row.subtask);
+            }
+
             return tasks;
         }, []);
     }
@@ -262,6 +285,10 @@ export default class GanttBoard extends Vue {
 
     isTaskRow(row: Row): row is TaskRow {
         return "task" in row;
+    }
+
+    isSubtaskRow(row: Row): row is SubtaskRow {
+        return "subtask" in row;
     }
 }
 </script>

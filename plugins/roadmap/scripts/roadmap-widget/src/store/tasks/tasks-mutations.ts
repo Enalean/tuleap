@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TasksState } from "./type";
-import type { Row, Task } from "../../type";
-
-const NB_SKELETONS_FOR_SUBTASKS = 2;
+import type { SetSubtasksPayload, TasksState } from "./type";
+import type { Task } from "../../type";
+import { SUBTASKS_ARE_LOADED, SUBTASKS_ARE_LOADING } from "../../type";
 
 export function setIsLoading(state: TasksState, is_loading: boolean): void {
     state.is_loading = is_loading;
@@ -44,36 +43,61 @@ export function setShouldDisplayErrorState(
     state.should_display_error_state = should_display_error_state;
 }
 
-export function setRows(state: TasksState, rows: Row[]): void {
-    state.rows = rows;
+export function setTasks(state: TasksState, tasks: Task[]): void {
+    state.tasks = tasks;
 }
 
-export function activateIsLoadingSubtasks(state: TasksState, task: Task): void {
+export function expandTask(state: TasksState, task: Task): void {
     const index = findTaskIndex(state, task);
     if (index === -1) {
         return;
     }
 
-    const task_with_skeletons: Row[] = [{ task: { ...task, is_loading_subtasks: true } }];
-    for (let i = 0; i < NB_SKELETONS_FOR_SUBTASKS; i++) {
-        const is_last_one = i === NB_SKELETONS_FOR_SUBTASKS - 1;
-        task_with_skeletons.push({ for_task: task, is_skeleton: true, is_last_one });
-    }
-
-    state.rows.splice(index, 1, ...task_with_skeletons);
+    state.tasks.splice(index, 1, { ...state.tasks[index], is_expanded: true });
 }
 
-export function deactivateIsLoadingSubtasks(state: TasksState, task: Task): void {
+export function collapseTask(state: TasksState, task: Task): void {
     const index = findTaskIndex(state, task);
     if (index === -1) {
         return;
     }
 
-    state.rows.splice(index, 1 + NB_SKELETONS_FOR_SUBTASKS, {
-        task: { ...task, is_loading_subtasks: false },
+    state.tasks.splice(index, 1, { ...state.tasks[index], is_expanded: false });
+}
+
+export function startLoadingSubtasks(state: TasksState, task: Task): void {
+    const index = findTaskIndex(state, task);
+    if (index === -1) {
+        return;
+    }
+
+    state.tasks.splice(index, 1, {
+        ...state.tasks[index],
+        subtasks_loading_status: SUBTASKS_ARE_LOADING,
     });
 }
 
+export function finishLoadingSubtasks(state: TasksState, task: Task): void {
+    const index = findTaskIndex(state, task);
+    if (index === -1) {
+        return;
+    }
+
+    state.tasks.splice(index, 1, {
+        ...state.tasks[index],
+        subtasks_loading_status: SUBTASKS_ARE_LOADED,
+    });
+}
+
+export function setSubtasks(state: TasksState, payload: SetSubtasksPayload): void {
+    const index = findTaskIndex(state, payload.task);
+    if (index === -1) {
+        return;
+    }
+
+    state.tasks.splice(index, 1, { ...state.tasks[index], subtasks: payload.subtasks });
+}
+
 function findTaskIndex(state: TasksState, task: Task): number {
-    return state.rows.findIndex((row) => "task" in row && row.task.id === task.id);
+    return state.tasks.findIndex((task_in_state) => task_in_state.id === task.id);
 }

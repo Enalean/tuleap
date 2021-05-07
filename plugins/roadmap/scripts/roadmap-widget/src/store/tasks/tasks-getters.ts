@@ -18,7 +18,39 @@
  */
 
 import type { TasksState } from "./type";
+import type { Row } from "../../type";
+import { SUBTASKS_ARE_LOADED, SUBTASKS_ARE_LOADING } from "../../type";
+
+const NB_SKELETONS_FOR_SUBTASKS = 2;
 
 export const does_at_least_one_task_have_subtasks = (state: TasksState): boolean => {
-    return state.rows.some((row) => "task" in row && row.task.has_subtasks);
+    return state.tasks.some((task) => task.has_subtasks);
+};
+
+export const rows = (state: TasksState): Row[] => {
+    return state.tasks.reduce((rows: Row[], task): Row[] => {
+        rows.push({ task: task });
+        if (!task.is_expanded) {
+            return rows;
+        }
+
+        if (task.subtasks_loading_status === SUBTASKS_ARE_LOADING) {
+            for (let i = 0; i < NB_SKELETONS_FOR_SUBTASKS; i++) {
+                const is_last_one = i === NB_SKELETONS_FOR_SUBTASKS - 1;
+                rows.push({ for_task: task, is_skeleton: true, is_last_one });
+            }
+
+            return rows;
+        }
+
+        if (task.subtasks_loading_status === SUBTASKS_ARE_LOADED) {
+            const nb_subtasks = task.subtasks.length;
+            task.subtasks.forEach((subtask, index) => {
+                const is_last_one = index === nb_subtasks - 1;
+                rows.push({ subtask, parent: task, is_last_one });
+            });
+        }
+
+        return rows;
+    }, []);
 };

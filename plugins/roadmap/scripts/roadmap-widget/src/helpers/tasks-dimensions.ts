@@ -34,13 +34,14 @@ export function getDimensionsMap(rows: Row[], time_period: TimePeriod): TaskDime
     const map = new TaskDimensionMap();
 
     rows.forEach((row, index) => {
-        if ("task" in row) {
-            const left = getLeftForTask(row.task, time_period);
+        const task = "task" in row ? row.task : "subtask" in row ? row.subtask : undefined;
+        if (task) {
+            const left = getLeftForTask(task, time_period);
 
-            map.set(row.task, {
+            map.set(task, {
                 index,
                 left,
-                width: getWidthForTask(row.task, time_period, left),
+                width: getWidthForTask(task, time_period, left),
             });
         }
     });

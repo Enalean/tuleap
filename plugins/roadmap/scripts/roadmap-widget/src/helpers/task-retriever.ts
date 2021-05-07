@@ -19,9 +19,18 @@
 
 import type { Task } from "../type";
 import { recursiveGet } from "tlp";
+import { SUBTASKS_WAITING_TO_BE_LOADED } from "../type";
 
-export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
-    const tasks = await recursiveGet<Array<unknown>, Task>(`/api/roadmaps/${roadmap_id}/tasks`);
+export function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
+    return retrieveAll(`/api/roadmaps/${roadmap_id}/tasks`);
+}
+
+export function retrieveAllSubtasks(task: Task): Promise<Task[]> {
+    return retrieveAll("/api/" + task.subtasks_uri);
+}
+
+export async function retrieveAll(url: string): Promise<Task[]> {
+    const tasks = await recursiveGet<Array<unknown>, Task>(url);
 
     return tasks
         .map(
@@ -37,7 +46,9 @@ export async function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
                     end: task.end ? new Date(task.end) : null,
                     is_milestone: !task.start || !task.end || task.end === task.start,
                     has_subtasks,
-                    is_loading_subtasks: false,
+                    subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+                    subtasks: [],
+                    is_expanded: false,
                 };
             }
         )

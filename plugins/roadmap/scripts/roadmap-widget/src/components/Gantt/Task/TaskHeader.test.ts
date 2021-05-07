@@ -22,9 +22,10 @@ import TaskHeader from "./TaskHeader.vue";
 import type { Task } from "../../../type";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { TasksState } from "../../../store/tasks/type";
+import HeaderLink from "./HeaderLink.vue";
 
 describe("TaskHeader", () => {
-    it("Displays meaningful info of the task", () => {
+    it("Displays link to the task", () => {
         const task: Task = {
             id: 123,
             title: "Do this",
@@ -56,8 +57,7 @@ describe("TaskHeader", () => {
             },
         });
 
-        expect(wrapper.text()).toContain("Do this");
-        expect(wrapper.text()).toContain("task #123");
+        expect(wrapper.findComponent(HeaderLink).exists()).toBeTruthy();
     });
 
     it("should indicates that the task has subtasks", () => {
@@ -161,64 +161,6 @@ describe("TaskHeader", () => {
             await wrapper.trigger("click");
 
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("tasks/toggleSubtasks", task);
-        });
-
-        it("should not toggle the subtasks if click on xref", async () => {
-            const task = {
-                id: 123,
-                has_subtasks: true,
-            } as Task;
-            const wrapper = shallowMount(TaskHeader, {
-                propsData: {
-                    task,
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            tasks: {} as TasksState,
-                        },
-                        getters: {
-                            "tasks/does_at_least_one_task_have_subtasks": false,
-                        },
-                    }),
-                },
-            });
-
-            await wrapper.find("[data-test=xref]").trigger("click");
-
-            expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith(
-                "tasks/toggleSubtasks",
-                task
-            );
-        });
-
-        it("should not toggle the subtasks if click on title", async () => {
-            const task = {
-                id: 123,
-                has_subtasks: true,
-            } as Task;
-            const wrapper = shallowMount(TaskHeader, {
-                propsData: {
-                    task,
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            tasks: {} as TasksState,
-                        },
-                        getters: {
-                            "tasks/does_at_least_one_task_have_subtasks": false,
-                        },
-                    }),
-                },
-            });
-
-            await wrapper.find("[data-test=title]").trigger("click");
-
-            expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith(
-                "tasks/toggleSubtasks",
-                task
-            );
         });
 
         it("should not toggle the subtasks if there is no subtasks", async () => {

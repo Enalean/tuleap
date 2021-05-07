@@ -24,7 +24,7 @@ import App from "./App.vue";
 import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
-import type { Task } from "../type";
+import type { Task, TaskRow } from "../type";
 import LoadingState from "./LoadingState.vue";
 import type { RootState } from "../store/type";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
@@ -43,6 +43,9 @@ describe("App", () => {
                     state: {
                         tasks,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": tasks.tasks.map((task): TaskRow => ({ task })),
+                    },
                 }),
             },
         });
@@ -50,7 +53,7 @@ describe("App", () => {
 
     it("Displays a loading state", async () => {
         const wrapper = await mountComponent({
-            rows: [],
+            tasks: [],
             is_loading: true,
             should_display_empty_state: false,
             should_display_error_state: false,
@@ -65,7 +68,7 @@ describe("App", () => {
 
     it("Displays an empty state", async () => {
         const wrapper = await mountComponent({
-            rows: [],
+            tasks: [],
             is_loading: false,
             should_display_empty_state: true,
             should_display_error_state: false,
@@ -80,7 +83,7 @@ describe("App", () => {
 
     it("Displays an error state with a message", async () => {
         const wrapper = await mountComponent({
-            rows: [],
+            tasks: [],
             is_loading: false,
             should_display_empty_state: false,
             should_display_error_state: true,
@@ -98,7 +101,7 @@ describe("App", () => {
 
     it("Displays an error state with a message even if there is no error message", async () => {
         const wrapper = await mountComponent({
-            rows: [],
+            tasks: [],
             is_loading: false,
             should_display_empty_state: false,
             should_display_error_state: true,
@@ -116,9 +119,9 @@ describe("App", () => {
 
     it("Displays a gantt board with tasks", async () => {
         const wrapper = await mountComponent({
-            rows: [
-                { task: { id: 1, start: new Date(2020, 3, 15), end: null } as Task },
-                { task: { id: 2, start: new Date(2020, 4, 15), end: null } as Task },
+            tasks: [
+                { id: 1, start: new Date(2020, 3, 15), end: null } as Task,
+                { id: 2, start: new Date(2020, 4, 15), end: null } as Task,
             ],
             is_loading: false,
             should_display_empty_state: false,

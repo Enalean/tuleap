@@ -121,6 +121,7 @@ describe("tasks-dimensions", () => {
         it("Returns the index of the task, so that we can know if a task is before or after another one", () => {
             const task_1 = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
             const task_2 = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
+            const subtask = { start: new Date(2020, 3, 10), end: new Date(2020, 3, 11) } as Task;
             const time_period = new TimePeriodMonth(
                 new Date(2020, 3, 10),
                 new Date(2020, 3, 20),
@@ -133,15 +134,17 @@ describe("tasks-dimensions", () => {
                     { for_task: task_1, is_skeleton: true, is_last_one: false },
                     { for_task: task_1, is_skeleton: true, is_last_one: true },
                     { task: task_2 },
-                    { for_task: task_2, is_skeleton: true, is_last_one: true },
+                    { parent: task_2, subtask, is_last_one: true },
                 ],
                 time_period
             );
             const dimensions_task_1 = getDimensions(task_1, dimensions_map);
             const dimensions_task_2 = getDimensions(task_2, dimensions_map);
+            const dimensions_subtask = getDimensions(subtask, dimensions_map);
 
             expect(dimensions_task_1.index).toBe(0);
             expect(dimensions_task_2.index).toBe(3);
+            expect(dimensions_subtask.index).toBe(4);
         });
     });
 

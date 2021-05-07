@@ -64,7 +64,7 @@ export default class App extends Vue {
     @tasks.Action
     private readonly loadTasks!: (roadmap_id: number) => Promise<void>;
 
-    @tasks.State
+    @tasks.Getter
     private readonly rows!: Row[];
 
     @tasks.State
