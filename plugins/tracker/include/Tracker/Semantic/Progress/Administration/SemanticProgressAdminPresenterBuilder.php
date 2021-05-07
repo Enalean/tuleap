@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
 use Tuleap\Tracker\Semantic\Progress\IComputeProgression;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
+use Tuleap\Tracker\Semantic\Progress\MethodBasedOnLinksCount;
 
 class SemanticProgressAdminPresenterBuilder
 {
@@ -60,6 +61,8 @@ class SemanticProgressAdminPresenterBuilder
             $method
         );
 
+        $has_a_link_field = ! empty($this->form_element_factory->getUsedArtifactLinkFields($tracker));
+
         return new SemanticProgressAdminPresenter(
             $tracker,
             $semantic_usages_description,
@@ -69,7 +72,8 @@ class SemanticProgressAdminPresenterBuilder
             $csrf_token,
             $initial_effort_options,
             $remaining_effort_options,
-            $available_computation_methods
+            $available_computation_methods,
+            $has_a_link_field
         );
     }
 
@@ -97,6 +101,10 @@ class SemanticProgressAdminPresenterBuilder
                 'name' => MethodBasedOnEffort::getMethodName(),
                 'label' => MethodBasedOnEffort::getMethodLabel(),
                 'is_selected' => $method::getMethodName() === MethodBasedOnEffort::getMethodName()
+            ], [
+                'name' => MethodBasedOnLinksCount::getMethodName(),
+                'label' => MethodBasedOnLinksCount::getMethodLabel(),
+                'is_selected' => $method::getMethodName() === MethodBasedOnLinksCount::getMethodName()
             ]
         ];
     }

@@ -18,18 +18,32 @@
  */
 
 export function init(
+    update_semantic_progress_button: HTMLElement,
     computation_method_selector: HTMLSelectElement,
     effort_based_config_section: HTMLElement,
     total_effort_selector: HTMLSelectElement,
-    remaining_effort_selector: HTMLSelectElement
+    remaining_effort_selector: HTMLSelectElement,
+    links_count_based_config_section: HTMLElement
 ): void {
+    toggleComputationMethodConfigSection(
+        update_semantic_progress_button,
+        computation_method_selector,
+        effort_based_config_section,
+        total_effort_selector,
+        remaining_effort_selector,
+        links_count_based_config_section
+    );
     disableAlreadySelectedOptions(total_effort_selector, remaining_effort_selector);
     disableAlreadySelectedOptions(remaining_effort_selector, total_effort_selector);
 
     computation_method_selector.addEventListener("change", () => {
         toggleComputationMethodConfigSection(
+            update_semantic_progress_button,
             computation_method_selector,
-            effort_based_config_section
+            effort_based_config_section,
+            total_effort_selector,
+            remaining_effort_selector,
+            links_count_based_config_section
         );
     });
 
@@ -65,14 +79,64 @@ function enableAllOptions(selectbox: HTMLSelectElement): void {
 }
 
 function toggleComputationMethodConfigSection(
+    update_semantic_progress_button: HTMLElement,
     computation_method_selector: HTMLSelectElement,
-    effort_based_config_section: HTMLElement
+    effort_based_config_section: HTMLElement,
+    total_effort_selector: HTMLSelectElement,
+    remaining_effort_selector: HTMLSelectElement,
+    links_count_based_config_section: HTMLElement
 ): void {
     const selected_method = computation_method_selector.value;
-    if (selected_method === "effort-based") {
-        effort_based_config_section.classList.add("selected-computation-method-config");
+    toggleEffortBasedConfigSection(
+        selected_method,
+        effort_based_config_section,
+        total_effort_selector,
+        remaining_effort_selector,
+        update_semantic_progress_button
+    );
+
+    toggleLinksCountBasedConfigSection(
+        selected_method,
+        links_count_based_config_section,
+        update_semantic_progress_button
+    );
+}
+
+function toggleEffortBasedConfigSection(
+    selected_method: string,
+    effort_based_config_section: HTMLElement,
+    total_effort_selector: HTMLSelectElement,
+    remaining_effort_selector: HTMLSelectElement,
+    update_semantic_progress_button: HTMLElement
+): void {
+    if (selected_method !== "effort-based") {
+        total_effort_selector.setAttribute("disabled", "disabled");
+        remaining_effort_selector.setAttribute("disabled", "disabled");
+        effort_based_config_section.classList.remove("selected-computation-method-config");
         return;
     }
 
-    effort_based_config_section.classList.remove("selected-computation-method-config");
+    total_effort_selector.removeAttribute("disabled");
+    remaining_effort_selector.removeAttribute("disabled");
+    update_semantic_progress_button.removeAttribute("disabled");
+    effort_based_config_section.classList.add("selected-computation-method-config");
+}
+
+function toggleLinksCountBasedConfigSection(
+    selected_method: string,
+    links_count_based_config_section: HTMLElement,
+    update_semantic_progress_button: HTMLElement
+): void {
+    if (selected_method !== "artifacts-links-count-based") {
+        links_count_based_config_section.classList.remove("selected-computation-method-config");
+        return;
+    }
+
+    if (
+        links_count_based_config_section.classList.contains("links-count-based-config-impossible")
+    ) {
+        update_semantic_progress_button.setAttribute("disabled", "disabled");
+    }
+
+    links_count_based_config_section.classList.add("selected-computation-method-config");
 }

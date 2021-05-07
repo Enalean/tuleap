@@ -157,7 +157,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
 
     public function deleteSemanticForTracker(\Tracker $tracker): bool
     {
-        return false;
+        return $this->dao->delete($tracker->getId());
     }
 
     private function getNullProgressionResult(): ProgressionResult
