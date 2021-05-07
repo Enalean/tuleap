@@ -99,7 +99,7 @@ import type { ProjectFlag, ProjectPrivacy } from "./project-privacy-helper";
 import { getProjectPrivacyIcon } from "./project-privacy-helper";
 import { createPopover } from "@tuleap/tlp";
 
-@Component
+@Component({ name: "BreadcrumbPrivacy" })
 export default class BreadcrumbPrivacy extends Vue {
     @Prop({ required: true })
     readonly project_flags!: Array<ProjectFlag>;
