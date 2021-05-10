@@ -159,6 +159,11 @@ final class RoadmapTasksRetriever
                 continue;
             }
 
+            $parent = $artifact->getParent($user);
+            if ($parent && $parent->getTracker()->getId() === $tracker->getId()) {
+                continue;
+            }
+
             $representations[] = $representation_builder->buildRepresentation($artifact, $user);
         }
 

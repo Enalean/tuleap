@@ -781,6 +781,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getUri'      => '/plugins/tracker?aid=201',
                 'getTitle'    => 'Do this',
                 'getTracker'  => $tracker,
+                'getParent'   => null,
             ]
         );
         $task_202 = Mockery::mock(
@@ -792,6 +793,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getUri'      => '/plugins/tracker?aid=202',
                 'getTitle'    => 'Do that',
                 'getTracker'  => $tracker,
+                'getParent'   => null,
             ]
         );
         $task_203 = Mockery::mock(
@@ -803,6 +805,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getUri'      => '/plugins/tracker?aid=203',
                 'getTitle'    => 'Do those',
                 'getTracker'  => $tracker,
+                'getParent'   => null,
             ]
         );
         $task_204 = Mockery::mock(
@@ -814,6 +817,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getUri'      => '/plugins/tracker?aid=204',
                 'getTitle'    => 'Done more than 1 year ago',
                 'getTracker'  => $tracker,
+                'getParent'   => null,
             ]
         );
 
@@ -882,6 +886,161 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     0.75,
                     "",
                     null,
+                    (new \DateTimeImmutable())->setTimestamp(1234567890),
+                    [],
+                ),
+            ],
+            $collection->getRepresentations()
+        );
+    }
+
+    public function testItExcludesArtifactsThatAreChildOfAnArtifactOfTheSameTracker(): void
+    {
+        $this->dao
+            ->shouldReceive('searchById')
+            ->with(self::ROADMAP_ID)
+            ->once()
+            ->andReturn(
+                [
+                    'id'         => self::ROADMAP_ID,
+                    'owner_id'   => self::PROJECT_ID,
+                    'owner_type' => 'g',
+                    'title'      => 'My Roadmap',
+                    'tracker_id' => self::TRACKER_ID
+                ]
+            );
+
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_manager
+            ->shouldReceive('getProject')
+            ->with(self::PROJECT_ID)
+            ->once()
+            ->andReturn($project);
+
+        $this->user_manager
+            ->shouldReceive('getCurrentUser')
+            ->once()
+            ->andReturn($this->user);
+
+        $this->url_verification
+            ->shouldReceive('userCanAccessProject')
+            ->with($this->user, $project)
+            ->once();
+
+        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
+        $tracker     = Mockery::mock(
+            Tracker::class,
+            [
+                'isActive'      => true,
+                'userCanView'   => true,
+                'getTitleField' => $title_field,
+                'getId'         => self::TRACKER_ID,
+                'getColor'      => TrackerColor::fromName('acid-green')
+            ]
+        );
+        $this->tracker_factory
+            ->shouldReceive('getTrackerById')
+            ->with(self::TRACKER_ID)
+            ->andReturn($tracker);
+
+        $start_date_field       = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $end_date_field         = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $total_effort_field     = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
+        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
+
+        $this->semantic_timeframe_builder
+            ->shouldReceive('getSemantic')
+            ->with($tracker)
+            ->andReturn(new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field));
+
+        $this->progress_builder
+            ->shouldReceive('getSemantic')
+            ->with($tracker)
+            ->andReturn(
+                new SemanticProgress(
+                    $tracker,
+                    new MethodBasedOnEffort(
+                        Mockery::mock(SemanticProgressDao::class),
+                        $total_effort_field,
+                        $remaining_effort_field
+                    )
+                )
+            );
+
+        $task_201 = Mockery::mock(
+            Artifact::class,
+            [
+                'userCanView' => true,
+                'getId'       => 201,
+                'getXRef'     => 'task #201',
+                'getUri'      => '/plugins/tracker?aid=201',
+                'getTitle'    => 'Do this',
+                'getTracker'  => $tracker,
+                'getParent'   => null,
+            ]
+        );
+        $task_202 = Mockery::mock(
+            Artifact::class,
+            [
+                'userCanView' => false,
+                'getId'       => 202,
+                'getXRef'     => 'task #202',
+                'getUri'      => '/plugins/tracker?aid=202',
+                'getTitle'    => 'Do that',
+                'getTracker'  => $tracker,
+                'getParent'   => $task_201,
+            ]
+        );
+
+        $this->mockDate($task_201, $start_date_field, 1234567890);
+        $this->mockDate($task_201, $end_date_field, 1234567890);
+        $this->mockDate($task_202, $start_date_field, null);
+        $this->mockDate($task_202, $end_date_field, 1234567890);
+
+        $this->mockEffort($task_201, $total_effort_field, 8);
+        $this->mockEffort($task_201, $remaining_effort_field, 5);
+        $this->mockEffort($task_202, $total_effort_field, 3);
+        $this->mockEffort($task_202, $remaining_effort_field, 0.75);
+
+        $artifacts = [$task_201, $task_202];
+        $this->artifact_factory
+            ->shouldReceive('getPaginatedArtifactsByTrackerId')
+            ->with(self::TRACKER_ID, 0, 10, false)
+            ->once()
+            ->andReturn(
+                new \Tracker_Artifact_PaginatedArtifacts($artifacts, 2)
+            );
+
+        $this->tasks_filter->shouldReceive('filterOutOfDateArtifacts')
+            ->with(
+                $artifacts,
+                Mockery::type(\DateTimeImmutable::class),
+                $this->user
+            )
+            ->once()
+            ->andReturn([$task_201, $task_202]);
+
+        $dependency_retriever = new class implements IRetrieveDependencies {
+            public function getDependencies(Artifact $artifact): array
+            {
+                return [];
+            }
+        };
+
+        $collection = $this->getRetriever($dependency_retriever)->getTasks(self::ROADMAP_ID, 0, 10);
+        self::assertEquals(2, $collection->getTotalSize());
+        self::assertCount(1, $collection->getRepresentations());
+        self::assertEquals(
+            [
+                new TaskRepresentation(
+                    201,
+                    'task #201',
+                    '/plugins/tracker?aid=201',
+                    'Do this',
+                    'acid-green',
+                    0.375,
+                    "",
+                    (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     [],
                 ),
