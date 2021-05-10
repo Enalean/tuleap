@@ -74,6 +74,11 @@
     --tlp-ui-white-darker-02: #{darken($tlp-ui-white, 2%)};
     --tlp-ui-white-transparent-10: #{transparentize($tlp-ui-success, .1)};
 
+    // Alerts
+    --tlp-alert-danger-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-ui-danger, 25%), 23%), 15%)};
+    --tlp-alert-danger-color: #{darken($tlp-ui-danger, 15%)};
+    --tlp-alert-danger-border: 5px solid var(--tlp-ui-danger);
+
     // Dark
     --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};
     --tlp-ui-dimmed-on-dark-background: #{$tlp-ui-border-dark};

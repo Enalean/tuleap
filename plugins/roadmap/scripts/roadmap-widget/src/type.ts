@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type SubtaskLoadingStatus = "nope" | "loading" | "loaded";
+type SubtaskLoadingStatus = "nope" | "loading" | "loaded" | "error";
 export const SUBTASKS_WAITING_TO_BE_LOADED: SubtaskLoadingStatus = "nope";
 export const SUBTASKS_ARE_LOADING: SubtaskLoadingStatus = "loading";
 export const SUBTASKS_ARE_LOADED: SubtaskLoadingStatus = "loaded";
+export const SUBTASKS_ARE_IN_ERROR: SubtaskLoadingStatus = "error";
 
 export interface Task {
     readonly id: number;
@@ -75,10 +76,15 @@ export interface SkeletonRow {
     readonly is_last_one: boolean;
 }
 
+export interface ErrorRow {
+    readonly for_task: Task;
+    readonly is_error: true;
+}
+
 export interface SubtaskRow {
     readonly parent: Task;
     readonly subtask: Task;
     readonly is_last_one: boolean;
 }
 
-export type Row = TaskRow | SkeletonRow | SubtaskRow;
+export type Row = TaskRow | SkeletonRow | ErrorRow | SubtaskRow;

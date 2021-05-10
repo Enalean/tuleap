@@ -21,6 +21,7 @@ import type { TasksState } from "./type";
 import * as mutations from "./tasks-mutations";
 import type { Task } from "../../type";
 import {
+    SUBTASKS_ARE_IN_ERROR,
     SUBTASKS_ARE_LOADED,
     SUBTASKS_ARE_LOADING,
     SUBTASKS_WAITING_TO_BE_LOADED,
@@ -139,6 +140,22 @@ describe("tasks-mutations", () => {
 
         expect(state.tasks[0].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
         expect(state.tasks[1].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADED);
+        expect(state.tasks[2].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+    });
+
+    it("markSubtasksAsError should switch the status to error", () => {
+        const state: TasksState = {
+            tasks: [
+                { id: 123, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+                { id: 124, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+                { id: 125, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+            ] as Task[],
+        } as TasksState;
+
+        mutations.markSubtasksAsError(state, { id: 124 } as Task);
+
+        expect(state.tasks[0].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+        expect(state.tasks[1].subtasks_loading_status).toBe(SUBTASKS_ARE_IN_ERROR);
         expect(state.tasks[2].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
     });
 

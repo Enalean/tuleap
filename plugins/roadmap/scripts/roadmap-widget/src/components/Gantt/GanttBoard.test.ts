@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import GanttBoard from "./GanttBoard.vue";
-import type { Task } from "../../type";
+import type { Row, Task } from "../../type";
 import GanttTask from "./Task/GanttTask.vue";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
@@ -31,6 +31,9 @@ import type { RootState } from "../../store/type";
 import type { TasksState } from "../../store/tasks/type";
 import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
 import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
+import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
+import SubtaskErrorHeader from "./Subtask/SubtaskErrorHeader.vue";
+import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -101,6 +104,66 @@ describe("GanttBoard", () => {
         expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
         expect(wrapper.findAllComponents(SubtaskSkeletonBar).length).toBe(1);
         expect(wrapper.findAllComponents(SubtaskSkeletonHeader).length).toBe(1);
+    });
+
+    it("Displays subtasks", () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            {
+                                parent: { id: 1, dependencies: {} } as Task,
+                                subtask: { id: 11, dependencies: {} } as Task,
+                                is_last_one: true,
+                            },
+                            { task: { id: 3, dependencies: {} } as Task },
+                        ] as Row[],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(GanttTask).length).toBe(3);
+        expect(wrapper.findAllComponents(SubtaskHeader).length).toBe(1);
+    });
+
+    it("Displays subtasks error message if retrieval failed", () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            {
+                                for_task: { id: 1, dependencies: {} } as Task,
+                                is_error: true,
+                            },
+                            { task: { id: 3, dependencies: {} } as Task },
+                        ] as Row[],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
+        expect(wrapper.findAllComponents(SubtaskErrorHeader).length).toBe(1);
+        expect(wrapper.findAllComponents(SubtaskMessage).length).toBe(1);
     });
 
     it("Displays months according to tasks", async () => {

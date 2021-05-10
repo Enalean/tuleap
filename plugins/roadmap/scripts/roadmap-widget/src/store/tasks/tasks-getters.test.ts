@@ -21,6 +21,7 @@ import * as getters from "./tasks-getters";
 import type { Row, Task } from "../../type";
 import type { TasksState } from "./type";
 import {
+    SUBTASKS_ARE_IN_ERROR,
     SUBTASKS_ARE_LOADED,
     SUBTASKS_ARE_LOADING,
     SUBTASKS_WAITING_TO_BE_LOADED,
@@ -175,6 +176,37 @@ describe("tasks-getters", () => {
                 { task: task_2 },
                 { parent: task_2, subtask: { id: 1241 }, is_last_one: false },
                 { parent: task_2, subtask: { id: 1242 }, is_last_one: true },
+                { task: task_3 },
+            ] as Row[]);
+        });
+
+        it("should display error message if retrieval of subtasks failed", () => {
+            const task_1 = {
+                id: 123,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const task_2 = {
+                id: 124,
+                is_expanded: true,
+                subtasks_loading_status: SUBTASKS_ARE_IN_ERROR,
+            } as Task;
+
+            const task_3 = {
+                id: 125,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const state = {
+                tasks: [task_1, task_2, task_3],
+            } as TasksState;
+
+            expect(getters.rows(state)).toStrictEqual([
+                { task: task_1 },
+                { task: task_2 },
+                { for_task: task_2, is_error: true },
                 { task: task_3 },
             ] as Row[]);
         });

@@ -19,7 +19,7 @@
 
 import type { TasksState } from "./type";
 import type { Row } from "../../type";
-import { SUBTASKS_ARE_LOADED, SUBTASKS_ARE_LOADING } from "../../type";
+import { SUBTASKS_ARE_IN_ERROR, SUBTASKS_ARE_LOADED, SUBTASKS_ARE_LOADING } from "../../type";
 
 const NB_SKELETONS_FOR_SUBTASKS = 2;
 
@@ -39,6 +39,12 @@ export const rows = (state: TasksState): Row[] => {
                 const is_last_one = i === NB_SKELETONS_FOR_SUBTASKS - 1;
                 rows.push({ for_task: task, is_skeleton: true, is_last_one });
             }
+
+            return rows;
+        }
+
+        if (task.subtasks_loading_status === SUBTASKS_ARE_IN_ERROR) {
+            rows.push({ for_task: task, is_error: true });
 
             return rows;
         }

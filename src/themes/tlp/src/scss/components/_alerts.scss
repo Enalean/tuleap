@@ -98,9 +98,9 @@
 .tlp-alert-danger {
     @extend %tlp-alert;
 
-    border-left-color: $tlp-ui-danger;
-    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-danger, 25%), 23%), 15%);
-    color: darken($tlp-ui-danger, 15%);
+    border-left: var(--tlp-alert-danger-border);
+    background: var(--tlp-alert-danger-background);
+    color: var(--tlp-alert-danger-color);
 
     &::before {
         content: '\f06a'; // fa-exclamation-circle
