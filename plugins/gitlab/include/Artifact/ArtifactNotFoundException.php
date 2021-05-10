@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,22 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook;
+namespace Tuleap\Gitlab\Artifact;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Exception;
 
-class WebhookTuleapReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
+class ArtifactNotFoundException extends Exception
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItCanBeConvertedToStringForArrayDiffOperations(): void
-    {
-        $ref = new WebhookTuleapReference(123, null);
-
-        self::assertEquals("123", (string) $ref);
-    }
 }

@@ -73,6 +73,10 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitBotCommenter
      */
     private $commenter;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookCloseArtifactHandler
+     */
+    private $close_artifact_handler;
 
     protected function setUp(): void
     {
@@ -85,6 +89,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
         $this->reference_manager                   = Mockery::mock(ReferenceManager::class);
         $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
         $this->commenter                           = Mockery::mock(PostPushCommitBotCommenter::class);
+        $this->close_artifact_handler              = Mockery::mock(PostPushWebhookCloseArtifactHandler::class);
 
         $this->processor = new PostPushWebhookActionProcessor(
             new WebhookTuleapReferencesParser(),
@@ -93,11 +98,12 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             $this->reference_manager,
             $this->tuleap_reference_retriever,
             $this->logger,
-            $this->commenter
+            $this->commenter,
+            $this->close_artifact_handler,
         );
     }
 
-    public function testItProcessesActionsForPostPushWebhook(): void
+    public function testItProcessesActionsForPostPushWebhookWithoutAnyCloseArtifactKeyword(): void
     {
         $gitlab_repository = new GitlabRepository(
             1,
@@ -209,6 +215,103 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->shouldReceive('addCommentOnCommit')
             ->once();
 
+        $this->close_artifact_handler
+            ->shouldReceive('handleArtifactClosure')
+            ->once();
+
+        $this->processor->process($gitlab_repository, $webhook_data);
+    }
+
+    public function testItProcessesActionsForPostPushWebhookWithCloseArtifactKeyword(): void
+    {
+        $gitlab_repository = new GitlabRepository(
+            1,
+            123654,
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
+            new DateTimeImmutable()
+        );
+
+        $webhook_data = new PostPushWebhookData(
+            'push',
+            123654,
+            'https://example.com/root/repo01',
+            [
+                new PostPushCommitWebhookData(
+                    'feff4ced04b237abb8b4a50b4160099313152c3c',
+                    'A commit with references containing close artifact keyword',
+                    'A commit with reference: resolve TULEAP-123',
+                    "master",
+                    1608110510,
+                    "john-snow@the-wall.com",
+                    "John Snow"
+                )
+            ]
+        );
+
+        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
+            ->once()
+            ->with($gitlab_repository)
+            ->andReturn([
+                Project::buildForTest()
+            ]);
+
+        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
+            ->once()
+            ->with(123)
+            ->andReturn(
+                new Reference(
+                    0,
+                    'key',
+                    'desc',
+                    'link',
+                    'P',
+                    'service_short_name',
+                    'nature',
+                    1,
+                    100
+                )
+            );
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with("1 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c")
+            ->once();
+        $this->logger
+            ->shouldReceive('info')
+            ->with("|_ Reference to Tuleap artifact #123 found.")
+            ->once();
+        $this->logger
+            ->shouldReceive('info')
+            ->with("|  |_ Tuleap artifact #123 found, cross-reference will be added for each project the GitLab repository is integrated in.")
+            ->once();
+        $this->logger
+            ->shouldReceive('info')
+            ->with("Commit data for feff4ced04b237abb8b4a50b4160099313152c3c saved in database")
+            ->once();
+
+        $this->reference_manager->shouldReceive('insertCrossReference')->once();
+        $this->commit_tuleap_reference_dao->shouldReceive('saveGitlabCommitInfo')
+            ->once()
+            ->with(
+                1,
+                'feff4ced04b237abb8b4a50b4160099313152c3c',
+                1608110510,
+                'A commit with references containing close artifact keyword',
+                "master",
+                'John Snow',
+                'john-snow@the-wall.com'
+            );
+
+        $this->commenter
+            ->shouldReceive('addCommentOnCommit')
+            ->once();
+
+        $this->close_artifact_handler
+            ->shouldReceive('handleArtifactClosure')
+            ->once();
+
         $this->processor->process($gitlab_repository, $webhook_data);
     }
 
@@ -270,6 +373,10 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->commenter
             ->shouldReceive('addCommentOnCommit')
+            ->never();
+
+        $this->close_artifact_handler
+            ->shouldReceive('handleArtifactClosure')
             ->never();
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
@@ -335,6 +442,10 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->commenter
             ->shouldReceive('addCommentOnCommit')
+            ->never();
+
+        $this->close_artifact_handler
+            ->shouldReceive('handleArtifactClosure')
             ->never();
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');

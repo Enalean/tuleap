@@ -31,14 +31,26 @@ class WebhookTuleapReference
      */
     private $id;
 
-    public function __construct(int $id)
+    /**
+     * Supported key: 'resolve(s)'
+     * @var string | null
+     */
+    private $close_artifact_keyword;
+
+    public function __construct(int $id, ?string $close_artifact_keyword = null)
     {
-        $this->id = $id;
+        $this->id                     = $id;
+        $this->close_artifact_keyword = $close_artifact_keyword;
     }
 
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getCloseArtifactKeyword(): ?string
+    {
+        return $this->close_artifact_keyword;
     }
 
     public function __toString(): string
