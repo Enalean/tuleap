@@ -45,7 +45,7 @@
                     />
                     <subtask-header
                         v-else-if="isSubtaskRow(row)"
-                        v-bind:key="'header-subtask-' + row.subtask.id"
+                        v-bind:key="'header-task-' + row.parent.id + '-subtask-' + row.subtask.id"
                         v-bind:row="row"
                     />
                     <subtask-error-header
@@ -86,14 +86,16 @@
                     />
                     <gantt-task
                         v-else-if="isSubtaskRow(row)"
-                        v-bind:key="'body-subtask-' + row.subtask.id"
+                        v-bind:key="'body-task-' + row.parent.id + '-subtask-' + row.subtask.id"
                         v-bind:task="row.subtask"
                         v-bind:time_period="time_period"
                         v-bind:nb_additional_units="nb_additional_units"
                         v-bind:dependencies="dependencies"
                         v-bind:dimensions_map="dimensions_map"
                         v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
-                        v-bind:popover_element_id="getIdForPopover(row.subtask)"
+                        v-bind:popover_element_id="
+                            getIdForPopoverForSubtask(row.parent, row.subtask)
+                        "
                     />
                     <div
                         v-else-if="isErrorRow(row)"
@@ -108,12 +110,20 @@
                     />
                 </template>
             </scrolling-area>
-            <bar-popover
-                v-for="task of tasks"
-                v-bind:key="task.id"
-                v-bind:task="task"
-                v-bind:id="getIdForPopover(task)"
-            />
+            <template v-for="row in rows">
+                <bar-popover
+                    v-if="isTaskRow(row)"
+                    v-bind:key="'popover-' + row.task.id"
+                    v-bind:task="row.task"
+                    v-bind:id="getIdForPopover(row.task)"
+                />
+                <bar-popover
+                    v-if="isSubtaskRow(row)"
+                    v-bind:key="'popover-' + row.parent.id + '-subtask-' + row.subtask.id"
+                    v-bind:task="row.subtask"
+                    v-bind:id="getIdForPopoverForSubtask(row.parent, row.subtask)"
+                />
+            </template>
         </div>
     </div>
 </template>
@@ -220,6 +230,10 @@ export default class GanttBoard extends Vue {
 
     getIdForPopover(task: Task): string {
         return this.id_prefix_for_bar_popover + "-" + task.id;
+    }
+
+    getIdForPopoverForSubtask(parent: Task, subtask: Task): string {
+        return this.id_prefix_for_bar_popover + "-" + parent.id + "-" + subtask.id;
     }
 
     isScrolling(is_scrolling: boolean): void {

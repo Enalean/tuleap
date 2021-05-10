@@ -40,6 +40,7 @@ export interface Task {
     readonly subtasks_loading_status: SubtaskLoadingStatus;
     readonly is_expanded: boolean;
     readonly subtasks: Task[];
+    readonly parent: Task | undefined;
 }
 
 export type TimeScale = "month" | "quarter" | "week";
