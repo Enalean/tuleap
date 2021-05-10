@@ -21,8 +21,9 @@ import type { RootState } from "../type";
 import type { TasksState } from "./type";
 import type { ActionContext } from "vuex";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { retrieveAllTasks } from "../../helpers/task-retriever";
-import type { Row, Task } from "../../type";
+import { retrieveAllSubtasks, retrieveAllTasks } from "../../helpers/task-retriever";
+import type { Task } from "../../type";
+import { SUBTASKS_WAITING_TO_BE_LOADED } from "../../type";
 
 export async function loadTasks(
     context: ActionContext<TasksState, RootState>,
@@ -33,10 +34,7 @@ export async function loadTasks(
         if (tasks.length === 0) {
             context.commit("setShouldDisplayEmptyState", true);
         } else {
-            context.commit(
-                "setRows",
-                tasks.map((task): Row => ({ task }))
-            );
+            context.commit("setTasks", tasks);
         }
     } catch (e) {
         if (isFetchWrapperError(e)) {
@@ -50,10 +48,27 @@ export async function loadTasks(
 }
 
 export function toggleSubtasks(context: ActionContext<TasksState, RootState>, task: Task): void {
-    if (task.is_loading_subtasks) {
-        context.commit("deactivateIsLoadingSubtasks", task);
-    } else {
-        context.commit("activateIsLoadingSubtasks", task);
+    if (task.is_expanded) {
+        context.commit("collapseTask", task);
+        return;
+    }
+
+    context.commit("expandTask", task);
+    if (task.subtasks_loading_status === SUBTASKS_WAITING_TO_BE_LOADED) {
+        loadSubtasks(context, task);
+    }
+}
+
+async function loadSubtasks(
+    context: ActionContext<TasksState, RootState>,
+    task: Task
+): Promise<void> {
+    context.commit("startLoadingSubtasks", task);
+    try {
+        const subtasks = await retrieveAllSubtasks(task);
+        context.commit("setSubtasks", { task, subtasks });
+    } finally {
+        context.commit("finishLoadingSubtasks", task);
     }
 }
 

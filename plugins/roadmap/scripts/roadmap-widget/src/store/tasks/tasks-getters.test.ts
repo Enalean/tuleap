@@ -20,17 +20,21 @@
 import * as getters from "./tasks-getters";
 import type { Row, Task } from "../../type";
 import type { TasksState } from "./type";
+import {
+    SUBTASKS_ARE_LOADED,
+    SUBTASKS_ARE_LOADING,
+    SUBTASKS_WAITING_TO_BE_LOADED,
+} from "../../type";
 
 describe("tasks-getters", () => {
     describe("does_at_least_one_task_have_subtasks", () => {
         it("should return false if there isn't any task with subtasks", () => {
             const state = {
-                rows: [
-                    { task: { id: 123, has_subtasks: false } as Task },
-                    { task: { id: 124, has_subtasks: false } as Task },
-                    { for_task: { id: 124 } as Task, is_skeleton: true, is_last_one: true },
-                    { task: { id: 125, has_subtasks: false } as Task },
-                ] as Row[],
+                tasks: [
+                    { id: 123, has_subtasks: false } as Task,
+                    { id: 124, has_subtasks: false } as Task,
+                    { id: 125, has_subtasks: false } as Task,
+                ],
             } as TasksState;
 
             expect(getters.does_at_least_one_task_have_subtasks(state)).toBe(false);
@@ -38,15 +42,172 @@ describe("tasks-getters", () => {
 
         it("should return true if there are some tasks with subtasks", () => {
             const state = {
-                rows: [
-                    { task: { id: 123, has_subtasks: false } as Task },
-                    { task: { id: 124, has_subtasks: true } as Task },
-                    { for_task: { id: 124 } as Task, is_skeleton: true, is_last_one: true },
-                    { task: { id: 125, has_subtasks: false } as Task },
-                ] as Row[],
+                tasks: [
+                    { id: 123, has_subtasks: false } as Task,
+                    { id: 124, has_subtasks: true } as Task,
+                    { id: 125, has_subtasks: false } as Task,
+                ],
             } as TasksState;
 
             expect(getters.does_at_least_one_task_have_subtasks(state)).toBe(true);
         });
+    });
+
+    describe("rows", () => {
+        it("should returns a row for each task", () => {
+            const task_1 = {
+                id: 123,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const task_2 = {
+                id: 124,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const task_3 = {
+                id: 125,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const state = {
+                tasks: [task_1, task_2, task_3],
+            } as TasksState;
+
+            expect(getters.rows(state)).toStrictEqual([
+                { task: task_1 },
+                { task: task_2 },
+                { task: task_3 },
+            ] as Row[]);
+        });
+
+        it("should add skeleton rows when needed", () => {
+            const task_1 = {
+                id: 123,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const task_2 = {
+                id: 124,
+                is_expanded: true,
+                subtasks_loading_status: SUBTASKS_ARE_LOADING,
+            } as Task;
+
+            const task_3 = {
+                id: 125,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const state = {
+                tasks: [task_1, task_2, task_3],
+            } as TasksState;
+
+            expect(getters.rows(state)).toStrictEqual([
+                { task: task_1 },
+                { task: task_2 },
+                { for_task: task_2, is_skeleton: true, is_last_one: false },
+                { for_task: task_2, is_skeleton: true, is_last_one: true },
+                { task: task_3 },
+            ] as Row[]);
+        });
+
+        it("should not add skeleton rows when subtasks are loading but task is collapsed", () => {
+            const task_1 = {
+                id: 123,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const task_2 = {
+                id: 124,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_ARE_LOADING,
+            } as Task;
+
+            const task_3 = {
+                id: 125,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const state = {
+                tasks: [task_1, task_2, task_3],
+            } as TasksState;
+
+            expect(getters.rows(state)).toStrictEqual([
+                { task: task_1 },
+                { task: task_2 },
+                { task: task_3 },
+            ] as Row[]);
+        });
+
+        it("should display subtasks when loaded and task is expanded", () => {
+            const task_1 = {
+                id: 123,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const task_2 = {
+                id: 124,
+                is_expanded: true,
+                subtasks_loading_status: SUBTASKS_ARE_LOADED,
+                subtasks: [{ id: 1241 }, { id: 1242 }] as Task[],
+            } as Task;
+
+            const task_3 = {
+                id: 125,
+                is_expanded: false,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+            } as Task;
+
+            const state = {
+                tasks: [task_1, task_2, task_3],
+            } as TasksState;
+
+            expect(getters.rows(state)).toStrictEqual([
+                { task: task_1 },
+                { task: task_2 },
+                { parent: task_2, subtask: { id: 1241 }, is_last_one: false },
+                { parent: task_2, subtask: { id: 1242 }, is_last_one: true },
+                { task: task_3 },
+            ] as Row[]);
+        });
+    });
+
+    it("should not display subtasks when loaded but task is collapsed", () => {
+        const task_1 = {
+            id: 123,
+            is_expanded: false,
+            subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+        } as Task;
+
+        const task_2 = {
+            id: 124,
+            is_expanded: false,
+            subtasks_loading_status: SUBTASKS_ARE_LOADED,
+            subtasks: [{ id: 1241 }, { id: 1242 }] as Task[],
+        } as Task;
+
+        const task_3 = {
+            id: 125,
+            is_expanded: false,
+            subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+        } as Task;
+
+        const state = {
+            tasks: [task_1, task_2, task_3],
+        } as TasksState;
+
+        expect(getters.rows(state)).toStrictEqual([
+            { task: task_1 },
+            { task: task_2 },
+            { task: task_3 },
+        ] as Row[]);
     });
 });

@@ -56,14 +56,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                        tasks: {
-                            rows: [
-                                { task: { id: 1, dependencies: {} } as Task },
-                                { task: { id: 2, dependencies: {} } as Task },
-                                { task: { id: 3, dependencies: {} } as Task },
-                            ],
-                        } as TasksState,
+                        tasks: {} as TasksState,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 2, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} } as Task },
+                        ],
+                    },
                 }),
             },
         });
@@ -80,18 +81,19 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                        tasks: {
-                            rows: [
-                                { task: { id: 1, dependencies: {} } as Task },
-                                {
-                                    for_task: { id: 1, dependencies: {} } as Task,
-                                    is_skeleton: true,
-                                    is_last_one: true,
-                                },
-                                { task: { id: 3, dependencies: {} } as Task },
-                            ],
-                        } as TasksState,
+                        tasks: {} as TasksState,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            {
+                                for_task: { id: 1, dependencies: {} } as Task,
+                                is_skeleton: true,
+                                is_last_one: true,
+                            },
+                            { task: { id: 3, dependencies: {} } as Task },
+                        ],
+                    },
                 }),
             },
         });
@@ -110,25 +112,26 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                        tasks: {
-                            rows: [
-                                {
-                                    task: {
-                                        id: 1,
-                                        start: new Date(2020, 3, 15),
-                                        dependencies: {},
-                                    } as Task,
-                                },
-                                {
-                                    task: {
-                                        id: 2,
-                                        start: new Date(2020, 3, 20),
-                                        dependencies: {},
-                                    } as Task,
-                                },
-                            ],
-                        } as TasksState,
+                        tasks: {} as TasksState,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            {
+                                task: {
+                                    id: 1,
+                                    start: new Date(2020, 3, 15),
+                                    dependencies: {},
+                                } as Task,
+                            },
+                            {
+                                task: {
+                                    id: 2,
+                                    start: new Date(2020, 3, 20),
+                                    dependencies: {},
+                                } as Task,
+                            },
+                        ],
+                    },
                 }),
             },
         });
@@ -162,25 +165,26 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                        tasks: {
-                            rows: [
-                                {
-                                    task: {
-                                        id: 1,
-                                        start: new Date(2020, 3, 15),
-                                        dependencies: {},
-                                    } as Task,
-                                },
-                                {
-                                    task: {
-                                        id: 2,
-                                        start: new Date(2020, 3, 20),
-                                        dependencies: {},
-                                    } as Task,
-                                },
-                            ],
-                        } as TasksState,
+                        tasks: {} as TasksState,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            {
+                                task: {
+                                    id: 1,
+                                    start: new Date(2020, 3, 15),
+                                    dependencies: {},
+                                } as Task,
+                            },
+                            {
+                                task: {
+                                    id: 2,
+                                    start: new Date(2020, 3, 20),
+                                    dependencies: {},
+                                } as Task,
+                            },
+                        ],
+                    },
                 }),
             },
         });
@@ -206,25 +210,26 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                        tasks: {
-                            rows: [
-                                {
-                                    task: {
-                                        id: 1,
-                                        start: new Date(2020, 3, 15),
-                                        dependencies: {},
-                                    } as Task,
-                                },
-                                {
-                                    task: {
-                                        id: 2,
-                                        start: new Date(2020, 3, 20),
-                                        dependencies: {},
-                                    } as Task,
-                                },
-                            ],
-                        } as TasksState,
+                        tasks: {} as TasksState,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            {
+                                task: {
+                                    id: 1,
+                                    start: new Date(2020, 3, 15),
+                                    dependencies: {},
+                                } as Task,
+                            },
+                            {
+                                task: {
+                                    id: 2,
+                                    start: new Date(2020, 3, 20),
+                                    dependencies: {},
+                                } as Task,
+                            },
+                        ],
+                    },
                 }),
             },
         });
@@ -261,14 +266,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                        tasks: {
-                            rows: [
-                                { task: { id: 1, dependencies: {} } as Task },
-                                { task: { id: 2, dependencies: {} } as Task },
-                                { task: { id: 3, dependencies: {} } as Task },
-                            ],
-                        } as TasksState,
+                        tasks: {} as TasksState,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 2, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} } as Task },
+                        ],
+                    },
                 }),
             },
         });
@@ -291,14 +297,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47: "en-US",
-                        tasks: {
-                            rows: [
-                                { task: { id: 1, dependencies: {} } as Task },
-                                { task: { id: 2, dependencies: {} } as Task },
-                                { task: { id: 3, dependencies: {} } as Task },
-                            ],
-                        } as TasksState,
+                        tasks: {} as TasksState,
                     } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 2, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} } as Task },
+                        ],
+                    },
                 }),
             },
         });

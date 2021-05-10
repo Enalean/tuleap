@@ -33,10 +33,7 @@
                 data-test="caret"
             ></i>
         </div>
-        <a v-bind:href="task.html_url" class="roadmap-gantt-task-header-link">
-            <span class="roadmap-gantt-task-header-xref" data-test="xref">{{ task.xref }}</span>
-            <span class="roadmap-gantt-task-header-title" data-test="title">{{ task.title }}</span>
-        </a>
+        <header-link v-bind:task="task" />
     </div>
 </template>
 
@@ -45,10 +42,12 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
 import { namespace } from "vuex-class";
+import HeaderLink from "./HeaderLink.vue";
 
 const tasks = namespace("tasks");
-
-@Component
+@Component({
+    components: { HeaderLink },
+})
 export default class TaskHeader extends Vue {
     @Prop({ required: true })
     readonly task!: Task;
@@ -60,7 +59,7 @@ export default class TaskHeader extends Vue {
     readonly toggleSubtasks!: (task: Task) => void;
 
     get caret_class(): string {
-        return this.task.is_loading_subtasks ? "fa-caret-down" : "fa-caret-right";
+        return this.task.is_expanded ? "fa-caret-down" : "fa-caret-right";
     }
 
     get classes(): string[] {

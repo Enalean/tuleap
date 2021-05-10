@@ -19,7 +19,12 @@
 
 import type { TasksState } from "./type";
 import * as mutations from "./tasks-mutations";
-import type { Row, Task } from "../../type";
+import type { Task } from "../../type";
+import {
+    SUBTASKS_ARE_LOADED,
+    SUBTASKS_ARE_LOADING,
+    SUBTASKS_WAITING_TO_BE_LOADED,
+} from "../../type";
 
 describe("tasks-mutations", () => {
     it("setIsLoading set the corresponding boolean", () => {
@@ -62,55 +67,110 @@ describe("tasks-mutations", () => {
         expect(state.error_message).toBe("This is not right!");
     });
 
-    it("setRoms stores the task rows", () => {
+    it("setTasks stores the tasks", () => {
         const state: TasksState = {
-            rows: [] as Row[],
+            tasks: [] as Task[],
         } as TasksState;
 
-        const rows: Row[] = [{ task: { id: 123 } as Task }, { task: { id: 124 } as Task }];
-        mutations.setRows(state, rows);
+        const tasks: Task[] = [{ id: 123 } as Task, { id: 124 } as Task];
+        mutations.setTasks(state, tasks);
 
-        expect(state.rows).toBe(rows);
+        expect(state.tasks).toBe(tasks);
     });
 
-    it("activateIsLoadingSubtasks should add some skeletons", () => {
-        const task = { id: 123, is_loading_subtasks: false } as Task;
+    it("expandTask marks the task as being expanded", () => {
         const state: TasksState = {
-            rows: [{ task }] as Row[],
+            tasks: [
+                { id: 123, is_expanded: false },
+                { id: 124, is_expanded: false },
+                { id: 125, is_expanded: false },
+            ] as Task[],
         } as TasksState;
 
-        mutations.activateIsLoadingSubtasks(state, task);
+        mutations.expandTask(state, { id: 124 } as Task);
 
-        expect(state.rows.length).toBe(3);
-        expect("task" in state.rows[0] && state.rows[0].task.is_loading_subtasks).toBe(true);
-        expect("is_skeleton" in state.rows[1] && state.rows[1].for_task.id === 123).toBe(true);
-        expect("is_skeleton" in state.rows[2] && state.rows[2].for_task.id === 123).toBe(true);
+        expect(state.tasks[0].is_expanded).toBe(false);
+        expect(state.tasks[1].is_expanded).toBe(true);
+        expect(state.tasks[2].is_expanded).toBe(false);
     });
 
-    it("deactivateIsLoadingSubtasks should remove skeletons", () => {
-        const task_1 = { id: 123, is_loading_subtasks: false } as Task;
-        const task_2 = { id: 124, is_loading_subtasks: false } as Task;
+    it("collapseTask remove the task from being expanded", () => {
         const state: TasksState = {
-            rows: [
-                { task: task_1 },
-                { for_task: task_1, is_skeleton: true, is_last_one: false },
-                { for_task: task_1, is_skeleton: true, is_last_one: true },
-                { task: task_2 },
-            ] as Row[],
+            tasks: [
+                { id: 123, is_expanded: true },
+                { id: 124, is_expanded: true },
+                { id: 125, is_expanded: true },
+            ] as Task[],
         } as TasksState;
 
-        mutations.deactivateIsLoadingSubtasks(state, task_1);
+        mutations.collapseTask(state, { id: 124 } as Task);
 
-        expect(state.rows.length).toBe(2);
-        expect(
-            "task" in state.rows[0] &&
-                state.rows[0].task.id === 123 &&
-                state.rows[0].task.is_loading_subtasks === false
-        ).toBe(true);
-        expect(
-            "task" in state.rows[1] &&
-                state.rows[1].task.id === 124 &&
-                state.rows[1].task.is_loading_subtasks === false
-        ).toBe(true);
+        expect(state.tasks[0].is_expanded).toBe(true);
+        expect(state.tasks[1].is_expanded).toBe(false);
+        expect(state.tasks[2].is_expanded).toBe(true);
+    });
+
+    it("startLoadingSubtasks should switch the status to loading", () => {
+        const state: TasksState = {
+            tasks: [
+                { id: 123, subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED },
+                { id: 124, subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED },
+                { id: 125, subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED },
+            ] as Task[],
+        } as TasksState;
+
+        mutations.startLoadingSubtasks(state, { id: 124 } as Task);
+
+        expect(state.tasks[0].subtasks_loading_status).toBe(SUBTASKS_WAITING_TO_BE_LOADED);
+        expect(state.tasks[1].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+        expect(state.tasks[2].subtasks_loading_status).toBe(SUBTASKS_WAITING_TO_BE_LOADED);
+    });
+
+    it("finishLoadingSubtasks should switch the status to loading", () => {
+        const state: TasksState = {
+            tasks: [
+                { id: 123, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+                { id: 124, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+                { id: 125, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+            ] as Task[],
+        } as TasksState;
+
+        mutations.finishLoadingSubtasks(state, { id: 124 } as Task);
+
+        expect(state.tasks[0].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+        expect(state.tasks[1].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADED);
+        expect(state.tasks[2].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+    });
+
+    it("setSubtasks stores the subtasks of a task", () => {
+        const state: TasksState = {
+            tasks: [
+                { id: 123, subtasks: [] as Task[] },
+                { id: 124, subtasks: [] as Task[] },
+                { id: 125, subtasks: [] as Task[] },
+            ] as Task[],
+        } as TasksState;
+
+        const subtasks = [{ id: 125 }, { id: 126 }] as Task[];
+        mutations.setSubtasks(state, { task: { id: 124 } as Task, subtasks });
+
+        expect(state.tasks[0].subtasks).toStrictEqual([]);
+        expect(state.tasks[1].subtasks).toStrictEqual(subtasks);
+        expect(state.tasks[2].subtasks).toStrictEqual([]);
+    });
+
+    it("chains mutations without overriding previous ones", () => {
+        const task = { id: 123, subtasks: [] as Task[], is_expanded: false } as Task;
+        const state: TasksState = {
+            tasks: [task],
+        } as TasksState;
+
+        const subtasks = [{ id: 124 } as Task];
+
+        mutations.expandTask(state, task);
+        mutations.setSubtasks(state, { task, subtasks });
+
+        expect(state.tasks[0].subtasks).toStrictEqual(subtasks);
+        expect(state.tasks[0].is_expanded).toBe(true);
     });
 });

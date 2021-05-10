@@ -17,8 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+type SubtaskLoadingStatus = "nope" | "loading" | "loaded";
+export const SUBTASKS_WAITING_TO_BE_LOADED: SubtaskLoadingStatus = "nope";
+export const SUBTASKS_ARE_LOADING: SubtaskLoadingStatus = "loading";
+export const SUBTASKS_ARE_LOADED: SubtaskLoadingStatus = "loaded";
+
 export interface Task {
     readonly id: number;
+    readonly subtasks_uri: string;
     readonly title: string;
     readonly xref: string;
     readonly color_name: string;
@@ -30,7 +36,9 @@ export interface Task {
     readonly dependencies: Record<string, number[]>;
     readonly is_milestone: boolean;
     readonly has_subtasks: boolean;
-    readonly is_loading_subtasks: boolean;
+    readonly subtasks_loading_status: SubtaskLoadingStatus;
+    readonly is_expanded: boolean;
+    readonly subtasks: Task[];
 }
 
 export type TimeScale = "month" | "quarter" | "week";
@@ -67,4 +75,10 @@ export interface SkeletonRow {
     readonly is_last_one: boolean;
 }
 
-export type Row = TaskRow | SkeletonRow;
+export interface SubtaskRow {
+    readonly parent: Task;
+    readonly subtask: Task;
+    readonly is_last_one: boolean;
+}
+
+export type Row = TaskRow | SkeletonRow | SubtaskRow;

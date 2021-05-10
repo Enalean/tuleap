@@ -17,15 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
 import * as actions from "./tasks-actions";
 import type { ActionContext } from "vuex";
 import type { TasksState } from "./type";
 import type { RootState } from "../type";
 import type { Task } from "../../type";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-
-jest.mock("tlp");
+import { SUBTASKS_ARE_LOADED, SUBTASKS_WAITING_TO_BE_LOADED } from "../../type";
+import * as TaskRetriever from "../../helpers/task-retriever";
 
 describe("tasks-actions", () => {
     let context: ActionContext<TasksState, RootState>;
@@ -35,11 +34,12 @@ describe("tasks-actions", () => {
             commit: jest.fn(),
             root_state: {} as RootState,
         } as unknown) as ActionContext<TasksState, RootState>;
+        jest.clearAllMocks();
     });
 
     describe("loadTasks", () => {
         it("should display an empty state if there is no tasks", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([]);
+            jest.spyOn(TaskRetriever, "retrieveAllTasks").mockResolvedValue([]);
 
             await actions.loadTasks(context, 123);
 
@@ -48,7 +48,7 @@ describe("tasks-actions", () => {
         });
 
         it("should display an error state for a 400", async () => {
-            const recursive_get = jest.spyOn(tlp, "recursiveGet");
+            const recursive_get = jest.spyOn(TaskRetriever, "retrieveAllTasks");
             mockFetchError(recursive_get, {
                 status: 400,
                 error_json: {
@@ -66,7 +66,7 @@ describe("tasks-actions", () => {
         });
 
         it.each([[403], [404]])("should display an empty state for a %i", async (status) => {
-            const recursive_get = jest.spyOn(tlp, "recursiveGet");
+            const recursive_get = jest.spyOn(TaskRetriever, "retrieveAllTasks");
             mockFetchError(recursive_get, {
                 status,
             });
@@ -78,7 +78,7 @@ describe("tasks-actions", () => {
         });
 
         it("should display a generic error state for a 500", async () => {
-            const recursive_get = jest.spyOn(tlp, "recursiveGet");
+            const recursive_get = jest.spyOn(TaskRetriever, "retrieveAllTasks");
             mockFetchError(recursive_get, {
                 status: 500,
                 error_json: {
@@ -110,36 +110,58 @@ describe("tasks-actions", () => {
                 is_milestone: true,
                 dependencies: {},
             } as Task;
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([task_1, task_2]);
+            jest.spyOn(TaskRetriever, "retrieveAllTasks").mockResolvedValue([task_1, task_2]);
 
             await actions.loadTasks(context, 123);
 
-            expect(context.commit).toHaveBeenCalledWith("setRows", [
-                { task: { ...task_1, has_subtasks: false, is_loading_subtasks: false } },
-                { task: { ...task_2, has_subtasks: false, is_loading_subtasks: false } },
-            ]);
+            expect(context.commit).toHaveBeenCalledWith("setTasks", [task_1, task_2]);
             expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
         });
     });
 
     describe("toggleSubtasks", () => {
-        describe("when task is not loading subtasks", () => {
-            it("informs that we are loading subtasks", () => {
-                const task = { is_loading_subtasks: false } as Task;
+        describe("when task is expanded", () => {
+            it("should collapse the task", () => {
+                const task = { is_expanded: true } as Task;
 
                 actions.toggleSubtasks(context, task);
 
-                expect(context.commit).toHaveBeenCalledWith("activateIsLoadingSubtasks", task);
+                expect(context.commit).toHaveBeenCalledWith("collapseTask", task);
             });
         });
 
-        describe("when task is already loading subtasks", () => {
-            it("informs that we are loading subtasks", () => {
-                const task = { is_loading_subtasks: true } as Task;
+        describe("when task is collapsed", () => {
+            it("should expand the task", () => {
+                const task = {
+                    is_expanded: false,
+                    subtasks_loading_status: SUBTASKS_ARE_LOADED,
+                } as Task;
 
                 actions.toggleSubtasks(context, task);
 
-                expect(context.commit).toHaveBeenCalledWith("deactivateIsLoadingSubtasks", task);
+                expect(context.commit).toHaveBeenCalledWith("expandTask", task);
+            });
+
+            it("should load the subtasks if they are waiting to be loaded", async () => {
+                const task = {
+                    is_expanded: false,
+                    subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+                } as Task;
+
+                const subtasks = [{ id: 42 }, { id: 66 }] as Task[];
+                jest.spyOn(TaskRetriever, "retrieveAllSubtasks").mockReturnValue(
+                    Promise.resolve(subtasks)
+                );
+
+                await actions.toggleSubtasks(context, task);
+
+                expect(context.commit).toHaveBeenCalledWith("expandTask", task);
+                expect(context.commit).toHaveBeenCalledWith("startLoadingSubtasks", task);
+                expect(context.commit).toHaveBeenCalledWith("setSubtasks", {
+                    task,
+                    subtasks,
+                });
+                expect(context.commit).toHaveBeenCalledWith("finishLoadingSubtasks", task);
             });
         });
     });
