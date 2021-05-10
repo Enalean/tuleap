@@ -27,7 +27,6 @@ use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoriesLinkedToMilestoneBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
@@ -53,10 +52,6 @@ class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirrore
      */
     private $content_dao;
     /**
-     * @var UserStoriesLinkedToMilestoneBuilder
-     */
-    private $features_linked_to_milestone_builder;
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -71,16 +66,14 @@ class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirrore
         \Tracker_ArtifactFactory $tracker_artifact_factory,
         MirroredMilestoneRetriever $mirrored_milestone_retriever,
         ContentDao $content_dao,
-        UserStoriesLinkedToMilestoneBuilder $features_linked_to_milestone_builder,
         LoggerInterface $logger
     ) {
-        $this->db_transaction_executor              = $db_transaction_executor;
-        $this->tracker_artifact_factory             = $tracker_artifact_factory;
-        $this->mirrored_milestone_retriever         = $mirrored_milestone_retriever;
-        $this->content_dao                          = $content_dao;
-        $this->features_linked_to_milestone_builder = $features_linked_to_milestone_builder;
-        $this->logger                               = $logger;
-        $this->artifacts_linked_to_parent_dao       = $artifacts_linked_to_parent_dao;
+        $this->db_transaction_executor        = $db_transaction_executor;
+        $this->tracker_artifact_factory       = $tracker_artifact_factory;
+        $this->mirrored_milestone_retriever   = $mirrored_milestone_retriever;
+        $this->content_dao                    = $content_dao;
+        $this->logger                         = $logger;
+        $this->artifacts_linked_to_parent_dao = $artifacts_linked_to_parent_dao;
     }
 
     /**
@@ -122,7 +115,7 @@ class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirrore
 
                     $fields_data = new FieldData(
                         $feature_plan_change->user_stories,
-                        $this->features_linked_to_milestone_builder->build($mirrored_milestone),
+                        $this->artifacts_linked_to_parent_dao->getUserStoriesOfMirroredMilestoneThatAreNotLinkedToASprint($mirrored_milestone->getId()),
                         $field_artifact_link->getId()
                     );
 
