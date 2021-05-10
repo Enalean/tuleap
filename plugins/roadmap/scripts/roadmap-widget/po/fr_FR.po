@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "An error occurred while retrieving the children."
+msgstr "Une erreur est survenue lors de la récupération des enfants."
+
 msgid "End date"
 msgstr "Date de fin"
 

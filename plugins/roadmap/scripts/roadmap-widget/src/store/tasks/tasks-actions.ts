@@ -47,29 +47,34 @@ export async function loadTasks(
     }
 }
 
-export function toggleSubtasks(context: ActionContext<TasksState, RootState>, task: Task): void {
+export function toggleSubtasks(
+    context: ActionContext<TasksState, RootState>,
+    task: Task
+): Promise<void> {
     if (task.is_expanded) {
         context.commit("collapseTask", task);
-        return;
+        return Promise.resolve();
     }
 
     context.commit("expandTask", task);
     if (task.subtasks_loading_status === SUBTASKS_WAITING_TO_BE_LOADED) {
-        loadSubtasks(context, task);
+        return loadSubtasks(context, task);
     }
+
+    return Promise.resolve();
 }
 
-async function loadSubtasks(
-    context: ActionContext<TasksState, RootState>,
-    task: Task
-): Promise<void> {
+function loadSubtasks(context: ActionContext<TasksState, RootState>, task: Task): Promise<void> {
     context.commit("startLoadingSubtasks", task);
-    try {
-        const subtasks = await retrieveAllSubtasks(task);
-        context.commit("setSubtasks", { task, subtasks });
-    } finally {
-        context.commit("finishLoadingSubtasks", task);
-    }
+
+    return retrieveAllSubtasks(task)
+        .then((subtasks) => {
+            context.commit("setSubtasks", { task, subtasks });
+            context.commit("finishLoadingSubtasks", task);
+        })
+        .catch(() => {
+            context.commit("markSubtasksAsError", task);
+        });
 }
 
 async function handleRestError(

@@ -28,15 +28,37 @@
             />
         </div>
         <div class="roadmap-gantt">
+            <template v-for="(row, index) in rows">
+                <subtask-message
+                    v-if="isErrorRow(row)"
+                    v-bind:key="'message-' + index"
+                    v-bind:row="row"
+                    v-bind:dimensions_map="dimensions_map"
+                />
+            </template>
             <div class="roadmap-gantt-header" v-bind:class="header_class" data-test="gantt-header">
                 <template v-for="(row, index) in rows">
-                    <task-header v-if="isTaskRow(row)" v-bind:key="index" v-bind:task="row.task" />
+                    <task-header
+                        v-if="isTaskRow(row)"
+                        v-bind:key="'header-task-' + row.task.id"
+                        v-bind:task="row.task"
+                    />
                     <subtask-header
                         v-else-if="isSubtaskRow(row)"
-                        v-bind:key="index"
+                        v-bind:key="'header-subtask-' + row.subtask.id"
                         v-bind:row="row"
                     />
-                    <subtask-skeleton-header v-else v-bind:key="index" v-bind:skeleton="row" />
+                    <subtask-error-header
+                        v-else-if="isErrorRow(row)"
+                        v-bind:key="'header-error-' + row.for_task.id + '-' + index"
+                        v-bind:row="row"
+                        v-bind:dimensions_map="dimensions_map"
+                    />
+                    <subtask-skeleton-header
+                        v-else
+                        v-bind:key="'header-skeleton-' + row.for_task.id + '-' + index"
+                        v-bind:skeleton="row"
+                    />
                 </template>
             </div>
             <scrolling-area
@@ -53,7 +75,7 @@
                 <template v-for="(row, index) in rows">
                     <gantt-task
                         v-if="isTaskRow(row)"
-                        v-bind:key="index"
+                        v-bind:key="'body-task-' + row.task.id"
                         v-bind:task="row.task"
                         v-bind:time_period="time_period"
                         v-bind:nb_additional_units="nb_additional_units"
@@ -64,7 +86,7 @@
                     />
                     <gantt-task
                         v-else-if="isSubtaskRow(row)"
-                        v-bind:key="index"
+                        v-bind:key="'body-subtask-' + row.subtask.id"
                         v-bind:task="row.subtask"
                         v-bind:time_period="time_period"
                         v-bind:nb_additional_units="nb_additional_units"
@@ -73,9 +95,14 @@
                         v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
                         v-bind:popover_element_id="getIdForPopover(row.subtask)"
                     />
+                    <div
+                        v-else-if="isErrorRow(row)"
+                        v-bind:key="'body-error-' + row.for_task.id + '-' + index"
+                        class="roadmap-gantt-task"
+                    ></div>
                     <subtask-skeleton-bar
                         v-else
-                        v-bind:key="index"
+                        v-bind:key="'body-skeleton-' + row.for_task.id + '-' + index"
                         v-bind:time_period="time_period"
                         v-bind:nb_additional_units="nb_additional_units"
                     />
@@ -106,6 +133,7 @@ import type {
     Row,
     TaskRow,
     SubtaskRow,
+    ErrorRow,
 } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
@@ -128,11 +156,15 @@ import { namespace, State } from "vuex-class";
 import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
 import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
 import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
+import SubtaskErrorHeader from "./Subtask/SubtaskErrorHeader.vue";
+import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
 
 const tasks = namespace("tasks");
 
 @Component({
     components: {
+        SubtaskMessage,
+        SubtaskErrorHeader,
         SubtaskHeader,
         SubtaskSkeletonBar,
         SubtaskSkeletonHeader,
@@ -289,6 +321,10 @@ export default class GanttBoard extends Vue {
 
     isSubtaskRow(row: Row): row is SubtaskRow {
         return "subtask" in row;
+    }
+
+    isErrorRow(row: Row): row is ErrorRow {
+        return "is_error" in row && row.is_error;
     }
 }
 </script>

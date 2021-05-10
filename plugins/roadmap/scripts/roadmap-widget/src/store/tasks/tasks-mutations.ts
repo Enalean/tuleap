@@ -19,7 +19,7 @@
 
 import type { SetSubtasksPayload, TasksState } from "./type";
 import type { Task } from "../../type";
-import { SUBTASKS_ARE_LOADED, SUBTASKS_ARE_LOADING } from "../../type";
+import { SUBTASKS_ARE_IN_ERROR, SUBTASKS_ARE_LOADED, SUBTASKS_ARE_LOADING } from "../../type";
 
 export function setIsLoading(state: TasksState, is_loading: boolean): void {
     state.is_loading = is_loading;
@@ -86,6 +86,18 @@ export function finishLoadingSubtasks(state: TasksState, task: Task): void {
     state.tasks.splice(index, 1, {
         ...state.tasks[index],
         subtasks_loading_status: SUBTASKS_ARE_LOADED,
+    });
+}
+
+export function markSubtasksAsError(state: TasksState, task: Task): void {
+    const index = findTaskIndex(state, task);
+    if (index === -1) {
+        return;
+    }
+
+    state.tasks.splice(index, 1, {
+        ...state.tasks[index],
+        subtasks_loading_status: SUBTASKS_ARE_IN_ERROR,
     });
 }
 
