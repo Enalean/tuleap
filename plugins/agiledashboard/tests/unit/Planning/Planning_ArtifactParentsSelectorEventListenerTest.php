@@ -97,9 +97,9 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \Tuleap\Te
         $this->epic   = $this->getArtifact($this->epic_id, $this->epic_tracker);
         $this->epic2  = $this->getArtifact($this->epic2_id, $this->epic_tracker);
 
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->withArgs(['plugin_agiledashboard', 'available', 'epic_tracker'])
-            ->andReturn('Available epic_tracker');
+        $GLOBALS['Language']->method('getText')
+            ->with('plugin_agiledashboard', 'available', 'epic_tracker')
+            ->willReturn('Available epic_tracker');
 
         $this->selector = \Mockery::spy(\Planning_ArtifactParentsSelector::class);
         $this->selector->shouldReceive('getPossibleParents')->with(

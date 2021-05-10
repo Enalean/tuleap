@@ -49,7 +49,7 @@ final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tu
         $this->url_verification->shouldReceive('getEventManager')->andReturns($event_manager);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($this->user);
         $fixtures = dirname(__FILE__) . '/_fixtures';
-        $GLOBALS['Language']->shouldReceive('getContent')->andReturns($fixtures . '/empty.txt');
+        $GLOBALS['Language']->method('getContent')->willReturn($fixtures . '/empty.txt');
 
         $this->server = ['SERVER_NAME' => 'example.com'];
 

@@ -26,16 +26,22 @@ class Rule_ProjectFullNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $GLOBALS['Language']->shouldReceive('getText')->with('rule_group_name', 'error_only_spaces')->andReturns('error_only_spaces');
-        $GLOBALS['Language']->shouldReceive('getText')->with('include_account', 'name_too_short')->andReturns('name_too_short');
-        $GLOBALS['Language']->shouldReceive('getText')->with('include_account', 'name_too_long', 40)->andReturns('name_too_long');
-    }
-
     public function testIsValid(): void
     {
+        $GLOBALS['Language']->method('getText')->willReturnCallback(
+            static function (string $page_name, string $category, $args): string {
+                if ($page_name === 'include_account' && $category === 'name_too_short') {
+                    return 'name_too_short';
+                }
+
+                if ($page_name === 'include_account' && $category === 'name_too_long' && $args === 40) {
+                    return 'name_too_long';
+                }
+
+                throw new LogicException(sprintf('Unexpected call to getText(%s, %s, %d)', $page_name, $category, $args));
+            }
+        );
+
         $rule = new Rule_ProjectFullName();
         $this->assertTrue($rule->isValid("prj"));
         $this->assertNull($rule->getErrorMessage());

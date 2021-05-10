@@ -20,12 +20,11 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
 use Tracker_FormElement_Field_String;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\GlobalLanguageMock;
 
-class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
@@ -34,10 +33,10 @@ class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\TestCas
 
     protected function setUp(): void
     {
-        $this->form_element = Mockery::mock(Tracker_FormElement_Field_String::class)->makePartial();
-        $this->form_element->shouldReceive('getId')->andReturn(300);
-        $this->form_element->shouldReceive('getLabel')->andReturn("My field");
-        $this->form_element->shouldReceive('getName')->andReturn('my_field');
+        $this->form_element = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getId', 'getLabel', 'getName']);
+        $this->form_element->method('getId')->willReturn(300);
+        $this->form_element->method('getLabel')->willReturn("My field");
+        $this->form_element->method('getName')->willReturn('my_field');
 
         $this->workflow_user = new Tracker_Workflow_WorkflowUser();
     }

@@ -102,9 +102,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_helper                              = Mockery::mock(\UserHelper::class);
 
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('system', 'datefmt')
-            ->andReturn('d/m/Y H:i');
+            ->willReturn('d/m/Y H:i');
 
         $this->organizer = new GitlabCrossReferenceOrganizer(
             $this->gitlab_repository_factory,

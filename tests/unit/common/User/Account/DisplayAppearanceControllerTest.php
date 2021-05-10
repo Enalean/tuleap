@@ -63,7 +63,7 @@ class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $GLOBALS['Language']->shouldReceive('gettext')->with('system', 'datefmt_short')->andReturn('d/m/Y');
+        $GLOBALS['Language']->method('gettext')->with('system', 'datefmt_short')->willReturn('d/m/Y');
 
         $this->appearance_builder = M::mock(AppearancePresenterBuilder::class);
         $this->csrf_token         = M::mock(CSRFSynchronizerToken::class);

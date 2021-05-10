@@ -73,9 +73,9 @@ class CrossReferenceGitEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->commit = Mockery::mock(Commit::class);
 
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('system', 'datefmt')
-            ->andReturn('d/m/Y H:i');
+            ->willReturn('d/m/Y H:i');
     }
 
     public function testItDisplaysCommitTitleAsXRefTitle(): void

@@ -115,7 +115,7 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
         foreach ($expected as $distance => $e) {
-            $GLOBALS['Language']->shouldReceive('getText')->times(2);
+            $GLOBALS['Language']->expects(self::atLeast(2))->method('getText');
             DateHelper::distanceOfTimeInWords($_SERVER['REQUEST_TIME'] - $distance, $_SERVER['REQUEST_TIME']);
             DateHelper::distanceOfTimeInWords($_SERVER['REQUEST_TIME'] - $distance, $_SERVER['REQUEST_TIME'], true);
         }
@@ -153,14 +153,14 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDateInPast(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->expects(self::once())
+            ->method('getText')
             ->with(
                 'include_utils',
                 'X_minutes',
                 8
             )
-            ->once()
-            ->andReturns('8 minutes');
+            ->willReturn('8 minutes');
 
         $this->assertEquals(
             '8 minutes ago',
@@ -171,14 +171,14 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDateInFuture()
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->expects(self::once())
+            ->method('getText')
             ->with(
                 'include_utils',
                 'X_minutes',
                 8
             )
-            ->once()
-            ->andReturns('8 minutes');
+            ->willReturn('8 minutes');
 
         $this->assertEquals(
             'in 8 minutes',
@@ -189,12 +189,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRelativeDate(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with(
                 'system',
                 'datefmt',
             )
-            ->andReturns('Y-m-d H:i');
+            ->willReturn('Y-m-d H:i');
 
         $user = UserTestBuilder::aUser()->withLocale('en_US')->build();
 
@@ -212,12 +212,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRelativeDateRelativeFistAbsoluteShown(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with(
                 'system',
                 'datefmt',
             )
-            ->andReturns('Y-m-d H:i');
+            ->willReturn('Y-m-d H:i');
 
         $user = Mockery::mock(\PFUser::class)
             ->shouldReceive(
@@ -242,12 +242,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRelativeDateRelativeFistAbsoluteTooltip(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with(
                 'system',
                 'datefmt',
             )
-            ->andReturns('Y-m-d H:i');
+            ->willReturn('Y-m-d H:i');
 
         $user = Mockery::mock(\PFUser::class)
             ->shouldReceive(
@@ -272,12 +272,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRelativeDateAbsoluteFistRelativeShown(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with(
                 'system',
                 'datefmt',
             )
-            ->andReturns('Y-m-d H:i');
+            ->willReturn('Y-m-d H:i');
 
         $user = Mockery::mock(\PFUser::class)
             ->shouldReceive(
@@ -302,12 +302,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRelativeDateAbsoluteFistRelativeTooltip(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with(
                 'system',
                 'datefmt',
             )
-            ->andReturns('Y-m-d H:i');
+            ->willReturn('Y-m-d H:i');
 
         $user = Mockery::mock(\PFUser::class)
             ->shouldReceive(
@@ -332,12 +332,12 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsATlpRelativeDateComponentWithDefaultDisplaySetBySiteAdmin(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with(
                 'system',
                 'datefmt',
             )
-            ->andReturns('Y-m-d H:i');
+            ->willReturn('Y-m-d H:i');
 
         $user = Mockery::mock(\PFUser::class)
             ->shouldReceive(

@@ -60,9 +60,8 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager->shouldReceive('updateUgroupBinding')
             ->once()
             ->andReturnTrue();
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->with('project_ugroup_binding', 'binding_removed')
-            ->once();
+        $GLOBALS['Language']->expects(self::once())->method('getText')
+            ->with('project_ugroup_binding', 'binding_removed');
         $GLOBALS['Response']->shouldReceive('addFeedback')->once();
 
         $this->assertTrue($this->binding->removeBinding(200));

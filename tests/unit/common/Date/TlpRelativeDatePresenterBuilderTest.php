@@ -36,9 +36,9 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('system', 'datefmt')
-            ->andReturn('d/m/Y H:i');
+            ->willReturn('d/m/Y H:i');
     }
 
     /**

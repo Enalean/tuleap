@@ -59,7 +59,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->renderer,
             $this->include_assets,
         );
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('');
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     protected function tearDown(): void

@@ -24,8 +24,6 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\GlobalLanguageMock;
 
-require_once 'bootstrap.php';
-
 class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -34,8 +32,12 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_git', 'actions_no_repository_forked', '*')->andReturns('actions_no_repository_forked');
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_git', 'successfully_forked', '*')->andReturns('successfully_forked');
+        $GLOBALS['Language']->method('getText')->willReturnMap(
+            [
+                ['plugin_git', 'actions_no_repository_forked', self::any(), 'actions_no_repository_forked'],
+                ['plugin_git', 'successfully_forked', self::any(), 'successfully_forked'],
+            ]
+        );
 
         $git_plugin = Mockery::mock(\GitPlugin::class)
             ->shouldReceive('areFriendlyUrlsActivated')

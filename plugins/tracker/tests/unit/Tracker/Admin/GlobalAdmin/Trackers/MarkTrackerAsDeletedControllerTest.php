@@ -370,10 +370,10 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturnTrue();
 
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->expects(self::once())
+            ->method('getText')
             ->with('project_reference', 't_r_deleted')
-            ->once()
-            ->andReturn('Corresponding Reference Pattern Deleted');
+            ->willReturn('Corresponding Reference Pattern Deleted');
 
         $layout = Mockery::mock(BaseLayout::class);
         $layout->shouldReceive('addFeedback')

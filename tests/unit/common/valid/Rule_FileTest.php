@@ -58,9 +58,9 @@ class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_max_size_upload', 1000);
         $r = new Rule_File();
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('rule_file', 'error_upload_size', UPLOAD_ERR_INI_SIZE)
-            ->andReturn(UPLOAD_ERR_INI_SIZE);
+            ->willReturn(UPLOAD_ERR_INI_SIZE);
         $this->file['error'] = UPLOAD_ERR_INI_SIZE;
         $this->assertFalse($r->isValid($this->file));
         $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
@@ -71,9 +71,9 @@ class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_max_size_upload', 1000);
         $r = new Rule_File();
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('rule_file', 'error_upload_size', UPLOAD_ERR_FORM_SIZE)
-            ->andReturn(UPLOAD_ERR_FORM_SIZE);
+            ->willReturn(UPLOAD_ERR_FORM_SIZE);
         $this->file['error'] = UPLOAD_ERR_FORM_SIZE;
         $this->assertFalse($r->isValid($this->file));
         $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_FORM_SIZE . '/', $r->error);
@@ -84,9 +84,9 @@ class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_max_size_upload', 1000);
         $r = new Rule_File();
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('rule_file', 'error_upload_partial', UPLOAD_ERR_PARTIAL)
-            ->andReturn(UPLOAD_ERR_PARTIAL);
+            ->willReturn(UPLOAD_ERR_PARTIAL);
         $this->file['error'] = UPLOAD_ERR_PARTIAL;
         $this->assertFalse($r->isValid($this->file));
         $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_PARTIAL . '/', $r->error);
@@ -97,9 +97,9 @@ class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_max_size_upload', 1000);
         $r = new Rule_File();
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('rule_file', 'error_upload_nofile', UPLOAD_ERR_NO_FILE)
-            ->andReturn(UPLOAD_ERR_NO_FILE);
+            ->willReturn(UPLOAD_ERR_NO_FILE);
         $this->file['error'] = UPLOAD_ERR_NO_FILE;
         $this->assertFalse($r->isValid($this->file));
         $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_NO_FILE . '/', $r->error);
@@ -110,9 +110,9 @@ class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_max_size_upload', 5);
         $r = new Rule_File();
         $GLOBALS['Language']
-            ->shouldReceive('getText')
+            ->method('getText')
             ->with('rule_file', 'error_upload_size', UPLOAD_ERR_INI_SIZE)
-            ->andReturn(UPLOAD_ERR_INI_SIZE);
+            ->willReturn(UPLOAD_ERR_INI_SIZE);
         $this->assertFalse($r->isValid($this->file));
         $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
     }

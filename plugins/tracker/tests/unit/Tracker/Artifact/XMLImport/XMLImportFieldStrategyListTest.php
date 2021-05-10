@@ -191,7 +191,7 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
               <value format="id"><![CDATA[104_2]]></value>
             </field_change>'
         );
-        $this->xml_fields_mapping->shouldReceive("getNewValueId")->with("104_2")->andReturn('111');
+        $this->xml_fields_mapping->shouldReceive("getNewValueId")->with(104)->andReturn('111');
 
         $result = $this->import_field_strategy->getFieldData($field, $field_change, $this->submitter, $this->artifact);
         self::assertEquals([111], $result);
