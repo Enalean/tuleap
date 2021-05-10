@@ -209,7 +209,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfTargetValuesAreDifferent(): void
     {
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'aaaaa(Champ1) -> bbbbb(Champ2)']);
+        $GLOBALS['Response']->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb(Champ2)');
 
         $value_field_list  = [
             123 => 456,
@@ -229,7 +229,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfSourceValuesAreDifferent(): void
     {
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'aaaaa(Champ1) -> bbbbb(Champ2)']);
+        $GLOBALS['Response']->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb(Champ2)');
 
         $value_field_list = [
             123 => 456,
@@ -249,7 +249,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateListRulesReturnErrorIfTrackersIdsAreDifferent(): void
     {
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'aaaaa(Champ1) -> bbbbb(Champ2)']);
+        $GLOBALS['Response']->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb(Champ2)');
 
         $value_field_list  = [
             123 => 456,
@@ -332,7 +332,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS1ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->shouldNotReceive('addFeedback');
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
         $value_field_list = [
             '101' => 'A2',
             '102' => 'B3',
@@ -344,7 +344,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS2ValidateListRulesReturnFalseAndErrorIfC3TryToAccessToB3()
     {
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'f_2(Champ2) -> f_3(Champ3)']);
+        $GLOBALS['Response']->method('addFeedback')->with('error', 'f_2(Champ2) -> f_3(Champ3)');
 
         $value_field_list = [
             '101' => 'A2',
@@ -358,7 +358,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS3ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->shouldNotReceive('addFeedback');
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
         $value_field_list = [
             '101' => ['A1', 'A2'],
             '102' => 'B3',
@@ -370,7 +370,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS4ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->shouldNotReceive('addFeedback');
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
         $value_field_list = [
             '101' => ['A1', 'A2'],
             '102' => 'B2',
@@ -382,7 +382,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS5ValidateListRulesReturnTrueIfRulesAreRespected()
     {
-        $GLOBALS['Response']->shouldNotReceive('addFeedback');
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
 
         $value_field_list = [
             '101' => 'A1',
@@ -396,7 +396,7 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testS6ValidateListRulesReturnFalseAndErrorIfA1TryToAccessToB2()
     {
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'f_1(Champ1) -> f_2(Champ2)']);
+        $GLOBALS['Response']->method('addFeedback')->with('error', 'f_1(Champ1) -> f_2(Champ2)');
         $value_field_list = [
             '101' => 'A1',
             '102' => ['B1', 'B2'], //A1 cannot access to B2 !

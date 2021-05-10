@@ -73,13 +73,7 @@ class FormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->form_element, 'new_type')
             ->andReturnTrue();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')
-            ->with('info', Mockery::any())
-            ->once();
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')
-            ->with('error', Mockery::any())
-            ->never();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
 
         $this->updater->updateFormElementType(
             $this->form_element,
@@ -96,9 +90,7 @@ class FormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->form_element, 'new_type')
             ->andReturnFalse();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')
-            ->with('info', Mockery::any())
-            ->never();
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('info');
 
         $this->expectException(FormElementTypeUpdateErrorException::class);
 
@@ -135,13 +127,7 @@ class FormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($target_field_02, 'new_type')
             ->andReturnTrue();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')
-            ->with('info', Mockery::any())
-            ->once();
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')
-            ->with('error', Mockery::any())
-            ->never();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
 
         $this->updater->updateFormElementType(
             $this->form_element,
@@ -174,9 +160,7 @@ class FormElementTypeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->shouldNotReceive('changeFormElementType')
             ->with($target_field_02, 'new_type');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')
-            ->with('info', Mockery::any())
-            ->never();
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('info');
 
         $this->expectException(FormElementTypeUpdateErrorException::class);
 

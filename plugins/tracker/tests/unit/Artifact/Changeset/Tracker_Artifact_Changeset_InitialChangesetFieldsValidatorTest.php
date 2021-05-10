@@ -216,7 +216,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
         $this->workflow->shouldReceive('validate')->andReturns(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs([Feedback::ERROR, Mockery::any()]);
+        $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR);
 
         $user        = \Mockery::spy(\PFUser::class);
         $fields_data = [];
@@ -243,7 +243,7 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
 
         $this->workflow->shouldReceive('validate')->andReturns(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs([Feedback::ERROR, Mockery::any()]);
+        $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR);
 
         $user        = \Mockery::spy(\PFUser::class);
         $fields_data = [];

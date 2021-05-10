@@ -47,7 +47,7 @@ final class ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
         $a->shouldReceive('validArtifact')->andReturns(false);
         //$a->setReturnValue('existDependency', false);
         $changes = null;
-        $GLOBALS['Response']->shouldReceive('addFeedback')->times(2);
+        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback');
         $this->assertFalse($a->addDependencies("99999", $changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
     }
 

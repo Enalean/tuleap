@@ -112,7 +112,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \Tuleap\Test\PH
         $this->artifact_factory->shouldReceive('getInstanceFromRow')
             ->with($artifact_346_row)->andReturn(Mockery::spy(Artifact::class));
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::WARN, Mockery::any(), Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::WARN);
 
         $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
     }

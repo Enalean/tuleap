@@ -147,8 +147,8 @@ class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker->shouldReceive('process')->never(); //user can't view the tracker. so don't process the request in tracker
         $this->formElement->shouldReceive('process')->never();
         $this->tracker->shouldReceive('userCanView')->once()->andReturns(false);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', Mockery::any())->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects(self::atLeastOnce())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects(self::once())->method('redirect');
 
         $request_artifact = Mockery::spy(HTTPRequest::class);
 

@@ -351,7 +351,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
         $this->project_dao->shouldReceive("updateStatus")->andReturn(false)->once();
 
-        $GLOBALS['Response']->shouldReceive("addFeedback");
+        $GLOBALS['Response']->method("addFeedback");
 
         $this->project_manager_test_version->updateStatus($project, 'A');
 

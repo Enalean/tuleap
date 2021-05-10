@@ -89,7 +89,7 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
 
         $this->permissions_manager->shouldReceive('addPermission')->never();
         $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::ERROR, \Mockery::any(), \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::ERROR);
 
         $this->permission_manager->save($request, $this->permission_setter);
     }
@@ -105,7 +105,7 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
         ]);
 
         $this->permissions_manager->shouldReceive('addPermission')->once();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::INFO, \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::INFO);
 
         $this->permission_manager->save($request, $this->permission_setter);
     }

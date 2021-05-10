@@ -130,7 +130,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     protected function processRequestAndExpectRedirection(Codendi_Request $request): void
     {
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect');
         ob_start();
         $this->action->process($this->layout, $request, $this->user);
         $content = ob_get_clean();
@@ -139,7 +139,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
 
     protected function processRequestAndExpectFormOutput(Codendi_Request $request): void
     {
-        $GLOBALS['Response']->shouldReceive('redirect')->never();
+        $GLOBALS['Response']->expects(self::never())->method('redirect');
         ob_start();
         $this->action->process($this->layout, $request, $this->user);
         $content = ob_get_clean();
@@ -149,7 +149,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     public function testItDoesNotDisplayErrorsIfNoActions(): void
     {
         $request = new Codendi_Request([], Mockery::mock(ProjectManager::class));
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', \Mockery::any())->never();
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with(Feedback::ERROR);
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -211,7 +211,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->andReturns(true);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('info', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -222,7 +222,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->andReturns(true);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('info', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -233,7 +233,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->andReturns(false);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('info', \Mockery::any())->never();
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -245,7 +245,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
         $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 123)->ordered()->andReturns(false);
         $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 456)->ordered()->andReturns(true);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('info', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -312,7 +312,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
 
         $this->date_factory->shouldReceive('create')->never();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->never();
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('info');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -480,7 +480,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('create')->never();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -496,7 +496,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
             ],
             Mockery::mock(ProjectManager::class)
         );
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('info', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -735,7 +735,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
 
         $this->date_factory->shouldReceive('save')->never();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -760,7 +760,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         );
 
         $this->date_factory->shouldReceive('save')->andReturns(true);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('info', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
         $this->processRequestAndExpectRedirection($request);
     }
 }

@@ -208,13 +208,13 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $milestone->shouldReceive('getTracker')->andReturn($milestone_tracker);
 
         $this->response
-            ->shouldReceive('addFeedback')
+            ->expects(self::once())
+            ->method('addFeedback')
             ->with(
                 \Feedback::INFO,
-                Mockery::on($has_expected_feedback_content),
+                self::callback($has_expected_feedback_content),
                 CODENDI_PURIFIER_FULL
-            )
-            ->once();
+            );
 
         $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 

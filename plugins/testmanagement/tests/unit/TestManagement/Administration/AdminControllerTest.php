@@ -270,8 +270,9 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
             ->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(
-            ['warning', 'The tracker id oui does not have step definition field']
+        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
+            ['warning', 'The tracker id 999 does not have step definition field'],
+            [\Feedback::ERROR]
         );
 
         $this->admin_controller->update();
@@ -314,8 +315,9 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
             ->andThrow(TrackerExecutionNotValidException::class);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(
-            ['warning', 'The tracker id oui does not have step execution field']
+        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
+            ['warning', 'The tracker id 537 does not have step execution field'],
+            [\Feedback::ERROR],
         );
 
         $this->admin_controller->update();
@@ -362,8 +364,9 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
             ->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(
-            ['warning', 'The tracker id oui does not have artifact links field']
+        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
+            ['warning', 'The tracker id 535 does not have artifact links field'],
+            [\Feedback::ERROR]
         );
 
         $this->admin_controller->update();
@@ -407,8 +410,9 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->once();
 
         $this->admin_controller->update();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(
-            ['warning', 'The tracker id oui is not a valid id']
+        $GLOBALS['Response']->method('addFeedback')->with(
+            'warning',
+            'The tracker id oui is not a valid id'
         );
     }
 }

@@ -22,8 +22,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\GlobalResponseMock;
 
-require_once __DIR__ . '/bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -352,7 +350,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', 'Repository my-repo-123 already exists on target, skipped.')->once();
+        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback')->withConsecutive(['warning', 'Repository my-repo-123 already exists on target, skipped.'], ['warning']);
 
         $repo1 = $this->givenARepository(123);
         $repo2 = $this->givenARepository(456);
@@ -363,37 +361,20 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->forkRepositories([$repo1, $repo2]);
     }
 
-    public function testForkShouldTellTheUserIfTheRepositoryAlreadyExists(): void
-    {
-        $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
-
-        $repo1 = $this->givenARepository(123);
-        $repo2 = $this->givenARepository(456);
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', 'Repository my-repo-456 already exists on target, skipped.')->once();
-
-        $this->backend->shouldReceive('fork')->andReturn(667)->once();
-        $this->backend->shouldReceive('fork')->andThrow(new GitRepositoryAlreadyExistsException($repo2->getName()))->once();
-
-        $this->forkRepositories([$repo1, $repo2]);
-    }
-
     public function testForkGiveInformationAboutUnexpectedErrors(): void
     {
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
+
 
         $errorMessage = 'user gitolite doesnt exist';
         $repo2        = $this->givenARepository(456);
         $repo2->setName('megaRepoGit');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', "Got an unexpected error while forking " . $repo2->getName() . ": " . $errorMessage)->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->withConsecutive(['warning', "Got an unexpected error while forking " . $repo2->getName() . ": " . $errorMessage]);
 
-        $this->backend->shouldReceive('fork')->andReturn(667)->once();
         $this->backend->shouldReceive('fork')->andThrow(new Exception($errorMessage))->once();
 
-        $repo1 = $this->givenARepository(123);
-
-        $this->forkRepositories([$repo1, $repo2]);
+        $this->forkRepositories([$repo2]);
     }
 
     public function testForkAssertNamespaceIsValid(): void

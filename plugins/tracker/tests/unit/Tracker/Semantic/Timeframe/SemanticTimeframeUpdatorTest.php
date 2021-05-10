@@ -79,10 +79,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
-        )->once();
+        );
 
         $this->updator->update($this->tracker, $request);
     }
@@ -96,10 +96,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
-        )->once();
+        );
 
         $this->updator->update($this->tracker, $request);
     }
@@ -113,10 +113,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
-        )->once();
+        );
 
         $this->updator->update($this->tracker, $request);
     }
@@ -131,10 +131,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->formelement_factory->shouldReceive("getUsedDateFieldById")->with($this->tracker, 1234)->andReturn(null);
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             'An error occurred while updating the timeframe semantic'
-        )->once();
+        );
 
         $this->updator->update($this->tracker, $request);
     }
@@ -168,10 +168,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         )->andReturn(true)->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
-        )->once();
+        );
 
         $this->updator->update($this->tracker, $request);
     }
@@ -201,10 +201,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $end_date_field_id
         )->andReturn(true)->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::INFO,
             'Semantic timeframe updated successfully'
-        )->once();
+        );
 
         $this->updator->update($this->tracker, $request);
     }
@@ -239,10 +239,10 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_dao->shouldReceive("save")->never();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
             \Feedback::ERROR,
             dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
-        )->once();
+        );
 
         $this->updator->update($this->tracker, $request);
     }
