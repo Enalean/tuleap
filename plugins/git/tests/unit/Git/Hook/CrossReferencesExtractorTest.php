@@ -22,18 +22,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Git\Hook;
+
+use Git;
+use Git_Hook_PushDetails;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+
 require_once __DIR__ . '/../../bootstrap.php';
 
-class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
+class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
-    private $git_exec_repo;
-    private $user;
-    private $repository;
-    private $repository_in_subpath;
-    private $reference_manager;
+    /**
+     * @var CrossReferencesExtractor
+     */
     private $post_receive;
+    /**
+     * @var \Git_Exec|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $git_exec_repo;
+    /**
+     * @var \GitRepository|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $repository;
+    /**
+     * @var \GitRepository|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $repository_in_subpath;
+    /**
+     * @var PFUser
+     */
+    private $user;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ReferenceManager
+     */
+    private $reference_manager;
+    /**
+     * @var Git_Hook_PushDetails
+     */
     private $push_details;
 
     protected function setUp(): void
@@ -58,17 +88,16 @@ class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $this->reference_manager = \Mockery::spy(\ReferenceManager::class);
 
-        $this->post_receive = new Git_Hook_ExtractCrossReferences($this->git_exec_repo, $this->reference_manager);
+        $this->post_receive = new CrossReferencesExtractor($this->git_exec_repo, $this->reference_manager);
 
         $this->push_details = new Git_Hook_PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
     }
-
 
     public function testItGetsEachRevisionContent(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->with('469eaa9')->once();
 
-        $this->post_receive->execute($this->push_details, '469eaa9');
+        $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
 
     public function testItExtractCrossReferencesForGivenUser(): void
@@ -77,7 +106,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::any(), 350)->once();
 
-        $this->post_receive->execute($this->push_details, '469eaa9');
+        $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
 
     public function testItExtractCrossReferencesOnGitCommit(): void
@@ -86,7 +115,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), \Mockery::any(), Git::REFERENCE_NATURE, \Mockery::any(), \Mockery::any())->once();
 
-        $this->post_receive->execute($this->push_details, '469eaa9');
+        $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
 
     public function testItExtractCrossReferencesOnCommitMessage(): void
@@ -95,7 +124,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->reference_manager->shouldReceive('extractCrossRef')->with('bla bla bla', \Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
-        $this->post_receive->execute($this->push_details, '469eaa9');
+        $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
 
     public function testItExtractCrossReferencesForProject(): void
@@ -104,7 +133,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), 101, \Mockery::any())->once();
 
-        $this->post_receive->execute($this->push_details, '469eaa9');
+        $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
 
     public function testItSetTheReferenceToTheRepository(): void
@@ -113,7 +142,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), 'dev/469eaa9', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
-        $this->post_receive->execute($this->push_details, '469eaa9');
+        $this->post_receive->extractCommitReference($this->push_details, '469eaa9');
     }
 
     public function testItSetTheReferenceToTheRepositoryWithSubRepo(): void
@@ -123,6 +152,56 @@ class Git_Hook_ExtractCrossReferencesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), 'arch/x86_64/dev/469eaa9', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
         $push_details = new Git_Hook_PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
-        $this->post_receive->execute($push_details, '469eaa9');
+        $this->post_receive->extractCommitReference($push_details, '469eaa9');
+    }
+
+    public function testItExtractCrossReferencesOnGitTag(): void
+    {
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('This tags art #123');
+
+        $this->reference_manager->shouldReceive('extractCrossRef')->with(
+            'This tags art #123',
+            'dev/v1',
+            Git::TAG_REFERENCE_NATURE,
+            101,
+            350
+        )
+            ->once();
+
+        $tag_push_details = new Git_Hook_PushDetails(
+            $this->repository,
+            $this->user,
+            'refs/tags/v1',
+            'create',
+            'tag',
+            []
+        );
+
+        $this->post_receive->extractTagReference($tag_push_details);
+    }
+
+    public function testItExtractCrossReferencesOnGitTagWithoutFullReference(): void
+    {
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('This tags art #123');
+
+        $this->reference_manager->shouldReceive('extractCrossRef')->with(
+            'This tags art #123',
+            'dev/v1',
+            Git::TAG_REFERENCE_NATURE,
+            101,
+            350
+        )
+            ->once();
+
+        $tag_push_details = new Git_Hook_PushDetails(
+            $this->repository,
+            $this->user,
+            'v1',
+            'create',
+            'tag',
+            []
+        );
+
+        $this->post_receive->extractTagReference($tag_push_details);
     }
 }

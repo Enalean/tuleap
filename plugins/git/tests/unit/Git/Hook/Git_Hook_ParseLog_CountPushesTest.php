@@ -22,8 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Hook\CrossReferencesExtractor;
+
 require_once __DIR__ . '/../../bootstrap.php';
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_Hook_ParseLog_CountPushesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -37,7 +40,7 @@ class Git_Hook_ParseLog_CountPushesTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->extract_cross_ref = \Mockery::spy(\Git_Hook_ExtractCrossReferences::class);
+        $this->extract_cross_ref = \Mockery::spy(CrossReferencesExtractor::class);
         $this->log_pushes        = \Mockery::spy(\Git_Hook_LogPushes::class);
         $this->logger            = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
