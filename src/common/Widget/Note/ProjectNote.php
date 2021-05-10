@@ -207,7 +207,7 @@ class ProjectNote extends \Widget
                 new EnhancedCodeBlockExtension($this->code_block_features),
             );
 
-            $this->interpreted_content = $interpreter->getInterpretedContent($this->content);
+            $this->interpreted_content = $interpreter->getInterpretedContentWithReferences($this->content, (int) $this->owner_id);
         }
 
         return $this->interpreted_content;
