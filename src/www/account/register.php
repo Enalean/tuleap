@@ -408,7 +408,6 @@ $GLOBALS['Response']->addJavascriptAsset(
     )
 );
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/register.js');
-$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
 $GLOBALS['Response']->header(['title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class]);
 
