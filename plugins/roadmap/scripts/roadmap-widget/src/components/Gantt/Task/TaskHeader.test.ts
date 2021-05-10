@@ -60,6 +60,31 @@ describe("TaskHeader", () => {
         expect(wrapper.findComponent(HeaderLink).exists()).toBeTruthy();
     });
 
+    it("does not need to display the project for parent tasks", () => {
+        const task: Task = {
+            id: 123,
+            has_subtasks: true,
+        } as Task;
+
+        const wrapper = shallowMount(TaskHeader, {
+            propsData: {
+                task,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    },
+                    getters: {
+                        "tasks/does_at_least_one_task_have_subtasks": true,
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(HeaderLink).props("should_display_project")).toBe(false);
+    });
+
     it("should indicates that the task has subtasks", () => {
         const task: Task = {
             id: 123,

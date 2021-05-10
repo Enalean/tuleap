@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -73,6 +74,10 @@ final class TaskRepresentation
      * @var string
      */
     public $subtasks_uri;
+    /**
+     * @var ProjectReference
+     */
+    public $project;
 
     /**
      * @param DependenciesByNature[] $dependencies
@@ -87,7 +92,8 @@ final class TaskRepresentation
         string $progress_error_message,
         ?\DateTimeImmutable $start,
         ?\DateTimeImmutable $end,
-        array $dependencies
+        array $dependencies,
+        ProjectReference $project
     ) {
         $this->id         = $id;
         $this->xref       = $xref;
@@ -97,6 +103,7 @@ final class TaskRepresentation
         $this->progress   = $progress;
         $this->start      = JsonCast::fromDateTimeToDate($start);
         $this->end        = JsonCast::fromDateTimeToDate($end);
+        $this->project    = $project;
 
         $this->progress_error_message = $progress_error_message;
         $this->subtasks_uri           = TasksResource::ROUTE . '/' . $id . '/subtasks';

@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use Tracker;
+use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -74,6 +75,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                             new \DateTimeImmutable('@1234567890'),
                             new \DateTimeImmutable('@1234567891'),
                             [],
+                            new ProjectReference($artifact->getTracker()->getProject()),
                         );
                     }
                 };
@@ -125,6 +127,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $artifact = ArtifactTestBuilder::anArtifact(42)
             ->withArtifactFactory($this->artifact_factory)
+            ->inProject(new \Project(['group_id' => 101, 'group_name' => 'ACME Corp']))
             ->build();
 
         $this->artifact_factory
