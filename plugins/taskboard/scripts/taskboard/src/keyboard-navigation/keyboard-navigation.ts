@@ -23,10 +23,16 @@ import { addShortcutsGroup } from "@tuleap/keyboard-shortcuts";
 import type { ArrowKey, GettextProvider } from "../type";
 import { DOWN, UP, RIGHT, LEFT } from "../type";
 import { moveFocus } from "./move-focus";
+import {
+    editCard,
+    editRemainingEffort,
+    returnToParent,
+    toggleClosedItems,
+} from "./quick-access-shortcuts-helpers";
 
 export class KeyboardShortcuts {
-    private navigation_shortcuts_group: ShortcutsGroup | null = null;
     private moving_shortcuts_group: ShortcutsGroup | null = null;
+    private quick_access_shortcuts_group: ShortcutsGroup | null = null;
     private readonly gettextCatalog: GettextProvider;
     private readonly doc: Document;
 
@@ -35,27 +41,28 @@ export class KeyboardShortcuts {
         this.gettextCatalog = gettextCatalog;
     }
 
-    setNavigation(): void {
-        this.navigation_shortcuts_group = createNavigationShortcutsGroup(
-            this.doc,
-            this.gettextCatalog
-        );
-        addShortcutsGroup(this.doc, this.navigation_shortcuts_group);
-    }
-
-    setCardsShifting(handler: (event: KeyboardEvent, direction: ArrowKey) => void): void {
-        this.moving_shortcuts_group = createMovingShortcutsGroup(
+    setNavigation(moving_cards_handler: (event: KeyboardEvent, direction: ArrowKey) => void): void {
+        this.moving_shortcuts_group = createNavigationShortcutsGroup(
             this.doc,
             this.gettextCatalog,
-            handler
+            moving_cards_handler
         );
         addShortcutsGroup(this.doc, this.moving_shortcuts_group);
     }
+
+    setQuickAccess(): void {
+        this.quick_access_shortcuts_group = createQuickAccessShortcutsGroup(
+            this.doc,
+            this.gettextCatalog
+        );
+        addShortcutsGroup(this.doc, this.quick_access_shortcuts_group);
+    }
 }
 
-export function createNavigationShortcutsGroup(
+function createNavigationShortcutsGroup(
     doc: Document,
-    gettext_provider: GettextProvider
+    gettext_provider: GettextProvider,
+    handler: (event: KeyboardEvent, direction: ArrowKey) => void
 ): ShortcutsGroup {
     const next: Shortcut = {
         keyboard_inputs: "k,down",
@@ -95,17 +102,6 @@ export function createNavigationShortcutsGroup(
         },
     };
 
-    return {
-        title: gettext_provider.$gettext("Navigation"),
-        shortcuts: [next, previous, right, left],
-    };
-}
-
-export function createMovingShortcutsGroup(
-    doc: Document,
-    gettext_provider: GettextProvider,
-    handler: (event: KeyboardEvent, direction: ArrowKey) => void
-): ShortcutsGroup {
     const move_right: Shortcut = {
         keyboard_inputs: "shift+right,shift+l",
         displayed_inputs: "Shift+l,Shift+→",
@@ -125,7 +121,41 @@ export function createMovingShortcutsGroup(
     };
 
     return {
-        title: gettext_provider.$gettext("Moving cards"),
-        shortcuts: [move_right, move_left],
+        title: gettext_provider.$gettext("Navigation in Taskboard"),
+        shortcuts: [next, previous, right, left, move_right, move_left],
+    };
+}
+
+function createQuickAccessShortcutsGroup(
+    doc: Document,
+    gettext_provider: GettextProvider
+): ShortcutsGroup {
+    const edit_card: Shortcut = {
+        keyboard_inputs: "e",
+        description: gettext_provider.$gettext("Edit card"),
+        handle: (event) => editCard(event),
+    };
+
+    const edit_remaining_effort: Shortcut = {
+        keyboard_inputs: "r",
+        description: gettext_provider.$gettext("Edit remaining efforts"),
+        handle: (event) => editRemainingEffort(event),
+    };
+
+    const toggle_closed_items: Shortcut = {
+        keyboard_inputs: "t",
+        description: gettext_provider.$gettext("Toggle closed items"),
+        handle: () => toggleClosedItems(doc),
+    };
+
+    const return_to_parent: Shortcut = {
+        keyboard_inputs: "escape",
+        description: gettext_provider.$gettext("Return to parent card or swimlane"),
+        handle: (event) => returnToParent(event),
+    };
+
+    return {
+        title: gettext_provider.$gettext("Quick access"),
+        shortcuts: [edit_card, edit_remaining_effort, toggle_closed_items, return_to_parent],
     };
 }

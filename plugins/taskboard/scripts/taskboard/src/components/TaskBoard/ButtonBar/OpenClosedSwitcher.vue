@@ -28,6 +28,7 @@
                 class="tlp-button-bar-checkbox"
                 v-bind:checked="are_closed_items_displayed"
                 v-on:change="displayClosedItems"
+                data-shortcut="toggle-closed-items"
             />
             <label
                 for="button-bar-show-closed"
@@ -46,6 +47,7 @@
                 class="tlp-button-bar-checkbox"
                 v-bind:checked="!are_closed_items_displayed"
                 v-on:change="hideClosedItems"
+                data-shortcut="toggle-closed-items"
             />
             <label
                 for="button-bar-hide-closed"

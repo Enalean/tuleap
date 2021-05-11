@@ -42,6 +42,7 @@
                     class="taskboard-card taskboard-card-collapsed"
                     tabindex="0"
                     data-navigation="card"
+                    data-shortcut="parent-card"
                     v-bind:class="additional_card_classnames"
                 >
                     <div class="taskboard-card-content">

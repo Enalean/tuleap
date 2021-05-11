@@ -30,6 +30,7 @@
         v-bind:title="$gettext('Remaining effort')"
         data-not-drag-handle="true"
         draggable="true"
+        data-shortcut="edit-remaining-effort"
     >
         <edit-remaining-effort v-if="is_in_edit_mode" v-bind:card="card" />
         <template v-else>{{ card.remaining_effort.value }}</template>

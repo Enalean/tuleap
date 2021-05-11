@@ -156,8 +156,7 @@ export default class TaskBoard extends Vue {
         };
 
         const keyboard_shortcuts = new KeyboardShortcuts(document, gettext_provider);
-        keyboard_shortcuts.setNavigation();
-        keyboard_shortcuts.setCardsShifting((event: KeyboardEvent, direction: ArrowKey) => {
+        keyboard_shortcuts.setNavigation((event: KeyboardEvent, direction: ArrowKey) => {
             const card = event.target;
             if (!(card instanceof HTMLElement) || !canMove(card)) {
                 return;
@@ -168,6 +167,7 @@ export default class TaskBoard extends Vue {
                 this.cleanupAfterDragCallback();
             });
         });
+        keyboard_shortcuts.setQuickAccess();
     }
 
     onDropHandler = (context: SuccessfulDropCallbackParameter): void => {
