@@ -100,6 +100,7 @@ function getJSAndCSSOptimizerPlugin() {
     return new ESBuildMinifyPlugin({
         target: esbuild_target,
         css: true,
+        legalComments: "none",
         exclude: [/including-prototypejs/], // Workaround for Prototype.js code depending on $super
     });
 }
