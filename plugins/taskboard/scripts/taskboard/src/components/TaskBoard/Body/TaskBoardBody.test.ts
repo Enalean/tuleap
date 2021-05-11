@@ -42,6 +42,11 @@ async function createWrapper(
                     swimlane: { swimlanes },
                     column: {},
                 } as RootState,
+                getters: {
+                    "swimlane/is_there_at_least_one_children_to_display": (
+                        swimlane: Swimlane
+                    ): boolean => swimlane.card.has_children,
+                },
             }),
         },
     });

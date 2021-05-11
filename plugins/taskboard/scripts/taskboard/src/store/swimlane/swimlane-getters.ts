@@ -43,6 +43,22 @@ export const cards_in_cell = (state: SwimlaneState, getters: [], root_state: Roo
     });
 };
 
+export const is_there_at_least_one_children_to_display = (
+    state: SwimlaneState,
+    getters: [],
+    root_state: RootState
+) => (current_swimlane: Swimlane): boolean => {
+    if (!current_swimlane.card.has_children) {
+        return false;
+    }
+
+    return current_swimlane.children_cards.some((card: Card): boolean => {
+        const column_of_card = getColumnOfCard(root_state.column.columns, card);
+
+        return column_of_card !== undefined;
+    });
+};
+
 export const has_at_least_one_card_in_edit_mode = (state: SwimlaneState): boolean => {
     return state.swimlanes.some(doesSwimlaneContainACardInEditMode);
 };

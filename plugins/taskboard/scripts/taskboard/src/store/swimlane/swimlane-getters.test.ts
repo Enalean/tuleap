@@ -275,6 +275,80 @@ describe("Swimlane state getters", () => {
         });
     });
 
+    describe("is_there_at_least_one_children_to_display", () => {
+        let swimlane_state: SwimlaneState;
+        let root_state: RootState;
+
+        beforeEach(() => {
+            const column_todo = {
+                id: 2,
+                label: "To do",
+                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }],
+            } as ColumnDefinition;
+
+            swimlane_state = { swimlanes: [] as Swimlane[] } as SwimlaneState;
+
+            root_state = {
+                column: {
+                    columns: [column_todo],
+                },
+            } as RootState;
+        });
+
+        it("Has no children to display when the card is known to have no children", () => {
+            const swimlane: Swimlane = {
+                card: { id: 43, has_children: false } as Card,
+            } as Swimlane;
+
+            swimlane_state.swimlanes.push(swimlane);
+
+            expect(
+                getters.is_there_at_least_one_children_to_display(
+                    swimlane_state,
+                    [],
+                    root_state
+                )(swimlane)
+            ).toBe(false);
+        });
+
+        it("Has no children to display when the card has no visible children in columns", () => {
+            const swimlane: Swimlane = {
+                card: { id: 43, has_children: true } as Card,
+                children_cards: [{ id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card],
+            } as Swimlane;
+
+            swimlane_state.swimlanes.push(swimlane);
+
+            expect(
+                getters.is_there_at_least_one_children_to_display(
+                    swimlane_state,
+                    [],
+                    root_state
+                )(swimlane)
+            ).toBe(false);
+        });
+
+        it("Has children to display when the card has at least one visible child in column", () => {
+            const swimlane: Swimlane = {
+                card: { id: 43, has_children: true } as Card,
+                children_cards: [
+                    { id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card,
+                    { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
+                ],
+            } as Swimlane;
+
+            swimlane_state.swimlanes.push(swimlane);
+
+            expect(
+                getters.is_there_at_least_one_children_to_display(
+                    swimlane_state,
+                    [],
+                    root_state
+                )(swimlane)
+            ).toBe(true);
+        });
+    });
+
     describe("has_at_least_one_card_in_edit_mode", () => {
         it("Returns false if there isn't any parent card in edit mode", () => {
             const state = {
