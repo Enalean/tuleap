@@ -30,7 +30,7 @@
                 <children-swimlane
                     v-bind:key="swimlane.card.id"
                     v-bind:swimlane="swimlane"
-                    v-else-if="swimlane.card.has_children"
+                    v-else-if="is_there_at_least_one_children_to_display(swimlane)"
                 />
                 <invalid-mapping-swimlane
                     v-bind:key="swimlane.card.id"
@@ -55,6 +55,7 @@ import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
+import type { Card } from "../../../type";
 
 const column = namespace("column");
 const swimlane = namespace("swimlane");
@@ -83,6 +84,9 @@ export default class TaskBoardBody extends Vue {
 
     @swimlane.Action
     loadSwimlanes!: () => void;
+
+    @swimlane.Getter
+    readonly is_there_at_least_one_children_to_display!: (current_swimlane: Swimlane) => Card[];
 
     created(): void {
         this.loadSwimlanes();
