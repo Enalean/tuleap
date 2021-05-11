@@ -44,6 +44,11 @@ class ArtifactTestBuilder
      */
     private $artifact_factory;
 
+    /**
+     * @var \Project|null
+     */
+    private $project;
+
     private function __construct(int $id)
     {
         $this->id      = $id;
@@ -73,6 +78,13 @@ class ArtifactTestBuilder
         return $this;
     }
 
+    public function inProject(\Project $project): self
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
     public function build(): Artifact
     {
         $artifact = new Artifact(
@@ -88,6 +100,10 @@ class ArtifactTestBuilder
 
         if ($this->artifact_factory) {
             $artifact->setArtifactFactory($this->artifact_factory);
+        }
+
+        if ($this->project) {
+            $artifact->getTracker()->setProject($this->project);
         }
 
         return $artifact;

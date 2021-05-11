@@ -68,6 +68,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $artifact = ArtifactTestBuilder::anArtifact(42)
             ->withTitle('There is a bug')
+            ->inProject(new \Project(['group_id' => 101, 'group_name' => 'ACME Corp']))
             ->build();
         $builder  = new TaskRepresentationBuilderForTracker(
             $artifact->getTracker(),
@@ -93,12 +94,14 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertEquals('fiesta-red', $representation->color_name);
         self::assertEquals('roadmap_tasks/42/subtasks', $representation->subtasks_uri);
         self::assertEquals(null, $representation->progress);
+        self::assertEquals('ACME Corp', $representation->project->label);
     }
 
     public function testArtifactBelongsToTheRightTracker(): void
     {
         $artifact = ArtifactTestBuilder::anArtifact(42)
             ->withTitle('There is a bug')
+            ->inProject(new \Project(['group_id' => 101, 'group_name' => 'ACME Corp']))
             ->build();
         $builder  = new TaskRepresentationBuilderForTracker(
             TrackerTestBuilder::aTracker()->build(),

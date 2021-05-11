@@ -1,0 +1,43 @@
+/**
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { shallowMount } from "@vue/test-utils";
+import type { Project, Task } from "../../../type";
+import HeaderLink from "./HeaderLink.vue";
+
+describe("HeaderLink", () => {
+    it("should display the project label if needed", async () => {
+        const wrapper = shallowMount(HeaderLink, {
+            propsData: {
+                task: {
+                    xref: "art #123",
+                    title: "Tomate salade oignon",
+                    project: { label: "ACME Corp" } as Project,
+                } as Task,
+                should_display_project: false,
+            },
+        });
+
+        const pattern = /ACME Corp\s+art #123/;
+        expect(wrapper.text()).not.toMatch(pattern);
+        await wrapper.setProps({ should_display_project: true });
+
+        expect(wrapper.text()).toMatch(pattern);
+    });
+});

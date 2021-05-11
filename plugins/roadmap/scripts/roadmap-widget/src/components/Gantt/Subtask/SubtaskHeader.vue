@@ -20,7 +20,10 @@
 
 <template>
     <div class="roadmap-gantt-task-header roadmap-gantt-subtask-header" v-bind:class="classes">
-        <header-link v-bind:task="row.subtask" />
+        <header-link
+            v-bind:task="row.subtask"
+            v-bind:should_display_project="should_display_project"
+        />
     </div>
 </template>
 
@@ -33,7 +36,7 @@ import HeaderLink from "../Task/HeaderLink.vue";
 @Component({
     components: { HeaderLink },
 })
-export default class SubtaskSkeletonHeader extends Vue {
+export default class SubtaskHeader extends Vue {
     @Prop({ required: true })
     readonly row!: SubtaskRow;
 
@@ -45,6 +48,10 @@ export default class SubtaskSkeletonHeader extends Vue {
         }
 
         return classes;
+    }
+
+    get should_display_project(): boolean {
+        return this.row.parent.project.id !== this.row.subtask.project.id;
     }
 }
 </script>

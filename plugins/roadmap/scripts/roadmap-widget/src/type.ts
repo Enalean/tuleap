@@ -23,9 +23,15 @@ export const SUBTASKS_ARE_LOADING: SubtaskLoadingStatus = "loading";
 export const SUBTASKS_ARE_LOADED: SubtaskLoadingStatus = "loaded";
 export const SUBTASKS_ARE_IN_ERROR: SubtaskLoadingStatus = "error";
 
+export interface Project {
+    readonly id: number;
+    readonly label: string;
+}
+
 export interface Task {
     readonly id: number;
     readonly subtasks_uri: string;
+    readonly project: Project;
     readonly title: string;
     readonly xref: string;
     readonly color_name: string;

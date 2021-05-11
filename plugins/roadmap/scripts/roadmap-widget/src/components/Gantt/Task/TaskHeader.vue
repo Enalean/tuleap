@@ -33,7 +33,7 @@
                 data-test="caret"
             ></i>
         </div>
-        <header-link v-bind:task="task" />
+        <header-link v-bind:task="task" v-bind:should_display_project="false" />
     </div>
 </template>
 

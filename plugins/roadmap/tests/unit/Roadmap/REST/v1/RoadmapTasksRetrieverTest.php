@@ -31,6 +31,7 @@ use ProjectManager;
 use Psr\Log\NullLogger;
 use Tracker;
 use TrackerFactory;
+use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -740,7 +741,8 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'userCanView'   => true,
                 'getTitleField' => $title_field,
                 'getId'         => self::TRACKER_ID,
-                'getColor'      => TrackerColor::fromName('acid-green')
+                'getColor'      => TrackerColor::fromName('acid-green'),
+                'getProject'    => $project
             ]
         );
         $this->tracker_factory
@@ -876,6 +878,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     [new DependenciesByNature('depends_on', [202, 203])],
+                    new ProjectReference($project),
                 ),
                 new TaskRepresentation(
                     203,
@@ -888,6 +891,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     null,
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     [],
+                    new ProjectReference($project),
                 ),
             ],
             $collection->getRepresentations()
@@ -935,7 +939,8 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'userCanView'   => true,
                 'getTitleField' => $title_field,
                 'getId'         => self::TRACKER_ID,
-                'getColor'      => TrackerColor::fromName('acid-green')
+                'getColor'      => TrackerColor::fromName('acid-green'),
+                'getProject'    => $project,
             ]
         );
         $this->tracker_factory
@@ -1043,6 +1048,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     [],
+                    new ProjectReference($project),
                 ),
             ],
             $collection->getRepresentations()

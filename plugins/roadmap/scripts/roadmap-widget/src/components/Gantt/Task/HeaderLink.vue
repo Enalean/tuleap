@@ -20,7 +20,16 @@
 
 <template>
     <a v-bind:href="task.html_url" class="roadmap-gantt-task-header-link" v-bind:class="link_class">
-        <span class="roadmap-gantt-task-header-xref">{{ task.xref }}</span>
+        <span class="roadmap-gantt-task-header-xref">
+            <span v-if="should_display_project">
+                {{ task.project.label }}
+                <i
+                    class="fas fa-arrow-right roadmap-gantt-task-header-xref-separator"
+                    aria-hidden="true"
+                ></i>
+            </span>
+            {{ task.xref }}
+        </span>
         <span class="roadmap-gantt-task-header-title">{{ task.title }}</span>
     </a>
 </template>
@@ -34,6 +43,9 @@ import type { Task } from "../../../type";
 export default class HeaderLink extends Vue {
     @Prop({ required: true })
     readonly task!: Task;
+
+    @Prop({ required: true })
+    readonly should_display_project!: boolean;
 
     get link_class(): string {
         return "roadmap-gantt-task-header-link-" + this.task.color_name;

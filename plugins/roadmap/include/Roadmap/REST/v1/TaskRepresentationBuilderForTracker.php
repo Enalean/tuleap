@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Tracker;
+use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -83,6 +84,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             $start,
             $end,
             $this->dependencies_retriever->getDependencies($artifact),
+            new ProjectReference($artifact->getTracker()->getProject()),
         );
     }
 }
