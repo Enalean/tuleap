@@ -30,7 +30,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
-use Tuleap\Tracker\Artifact\Heartbeat\OverrideArtifactsInFavourOfAnOther;
+use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
 use UserHelper;
 use UserManager;
 
@@ -79,9 +79,13 @@ class LatestHeartbeatsCollector
 
     public function collect(HeartbeatsEntryCollection $collection): void
     {
+        $event = new ExcludeTrackersFromArtifactHeartbeats($collection->getProject());
+        $this->event_manager->dispatch($event);
+
         $artifacts = $this->dao->searchLatestUpdatedArtifactsInProject(
-            $collection->getProject()->getID(),
-            $collection::NB_MAX_ENTRIES
+            (int) $collection->getProject()->getID(),
+            $collection::NB_MAX_ENTRIES,
+            ...$event->getExcludedTrackerIDs()
         );
 
         if (! $artifacts) {
@@ -93,10 +97,7 @@ class LatestHeartbeatsCollector
             $artifact_list[] = $this->factory->getInstanceFromRow($row);
         }
 
-        $event = new OverrideArtifactsInFavourOfAnOther($artifact_list, $collection->getUser(), $collection->getProject());
-        $this->event_manager->dispatch($event);
-
-        foreach ($event->getOverriddenArtifacts() as $artifact) {
+        foreach ($artifact_list as $artifact) {
             if (! $artifact->userCanView($collection->getUser())) {
                 $collection->thereAreActivitiesUserCannotSee();
                 continue;

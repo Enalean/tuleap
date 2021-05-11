@@ -45,7 +45,7 @@ use Tuleap\TestManagement\Campaign\StatusUpdater;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
-use Tuleap\TestManagement\Heartbeat\HeartbeatArtifactOverrider;
+use Tuleap\TestManagement\Heartbeat\HeartbeatArtifactTrackerExcluder;
 use Tuleap\TestManagement\Heartbeat\LatestHeartbeatsCollector;
 use Tuleap\TestManagement\LegacyRoutingController;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
@@ -71,8 +71,8 @@ use Tuleap\Tracker\Admin\DisplayingTrackerEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
+use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
 use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
-use Tuleap\Tracker\Artifact\Heartbeat\OverrideArtifactsInFavourOfAnOther;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
@@ -149,7 +149,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(HistoryQuickLinkCollection::NAME);
-            $this->addHook(OverrideArtifactsInFavourOfAnOther::NAME);
+            $this->addHook(ExcludeTrackersFromArtifactHeartbeats::NAME);
             $this->addHook(HeartbeatsEntryCollection::NAME);
             $this->addHook(DisplayingTrackerEvent::NAME);
         }
@@ -908,10 +908,10 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         );
     }
 
-    public function overrideArtifactsInFavourOfAnOther(OverrideArtifactsInFavourOfAnOther $event): void
+    public function collectExcludedTrackerFromArtifactHeartbeats(ExcludeTrackersFromArtifactHeartbeats $event): void
     {
-        $artifact_overrider = new HeartbeatArtifactOverrider();
-        $artifact_overrider->overrideArtifacts($this->getConfig(), $event);
+        $tracker_excluder = new HeartbeatArtifactTrackerExcluder();
+        $tracker_excluder->excludeTrackers($this->getConfig(), $event);
     }
 
     public function collectHeartbeatsEntries(HeartbeatsEntryCollection $collection): void
