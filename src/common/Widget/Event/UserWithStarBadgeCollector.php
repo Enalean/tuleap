@@ -59,10 +59,7 @@ class UserWithStarBadgeCollector implements Dispatchable
         return $this->users;
     }
 
-    /**
-     * @return UserWithStarBadge
-     */
-    public function getUserWithStarBadge()
+    public function getUserWithStarBadge(): ?UserWithStarBadge
     {
         return $this->badged_user;
     }

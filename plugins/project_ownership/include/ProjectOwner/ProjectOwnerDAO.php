@@ -24,7 +24,7 @@ use Tuleap\DB\DataAccessObject;
 
 class ProjectOwnerDAO extends DataAccessObject
 {
-    public function save($project_id, $user_id)
+    public function save($project_id, $user_id): void
     {
         $this->getDB()->run(
             'INSERT INTO plugin_project_ownership_project_owner (project_id, user_id) VALUES (?, ?)
@@ -35,10 +35,7 @@ class ProjectOwnerDAO extends DataAccessObject
         );
     }
 
-    /**
-     * @return array
-     */
-    public function searchByProjectID($project_id)
+    public function searchByProjectID($project_id): ?array
     {
         return $this->getDB()->row(
             'SELECT * FROM plugin_project_ownership_project_owner WHERE project_id = ?',
