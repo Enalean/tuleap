@@ -55,6 +55,7 @@
 
     --tlp-ui-info-transparent-90: #{transparentize($tlp-ui-info, .9)};
 
+    --tlp-ui-warning-darker-10: #{darken($tlp-ui-warning, 10%)};
     --tlp-ui-warning-lighter-07: #{mix($tlp-ui-warning, $tlp-ui-white, 7%)};
     --tlp-ui-warning-lighter-12: #{mix($tlp-ui-warning, $tlp-ui-white, 12%)};
 
@@ -62,9 +63,11 @@
     --tlp-ui-warning-transparent-60-darker-05: #{darken(transparentize($tlp-ui-warning, .6), 5%)};
     --tlp-ui-warning-transparent-90: #{transparentize($tlp-ui-warning, .9)};
 
+    --tlp-ui-danger-darker-10: #{darken($tlp-ui-danger, 10%)};
     --tlp-ui-danger-color-transparent-15: #{transparentize($tlp-ui-success, .15)};
     --tlp-ui-danger-color-transparent-90: #{transparentize($tlp-ui-success, .9)};
 
+    --tlp-ui-success-darker-10: #{darken($tlp-ui-success, 10%)};
     --tlp-ui-success-lighter-70: #{mix($tlp-ui-success, $tlp-ui-white, 7)};
     --tlp-ui-success-color-transparent-90: #{transparentize($tlp-ui-success, .9)};
     --tlp-ui-success-color-transparent-95: #{transparentize($tlp-ui-success, .95)};

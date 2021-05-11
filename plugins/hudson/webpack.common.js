@@ -28,12 +28,8 @@ const entry_points = {
     "default-style": "./themes/default/style.scss",
     "test-results-pie": "./scripts/test-results-pie-chart.js",
     hudson_tab: "./scripts/hudson_tab.js",
+    "hudson-style": "./themes/BurningParrot/hudson.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`bp-style-${color}`] = `./themes/BurningParrot/style-${color}.scss`;
-}
 
 module.exports = [
     {

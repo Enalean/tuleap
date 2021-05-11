@@ -51,6 +51,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initializePieChart(widget) {
         const pie_chart_mount_point = widget.querySelector(".test-results-pie");
+        if (!pie_chart_mount_point) {
+            return;
+        }
+
         const pie_chart_element_sizes = getSizes(pie_chart_mount_point);
 
         const pie_chart = new StatisticsPieChart({
