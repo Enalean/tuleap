@@ -151,7 +151,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new \Tuleap\Layout\CssAsset($this->getAssets(), 'bp-style')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'hudson-style')]);
     }
 
     private function getAssets(): IncludeAssets

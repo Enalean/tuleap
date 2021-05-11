@@ -1,3 +1,22 @@
+/**
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 .widget-jenkins-job-icon {
     max-width: 10px;
     margin: 0 5px 0 0;
@@ -34,7 +53,7 @@
 
     > .test-results-pie-legend-text-span {
         min-height: 0;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         font-size: 12px;
         line-height: 18px;
         cursor: default;
@@ -56,15 +75,15 @@
 }
 
 .test-results-pie-legend-color-success {
-    background-color: $tlp-ui-success;
+    background-color: var(--tlp-ui-success);
 }
 
 .test-results-pie-legend-color-skipped {
-    background-color: $tlp-ui-warning;
+    background-color: var(--tlp-ui-warning);
 }
 
 .test-results-pie-legend-color-failed {
-    background-color: $tlp-ui-danger;
+    background-color: var(--tlp-ui-danger);
 }
 
 .test-results-pie-slice-path {
@@ -77,30 +96,30 @@
 
 .test-results-pie-slice-success {
     > path {
-        fill: $tlp-ui-success;
+        fill: var(--tlp-ui-success);
     }
 
     > text {
-        fill: darken($tlp-ui-success, 10%);
+        fill: var(--tlp-ui-success-darker-10);
     }
 }
 
 .test-results-pie-slice-skipped {
     > path {
-        fill: $tlp-ui-warning;
+        fill: var(--tlp-ui-warning);
     }
 
     > text {
-        fill: darken($tlp-ui-warning, 10%);
+        fill: var(--tlp-ui-warning-darker-10);
     }
 }
 
 .test-results-pie-slice-failed {
     > path {
-        fill: $tlp-ui-danger;
+        fill: var(--tlp-ui-danger);
     }
 
     > text {
-        fill: darken($tlp-ui-danger, 10%);
+        fill: var(--tlp-ui-danger-darker-10);
     }
 }
