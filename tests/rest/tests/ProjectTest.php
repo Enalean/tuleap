@@ -22,6 +22,7 @@ namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
 use REST_TestDataBuilder;
+use function PHPUnit\Framework\assertEquals;
 
 /**
  * @group ProjectTests
@@ -55,7 +56,104 @@ class ProjectTest extends ProjectBase
                 $post_resource
             )
         );
-        $this->assertEquals($response->getStatusCode(), 201);
+        assertEquals(201, $response->getStatusCode());
+
+        $create_project_id = $response->json()['id'];
+
+        $this->removeAdminFromProjectMembers(
+            $create_project_id,
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+        );
+    }
+
+    /**
+     * Transfer project ownership and administration to a catch all user
+     *
+     * Historically projects where created but not approved. Tests were written with this assumption so, for instance
+     * membership verification didn't take into account project created in the tests. Now that the projects are auto
+     * approved by default, we need to remove the project creator from the project they just created to avoid fixing
+     * all downstream tests.
+     *
+     * Thanks to project_ownership crap, in order to remove user from admin, we have to:
+     * * Add the new admin
+     * * As site admin change project owner
+     * * Remove the old admin
+     * * Remove from project members
+     */
+    private function removeAdminFromProjectMembers(int $project_id, string $original_project_admin): void
+    {
+        $response = $this->getResponseByName(
+            $original_project_admin,
+            $this->client->put(
+                sprintf('user_groups/%d_4/users', $project_id),
+                null,
+                json_encode(
+                    [
+                        'user_references' => [
+                            ['username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN],
+                            ['username' => $original_project_admin],
+                        ]
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
+            )
+        );
+        assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            \TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                sprintf('project_ownership/%d', $project_id),
+                null,
+                json_encode(
+                    [
+                        'project_owner' => [
+                            'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+                        ]
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
+            )
+        );
+        assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            $original_project_admin,
+            $this->client->put(
+                sprintf('user_groups/%d_4/users', $project_id),
+                null,
+                json_encode(
+                    [
+                        'user_references' => [
+                            [
+                                'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+                            ]
+                        ]
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
+            )
+        );
+        assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+            $this->client->put(
+                sprintf('user_groups/%d_3/users', $project_id),
+                null,
+                json_encode(
+                    [
+                        'user_references' => [
+                            [
+                                'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+                            ]
+                        ]
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
+            )
+        );
+        assertEquals(200, $response->getStatusCode());
     }
 
     public function testPOSTForAdmin()
@@ -78,8 +176,13 @@ class ProjectTest extends ProjectBase
         );
 
         $project = $response->json();
-        $this->assertEquals($response->getStatusCode(), 201);
+        $this->assertEquals(201, $response->getStatusCode());
         $this->assertArrayHasKey("id", $project);
+
+        $this->removeAdminFromProjectMembers(
+            $project['id'],
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+        );
     }
 
     public function testPOSTForRestProjectManager()
@@ -102,8 +205,8 @@ class ProjectTest extends ProjectBase
         );
 
         $project = $response->json();
+        $this->assertEquals(201, $response->getStatusCode());
         $this->assertArrayHasKey("id", $project);
-        $this->assertEquals($response->getStatusCode(), 201);
     }
 
     public function testProjectCreationWithAnIncorrectProjectIDFails(): void
