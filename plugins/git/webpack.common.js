@@ -110,13 +110,9 @@ const webpack_config_for_legacy_scripts = {
 
 const entry_points = {
     default: "./themes/default/css/style.scss",
+    "bp-style": "./themes/BurningParrot/git.scss",
+    "bp-style-siteadmin": "./themes/BurningParrot/site-admin/git.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`bp-style-${color}`] = `./themes/BurningParrot/git-${color}.scss`;
-    entry_points[`bp-style-siteadmin-${color}`] = `./themes/BurningParrot/site-admin-${color}.scss`;
-}
 
 const webpack_config_for_themes = {
     entry: entry_points,

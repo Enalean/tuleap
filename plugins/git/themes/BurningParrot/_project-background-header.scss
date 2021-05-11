@@ -18,7 +18,7 @@
  */
 
 @use '../../src/themes/common/css/project-background/background';
-@import '../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
 
 .project-with-background {
     .git-repository-list-header > h1,
@@ -29,16 +29,16 @@
     }
 
     .git-repository-parent {
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
 
         > a {
-            color: $tlp-ui-white;
+            color: var(--tlp-ui-white);
             text-decoration: underline;
 
             &:focus,
             &:hover,
             &:active {
-                color: darken($tlp-ui-white, 10%);
+                color: var(--tlp-ui-white-darker-10);
             }
         }
     }
@@ -49,8 +49,8 @@ body {
     @each $element-with-project-background in $elements-with-project-background {
         @include background.apply-background(
             $element-with-project-background,
-            $sidebar-expanded-width,
-            $sidebar-collapsed-width,
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width,
         );
     }
 }

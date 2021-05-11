@@ -27,7 +27,6 @@ use TemplateRendererFactory;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 
@@ -83,7 +82,7 @@ class GitRepositoryHeaderDisplayer
         if (! $request->exist('a') || in_array($request->get('a'), ['blob', 'blame', 'tree'], true)) {
             $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->core_assets, 'syntax-highlight'));
         }
-        $layout->addCssAsset(new CssAsset($this->include_assets, 'bp-style'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'bp-style'));
         $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repository.js'));
 
         $external_assets = new CollectAssets();

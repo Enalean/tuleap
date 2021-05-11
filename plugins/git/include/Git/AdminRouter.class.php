@@ -139,7 +139,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
 
         $controller->process($request);
 
-        $layout->addCssAsset(new \Tuleap\Layout\CssAsset($this->include_assets, 'bp-style-siteadmin'));
+        $layout->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->include_assets, 'bp-style-siteadmin'));
 
         $controller->display($request);
     }

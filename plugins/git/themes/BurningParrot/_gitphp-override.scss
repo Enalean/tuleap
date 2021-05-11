@@ -43,7 +43,7 @@
 }
 
 #git-repository-blob-file > tbody > tr > td > pre {
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
 }
 
 #gitphp.plugin_git_gitphp div.page_footer {

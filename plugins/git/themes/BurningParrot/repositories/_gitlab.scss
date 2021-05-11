@@ -22,7 +22,7 @@
 }
 
 .unlink-repository-gitlab {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 .tlp-dropdown-menu.tlp-dropdown-menu-right.tlp-dropdown-menu-on-icon {
@@ -44,8 +44,8 @@
 }
 
 .default-gitlab-avatar {
-    background-color: $tlp-theme-background-color;
-    color: $tlp-ui-dimmed;
+    background-color: var(--tlp-theme-background-color);
+    color: var(--tlp-ui-dimmed);
     text-align: center;
 }
 
@@ -107,7 +107,7 @@
 
 .gitlab-repository-path-namespace {
     display: block;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .75rem;
 }
 
