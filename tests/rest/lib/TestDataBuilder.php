@@ -103,16 +103,15 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     public function generateUsers()
     {
         $this->initPassword(self::ADMIN_USER_NAME, self::STANDARD_PASSWORD);
-
         $this->initPassword(self::TEST_USER_1_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::TEST_USER_3_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::TEST_USER_4_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::TEST_USER_CATCH_ALL_PROJECT_ADMIN, self::STANDARD_PASSWORD);
 
         $user_2 = $this->user_manager->getUserByUserName(self::TEST_USER_2_NAME);
         $user_2->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_USER_2_PASS));
         $user_2->setAuthorizedKeys('ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHk9 toto@marche');
         $this->user_manager->updateDb($user_2);
-
-        $this->initPassword(self::TEST_USER_3_NAME, self::STANDARD_PASSWORD);
-        $this->initPassword(self::TEST_USER_4_NAME, self::STANDARD_PASSWORD);
 
         $user_5 = $this->user_manager->getUserByUserName(self::TEST_USER_5_NAME);
         $user_5->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_USER_5_PASS));

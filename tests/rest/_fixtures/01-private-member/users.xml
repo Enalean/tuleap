@@ -56,4 +56,11 @@
       <email><![CDATA[rest_api_restricted_2@example.com]]></email>
       <ldapid></ldapid>
     </user>
+  <user>
+    <id>110</id>
+    <username>rest_api_catch_all_project_admin</username>
+    <realname><![CDATA[]]></realname>
+    <email><![CDATA[rest_api_catch_all_project_admin@example.com]]></email>
+    <ldapid></ldapid>
+  </user>
 </users>

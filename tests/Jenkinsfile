@@ -87,7 +87,7 @@ pipeline {
                             steps { script { actions.runRESTTests('mysql57', '74') } }
                         }
                     }
-                    post { always { junit 'results/api-rest/*/rest_tests.xml' } }
+                    post { always { junit 'results/api-rest/*/*' } }
                 }
                 stage('DB Integration') {
                     stages {

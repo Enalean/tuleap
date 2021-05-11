@@ -55,6 +55,8 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME = "rest_api_delegated_rest_project_manager";
     public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS = 'welcome0';
 
+    public const TEST_USER_CATCH_ALL_PROJECT_ADMIN = 'rest_api_catch_all_project_admin';
+
     public const ADMIN_PROJECT_ID = 100;
 
     public const PROJECT_PRIVATE_MEMBER_SHORTNAME         = 'private-member';
@@ -109,12 +111,5 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $this->user_manager    = UserManager::instance();
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
-    }
-
-    protected function activatePlugin($name)
-    {
-        $plugin_factory = PluginFactory::instance();
-        $plugin         = $plugin_factory->createPlugin($name);
-        $plugin_factory->availablePlugin($plugin);
     }
 }
