@@ -47,9 +47,9 @@
 .tlp-alert-info {
     @extend %tlp-alert;
 
-    border-left-color: $tlp-ui-info;
-    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-info, 25%), 23%), 15%);
-    color: darken($tlp-ui-info, 30%);
+    border-left: var(--tlp-alert-info-border);
+    background: var(--tlp-alert-info-background);
+    color: var(--tlp-alert-info-color);
 
     &::before {
         content: '\f05a'; // fa-info-circle

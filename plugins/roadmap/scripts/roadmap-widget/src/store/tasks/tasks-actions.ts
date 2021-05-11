@@ -69,8 +69,12 @@ function loadSubtasks(context: ActionContext<TasksState, RootState>, task: Task)
 
     return retrieveAllSubtasks(task)
         .then((subtasks) => {
-            context.commit("setSubtasks", { task, subtasks });
-            context.commit("finishLoadingSubtasks", task);
+            if (subtasks.length > 0) {
+                context.commit("setSubtasks", { task, subtasks });
+                context.commit("finishLoadingSubtasks", task);
+            } else {
+                context.commit("markSubtasksAsEmpty", task);
+            }
         })
         .catch(() => {
             context.commit("markSubtasksAsError", task);

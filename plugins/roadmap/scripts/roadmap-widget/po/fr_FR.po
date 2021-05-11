@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Actually there isn't any children you can see here."
+msgstr "En fait il n'y a aucun enfant que vous pouvez voir ici."
+
 msgid "An error occurred while retrieving the children."
 msgstr "Une erreur est survenue lors de la récupération des enfants."
 
@@ -29,6 +32,9 @@ msgstr "Mois"
 
 msgid "None"
 msgstr "Aucun"
+
+msgid "Ok, got it"
+msgstr ""
 
 msgid "Oops, something went wrong."
 msgstr "Oups, quelque chose ne va pas."

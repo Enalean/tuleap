@@ -20,7 +20,7 @@
 
 <template>
     <div
-        class="roadmap-gantt-task-header roadmap-gantt-subtask-header roadmap-gantt-subtask-header-last-one roadmap-gantt-subtask-header-error"
+        class="roadmap-gantt-task-header roadmap-gantt-subtask-header roadmap-gantt-subtask-header-last-one"
         v-bind:class="classes"
     ></div>
 </template>
@@ -31,7 +31,7 @@ import { Component, Prop } from "vue-property-decorator";
 import type { ErrorRow } from "../../../type";
 
 @Component
-export default class SubtaskSkeletonHeader extends Vue {
+export default class SubtaskMessageHeader extends Vue {
     @Prop({ required: true })
     readonly row!: ErrorRow;
 

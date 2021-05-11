@@ -32,9 +32,9 @@ import type { TasksState } from "../../store/tasks/type";
 import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
 import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
 import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
-import SubtaskErrorHeader from "./Subtask/SubtaskErrorHeader.vue";
 import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
 import BarPopover from "./Task/BarPopover.vue";
+import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -206,7 +206,37 @@ describe("GanttBoard", () => {
         });
 
         expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
-        expect(wrapper.findAllComponents(SubtaskErrorHeader).length).toBe(1);
+        expect(wrapper.findAllComponents(SubtaskMessageHeader).length).toBe(1);
+        expect(wrapper.findAllComponents(SubtaskMessage).length).toBe(1);
+    });
+
+    it("Displays subtasks empty message if retrieval returned no subtasks", () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            {
+                                for_task: { id: 1, dependencies: {} } as Task,
+                                is_empty: true,
+                            },
+                            { task: { id: 3, dependencies: {} } as Task },
+                        ] as Row[],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
+        expect(wrapper.findAllComponents(SubtaskMessageHeader).length).toBe(1);
         expect(wrapper.findAllComponents(SubtaskMessage).length).toBe(1);
     });
 
