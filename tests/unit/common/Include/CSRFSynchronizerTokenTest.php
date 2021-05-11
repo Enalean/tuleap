@@ -101,7 +101,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
 
     public function testItDoesNothingWhenAValidTokenIsChecked()
     {
-        $GLOBALS['Response']->shouldReceive('redirect')->never();
+        $GLOBALS['Response']->expects(self::never())->method('redirect');
 
         $csrf_token = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -118,7 +118,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
     public function testItRedirectsWhenAnInvalidTokenIsChecked()
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with($uri);
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,
@@ -135,7 +135,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
     public function testItRedirectsWhenNoTokenIsProvidedInTheRequest()
     {
         $uri = '/path/to/uri';
-        $GLOBALS['Response']->shouldReceive('redirect')->with($uri)->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with($uri);
 
         $csrf_token = new CSRFSynchronizerToken(
             $uri,

@@ -422,7 +422,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
         $artifact->shouldReceive('getWorkflowUpdateChecker')->andReturns($workflow_checker);
 
-        $GLOBALS['Response']->shouldReceive('getFeedbackErrors')->andReturns([]);
+        $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
 
         $art_factory->shouldReceive('save')->andReturns(true)->once();
 
@@ -670,7 +670,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
         $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
 
-        $GLOBALS['Response']->shouldReceive('getFeedbackErrors')->andReturns([]);
+        $GLOBALS['Response']->method('getFeedbackErrors')->willReturn([]);
 
         $art_factory->shouldReceive('save')->andReturns(true)->once();
 

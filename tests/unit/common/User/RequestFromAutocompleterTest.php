@@ -148,10 +148,11 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->getRequest('bla,jdoe@example.com,_ugroup:Secret,Unknown (seraph)');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->times(3);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(\Feedback::WARN, "The entered value 'bla' is invalid.")->ordered();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(\Feedback::WARN, "The entered value 'Secret' is invalid.")->ordered();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(\Feedback::WARN, "The entered value 'seraph' is invalid.")->ordered();
+        $GLOBALS['Response']->expects(self::exactly(3))->method('addFeedback')->withConsecutive(
+            [\Feedback::WARN, "The entered value 'bla' is invalid."],
+            [\Feedback::WARN, "The entered value 'Secret' is invalid."],
+            [\Feedback::WARN, "The entered value 'Unknown (seraph)' is invalid."],
+        );
 
         $this->invalid_entries->generateWarningMessageForInvalidEntries();
     }
@@ -161,6 +162,6 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getRequest('');
 
         $this->invalid_entries->generateWarningMessageForInvalidEntries();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->times(0);
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
     }
 }

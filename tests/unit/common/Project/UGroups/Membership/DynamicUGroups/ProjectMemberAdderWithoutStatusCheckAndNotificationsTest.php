@@ -64,7 +64,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\T
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
         $this->add_project_member->shouldReceive('addProjectMember')->with($user, $this->an_active_project)->once();
 
-        $GLOBALS['Response']->shouldNotReceive('addFeedback');
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
 
         $this->project_member_adder->addProjectMember($user, $this->an_active_project);
     }
@@ -74,7 +74,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\T
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
         $this->add_project_member->shouldReceive('addProjectMember')->andThrow(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $this->an_active_project));
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMember($user, $this->an_active_project);
     }
@@ -84,7 +84,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\T
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
         $this->add_project_member->shouldReceive('addProjectMember')->andThrow(new AlreadyProjectMemberException());
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
         $this->project_member_adder->addProjectMember($user, $this->an_active_project);
     }

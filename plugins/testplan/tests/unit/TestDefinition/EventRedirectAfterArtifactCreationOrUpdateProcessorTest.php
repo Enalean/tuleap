@@ -192,9 +192,9 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
             )->once()
             ->andThrow(\Tracker_Exception::class);
         $GLOBALS['Response']
-            ->shouldReceive('addFeedback')
-            ->with('warning', 'Unable to link the backlog item to the new artifact')
-            ->once();
+            ->expects(self::once())
+            ->method('addFeedback')
+            ->with('warning', 'Unable to link the backlog item to the new artifact');
 
         $this->processor->process($request, $redirect, $artifact);
 

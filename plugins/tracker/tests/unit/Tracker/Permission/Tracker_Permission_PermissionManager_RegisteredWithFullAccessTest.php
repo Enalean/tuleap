@@ -93,7 +93,7 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
             ]
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::WARN, \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(Feedback::WARN);
 
         $this->permission_manager->save($request, $this->permission_setter);
     }
@@ -109,9 +109,7 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
             ]
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->times(2);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::WARN, \Mockery::any())->ordered();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(Feedback::WARN, \Mockery::any())->ordered();
+        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback')->with(Feedback::WARN);
 
         $this->permission_manager->save($request, $this->permission_setter);
     }

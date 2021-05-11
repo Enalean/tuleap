@@ -31,13 +31,11 @@ use Tracker_FormElement_StaticField_Separator;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\GlobalResponseMock;
 
 class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
-    use GlobalResponseMock;
 
     protected function tearDown(): void
     {
@@ -112,8 +110,17 @@ class TrackerFormElementTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function whenIDisplayAdminFormElement($formElement)
     {
-        $GLOBALS['HTML'] = $GLOBALS['Response'];
-        $GLOBALS['HTML']->shouldReveive('getFactoryIconUseIt');
+        $GLOBALS['HTML'] = new class {
+            public function getImagePath(): string
+            {
+                return '.';
+            }
+
+            public function selectRank(): string
+            {
+                return '';
+            }
+        };
 
         $tracker_manager = Mockery::mock(TrackerManager::class);
         $user            = Mockery::mock(PFUser::class);

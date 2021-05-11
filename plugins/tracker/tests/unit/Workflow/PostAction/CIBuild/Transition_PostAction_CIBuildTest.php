@@ -179,7 +179,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDisplayInfoFeedbackIfLaunchSucceed(): void
     {
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('info', \Mockery::any())->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
         $this->post_action_ci_build->after($this->changeset);
     }
 
@@ -190,7 +190,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
             new Jenkins_ClientUnableToLaunchBuildException($error_message)
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', $error_message)->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error', $error_message);
         $this->post_action_ci_build->after($this->changeset);
     }
 
@@ -205,7 +205,7 @@ final class Transition_PostAction_CIBuildTest extends \Tuleap\Test\PHPUnit\TestC
         $id                   = 123;
         $job_url              = '';
         $post_action_ci_build = new Transition_PostAction_CIBuild($this->transition, $id, $job_url, $this->client);
-        $GLOBALS['Response']->shouldReceive('addFeedback')->never();
+        $GLOBALS['Response']->expects(self::never())->method('addFeedback');
         $this->client->shouldReceive('launchJobBuild')->never();
         $post_action_ci_build->after($this->changeset);
     }

@@ -150,7 +150,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns(null);
 
         $expected = [];
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -162,7 +162,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
 
         $user_story_id = $this->user_story->getId();
         $expected      = [$user_story_id => ['remaining_effort' => 23]];
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -181,7 +181,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($user_story);
 
         $expected = [];
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -215,7 +215,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $expected = [
             $this->artifact_id => ['remaining_effort' => '42 (autocomputed)']
         ];
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $action->process($this->layout, $this->request, $this->user);
     }
@@ -232,7 +232,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
             $this->artifact_id => ['remaining_effort' => 42],
             $user_story_id     => ['remaining_effort' => 23]
         ];
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -247,7 +247,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $expected = [
             $this->artifact_id => ['remaining_effort' => 42],
         ];
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -270,7 +270,7 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $expected = [
             $this->artifact_id => ['remaining_effort' => 42],
         ];
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

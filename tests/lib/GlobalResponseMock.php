@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
-use Mockery;
 use Tuleap\Layout\BaseLayout;
 
 trait GlobalResponseMock
@@ -32,7 +31,13 @@ trait GlobalResponseMock
      */
     protected function mockResponse(): void
     {
-        $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
+        $GLOBALS['Response'] = $this->getMockBuilder(BaseLayout::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->enableAutoReturnValueGeneration()
+            ->getMock();
     }
 
     /**

@@ -138,8 +138,8 @@ class TrackerFormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs(['Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').']);
 
         $GLOBALS['Response']
-            ->shouldReceive('addFeedback')
-            ->withArgs(['warning', 'Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').']);
+            ->method('addFeedback')
+            ->with('warning', 'Type \'mon_type\' does not exist. This field is ignored. (Name : \'field_name\', ID: \'F0\').');
 
         $this->assertNull($this->form_element_factory->getInstanceFromXML($this->tracker, $this->xml_element, $mapping, $this->user_finder, $this->feedback_collector));
     }
@@ -173,8 +173,8 @@ class TrackerFormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs(['Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').']);
 
         $GLOBALS['Response']
-            ->shouldReceive('addFeedback')
-            ->withArgs(['warning', 'Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').']);
+            ->method('addFeedback')
+            ->with('warning', 'Type \'external\' does not exist. This field is ignored. (Name : \'external\', ID: \'F1602\').');
 
         $element_from_instance = $this->form_element_factory->getInstanceFromXML(
             $this->tracker,

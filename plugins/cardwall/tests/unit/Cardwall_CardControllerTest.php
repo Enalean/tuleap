@@ -117,7 +117,7 @@ final class Cardwall_CardControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendJSON')->with($expected);
 
         $card_controller->getCard();
     }

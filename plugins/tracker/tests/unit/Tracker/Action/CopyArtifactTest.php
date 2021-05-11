@@ -204,7 +204,7 @@ XML;
 
         $this->new_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')->once();
 
-        $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?aid=456'])->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?aid=456');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -215,7 +215,7 @@ XML;
 
         $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
 
-        $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?tracker=1'])->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -224,7 +224,7 @@ XML;
     {
         $this->tracker->shouldReceive('userCanSubmitArtifact')->withArgs([$this->user])->andReturn(true);
 
-        $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?tracker=1'])->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -264,8 +264,8 @@ XML;
         $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn($this->changeset_id);
         $this->request->shouldReceive('get')->with('artifact')->andReturn($this->submitted_values);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?tracker=1'])->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
         $this->xml_updater->shouldReceive('update')->never();
@@ -282,8 +282,8 @@ XML;
         $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn(false);
         $this->request->shouldReceive('get')->with('artifact')->andReturn($this->submitted_values);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?tracker=1'])->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
         $this->xml_updater->shouldReceive('update')->never();
@@ -300,8 +300,8 @@ XML;
         $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn($this->changeset_id);
         $this->request->shouldReceive('get')->with('artifact')->andReturn($this->changeset_id);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?tracker=1'])->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
         $this->xml_updater->shouldReceive('update')->never();
@@ -327,8 +327,8 @@ XML;
         $this->request->shouldReceive('get')->with('from_changeset_id')->andReturn($this->changeset_id);
         $this->request->shouldReceive('get')->with('artifact')->andReturn($this->changeset_id);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->withArgs([TRACKER_BASE_URL . '/?tracker=1'])->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?tracker=1');
 
         $this->xml_exporter->shouldReceive('exportSnapshotWithoutComments')->never();
         $this->xml_updater->shouldReceive('update')->never();

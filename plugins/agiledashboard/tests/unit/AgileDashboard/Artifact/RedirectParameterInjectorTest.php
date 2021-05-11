@@ -130,18 +130,18 @@ class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($artifact);
 
         $this->response
-            ->shouldReceive('addFeedback')
+            ->expects(self::once())
+            ->method('addFeedback')
             ->with(
                 \Feedback::INFO,
-                Mockery::on(
+                self::callback(
                     static function (string $content_to_display): bool {
                         return strpos($content_to_display, 'Some milestone') !== false &&
                             strpos($content_to_display, 'rel #42') !== false;
                     }
                 ),
                 CODENDI_PURIFIER_FULL
-            )
-            ->once();
+            );
         $redirect = new \Tracker_Artifact_Redirect();
 
         $this->injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);

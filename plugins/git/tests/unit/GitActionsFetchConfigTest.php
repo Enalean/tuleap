@@ -120,7 +120,7 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->shouldReceive('getRepositoryById')->andReturns(null);
         $repo_id = 458;
 
-        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(404)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(404);
 
         $this->actions->fetchGitConfig($repo_id, $this->user, $this->project);
     }
@@ -130,7 +130,7 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = \Mockery::spy(\Project::class);
         $this->repo->shouldReceive('belongsToProject')->with($project)->andReturns(false);
 
-        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(403)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(403);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $project);
     }
@@ -139,7 +139,7 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('isAdmin')->with($this->project_id)->andReturns(false);
         $this->repo->shouldReceive('isMigratedToGerrit')->andReturns(true);
-        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(401)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(401);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
@@ -148,7 +148,7 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user->shouldReceive('isAdmin')->with($this->project_id)->andReturns(true);
         $this->repo->shouldReceive('isMigratedToGerrit')->andReturns(false);
-        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(500)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(500);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
@@ -158,7 +158,7 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_permissions_manager->shouldReceive('userIsGitAdmin')->andReturns(true);
         $this->repo->shouldReceive('isMigratedToGerrit')->andReturns(true);
         $this->project_creator->shouldReceive('getGerritConfig')->andThrows(new Git_Driver_Gerrit_Exception());
-        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(500)->once();
+        $GLOBALS['Response']->expects(self::once())->method('sendStatusCode')->with(500);
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
