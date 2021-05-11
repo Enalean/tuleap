@@ -29,7 +29,7 @@
 
 .test-plan-list-of-backlogitems-title {
     margin: 0;
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
     font-weight: 600;
 }
 
@@ -50,8 +50,8 @@
 
     &.test-plan-backlog-item-is-just-refreshed {
         animation: pulse-backlog-item-card 500ms ease-in-out;
-        border-color: $tlp-ui-success;
-        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-lighter-90);
     }
 }
 
@@ -70,13 +70,13 @@
 }
 
 .test-plan-backlog-item-caret {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }
 
 .test-plan-backlog-item-title {
     margin: 0 4px;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-weight: 600;
     line-height: 28px;
 }
@@ -96,7 +96,7 @@
 }
 
 .test-plan-backlog-item-coverage-text {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
 }
 
@@ -112,24 +112,24 @@
 }
 
 .test-plan-backlog-item-coverage-icon-symbol {
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     line-height: 0;
 }
 
 .test-plan-backlog-item-coverage-icon-failed {
-    background: $tlp-ui-danger;
+    background: var(--tlp-ui-danger);
 }
 
 .test-plan-backlog-item-coverage-icon-blocked {
-    background: $tlp-ui-info;
+    background: var(--tlp-ui-info);
 }
 
 .test-plan-backlog-item-coverage-icon-passed {
-    background: $tlp-ui-success;
+    background: var(--tlp-ui-success);
 }
 
 .test-plan-backlog-item-coverage-icon-notrun {
-    background: $tlp-ui-dimmed;
+    background: var(--tlp-ui-dimmed);
 }
 
 @keyframes pulse-backlog-item-card {
