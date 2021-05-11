@@ -20,11 +20,17 @@
 
 import { select2 } from "tlp";
 
-const select = document.querySelector("#timezone");
-if (!(select instanceof HTMLSelectElement)) {
-    throw new Error("#timezone not found or is not select");
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const select = document.querySelector("#timezone");
+    if (!(select instanceof HTMLSelectElement)) {
+        throw new Error("#timezone not found or is not select");
+    }
 
-select2(select, {
-    placeholder: "Choose a timezone",
+    if (!select.value) {
+        select.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+
+    select2(select, {
+        placeholder: "Choose a timezone",
+    });
 });

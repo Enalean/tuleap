@@ -125,7 +125,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             ->withEmail('alice@example.com')
             ->withLanguage(M::spy(\BaseLanguage::class))
             ->withAddDate(940000000)
-            ->withTimezone('GMT')
+            ->withTimezone('UTC')
             ->withAvatarUrl("/path/to/avatar.png")
             ->build();
     }
@@ -380,7 +380,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
         $this->user_manager->shouldNotReceive('updateDb');
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'GMT')->build(),
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'UTC')->build(),
             $this->layout,
             []
         );

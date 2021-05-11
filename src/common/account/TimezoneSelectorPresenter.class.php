@@ -42,6 +42,6 @@ class Account_TimezoneSelectorPresenter
 
         $collection = new Account_TimezonesCollection();
 
-        $this->list_of_timezones = $collection->getTimezonePresenters($current_timezone);
+        $this->list_of_timezones = $collection->getTimezonePresenters($current_timezone ?: '');
     }
 }

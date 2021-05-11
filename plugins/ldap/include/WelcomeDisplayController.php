@@ -172,7 +172,6 @@ class WelcomeDisplayController implements DispatchableWithRequest
      */
     private function getTimezonePopup(BaseLayout $layout, $timezone): string
     {
-        $layout->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
         $layout->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
         $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
         return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($timezone));
