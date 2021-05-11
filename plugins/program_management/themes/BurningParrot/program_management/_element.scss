@@ -91,6 +91,49 @@
         width: var(--tlp-medium-spacing);
         height: 100%;
     }
+
+    &.is-moving {
+        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        animation: blinking 1200ms ease-in-out alternate infinite;
+    }
+
+    &.has-moved {
+        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        animation: pulse-has-moved 500ms ease-in-out;
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-color-transparent-90);
+    }
+}
+
+@keyframes pulse-has-moved {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes blinking {
+    0% {
+        border-color: var(--tlp-ui-border-normal);
+        background: var(--tlp-ui-white);
+    }
+
+    50% {
+        border-color: var(--tlp-ui-info);
+        background: var(--tlp-ui-info-transparent-90);
+    }
+
+    100% {
+        border-color: var(--tlp-ui-border-normal);
+        background: var(--tlp-ui-white);
+    }
 }
 
 .element-card-xref {

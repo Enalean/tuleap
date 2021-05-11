@@ -12,6 +12,7 @@ exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = 
   >
     <div
       class="element-card element-card-lake_placid_blue element-card-background-peggy_pink_text element-card-with-accessibility element-draggable-item"
+      data-test="feature-card"
     >
       <div
         class="element-card-content"
@@ -59,6 +60,7 @@ exports[`FeatureCard Displays a not draggable card when user can not plan/unplan
   >
     <div
       class="element-card element-card-lake_placid_blue"
+      data-test="feature-card"
     >
       <div
         class="element-card-content"
@@ -104,6 +106,7 @@ exports[`FeatureCard Displays a not draggable card without accessibility pattern
   >
     <div
       class="element-card element-card-lake_placid_blue"
+      data-test="feature-card"
     >
       <div
         class="element-card-content"

@@ -51,6 +51,7 @@ describe("FeatureCard", () => {
                 $store: createStoreMock({
                     state: {
                         configuration: { accessibility: true, can_create_program_increment: true },
+                        ongoing_move_elements_id: [],
                     },
                 }),
             },
@@ -85,6 +86,7 @@ describe("FeatureCard", () => {
                             accessibility: false,
                             can_create_program_increment: false,
                         },
+                        ongoing_move_elements_id: [],
                     },
                 }),
             },
@@ -116,6 +118,7 @@ describe("FeatureCard", () => {
                 $store: createStoreMock({
                     state: {
                         configuration: { accessibility: false, can_create_program_increment: true },
+                        ongoing_move_elements_id: [],
                     },
                 }),
             },
@@ -148,6 +151,7 @@ describe("FeatureCard", () => {
                 $store: createStoreMock({
                     state: {
                         configuration: { accessibility: false, can_create_program_increment: true },
+                        ongoing_move_elements_id: [],
                     },
                 }),
             },
@@ -155,5 +159,53 @@ describe("FeatureCard", () => {
 
         const wrapper = shallowMount(FeatureCard, component_options);
         expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
+    });
+
+    it("Displays a card when it is moving", async () => {
+        component_options = {
+            propsData: {
+                feature: {
+                    id: 100,
+                    title: "My artifact",
+                    tracker: {
+                        label: "bug",
+                        color_name: "lake_placid_blue",
+                    },
+                    background_color: "",
+                    has_user_story_planned: true,
+                    has_user_story_linked: true,
+                } as Feature,
+                program_increment: {
+                    user_can_plan: false,
+                } as ProgramIncrement,
+            },
+            localVue: await createProgramManagementLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: { accessibility: false, can_create_program_increment: true },
+                        ongoing_move_elements_id: [100],
+                    },
+                }),
+            },
+        };
+
+        jest.useFakeTimers();
+
+        const wrapper = shallowMount(FeatureCard, component_options);
+
+        expect(wrapper.findComponent(FeatureCardBacklogItems).exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=feature-card]").classes()).toContain("is-moving");
+        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("has-moved");
+
+        wrapper.vm.$store.state.ongoing_move_elements_id = [];
+        await wrapper.vm.$nextTick();
+        expect(wrapper.find("[data-test=feature-card]").classes()).toContain("has-moved");
+        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("is-moving");
+
+        jest.advanceTimersByTime(1000);
+        await wrapper.vm.$nextTick();
+        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("has-moved");
+        expect(wrapper.find("[data-test=feature-card]").classes()).not.toContain("is-moving");
     });
 });
