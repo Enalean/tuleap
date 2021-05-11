@@ -141,7 +141,8 @@ class PostPushWebhookActionProcessor
 
                 $this->close_artifact_handler->handleArtifactClosure(
                     $tuleap_reference,
-                    $commit_webhook_data
+                    $commit_webhook_data,
+                    $gitlab_repository
                 );
 
                 $good_references[] = $tuleap_reference;

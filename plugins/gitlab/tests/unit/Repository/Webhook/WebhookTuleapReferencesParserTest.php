@@ -173,7 +173,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         $this->assertCount(2, $references);
 
         $this->assertSame(3, $references[0]->getId());
-        $this->assertSame('resolves', $references[0]->getCloseArtifactKeyword());
+        $this->assertSame('resolve', $references[0]->getCloseArtifactKeyword());
 
         $this->assertSame(15, $references[1]->getId());
         $this->assertSame('resolve', $references[1]->getCloseArtifactKeyword());
@@ -206,7 +206,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         $this->assertNull($references[1]->getCloseArtifactKeyword());
 
         $this->assertSame(68, $references[2]->getId());
-        $this->assertSame('resolves', $references[2]->getCloseArtifactKeyword());
+        $this->assertSame('resolve', $references[2]->getCloseArtifactKeyword());
 
         $this->assertSame(88, $references[3]->getId());
         $this->assertSame('resolve', $references[3]->getCloseArtifactKeyword());

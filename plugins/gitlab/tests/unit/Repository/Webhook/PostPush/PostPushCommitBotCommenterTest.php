@@ -24,12 +24,8 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
-use Tracker_Artifact_Changeset;
-use Tracker_NoChangeException;
-use Tracker_Workflow_WorkflowUser;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
@@ -44,8 +40,6 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Templating\TemplateCache;
-use Tuleap\Tracker\Artifact\Artifact;
-use UserManager;
 
 class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -88,11 +82,6 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactRetriever
      */
     private $artifact_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-
 
     protected function setUp(): void
     {
@@ -104,7 +93,6 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->webhook_data                            = Mockery::mock(PostPushCommitWebhookData::class);
         $this->gitlab_repository                       = Mockery::mock(GitlabRepository::class);
         $this->bot_comment_reference_presenter_builder = Mockery::mock(BotCommentReferencePresenterBuilder::class);
-        $this->user_manager                            = Mockery::mock(UserManager::class);
 
         $template_cache         = \Mockery::mock(TemplateCache::class, ['getPath' => null]);
         $this->template_factory = new TemplateRendererFactory($template_cache);
@@ -114,8 +102,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->credentials_retriever,
             $this->logger,
             $this->bot_comment_reference_presenter_builder,
-            $this->template_factory,
-            $this->user_manager
+            $this->template_factory
         );
     }
 
@@ -268,123 +255,5 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->gitlab_repository,
             $references
         );
-    }
-
-    public function testItDoesNotAddArtifactCommentIfAnErrorOccursDuringTheCommentCreation(): void
-    {
-        $artifact = Mockery::mock(Artifact::class);
-        $message  = "@asticotc attempts to close this artifact from GitLab but no status semantic defined.";
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
-            ]
-        );
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->shouldReceive("getAuthorEmail")->andReturn($committer_email);
-        $this->webhook_data->shouldNotReceive("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "L.Asticot.Coco@email.example.fr",
-                "user_name" => "asticotc",
-                'language_id' => 'en'
-            ]
-        );
-        $this->user_manager->shouldReceive("getUserByEmail")->with($committer_email)->andReturn($committer);
-
-        $artifact->shouldReceive("createNewChangeset")->with([], $message, $tracker_workflow_user)->andThrow(Tracker_NoChangeException::class);
-        $this->logger->shouldReceive("error")->with("An error occurred during the creation of the comment")->once();
-
-        $this->commenter->addTuleapArtifactComment($artifact, $tracker_workflow_user, $this->webhook_data);
-    }
-
-    public function testItDoesNotAddArtifactCommentIfTheCommentIsNotCreated(): void
-    {
-        $artifact = Mockery::mock(Artifact::class);
-        $message  = "@asticotc attempts to close this artifact from GitLab but no status semantic defined.";
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
-            ]
-        );
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->shouldReceive("getAuthorEmail")->andReturn($committer_email);
-        $this->webhook_data->shouldNotReceive("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "L.Asticot.Coco@email.example.fr",
-                "user_name" => "asticotc",
-                'language_id' => 'en'
-            ]
-        );
-        $this->user_manager->shouldReceive("getUserByEmail")->with($committer_email)->andReturn($committer);
-
-        $artifact->shouldReceive("createNewChangeset")->with([], $message, $tracker_workflow_user)->andReturnNull();
-        $this->logger->shouldReceive("error")->with("No new comment was created")->once();
-
-        $this->commenter->addTuleapArtifactComment($artifact, $tracker_workflow_user, $this->webhook_data);
-    }
-
-    public function testItCreatesANewCommentWithTheTuleapUsernameIfTheTuleapUserExists(): void
-    {
-        $artifact = Mockery::mock(Artifact::class);
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
-            ]
-        );
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->shouldReceive("getAuthorEmail")->andReturn($committer_email);
-        $this->webhook_data->shouldNotReceive("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "L.Asticot.Coco@email.example.fr",
-                "user_name" => "asticotc",
-                'language_id' => 'en'
-            ]
-        );
-        $this->user_manager->shouldReceive("getUserByEmail")->with($committer_email)->andReturn($committer);
-
-        $message = "@asticotc attempts to close this artifact from GitLab but no status semantic defined.";
-        $artifact->shouldReceive("createNewChangeset")->with([], $message, $tracker_workflow_user)->andReturn(Mockery::mock(Tracker_Artifact_Changeset::class));
-
-        $this->logger->shouldNotReceive("error");
-
-        $this->commenter->addTuleapArtifactComment($artifact, $tracker_workflow_user, $this->webhook_data);
-    }
-
-    public function testItCreatesANewCommentWithTheGitlabCommitterAuthorIfTheTuleapUserDoesNotExist(): void
-    {
-        $artifact = Mockery::mock(Artifact::class);
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en'
-            ]
-        );
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->shouldReceive("getAuthorEmail")->andReturn($committer_email);
-        $this->webhook_data->shouldReceive("getAuthorName")->andReturn("Coco L'Asticot");
-        $this->user_manager->shouldReceive("getUserByEmail")->with($committer_email)->andReturnNull();
-
-        $message = "Coco L'Asticot attempts to close this artifact from GitLab but no status semantic defined.";
-        $artifact->shouldReceive("createNewChangeset")->with([], $message, $tracker_workflow_user)->andReturn(Mockery::mock(Tracker_Artifact_Changeset::class));
-
-        $this->logger->shouldNotReceive("error");
-
-        $this->commenter->addTuleapArtifactComment($artifact, $tracker_workflow_user, $this->webhook_data);
     }
 }
