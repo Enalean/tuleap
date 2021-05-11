@@ -78,8 +78,8 @@ class ProjectTest extends ProjectBase
         );
 
         $project = $response->json();
-        $this->assertArrayHasKey("id", $project);
         $this->assertEquals($response->getStatusCode(), 201);
+        $this->assertArrayHasKey("id", $project);
     }
 
     public function testPOSTForRestProjectManager()

@@ -4,7 +4,7 @@
     <id>101</id>
     <username>admin</username>
     <realname><![CDATA[Site Administrator]]></realname>
-    <email><![CDATA[codendi-admin@_DOMAIN_NAME_]]></email>
+    <email><![CDATA[codendi-admin@localhost.localdomain]]></email>
     <ldapid><![CDATA[]]></ldapid>
   </user>
   <user>

@@ -44,9 +44,7 @@ yarn-error.log
 *.css.map
 node_modules/
 src/www/assets/*
-test_results/*
-test_results_e2e_full/*
-test_results_distlp/*
+test_results*
 tests/soap/vendor
 tests/rest/vendor
 tests/phpunit/phpunit_test_results.xml
