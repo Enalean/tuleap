@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Semantic;
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Tracker_Semantic_StatusDao;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 
-class SemanticDoneDuplicator
+class SemanticDoneDuplicator implements IDuplicateSemantic
 {
     /**
      * @var SemanticDoneDao
@@ -43,10 +43,19 @@ class SemanticDoneDuplicator
         $this->semantic_status_dao = $semantic_status_dao;
     }
 
-    public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping)
+    /**
+     * Duplicate the semantic from tracker source to tracker target
+     *
+     * @param int   $from_tracker_id The Id of the tracker source
+     * @param int   $to_tracker_id   The Id of the tracker target
+     * @param array $field_mapping   The mapping of the fields of the tracker
+     *
+     * @return void
+     */
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
     {
         $result = $this->semantic_done_dao->getSelectedValues($from_tracker_id);
-        if ($result->count() === 0) {
+        if (empty($result)) {
             return;
         }
 
@@ -63,7 +72,7 @@ class SemanticDoneDuplicator
 
         $to_selected_value_ids = [];
         foreach ($result as $row) {
-            $from_selected_value_id = (int) $row['value_id'];
+            $from_selected_value_id = $row['value_id'];
             if (isset($values_mapping[$from_selected_value_id])) {
                 $to_selected_value_ids[] = (int) $values_mapping[$from_selected_value_id];
             }
@@ -78,7 +87,7 @@ class SemanticDoneDuplicator
     {
         $values_mapping = [];
         foreach ($field_mapping as $mapping) {
-            if ((int) $mapping['from'] === (int) $from_semantic_status_field_id) {
+            if ((int) $mapping['from'] === $from_semantic_status_field_id) {
                 $values_mapping = $mapping['values'];
             }
         }

@@ -24,7 +24,7 @@ use AgileDashboard_Semantic_InitialEffortFactory;
 use Codendi_HTMLPurifier;
 use PlanningFactory;
 use Tracker;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 class MessageFetcher
 {

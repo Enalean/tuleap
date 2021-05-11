@@ -33,9 +33,9 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {

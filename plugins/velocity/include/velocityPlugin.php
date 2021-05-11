@@ -21,12 +21,12 @@
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsChartPresentersRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\JiraImport\JiraAgile\ScrumTrackerStructureEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;

@@ -25,6 +25,11 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDuplicator;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressFromXMLBuilder;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDuplicator;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
@@ -58,7 +63,6 @@ class Tracker_SemanticFactory
         array $xml_mapping,
         Tracker $tracker
     ): ?Tracker_Semantic {
-        $semantic   = null;
         $attributes = $xml->attributes();
         $type       = $attributes['type'];
 
@@ -67,7 +71,7 @@ class Tracker_SemanticFactory
             return $this->getSemanticFromAnotherPlugin($xml, $full_semantic_xml, $xml_mapping, $tracker, $type);
         }
 
-        return $builder->getInstanceFromXML($xml, $xml_mapping, $tracker);
+        return $builder->getInstanceFromXML($xml, $full_semantic_xml, $xml_mapping, $tracker);
     }
 
     private function getSemanticFromXMLBuilder(string $type): ?IBuildSemanticFromXML
@@ -82,6 +86,10 @@ class Tracker_SemanticFactory
 
         if ($type === 'status') {
             return $this->getSemanticStatusFactory();
+        }
+
+        if ($type === SemanticDone::NAME) {
+            return $this->getSemanticDoneFactory();
         }
 
         if ($type === 'contributor') {
@@ -143,7 +151,7 @@ class Tracker_SemanticFactory
     /**
      * Returns an instance of Tracker_Semantic_TitleFactory
      *
-     * @return Tracker_Semantic_TitleFactory an instance of the factory
+     * @return Tracker_Semantic_DescriptionFactory an instance of the factory
      */
     public function getSemanticDescriptionFactory()
     {
@@ -177,6 +185,14 @@ class Tracker_SemanticFactory
     public function getSemanticContributorFactory()
     {
         return Tracker_Semantic_ContributorFactory::instance();
+    }
+
+    private function getSemanticDoneFactory(): SemanticDoneFactory
+    {
+        return new SemanticDoneFactory(
+            new SemanticDoneDao(),
+            new SemanticDoneValueChecker()
+        );
     }
 
     /**
@@ -224,6 +240,10 @@ class Tracker_SemanticFactory
             $this->getSemanticTooltipFactory(),
             $timeframe_duplicator,
             new SemanticProgressDuplicator(new SemanticProgressDao()),
+            new SemanticDoneDuplicator(
+                new SemanticDoneDao(),
+                new Tracker_Semantic_StatusDao()
+            )
         ];
 
         EventManager::instance()->processEvent(

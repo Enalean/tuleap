@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,11 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Semantic\XML;
+namespace Tuleap\Tracker\Semantic\Status\Done\XML;
 
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReference;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 
 final class XMLDoneSemantic extends XMLSemantic
@@ -43,10 +43,10 @@ final class XMLDoneSemantic extends XMLSemantic
     /**
      * @psalm-mutation-free
      */
-    public function withDoneValues(XMLBindValueReference ...$open_values): self
+    public function withDoneValues(XMLBindValueReference ...$done_values): self
     {
         $new              = clone $this;
-        $new->done_values = array_merge($new->done_values, $open_values);
+        $new->done_values = array_merge($new->done_values, $done_values);
         return $new;
     }
 
@@ -56,8 +56,8 @@ final class XMLDoneSemantic extends XMLSemantic
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insert($semantic, 'shortname', SemanticDone::NAME);
-        $cdata->insert($semantic, 'label', dgettext('tuleap-agiledashboard', 'Done'));
-        $cdata->insert($semantic, 'description', dgettext('tuleap-agiledashboard', 'Define the closed status that are considered Done'));
+        $cdata->insert($semantic, 'label', dgettext('tuleap-tracker', 'Done'));
+        $cdata->insert($semantic, 'description', dgettext('tuleap-tracker', 'Define the closed status that are considered Done'));
 
         $closed_values = $semantic->addChild('closed_values');
         foreach ($this->done_values as $done_value) {

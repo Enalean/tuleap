@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
@@ -33,7 +33,7 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $value_checker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao\SemanticDoneDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticDoneDao
      */
     private $dao;
     /**
@@ -66,8 +66,8 @@ class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker         = \Mockery::mock(\Tracker::class);
         $this->semantic_status = \Mockery::spy(\Tracker_Semantic_Status::class);
-        $this->dao             = \Mockery::spy(\Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao::class);
-        $this->value_checker   = \Mockery::spy(\Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker::class);
+        $this->dao             = \Mockery::spy(SemanticDoneDao::class);
+        $this->value_checker   = \Mockery::spy(SemanticDoneValueChecker::class);
     }
 
     public function testItExportsTheSemanticInXml(): void

@@ -18,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 class BurnupCalculator
 {
@@ -50,7 +52,6 @@ class BurnupCalculator
      * @var SemanticDoneFactory
      */
     private $semantic_done_factory;
-
 
     public function __construct(
         Tracker_Artifact_ChangesetFactory $changeset_factory,

@@ -24,7 +24,7 @@ use Feedback;
 use PFUser;
 use Tracker_FormElement_Field;
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 

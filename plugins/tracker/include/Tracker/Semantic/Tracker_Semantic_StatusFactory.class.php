@@ -48,15 +48,19 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
         return Tracker_Semantic_Status::load($tracker);
     }
 
-    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic
-    {
-        $xml_field            = $xml->field;
+    public function getInstanceFromXML(
+        SimpleXMLElement $current_semantic_xml,
+        SimpleXMLElement $all_semantics_xml,
+        array $xml_mapping,
+        Tracker $tracker
+    ): ?Tracker_Semantic {
+        $xml_field            = $current_semantic_xml->field;
         $xml_field_attributes = $xml_field->attributes();
         if (! isset($xml_mapping[(string) $xml_field_attributes['REF']])) {
             return null;
         }
         $field           = $xml_mapping[(string) $xml_field_attributes['REF']];
-        $xml_open_values = $xml->open_values;
+        $xml_open_values = $current_semantic_xml->open_values;
         $open_values     = [];
         foreach ($xml_open_values->open_value as $xml_open_value) {
             $xml_open_value_attributes = $xml_open_value->attributes();

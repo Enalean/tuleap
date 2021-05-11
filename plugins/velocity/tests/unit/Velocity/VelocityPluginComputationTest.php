@@ -26,8 +26,8 @@ use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 

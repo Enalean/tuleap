@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Value;

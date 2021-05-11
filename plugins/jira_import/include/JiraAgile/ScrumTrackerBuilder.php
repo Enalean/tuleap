@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -25,7 +25,6 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\FormElement\Burnup\XML\XMLBurnupField;
-use Tuleap\AgileDashboard\Semantic\XML\XMLDoneSemantic;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField;
@@ -50,6 +49,7 @@ use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Report\Renderer\Table\XML\XMLTable;
 use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
+use Tuleap\Tracker\Semantic\Status\Done\XML\XMLDoneSemantic;
 use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
 use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;

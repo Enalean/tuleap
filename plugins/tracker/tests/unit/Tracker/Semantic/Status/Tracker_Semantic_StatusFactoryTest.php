@@ -27,6 +27,7 @@ use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_StatusFactory;
 
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -36,6 +37,8 @@ class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/Status/ImportTrackerSemanticStatusTest.xml')
         );
+
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
 
         $tracker = Mockery::mock(Tracker::class);
 
@@ -60,7 +63,12 @@ class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                     'F14-V68' => 808,
                     'F14-V69' => 809
         ];
-        $semantic_status = Tracker_Semantic_StatusFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
+        $semantic_status = Tracker_Semantic_StatusFactory::instance()->getInstanceFromXML(
+            $xml,
+            $all_semantics_xml,
+            $mapping,
+            $tracker
+        );
 
         $this->assertEquals('status', $semantic_status->getShortName());
         $this->assertEquals(113, $semantic_status->getFieldId());

@@ -43,8 +43,11 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [
                 'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
                 'F202' => $this->getMockedField(\Tracker_FormElement_Field_Integer::class)
@@ -71,8 +74,11 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [
                 'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
                 'F202' => $this->getMockedField(\Tracker_FormElement_Field_Date::class)
@@ -93,8 +99,11 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItReturnsNullWhenFieldsNotFoundInMapping(\SimpleXMLElement $xml, array $mapping): void
     {
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             $mapping,
             $this->getMockedTracker()
         );

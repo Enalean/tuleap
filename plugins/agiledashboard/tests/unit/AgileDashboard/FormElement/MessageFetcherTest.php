@@ -22,8 +22,8 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 final class MessageFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -54,7 +54,7 @@ final class MessageFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $initial_effort_factory;
     /**
-     * @var \Mockery\MockInterface|SemanticDoneFactory
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticDoneFactory
      */
     private $semantic_done_factory;
 
@@ -62,7 +62,7 @@ final class MessageFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->planning_factory       = \Mockery::spy(\PlanningFactory::class);
         $this->initial_effort_factory = \Mockery::mock('AgileDashboard_Semantic_InitialEffortFactory');
-        $this->semantic_done_factory  = \Mockery::mock('Tuleap\AgileDashboard\Semantic\SemanticDoneFactory');
+        $this->semantic_done_factory  = \Mockery::mock(SemanticDoneFactory::class);
 
         $this->message_fetcher = new MessageFetcher(
             $this->planning_factory,

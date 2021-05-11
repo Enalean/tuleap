@@ -67,13 +67,8 @@ use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneDuplicator;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\AgileDashboard\Semantic\XML\SemanticsExporter;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
@@ -127,7 +122,6 @@ use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
@@ -139,9 +133,9 @@ use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
-use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
-use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
-use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\TrackerCrumbInContext;
@@ -234,10 +228,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(PermissionPerGroupDisplayEvent::NAME);
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-            $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
-            $this->addHook(SemanticStatusGetDisabledValues::NAME);
-            $this->addHook(SemanticStatusCanBeDeleted::NAME);
-            $this->addHook(SemanticStatusFieldCanBeUpdated::NAME);
             $this->addHook(HistoryEntryCollection::NAME);
             $this->addHook(Event::USER_HISTORY_CLEAR);
             $this->addHook(ArtifactCreated::NAME);
@@ -901,7 +891,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         \assert($semantics instanceof Tracker_SemanticCollection);
 
         $semantics->add(AgileDashBoard_Semantic_InitialEffort::load($tracker));
-        $semantics->insertAfter(Tracker_Semantic_Status::NAME, SemanticDone::load($tracker));
     }
 
     /**
@@ -916,19 +905,16 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $type              = $parameters['type'];
 
         if ($type == AgileDashBoard_Semantic_InitialEffort::NAME) {
-            $parameters['semantic'] = $this->getSemanticInitialEffortFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
-        }
-
-        if ($type == SemanticDone::NAME) {
-            $factory                = $this->getSemanticDoneFactory();
-            $parameters['semantic'] = $factory->getInstanceFromXML($xml, $full_semantic_xml, $xmlMapping, $tracker);
+            $parameters['semantic'] = $this->getSemanticInitialEffortFactory()->getInstanceFromXML(
+                $xml,
+                $full_semantic_xml,
+                $xmlMapping,
+                $tracker
+            );
         }
     }
 
-    /**
-     * @return SemanticDoneFactory
-     */
-    private function getSemanticDoneFactory()
+    private function getSemanticDoneFactory(): SemanticDoneFactory
     {
         return new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
     }
@@ -939,10 +925,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function tracker_event_get_semantic_duplicators($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['duplicators'][] = $this->getSemanticInitialEffortFactory();
-        $params['duplicators'][] = new SemanticDoneDuplicator(
-            new SemanticDoneDao(),
-            new Tracker_Semantic_StatusDao()
-        );
     }
 
     protected function getSemanticInitialEffortFactory()
@@ -1261,49 +1243,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             if ($child->userCanView($user)) {
                 $item_ids[] = $child->getId();
             }
-        }
-    }
-
-    public function canValueBeHiddenStatementsCollection(CanValueBeHiddenStatementsCollection $event)
-    {
-        $field   = $event->getField();
-        $tracker = $field->getTracker();
-        $dao     = new SemanticDoneDao();
-
-        $event->add($dao->getSemanticStatement($field->getId(), $tracker->getId()));
-    }
-
-    public function semanticStatusGetDisabledValues(SemanticStatusGetDisabledValues $event)
-    {
-        $field   = $event->getField();
-        $tracker = $field->getTracker();
-        $dao     = new SemanticDoneDao();
-
-        $disabled_values = [];
-        foreach ($dao->getSelectedValues($tracker->getId()) as $value_row) {
-            $disabled_values[] = $value_row['value_id'];
-        }
-
-        $event->setDisabledValues(array_unique($disabled_values));
-    }
-
-    public function semanticStatusCanBeDeleted(SemanticStatusCanBeDeleted $event)
-    {
-        $tracker = $event->getTracker();
-
-        if ($this->doesSemanticDoneUsesSemanticStatus($tracker)) {
-            $event->semanticIsNotDeletable(
-                dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
-            );
-        }
-    }
-
-    public function semanticStatusFieldCanBeUpdated(SemanticStatusFieldCanBeUpdated $event): void
-    {
-        if ($this->doesSemanticDoneUsesSemanticStatus($event->getTracker())) {
-            $event->fieldIsNotUpdatable(
-                dgettext('tuleap-agiledashboard', 'The field for semantic status cannot be updated because semantic done is defined for this tracker.')
-            );
         }
     }
 
@@ -1637,14 +1576,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         $artifact_explicit_backlog_dao = new ArtifactsInExplicitBacklogDao();
         $artifact_explicit_backlog_dao->removeArtifactFromExplicitBacklog($artifact->getId());
-    }
-
-    private function doesSemanticDoneUsesSemanticStatus(Tracker $tracker)
-    {
-        $dao             = new SemanticDoneDao();
-        $selected_values = $dao->getSelectedValues($tracker->getId());
-
-        return $selected_values->rowCount() !== 0;
     }
 
     public function moveArtifactGetExternalSemanticCheckers(MoveArtifactGetExternalSemanticCheckers $event)
@@ -2192,7 +2123,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $event->getXmlTracker(),
             $event->getJiraPlatformConfiguration(),
             $event->getFieldMappingCollection(),
-            $event->getStatusValuesCollection(),
         );
     }
 

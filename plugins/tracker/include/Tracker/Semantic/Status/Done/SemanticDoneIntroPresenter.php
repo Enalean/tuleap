@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Tracker_FormElement_Field;
 
@@ -46,11 +48,11 @@ class SemanticDoneIntroPresenter
 
     public function __construct(array $selected_values, ?Tracker_FormElement_Field $semantic_status_field = null)
     {
-        $this->semantic_status_is_defined = (bool) ($semantic_status_field !== null);
+        $this->semantic_status_is_defined = ($semantic_status_field !== null);
         $this->selected_values            = $selected_values;
         $this->has_selected_values        = count($selected_values) > 0;
 
-        if ($this->semantic_status_is_defined) {
+        if ($semantic_status_field !== null) {
             $this->semantic_status_field_label = $semantic_status_field->getLabel();
         }
     }

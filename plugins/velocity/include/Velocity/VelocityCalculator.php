@@ -24,8 +24,8 @@ use AgileDashboard_Semantic_InitialEffortFactory;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_IComputeValues;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 class VelocityCalculator
 {

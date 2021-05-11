@@ -51,8 +51,11 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
@@ -80,8 +83,11 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
@@ -103,8 +109,11 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
@@ -126,8 +135,11 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
             ],
@@ -148,8 +160,11 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
             ],
@@ -170,8 +185,11 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [],
             $tracker
         );
@@ -195,8 +213,11 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         '
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $semantic = $this->builder->getInstanceFromXML(
             $xml,
+            $all_semantics_xml,
             [],
             \Mockery::mock(\Tracker::class, ['getId' => 113])
         );

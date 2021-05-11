@@ -34,10 +34,10 @@ use Tracker_HierarchyFactory;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 
 class SemanticVelocity extends Tracker_Semantic
 {

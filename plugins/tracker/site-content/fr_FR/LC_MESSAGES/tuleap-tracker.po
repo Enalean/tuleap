@@ -539,12 +539,18 @@ msgstr "Une erreur est survenue empechant la copie de l'artefact #%1$s"
 msgid "An error occured while creating the tracker."
 msgstr "Une erreur est survenue lors de la création de l'outil de suivi."
 
+msgid "An error occurred while clearing done values."
+msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
+
 msgid "An error occurred while deleting the semantic"
 msgstr "Une erreur est survenue lors de suppression de la sémantique"
 
 #, php-format
 msgid "An error occurred while trying to delete the tracker %s"
 msgstr "Une erreur est survenue lors de la suppression de l'outil de suivi %s"
+
+msgid "An error occurred while updating done values."
+msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
 
 msgid "An error occurred while updating the timeframe semantic"
 msgstr ""
@@ -1153,6 +1159,11 @@ msgstr ""
 msgid "Define global date rules"
 msgstr "Définition des règles globales sur les dates"
 
+msgid "Define the closed status that are considered Done"
+msgstr ""
+"Définissez les valeurs fermées de la sémantique statut considérées comme "
+"finies"
+
 msgid "Define the contributor/assignee of an artifact"
 msgstr "Définir le contributeur d'un artéfact"
 
@@ -1295,6 +1306,15 @@ msgstr ""
 "Voulez-vous vraiment reconstruire le cache du burdown dans son intégralité? "
 "La reconstruction du cache entrainera une indisponibilité du champ durant "
 "quelques minutes."
+
+msgid "Done"
+msgstr "Terminé"
+
+msgid "Done values successfully cleared."
+msgstr "Les valeurs finies ont été supprimées avec succès."
+
+msgid "Done values successfully updated."
+msgstr "Les valeurs finies ont été mises à jour avec succès."
 
 msgid "Duplicate this artifact"
 msgstr "Dupliquer cet artefact"
@@ -2567,6 +2587,11 @@ msgstr "Sélectionner la valeur par défaut"
 msgid "Selectbox"
 msgstr "Liste de choix"
 
+msgid "Selected values are invalid because some are not closed values anymore."
+msgstr ""
+"Certaines valeurs sélectionnées sont invalides car elles ne sont plus "
+"considérées comme fermées."
+
 #, php-format
 msgid "Semantic Timeframe is not configured for tracker %s."
 msgstr "La sémantique Plage de temps n'est pas configurée pour le tracker %s."
@@ -2579,6 +2604,9 @@ msgstr "La sémantique a été sauvegardée avec succès"
 
 msgid "Semantic is properly configured"
 msgstr "La sémantique est correctement configurée"
+
+msgid "Semantic status is not defined."
+msgstr "La sémantique status n'est pas définie."
 
 msgid "Semantic timeframe reset successfully"
 msgstr "La sémantique plage de temps a été réinitialisée avec succès"
@@ -3022,6 +3050,13 @@ msgstr ""
 "Le champ '%u' est utilisé pour définir le workflow et ne peut pas être "
 "choisi en tant que champ figé."
 
+msgid ""
+"The field for semantic status cannot be updated because semantic done is "
+"defined for this tracker."
+msgstr ""
+"Le champ pour la sémantique statut ne peut être mis à jour car la sémantique "
+"fini est définie."
+
 msgid "The field is automatically set to artifact submission date"
 msgstr ""
 "Le champ est automatiquement renseigné avec la date de soumission de "
@@ -3353,6 +3388,13 @@ msgid "The same value cannot be source and destination at the same time."
 msgstr ""
 "La même valeur ne peut pas être à la fois source et destination en même "
 "temps."
+
+msgid ""
+"The semantic status cannot de deleted because the semantic done is defined "
+"for this tracker."
+msgstr ""
+"La sémantique statut ne peut être supprimée car la sémantique fini est "
+"définie."
 
 msgid ""
 "The semantic status cannot de deleted because tracker notifications is set "

@@ -23,7 +23,6 @@
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use DataAccessObject;
-use EventManager;
 use Tracker_FormElement_Field;
 
 class BindStaticValueDao extends DataAccessObject
@@ -34,17 +33,11 @@ class BindStaticValueDao extends DataAccessObject
     private $cache_canbedeleted_values = [];
     private $cache_canbehidden_values  = [];
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->table_name = 'tracker_field_list_bind_static_value';
-    }
-
     public function searchById($id)
     {
         $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field_list_bind_static_value
                 WHERE id = $id";
         return $this->retrieve($sql);
     }
@@ -53,7 +46,7 @@ class BindStaticValueDao extends DataAccessObject
     {
         $field_id = $this->da->escapeInt($field_id);
         $sql      = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field_list_bind_static_value
                 WHERE field_id = $field_id
                 ORDER BY " . ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
@@ -64,14 +57,14 @@ class BindStaticValueDao extends DataAccessObject
         $from_value_id = $this->da->escapeInt($from_value_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
         if ($by_reference) {
-            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+            $insert = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden, original_value_id)
                     SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
         } else {
-            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+            $insert = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden, original_value_id)
                     SELECT $to_field_id, label, description, rank, is_hidden, original_value_id";
         }
         $sql = $insert . "
-                FROM $this->table_name
+                FROM tracker_field_list_bind_static_value
                 WHERE id = $from_value_id";
 
         return $this->updateAndGetLastId($sql);
@@ -87,7 +80,7 @@ class BindStaticValueDao extends DataAccessObject
         );
         $is_hidden   = $this->da->escapeInt($is_hidden);
 
-        $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
+        $sql = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden)
                 VALUES ($field_id, $label, $description, $rank, $is_hidden)";
         return $this->updateAndGetLastId($sql);
     }
@@ -97,7 +90,7 @@ class BindStaticValueDao extends DataAccessObject
         $field_id          = $this->da->escapeInt($field->id);
         $original_value_id = $this->da->escapeInt($original_value_id);
 
-        $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+        $sql = "INSERT INTO tracker_field_list_bind_static_value (field_id, label, description, rank, is_hidden, original_value_id)
                 SELECT target.id, original_value.label, original_value.description, original_value.rank, original_value.is_hidden, $original_value_id
                     FROM tracker_field_list_bind_static_value AS original_value
                     INNER JOIN tracker_field AS target ON (target.original_field_id = original_value.field_id)
@@ -111,7 +104,7 @@ class BindStaticValueDao extends DataAccessObject
     {
         $id = $this->da->escapeInt($id);
 
-        $sql = "UPDATE $this->table_name
+        $sql = "UPDATE tracker_field_list_bind_static_value
                 SET is_hidden = 1
                 WHERE id = $id
                    OR original_value_id = $id";
@@ -124,7 +117,7 @@ class BindStaticValueDao extends DataAccessObject
         $id    = $this->da->escapeInt($id);
         $label = $this->da->quoteSmart($label);
 
-        $sql = "UPDATE $this->table_name
+        $sql = "UPDATE tracker_field_list_bind_static_value
                 SET label = $label
                 WHERE id = $id
                    OR original_value_id = $id";
@@ -143,7 +136,7 @@ class BindStaticValueDao extends DataAccessObject
         );
         $is_hidden   = $this->da->escapeInt($is_hidden);
 
-        $sql = "UPDATE $this->table_name
+        $sql = "UPDATE tracker_field_list_bind_static_value
                 SET label = $label,
                     description = $description,
                     rank = $rank,
@@ -156,7 +149,7 @@ class BindStaticValueDao extends DataAccessObject
     public function delete($id)
     {
         $id  = $this->da->escapeInt($id);
-        $sql = "DELETE FROM $this->table_name
+        $sql = "DELETE FROM tracker_field_list_bind_static_value
                 WHERE id = $id
                    OR original_value_id = $id";
 
@@ -181,40 +174,44 @@ class BindStaticValueDao extends DataAccessObject
 
     public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field $field, $value_id)
     {
-        $collection = new CanValueBeHiddenStatementsCollection($field);
-
-        return $this->isValueHiddenable($field->getId(), $value_id, $collection);
+        return $this->isValueHiddenable($field->getId(), $value_id, "");
     }
 
     public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id)
     {
-        $field_id = $this->da->escapeInt($field->getId());
+        $field_id   = $this->da->escapeInt($field->getId());
+        $tracker_id = $this->da->escapeInt($field->getTracker()->getId());
 
         $semantic_status_statement = "
-            SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
-            FROM $this->table_name AS v
+            UNION SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
+            FROM tracker_field_list_bind_static_value AS v
                 INNER JOIN tracker_semantic_status AS s
                 ON ((s.open_value_id = v.id OR s.open_value_id = v.original_value_id)
                     AND s.field_id = v.field_id)
             WHERE v.field_id = $field_id";
 
-        $collection = new CanValueBeHiddenStatementsCollection($field);
-        $collection->add($semantic_status_statement);
+        $semantic_done_statement = "
+            UNION SELECT IF(static_value.original_value_id, static_value.original_value_id, static_value.id) AS id
+                FROM tracker_field_list_bind_static_value AS static_value
+                    INNER JOIN plugin_tracker_semantic_done AS semantic_done
+                    ON (semantic_done.value_id = static_value.id OR semantic_done.value_id = static_value.original_value_id)
+                WHERE semantic_done.tracker_id = $tracker_id
+                AND static_value.field_id = $field_id";
 
-        EventManager::instance()->processEvent($collection);
-
-        return $this->isValueHiddenable($field_id, $value_id, $collection);
+        return $this->isValueHiddenable(
+            $field_id,
+            $value_id,
+            $semantic_status_statement . $semantic_done_statement
+        );
     }
 
-    private function isValueHiddenable($field_id, $value_id, CanValueBeHiddenStatementsCollection $collection)
+    private function isValueHiddenable($field_id, $value_id, string $additionnal_unions)
     {
         $field_id = $this->da->escapeInt($field_id);
 
-        $additionnal_unions = $collection->asUnion();
-
         if (! isset($this->cache_canbehidden_values[$field_id])) {
             $sql = "SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
-                    FROM $this->table_name AS v
+                    FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_workflow AS w ON (
                             v.field_id = w.field_id
                         )
@@ -226,7 +223,7 @@ class BindStaticValueDao extends DataAccessObject
                     WHERE v.field_id = $field_id
                     UNION
                     SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
-                    FROM $this->table_name AS v
+                    FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_workflow AS w ON (
                             v.field_id = w.field_id
                         )
@@ -238,13 +235,13 @@ class BindStaticValueDao extends DataAccessObject
                     WHERE v.field_id = $field_id
                     UNION
                     SELECT v.id AS id
-                    FROM $this->table_name AS v
+                    FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_rule_list AS tr
                         ON (tr.source_field_id = v.field_id AND tr.source_value_id = v.id)
                     WHERE source_field_id = $field_id
                     UNION
                     SELECT v.id AS id
-                    FROM $this->table_name AS v
+                    FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_rule_list AS tr
                         ON (tr.target_field_id = v.field_id AND tr.target_value_id = v.id)
                     WHERE target_field_id = $field_id
@@ -285,13 +282,13 @@ class BindStaticValueDao extends DataAccessObject
 
         if (! isset($this->cache_canbedeleted_values[$field_id])) {
             $sql = "SELECT DISTINCT IF (v.original_value_id, v.original_value_id, v.id) AS id
-                    FROM $this->table_name AS v
+                    FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
                         INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id)
                     WHERE v.field_id = $field_id
                     UNION
                     SELECT v.id AS id
-                    FROM $this->table_name AS v
+                    FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_changeset_value_openlist AS cvl ON (v.id = cvl.bindvalue_id)
                         INNER JOIN tracker_changeset_value AS cv ON (
                             cv.id = cvl.changeset_value_id
@@ -324,7 +321,7 @@ class BindStaticValueDao extends DataAccessObject
         $new_original_value_id = $this->da->escapeInt($new_original_value_id);
 
         $sql = "
-            UPDATE $this->table_name
+            UPDATE tracker_field_list_bind_static_value
             SET   original_value_id = $new_original_value_id
             WHERE field_id          = $field_id
             AND   original_value_id = $old_original_value_id

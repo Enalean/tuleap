@@ -21,9 +21,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticStatusRepresentation;
-use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
-use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
-use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 
 class Tracker_Semantic_Status extends Tracker_Semantic
 {
@@ -309,12 +307,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                 $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>');
                 $html .= '<p>' . dgettext('tuleap-tracker', 'Feel free to choose one:') . $select . ' ' . $submit . '</p>';
             } else {
-                $event = new SemanticStatusFieldCanBeUpdated($this->tracker);
-
-                EventManager::instance()->processEvent($event);
-
-                if (! ($event->fieldCanBeUpdated())) {
-                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $event->getReason());
+                if ($this->doesSemanticDoneHaveDefinedValues($this->getTracker())) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        dgettext('tuleap-tracker', 'The field for semantic status cannot be updated because semantic done is defined for this tracker.')
+                    );
                     $select = $hp->purify($this->getField()->getLabel());
                 }
 
@@ -331,13 +328,16 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
-    private function getDisabledValues()
+    private function getDisabledValues(): array
     {
-        $event = new SemanticStatusGetDisabledValues($this->getField());
+        $dao = new SemanticDoneDao();
 
-        EventManager::instance()->processEvent($event);
+        $disabled_values = [];
+        foreach ($dao->getSelectedValues($this->getTracker()->getId()) as $value_row) {
+            $disabled_values[] = $value_row['value_id'];
+        }
 
-        return $event->getDisabledValues();
+        return $disabled_values;
     }
 
     /**
@@ -410,11 +410,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             return;
         }
 
-        $event = new SemanticStatusCanBeDeleted($this->tracker);
-        EventManager::instance()->processEvent($event);
-
-        if (! $event->semanticCanBeDeleted()) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $event->getReason());
+        if ($this->doesSemanticDoneHaveDefinedValues($this->getTracker())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-tracker', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
+            );
             return;
         }
 
@@ -422,6 +422,14 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $this->open_values = [];
         $dao               = new Tracker_Semantic_StatusDao();
         $dao->delete($this->tracker->getId());
+    }
+
+    private function doesSemanticDoneHaveDefinedValues(Tracker $tracker): bool
+    {
+        $dao             = new SemanticDoneDao();
+        $selected_values = $dao->getSelectedValues($tracker->getId());
+
+        return count($selected_values) > 0;
     }
 
     private function doesTrackerNotificationUseStatusSemantic()
@@ -613,12 +621,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         }
 
         if ($this->getFieldId() !== $field->getId()) {
-            $event = new SemanticStatusFieldCanBeUpdated($this->tracker);
-
-            EventManager::instance()->processEvent($event);
-
-            if (! ($event->fieldCanBeUpdated())) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $event->getReason());
+            if ($this->doesSemanticDoneHaveDefinedValues($this->getTracker())) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    dgettext('tuleap-tracker', 'The field for semantic status cannot be updated because semantic done is defined for this tracker.')
+                );
                 return;
             }
         }

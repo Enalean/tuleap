@@ -22,7 +22,7 @@ namespace Tuleap\Velocity\Semantic;
 
 use SimpleXMLElement;
 use Tracker;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 
 class SemanticVelocityFactory
 {

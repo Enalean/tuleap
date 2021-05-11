@@ -27,6 +27,7 @@ use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -123,6 +124,10 @@ class Tracker_SemanticManager
         $semantics->add(Tracker_Semantic_Title::load($this->tracker));
         $semantics->add(Tracker_Semantic_Description::load($this->tracker));
         $semantics->add(Tracker_Semantic_Status::load($this->tracker));
+        $semantics->insertAfter(
+            Tracker_Semantic_Status::NAME,
+            SemanticDone::load($this->tracker)
+        );
         $semantics->add(Tracker_Semantic_Contributor::load($this->tracker));
 
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(

@@ -136,14 +136,8 @@ msgstr ""
 "Un artéfact sera considéré comme <strong>fini</strong> lorsque son champ %s "
 "aura une des valeurs fermées suivantes :"
 
-msgid "An error occurred while clearing done values."
-msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
-
 msgid "An error occurred while trying to solve inconsistencies."
 msgstr "Une erreur s'est produite pendant la résolution des inconsistences."
-
-msgid "An error occurred while updating done values."
-msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
 
 msgid ""
 "Any \"AddToTopBacklog\" workflow post-actions defined in the project will be "
@@ -229,11 +223,6 @@ msgstr "Créer un kanban"
 msgid "Create a new planning"
 msgstr "Créer un nouveau planning"
 
-msgid "Define the closed status that are considered Done"
-msgstr ""
-"Définissez les valeurs fermées de la sémantique statut considérées comme "
-"finies"
-
 msgid "Define the initial effort of an artifact."
 msgstr "Définir l'effort estimé d'un artéfact"
 
@@ -264,12 +253,6 @@ msgstr ""
 
 msgid "Done"
 msgstr "Terminé"
-
-msgid "Done values successfully cleared."
-msgstr "Les valeurs finies ont été supprimées avec succès."
-
-msgid "Done values successfully updated."
-msgstr "Les valeurs finies ont été mises à jour avec succès."
 
 msgid "Edit"
 msgstr "Éditer"
@@ -536,11 +519,6 @@ msgstr "Voir la documentation pour plus de détails."
 msgid "Select the source tracker:"
 msgstr "Sélectionnez le tracker source:"
 
-msgid "Selected values are invalid because some are not closed values anymore."
-msgstr ""
-"Certaines valeurs sélectionnées sont invalides car elles ne sont plus "
-"considérées comme fermées."
-
 #, php-format
 msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
 msgstr ""
@@ -553,9 +531,6 @@ msgid ""
 msgstr ""
 "La sémantique effort estimé n'est pas définie pour l'outil de suivi <a href="
 "\"%s\">%s</a>"
-
-msgid "Semantic status is not defined."
-msgstr "La sémantique status n'est pas définie."
 
 msgid "Service Agiledashboard is disabled."
 msgstr "Le service des tableaux de bords agile est désactivé."
@@ -602,13 +577,6 @@ msgstr ""
 msgid "The configuration has been successfully imported!"
 msgstr "La configuration a été importée !"
 
-msgid ""
-"The field for semantic status cannot be updated because semantic done is "
-"defined for this tracker."
-msgstr ""
-"Le champ pour la sémantique statut ne peut être mis à jour car la sémantique "
-"fini est définie."
-
 msgid "The field you submitted is not a numeric field"
 msgstr "Le champ soumis n'est pas un champ numérique"
 
@@ -640,9 +608,6 @@ msgstr ""
 msgid "The request is invalid."
 msgstr "La requête n'est pas valide."
 
-msgid "The request is not valid."
-msgstr "La requête n'est pas valide."
-
 msgid "The selected values will define the artifact as done:"
 msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
 
@@ -651,13 +616,6 @@ msgid ""
 "defined."
 msgstr ""
 "La sémantique fini ne peut être définie car la sémantique statut n'est pas "
-"définie."
-
-msgid ""
-"The semantic status cannot de deleted because the semantic done is defined "
-"for this tracker."
-msgstr ""
-"La sémantique statut ne peut être supprimée car la sémantique fini est "
 "définie."
 
 #, php-format

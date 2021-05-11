@@ -26,11 +26,15 @@ use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
 class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML
 {
-    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
-    {
+    public function getInstanceFromXML(
+        SimpleXMLElement $current_semantic_xml,
+        SimpleXMLElement $all_semantics_xml,
+        array $xml_mapping,
+        Tracker $tracker
+    ): Tracker_Semantic {
         $extractor        = new CardFieldXmlExtractor();
-        $fields           = $extractor->extractFieldFromXml($xml, $xml_mapping);
-        $background_color = $extractor->extractBackgroundColorFromXml($xml, $xml_mapping);
+        $fields           = $extractor->extractFieldFromXml($current_semantic_xml, $xml_mapping);
+        $background_color = $extractor->extractBackgroundColorFromXml($current_semantic_xml, $xml_mapping);
 
         $semantic = Cardwall_Semantic_CardFields::load($tracker);
         $semantic->setFields($fields);

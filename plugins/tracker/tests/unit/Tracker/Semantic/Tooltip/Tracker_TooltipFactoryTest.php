@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tracker_TooltipFactory;
 
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -33,18 +34,20 @@ class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     //testing Tooltip import
     public function testImport()
     {
-        $xml     = simplexml_load_string(
+        $xml = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticTooltipTest.xml')
         );
-        $tracker = Mockery::mock(Tracker::class);
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
+        $tracker = Mockery::mock(Tracker::class);
         $mapping = [
                     'F8'  => 108,
                     'F9'  => 109,
                     'F16' => 116,
                     'F14' => 114
         ];
-        $tooltip = Tracker_TooltipFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
+        $tooltip = Tracker_TooltipFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker);
 
         $this->assertEquals(3, count($tooltip->getFields()));
         $fields = $tooltip->getFields();

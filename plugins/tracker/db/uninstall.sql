@@ -120,6 +120,7 @@ DROP TABLE IF EXISTS plugin_tracker_legacy_tracker_migrated;
 
 DROP TABLE IF EXISTS plugin_tracker_private_comment_disabled_tracker;
 DROP TABLE IF EXISTS plugin_tracker_private_comment_permission;
+DROP TABLE IF EXISTS plugin_tracker_semantic_done;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

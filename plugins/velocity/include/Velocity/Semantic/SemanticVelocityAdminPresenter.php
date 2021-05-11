@@ -22,7 +22,7 @@ namespace Tuleap\Velocity\Semantic;
 
 use CSRFSynchronizerToken;
 use Tracker;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 
 class SemanticVelocityAdminPresenter
 {
