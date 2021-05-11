@@ -24,6 +24,7 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
+use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -93,7 +94,7 @@ final class TasksResource
             new TaskRepresentationBuilderForTrackerCache(
                 $semantic_timeframe_builder,
                 $timeframe_builder,
-                new DependenciesRetriever(new NatureDao()),
+                new DependenciesRetriever(new NatureForRoadmapDao()),
                 new SemanticProgressBuilder(
                     $progress_dao,
                     new MethodBuilder(

@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 final class DependenciesRetriever implements IRetrieveDependencies
 {
     /**
-     * @var NatureDao
+     * @var NatureForRoadmapDao
      */
     private $nature_dao;
 
-    public function __construct(NatureDao $nature_dao)
+    public function __construct(NatureForRoadmapDao $nature_dao)
     {
         $this->nature_dao = $nature_dao;
     }
@@ -42,18 +42,24 @@ final class DependenciesRetriever implements IRetrieveDependencies
      */
     public function getDependencies(Artifact $artifact): array
     {
-        $dependencies = [];
-        $rows         = $this->nature_dao->searchForwardNatureShortNamesForGivenArtifact($artifact->getID());
-        foreach ($rows as $row) {
-            $shortname    = $row['shortname'];
-            $artifact_ids = $this->nature_dao->getForwardLinkedArtifactIds(
-                $artifact->getID(),
-                $shortname,
-                PHP_INT_MAX,
-                0
-            );
+        $links_by_nature = [];
 
-            $dependencies[] = new DependenciesByNature($shortname, $artifact_ids);
+        $rows = $this->nature_dao->searchForwardLinksHavingSemantics($artifact->getID());
+        if (! $rows) {
+            return [];
+        }
+
+        foreach ($rows as $row) {
+            if (! isset($links_by_nature[$row['nature']])) {
+                $links_by_nature[$row['nature']] = [];
+            }
+
+            $links_by_nature[$row['nature']][] = $row['id'];
+        }
+
+        $dependencies = [];
+        foreach ($links_by_nature as $nature => $artifact_ids) {
+            $dependencies[] = new DependenciesByNature($nature, array_unique($artifact_ids));
         }
 
         return $dependencies;
