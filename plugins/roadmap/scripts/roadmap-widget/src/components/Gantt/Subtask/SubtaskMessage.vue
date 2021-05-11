@@ -19,12 +19,23 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-subtask-header-error-message" v-bind:style="style">
+    <div v-bind:class="message_class" v-bind:style="style">
         <i
-            class="fas fa-exclamation-circle roadmap-gantt-subtask-header-error-message-icon"
+            class="fas roadmap-gantt-subtask-header-message-icon"
+            v-bind:class="icon"
             aria-hidden="true"
         ></i>
-        <translate>An error occurred while retrieving the children.</translate>
+        {{ message }}
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-mini roadmap-gantt-subtask-header-message-button"
+            v-if="should_button_be_displayed"
+            v-on:click="userUndestandsThatThereAreNoSubtasksToBeDisplayed"
+            data-test="button"
+        >
+            <i class="fas fa-check tlp-button-icon" aria-hidden="true"></i>
+            <translate>Ok, got it</translate>
+        </button>
     </div>
 </template>
 
@@ -32,16 +43,35 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Styles } from "../../../helpers/styles";
-import type { ErrorRow, TaskDimension, TaskDimensionMap } from "../../../type";
+import type {
+    EmptySubtasksRow,
+    ErrorRow,
+    Row,
+    Task,
+    TaskDimension,
+    TaskDimensionMap,
+} from "../../../type";
 import { getDimensions } from "../../../helpers/tasks-dimensions";
+import { namespace } from "vuex-class";
+
+const tasks = namespace("tasks");
 
 @Component
 export default class SubtaskMessage extends Vue {
     @Prop({ required: true })
-    readonly row!: ErrorRow;
+    readonly row!: ErrorRow | EmptySubtasksRow;
 
     @Prop({ required: true })
     readonly dimensions_map!: TaskDimensionMap;
+
+    @tasks.Mutation
+    readonly removeSubtasksDisplayForTask!: (task: Task) => void;
+
+    get message_class(): string {
+        return this.isErrorRow(this.row)
+            ? "roadmap-gantt-subtask-header-error-message"
+            : "roadmap-gantt-subtask-header-info-message";
+    }
 
     get style(): string {
         const top =
@@ -55,6 +85,28 @@ export default class SubtaskMessage extends Vue {
 
     get dimensions(): TaskDimension {
         return getDimensions(this.row.for_task, this.dimensions_map);
+    }
+
+    get icon(): string {
+        return this.isErrorRow(this.row) ? "fa-exclamation-circle" : "fa-info-circle";
+    }
+
+    get message(): string {
+        return this.isErrorRow(this.row)
+            ? this.$gettext("An error occurred while retrieving the children.")
+            : this.$gettext("Actually there isn't any children you can see here.");
+    }
+
+    get should_button_be_displayed(): boolean {
+        return !this.isErrorRow(this.row);
+    }
+
+    userUndestandsThatThereAreNoSubtasksToBeDisplayed(): void {
+        this.removeSubtasksDisplayForTask(this.row.for_task);
+    }
+
+    isErrorRow(row: Row): row is ErrorRow {
+        return "is_error" in row && row.is_error;
     }
 }
 </script>

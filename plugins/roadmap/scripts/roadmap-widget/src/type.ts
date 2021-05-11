@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type SubtaskLoadingStatus = "nope" | "loading" | "loaded" | "error";
+type SubtaskLoadingStatus = "nope" | "loading" | "loaded" | "error" | "empty";
 export const SUBTASKS_WAITING_TO_BE_LOADED: SubtaskLoadingStatus = "nope";
 export const SUBTASKS_ARE_LOADING: SubtaskLoadingStatus = "loading";
 export const SUBTASKS_ARE_LOADED: SubtaskLoadingStatus = "loaded";
 export const SUBTASKS_ARE_IN_ERROR: SubtaskLoadingStatus = "error";
+export const SUBTASKS_ARE_EMPTY: SubtaskLoadingStatus = "empty";
 
 export interface Project {
     readonly id: number;
@@ -88,10 +89,15 @@ export interface ErrorRow {
     readonly is_error: true;
 }
 
+export interface EmptySubtasksRow {
+    readonly for_task: Task;
+    readonly is_empty: true;
+}
+
 export interface SubtaskRow {
     readonly parent: Task;
     readonly subtask: Task;
     readonly is_last_one: boolean;
 }
 
-export type Row = TaskRow | SkeletonRow | ErrorRow | SubtaskRow;
+export type Row = TaskRow | SkeletonRow | EmptySubtasksRow | ErrorRow | SubtaskRow;

@@ -175,23 +175,37 @@ $border-width: 4px;
     }
 }
 
-.roadmap-gantt-subtask-header-error-message {
+.roadmap-gantt-subtask-header-error-message,
+.roadmap-gantt-subtask-header-info-message {
     display: flex;
     position: absolute;
-    z-index: roadmap-variables.$z-index-error-messages;
+    z-index: roadmap-variables.$z-index-task-messages;
     left: var(--tlp-medium-spacing);
     align-items: center;
     width: calc(100% - var(--tlp-medium-spacing));
     height: roadmap-variables.$task-height;
     padding: 0 var(--tlp-medium-spacing);
-    border-left: var(--tlp-alert-danger-border);
-    background: var(--tlp-alert-danger-background);
-    color: var(--tlp-alert-danger-color);
     font-size: .875rem;
 }
 
-.roadmap-gantt-subtask-header-error-message-icon {
+.roadmap-gantt-subtask-header-error-message {
+    border-left: var(--tlp-alert-danger-border);
+    background: var(--tlp-alert-danger-background);
+    color: var(--tlp-alert-danger-color);
+}
+
+.roadmap-gantt-subtask-header-info-message {
+    border-left: var(--tlp-alert-info-border);
+    background: var(--tlp-alert-info-background);
+    color: var(--tlp-alert-info-color);
+}
+
+.roadmap-gantt-subtask-header-message-icon {
     margin: 0 6px 0 0;
+}
+
+.roadmap-gantt-subtask-header-message-button {
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {

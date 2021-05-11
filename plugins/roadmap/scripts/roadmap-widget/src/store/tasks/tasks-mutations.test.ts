@@ -21,6 +21,7 @@ import type { TasksState } from "./type";
 import * as mutations from "./tasks-mutations";
 import type { Task } from "../../type";
 import {
+    SUBTASKS_ARE_EMPTY,
     SUBTASKS_ARE_IN_ERROR,
     SUBTASKS_ARE_LOADED,
     SUBTASKS_ARE_LOADING,
@@ -157,6 +158,40 @@ describe("tasks-mutations", () => {
         expect(state.tasks[0].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
         expect(state.tasks[1].subtasks_loading_status).toBe(SUBTASKS_ARE_IN_ERROR);
         expect(state.tasks[2].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+    });
+
+    it("markSubtasksAsEmpty should switch the status to empty", () => {
+        const state: TasksState = {
+            tasks: [
+                { id: 123, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+                { id: 124, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+                { id: 125, subtasks_loading_status: SUBTASKS_ARE_LOADING },
+            ] as Task[],
+        } as TasksState;
+
+        mutations.markSubtasksAsEmpty(state, { id: 124 } as Task);
+
+        expect(state.tasks[0].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+        expect(state.tasks[1].subtasks_loading_status).toBe(SUBTASKS_ARE_EMPTY);
+        expect(state.tasks[2].subtasks_loading_status).toBe(SUBTASKS_ARE_LOADING);
+    });
+
+    it("removeSubtasksDisplayForTask should disallow to expand the task again", () => {
+        const state: TasksState = {
+            tasks: [
+                {
+                    id: 124,
+                    subtasks_loading_status: SUBTASKS_ARE_EMPTY,
+                    has_subtasks: true,
+                    is_expanded: true,
+                },
+            ] as Task[],
+        } as TasksState;
+
+        mutations.removeSubtasksDisplayForTask(state, { id: 124 } as Task);
+
+        expect(state.tasks[0].has_subtasks).toBe(false);
+        expect(state.tasks[0].is_expanded).toBe(false);
     });
 
     it("setSubtasks stores the subtasks of a task", () => {

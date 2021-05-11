@@ -22,6 +22,9 @@ import { TaskDimensionMap } from "../../../type";
 import { shallowMount } from "@vue/test-utils";
 import SubtaskMessage from "./SubtaskMessage.vue";
 import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { TasksState } from "../../../store/tasks/type";
+import type { RootState } from "../../../store/type";
 
 describe("SubtaskMessage", () => {
     it("should position itself by taking account the size of pin head + year + month + tasks above us + 1px for the border", async () => {
@@ -39,5 +42,36 @@ describe("SubtaskMessage", () => {
         });
 
         expect(wrapper.element.style.top).toBe("274px");
+    });
+
+    describe("empty subtasks", () => {
+        it("should display a confirmation button", async () => {
+            const task = { id: 123 } as Task;
+
+            const dimensions_map = new TaskDimensionMap();
+            dimensions_map.set(task, { index: 4 } as TaskDimension);
+
+            const wrapper = shallowMount(SubtaskMessage, {
+                localVue: await createRoadmapLocalVue(),
+                propsData: {
+                    row: { for_task: task, is_empty: true },
+                    dimensions_map,
+                },
+                mocks: {
+                    $store: createStoreMock({
+                        state: {
+                            tasks: {} as TasksState,
+                        } as RootState,
+                    }),
+                },
+            });
+
+            const button = wrapper.find("[data-test=button]");
+            await button.trigger("click");
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "tasks/removeSubtasksDisplayForTask",
+                task
+            );
+        });
     });
 });
