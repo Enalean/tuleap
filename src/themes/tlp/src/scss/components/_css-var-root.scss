@@ -53,6 +53,7 @@
     --tlp-theme-color-transparent-85: #{transparentize($tlp-theme-color, .85)};
     --tlp-theme-color-transparent-90: #{transparentize($tlp-theme-color, .9)};
 
+    --tlp-ui-info-lighter-20: #{mix($tlp-ui-info, $tlp-ui-white, 80%)};
     --tlp-ui-info-transparent-90: #{transparentize($tlp-ui-info, .9)};
 
     --tlp-ui-warning-darker-10: #{darken($tlp-ui-warning, 10%)};
@@ -64,11 +65,13 @@
     --tlp-ui-warning-transparent-90: #{transparentize($tlp-ui-warning, .9)};
 
     --tlp-ui-danger-darker-10: #{darken($tlp-ui-danger, 10%)};
+    --tlp-ui-danger-lighter-20: #{mix($tlp-ui-danger, $tlp-ui-white, 80%)};
     --tlp-ui-danger-color-transparent-15: #{transparentize($tlp-ui-success, .15)};
     --tlp-ui-danger-color-transparent-90: #{transparentize($tlp-ui-success, .9)};
 
     --tlp-ui-success-darker-10: #{darken($tlp-ui-success, 10%)};
-    --tlp-ui-success-lighter-70: #{mix($tlp-ui-success, $tlp-ui-white, 7)};
+    --tlp-ui-success-lighter-20: #{mix($tlp-ui-success, $tlp-ui-white, 80%)};
+    --tlp-ui-success-lighter-90: #{mix($tlp-ui-success, $tlp-ui-white, 10%)};
     --tlp-ui-success-color-transparent-90: #{transparentize($tlp-ui-success, .9)};
     --tlp-ui-success-color-transparent-95: #{transparentize($tlp-ui-success, .95)};
 
@@ -104,6 +107,8 @@
     --tlp-ui-border-dark: #{$tlp-ui-border-dark};
 
     --tlp-ui-border-normal-transparent-50: #{transparentize($tlp-ui-border-normal, .5)};
+
+    --tlp-ui-border-dark-lighter-20: #{mix($tlp-ui-border-dark, $tlp-ui-white, 80%)};
     --tlp-ui-border-dark-darker-05: #{darken($tlp-ui-border-dark, 5%)};
 
     // density

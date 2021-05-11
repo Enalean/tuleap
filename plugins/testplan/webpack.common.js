@@ -27,12 +27,8 @@ const output = webpack_configurator.configureOutput(
 
 const entry = {
     testplan: "./scripts/test-plan/index.ts",
+    "testplan-style": "./themes/testplan.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry[`testplan-style-${color}`] = `./themes/testplan-${color}.scss`;
-}
 
 module.exports = [
     {

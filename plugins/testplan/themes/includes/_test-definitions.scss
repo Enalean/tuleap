@@ -19,7 +19,7 @@
 
 @use 'media-query-definitions' as media-query;
 @use '../../../../src/themes/tlp/src/scss/components/tooltips-mixins' as tooltip with (
-    $tlp-tooltip-background: $tlp-theme-sidebar-background-color
+    $tlp-tooltip-background: var(--tlp-theme-sidebar-background-color)
 );
 
 .test-plan-list-of-test-definitions {
@@ -27,11 +27,11 @@
     flex-direction: column;
     align-items: center;
     padding: var(--tlp-small-spacing);
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-top: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
-    background: $tlp-theme-color-dimmed-background;
+    background: var(--tlp-theme-color-dimmed-background);
 }
 
 .test-plan-list-of-test-definitions-empty-text {
@@ -73,8 +73,8 @@
 
     &.test-plan-test-definition-is-just-refreshed {
         animation: pulse-test-definition 500ms ease-in-out;
-        border-color: $tlp-ui-success;
-        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-lighter-90);
     }
 }
 
@@ -85,7 +85,7 @@
 
 .test-plan-test-definition-xref {
     margin: 0 4px 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 
     &:hover {
@@ -102,8 +102,8 @@
     align-self: center;
     padding: 1px 6px;
     border-radius: 3px;
-    background: $tlp-theme-color-hover-background;
-    color: $tlp-theme-color;
+    background: var(--tlp-theme-color-hover-background);
+    color: var(--tlp-theme-color);
     font-size: 12px;
     line-height: 18px;
     text-align: center;
@@ -123,7 +123,7 @@
 .test-plan-test-definition-icon-automated-tests.test-plan-test-definition-icon-status-notrun,
 .test-plan-test-definition-icon-automated-tests:last-child {
     opacity: .5;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .test-plan-test-definition-icon-status-passed,
@@ -135,23 +135,23 @@
 }
 
 .test-plan-test-definition-icon-status-passed {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .test-plan-test-definition-icon-status-failed {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 .test-plan-test-definition-icon-status-blocked {
-    color: $tlp-ui-info;
+    color: var(--tlp-ui-info);
 }
 
 .test-plan-test-definition-icon-status-notrun {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .test-plan-test-definition-icon-status-notplanned {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .test-plan-test-definition-test-status-tooltip-position {

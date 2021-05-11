@@ -33,7 +33,7 @@
 
 .test-plan-list-of-campaigns-title {
     margin: 0;
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
     font-weight: 600;
 }
 
@@ -61,15 +61,15 @@
 
     &.test-plan-campaign-is-just-refreshed {
         animation: pulse-campaign 500ms ease-in-out;
-        border-color: $tlp-ui-success;
-        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-lighter-90);
     }
 
     &:hover {
         text-decoration: none;
 
         &:not(.test-plan-campaign-is-just-refreshed) {
-            border-color: $tlp-theme-color;
+            border-color: var(--tlp-theme-color);
         }
     }
 
@@ -89,7 +89,7 @@
 }
 
 .test-plan-campaign-header-stats {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
 }
 
@@ -140,11 +140,11 @@
         flex: 1 1 auto;
 
         > .test-plan-campaign-progression-value {
-            color: $tlp-ui-success;
+            color: var(--tlp-ui-success);
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, $tlp-ui-success, mix($tlp-ui-success, $tlp-ui-white, 80%));
+            background-image: linear-gradient(45deg, var(--tlp-ui-success), var(--tlp-ui-success-lighter-20));
         }
     }
 
@@ -152,11 +152,11 @@
         flex: 0 0 auto;
 
         > .test-plan-campaign-progression-value {
-            color: $tlp-ui-danger;
+            color: var(--tlp-ui-danger);
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, $tlp-ui-danger, mix($tlp-ui-danger, $tlp-ui-white, 80%));
+            background-image: linear-gradient(45deg, var(--tlp-ui-danger), var(--tlp-ui-danger-lighter-20));
         }
     }
 
@@ -164,11 +164,11 @@
         flex: 0 0 auto;
 
         > .test-plan-campaign-progression-value {
-            color: $tlp-ui-info;
+            color: var(--tlp-ui-info);
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, $tlp-ui-info, mix($tlp-ui-info, $tlp-ui-white, 80%));
+            background-image: linear-gradient(45deg, var(--tlp-ui-info), var(--tlp-ui-info-lighter-20));
         }
     }
 
@@ -176,11 +176,11 @@
         flex: 0 0 auto;
 
         > .test-plan-campaign-progression-value {
-            color: $tlp-ui-dimmed;
+            color: var(--tlp-ui-dimmed);
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, $tlp-ui-border-dark, mix($tlp-ui-border-dark, $tlp-ui-white, 80%));
+            background-image: linear-gradient(45deg, var(--tlp-ui-border-dark), var(--tlp-ui-border-dark-lighter-20));
         }
     }
 }
@@ -193,18 +193,18 @@
 
 @keyframes blink-campaign {
     0% {
-        border-color: $tlp-ui-info;
-        background: transparentize($tlp-ui-info, .9);
+        border-color: var(--tlp-ui-info);
+        background: var(--tlp-ui-info-transparent-90);
     }
 
     50% {
         border-color: transparent;
-        background: $tlp-ui-white;
+        background: var(--tlp-ui-white);
     }
 
     100% {
-        border-color: $tlp-ui-info;
-        background: transparentize($tlp-ui-info, .9);
+        border-color: var(--tlp-ui-info);
+        background: var(--tlp-ui-info-transparent-90);
     }
 }
 
