@@ -26,7 +26,7 @@
         />
         <dependency-arrow
             v-for="dependency of dependencies_to_display"
-            v-bind:key="dependency.id"
+            v-bind:key="getDependencyKey(dependency)"
             v-bind:task="task"
             v-bind:dependency="dependency"
             v-bind:dimensions_map="dimensions_map"
@@ -54,10 +54,10 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type {
     Task,
-    TimePeriod,
-    TasksDependencies,
     TaskDimension,
     TaskDimensionMap,
+    TasksDependencies,
+    TimePeriod,
 } from "../../../type";
 import BackgroundGrid from "./BackgroundGrid.vue";
 import TaskBar from "./TaskBar.vue";
@@ -113,6 +113,14 @@ export default class GanttTask extends Vue {
         if (this.popover) {
             this.popover.destroy();
         }
+    }
+
+    getDependencyKey(dependency: Task): string {
+        return (
+            "dependency-" +
+            dependency.id +
+            (dependency.parent ? "-parent-" + dependency.parent.id : "")
+        );
     }
 
     get dimensions(): TaskDimension {

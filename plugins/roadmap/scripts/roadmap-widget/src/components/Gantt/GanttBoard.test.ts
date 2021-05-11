@@ -34,6 +34,7 @@ import SubtaskSkeletonHeader from "./Subtask/SubtaskSkeletonHeader.vue";
 import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
 import SubtaskErrorHeader from "./Subtask/SubtaskErrorHeader.vue";
 import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
+import BarPopover from "./Task/BarPopover.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -134,6 +135,49 @@ describe("GanttBoard", () => {
 
         expect(wrapper.findAllComponents(GanttTask).length).toBe(3);
         expect(wrapper.findAllComponents(SubtaskHeader).length).toBe(1);
+    });
+
+    it("Displays subtasks that can have multiple parents", () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} } as Task },
+                            {
+                                parent: { id: 1, dependencies: {} } as Task,
+                                subtask: { id: 11, dependencies: {} } as Task,
+                                is_last_one: true,
+                            },
+                            { task: { id: 3, dependencies: {} } as Task },
+                            {
+                                parent: { id: 3, dependencies: {} } as Task,
+                                subtask: { id: 11, dependencies: {} } as Task,
+                                is_last_one: true,
+                            },
+                        ] as Row[],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(GanttTask).length).toBe(4);
+        expect(wrapper.findAllComponents(SubtaskHeader).length).toBe(2);
+
+        const popover_ids = wrapper
+            .findAllComponents(BarPopover)
+            .wrappers.map((wrapper) => wrapper.element.id);
+        const unique_popover_ids = popover_ids.filter(
+            (id, index, ids) => ids.indexOf(id) === index
+        );
+        expect(unique_popover_ids.length).toBe(4);
     });
 
     it("Displays subtasks error message if retrieval failed", () => {

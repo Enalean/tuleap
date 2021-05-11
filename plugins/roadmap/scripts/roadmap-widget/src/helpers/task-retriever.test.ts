@@ -283,4 +283,24 @@ describe("task-retriever", () => {
             });
         });
     });
+
+    it("retrieveAllSubasks should inject the parent in retrieved subtasks", async () => {
+        const task = { subtasks_uri: "uri/1234" } as Task;
+
+        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            {
+                id: 6422,
+                xref: "epic #6422",
+                title: "Do this",
+                html_url: "/plugins/tracker/?aid=6422",
+                color_name: "panther-pink",
+                start: null,
+                end: "2020-03-14T10:00:00+01:00",
+            },
+        ]);
+
+        const subtasks = await retrieveAllSubtasks(task);
+
+        expect(subtasks[0].parent).toBe(task);
+    });
 });

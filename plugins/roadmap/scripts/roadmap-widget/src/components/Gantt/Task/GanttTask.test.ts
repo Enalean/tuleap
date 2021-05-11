@@ -155,6 +155,25 @@ describe("GanttTask", () => {
         });
     });
 
+    it("should display an arrow even if the dependency is displayed more than once because it is a subtask with multiple parents", () => {
+        const a_parent: Task = { id: 122 } as Task;
+        const another_parent: Task = { id: 123 } as Task;
+        const dep_1: Task = { id: 124, parent: a_parent } as Task;
+        const dep_2: Task = { id: 124, parent: another_parent } as Task;
+
+        const wrapper = mountGanttTask(
+            { start: new Date(2020, 3, 5), end: new Date(2020, 3, 25) } as Task,
+            new TasksByNature([["depends_on", [dep_1, dep_2]]]),
+            "depends_on"
+        );
+
+        const arrows = wrapper.findAllComponents(DependencyArrow);
+        expect(arrows.length).toBe(2);
+
+        expect(arrows.at(0).props("dependency")).toStrictEqual(dep_1);
+        expect(arrows.at(1).props("dependency")).toStrictEqual(dep_2);
+    });
+
     describe("percentage", () => {
         it("should round the percentage to be displayed", () => {
             const wrapper = mountGanttTask({
