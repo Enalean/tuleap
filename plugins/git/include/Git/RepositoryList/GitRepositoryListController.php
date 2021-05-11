@@ -27,7 +27,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request;
 
@@ -102,7 +102,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         $event = new ProjectProviderEvent($this->project);
         $this->event_manager->processEvent($event);
 
-        $layout->addCssAsset(new CssAsset($this->include_assets, 'bp-style'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'bp-style'));
 
         $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repositories-list.js'));
         $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $this->project);

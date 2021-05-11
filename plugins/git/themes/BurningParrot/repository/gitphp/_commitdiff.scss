@@ -26,7 +26,7 @@
 .git-repository-commit-diff-file-header {
     display: flex;
     padding: var(--tlp-medium-spacing);
-    background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
+    background: var(--tlp-theme-background-color-lighter-50);
 
     .git-repository-commit-file-status {
         font-size: 16px;
@@ -67,7 +67,7 @@
 
 .git-repository-diff-line-left {
     padding: 0 var(--tlp-small-spacing) 0 0;
-    border-right: 1px solid $tlp-ui-border-light;
+    border-right: 1px solid var(--tlp-ui-border-light);
 }
 
 .git-repository-diff-line-right {
@@ -97,11 +97,11 @@
 }
 
 .git-repository-diff-line-added {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .git-repository-diff-line-deleted {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 .git-repository-diff-line-at {

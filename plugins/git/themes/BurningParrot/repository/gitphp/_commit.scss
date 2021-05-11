@@ -77,7 +77,7 @@
     min-width: 300px;
     margin: 0 var(--tlp-x-large-spacing) 0 0;
     padding: 0 0 0 var(--tlp-medium-spacing);
-    border-left: 2px solid $tlp-theme-color;
+    border-left: 2px solid var(--tlp-theme-color);
     white-space: pre-wrap;
 
     @media screen and (max-width: 1000px) {
@@ -120,21 +120,21 @@
 .git-repository-commit-file-stat-added,
 .git-repository-commit-file-added,
 .git-repository-commit-metadata-changes-added {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .git-repository-commit-file-stat-removed,
 .git-repository-commit-file-deleted,
 .git-repository-commit-metadata-changes-removed {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 .git-repository-commit-file-changed {
-    color: $tlp-ui-warning;
+    color: var(--tlp-ui-warning);
 }
 
 .git-repository-commit-file-stat-binary {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .git-repository-commit-metadata-changes-added {

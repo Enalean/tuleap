@@ -23,7 +23,7 @@
 
     &:hover,
     &:focus-within {
-        border: 1px solid $tlp-theme-color;
+        border: 1px solid var(--tlp-theme-color);
     }
 }
 
@@ -73,7 +73,7 @@
 }
 
 .git-repository-card-title {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 1rem;
     font-weight: 600;
     text-transform: none;
@@ -92,12 +92,12 @@
 
 .git-repository-card-last-update {
     margin: 0 var(--tlp-medium-spacing) 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .75rem;
 }
 
 .git-repository-card-description {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .875rem;
     line-height: 1.375rem;
 }
@@ -105,7 +105,7 @@
 .git-pullrequest-badge-link {
     margin: 0 var(--tlp-medium-spacing) 0 0;
     transition: opacity 100ms;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
 
     &:hover,
     &:focus {
@@ -117,11 +117,11 @@
     position: relative;
     top: 1px;
     transition: color 100ms;
-    color: $tlp-ui-border-dark;
+    color: var(--tlp-ui-border-dark);
     font-size: .75rem;
 
     &:hover,
     &:focus {
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 }

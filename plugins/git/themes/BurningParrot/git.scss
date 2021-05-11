@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../src/themes/tlp/src/scss/variables/variables-blue';
-
-@import 'site-admin/git';
+@use 'repositories/repositories';
+@use 'repository/repository';
+@use 'project-background-header';
