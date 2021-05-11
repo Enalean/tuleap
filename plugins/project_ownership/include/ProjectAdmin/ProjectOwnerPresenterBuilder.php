@@ -47,10 +47,13 @@ class ProjectOwnerPresenterBuilder
         $this->language     = $language;
     }
 
-    public function build(Project $project)
+    public function build(Project $project): ProjectOwnerPresenter
     {
         $row           = $this->dao->searchByProjectID($project->getID());
-        $project_owner = $this->user_manager->getUserById($row['user_id']);
+        $project_owner = null;
+        if (isset($row['user_id'])) {
+            $project_owner = $this->user_manager->getUserById($row['user_id']);
+        }
 
         $presenter = new ProjectOwnerPresenter($this->user_helper, $this->language);
         $presenter->build($project_owner);
