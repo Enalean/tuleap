@@ -22,19 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
+use DateTimeImmutable;
 use Mockery;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Artifact\ArtifactNotFoundException;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
+use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 use UserNotExistException;
 
@@ -47,10 +50,6 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      */
     private $handler;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitBotCommenter
-     */
-    private $commit_bot_commenter;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactRetriever
      */
     private $artifact_retriever;
@@ -62,21 +61,31 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Semantic_StatusFactory
      */
     private $semantic_status_factory;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectDao
+     */
+    private $repository_project_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitArtifactUpdater
+     */
+    private $artifact_updater;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->commit_bot_commenter    = Mockery::mock(PostPushCommitBotCommenter::class);
+        $this->artifact_updater        = Mockery::mock(PostPushCommitArtifactUpdater::class);
         $this->artifact_retriever      = Mockery::mock(ArtifactRetriever::class);
         $this->user_manager            = Mockery::mock(UserManager::class);
         $this->semantic_status_factory = Mockery::mock(Tracker_Semantic_StatusFactory::class);
+        $this->repository_project_dao  = Mockery::mock(GitlabRepositoryProjectDao::class);
 
         $this->handler = new PostPushWebhookCloseArtifactHandler(
-            $this->commit_bot_commenter,
+            $this->artifact_updater,
             $this->artifact_retriever,
             $this->user_manager,
             $this->semantic_status_factory,
+            $this->repository_project_dao,
             new NullLogger()
         );
     }
@@ -93,8 +102,9 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
+        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
-        $tracker  = Mockery::mock(Tracker::class);
+        $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
         $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -102,6 +112,11 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->once()
             ->with($reference)
             ->andReturn($artifact);
+
+        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+            ->once()
+            ->with(1, 101)
+            ->andReturn(true);
 
         $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
         $this->user_manager->shouldReceive('getUserById')
@@ -117,7 +132,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($tracker)
             ->andReturn($status_semantic);
 
-        $this->commit_bot_commenter->shouldReceive('addTuleapArtifactComment')
+        $this->artifact_updater->shouldReceive('addTuleapArtifactCommentNoSemanticDefined')
             ->once()
             ->with(
                 $artifact,
@@ -127,7 +142,8 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->handler->handleArtifactClosure(
             $reference,
-            $webhook_data
+            $webhook_data,
+            $repository
         );
     }
 
@@ -143,17 +159,19 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
+        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
         $this->artifact_retriever->shouldReceive('retrieveArtifactById')
             ->once()
             ->with($reference)
             ->andThrow(new ArtifactNotFoundException());
 
-        $this->commit_bot_commenter->shouldNotReceive('addTuleapArtifactComment');
+        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
 
         $this->handler->handleArtifactClosure(
             $reference,
-            $webhook_data
+            $webhook_data,
+            $repository
         );
     }
 
@@ -169,8 +187,9 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
+        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
-        $tracker  = Mockery::mock(Tracker::class);
+        $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
         $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -179,6 +198,11 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($reference)
             ->andReturn($artifact);
 
+        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+            ->once()
+            ->with(1, 101)
+            ->andReturn(true);
+
         $this->user_manager->shouldReceive('getUserById')
             ->once()
             ->with(Tracker_Workflow_WorkflowUser::ID)
@@ -186,15 +210,16 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->expectException(UserNotExistException::class);
 
-        $this->commit_bot_commenter->shouldNotReceive('addTuleapArtifactComment');
+        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
 
         $this->handler->handleArtifactClosure(
             $reference,
-            $webhook_data
+            $webhook_data,
+            $repository
         );
     }
 
-    public function testItDoesNothingIfStatusSemanticIsDefined(): void
+    public function testItAskToCommentArtifactAndChangeStatusIfStatusSemanticIsDefined(): void
     {
         $reference    = new WebhookTuleapReference(123, "resolve");
         $webhook_data = new PostPushCommitWebhookData(
@@ -206,8 +231,9 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
+        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
-        $tracker  = Mockery::mock(Tracker::class);
+        $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
         $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -215,6 +241,11 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->once()
             ->with($reference)
             ->andReturn($artifact);
+
+        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+            ->once()
+            ->with(1, 101)
+            ->andReturn(true);
 
         $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
         $this->user_manager->shouldReceive('getUserById')
@@ -232,11 +263,87 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($tracker)
             ->andReturn($status_semantic);
 
-        $this->commit_bot_commenter->shouldNotReceive('addTuleapArtifactComment');
+        $this->artifact_updater->shouldReceive('closeTuleapArtifact')
+            ->once()
+            ->with(
+                $artifact,
+                $user,
+                $webhook_data,
+                $reference,
+                $status_semantic->getField(),
+                $repository
+            );
 
         $this->handler->handleArtifactClosure(
             $reference,
-            $webhook_data
+            $webhook_data,
+            $repository
+        );
+    }
+
+    public function testItDoesNothingIfNoCloseKeywordDefined(): void
+    {
+        $reference    = new WebhookTuleapReference(123);
+        $webhook_data = new PostPushCommitWebhookData(
+            'feff4ced04b237abb8b4a50b4160099313152c3c',
+            'A commit with references containing close artifact keyword',
+            'A commit with reference: resolve TULEAP-123',
+            "master",
+            1608110510,
+            "john-snow@example.com",
+            "John Snow"
+        );
+        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $this->artifact_retriever->shouldNotReceive('retrieveArtifactById');
+        $this->repository_project_dao->shouldNotReceive('isGitlabRepositoryIntegratedInProject');
+        $this->user_manager->shouldNotReceive('getUserById');
+        $this->semantic_status_factory->shouldNotReceive('getByTracker');
+        $this->artifact_updater->shouldNotReceive('closeTuleapArtifact');
+
+        $this->handler->handleArtifactClosure(
+            $reference,
+            $webhook_data,
+            $repository
+        );
+    }
+
+    public function testItDoesNothingIfRepositoryIsNotIntegratedInProjectOfArtifact(): void
+    {
+        $reference    = new WebhookTuleapReference(123, "resolve");
+        $webhook_data = new PostPushCommitWebhookData(
+            'feff4ced04b237abb8b4a50b4160099313152c3c',
+            'A commit with references containing close artifact keyword',
+            'A commit with reference: resolve TULEAP-123',
+            "master",
+            1608110510,
+            "john-snow@example.com",
+            "John Snow"
+        );
+        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
+            ->once()
+            ->with($reference)
+            ->andReturn($artifact);
+
+        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+            ->once()
+            ->with(1, 101)
+            ->andReturn(false);
+
+        $this->user_manager->shouldNotReceive('getUserById');
+        $this->semantic_status_factory->shouldNotReceive('getByTracker');
+        $this->artifact_updater->shouldNotReceive('closeTuleapArtifact');
+
+        $this->handler->handleArtifactClosure(
+            $reference,
+            $webhook_data,
+            $repository
         );
     }
 }

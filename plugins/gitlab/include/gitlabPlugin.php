@@ -59,6 +59,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDat
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PreviouslySavedReferencesRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitArtifactUpdater;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
@@ -92,6 +93,7 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -234,7 +236,6 @@ class gitlabPlugin extends Plugin
             $logger,
             new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
             TemplateRendererFactory::build(),
-            UserManager::instance()
         );
 
         return new GitlabRepositoryWebhookController(
@@ -268,10 +269,15 @@ class gitlabPlugin extends Plugin
                     $logger,
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
-                        $commenter,
+                        new PostPushCommitArtifactUpdater(
+                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory()),
+                            UserManager::instance(),
+                            $logger
+                        ),
                         new ArtifactRetriever(Tracker_ArtifactFactory::instance()),
                         UserManager::instance(),
                         Tracker_Semantic_StatusFactory::instance(),
+                        new GitlabRepositoryProjectDao(),
                         $logger
                     )
                 ),

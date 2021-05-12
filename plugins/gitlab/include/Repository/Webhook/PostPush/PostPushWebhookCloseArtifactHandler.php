@@ -27,16 +27,14 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Artifact\ArtifactNotFoundException;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
+use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use UserManager;
 use UserNotExistException;
 
 class PostPushWebhookCloseArtifactHandler
 {
-    /**
-     * @var PostPushCommitBotCommenter
-     */
-    private $commit_bot_commenter;
     /**
      * @var ArtifactRetriever
      */
@@ -53,31 +51,53 @@ class PostPushWebhookCloseArtifactHandler
      * @var Tracker_Semantic_StatusFactory
      */
     private $semantic_status_factory;
+    /**
+     * @var GitlabRepositoryProjectDao
+     */
+    private $repository_project_dao;
+    /**
+     * @var PostPushCommitArtifactUpdater
+     */
+    private $artifact_updater;
 
     public function __construct(
-        PostPushCommitBotCommenter $commit_bot_commenter,
+        PostPushCommitArtifactUpdater $artifact_updater,
         ArtifactRetriever $artifact_retriever,
         UserManager $user_manager,
         Tracker_Semantic_StatusFactory $semantic_status_factory,
+        GitlabRepositoryProjectDao $repository_project_dao,
         LoggerInterface $logger
     ) {
-        $this->commit_bot_commenter    = $commit_bot_commenter;
+        $this->artifact_updater        = $artifact_updater;
         $this->artifact_retriever      = $artifact_retriever;
         $this->user_manager            = $user_manager;
         $this->semantic_status_factory = $semantic_status_factory;
+        $this->repository_project_dao  = $repository_project_dao;
         $this->logger                  = $logger;
     }
 
     public function handleArtifactClosure(
         WebhookTuleapReference $tuleap_reference,
-        PostPushCommitWebhookData $post_push_commit_webhook_data
+        PostPushCommitWebhookData $post_push_commit_webhook_data,
+        GitlabRepository $gitlab_repository
     ): void {
         if ($tuleap_reference->getCloseArtifactKeyword() === null) {
             return;
         }
 
         try {
-            $artifact = $this->artifact_retriever->retrieveArtifactById($tuleap_reference);
+            $artifact                            = $this->artifact_retriever->retrieveArtifactById($tuleap_reference);
+            $is_repository_integrated_in_project = $this->repository_project_dao->isGitlabRepositoryIntegratedInProject(
+                $gitlab_repository->getId(),
+                (int) $artifact->getTracker()->getGroupId()
+            );
+
+            if (! $is_repository_integrated_in_project) {
+                $this->logger->warning(
+                    "|  |  |_ Artifact #{$tuleap_reference->getId()} is not in a project where the GitLab repository is integrated in. Skipping."
+                );
+                return;
+            }
 
             $tracker_workflow_user = $this->user_manager->getUserById(Tracker_Workflow_WorkflowUser::ID);
             if (! $tracker_workflow_user) {
@@ -88,18 +108,25 @@ class PostPushWebhookCloseArtifactHandler
                 $artifact->getTracker()
             );
 
-            if ($status_semantic->getField() !== null) {
-                $this->logger->info("Status semantic defined for artifact #{$tuleap_reference->getId()}.");
+            if ($status_semantic->getField() === null) {
+                $this->artifact_updater->addTuleapArtifactCommentNoSemanticDefined(
+                    $artifact,
+                    $tracker_workflow_user,
+                    $post_push_commit_webhook_data
+                );
                 return;
             }
 
-            $this->commit_bot_commenter->addTuleapArtifactComment(
+            $this->artifact_updater->closeTuleapArtifact(
                 $artifact,
                 $tracker_workflow_user,
-                $post_push_commit_webhook_data
+                $post_push_commit_webhook_data,
+                $tuleap_reference,
+                $status_semantic->getField(),
+                $gitlab_repository
             );
         } catch (ArtifactNotFoundException $e) {
-            $this->logger->error("Artifact #{$tuleap_reference->getId()} not found");
+            $this->logger->error("|  |  |_ Artifact #{$tuleap_reference->getId()} not found");
         }
     }
 }
