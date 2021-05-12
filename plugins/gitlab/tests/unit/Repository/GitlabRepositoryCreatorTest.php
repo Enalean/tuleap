@@ -131,7 +131,8 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,
             $this->gitlab_project,
-            $this->project
+            $this->project,
+            GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration()
         );
     }
 
@@ -162,7 +163,8 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,
             $this->gitlab_project,
-            $this->project
+            $this->project,
+            GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration()
         );
     }
 
@@ -195,7 +197,8 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,
             $this->gitlab_project,
-            $this->project
+            $this->project,
+            GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration()
         );
     }
 
@@ -226,7 +229,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_repository_project_dao->shouldReceive('addGitlabRepositoryIntegrationInProject')
             ->once()
-            ->with(1, 101);
+            ->with(1, 101, 0);
 
         $this->webhook_creator->shouldReceive('generateWebhookInGitlabProject')
             ->once()
@@ -240,7 +243,8 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $result = $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,
             $this->gitlab_project,
-            $this->project
+            $this->project,
+            GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration()
         );
 
         $this->assertSame($gitlab_repository, $result);

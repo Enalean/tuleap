@@ -46,6 +46,7 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
+use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDeletor;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -167,10 +168,17 @@ final class GitlabRepositoryResource
                 new GitlabBotApiTokenInserter(new GitlabBotApiTokenDao(), new KeyFactory())
             );
 
+            if (isset($gitlab_repository->allow_artifact_closure) && $gitlab_repository->allow_artifact_closure === true) {
+                $configuration = GitlabRepositoryCreatorConfiguration::buildConfigurationAllowingArtifactClosure();
+            } else {
+                $configuration = GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
+            }
+
             $integrated_gitlab_repository = $gitlab_repository_creator->integrateGitlabRepositoryInProject(
                 $credentials,
                 $gitlab_api_project,
-                $project
+                $project,
+                $configuration
             );
 
             return new GitlabRepositoryRepresentation(

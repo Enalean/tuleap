@@ -103,6 +103,7 @@ describe("Gitlab Api Querier", () => {
             const gitlab_repository_id = 10;
             const gitlab_bot_api_token = "AzRT785";
             const gitlab_server_url = "https://example.com";
+            const allow_artifact_closure = false;
 
             const headers = {
                 "content-type": "application/json",
@@ -113,6 +114,7 @@ describe("Gitlab Api Querier", () => {
                 gitlab_repository_id,
                 gitlab_server_url,
                 gitlab_bot_api_token,
+                allow_artifact_closure,
             });
 
             const tlpPost = jest.spyOn(tlp, "post");
@@ -123,6 +125,7 @@ describe("Gitlab Api Querier", () => {
                 gitlab_repository_id,
                 gitlab_server_url,
                 gitlab_bot_api_token,
+                allow_artifact_closure,
             });
 
             expect(tlpPost).toHaveBeenCalledWith("/api/gitlab_repositories", {

@@ -34,7 +34,7 @@
             >
                 {{ message_error_rest }}
             </div>
-            <table v-else class="tlp-table">
+            <table v-else class="tlp-table gitlab-repositories-list-table">
                 <thead>
                     <tr>
                         <th></th>
@@ -127,6 +127,19 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" v-model="allow_artifact_closure" value="1" />
+                    <translate>Allow artifact closure</translate>
+                </label>
+                <p class="tlp-text-info">
+                    <i class="far fa-life-ring" aria-hidden="true"></i>
+                    <translate>
+                        If selected, artifacts of this project can be closed with GitLab commit
+                        messages from the selected repository.
+                    </translate>
+                </p>
+            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -192,6 +205,7 @@ export default class ListRepositoriesModal extends Vue {
     private selected_repository: GitlabProject | null = null;
     private is_loading = false;
     private message_error_rest = "";
+    private allow_artifact_closure = 0;
 
     get disabled_button(): boolean {
         return this.selected_repository === null || this.is_loading || this.have_any_rest_error;
@@ -222,6 +236,7 @@ export default class ListRepositoriesModal extends Vue {
                 gitlab_bot_api_token: this.gitlab_api_token,
                 gitlab_server_url: this.server_url,
                 project_id: getProjectId(),
+                allow_artifact_closure: Boolean(this.allow_artifact_closure),
             });
 
             this.$store.commit("resetRepositories");

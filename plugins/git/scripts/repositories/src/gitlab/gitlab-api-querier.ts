@@ -32,6 +32,7 @@ export interface GitLabRepositoryCreation {
     gitlab_repository_id: number;
     gitlab_server_url: string;
     gitlab_bot_api_token: string;
+    allow_artifact_closure: boolean;
 }
 
 export interface GitLabRepositoryUpdate {
