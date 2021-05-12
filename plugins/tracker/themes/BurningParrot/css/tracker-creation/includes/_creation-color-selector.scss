@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 .tracker-color-selector {
     width: 75px;
@@ -44,7 +45,7 @@
 #select2-tracker-creation-field-color-results {
     min-width: 110px;
     margin-top: -1px;
-    border: 1px solid $tlp-theme-color;
+    border: 1px solid var(--tlp-theme-color);
     border-radius: 0 3px 3px;
 }
 
@@ -83,7 +84,7 @@
         border-radius: 50%;
     }
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             background: map-get($colors, 'secondary');
 
@@ -98,7 +99,7 @@
 body[data-user-has-accessibility-mode='1'] {
     #select2-tracker-creation-field-color-container > span,
     #select2-tracker-creation-field-color-results > li > span {
-        @each $color-name, $colors in $tlp-swatch-color-map {
+        @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
             &.#{$color-name} {
                 &::before {
                     background: map-get($colors, 'primary');

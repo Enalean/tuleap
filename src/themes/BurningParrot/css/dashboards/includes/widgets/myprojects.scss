@@ -27,7 +27,7 @@
 
 .dashboard-widget-my-projects-icons {
     margin: 0 5px 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .dashboard-widget-my-projects-project-name {
@@ -35,25 +35,25 @@
 }
 
 .empty-project-box-inside {
-    fill: desaturate(lighten($tlp-theme-color, 20%), 10%);
+    fill: var(--tlp-ui-white);
 }
 
 .empty-project-box-icons {
-    fill: $tlp-theme-color;
+    fill: var(--tlp-illustration-color);
 }
 
 .empty-project-box-shadow {
-    fill: $tlp-theme-color;
+    fill: var(--tlp-illustration-grey);
 }
 
 .empty-project-box {
-    fill: desaturate(lighten($tlp-theme-color, 40%), 15%);
+    fill: var(--tlp-illustration-grey);
 }
 
 .empty-project-box-top-shadow {
-    fill: $tlp-theme-color;
+    fill: var(--tlp-ui-border-dark-darker-05);
 }
 
 .empty-project-box-top {
-    fill: desaturate(lighten($tlp-theme-color, 40%), 15%);
+    fill: var(--tlp-illustration-grey);
 }

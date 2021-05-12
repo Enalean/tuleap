@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../../src/themes/tlp/src/scss/variables/colors/common-colors';
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 .select-option-not-colored {
     padding-left: 16px;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .select-option-colored-#{$color-name} {
         border-left: 16px solid map-get($colors, 'primary');
     }

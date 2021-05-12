@@ -27,7 +27,7 @@ use HTTPRequest;
 use Project;
 use trackerPlugin;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -104,7 +104,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
             __DIR__ . '/../../../../../src/www/assets/trackers',
             '/assets/trackers'
         );
-        $layout->addCssAsset(new CssAsset($assets, 'tracker-creation'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'tracker-creation'));
 
         $layout->header(
             [

@@ -26,7 +26,7 @@ use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -82,7 +82,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         );
         $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-email-copy-paste-bp.js'));
         $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-workflow-transitions.js'));
-        $layout->addCssAsset(new CssAsset($assets, 'workflow'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'workflow'));
 
         $event = new GetExternalPostActionPluginsEvent($tracker);
         $this->event_manager->processEvent($event);

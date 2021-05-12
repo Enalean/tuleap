@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 .trackers-homepage-title {
     display: flex;
     align-items: center;
@@ -34,7 +36,7 @@
 .trackers-homepage-tracker {
     width: 50%;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             &:hover {
                 border-color: map-get($colors, 'border');
@@ -70,6 +72,6 @@
 
 .trackers-homepage-tracker-description {
     display: block;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .875rem;
 }

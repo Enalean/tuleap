@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,6 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/tlp/src/scss/variables/variables-purple';
+@use 'workflow/header';
+@use 'workflow/matrix';
+@use 'workflow/transition-modal';
+@use '~@tuleap/list-picker';
 
-@import './workflow';
+
+.tracker-workflow-loader {
+    height: 200px;
+    margin: 0 auto;
+    background: url('../../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.tracker-workflow-property-disabled {
+    opacity: .5;
+}
+
+.tracker-workflow-rules-enforcement-warning {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.tracker-workflow-transition-modal-empty-action {
+    margin: var(--tlp-medium-spacing) 0;
+    color: var(--tlp-theme-color-transparent-70);
+    font-size: 20px;
+    line-height: 26px;
+    text-align: center;
+}

@@ -483,10 +483,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);
 
         if ($include_tracker_css_file || strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $variant                 = $params['variant'];
-            $params['stylesheets'][] = $this->getAssets()->getFileURL(
-                'tracker-bp-' . $variant->getName() . '.css'
-            );
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('tracker-bp.css');
         }
     }
 
