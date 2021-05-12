@@ -28,6 +28,6 @@
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest",
     "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\"",
-    "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && ../../../../$npm_package_config_bin/vite serve --host 127.0.0.1 --open"
+    "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && ../../../../$npm_package_config_bin/vite serve"
   }
 }
