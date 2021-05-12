@@ -86,15 +86,19 @@ class PostPushWebhookCloseArtifactHandler
         }
 
         try {
-            $artifact                            = $this->artifact_retriever->retrieveArtifactById($tuleap_reference);
-            $is_repository_integrated_in_project = $this->repository_project_dao->isGitlabRepositoryIntegratedInProject(
+            $artifact = $this->artifact_retriever->retrieveArtifactById($tuleap_reference);
+
+            $action_enabled_for_repository_in_project = $this->repository_project_dao->isArtifactClosureActionEnabledForRepositoryInProject(
                 $gitlab_repository->getId(),
                 (int) $artifact->getTracker()->getGroupId()
             );
 
-            if (! $is_repository_integrated_in_project) {
+            if (! $action_enabled_for_repository_in_project) {
                 $this->logger->warning(
-                    "|  |  |_ Artifact #{$tuleap_reference->getId()} is not in a project where the GitLab repository is integrated in. Skipping."
+                    "|  |  |_ Artifact #{$tuleap_reference->getId()} cannot be closed. " .
+                    "Either this artifact is not in a project where the GitLab repository is integrated in " .
+                    "or the artifact closure action is not enabled. " .
+                    "Skipping."
                 );
                 return;
             }

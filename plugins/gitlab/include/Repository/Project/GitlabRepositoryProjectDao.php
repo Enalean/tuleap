@@ -58,6 +58,19 @@ class GitlabRepositoryProjectDao extends DataAccessObject
         return count($rows) > 0;
     }
 
+    public function isArtifactClosureActionEnabledForRepositoryInProject(int $repository_id, int $project_id): bool
+    {
+        $sql = "SELECT NULL
+                FROM plugin_gitlab_repository_project
+                WHERE id = ?
+                    AND project_id = ?
+                    AND allow_artifact_closure = 1";
+
+        $rows = $this->getDB()->run($sql, $repository_id, $project_id);
+
+        return count($rows) > 0;
+    }
+
     public function addGitlabRepositoryIntegrationInProject(int $repository_id, int $project_id): void
     {
         $this->getDB()->insert(

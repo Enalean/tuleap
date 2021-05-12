@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository (
 CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_project (
     id INT(11) NOT NULL,
     project_id INT(11) NOT NULL,
+    allow_artifact_closure TINYINT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (id, project_id)
 ) ENGINE=InnoDB;
 
