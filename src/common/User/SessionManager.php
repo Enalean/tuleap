@@ -58,7 +58,7 @@ class SessionManager
      * @return PFUser
      * @throws InvalidSessionException
      */
-    public function getUser($session_identifier, $current_time, $session_lifetime)
+    public function getUser($session_identifier, $current_time, $session_lifetime, string $current_user_agent)
     {
         list($session_id, $session_token) = $this->getSessionIdentifierParts($session_identifier);
 
@@ -76,6 +76,10 @@ class SessionManager
 
         if ($user === null) {
             throw new InvalidSessionException();
+        }
+
+        if ($session['user_agent'] !== $current_user_agent) {
+            $this->session_dao->updateUserAgentByID($session_id, $current_user_agent);
         }
 
         $user->setSessionId($session_id);
