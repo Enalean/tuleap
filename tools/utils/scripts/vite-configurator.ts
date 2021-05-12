@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { BuildOptions, UserConfig, UserConfigExport } from "vite";
+import type { BuildOptions, ServerOptions, UserConfig, UserConfigExport } from "vite";
 import { defineConfig as viteDefineConfig } from "vite";
 export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 import { esbuild_target } from "./browserslist_config";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
-type UserConfigWithoutBuild = Omit<UserConfig, "build">;
-type OverloadedUserConfig = UserConfigWithoutBuild & { build: OverloadedBuildOptions };
+type OverloadedServerOptions = Omit<ServerOptions, "fsServe">;
+type UserConfigWithoutBuildAndServer = Omit<UserConfig, "build" | "server">;
+type OverloadedUserConfig = UserConfigWithoutBuildAndServer & { build?: OverloadedBuildOptions } & {
+    server?: OverloadedServerOptions;
+};
 
 export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
     return viteDefineConfig({
@@ -34,6 +37,11 @@ export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
             brotliSize: false,
             minify: "esbuild",
             target: esbuild_target,
+        },
+        server: {
+            fsServe: {
+                root: __dirname + "/../../../",
+            },
         },
     });
 }
