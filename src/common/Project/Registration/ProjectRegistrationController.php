@@ -25,7 +25,7 @@ namespace Tuleap\Project\Registration;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -74,7 +74,7 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
         }
 
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('project/project-registration.js'));
-        $layout->addCssAsset(new CssAsset($this->assets, 'project/project-registration'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'project-registration-style'));
 
         $layout->header(["title" => _("Project Registration"), "body_class" => ["body-project-registration"]]);
 

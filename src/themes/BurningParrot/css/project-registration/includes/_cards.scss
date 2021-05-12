@@ -41,7 +41,7 @@ $card-border-margin: 150px;
 }
 
 .project-registration-template-card-description {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
     line-height: 20px;
 }
@@ -54,11 +54,11 @@ $card-border-margin: 150px;
 }
 
 .project-registration-template-card-svg {
-    fill: $tlp-ui-border-dark;
+    fill: var(--tlp-ui-border-dark);
 }
 
 .project-registration-template-card-svg-stroke {
-    stroke: $tlp-ui-border-dark;
+    stroke: var(--tlp-ui-border-dark);
 }
 
 .project-registration-selected-template {
@@ -66,22 +66,22 @@ $card-border-margin: 150px;
 
     &:checked {
         + label {
-            border-color: $tlp-theme-color;
+            border-color: var(--tlp-theme-color);
 
             > div > .project-registration-template-card-title {
                 margin: 0 0 var(--tlp-small-spacing);
-                color: $tlp-theme-color;
+                color: var(--tlp-theme-color);
                 font-size: 16px;
                 font-weight: normal;
                 line-height: 18px;
             }
 
             > div > svg > .project-registration-template-card-svg {
-                fill: $tlp-theme-color;
+                fill: var(--tlp-theme-color);
             }
 
             > div > svg > .project-registration-template-card-svg-stroke {
-                stroke: $tlp-theme-color;
+                stroke: var(--tlp-theme-color);
             }
         }
     }

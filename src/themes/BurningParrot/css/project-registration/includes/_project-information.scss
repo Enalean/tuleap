@@ -33,7 +33,7 @@
     display: flex;
     margin: var(--tlp-small-spacing) 0;
     padding-left: 4px;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 13px;
     white-space: nowrap;
     cursor: pointer;
@@ -69,7 +69,7 @@
 }
 
 .project-information-input-privacy-list-option-description {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 13px;
     line-height: 20px;
 }
@@ -86,5 +86,5 @@
 
 /* stylelint-disable-next-line selector-class-pattern */
 .select2-results__option--highlighted .project-information-input-privacy-list-option-description {
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
 }

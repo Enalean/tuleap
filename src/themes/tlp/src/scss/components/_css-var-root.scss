@@ -45,6 +45,7 @@
 
     --tlp-theme-background-color-darker-20: #{darken($tlp-theme-background-color, 20%)};
 
+    --tlp-theme-color-lighter-10: #{ mix($tlp-theme-color, $tlp-ui-white, 10%)};
     --tlp-theme-color-transparent-15: #{transparentize($tlp-theme-color, .15)};
     --tlp-theme-color-transparent-30: #{transparentize($tlp-theme-color, .3)};
     --tlp-theme-color-transparent-50: #{transparentize($tlp-theme-color, .5)};
@@ -66,8 +67,8 @@
 
     --tlp-ui-danger-darker-10: #{darken($tlp-ui-danger, 10%)};
     --tlp-ui-danger-lighter-20: #{mix($tlp-ui-danger, $tlp-ui-white, 80%)};
-    --tlp-ui-danger-color-transparent-15: #{transparentize($tlp-ui-success, .15)};
-    --tlp-ui-danger-color-transparent-90: #{transparentize($tlp-ui-success, .9)};
+    --tlp-ui-danger-color-transparent-15: #{transparentize($tlp-ui-danger, .15)};
+    --tlp-ui-danger-color-transparent-90: #{transparentize($tlp-ui-danger, .9)};
 
     --tlp-ui-success-darker-10: #{darken($tlp-ui-success, 10%)};
     --tlp-ui-success-lighter-20: #{mix($tlp-ui-success, $tlp-ui-white, 80%)};
@@ -76,7 +77,7 @@
     --tlp-ui-success-color-transparent-95: #{transparentize($tlp-ui-success, .95)};
 
     --tlp-ui-dimmed-darker-10: #{darken($tlp-ui-dimmed, 10%)};
-    --tlp-ui-dimmed-transparent-40: #{transparentize($tlp-ui-dimmed, .4)};
+    --tlp-ui-dimmed-transparent-50: #{transparentize($tlp-ui-dimmed, .5)};
 
     --tlp-ui-white-darker-02: #{darken($tlp-ui-white, 2%)};
     --tlp-ui-white-darker-10: #{darken($tlp-ui-white, 10%)};
@@ -99,6 +100,8 @@
     --tlp-theme-dark-background-color-transparent-85: #{transparentize($tlp-theme-sidebar-background-color, .85)};
     --tlp-theme-dark-background-color-transparent-90: #{transparentize($tlp-theme-sidebar-background-color, .9)};
     --tlp-theme-dark-background-color-darker: #{color.scale($tlp-theme-sidebar-background-color, $lightness: -20%)};
+    --tlp-theme-dark-background-color-lighter-05: #{color.scale($tlp-theme-sidebar-background-color, $lightness: 5%)};
+    --tlp-theme-dark-background-color-lighter-10: #{color.scale($tlp-theme-sidebar-background-color, $lightness: 10%)};
     --tlp-typo-default-text-color-on-dark-background: #{$tlp-ui-border-normal};
 
     // borders
@@ -110,6 +113,7 @@
 
     --tlp-ui-border-dark-lighter-20: #{mix($tlp-ui-border-dark, $tlp-ui-white, 80%)};
     --tlp-ui-border-dark-darker-05: #{darken($tlp-ui-border-dark, 5%)};
+    --tlp-ui-border-dark-transparent-20: #{transparentize($tlp-ui-border-dark, .2)};
 
     // density
     @if $tlp-density == $tlp-density-condensed {
