@@ -249,7 +249,7 @@ class Tracker_Widget_MyArtifacts extends Widget
             __DIR__ . '/../../../../../src/www/assets/trackers',
             '/assets/trackers'
         );
-        return new CssAssetCollection([new \Tuleap\Layout\CssAsset($include_assets, 'tracker-bp')]);
+        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'tracker-bp')]);
     }
 
     public function getJavascriptDependencies(): array

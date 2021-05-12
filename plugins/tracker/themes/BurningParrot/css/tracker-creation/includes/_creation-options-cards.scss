@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'creation-screen-breakpoints';
+
 .tracker-creation-template-card {
     display: flex;
     width: calc(50% - var(--tlp-small-spacing));
     min-height: 120px;
     margin: 0 0 var(--tlp-medium-spacing);
 
-    @media screen and (max-width: $creation-small-screen-width) {
+    @media screen and (max-width: creation-screen-breakpoints.$creation-small-screen-width) {
         width: 100%;
     }
 
@@ -32,11 +34,11 @@
     }
 
     .card-glyph-stroke {
-        stroke: $tlp-ui-border-dark;
+        stroke: var(--tlp-ui-border-dark);
     }
 
     .card-glyph-fill {
-        fill: $tlp-ui-border-dark;
+        fill: var(--tlp-ui-border-dark);
     }
 
     #tracker-creation-template-selector {
@@ -45,23 +47,23 @@
 
     &.tracker-creation-template-card-active {
         .tlp-card {
-            border-color: $tlp-theme-color;
+            border-color: var(--tlp-theme-color);
         }
 
         .tlp-label {
-            color: $tlp-theme-color;
+            color: var(--tlp-theme-color);
         }
 
         .tlp-select {
-            border-color: $tlp-theme-color;
+            border-color: var(--tlp-theme-color);
         }
 
         .card-glyph-stroke {
-            stroke: $tlp-theme-color;
+            stroke: var(--tlp-theme-color);
         }
 
         .card-glyph-fill {
-            fill: $tlp-theme-color;
+            fill: var(--tlp-theme-color);
         }
     }
 
@@ -107,7 +109,7 @@
                 flex-direction: column;
 
                 > .card-description-content {
-                    color: $tlp-ui-dimmed;
+                    color: var(--tlp-ui-dimmed);
                     font-size: 14px;
                     line-height: 20px;
                 }

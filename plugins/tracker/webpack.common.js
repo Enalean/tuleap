@@ -189,16 +189,10 @@ let entry_points = {
     "burndown-chart": "./themes/burndown-chart.scss",
     colorpicker: "./themes/FlamingParrot/css/colorpicker.scss",
     "dependencies-matrix": "./themes/FlamingParrot/css/dependencies-matrix.scss",
+    "tracker-creation": "./themes/BurningParrot/css/tracker-creation/tracker-creation.scss",
+    workflow: "./themes/BurningParrot/css/workflow.scss",
+    "tracker-bp": "./themes/BurningParrot/css/tracker.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry_points[`tracker-bp-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[`workflow-${color}`] = `./themes/BurningParrot/css/workflow-${color}.scss`;
-    entry_points[
-        `tracker-creation-${color}`
-    ] = `./themes/BurningParrot/css/tracker-creation/tracker-creation-${color}.scss`;
-}
 
 const config_for_themes = {
     entry: entry_points,

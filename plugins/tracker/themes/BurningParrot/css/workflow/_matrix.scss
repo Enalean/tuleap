@@ -18,7 +18,7 @@
  */
 
 .tracker-workflow-transition-spinner {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .tlp-table.tracker-workflow-transition-table {
@@ -54,8 +54,8 @@
                 left: 250px;
                 min-width: 100px;
                 padding: 10px;
-                border-right: 2px solid rgba($tlp-theme-color, .2);
-                color: $tlp-theme-color;
+                border-right: 2px solid var(--tlp-theme-color-transparent-15);
+                color: var(--tlp-theme-color);
                 font-weight: 600;
                 text-align: right;
                 white-space: nowrap;
@@ -73,7 +73,7 @@
             text-align: center;
 
             &.tracker-workflow-transition-action-updated {
-                background: transparentize($tlp-ui-success, .9);
+                background: var(--tlp-ui-success-color-transparent-90);
             }
         }
     }
@@ -95,7 +95,7 @@
     width: 16px;
     height: 16px;
     transform: translate(-50%, -50%);
-    color: $tlp-ui-border-dark;
+    color: var(--tlp-ui-border-dark);
     font-size: 16px;
     cursor: not-allowed;
 }
@@ -114,7 +114,7 @@
         height: 4px;
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        background: $tlp-ui-border-dark;
+        background: var(--tlp-ui-border-dark);
     }
 }
 
@@ -134,13 +134,13 @@
 
 .tracker-workflow-transition-mark {
     transition: color ease-in-out 100ms;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 1rem;
     cursor: pointer;
 
     &.tracker-workflow-transition-action-updated {
         animation: bounce ease-in-out 500ms infinite alternate;
-        color: $tlp-ui-success;
+        color: var(--tlp-ui-success);
     }
 }
 

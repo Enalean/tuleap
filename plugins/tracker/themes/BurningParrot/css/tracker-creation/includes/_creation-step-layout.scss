@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'creation-screen-breakpoints';
+
 .tracker-creation-step {
     display: flex;
     max-width: 1400px;
     margin: 0 auto;
 
-    @media screen and (max-width: $creation-tiny-screen-width) {
+    @media screen and (max-width: creation-screen-breakpoints.$creation-tiny-screen-width) {
         margin: 0;
     }
 
-    @media screen and (max-width: $creation-tiny-screen-width) {
+    @media screen and (max-width: creation-screen-breakpoints.$creation-tiny-screen-width) {
         flex-direction: column;
     }
 
@@ -37,12 +39,12 @@
             width: 100%;
         }
 
-        @media screen and (max-width: $creation-small-screen-width) {
+        @media screen and (max-width: creation-screen-breakpoints.$creation-small-screen-width) {
             width: 35%;
             margin: 80px var(--tlp-large-spacing) 0 0;
         }
 
-        @media screen and (max-width: $creation-tiny-screen-width) {
+        @media screen and (max-width: creation-screen-breakpoints.$creation-tiny-screen-width) {
             display: none;
         }
     }
@@ -75,14 +77,14 @@
 }
 
 .tracker-creation-step-label {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 28px;
     line-height: 36px;
 }
 
 .tracker-creation-step-interactive-content {
     margin: 0 0 var(--tlp-medium-spacing) 0;
-    border-bottom: 1px solid $tlp-ui-border-dark;
+    border-bottom: 1px solid var(--tlp-ui-border-dark);
 }
 
 .tracker-creation-starting-point-options {
@@ -95,7 +97,7 @@
         margin: var(--tlp-medium-spacing) 0 0;
     }
 
-    @media screen and (max-width: $creation-small-screen-width) {
+    @media screen and (max-width: creation-screen-breakpoints.$creation-small-screen-width) {
         flex-direction: column;
     }
 }
@@ -140,7 +142,7 @@
         }
     }
 
-    @media screen and (max-width: $creation-tiny-screen-width) {
+    @media screen and (max-width: creation-screen-breakpoints.$creation-tiny-screen-width) {
         width: 100%;
     }
 }
@@ -155,7 +157,7 @@
     display: flex;
     margin: calc(-1 * var(--tlp-small-spacing)) 0 var(--tlp-small-spacing);
     padding-left: 4px;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 13px;
     white-space: nowrap;
     cursor: pointer;
@@ -177,7 +179,7 @@
 }
 
 .tracker-creation-navigation-back-to-legacy {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .tracker-creation-navigation-buttons {
@@ -192,7 +194,7 @@
 
     > .tracker-creation-previous-step-button {
         align-self: center;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
 
         &:hover {
             text-decoration: none;

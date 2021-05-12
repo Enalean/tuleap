@@ -18,7 +18,7 @@
  */
 
 @use '../../src/themes/common/css/project-background/background';
-@import '../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
 
 .project-with-background {
     .trackers-homepage-title,
@@ -40,12 +40,12 @@
 body {
     @include background.apply-background(
         '.tracker-administration-title',
-        $sidebar-expanded-width,
-        $sidebar-collapsed-width
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
     );
     @include background.apply-background(
         '.trackers-homepage-title',
-        $sidebar-expanded-width,
-        $sidebar-collapsed-width
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
     );
 }

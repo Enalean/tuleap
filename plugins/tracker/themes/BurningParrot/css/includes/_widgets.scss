@@ -37,13 +37,13 @@ ul.tracker-widget-artifacts-list {
 }
 
 .empty-artifacts-cover {
-    fill: desaturate(lighten($tlp-theme-color, 40%), 15%);
+    fill: var(--tlp-illustration-grey);
 }
 
 .empty-artifacts-icon {
-    fill: $tlp-theme-color;
+    fill: var(--tlp-illustration-color);
 }
 
 .empty-artifacts-sheet-border {
-    stroke: desaturate(lighten($tlp-theme-color, 20%), 10%);
+    stroke: var(--tlp-illustration-grey);
 }

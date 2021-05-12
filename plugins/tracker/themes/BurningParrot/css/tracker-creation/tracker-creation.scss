@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'includes/creation-screen-breakpoints';
-@import 'includes/creation-step-layout';
-@import 'includes/creation-options-cards';
-@import 'includes/creation-color-selector';
+@use 'includes/creation-step-layout';
+@use 'includes/creation-options-cards';
+@use 'includes/creation-color-selector';
