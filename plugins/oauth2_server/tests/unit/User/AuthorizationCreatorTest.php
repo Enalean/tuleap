@@ -31,11 +31,11 @@ final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var AuthorizationCreator */
     private $creator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationDao
      */
     private $authorization_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationScopeDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationScopeDao
      */
     private $scope_dao;
 

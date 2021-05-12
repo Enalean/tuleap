@@ -43,11 +43,11 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppsPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppsPresenterBuilder
      */
     private $presenter_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
 

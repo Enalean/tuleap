@@ -40,11 +40,11 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenRevoker
      */
     private $refresh_token_revoker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AccessTokenRevoker
      */
     private $access_token_revoker;
 

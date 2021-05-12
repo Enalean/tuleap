@@ -35,19 +35,19 @@ final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var OAuth2RefreshTokenRevoker */
     private $revoker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $refresh_token_unserializer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeRevoker
      */
     private $authorization_code_revoker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenDAO
      */
     private $dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
      */
     private $hasher;
 

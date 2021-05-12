@@ -43,27 +43,27 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppFactory
      */
     private $app_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthenticationScopeBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthenticationScopeBuilder
      */
     private $scope_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationCreator
      */
     private $authorization_creator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationCodeResponseFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationCodeResponseFactory
      */
     private $response_factory;
     /**
-     * @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject
+     * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
 

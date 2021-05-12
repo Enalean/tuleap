@@ -30,7 +30,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider dataProviderInvalidData
      */
-    public function testFromAppDataThrowsWhenDataIsInvalid(string $app_name, string $redirect_uri)
+    public function testFromAppDataThrowsWhenDataIsInvalid(string $app_name, string $redirect_uri): void
     {
         $this->expectException(InvalidAppDataException::class);
         NewOAuth2App::fromProjectAdministrationAppData(

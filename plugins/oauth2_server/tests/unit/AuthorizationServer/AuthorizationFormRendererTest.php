@@ -39,7 +39,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var AuthorizationFormRenderer */
     private $form_renderer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationFormPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationFormPresenterBuilder
      */
     private $presenter_builder;
 
@@ -57,7 +57,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRenderForm(): void
     {
         $foobar_scope         = $this->createMock(AuthenticationScope::class);
-        $foobar_definition    = new class implements AuthenticationScopeDefinition {
+        $foobar_definition    = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
                 return 'Foo Bar';
@@ -69,7 +69,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
         $typevalue_scope      = $this->createMock(AuthenticationScope::class);
-        $typevalue_definition = new class implements AuthenticationScopeDefinition {
+        $typevalue_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
                 return 'Type Value';

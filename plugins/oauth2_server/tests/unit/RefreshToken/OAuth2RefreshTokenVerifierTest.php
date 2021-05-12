@@ -36,19 +36,19 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenDAO
      */
     private $dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeRetriever
      */
     private $scope_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeRevoker
      */
     private $auth_code_revoker;
     /**

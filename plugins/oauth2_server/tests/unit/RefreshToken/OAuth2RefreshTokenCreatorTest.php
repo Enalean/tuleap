@@ -39,11 +39,11 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenDAO
      */
     private $refresh_token_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeSaver
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeSaver
      */
     private $scope_saver;
     /**
@@ -121,7 +121,9 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $refresh_token_1 = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
         $refresh_token_2 = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
 
-        $this->assertFalse($refresh_token_1->isIdenticalTo($refresh_token_2));
+        self::assertNotNull($refresh_token_1);
+        self::assertNotNull($refresh_token_2);
+        self::assertFalse($refresh_token_1->isIdenticalTo($refresh_token_2));
     }
 
     public function testDoesNotIssueRefreshTokenWhenAuthorizationCodeDoesNotHaveOfflineScope(): void

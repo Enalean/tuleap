@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Authentication\Scope;
 
+/**
+ * @psalm-immutable
+ * @implements AuthenticationScope<AuthenticationScopeIdentifier>
+ */
 final class AuthenticationTestCoveringScope implements AuthenticationScope
 {
     /**
@@ -39,6 +43,9 @@ final class AuthenticationTestCoveringScope implements AuthenticationScope
         self::throwUnexpectedCall();
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): AuthenticationScope
     {
         return new self($identifier);
@@ -51,7 +58,7 @@ final class AuthenticationTestCoveringScope implements AuthenticationScope
 
     public function getDefinition(): AuthenticationScopeDefinition
     {
-        $this->throwUnexpectedCall();
+        self::throwUnexpectedCall();
     }
 
     public function covers(AuthenticationScope $scope): bool

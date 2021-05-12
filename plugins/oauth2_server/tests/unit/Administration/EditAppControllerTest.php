@@ -40,15 +40,15 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppProjectVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AppProjectVerifier
      */
     private $project_verifier;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
      */
     private $app_dao;
 

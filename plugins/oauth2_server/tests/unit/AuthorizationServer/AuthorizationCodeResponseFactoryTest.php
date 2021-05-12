@@ -35,11 +35,11 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
     /** @var AuthorizationCodeResponseFactory */
     private $authorization_code_response_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeCreator
      */
     private $authorization_code_creator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\URLRedirect
+     * @var \PHPUnit\Framework\MockObject\MockObject&\URLRedirect
      */
     private $url_redirect;
 

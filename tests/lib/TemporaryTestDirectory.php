@@ -27,7 +27,10 @@ namespace Tuleap;
  */
 trait TemporaryTestDirectory
 {
-    private $temporary_directory;
+    /**
+     * @var string
+     */
+    private $temporary_directory = '';
 
     /**
      * @before

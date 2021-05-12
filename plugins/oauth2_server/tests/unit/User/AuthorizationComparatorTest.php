@@ -32,7 +32,7 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var AuthorizationComparator */
     private $comparator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizedScopeFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizedScopeFactory
      */
     private $factory;
 

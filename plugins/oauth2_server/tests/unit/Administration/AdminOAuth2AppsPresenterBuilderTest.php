@@ -36,11 +36,11 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $presenter_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|LastGeneratedClientSecretStore
+     * @var \PHPUnit\Framework\MockObject\MockObject&LastGeneratedClientSecretStore
      */
     private $client_secret_store;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppFactory
      */
     private $app_factory;
 

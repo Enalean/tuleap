@@ -29,28 +29,27 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
-use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 
 final class OAuth2AccessTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /** @var OAuth2RefreshTokenRevoker */
+    /** @var OAuth2AccessTokenRevoker */
     private $revoker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $access_token_unserializer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AccessTokenDAO
      */
     private $dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeRevoker
      */
     private $authorization_code_revoker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
      */
     private $hasher;
 

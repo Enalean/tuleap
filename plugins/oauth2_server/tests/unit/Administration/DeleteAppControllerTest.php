@@ -39,15 +39,15 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppProjectVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AppProjectVerifier
      */
     private $project_verifier;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppRemover
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AppRemover
      */
     private $app_remover;
 

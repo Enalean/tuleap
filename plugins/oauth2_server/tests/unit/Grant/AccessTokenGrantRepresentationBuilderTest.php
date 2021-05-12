@@ -38,15 +38,15 @@ use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AccessTokenCreator
      */
     private $access_token_creator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenCreator
      */
     private $refresh_token_creator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OpenIDConnectIDTokenCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&OpenIDConnectIDTokenCreator
      */
     private $id_token_creator;
     /**

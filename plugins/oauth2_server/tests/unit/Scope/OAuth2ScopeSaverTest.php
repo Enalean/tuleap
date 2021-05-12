@@ -28,7 +28,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class OAuth2ScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeIdentifierSaverDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeIdentifierSaverDAO
      */
     private $dao;
 

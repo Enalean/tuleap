@@ -50,31 +50,31 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
     /** @var AuthorizationEndpointController */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationFormRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationFormRenderer
      */
     private $form_renderer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppFactory
      */
     private $app_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ScopeExtractor
+     * @var \PHPUnit\Framework\MockObject\MockObject&ScopeExtractor
      */
     private $scope_extractor;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationCodeResponseFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationCodeResponseFactory
      */
     private $response_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationComparator
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationComparator
      */
     private $comparator;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PKCEInformationExtractor
+     * @var \PHPUnit\Framework\MockObject\MockObject&PKCEInformationExtractor
      */
     private $pkce_information_extractor;
 

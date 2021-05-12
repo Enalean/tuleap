@@ -30,15 +30,15 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppFactory
      */
     private $app_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
      */
     private $app_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
