@@ -113,7 +113,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($reference)
             ->andReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
             ->once()
             ->with(1, 101)
             ->andReturn(true);
@@ -198,7 +198,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($reference)
             ->andReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
             ->once()
             ->with(1, 101)
             ->andReturn(true);
@@ -242,7 +242,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($reference)
             ->andReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
             ->once()
             ->with(1, 101)
             ->andReturn(true);
@@ -296,7 +296,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
         $this->artifact_retriever->shouldNotReceive('retrieveArtifactById');
-        $this->repository_project_dao->shouldNotReceive('isGitlabRepositoryIntegratedInProject');
+        $this->repository_project_dao->shouldNotReceive('isArtifactClosureActionEnabledForRepositoryInProject');
         $this->user_manager->shouldNotReceive('getUserById');
         $this->semantic_status_factory->shouldNotReceive('getByTracker');
         $this->artifact_updater->shouldNotReceive('closeTuleapArtifact');
@@ -331,7 +331,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($reference)
             ->andReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
+        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
             ->once()
             ->with(1, 101)
             ->andReturn(false);
