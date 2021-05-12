@@ -34,7 +34,7 @@ msgid "None"
 msgstr "Aucun"
 
 msgid "Ok, got it"
-msgstr ""
+msgstr "Ok, j'ai compris"
 
 msgid "Oops, something went wrong."
 msgstr "Oups, quelque chose ne va pas."
