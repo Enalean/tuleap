@@ -37,13 +37,13 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $controller;
     /** @var LayoutHelperPassthrough */
     private $layout_helper;
-    /** @var \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer */
     private $renderer;
-    /** @var \PHPUnit\Framework\MockObject\MockObject|AdminOAuth2AppsPresenterBuilder */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&AdminOAuth2AppsPresenterBuilder */
     private $presenter_builder;
-    /** @var \PHPUnit\Framework\MockObject\MockObject|IncludeAssets */
+    /** @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets */
     private $include_assets;
-    /** @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject */
     private $csrf_token;
 
     protected function setUp(): void

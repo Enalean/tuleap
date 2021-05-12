@@ -43,15 +43,15 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationRevoker
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationRevoker
      */
     private $autorization_revoker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&RedirectWithFeedbackFactory
      */
     private $redirector;
 

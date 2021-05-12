@@ -42,11 +42,11 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $response_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2GrantAccessTokenFromAuthorizationCode
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2GrantAccessTokenFromAuthorizationCode
      */
     private $grant_access_token_from_auth_code;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2GrantAccessTokenFromRefreshToken
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2GrantAccessTokenFromRefreshToken
      */
     private $grant_access_token_from_refresh_token;
 

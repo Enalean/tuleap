@@ -31,7 +31,7 @@ final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var ScopeExtractor */
     private $scope_extractor;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthenticationScopeBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthenticationScopeBuilder
      */
     private $scope_builder;
 

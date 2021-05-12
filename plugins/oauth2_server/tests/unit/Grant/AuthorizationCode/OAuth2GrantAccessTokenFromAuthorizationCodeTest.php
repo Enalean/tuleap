@@ -42,19 +42,19 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AccessTokenGrantRepresentationBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessTokenGrantRepresentationBuilder
      */
     private $representation_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $auth_code_unserializer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeVerifier
      */
     private $auth_code_verifier;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PKCECodeVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&PKCECodeVerifier
      */
     private $pkce_code_verifier;
     /**

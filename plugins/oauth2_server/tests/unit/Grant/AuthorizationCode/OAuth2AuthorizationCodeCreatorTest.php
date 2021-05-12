@@ -37,11 +37,11 @@ final class OAuth2AuthorizationCodeCreatorTest extends \Tuleap\Test\PHPUnit\Test
     private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeDAO
      */
     private $dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeSaver
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeSaver
      */
     private $scope_saver;
     /**

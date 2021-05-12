@@ -89,7 +89,6 @@
     "php-http/mock-client": "^1.2",
     "phpcompatibility/php-compatibility": "^9.1",
     "phpunit/phpunit": "^9.1",
-    "psalm/plugin-mockery": "^0.7.0",
     "psalm/plugin-phpunit": "^0.15.1",
     "qossmic/deptrac-shim": "^0.12.0",
     "slevomat/coding-standard": "^6.0",

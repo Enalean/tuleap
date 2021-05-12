@@ -45,7 +45,7 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     public function testBuild(): void
     {
         $foobar_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
-        $foobar_definition = new class implements AuthenticationScopeDefinition {
+        $foobar_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
                 return 'Foo Bar';
@@ -60,7 +60,7 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $foobar_scope->expects(self::once())->method('getDefinition')->willReturn($foobar_definition);
         $foobar_scope->expects(self::once())->method('getIdentifier')->willReturn($foobar_identifier);
         $typevalue_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
-        $typevalue_definition = new class implements AuthenticationScopeDefinition {
+        $typevalue_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
                 return 'Type Value';
@@ -117,7 +117,6 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->assertSame($redirect_uri, $presenter->redirect_uri);
         $this->assertSame($state_value, $presenter->state);
         $this->assertSame(bin2hex($pkce_code_challenge), $presenter->pkce_code_challenge);
-        $this->assertNotNull($presenter->csrf_token);
         $this->assertSame(
             'https://example.com?state=xyz&error=access_denied',
             (string) $presenter->deny_authorization_uri

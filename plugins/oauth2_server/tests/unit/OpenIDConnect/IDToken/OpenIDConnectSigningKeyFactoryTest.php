@@ -77,7 +77,7 @@ final class OpenIDConnectSigningKeyFactoryTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $encryption_key;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OpenIDConnectSigningKeyDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OpenIDConnectSigningKeyDAO
      */
     private $dao;
     /**
@@ -111,7 +111,7 @@ final class OpenIDConnectSigningKeyFactoryTest extends \Tuleap\Test\PHPUnit\Test
 
         $key = $this->signing_key_factory->getKey(new \DateTimeImmutable('@100'));
 
-        $this->assertEquals(self::SIGNING_PRIVATE_KEY, $key->getPrivateKey()->getContent());
+        $this->assertEquals(self::SIGNING_PRIVATE_KEY, $key->getPrivateKey()->contents());
     }
 
     public function testGetExistingSigningPublicKeyFromTheDB(): void
@@ -130,7 +130,7 @@ final class OpenIDConnectSigningKeyFactoryTest extends \Tuleap\Test\PHPUnit\Test
         $this->dao->expects(self::once())->method('save')->with(self::anything(), self::anything(), 160, 90);
 
         $key = $this->signing_key_factory->getKey(new \DateTimeImmutable('@100'));
-        $this->assertNotEmpty($key->getPrivateKey()->getContent());
+        $this->assertNotEmpty($key->getPrivateKey()->contents());
     }
 
     public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPublicKey(): void

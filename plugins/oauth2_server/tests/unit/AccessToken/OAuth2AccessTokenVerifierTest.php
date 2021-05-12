@@ -44,19 +44,19 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AccessTokenDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AccessTokenDAO
      */
     private $dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeRetriever
      */
     private $scope_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
@@ -204,15 +204,27 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
+    /**
+     * @psalm-return AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>
+     */
     private function buildRequiredScope(): AuthenticationScope
     {
-        return new class /** @psalm-immutable */ implements AuthenticationScope
+        /**
+         * @var AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>
+         */
+        $scope = new /** @psalm-immutable */ class implements AuthenticationScope
         {
+            /**
+             * @psalm-pure
+             */
             public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
+            /**
+             * @psalm-pure
+             */
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
@@ -225,7 +237,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
             public function getDefinition(): AuthenticationScopeDefinition
             {
-                return new class /** @psalm-immutable */ implements AuthenticationScopeDefinition {
+                return new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
                     public function getName(): string
                     {
                         return 'Name';
@@ -243,19 +255,27 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 return true;
             }
         };
+
+        return $scope;
     }
 
     public function buildScopeCoveringNothing(): AuthenticationScope
     {
-        return new class /** @psalm-immutable */ implements AuthenticationScope
+        return new /** @psalm-immutable */ class implements AuthenticationScope
         {
             use AuthenticationScopeThrowOnActualMethodCall;
 
+            /**
+             * @psalm-pure
+             */
             public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
+            /**
+             * @psalm-pure
+             */
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');

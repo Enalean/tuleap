@@ -43,11 +43,11 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $client_secret_unserializer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppCredentialVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AppCredentialVerifier
      */
     private $verifier;
     /**

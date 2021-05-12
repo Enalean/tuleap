@@ -22,29 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Authentication\Scope;
 
+/**
+ * @psalm-immutable
+ * @template-covariant TScopeIdentifier of \Tuleap\Authentication\Scope\AuthenticationScopeIdentifier
+ */
 trait AuthenticationScopeThrowOnActualMethodCall
 {
+    /**
+     * @psalm-pure
+     * @psalm-return TScopeIdentifier
+     */
     final public function getIdentifier(): AuthenticationScopeIdentifier
     {
-        $this->throwUnexpectedCall();
-    }
-
-    final public function getDefinition(): AuthenticationScopeDefinition
-    {
-        $this->throwUnexpectedCall();
-    }
-
-    final public function covers(AuthenticationScope $scope): bool
-    {
-        $this->throwUnexpectedCall();
+        self::throwUnexpectedCall();
     }
 
     /**
+     * @psalm-pure
+     */
+    final public function getDefinition(): AuthenticationScopeDefinition
+    {
+        self::throwUnexpectedCall();
+    }
+
+    /**
+     * @psalm-pure
+     */
+    final public function covers(AuthenticationScope $scope): bool
+    {
+        self::throwUnexpectedCall();
+    }
+
+    /**
+     * @psalm-pure
      * @psalm-return never-return
      *
      * @throws \LogicException
      */
-    private function throwUnexpectedCall(): void
+    private static function throwUnexpectedCall(): void
     {
         throw new \LogicException('This method is not supposed to be called in the test');
     }

@@ -34,17 +34,21 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var AuthorizedScopeFactory */
     private $factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationDao
      */
     private $authorization_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationScopeDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationScopeDao
      */
     private $scope_dao;
 
     protected function setUp(): void
     {
-        $scope_builder           = new class implements AuthenticationScopeBuilder {
+        $scope_builder           = new /** @psalm-immutable */ class implements AuthenticationScopeBuilder {
+            /**
+             * @psalm-suppress ImplementedReturnTypeMismatch Looks like there is a confusion caused by the anonymous class and the templated function
+             * @psalm-return AuthenticationScope<AuthenticationScopeIdentifier>|null
+             */
             public function buildAuthenticationScopeFromScopeIdentifier(
                 AuthenticationScopeIdentifier $scope_identifier
             ): ?AuthenticationScope {

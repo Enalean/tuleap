@@ -32,11 +32,11 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $app_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
      */
     private $app_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
     private $project_manager;
 

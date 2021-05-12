@@ -33,15 +33,15 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AppProjectVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AppProjectVerifier
      */
     private $project_verifier;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ClientSecretUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientSecretUpdater
      */
     private $client_secret_updater;
     /**

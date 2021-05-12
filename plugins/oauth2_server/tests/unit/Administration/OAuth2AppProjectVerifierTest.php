@@ -27,7 +27,7 @@ use Tuleap\OAuth2Server\App\AppDao;
 final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
      */
     private $app_dao;
     /**

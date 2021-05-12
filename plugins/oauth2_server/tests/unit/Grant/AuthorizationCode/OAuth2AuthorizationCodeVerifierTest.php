@@ -34,19 +34,19 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 final class OAuth2AuthorizationCodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenVerificationStringHasher
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeDAO
      */
     private $dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeRetriever
      */
     private $scope_retriever;
     /**

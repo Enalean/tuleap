@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "422e85cee8598c1dd21e4de354e5cc99",
+    "content-hash": "3bfc89e069148c1a2cfdaba1fd2c3e6c",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -6913,60 +6913,6 @@
                 }
             ],
             "time": "2020-12-04T05:05:53+00:00"
-        },
-        {
-            "name": "psalm/plugin-mockery",
-            "version": "0.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/psalm/psalm-plugin-mockery.git",
-                "reference": "f40d4777a0d18913bc01edef7ebe8173629663a6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/psalm/psalm-plugin-mockery/zipball/f40d4777a0d18913bc01edef7ebe8173629663a6",
-                "reference": "f40d4777a0d18913bc01edef7ebe8173629663a6",
-                "shasum": ""
-            },
-            "require": {
-                "mockery/mockery": "^0.9 || ^1.0",
-                "vimeo/psalm": "^4.0"
-            },
-            "require-dev": {
-                "codeception/base": "^2.5",
-                "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0",
-                "squizlabs/php_codesniffer": "^3.3.1",
-                "weirdan/codeception-psalm-module": "^0.2.1"
-            },
-            "type": "psalm-plugin",
-            "extra": {
-                "psalm": {
-                    "pluginClass": "Psalm\\MockeryPlugin\\Plugin"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psalm\\MockeryPlugin\\": [
-                        "."
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Matt Brown",
-                    "email": "github@muglug.com"
-                }
-            ],
-            "description": "Psalm plugin for Mockery",
-            "support": {
-                "issues": "https://github.com/psalm/psalm-plugin-mockery/issues",
-                "source": "https://github.com/psalm/psalm-plugin-mockery/tree/0.7.0"
-            },
-            "time": "2020-12-01T19:45:52+00:00"
         },
         {
             "name": "psalm/plugin-phpunit",

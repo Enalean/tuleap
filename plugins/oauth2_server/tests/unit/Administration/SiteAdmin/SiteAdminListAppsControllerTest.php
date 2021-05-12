@@ -34,23 +34,23 @@ use UserManager;
 final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AdminPageRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&AdminPageRenderer
      */
     private $admin_page_renderer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AdminOAuth2AppsPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AdminOAuth2AppsPresenterBuilder
      */
     private $presenter_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|IncludeAssets
+     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
      */
     private $include_assets;
     /**
-     * @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject
+     * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**

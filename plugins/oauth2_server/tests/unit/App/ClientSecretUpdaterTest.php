@@ -33,11 +33,11 @@ final class ClientSecretUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $hasher;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
      */
     private $app_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|LastGeneratedClientSecretStore
+     * @var \PHPUnit\Framework\MockObject\MockObject&LastGeneratedClientSecretStore
      */
     private $client_secret_store;
 

@@ -43,19 +43,19 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppDao
      */
     private $app_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|LastGeneratedClientSecretStore
+     * @var \PHPUnit\Framework\MockObject\MockObject&LastGeneratedClientSecretStore
      */
     private $client_secret_store;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|RedirectWithFeedbackFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&RedirectWithFeedbackFactory
      */
     private $redirector;
     /**
-     * @var \CSRFSynchronizerToken|\PHPUnit\Framework\MockObject\MockObject
+     * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
 

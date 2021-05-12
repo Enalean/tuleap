@@ -38,15 +38,15 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var AppsPresenterBuilder */
     private $builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|EventDispatcherInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
      */
     private $dispatcher;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AppFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AppFactory
      */
     private $app_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizedScopeFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizedScopeFactory
      */
     private $authorized_scope_factory;
 
@@ -136,7 +136,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildFooBarScopeDefinition(): AuthenticationScope
     {
         $foobar_scope      = $this->createMock(AuthenticationScope::class);
-        $foobar_definition = new class implements AuthenticationScopeDefinition {
+        $foobar_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
                 return 'Foo Bar';
@@ -154,7 +154,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildTypeValueScopeDefinition(): AuthenticationScope
     {
         $typevalue_scope      = $this->createMock(AuthenticationScope::class);
-        $typevalue_definition = new class implements AuthenticationScopeDefinition {
+        $typevalue_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
             public function getName(): string
             {
                 return 'Type Value';

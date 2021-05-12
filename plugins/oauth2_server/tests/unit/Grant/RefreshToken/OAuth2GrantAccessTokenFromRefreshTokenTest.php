@@ -44,15 +44,15 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AccessTokenGrantRepresentationBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AccessTokenGrantRepresentationBuilder
      */
     private $representation_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|SplitTokenIdentifierTranslator
+     * @var \PHPUnit\Framework\MockObject\MockObject&SplitTokenIdentifierTranslator
      */
     private $refresh_token_unserializer;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2RefreshTokenVerifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2RefreshTokenVerifier
      */
     private $refresh_token_verifier;
     /**
@@ -60,7 +60,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
      */
     private $grant_access_from_refresh_token;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ScopeExtractor
+     * @var \PHPUnit\Framework\MockObject\MockObject&ScopeExtractor
      */
     private $scope_extractor;
 

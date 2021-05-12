@@ -31,11 +31,11 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2ScopeIdentifierSearcherDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2ScopeIdentifierSearcherDAO
      */
     private $scope_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthenticationScopeBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthenticationScopeBuilder
      */
     private $scope_builder;
     /**

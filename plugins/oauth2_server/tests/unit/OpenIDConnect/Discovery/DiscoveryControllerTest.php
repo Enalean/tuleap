@@ -37,7 +37,7 @@ final class DiscoveryControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ConfigurationResponseRepresentationBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&ConfigurationResponseRepresentationBuilder
      */
     private $representation_builder;
 

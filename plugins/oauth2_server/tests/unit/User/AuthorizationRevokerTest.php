@@ -33,11 +33,11 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $authorization_revoker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|OAuth2AuthorizationCodeDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&OAuth2AuthorizationCodeDAO
      */
     private $auth_code_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AuthorizationDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizationDao
      */
     private $authorization_dao;
 
