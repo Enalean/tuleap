@@ -42,7 +42,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../include/pre.php';
@@ -79,7 +78,7 @@ $router                     = new UserDashboardRouter(
         new AssetsIncluder(
             $GLOBALS['Response'],
             $core_assets,
-            new CssAssetCollection([new CssAsset($core_assets, 'dashboards/dashboards')])
+            new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($core_assets, 'dashboards-style')])
         )
     ),
     new WidgetDashboardController(

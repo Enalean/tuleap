@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@import './includes/cards';
-@import './includes/project-information';
-@import './includes/services';
+@use './includes/cards';
+@use './includes/project-information';
+@use './includes/services';
 
 $illustration-width: 319px;
 $illustration-spacing: calc(2 * var(--tlp-large-spacing));
 $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
 .body-project-registration {
-    background: linear-gradient(180deg, $tlp-ui-white 0, $tlp-ui-white 70px, $tlp-theme-background-color 470px);
+    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-ui-white) 70px, var(--tlp-theme-background-color) 470px);
 }
 
 .project-registration {
     padding: var(--tlp-x-large-spacing) var(--tlp-x-large-spacing) 100px;
-    background: linear-gradient(180deg, $tlp-ui-white 0, $tlp-theme-background-color 400px);
+    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-theme-background-color) 400px);
 }
 
 .project-registration-content {
@@ -70,7 +70,7 @@ $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
 .project-registration-button-container {
     padding: var(--tlp-medium-spacing) 0 0;
-    border-top: 1px solid $tlp-ui-border-dark;
+    border-top: 1px solid var(--tlp-ui-border-dark);
 
     > .project-registration-content {
         display: flex;
@@ -91,14 +91,14 @@ $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
         padding: var(--tlp-large-spacing);
         animation: footerAppear ease-out 150ms;
         border-top: 0;
-        background: transparentize($tlp-ui-white, .1);
+        background: var(--tlp-ui-white-transparent-10);
         box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
     }
 }
 
 .project-registration-back-button {
     margin: 0 var(--tlp-medium-spacing) 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     cursor: pointer;
 
     &:hover {

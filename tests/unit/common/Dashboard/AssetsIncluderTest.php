@@ -28,7 +28,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetLinePresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 
 class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -64,7 +64,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
         $css_include_assets = Mockery::mock(IncludeAssets::class);
         $css_include_assets->allows('getPath');
         $this->css_asset_collection = new CssAssetCollection(
-            [new CssAsset($css_include_assets, 'dashboards/dashboards')]
+            [new CssAssetWithoutVariantDeclinaisons($css_include_assets, 'dashboards-style')]
         );
 
         $this->request = \Mockery::mock(\HTTPRequest::class);

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../node_modules/dragula/dist/dragula.min.css';
+@use '../../../../node_modules/dragula/dist/dragula.min.css';
 
 #add-dashboard-button {
     margin: 10px 0 10px var(--tlp-medium-spacing);
@@ -34,11 +34,11 @@
 #dashboard-tabs-dropdown-trigger {
     transition: color 100ms, opacity 100ms;
     opacity: .5;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 
     &:hover {
         opacity: 1;
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
     }
 }
 
@@ -136,12 +136,12 @@
 
     > .dashboard-row-dropdown-path {
         transition: fill 100ms;
-        fill: transparentize($tlp-ui-dimmed, .5);
+        fill: var(--tlp-ui-dimmed-transparent-50);
     }
 
     &:hover {
         > .dashboard-row-dropdown-path {
-            fill: $tlp-theme-color;
+            fill: var(--tlp-theme-color);
         }
     }
 }
@@ -152,10 +152,10 @@
 
 .dashboard-dropdown-layout-field-path {
     transition: fill 100ms;
-    fill: transparentize($tlp-theme-color, .5);
+    fill: var(--tlp-ui-dimmed-transparent-50);
 
     &.selected {
-        fill: $tlp-theme-color;
+        fill: var(--tlp-theme-color);
     }
 }
 
@@ -169,19 +169,19 @@ body.gu-unselectable {
         0% {
             height: $placeholder-height;
             opacity: .5;
-            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, .5);
+            box-shadow: 0 0 0 0 var(--tlp-theme-color-transparent-50);
         }
 
         50% {
             height: $placeholder-height * 4;
             opacity: 1;
-            box-shadow: 0 0 0 6px transparentize($tlp-theme-color, 1);
+            box-shadow: 0 0 0 6px transparent;
         }
 
         100% {
             height: $placeholder-height;
             opacity: .5;
-            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, 1);
+            box-shadow: 0 0 0 0 transparent;
         }
     }
 
@@ -189,19 +189,19 @@ body.gu-unselectable {
         0% {
             width: $placeholder-width;
             opacity: .5;
-            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, .5);
+            box-shadow: 0 0 0 0 var(--tlp-theme-color-transparent-50);
         }
 
         50% {
             width: $placeholder-width * 4;
             opacity: 1;
-            box-shadow: 0 0 0 6px transparentize($tlp-theme-color, 1);
+            box-shadow: 0 0 0 6px transparent;
         }
 
         100% {
             width: $placeholder-width;
             opacity: .5;
-            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, 1);
+            box-shadow: 0 0 0 0 transparent;
         }
     }
 
@@ -213,7 +213,7 @@ body.gu-unselectable {
         left: $left;
         transform: translate(-50%, -50%);
         border-radius: $placeholder-radius;
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
 
         @if $direction == 'column' {
             width: $placeholder-height;
@@ -274,7 +274,7 @@ body.gu-unselectable {
 
     &:hover {
         .dashboard-dropdown-layout-field-path {
-            fill: $tlp-theme-color;
+            fill: var(--tlp-theme-color);
         }
     }
 }

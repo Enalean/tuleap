@@ -47,7 +47,7 @@ use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Widget\WidgetFactory;
@@ -87,9 +87,9 @@ class Home implements DispatchableWithRequest
                 );
 
                 $core_assets                              = new \Tuleap\Layout\IncludeCoreAssets();
-                $project_registration_creation_css_assets = new CssAsset(
+                $project_registration_creation_css_assets = new CssAssetWithoutVariantDeclinaisons(
                     $core_assets,
-                    'project/project-registration-creation'
+                    'project-registration-creation-style'
                 );
 
                 $csrf_token                 = new CSRFSynchronizerToken('/project/');
@@ -114,7 +114,7 @@ class Home implements DispatchableWithRequest
                         new AssetsIncluder(
                             $layout,
                             $core_assets,
-                            new CssAssetCollection([new CssAsset($core_assets, 'dashboards/dashboards')])
+                            new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($core_assets, 'dashboards-style')])
                         ),
                         EventManager::instance(),
                         $layout,

@@ -38,18 +38,18 @@
 }
 
 .dashboard-project-header-trovecat {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .75rem;
 }
 
 .dashboard-project-header-trovecat-link {
-    color: $tlp-ui-warning;
+    color: var(--tlp-ui-warning);
     text-decoration: underline;
 
     &:focus,
     &:hover,
     &:active {
-        color: darken($tlp-ui-warning, 10%);
+        color: var(--tlp-ui-warning-darker-10);
     }
 }
 
@@ -60,7 +60,7 @@
 
 .dashboard-project-title {
     margin: 0 var(--tlp-medium-spacing) 0 0;
-    color: $tlp-theme-sidebar-background-color;
+    color: var(--tlp-theme-sidebar-background-color);
     font-size: 2.75rem;
     font-weight: 500;
 }
@@ -76,7 +76,7 @@
     width: 13px;
     height: 10px;
     margin: 2px 0 0;
-    fill: $tlp-ui-dimmed;
+    fill: var(--tlp-ui-dimmed);
     vertical-align: top;
 
     + .dashboard-project-title-name {

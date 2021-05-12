@@ -48,12 +48,12 @@
 
 .widget-project-members-members-count {
     margin: 0 0 5px;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 60px;
 }
 
 .widget-project-members-members-label {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;

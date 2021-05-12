@@ -19,10 +19,10 @@
  */
 
 .dashboard-widget-project-classification-trovecat {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .dashboard-widget-project-classification-trovecat-icon {
     margin: 0 3px 0 0;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
 }

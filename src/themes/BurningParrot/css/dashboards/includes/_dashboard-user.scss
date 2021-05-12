@@ -1,4 +1,4 @@
-$dashboard-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
+$dashboard-header-background: var(--tlp-theme-dark-background-color-lighter-05);
 
 .body-user-dashboard {
     header:not(.pinned) {
@@ -10,7 +10,7 @@ $dashboard-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
         }
 
         .logo-svg-fill-default-text-color {
-            fill: $tlp-ui-white;
+            fill: var(--tlp-ui-white);
         }
     }
 
@@ -23,33 +23,33 @@ $dashboard-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
     #nav-dropdown-user-content,
     #nav-dropdown-new-content {
         > .tlp-popover-arrow {
-            background: lighten($tlp-theme-sidebar-background-color, 10%);
+            background: var(--tlp-theme-dark-background-color-lighter-10);
         }
 
         > .tlp-popover-header {
-            background: lighten($tlp-theme-sidebar-background-color, 10%);
+            background: var(--tlp-theme-dark-background-color-lighter-10);
         }
     }
 
     .dashboard-tabs {
         padding: 0 calc(var(--tlp-medium-spacing) + 4px);
-        background: lighten($tlp-theme-sidebar-background-color, 5%);
+        background: var(--tlp-theme-dark-background-color-lighter-05);
         box-shadow: none;
 
         > .tlp-tab {
-            color: transparentize($tlp-ui-border-dark, .2);
+            color: var(--tlp-ui-border-dark-transparent-20);
 
             &:hover,
             &.tlp-tab-active {
                 border-bottom-color: transparent;
-                color: $tlp-ui-white;
+                color: var(--tlp-ui-white);
             }
 
             #dashboard-tabs-dropdown-trigger {
-                color: $tlp-ui-border-normal;
+                color: var(--tlp-ui-border-normal);
 
                 &:hover {
-                    color: $tlp-ui-white;
+                    color: var(--tlp-ui-white);
                 }
             }
         }
@@ -63,7 +63,7 @@ $dashboard-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
 
 .dashboard-user-title {
     margin: 0;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     font-size: 3rem;
     font-weight: 600;
 }

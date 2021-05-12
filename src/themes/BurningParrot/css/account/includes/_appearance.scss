@@ -18,6 +18,8 @@
  *
  */
 
+@use '../../../../tlp/src/scss/variables/colors/common-colors';
+
 .user-preferences-color-selector-selection-blue,
 .user-preferences-color-selector-selection-green,
 .user-preferences-color-selector-selection-grey,
@@ -28,27 +30,27 @@
 }
 
 .user-preferences-color-selector-selection-blue {
-    color: $tlp-theme-blue;
+    color: common-colors.$tlp-theme-blue;
 }
 
 .user-preferences-color-selector-selection-green {
-    color: $tlp-theme-green;
+    color: common-colors.$tlp-theme-green;
 }
 
 .user-preferences-color-selector-selection-grey {
-    color: $tlp-theme-grey;
+    color: common-colors.$tlp-theme-grey;
 }
 
 .user-preferences-color-selector-selection-orange {
-    color: $tlp-theme-orange;
+    color: common-colors.$tlp-theme-orange;
 }
 
 .user-preferences-color-selector-selection-purple {
-    color: $tlp-theme-purple;
+    color: common-colors.$tlp-theme-purple;
 }
 
 .user-preferences-color-selector-selection-red {
-    color: $tlp-theme-red;
+    color: common-colors.$tlp-theme-red;
 }
 
 /* stylelint-disable selector-class-pattern */
@@ -58,7 +60,7 @@
 .theme-orange .select2-results__option--highlighted > .user-preferences-color-selector-selection-orange,
 .theme-purple .select2-results__option--highlighted > .user-preferences-color-selector-selection-purple,
 .theme-red .select2-results__option--highlighted > .user-preferences-color-selector-selection-red {
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
 }
 /* stylelint-enable selector-class-pattern */
 
@@ -110,109 +112,109 @@
 
 .user-preferences-section-appearance-preview-blue {
     .user-preferences-section-appearance-preview-color-fill {
-        fill: $tlp-theme-blue;
+        fill: common-colors.$tlp-theme-blue;
     }
 
     .user-preferences-section-appearance-preview-color-stroke {
-        stroke: $tlp-theme-blue;
+        stroke: common-colors.$tlp-theme-blue;
     }
 
     .user-preferences-section-appearance-preview-background {
-        fill: $tlp-theme-background-blue;
+        fill: common-colors.$tlp-theme-background-blue;
     }
 
     .user-preferences-section-appearance-preview-sidebar {
-        fill: $tlp-theme-sidebar-background-blue;
+        fill: common-colors.$tlp-theme-sidebar-background-blue;
     }
 }
 
 .user-preferences-section-appearance-preview-grey {
     .user-preferences-section-appearance-preview-color-fill {
-        fill: $tlp-theme-grey;
+        fill: common-colors.$tlp-theme-grey;
     }
 
     .user-preferences-section-appearance-preview-color-stroke {
-        stroke: $tlp-theme-grey;
+        stroke: common-colors.$tlp-theme-grey;
     }
 
     .user-preferences-section-appearance-preview-background {
-        fill: $tlp-theme-background-grey;
+        fill: common-colors.$tlp-theme-background-grey;
     }
 
     .user-preferences-section-appearance-preview-sidebar {
-        fill: $tlp-theme-sidebar-background-grey;
+        fill: common-colors.$tlp-theme-sidebar-background-grey;
     }
 }
 
 .user-preferences-section-appearance-preview-orange {
     .user-preferences-section-appearance-preview-color-fill {
-        fill: $tlp-theme-orange;
+        fill: common-colors.$tlp-theme-orange;
     }
 
     .user-preferences-section-appearance-preview-color-stroke {
-        stroke: $tlp-theme-orange;
+        stroke: common-colors.$tlp-theme-orange;
     }
 
     .user-preferences-section-appearance-preview-background {
-        fill: $tlp-theme-background-orange;
+        fill: common-colors.$tlp-theme-background-orange;
     }
 
     .user-preferences-section-appearance-preview-sidebar {
-        fill: $tlp-theme-sidebar-background-orange;
+        fill: common-colors.$tlp-theme-sidebar-background-orange;
     }
 }
 
 .user-preferences-section-appearance-preview-red {
     .user-preferences-section-appearance-preview-color-fill {
-        fill: $tlp-theme-red;
+        fill: common-colors.$tlp-theme-red;
     }
 
     .user-preferences-section-appearance-preview-color-stroke {
-        stroke: $tlp-theme-red;
+        stroke: common-colors.$tlp-theme-red;
     }
 
     .user-preferences-section-appearance-preview-background {
-        fill: $tlp-theme-background-red;
+        fill: common-colors.$tlp-theme-background-red;
     }
 
     .user-preferences-section-appearance-preview-sidebar {
-        fill: $tlp-theme-sidebar-background-red;
+        fill: common-colors.$tlp-theme-sidebar-background-red;
     }
 }
 
 .user-preferences-section-appearance-preview-green {
     .user-preferences-section-appearance-preview-color-fill {
-        fill: $tlp-theme-green;
+        fill: common-colors.$tlp-theme-green;
     }
 
     .user-preferences-section-appearance-preview-color-stroke {
-        stroke: $tlp-theme-green;
+        stroke: common-colors.$tlp-theme-green;
     }
 
     .user-preferences-section-appearance-preview-background {
-        fill: $tlp-theme-background-green;
+        fill: common-colors.$tlp-theme-background-green;
     }
 
     .user-preferences-section-appearance-preview-sidebar {
-        fill: $tlp-theme-sidebar-background-green;
+        fill: common-colors.$tlp-theme-sidebar-background-green;
     }
 }
 
 .user-preferences-section-appearance-preview-purple {
     .user-preferences-section-appearance-preview-color-fill {
-        fill: $tlp-theme-purple;
+        fill: common-colors.$tlp-theme-purple;
     }
 
     .user-preferences-section-appearance-preview-color-stroke {
-        stroke: $tlp-theme-purple;
+        stroke: common-colors.$tlp-theme-purple;
     }
 
     .user-preferences-section-appearance-preview-background {
-        fill: $tlp-theme-background-purple;
+        fill: common-colors.$tlp-theme-background-purple;
     }
 
     .user-preferences-section-appearance-preview-sidebar {
-        fill: $tlp-theme-sidebar-background-purple;
+        fill: common-colors.$tlp-theme-sidebar-background-purple;
     }
 }
 

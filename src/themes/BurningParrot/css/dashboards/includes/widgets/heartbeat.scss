@@ -43,10 +43,10 @@
 }
 
 .widget-project-heartbeat-empty-icon {
-    fill: transparentize($tlp-theme-color, .7);
+    fill: var(--tlp-theme-color-transparent-70);
 }
 
-$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+$timeline-color: var(--tlp-theme-color-lighter-10);
 
 .dashboard-widget-content-projectheartbeat-activities {
     position: relative;
@@ -60,8 +60,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color var(--tlp-medium-spacing), transparent var(--tlp-medium-spacing) + 1px),
-            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color var(--tlp-medium-spacing));
+        background: linear-gradient(to top, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing), transparent var(--tlp-medium-spacing) + 1px),
+            linear-gradient(to bottom, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing));
     }
 }
 
@@ -73,7 +73,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     padding: 5px;
     border-radius: 3px;
     background: $timeline-color;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 10px;
     font-weight: 600;
     letter-spacing: .5px;
@@ -108,10 +108,10 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     height: 24px;
     margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
-    background: $tlp-theme-color;
+    background: var(--tlp-theme-color);
 
     > .tuleap-svg {
-        fill: $tlp-ui-white;
+        fill: var(--tlp-ui-white);
     }
 }
 
@@ -133,7 +133,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .dashboard-widget-content-projectheartbeat-item-time {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }
 
