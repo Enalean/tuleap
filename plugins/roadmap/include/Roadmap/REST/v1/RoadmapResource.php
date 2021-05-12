@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 use Luracast\Restler\RestException;
 use Psr\Log\LoggerInterface;
 use Tuleap\REST\Header;
+use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -95,7 +96,7 @@ final class RoadmapResource
             $semantic_timeframe_builder,
             $timeframe_builder,
             \Tracker_ArtifactFactory::instance(),
-            new DependenciesRetriever(new NatureDao()),
+            new DependenciesRetriever(new NatureForRoadmapDao()),
             new RoadmapTasksOutOfDateFilter(
                 new TaskOutOfDateDetector(
                     new SemanticStatusRetriever(),

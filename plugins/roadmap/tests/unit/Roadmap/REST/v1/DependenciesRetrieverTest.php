@@ -22,33 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 final class DependenciesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetDependencies(): void
     {
-        $dao = Mockery::mock(NatureDao::class, [
-            'searchForwardNatureShortNamesForGivenArtifact' => [
-                ['shortname' => 'depends_on'],
-                ['shortname' => 'fixed_in'],
-                ['shortname' => ''],
-            ],
-        ]);
-        $dao->shouldReceive('getForwardLinkedArtifactIds')
-            ->with(123, 'depends_on', PHP_INT_MAX, 0)
-            ->andReturn([124, 125]);
-        $dao->shouldReceive('getForwardLinkedArtifactIds')
-            ->with(123, 'fixed_in', PHP_INT_MAX, 0)
-            ->andReturn([234]);
-        $dao->shouldReceive('getForwardLinkedArtifactIds')
-            ->with(123, '', PHP_INT_MAX, 0)
-            ->andReturn([111, 666]);
+        $dao = $this->createMock(NatureForRoadmapDao::class);
+        $dao
+            ->method('searchForwardLinksHavingSemantics')
+            ->willReturn([
+                ['nature' => 'depends_on', 'id' => 124],
+                ['nature' => 'fixed_in', 'id' => 234],
+                ['nature' => 'depends_on', 'id' => 125],
+                ['nature' => '', 'id' => 111],
+                ['nature' => '', 'id' => 666],
+                ['nature' => 'fixed_in', 'id' => 234],
+            ]);
 
         $retriever = new DependenciesRetriever($dao);
 
