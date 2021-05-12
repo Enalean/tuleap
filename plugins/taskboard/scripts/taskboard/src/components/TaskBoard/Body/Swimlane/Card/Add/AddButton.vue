@@ -20,6 +20,7 @@
 
 <template>
     <button
+        v-if="!is_in_add_mode"
         type="button"
         class="taskboard-add-in-place-button tlp-button-primary tlp-button-outline"
         v-bind:class="button_class"
@@ -27,6 +28,7 @@
         v-on:click="$emit('click')"
         data-test="add-in-place-button"
         data-navigation="add-form"
+        ref="addButton"
     >
         <i class="fa" v-bind:class="icon_class" aria-hidden="true"></i>
         <span v-if="label">{{ label }}</span>
@@ -35,12 +37,22 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class AddButton extends Vue {
     @Prop({ required: true })
     readonly label!: string;
+
+    @Prop({ required: true })
+    readonly is_in_add_mode!: boolean;
+
+    @Watch("is_in_add_mode")
+    onIsInAddModeChanged(is_in_add_mode: boolean): void {
+        if (!is_in_add_mode) {
+            this.focusAddButton();
+        }
+    }
 
     get title(): string {
         return this.label || this.$gettext("Add new card");
@@ -52,6 +64,16 @@ export default class AddButton extends Vue {
 
     get button_class(): string {
         return this.label === "" ? "" : "tlp-button-small taskboard-add-in-place-button-with-label";
+    }
+
+    focusAddButton(): void {
+        this.$nextTick(() => {
+            const add_button = this.$refs.addButton;
+            if (!(add_button instanceof HTMLElement)) {
+                throw new Error("Did not get the add button, is the ref valid?");
+            }
+            add_button.focus();
+        });
     }
 }
 </script>

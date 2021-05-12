@@ -73,7 +73,7 @@ describe("EditCardButtons", () => {
     });
 
     describe("Broadcast events", () => {
-        it("Broadcasts cancel-card-edition event when buttons emit a cancel event", () => {
+        it("Broadcasts cancel-card-edition and editor-closed events when buttons emit a cancel event", () => {
             const card = { is_in_edit_mode: true, remaining_effort: null } as Card;
             const wrapper = createWrapper(card);
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
@@ -81,9 +81,10 @@ describe("EditCardButtons", () => {
             wrapper.findComponent(CancelSaveButtons).vm.$emit("cancel");
 
             expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.CANCEL_CARD_EDITION, card);
+            expect(wrapper.emitted("editor-closed")).toBeTruthy();
         });
 
-        it("Broadcasts save-card-edition event when buttons emit a save event", () => {
+        it("Broadcasts save-card-edition and editor-closed events when buttons emit a save event", () => {
             const card = {
                 is_in_edit_mode: true,
                 remaining_effort: null,
@@ -94,6 +95,7 @@ describe("EditCardButtons", () => {
             wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
             expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.SAVE_CARD_EDITION, card);
+            expect(wrapper.emitted("editor-closed")).toBeTruthy();
         });
     });
 

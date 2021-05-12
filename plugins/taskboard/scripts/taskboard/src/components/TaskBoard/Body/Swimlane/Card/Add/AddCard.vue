@@ -33,7 +33,7 @@
             />
         </div>
         <add-button
-            v-if="!is_in_add_mode"
+            v-bind:is_in_add_mode="is_in_add_mode"
             v-on:click="switchToAddMode"
             v-bind:label="button_label"
         />

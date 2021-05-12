@@ -113,7 +113,7 @@ export default class EditRemainingEffort extends Vue {
         this.removeRemainingEffortFromEditMode(this.card);
     }
 
-    save(): void {
+    save(keyup_event?: KeyboardEvent): void {
         const input = this.$el;
         if (!(input instanceof HTMLInputElement)) {
             throw new Error("The component is not a HTML input");
@@ -141,6 +141,12 @@ export default class EditRemainingEffort extends Vue {
 
         const new_remaining_effort: NewRemainingEffortPayload = { card: this.card, value };
         this.saveRemainingEffort(new_remaining_effort);
+
+        this.$emit("editor-closed");
+
+        if (keyup_event) {
+            keyup_event.stopPropagation();
+        }
     }
 }
 </script>

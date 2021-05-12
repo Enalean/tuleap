@@ -66,10 +66,12 @@ export default class EditCardButtons extends Vue {
 
     cancel(): void {
         EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, this.card);
+        this.$emit("editor-closed");
     }
 
     save(): void {
         EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, this.card);
+        this.$emit("editor-closed");
     }
 }
 </script>

@@ -18,10 +18,16 @@
   -->
 
 <template>
-    <div>
-        <parent-card v-bind:card="card" />
-        <parent-card-remaining-effort v-bind:card="card" />
-        <edit-card-buttons v-bind:card="card" />
+    <div
+        ref="cardWithRemainingEffort"
+        tabindex="0"
+        data-navigation="card"
+        data-shortcut="parent-card"
+        data-test="card-with-remaining-effort"
+    >
+        <parent-card v-bind:card="card" v-on:editor-closed="focusCard" />
+        <parent-card-remaining-effort v-bind:card="card" v-on:editor-closed="focusCard" />
+        <edit-card-buttons v-bind:card="card" v-on:editor-closed="focusCard" />
     </div>
 </template>
 
@@ -39,5 +45,13 @@ import EditCardButtons from "./EditMode/EditCardButtons.vue";
 export default class CardWithRemainingEffort extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
+
+    focusCard(): void {
+        const card = this.$refs.cardWithRemainingEffort;
+        if (!(card instanceof HTMLElement)) {
+            throw new Error("Did not get the expected card element, is the ref valid?");
+        }
+        card.focus();
+    }
 }
 </script>

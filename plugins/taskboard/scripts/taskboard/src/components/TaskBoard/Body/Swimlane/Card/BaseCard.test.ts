@@ -320,5 +320,25 @@ describe("BaseCard", () => {
             jest.runAllTimers();
             expect(scroll_helper.scrollToItemIfNeeded).toHaveBeenCalled();
         });
+
+        it("emits an `editor-closed` event after cancelling", async () => {
+            const card = getCard({ is_in_edit_mode: true } as Card);
+            const wrapper = await getWrapper(card);
+
+            EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
+            expect(wrapper.emitted("editor-closed")).toBeTruthy();
+        });
+
+        it("emits an `editor-closed` event after saving", async () => {
+            const card = getCard({ label: "toto", is_in_edit_mode: true } as Card);
+            const wrapper = await getWrapper(card);
+
+            const label = "Lorem ipsum";
+            wrapper.setData({ label });
+            const edit_label = wrapper.findComponent(LabelEditor);
+            edit_label.vm.$emit("save");
+
+            expect(wrapper.emitted("editor-closed")).toBeTruthy();
+        });
     });
 });

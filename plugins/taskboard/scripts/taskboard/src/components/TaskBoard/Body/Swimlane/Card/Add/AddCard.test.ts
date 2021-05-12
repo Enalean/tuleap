@@ -55,7 +55,7 @@ describe("AddCard", () => {
         expect(wrapper.findComponent(AddButton).exists()).toBe(true);
     });
 
-    it("Given the button is clicked, Then it hides the button and show the editor", async () => {
+    it("Given the button is clicked, then it shows the editor", async () => {
         const wrapper = getWrapper();
 
         wrapper.findComponent(AddButton).vm.$emit("click");
@@ -63,7 +63,6 @@ describe("AddCard", () => {
 
         expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
         expect(wrapper.findComponent(LabelEditor).props("readonly")).toBe(false);
-        expect(wrapper.findComponent(AddButton).exists()).toBe(false);
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setIsACellAddingInPlace");
     });
 
@@ -105,7 +104,6 @@ describe("AddCard", () => {
         expect(wrapper.vm.$data.label).toBe("");
 
         expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
-        expect(wrapper.findComponent(AddButton).exists()).toBe(false);
     });
 
     it(`Given the editor is displayed,
@@ -133,7 +131,6 @@ describe("AddCard", () => {
         expect(wrapper.vm.$data.label).toBe("");
 
         expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
-        expect(wrapper.findComponent(AddButton).exists()).toBe(false);
     });
 
     it(`Given the editor is displayed,
