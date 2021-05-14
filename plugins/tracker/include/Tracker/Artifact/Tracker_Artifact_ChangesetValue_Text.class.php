@@ -260,6 +260,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         if ($this->isInHTMLFormat()) {
             return $hp->purify($this->getText(), CODENDI_PURIFIER_STRIP_HTML);
         }
+        if ($this->format === self::COMMONMARK_CONTENT) {
+            return self::getCommonMarkInterpreter($hp)->getContentStrippedOfTags($this->getText());
+        }
 
         return $this->getText();
     }
@@ -281,10 +284,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     private function interpretMarkdownContent(string $text): string
     {
-        $content_interpreter = CommonMarkInterpreter::build(
-            Codendi_HTMLPurifier::instance(),
-            new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance())
-        );
+        $content_interpreter = self::getCommonMarkInterpreter(Codendi_HTMLPurifier::instance());
 
         $interpreted_content_with_references = $content_interpreter->getInterpretedContentWithReferences(
             $text,
@@ -292,5 +292,13 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         );
 
         return $interpreted_content_with_references;
+    }
+
+    private static function getCommonMarkInterpreter(Codendi_HTMLPurifier $purifier): CommonMarkInterpreter
+    {
+        return CommonMarkInterpreter::build(
+            Codendi_HTMLPurifier::instance(),
+            new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance())
+        );
     }
 }

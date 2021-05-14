@@ -70,6 +70,20 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $this->assertEquals('Problems with my code: example', $text->getContentAsText());
     }
 
+    public function testItStripsCommonMarkMarkupWhenFormatIsCommonMark(): void
+    {
+        $field = $this->getTextFieldWithProject();
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            $this->createMock(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            'Problems with my code: **example**',
+            Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+        );
+        self::assertEquals("Problems with my code: example\n", $text->getContentAsText());
+    }
+
     public function testReturnsUnconvertedHTMLWhenFormatIsHTML(): void
     {
         $field = $this->getTextFieldWithProject();
