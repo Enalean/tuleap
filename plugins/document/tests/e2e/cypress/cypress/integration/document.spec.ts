@@ -19,10 +19,11 @@
 
 function disableSpecificErrorThrownByCkeditor(): void {
     cy.on("uncaught:exception", (err) => {
-        // the message bellow is only thown by ckeditor, if any other js exception is thrown
+        // the message bellow is only thrown by ckeditor, if any other js exception is thrown
         // the test will fail
-        expect(err.message).to.include("Cannot read property 'compatMode' of undefined");
-        return false;
+        if (err.message.includes("Cannot read property 'compatMode' of undefined")) {
+            return false;
+        }
     });
 }
 
@@ -227,7 +228,7 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-tree-content]").should("not.exist");
         });
 
-        it(`user can download a folder as a zip archive`, function () {
+        it(`user can download a folder as a zip archive`, () => {
             // Create a folder
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-drop-down-button]").click();
@@ -239,21 +240,14 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-modal-submit-button]").click();
             });
 
+            // Go to the folder
+            cy.get("[data-test=document-tree-content]").contains("a", "Folder download").click();
+
             // Create an embedded file in this folder
-            cy.get("[data-test=document-tree-content]")
-                .contains("tr", "Folder download")
-                .as("folder_download_row")
-                .within(() => {
-                    cy.get("[data-test=dropdown-button]")
-                        // Force the button to be visible for cypress
-                        .invoke("css", "visibility", "visible")
-                        .as("folder_download_dropdown")
-                        .click();
-                });
-            // Force the dropdown to be visible for cypress
-            cy.get("[data-test=dropdown-menu]").invoke("css", "visibility", "visible");
-            cy.get("[data-test=dropdown-menu]").invoke("css", "pointer-events", "auto");
-            cy.get("[data-test=document-new-item]").click();
+            cy.get("[data-test=document-header-actions]").within(() => {
+                cy.get("[data-test=document-item-action-new-button]").click();
+            });
+
             cy.get("[data-test=document-new-item-modal]").within(() => {
                 cy.get("[data-test=embedded]").click();
                 cy.get("[data-test=document-new-item-title]").type("Embedded file");
@@ -269,40 +263,47 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-modal-submit-button]").click();
             });
 
-            cy.get("@folder_download_dropdown").click();
-            cy.get("@folder_download_row").within(($row) => {
-                // We cannot click the download button, otherwise the browser will ask "Where to save this file ?"
-                // and will stop the test.
-                cy.get("[data-test=document-dropdown-download-folder-as-zip]").should("exist");
-                const folder_id = $row.data("itemId");
-                if (folder_id === undefined) {
-                    throw new Error("Could not retrieve the folder id from its <tr>");
-                }
-                const download_uri = `/plugins/document/document-project/folders/${encodeURIComponent(
-                    folder_id
-                )}/download-folder-as-zip`;
+            cy.visitProjectService("document-project", "Documents");
 
-                // Verify the download URI returns code 200 and has the correct headers
-                cy.request({
-                    url: download_uri,
-                }).then((response) => {
-                    expect(response.status).to.equal(200);
-                    expect(response.headers["content-type"]).to.equal("application/zip");
-                    expect(response.headers["content-disposition"]).to.equal(
-                        'attachment; filename="Folder download.zip"'
-                    );
+            cy.get("[data-test=document-tree-content]")
+                .contains("tr", "Folder download")
+                .within(($row) => {
+                    // We cannot click the download button, otherwise the browser will ask "Where to save this file ?"
+                    // and will stop the test.
+                    cy.get("[data-test=document-dropdown-download-folder-as-zip]").should("exist");
+                    const folder_id = $row.data("itemId");
+                    if (folder_id === undefined) {
+                        throw new Error("Could not retrieve the folder id from its <tr>");
+                    }
+                    const download_uri = `/plugins/document/document-project/folders/${encodeURIComponent(
+                        folder_id
+                    )}/download-folder-as-zip`;
+
+                    // Verify the download URI returns code 200 and has the correct headers
+                    cy.request({
+                        url: download_uri,
+                    }).then((response) => {
+                        expect(response.status).to.equal(200);
+                        expect(response.headers["content-type"]).to.equal("application/zip");
+                        expect(response.headers["content-disposition"]).to.equal(
+                            'attachment; filename="Folder download.zip"'
+                        );
+                    });
+
+                    // Open quick look so we can delete the folder
+                    // button is displayed on tr::hover, so we need to force click
+                    cy.get("[data-test=quick-look-button]").click({ force: true });
                 });
-            });
-            // Delete the folder for repeatability
-            cy.get("@folder_download_row").within(() => {
-                cy.get("[data-test=document-dropdown-delete]").click();
-            });
+
+            // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
+            // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
+            cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
             cy.get("[data-test=document-confirm-deletion-button]").click();
+
+            cy.get("[data-test=document-tree-content]").should("not.exist");
         });
 
         it("user can navigate and manipulate items using keyboard shortcuts", () => {
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").as("body");
             cy.get("[data-test=document-header-actions]").should("be.visible");
 
             testNewFolderShortcut();
@@ -314,7 +315,7 @@ describe("Document new UI", () => {
 });
 
 function testNewFolderShortcut(): void {
-    cy.get("@body").type("b");
+    typeShortcut("b");
     cy.get("[data-test=document-new-folder-modal]")
         .should("be.visible")
         .within(() => {
@@ -328,7 +329,7 @@ function testNewFolderShortcut(): void {
 }
 
 function testNewItemShortcut(): void {
-    cy.get("@body").type("n");
+    typeShortcut("n");
     cy.get("[data-test=document-new-item-modal]")
         .should("be.visible")
         .within(() => {
@@ -343,21 +344,28 @@ function testNewItemShortcut(): void {
 }
 
 function testNavigationShortcuts(): void {
-    cy.get("@body").type("{ctrl}{uparrow}");
+    typeShortcut("{ctrl}{uparrow}");
     cy.focused().should("contain", "First item");
 
-    cy.get("@body").type("{downarrow}");
+    typeShortcut("{downarrow}");
     cy.focused().should("contain", "Last item");
 }
 
 function deleteItems(): void {
-    cy.get("@body").type("{del}");
+    typeShortcut("{del}");
     cy.get("[data-test=document-confirm-deletion-button]").click();
     cy.get("[data-test=document-delete-item-modal]").should("not.exist");
 
-    cy.get("@body").type("{ctrl}{uparrow}").type("{del}");
+    typeShortcut("{ctrl}{uparrow}", "{del}");
     cy.get("[data-test=document-confirm-deletion-button]").click();
     cy.get("[data-test=document-delete-item-modal]").should("not.exist");
 
     cy.get("[data-test=document-tree-content]").should("not.exist");
+}
+
+function typeShortcut(...inputs: string[]): void {
+    for (const input of inputs) {
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get("body").type(input);
+    }
 }
