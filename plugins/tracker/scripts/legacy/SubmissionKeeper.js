@@ -51,7 +51,8 @@ tuleap.trackers = tuleap.trackers || {};
                 }
 
                 artifact_form.querySelectorAll("[type=submit]").forEach(function (button) {
-                    button.addEventListener("click", function () {
+                    button.addEventListener("click", function (event) {
+                        event.preventDefault(); // Needed to make Chrome [74; 78] not broken, see https://bugs.chromium.org/p/chromium/issues/detail?id=977882
                         if (self.isArtifactSubmittable()) {
                             if (button.name === "submit_and_stay") {
                                 setSubmitAndStayOption(artifact_form);
