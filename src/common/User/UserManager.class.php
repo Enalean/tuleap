@@ -458,8 +458,9 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             try {
                 $session_manager    = $this->getSessionManager();
                 $now                = $_SERVER['REQUEST_TIME'];
+                $user_agent         = $_SERVER['HTTP_USER_AGENT'] ?? '';
                 $session_lifetime   = $this->getSessionLifetime();
-                $this->_currentuser = $session_manager->getUser($session_hash, $now, $session_lifetime);
+                $this->_currentuser = $session_manager->getUser($session_hash, $now, $session_lifetime, $user_agent);
                 if ($this->_currentuser->isSuspended() || $this->_currentuser->isDeleted()) {
                     $session_manager->destroyAllSessions($this->_currentuser);
                     $this->_currentuser = null;

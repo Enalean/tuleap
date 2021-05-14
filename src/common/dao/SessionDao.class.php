@@ -45,6 +45,14 @@ class SessionDao extends DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
+    public function updateUserAgentByID(int $id, string $user_agent): void
+    {
+        $id         = $this->getDa()->escapeInt($id);
+        $user_agent = $this->getDa()->quoteSmart($user_agent);
+
+        $this->update("UPDATE session SET user_agent = $user_agent WHERE id = $id");
+    }
+
     /**
      * @return int the number of active sessions
      */

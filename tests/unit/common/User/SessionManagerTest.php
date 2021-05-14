@@ -57,7 +57,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $session_identifier = 'malformed_session_identifier';
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
-        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
+        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
     }
 
     public function testItThrowsAnExceptionWhenTheSessionIsNotFound(): void
@@ -69,7 +69,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->session_dao->shouldReceive('searchById')->with('1', self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(false);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
-        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
+        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
     }
 
     public function testItThrowsAnExceptionWhenTokenDoesNotMatch(): void
@@ -83,7 +83,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(['session_hash' => 'expected_token']);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
-        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
+        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
     }
 
     public function testItThrowsAnExceptionWhenTheUserCanNotBeRetrieved(): void
@@ -101,7 +101,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
-        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
+        $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
     }
 
     public function testItGetsTheUserFromTheSessionIdentifier(): void
@@ -116,14 +116,16 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->session_dao->shouldReceive('searchById')->with($session_id, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns([
             'session_hash' => $hashed_session_token,
-            'user_id'      => $user_id
+            'user_id'      => $user_id,
+            'user_agent'   => 'old_user_agent'
         ]);
+        $this->session_dao->shouldReceive('updateUserAgentByID')->once();
         $user = \Mockery::spy(\PFUser::class);
         $this->user_manager->shouldReceive('getUserById')->with($user_id)->andReturns($user);
 
         $user->shouldReceive('setSessionId')->with($session_id)->once();
         $user->shouldReceive('setSessionHash')->with("$session_id.$session_token")->once();
-        $session_user = $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
+        $session_user = $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
         $this->assertSame($user, $session_user);
     }
 
