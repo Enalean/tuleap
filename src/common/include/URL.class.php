@@ -106,6 +106,9 @@ class URL
                 $dao      = $this->getForumDao();
                 $result   = $dao->searchByGroupForumId($_REQUEST['forum_id']);
                 $group_id = $result->getRow();
+                if ($group_id === false) {
+                    return false;
+                }
                 $group_id = $group_id['group_id'];
 
                 // News
@@ -116,8 +119,11 @@ class URL
 
             if (array_key_exists('msg_id', $_REQUEST) && $_REQUEST['msg_id']) {
                 // Get corresponding project
-                $dao      = $this->getForumDao();
-                $row      = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
+                $dao = $this->getForumDao();
+                $row = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
+                if ($row === false) {
+                    return false;
+                }
                 $group_id = $row['group_id'];
                 $forum_id = $row['group_forum_id'];
 
@@ -135,6 +141,9 @@ class URL
                 $dao      = $this->getArtifactDao();
                 $result   = $dao->searchArtifactId($_REQUEST['artifact_id']);
                 $group_id = $result->getRow();
+                if ($group_id === false) {
+                    return false;
+                }
                 $group_id = $group_id['group_id'];
             }
         }
