@@ -23,14 +23,15 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 class WebhookTuleapReferencesParser
 {
-    private const RESOLVE_KEYWORD_REGEX = "resolve\s?|resolves\s?";
-    public const  RESOLVE_KEYWORD       = "resolve";
+    private const CLOSED_KEYWORDS_REGEX = "resolves\s?|closes\s?";
+    public const  RESOLVES_KEYWORD      = "resolves";
+    public const  CLOSES_KEYWORD        = "closes";
 
     public function extractCollectionOfTuleapReferences(
         string $message
     ): WebhookTuleapReferenceCollection {
         $matches = [];
-        $pattern = '/(' . self::RESOLVE_KEYWORD_REGEX . ')?(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';
+        $pattern = '/(' . self::CLOSED_KEYWORDS_REGEX . ')?(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';
         preg_match_all($pattern, $message, $matches);
 
         $parsed_tuleap_references = [];
@@ -38,10 +39,12 @@ class WebhookTuleapReferencesParser
             for ($match_index = 0; $match_index < count($matches[2]); $match_index++) {
                 $close_artifact_keyword = preg_replace('/\s+/', '', $matches[1][$match_index]);
                 $artifact_id            = $matches[2][$match_index];
-                if ($close_artifact_keyword === '') {
-                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, null);
+                if ($close_artifact_keyword === self::RESOLVES_KEYWORD) {
+                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::RESOLVES_KEYWORD);
+                } elseif ($close_artifact_keyword === self::CLOSES_KEYWORD) {
+                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::CLOSES_KEYWORD);
                 } else {
-                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::RESOLVE_KEYWORD);
+                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, null);
                 }
             }
         }
