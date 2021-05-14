@@ -109,8 +109,10 @@ class CrossTrackerReportDao extends DataAccessObject
         return $this->getDB()->run($sql, $report_id);
     }
 
-
-    public function searchCrossTrackerWidgetByCrossTrackerReportId($content_id)
+    /**
+     * @psalm-return array{dashboard_id: int, dashboard_type: string, user_id: int, project_id: int}|null
+     */
+    public function searchCrossTrackerWidgetByCrossTrackerReportId($content_id): ?array
     {
         $sql = "SELECT dashboard_id, dashboard_type, user_id, project_dashboards.project_id
                   FROM plugin_crosstracker_report

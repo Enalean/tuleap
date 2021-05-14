@@ -632,14 +632,14 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws RestException 403
      */
-    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)
+    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report): void
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
-        if ($widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
+        if ($widget !== null && $widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
             throw new RestException(403);
         }
 
-        if ($widget['dashboard_type'] === 'project') {
+        if ($widget !== null && $widget['dashboard_type'] === 'project') {
             $project = $this->project_manager->getProject($widget['project_id']);
             ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
         }
