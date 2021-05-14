@@ -86,7 +86,9 @@ class Tracker_Action_UpdateArtifact
             if ($request->isAjax()) {
                 $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
             } elseif ($request->existAndNonEmpty('from_overlay')) {
-                echo '<script>window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition(' . $this->artifact->getId() . ')</script>';
+                $purifier  = Codendi_HTMLPurifier::instance();
+                $csp_nonce = $GLOBALS['Response']->getCSPNonce();
+                echo sprintf('<script type="text/javascript" nonce="%s">window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition(%d);</script>', $purifier->purify($csp_nonce), $this->artifact->getId());
                 return;
             } else {
                 $GLOBALS['Response']->redirect($redirect->toUrl());

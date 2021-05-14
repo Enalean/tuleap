@@ -1,13 +1,6 @@
 <h2 class="almost-tlp-title">{{# dgettext }} tuleap-tracker |Manage Fields Permissions{{/ dgettext }}</h2>
 
 {{# has_permissions}}
-<script type="text/javascript">
-    <!--
-    function changeFirstPartId(wanted) {
-        location.href = '?selected_id=' + wanted;
-    }
-    //-->
-</script>
 
 <form name="form_tracker_permissions" action="{{ update_url }}" method="post">
     <div>
@@ -31,7 +24,7 @@
             <tr>
                 {{# is_first }}
                 <td rowspan="{{ nb_permissions }}" style="vertical-align:top;">
-                    <select onchange="changeFirstPartId(this.options[this.selectedIndex].value);">
+                    <select id="permissions-selector-target-element">
                         {{# ugroup_list }}
                             <option value="{{ id }}"{{# is_selected }} selected="selected" style="background:#EEE;"{{/ is_selected }}>{{ name }}{{# might_not_have_access }} *{{/ might_not_have_access}}</option>
                         {{/ ugroup_list }}

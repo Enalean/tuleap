@@ -114,7 +114,9 @@ class Tracker_Action_CreateArtifact
             header(JSONHeader::getHeaderForPrototypeJS(['aid' => $artifact->getId()]));
             exit;
         } elseif ($this->isFromOverlay($request)) {
-            echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact(' . (int) $artifact->getId() . ');</script>';
+            $purifier  = Codendi_HTMLPurifier::instance();
+            $csp_nonce = $GLOBALS['Response']->getCSPNonce();
+            echo sprintf('<script type="text/javascript" nonce="%s">window.parent.codendi.tracker.artifact.artifactLink.newArtifact(%d);</script>', $purifier->purify($csp_nonce), $artifact->getId());
             exit;
         } else {
             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Artifact Successfully Created (%1$s)'), $artifact->fetchXRefLink()), CODENDI_PURIFIER_LIGHT);

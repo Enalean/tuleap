@@ -298,8 +298,8 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $request = new Codendi_Request(['func' => 'artifact-update', 'from_overlay' => '1'], Mockery::spy(ProjectManager::class));
 
         $from_overlay = $this->getProcessAndCaptureOutput($this->layout, $request, $this->user);
-        $expected     = '<script>window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition(' . $this->task->getId() . ')</script>';
-        $this->assertSame($expected, $from_overlay);
+        $expected     = '<script type="text/javascript" nonce="">window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition(' . $this->task->getId() . ');</script>';
+        self::assertSame($expected, $from_overlay);
     }
 
     public function testItDoesntReturnScriptWhenInAjax(): void

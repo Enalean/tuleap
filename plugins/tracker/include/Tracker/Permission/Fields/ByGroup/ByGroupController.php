@@ -26,6 +26,8 @@ namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 use HTTPRequest;
 use Tracker_FormElementFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -67,10 +69,10 @@ class ByGroupController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $this->display($tracker, $request);
+        $this->display($tracker, $request, $layout);
     }
 
-    protected function display(\Tracker $tracker, HTTPRequest $request)
+    protected function display(\Tracker $tracker, HTTPRequest $request, BaseLayout $layout): void
     {
         $selected_id = (int) $request->getValidated('selected_id', 'uint', 0);
 
@@ -91,6 +93,12 @@ class ByGroupController implements DispatchableWithRequest
 
         $tracker->displayAdminPermsHeader($tracker_manager, $title);
 
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../../../../../../src/www/assets/trackers', '/assets/trackers'),
+                'tracker-admin-fields-permissions.js'
+            )
+        );
         $this->renderer->renderToPage(
             'fields-by-group',
             new ByGroupPresenter(
