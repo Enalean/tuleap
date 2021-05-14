@@ -243,8 +243,10 @@ class WikiPage
         }
         $row = db_fetch_array($res);
 
-        self::$gid      =  $row['group_id'];
-        $this->pagename =  $row['pagename'];
+        if ($row !== false) {
+            self::$gid      =  $row['group_id'];
+            $this->pagename =  $row['pagename'];
+        }
     }
 
 
