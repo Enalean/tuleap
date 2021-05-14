@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\CommonMarkExtension;
 
-use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
+use League\CommonMark\MarkdownConverter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 final class LinkToGitFileExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -35,7 +35,7 @@ final class LinkToGitFileExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $blob_finder;
     /**
-     * @var CommonMarkConverter
+     * @var MarkdownConverter
      */
     private $converter;
 
@@ -44,7 +44,7 @@ final class LinkToGitFileExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
         $environment       = Environment::createCommonMarkEnvironment();
         $this->blob_finder = \Mockery::mock(LinkToGitFileBlobFinder::class);
         $environment->addExtension(new LinkToGitFileExtension($this->blob_finder));
-        $this->converter = new CommonMarkConverter([], $environment);
+        $this->converter = new MarkdownConverter($environment);
     }
 
     public function testDirectLinkIsConvertedIfItPointsToAGitFile(): void
