@@ -71,13 +71,17 @@ class GitlabRepositoryProjectDao extends DataAccessObject
         return count($rows) > 0;
     }
 
-    public function addGitlabRepositoryIntegrationInProject(int $repository_id, int $project_id): void
-    {
+    public function addGitlabRepositoryIntegrationInProject(
+        int $repository_id,
+        int $project_id,
+        int $allow_artifact_closure
+    ): void {
         $this->getDB()->insert(
             'plugin_gitlab_repository_project',
             [
-                'id'         => $repository_id,
-                'project_id' => $project_id
+                'id'                     => $repository_id,
+                'project_id'             => $project_id,
+                'allow_artifact_closure' => $allow_artifact_closure,
             ]
         );
     }

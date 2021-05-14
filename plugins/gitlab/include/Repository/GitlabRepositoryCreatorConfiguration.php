@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,35 +19,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\REST\v1;
+namespace Tuleap\Gitlab\Repository;
 
 /**
  * @psalm-immutable
  */
-class GitlabRepositoryPOSTRepresentation
+class GitlabRepositoryCreatorConfiguration
 {
     /**
-     * @var int
-     */
-    public $project_id;
-
-    /**
-     * @var string
-     */
-    public $gitlab_server_url;
-
-    /**
-     * @var string
-     */
-    public $gitlab_bot_api_token;
-
-    /**
-     * @var int
-     */
-    public $gitlab_repository_id;
-
-    /**
-     * @var bool {@required false}
+     * @var bool
      */
     public $allow_artifact_closure;
+
+    private function __construct(bool $allow_artifact_closure)
+    {
+        $this->allow_artifact_closure = $allow_artifact_closure;
+    }
+
+    public static function buildDefaultConfiguration(): self
+    {
+        return new self(false);
+    }
+
+    public static function buildConfigurationAllowingArtifactClosure(): self
+    {
+        return new self(true);
+    }
+
+    public function isRepositoryIntegrationAllowingArtifactClosure(): bool
+    {
+        return $this->allow_artifact_closure;
+    }
 }

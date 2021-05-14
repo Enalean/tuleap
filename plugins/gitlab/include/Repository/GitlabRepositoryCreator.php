@@ -83,10 +83,11 @@ class GitlabRepositoryCreator
     public function integrateGitlabRepositoryInProject(
         Credentials $credentials,
         GitlabProject $gitlab_project,
-        Project $project
+        Project $project,
+        GitlabRepositoryCreatorConfiguration $configuration
     ): GitlabRepository {
         return $this->db_transaction_executor->execute(
-            function () use ($credentials, $gitlab_project, $project) {
+            function () use ($credentials, $gitlab_project, $project, $configuration) {
                 $gitlab_repository_id  = $gitlab_project->getId();
                 $gitlab_web_url        = $gitlab_project->getWebUrl();
                 $gitlab_name_with_path = $gitlab_project->getPathWithNamespace();
@@ -108,7 +109,8 @@ class GitlabRepositoryCreator
                 if ($already_existing_gitlab_repository !== null) {
                     $this->addAlreadyIntegratedGitlabRepositoryInProject(
                         $already_existing_gitlab_repository,
-                        $project
+                        $project,
+                        $configuration
                     );
 
                     return $already_existing_gitlab_repository;
@@ -117,7 +119,8 @@ class GitlabRepositoryCreator
                 return $this->createGitlabRepositoryIntegration(
                     $credentials,
                     $gitlab_project,
-                    $project
+                    $project,
+                    $configuration
                 );
             }
         );
@@ -128,7 +131,8 @@ class GitlabRepositoryCreator
      */
     private function addAlreadyIntegratedGitlabRepositoryInProject(
         GitlabRepository $already_existing_gitlab_repository,
-        Project $project
+        Project $project,
+        GitlabRepositoryCreatorConfiguration $configuration
     ): void {
         $repository_id = $already_existing_gitlab_repository->getId();
         $project_id    = (int) $project->getID();
@@ -143,14 +147,16 @@ class GitlabRepositoryCreator
 
         $this->gitlab_repository_project_dao->addGitlabRepositoryIntegrationInProject(
             $repository_id,
-            $project_id
+            $project_id,
+            (int) $configuration->isRepositoryIntegrationAllowingArtifactClosure()
         );
     }
 
     private function createGitlabRepositoryIntegration(
         Credentials $credentials,
         GitlabProject $gitlab_project,
-        Project $project
+        Project $project,
+        GitlabRepositoryCreatorConfiguration $configuration
     ): GitlabRepository {
         $id = $this->gitlab_repository_dao->createGitlabRepository(
             $gitlab_project->getId(),
@@ -167,7 +173,8 @@ class GitlabRepositoryCreator
 
         $this->gitlab_repository_project_dao->addGitlabRepositoryIntegrationInProject(
             $id,
-            (int) $project->getID()
+            (int) $project->getID(),
+            (int) $configuration->isRepositoryIntegrationAllowingArtifactClosure()
         );
 
         $this->webhook_creator->generateWebhookInGitlabProject($credentials, $gitlab_repository);

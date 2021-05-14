@@ -34,6 +34,9 @@ msgstr "Ajouter un dépôt"
 msgid "Administration"
 msgstr "Administration"
 
+msgid "Allow artifact closure"
+msgstr "Autoriser la fermeture des artéfacts"
+
 msgid "Allowed characters: a-zA-Z0-9/_.-"
 msgstr "Caractères autorisés : a-zA-Z0-9/_.-"
 
@@ -110,6 +113,14 @@ msgstr "URL du serveur GitLab"
 
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
+
+msgid ""
+"If selected, artifacts of this project can be closed with GitLab commit\n"
+"                    messages from the selected repository."
+msgstr ""
+"Si choisi, les artéfacts de ce projet pourront être fermés à l'aide des "
+"messages de commit\n"
+"                    de GitLab depuis le dépôt sélectionné."
 
 msgid "Integrate selected repository"
 msgstr "Intégrer le dépôt sélectionné"
@@ -212,9 +223,9 @@ msgid ""
 "able to extract Tuleap references from GitLab tag message."
 msgstr ""
 "Le jeton d'accès sera utilisé pour configurer les hooks de projet et "
-"commenter automatiquement les commits et les demandes de fusion GitLab. "
-"Il est également utilisé afin d'extraire les références Tuleap contenues "
-"dans les étiquettes GitLab."
+"commenter automatiquement les commits et les demandes de fusion GitLab. Il "
+"est également utilisé afin d'extraire les références Tuleap contenues dans "
+"les étiquettes GitLab."
 
 msgid ""
 "The access token will be used to fetch repositories, configure project "

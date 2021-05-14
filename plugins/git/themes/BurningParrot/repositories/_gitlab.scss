@@ -100,6 +100,10 @@
     }
 }
 
+.gitlab-repositories-list-table {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
 /* stylelint-disable-next-line selector-no-qualifying-type */
 .tlp-table > tbody > tr > td.gitlab-repository-namespace {
     line-height: 1.2rem;
