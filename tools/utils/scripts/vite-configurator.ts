@@ -41,6 +41,7 @@ export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
         server: {
             fsServe: {
                 root: __dirname + "/../../../",
+                strict: true,
             },
         },
     });
