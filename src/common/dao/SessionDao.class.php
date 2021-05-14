@@ -18,84 +18,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SessionDao extends DataAccessObject
+class SessionDao extends \Tuleap\DB\DataAccessObject
 {
-
-    public function create($user_id, $token, $ip_address, $current_time, string $user_agent)
+    public function create($user_id, $token, $ip_address, $current_time, string $user_agent): int
     {
-        $user_id      = $this->getDa()->escapeInt($user_id);
-        $token        = $this->getDa()->quoteSmart($token);
-        $ip_address   = $this->getDa()->quoteSmart($ip_address);
-        $current_time = $this->getDa()->escapeInt($current_time);
-        $user_agent   = $this->getDa()->quoteSmart($user_agent);
-
-        $sql = "INSERT INTO session(user_id, session_hash, ip_addr, time, user_agent)
-                VALUES($user_id, $token, $ip_address, $current_time, $user_agent)";
-
-        return $this->updateAndGetLastId($sql);
+        return (int) $this->getDB()->insertReturnId(
+            'session',
+            [
+                'user_id' => $user_id,
+                'session_hash' => $token,
+                'ip_addr' => $ip_address,
+                'time' => $current_time,
+                'user_agent' => $user_agent,
+            ]
+        );
     }
 
-    public function searchById($id, $current_time, $session_lifetime)
+    public function searchById($id, $current_time, $session_lifetime): ?array
     {
-        $id               = $this->getDa()->escapeInt($id);
-        $current_time     = $this->getDa()->escapeInt($current_time);
-        $session_lifetime = $this->getDa()->escapeInt($session_lifetime);
-
-        $sql = "SELECT * FROM session WHERE id = $id AND time + $session_lifetime > $current_time";
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row('SELECT * FROM session WHERE id = ? AND time + ? > ?', $id, $session_lifetime, $current_time);
     }
 
     public function updateUserAgentByID(int $id, string $user_agent): void
     {
-        $id         = $this->getDa()->escapeInt($id);
-        $user_agent = $this->getDa()->quoteSmart($user_agent);
-
-        $this->update("UPDATE session SET user_agent = $user_agent WHERE id = $id");
+        $this->getDB()->run('UPDATE session SET user_agent = ? WHERE id = ?', $user_agent, $id);
     }
 
     /**
      * @return int the number of active sessions
      */
-    public function count($current_time, $session_lifetime)
+    public function count($current_time, $session_lifetime): int
     {
-        $current_time     = $this->da->escapeInt($current_time);
-        $session_lifetime = $this->da->escapeInt($session_lifetime);
-
-        $row = $this->retrieve(
-            "SELECT count(*) AS nb FROM session WHERE time + $session_lifetime > $current_time"
-        )->getRow();
-        return $row['nb'];
+        return $this->getDB()->single(
+            'SELECT COUNT(*) AS nb FROM session WHERE time + ? > ?',
+            [$session_lifetime, $current_time]
+        );
     }
 
-    public function deleteSessionById($id)
+    public function deleteSessionById($id): void
     {
-        $id  = $this->getDa()->escapeInt($id);
-        $sql = "DELETE FROM session WHERE id = $id";
-        return $this->update($sql);
+        $this->getDB()->run('DELETE FROM session WHERE id = ?', $id);
     }
 
-    public function deleteSessionByUserId($user_id)
+    public function deleteSessionByUserId($user_id): void
     {
-        $user_id = $this->getDa()->escapeInt($user_id);
-        $sql     = "DELETE FROM session WHERE user_id = $user_id";
-        return $this->update($sql);
+        $this->getDB()->run('DELETE FROM session WHERE user_id = ?', $user_id);
     }
 
-    public function deleteAllSessionsByUserIdButTheCurrentOne($user_id, $current_session_id)
+    public function deleteAllSessionsByUserIdButTheCurrentOne($user_id, $current_session_id): void
     {
-        $user_id            = $this->getDa()->escapeInt($user_id);
-        $current_session_id = $this->getDa()->escapeInt($current_session_id);
-        $sql                = "DELETE FROM session WHERE user_id = $user_id AND id != $current_session_id";
-        return $this->update($sql);
+        $this->getDB()->run('DELETE FROM session WHERE user_id = ? AND id != ?', $user_id, $current_session_id);
     }
 
-    /**
-     * Purge the table
-     *
-     * @return bool true if success, false otherwise
-     */
-    public function deleteAll()
+    public function deleteAll(): void
     {
-        return $this->update("TRUNCATE TABLE session");
+        $this->getDB()->run('TRUNCATE TABLE session');
     }
 }

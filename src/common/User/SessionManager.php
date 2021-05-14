@@ -63,7 +63,7 @@ class SessionManager
         list($session_id, $session_token) = $this->getSessionIdentifierParts($session_identifier);
 
         $session = $this->session_dao->searchById($session_id, $current_time, $session_lifetime);
-        if ($session === false) {
+        if ($session === null) {
             throw new InvalidSessionException();
         }
 
@@ -95,16 +95,16 @@ class SessionManager
     {
         $token        = $this->random_number_generator->getNumber();
         $hashed_token = hash(self::HASH_ALGORITHM, $token);
-        $session_id   = $this->session_dao->create(
-            $user->getId(),
-            $hashed_token,
-            $request->getIPAddress(),
-            $current_time,
-            $request->getFromServer('HTTP_USER_AGENT') ?: ''
-        );
-
-        if ($session_id === null) {
-            throw new SessionNotCreatedException();
+        try {
+            $session_id = $this->session_dao->create(
+                $user->getId(),
+                $hashed_token,
+                $request->getIPAddress(),
+                $current_time,
+                $request->getFromServer('HTTP_USER_AGENT') ?: ''
+            );
+        } catch (\Exception $exception) {
+            throw new SessionNotCreatedException($exception);
         }
 
         $session_identifier = $session_id . self::SESSION_IDENTIFIER_SEPARATOR . $token;
@@ -114,42 +114,24 @@ class SessionManager
         return $session_identifier;
     }
 
-    /**
-     * @throws SessionDataAccessException
-     */
     public function destroyCurrentSession(PFUser $user)
     {
         $session_id = $user->getSessionId();
-        $is_deleted = $this->session_dao->deleteSessionById($session_id);
-        if ($is_deleted === false) {
-            throw new SessionDataAccessException();
-        }
+        $this->session_dao->deleteSessionById($session_id);
         $user->setSessionId(false);
         $user->setSessionHash(false);
     }
 
-    /**
-     * @throws SessionDataAccessException
-     */
     public function destroyAllSessions(PFUser $user)
     {
-        $is_deleted = $this->session_dao->deleteSessionByUserId($user->getId());
-        if ($is_deleted === false) {
-            throw new SessionDataAccessException();
-        }
+        $this->session_dao->deleteSessionByUserId($user->getId());
         $user->setSessionId(false);
         $user->setSessionHash(false);
     }
 
-    /**
-     * @throws SessionDataAccessException
-     */
     public function destroyAllSessionsButTheCurrentOne(PFUser $user)
     {
-        $is_deleted = $this->session_dao->deleteAllSessionsByUserIdButTheCurrentOne($user->getId(), $user->getSessionId());
-        if ($is_deleted === false) {
-            throw new SessionDataAccessException();
-        }
+        $this->session_dao->deleteAllSessionsByUserIdButTheCurrentOne($user->getId(), $user->getSessionId());
     }
 
     /**
