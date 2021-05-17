@@ -18,8 +18,14 @@
  */
 
 import type { DraggedCard, State } from "../store/type";
-import { LEFT, RIGHT } from "../type";
-import { getContext, getDraggedCard, getTargetCell, focusDraggedCard } from "./keyboard-drop";
+import { LEFT, RIGHT, DOWN, UP } from "../type";
+import {
+    getContext,
+    getDraggedCard,
+    getTargetCell,
+    focusDraggedCard,
+    getNextSiblingAfterMove,
+} from "./keyboard-drop";
 
 describe(`keyboard-drop helper`, () => {
     let doc: Document;
@@ -27,7 +33,9 @@ describe(`keyboard-drop helper`, () => {
     let first_cell: HTMLElement;
     let second_cell: HTMLElement;
     let third_cell: HTMLElement;
-    let card: HTMLElement;
+    let first_card: HTMLElement;
+    let second_card: HTMLElement;
+    let third_card: HTMLElement;
 
     const no_card_dragged_state = { card_being_dragged: null } as State;
     const card_dragged_state = { card_being_dragged: { card_id: 1 } as DraggedCard } as State;
@@ -50,11 +58,19 @@ describe(`keyboard-drop helper`, () => {
             expect(context).toBe(null);
         });
 
+        it("throws an error if card is not in a cell", () => {
+            delete first_cell.dataset.navigation;
+
+            expect(() => {
+                getContext(doc, card_dragged_state, LEFT);
+            }).toThrow();
+        });
+
         it("returns a context object containing the dropped card, the source and target dropzone", () => {
             const context = getContext(doc, card_dragged_state, RIGHT);
 
             expect(context).toEqual({
-                dropped_element: card,
+                dropped_element: first_card,
                 source_dropzone: first_cell,
                 target_dropzone: second_cell,
                 next_sibling: null,
@@ -87,6 +103,62 @@ describe(`keyboard-drop helper`, () => {
 
             expect(target_cell).toBe(first_cell);
         });
+
+        it("returns same cell if direction is UP or DOWN", () => {
+            const target_cell = getTargetCell(second_cell, UP);
+
+            expect(target_cell).toBe(second_cell);
+        });
+    });
+
+    describe("getNextSiblingAfterMove", () => {
+        it("returns null if direction is LEFT or RIGHT", () => {
+            const next_sibling = getNextSiblingAfterMove(first_card, first_cell, LEFT);
+
+            expect(next_sibling).toBe(null);
+        });
+
+        describe("direction is UP", () => {
+            it("returns the card's previous sibling", () => {
+                const next_sibling = getNextSiblingAfterMove(second_card, first_cell, UP);
+
+                expect(next_sibling).toBe(first_card);
+            });
+
+            it("returns null if card is the first in cell", () => {
+                const next_sibling = getNextSiblingAfterMove(first_card, first_cell, UP);
+
+                expect(next_sibling).toBe(null);
+            });
+        });
+
+        describe("direction is DOWN", () => {
+            it("returns the card's after next sibling", () => {
+                const next_sibling = getNextSiblingAfterMove(first_card, first_cell, DOWN);
+
+                expect(next_sibling).toBe(third_card);
+            });
+
+            it("returns null if card is the before last in cell", () => {
+                const next_sibling = getNextSiblingAfterMove(second_card, first_cell, DOWN);
+
+                expect(next_sibling).toBe(null);
+            });
+
+            it("returns the first card in cell if card is the last in cell", () => {
+                const next_sibling = getNextSiblingAfterMove(third_card, first_cell, DOWN);
+
+                expect(next_sibling).toBe(first_card);
+            });
+
+            it("throws if first element in cell is not a card", () => {
+                delete first_card.dataset.navigation;
+
+                expect(() => {
+                    getNextSiblingAfterMove(third_card, first_cell, DOWN);
+                }).toThrow();
+            });
+        });
     });
 
     describe("getDraggedCard", () => {
@@ -99,7 +171,7 @@ describe(`keyboard-drop helper`, () => {
         it("returns the card being dragged", () => {
             const dragged_card = getDraggedCard(doc, card_dragged_state);
 
-            expect(dragged_card).toBe(card);
+            expect(dragged_card).toBe(first_card);
         });
     });
 
@@ -110,10 +182,10 @@ describe(`keyboard-drop helper`, () => {
         });
 
         it("focuses the dragged card", () => {
-            card.focus();
+            first_card.focus();
             focusDraggedCard(document, card_dragged_state);
 
-            expect(document.activeElement).toEqual(card);
+            expect(document.activeElement).toEqual(first_card);
         });
     });
 
@@ -122,30 +194,38 @@ describe(`keyboard-drop helper`, () => {
             "beforeend",
             `
                 <div data-is-container="true" data-navigation='cell' data-test="first-cell">
-                    <div data-card-id="1" tabindex="0" data-test="card"></div>
+                    <div data-card-id="1" tabindex="0" data-navigation='card' data-test="first-card"></div>
+                    <div data-card-id="2" tabindex="0" data-navigation='card' data-test="second-card"></div>
+                    <div data-card-id="3" tabindex="0" data-navigation='card' data-test="third-card"></div>
                 </div>
                 <div data-is-container="true" data-navigation='cell' data-test="second-cell"></div>
                 <div data-is-container="true" data-navigation='cell' data-test="third-cell"></div>
             `
         );
 
-        const maybe_first_cell = doc.querySelector("[data-test='first-cell']");
-        const maybe_second_cell = doc.querySelector("[data-test='second-cell']");
-        const maybe_third_cell = doc.querySelector("[data-test='third-cell']");
-        const maybe_card = doc.querySelector("[data-test='card']");
+        const first_cell_element = doc.querySelector("[data-test='first-cell']");
+        const second_cell_element = doc.querySelector("[data-test='second-cell']");
+        const third_cell_element = doc.querySelector("[data-test='third-cell']");
+        const first_card_element = doc.querySelector("[data-test='first-card']");
+        const second_card_element = doc.querySelector("[data-test='second-card']");
+        const third_card_element = doc.querySelector("[data-test='third-card']");
 
         if (
-            !(maybe_first_cell instanceof HTMLElement) ||
-            !(maybe_second_cell instanceof HTMLElement) ||
-            !(maybe_third_cell instanceof HTMLElement) ||
-            !(maybe_card instanceof HTMLElement)
+            !(first_cell_element instanceof HTMLElement) ||
+            !(second_cell_element instanceof HTMLElement) ||
+            !(third_cell_element instanceof HTMLElement) ||
+            !(first_card_element instanceof HTMLElement) ||
+            !(second_card_element instanceof HTMLElement) ||
+            !(third_card_element instanceof HTMLElement)
         ) {
             throw new Error("Bad setup");
         }
 
-        first_cell = maybe_first_cell;
-        second_cell = maybe_second_cell;
-        third_cell = maybe_third_cell;
-        card = maybe_card;
+        first_cell = first_cell_element;
+        second_cell = second_cell_element;
+        third_cell = third_cell_element;
+        first_card = first_card_element;
+        second_card = second_card_element;
+        third_card = third_card_element;
     }
 });

@@ -69,11 +69,17 @@ msgstr ""
 msgid "John"
 msgstr "Jean"
 
+msgid "Move card down"
+msgstr "Déplacer la carte vers le bas"
+
 msgid "Move card to the left cell"
 msgstr "Déplacer la carte à gauche"
 
 msgid "Move card to the right cell"
 msgstr "Déplacer la carte à droite"
+
+msgid "Move card up"
+msgstr "Déplacer la carte vers le haut"
 
 msgid "Move from one swimlane or card to the next one"
 msgstr "Aller d'une ligne ou d'une carte à la suivante"

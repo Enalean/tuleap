@@ -120,9 +120,27 @@ function createNavigationShortcutsGroup(
         },
     };
 
+    const move_up: Shortcut = {
+        keyboard_inputs: "shift+j,shift+up",
+        displayed_inputs: "Shift+j,Shift+↑",
+        description: gettext_provider.$gettext("Move card up"),
+        handle: (event): void => {
+            handler(event, UP);
+        },
+    };
+
+    const move_down: Shortcut = {
+        keyboard_inputs: "shift+k,shift+down",
+        displayed_inputs: "Shift+k,Shift+↓",
+        description: gettext_provider.$gettext("Move card down"),
+        handle: (event): void => {
+            handler(event, DOWN);
+        },
+    };
+
     return {
         title: gettext_provider.$gettext("Navigation in Taskboard"),
-        shortcuts: [next, previous, right, left, move_right, move_left],
+        shortcuts: [next, previous, right, left, move_right, move_left, move_down, move_up],
     };
 }
 
