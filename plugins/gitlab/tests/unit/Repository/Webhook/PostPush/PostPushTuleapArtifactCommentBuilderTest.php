@@ -23,44 +23,136 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
+use Tracker;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 
-class PostPushTuleapArtifactCommentBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 {
     public function testReturnEmptyStringWhenKeywordIsNull(): void
     {
-        $commit     = new PostPushCommitWebhookData("123aze", "commit", "", "branch_name", 1620725174, "user@example.fr", "user");
+        $commit     = new PostPushCommitWebhookData(
+            "123aze",
+            "commit",
+            "",
+            "branch_name",
+            1620725174,
+            "user@example.fr",
+            "user"
+        );
         $reference  = new WebhookTuleapReference(12, null);
         $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment("user", $commit, $reference, $repository);
+        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+            "user",
+            $commit,
+            $reference,
+            $repository,
+            $artifact
+        );
         self::assertEquals("", $comment);
     }
 
     public function testReturnEmptyStringWhenKeywordIsNotHandled(): void
     {
-        $commit     = new PostPushCommitWebhookData("123aze", "commit", "", "branch_name", 1620725174, "user@example.fr", "user");
+        $commit     = new PostPushCommitWebhookData(
+            "123aze",
+            "commit",
+            "",
+            "branch_name",
+            1620725174,
+            "user@example.fr",
+            "user"
+        );
         $reference  = new WebhookTuleapReference(12, "solved");
         $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment("user", $commit, $reference, $repository);
+        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+            "user",
+            $commit,
+            $reference,
+            $repository,
+            $artifact
+        );
         self::assertEquals("", $comment);
     }
 
     public function testReturnCommentWhenKeywordIsResolves(): void
     {
-        $commit     = new PostPushCommitWebhookData("123aze", "commit", "", "branch_name", 1620725174, "user@example.fr", "user");
+        $commit     = new PostPushCommitWebhookData(
+            "123aze",
+            "commit",
+            "",
+            "branch_name",
+            1620725174,
+            "user@example.fr",
+            "user"
+        );
         $reference  = new WebhookTuleapReference(12, "resolves");
         $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment("user", $commit, $reference, $repository);
+        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+            "user",
+            $commit,
+            $reference,
+            $repository,
+            $artifact
+        );
         self::assertEquals("solved by user with gitlab_commit #MyRepo/123aze", $comment);
     }
 
     public function testReturnCommentWhenKeywordIsCloses(): void
     {
-        $commit     = new PostPushCommitWebhookData("123aze", "commit", "", "branch_name", 1620725174, "user@example.fr", "user");
+        $commit     = new PostPushCommitWebhookData(
+            "123aze",
+            "commit",
+            "",
+            "branch_name",
+            1620725174,
+            "user@example.fr",
+            "user"
+        );
         $reference  = new WebhookTuleapReference(12, "closes");
         $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment("user", $commit, $reference, $repository);
+        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+            "user",
+            $commit,
+            $reference,
+            $repository,
+            $artifact
+        );
         self::assertEquals("closed by user with gitlab_commit #MyRepo/123aze", $comment);
+    }
+
+    public function testReturnCommentWhenKeywordIsFixes(): void
+    {
+        $commit     = new PostPushCommitWebhookData(
+            "123aze",
+            "commit",
+            "",
+            "branch_name",
+            1620725174,
+            "user@example.fr",
+            "user"
+        );
+        $reference  = new WebhookTuleapReference(12, "fixes");
+        $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getItemName')->willReturn("tracker_isetta");
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method("getTracker")->willReturn($tracker);
+
+        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
+            "user",
+            $commit,
+            $reference,
+            $repository,
+            $artifact
+        );
+        self::assertEquals("tracker_isetta fixed by user with gitlab_commit #MyRepo/123aze", $comment);
     }
 }
