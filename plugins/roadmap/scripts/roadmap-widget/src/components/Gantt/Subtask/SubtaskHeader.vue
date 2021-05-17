@@ -24,6 +24,7 @@
             v-bind:task="row.subtask"
             v-bind:should_display_project="should_display_project"
         />
+        <header-invalid-icon v-if="is_task_invalid" data-test="icon" />
     </div>
 </template>
 
@@ -32,13 +33,41 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { SubtaskRow } from "../../../type";
 import HeaderLink from "../Task/HeaderLink.vue";
+import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
+import { createPopover } from "@tuleap/tlp-popovers";
+import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
+import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
 
 @Component({
-    components: { HeaderLink },
+    components: { HeaderInvalidIcon, HeaderLink },
 })
 export default class SubtaskHeader extends Vue {
     @Prop({ required: true })
     readonly row!: SubtaskRow;
+
+    @Prop({ required: true })
+    private readonly popover_element_id!: string;
+
+    private popover: Popover | undefined;
+
+    mounted(): void {
+        const popover_element = document.getElementById(this.popover_element_id);
+        if (
+            this.is_task_invalid &&
+            this.$el instanceof HTMLElement &&
+            popover_element instanceof HTMLElement
+        ) {
+            this.popover = createPopover(this.$el, popover_element, {
+                placement: "right",
+            });
+        }
+    }
+
+    beforeDestroy(): void {
+        if (this.popover) {
+            this.popover.destroy();
+        }
+    }
 
     get classes(): string[] {
         const classes = ["roadmap-gantt-task-header-" + this.row.parent.color_name];
@@ -47,11 +76,19 @@ export default class SubtaskHeader extends Vue {
             classes.push("roadmap-gantt-subtask-header-last-one");
         }
 
+        if (this.is_task_invalid) {
+            classes.push("roadmap-gantt-subtask-header-for-invalid-task");
+        }
+
         return classes;
     }
 
     get should_display_project(): boolean {
         return this.row.parent.project.id !== this.row.subtask.project.id;
+    }
+
+    get is_task_invalid(): boolean {
+        return !doesTaskHaveEndDateGreaterOrEqualToStartDate(this.row.subtask);
     }
 }
 </script>

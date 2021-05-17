@@ -21,6 +21,7 @@
 @use 'roadmap-variables';
 
 $border-width: 4px;
+$caret-width: 20px;
 
 .roadmap-gantt-header {
     position: relative;
@@ -67,8 +68,6 @@ $border-width: 4px;
 }
 
 .roadmap-gantt-task-header-caret {
-    $caret-width: 20px;
-
     flex: 0 0 auto;
     width: $caret-width;
     font-size: .625rem;
@@ -96,6 +95,18 @@ $border-width: 4px;
     }
 }
 
+.roadmap-gantt-subtask-header-for-invalid-task > .roadmap-gantt-task-header-link {
+    max-width: calc(#{roadmap-variables.$task-header-width} - var(--tlp-medium-spacing) - var(--tlp-jumbo-spacing));
+}
+
+.roadmap-gantt-task-header-for-invalid-task > .roadmap-gantt-task-header-link {
+    max-width: calc(#{roadmap-variables.$task-header-width} - var(--tlp-medium-spacing) - var(--tlp-x-large-spacing));
+}
+
+.roadmap-gantt-task-header-for-invalid-task > .roadmap-gantt-task-header-caret + .roadmap-gantt-task-header-link {
+    max-width: calc(#{roadmap-variables.$task-header-width - $caret-width} - var(--tlp-medium-spacing) - var(--tlp-large-spacing));
+}
+
 .roadmap-gantt-task-header-xref {
     display: inline-block;
     margin: 0 0 2px;
@@ -117,6 +128,14 @@ $border-width: 4px;
     > .tlp-skeleton-text {
         width: 100%;
     }
+}
+
+.roadmap-gantt-task-header-invalid-icon {
+    display: flex;
+    flex: 1 0 auto;
+    align-self: center;
+    justify-content: flex-end;
+    color: var(--tlp-ui-warning);
 }
 
 .roadmap-gantt-subtask-header {

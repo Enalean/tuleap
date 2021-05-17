@@ -24,28 +24,32 @@
             v-bind:time_period="time_period"
             v-bind:nb_additional_units="nb_additional_units"
         />
-        <dependency-arrow
-            v-for="dependency of dependencies_to_display"
-            v-bind:key="getDependencyKey(dependency)"
-            v-bind:task="task"
-            v-bind:dependency="dependency"
-            v-bind:dimensions_map="dimensions_map"
-            v-bind:percentage="percentage"
-            v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
-            v-bind:is_error_sign_displayed_outside_bar="is_error_sign_displayed_outside_bar"
-        />
-        <task-bar
-            v-bind:task="task"
-            v-bind:left="dimensions.left"
-            v-bind:width="dimensions.width"
-            v-bind:percentage="percentage"
-            v-bind:is_text_displayed_inside_progress_bar="is_text_displayed_inside_progress_bar"
-            v-bind:is_text_displayed_outside_progress_bar="is_text_displayed_outside_progress_bar"
-            v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
-            v-bind:is_error_sign_displayed_inside_bar="is_error_sign_displayed_inside_bar"
-            v-bind:is_error_sign_displayed_outside_bar="is_error_sign_displayed_outside_bar"
-            ref="bar"
-        />
+        <template v-if="is_task_valid">
+            <dependency-arrow
+                v-for="dependency of dependencies_to_display"
+                v-bind:key="getDependencyKey(dependency)"
+                v-bind:task="task"
+                v-bind:dependency="dependency"
+                v-bind:dimensions_map="dimensions_map"
+                v-bind:percentage="percentage"
+                v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
+                v-bind:is_error_sign_displayed_outside_bar="is_error_sign_displayed_outside_bar"
+            />
+            <task-bar
+                v-bind:task="task"
+                v-bind:left="dimensions.left"
+                v-bind:width="dimensions.width"
+                v-bind:percentage="percentage"
+                v-bind:is_text_displayed_inside_progress_bar="is_text_displayed_inside_progress_bar"
+                v-bind:is_text_displayed_outside_progress_bar="
+                    is_text_displayed_outside_progress_bar
+                "
+                v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
+                v-bind:is_error_sign_displayed_inside_bar="is_error_sign_displayed_inside_bar"
+                v-bind:is_error_sign_displayed_outside_bar="is_error_sign_displayed_outside_bar"
+                ref="bar"
+            />
+        </template>
     </div>
 </template>
 
@@ -65,16 +69,15 @@ import DependencyArrow from "./DependencyArrow.vue";
 import { getDimensions } from "../../../helpers/tasks-dimensions";
 import { createPopover } from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
-import BarPopover from "./BarPopover.vue";
 import { Styles } from "../../../helpers/styles";
+import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
 
 @Component({
-    components: { BarPopover, DependencyArrow, TaskBar, BackgroundGrid },
+    components: { DependencyArrow, TaskBar, BackgroundGrid },
 })
 export default class GanttTask extends Vue {
     $refs!: {
         bar: TaskBar;
-        popover: BarPopover;
     };
 
     @Prop({ required: true })
@@ -102,7 +105,11 @@ export default class GanttTask extends Vue {
 
     mounted(): void {
         const popover_element = document.getElementById(this.popover_element_id);
-        if (this.$refs.bar.$el instanceof HTMLElement && popover_element instanceof HTMLElement) {
+        if (
+            this.is_task_valid &&
+            this.$refs.bar.$el instanceof HTMLElement &&
+            popover_element instanceof HTMLElement
+        ) {
             this.popover = createPopover(this.$refs.bar.$el, popover_element, {
                 placement: "right-start",
             });
@@ -239,6 +246,10 @@ export default class GanttTask extends Vue {
 
     get is_progress_in_error(): boolean {
         return this.task.progress_error_message.length > 0;
+    }
+
+    get is_task_valid(): boolean {
+        return doesTaskHaveEndDateGreaterOrEqualToStartDate(this.task);
     }
 }
 </script>

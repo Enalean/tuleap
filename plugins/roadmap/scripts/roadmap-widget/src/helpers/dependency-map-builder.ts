@@ -19,6 +19,7 @@
 
 import { TasksByNature, TasksDependencies } from "../type";
 import type { Task } from "../type";
+import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "./task-has-valid-dates";
 
 export function getTasksDependencies(tasks: Task[]): TasksDependencies {
     const map = new TasksDependencies();
@@ -34,6 +35,10 @@ export function getTasksDependencies(tasks: Task[]): TasksDependencies {
 }
 
 function addTaskDependenciesToTheMap(task: Task, tasks: Task[], map: TasksDependencies): void {
+    if (!doesTaskHaveEndDateGreaterOrEqualToStartDate(task)) {
+        return;
+    }
+
     for (const nature of Object.keys(task.dependencies)) {
         const dependent_tasks = getAllTasksMatchingIds(tasks, task.dependencies[nature]);
         if (dependent_tasks.length === 0) {
@@ -47,5 +52,7 @@ function addTaskDependenciesToTheMap(task: Task, tasks: Task[], map: TasksDepend
 }
 
 function getAllTasksMatchingIds(tasks: Task[], ids: number[]): Task[] {
-    return tasks.filter((task) => ids.includes(task.id));
+    return tasks.filter((task) => {
+        return ids.includes(task.id) && doesTaskHaveEndDateGreaterOrEqualToStartDate(task);
+    });
 }

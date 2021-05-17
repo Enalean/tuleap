@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import SubtaskHeader from "./SubtaskHeader.vue";
 import type { Project, SubtaskRow, Task } from "../../../type";
 import HeaderLink from "../Task/HeaderLink.vue";
+import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
 
 describe("SubtaskHeader", () => {
     it("should ask to display the project if the task is not in the same project than its parent", () => {
@@ -30,9 +31,28 @@ describe("SubtaskHeader", () => {
                     parent: { project: { id: 123 } as Project } as Task,
                     subtask: { project: { id: 124 } as Project } as Task,
                 } as SubtaskRow,
+                popover_element_id: "id",
             },
         });
 
         expect(wrapper.findComponent(HeaderLink).props("should_display_project")).toBe(true);
+    });
+
+    it("should display a warning icon if task has end date < start date", () => {
+        const wrapper = shallowMount(SubtaskHeader, {
+            propsData: {
+                row: {
+                    parent: { project: { id: 123 } as Project } as Task,
+                    subtask: {
+                        project: { id: 124 } as Project,
+                        start: new Date("2020-04-14T22:00:00.000Z"),
+                        end: new Date("2020-04-10T22:00:00.000Z"),
+                    } as Task,
+                } as SubtaskRow,
+                popover_element_id: "id",
+            },
+        });
+
+        expect(wrapper.findComponent(HeaderInvalidIcon).exists()).toBe(true);
     });
 });

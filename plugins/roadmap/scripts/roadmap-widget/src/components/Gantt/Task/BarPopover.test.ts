@@ -182,4 +182,29 @@ describe("BarPopover", () => {
         expect(wrapper.text()).toContain("January 12, 2020");
         expect(wrapper.text()).toContain("Undefined");
     });
+
+    it("should display error message if end date < start date", async () => {
+        const wrapper = shallowMount(BarPopover, {
+            localVue: await createRoadmapLocalVue(),
+            propsData: {
+                task: {
+                    xref: "art #123",
+                    title: "Create button",
+                    start: new Date("2020-01-12T15:00:00.000Z"),
+                    end: new Date("2020-01-10T15:00:00.000Z"),
+                    progress: null,
+                    progress_error_message: "",
+                } as Task,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.text()).toContain("End date is lesser than start date!");
+    });
 });

@@ -20,6 +20,7 @@
 import type { Task } from "../type";
 import { recursiveGet } from "tlp";
 import { SUBTASKS_WAITING_TO_BE_LOADED } from "../type";
+import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "./task-has-valid-dates";
 
 export function retrieveAllTasks(roadmap_id: number): Promise<Task[]> {
     return retrieveAll(`/api/roadmaps/${roadmap_id}/tasks`, {});
@@ -41,7 +42,8 @@ export async function retrieveAll(
                 const has_subtasks =
                     task.dependencies &&
                     "_is_child" in task.dependencies &&
-                    task.dependencies._is_child.length > 0;
+                    task.dependencies._is_child.length > 0 &&
+                    doesTaskHaveEndDateGreaterOrEqualToStartDate(task);
 
                 return {
                     ...task,
@@ -57,22 +59,31 @@ export async function retrieveAll(
             }
         )
         .filter((task: Task): boolean => {
-            if (!task.start && !task.end) {
-                return false;
-            }
-
-            if (task.start && task.end && task.end < task.start) {
-                return false;
-            }
-
-            return true;
+            return Boolean(task.start || task.end);
         })
         .sort((a: Task, b: Task) => {
             const start_of_a = a.start ? a.start : a.end;
             const start_of_b = b.start ? b.start : b.end;
+            const end_of_a = a.end;
+            const end_of_b = b.end;
 
             if (!start_of_a || !start_of_b) {
                 // should not happen, according to the filter above
+                return -1;
+            }
+
+            if (end_of_a && end_of_a < start_of_a) {
+                if (end_of_b && end_of_b < start_of_b) {
+                    // both tasks a and b are invalid, switch to alphabetical sort
+                    return a.title.localeCompare(b.title, undefined, { numeric: true });
+                }
+
+                // put invalid task a at the end
+                return 1;
+            }
+
+            if (end_of_b && end_of_b < start_of_b) {
+                // put invalid task b at the end
                 return -1;
             }
 

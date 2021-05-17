@@ -51,4 +51,46 @@ describe("dependency-map-builder", () => {
         expect(map.get(task_4)?.get("")).toStrictEqual([task_1]);
         expect(map.get(task_4)?.get("depends_on")).toStrictEqual([task_2, task_3]);
     });
+
+    it("Removes dependencies with end date < start date", () => {
+        const task_1 = ({ id: 1, dependencies: { "": [2, 3] } } as unknown) as Task;
+        const task_2 = {
+            id: 2,
+            dependencies: {},
+            start: new Date("2020-04-14T22:00:00.000Z"),
+            end: new Date("2020-04-14T22:00:00.000Z"),
+        } as Task;
+        const task_3 = {
+            id: 3,
+            dependencies: {},
+            start: new Date("2020-04-14T22:00:00.000Z"),
+            end: new Date("2020-04-10T22:00:00.000Z"),
+        } as Task;
+
+        const map = getTasksDependencies([task_1, task_2, task_3]);
+
+        expect(map.has(task_1)).toBe(true);
+        expect(map.get(task_1)?.get("")).toStrictEqual([task_2]);
+    });
+
+    it("Does not compute dependencies for tasks with end date < start date", () => {
+        const task_1 = ({
+            id: 1,
+            dependencies: { "": [2, 3] },
+            start: new Date("2020-04-14T22:00:00.000Z"),
+            end: new Date("2020-04-10T22:00:00.000Z"),
+        } as unknown) as Task;
+        const task_2 = {
+            id: 2,
+            dependencies: {},
+        } as Task;
+        const task_3 = {
+            id: 3,
+            dependencies: {},
+        } as Task;
+
+        const map = getTasksDependencies([task_1, task_2, task_3]);
+
+        expect(map.has(task_1)).toBe(false);
+    });
 });
