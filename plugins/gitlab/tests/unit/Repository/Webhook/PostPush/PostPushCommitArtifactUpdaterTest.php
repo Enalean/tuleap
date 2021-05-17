@@ -208,7 +208,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $reference  = new WebhookTuleapReference(12, "resolve");
+        $reference  = new WebhookTuleapReference(12, "resolves");
         $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
         $status_field = Mockery::mock(\Tracker_FormElement_Field_List::class);
@@ -265,7 +265,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $reference  = new WebhookTuleapReference(12, "resolve");
+        $reference  = new WebhookTuleapReference(12, "resolves");
         $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
         $status_field = Mockery::mock(\Tracker_FormElement_Field_List::class);
@@ -317,7 +317,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $reference  = new WebhookTuleapReference(12, "resolve");
+        $reference  = new WebhookTuleapReference(12, "resolves");
         $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
 
         $status_field = Mockery::mock(\Tracker_FormElement_Field_List::class);

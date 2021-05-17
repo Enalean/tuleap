@@ -35,10 +35,18 @@ class PostPushTuleapArtifactCommentBuilder
         WebhookTuleapReference $tuleap_reference,
         GitlabRepository $gitlab_repository
     ): string {
-        if ($tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::RESOLVE_KEYWORD) {
+        if (
+            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::RESOLVES_KEYWORD &&
+            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::CLOSES_KEYWORD
+        ) {
             return "";
         }
 
-        return "solved by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository->getName()}/{$commit->getSha1()}";
+        $action_word = "solved";
+        if ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::CLOSES_KEYWORD) {
+            $action_word = "closed";
+        }
+
+        return "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository->getName()}/{$commit->getSha1()}";
     }
 }
