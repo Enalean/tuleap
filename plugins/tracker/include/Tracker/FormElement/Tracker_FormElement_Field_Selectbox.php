@@ -99,12 +99,13 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $html;
     }
 
-    protected function displayArtifactJavascript($changeset_values)
+    protected function displayArtifactJavascript($changeset_values): string
     {
-        $hp     = Codendi_HTMLPurifier::instance();
-        $html   = '<script type="text/javascript">';
-        $html  .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
-        $values = $this->getBind()->getAllValues();
+        $hp        = Codendi_HTMLPurifier::instance();
+        $csp_nonce = $GLOBALS['Response']->getCSPNonce();
+        $html      = sprintf('<script type="text/javascript" nonce="%s">', $hp->purify($csp_nonce));
+        $html     .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
+        $values    = $this->getBind()->getAllValues();
 
         $html .= "\n\t.addOption('None'.escapeHTML(), '100', " . (empty($changeset_values) ? 'true' : 'false') . ", '')";
 
@@ -116,10 +117,11 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $html;
     }
 
-    protected function displaySubmitJavascript()
+    protected function displaySubmitJavascript(): string
     {
         $hp            = Codendi_HTMLPurifier::instance();
-        $html          = '<script type="text/javascript">';
+        $csp_nonce     = $GLOBALS['Response']->getCSPNonce();
+        $html          = sprintf('<script type="text/javascript" nonce="%s">', $hp->purify($csp_nonce));
         $html         .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $default_value = $this->getDefaultValue();
         $values        = $this->getBind()->getAllValues();

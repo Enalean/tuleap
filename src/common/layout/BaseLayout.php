@@ -102,7 +102,7 @@ abstract class BaseLayout extends Response
      * @var string
      * @psalm-readonly
      */
-    private $csp_nonce;
+    private $csp_nonce = '';
 
     public function __construct($root)
     {
@@ -429,7 +429,7 @@ abstract class BaseLayout extends Response
         );
     }
 
-    final protected function getCSPNonce(): string
+    final public function getCSPNonce(): string
     {
         return $this->csp_nonce;
     }

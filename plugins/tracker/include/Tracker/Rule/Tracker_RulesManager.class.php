@@ -595,11 +595,13 @@ class Tracker_RulesManager
           echo '<td class="matrix-cell" ><label class="pc_checkbox"><input type="checkbox" class=" tracker-field-dependencies-checkbox" name="' . $box_value . '" ' . $checked . '>&nbsp;</label></td>';
     }
 
-    public function displayRulesAsJavascript()
+    public function displayRulesAsJavascript(): string
     {
-        $html  = '<script type="text/javascript">';
-        $html .= "\n//------------------------------------------------------\n";
-        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
+        $purifier  = Codendi_HTMLPurifier::instance();
+        $csp_nonce = $GLOBALS['Response']->getCSPNonce();
+        $html      = sprintf('<script type="text/javascript" nonce="%s">', $purifier->purify($csp_nonce));
+        $html     .= "\n//------------------------------------------------------\n";
+        $rules     = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $trvv  = new Tracker_Rule_List_View($rules[$key]);

@@ -63,6 +63,7 @@ const config_for_flaming_parrot = {
             "./scripts/semantic-timeframe-option-selector.js",
         "tracker-semantic-progress-options-selector":
             "./scripts/semantics/progress/admin-selectors.ts",
+        "tracker-admin-fields-permissions": "./scripts/tracker-admin/admin-fields-permissions",
     },
     context,
     output,
