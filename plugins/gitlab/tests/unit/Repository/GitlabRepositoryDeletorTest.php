@@ -28,7 +28,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
@@ -56,11 +55,6 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var DBTransactionExecutorPassthrough
      */
     private $db_transaction_executor;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectDao
-     */
-    private $gitlab_repository_project_dao;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryDao
@@ -110,21 +104,19 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->git_permissions_manager       = Mockery::mock(GitPermissionsManager::class);
-        $this->db_transaction_executor       = new DBTransactionExecutorPassthrough();
-        $this->gitlab_repository_project_dao = Mockery::mock(GitlabRepositoryProjectDao::class);
-        $this->webhook_deletor               = Mockery::mock(WebhookDeletor::class);
-        $this->gitlab_repository_dao         = Mockery::mock(GitlabRepositoryDao::class);
-        $this->gitlab_bot_api_token_dao      = Mockery::mock(GitlabBotApiTokenDao::class);
-        $this->commit_tuleap_reference_dao   = Mockery::mock(CommitTuleapReferenceDao::class);
-        $this->merge_request_dao             = Mockery::mock(MergeRequestTuleapReferenceDao::class);
-        $this->tag_info_dao                  = Mockery::mock(TagInfoDao::class);
-        $this->credentials_retriever         = Mockery::mock(CredentialsRetriever::class);
+        $this->git_permissions_manager     = Mockery::mock(GitPermissionsManager::class);
+        $this->db_transaction_executor     = new DBTransactionExecutorPassthrough();
+        $this->webhook_deletor             = Mockery::mock(WebhookDeletor::class);
+        $this->commit_tuleap_reference_dao = Mockery::mock(CommitTuleapReferenceDao::class);
+        $this->gitlab_repository_dao       = Mockery::mock(GitlabRepositoryDao::class);
+        $this->gitlab_bot_api_token_dao    = Mockery::mock(GitlabBotApiTokenDao::class);
+        $this->merge_request_dao           = Mockery::mock(MergeRequestTuleapReferenceDao::class);
+        $this->tag_info_dao                = Mockery::mock(TagInfoDao::class);
+        $this->credentials_retriever       = Mockery::mock(CredentialsRetriever::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
             $this->git_permissions_manager,
             $this->db_transaction_executor,
-            $this->gitlab_repository_project_dao,
             $this->webhook_deletor,
             $this->gitlab_repository_dao,
             $this->gitlab_bot_api_token_dao,
@@ -134,17 +126,19 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->credentials_retriever
         );
 
+        $this->project = Project::buildForTest();
+        $this->user    = Mockery::mock(PFUser::class);
+
         $this->gitlab_repository = new GitlabRepository(
             1,
             156981,
             'root/repo01',
             '',
             'https://example.com/gitlab/root/repo01',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            $this->project,
+            false
         );
-
-        $this->project = Project::buildForTest();
-        $this->user    = Mockery::mock(PFUser::class);
     }
 
     public function testItThrowsAnExceptionIfUserIsNotGitAdministrator(): void
@@ -156,91 +150,18 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(GitUserNotAdminException::class);
 
-        $this->deletor->deleteRepositoryInProject(
+        $this->deletor->deleteRepositoryIntegration(
             $this->gitlab_repository,
-            $this->project,
             $this->user
         );
     }
 
-    public function testItThrowsAnExceptionIfGitlabRepositoryNotIntegratedInAnyProject(): void
+    public function testItDeletesAllIntegrationData(): void
     {
         $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
             ->once()
             ->with($this->user, $this->project)
             ->andReturnTrue();
-
-        $this->gitlab_repository_project_dao->shouldReceive('searchProjectsTheGitlabRepositoryIsIntegratedIn')
-            ->andReturn([]);
-
-        $this->expectException(GitlabRepositoryNotIntegratedInAnyProjectException::class);
-
-        $this->deletor->deleteRepositoryInProject(
-            $this->gitlab_repository,
-            $this->project,
-            $this->user
-        );
-    }
-
-    public function testItThrowsAnExceptionIfGitlabRepositoryNotIntegratedInProvidedProject(): void
-    {
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
-            ->with($this->user, $this->project)
-            ->andReturnTrue();
-
-        $this->gitlab_repository_project_dao->shouldReceive('searchProjectsTheGitlabRepositoryIsIntegratedIn')
-            ->andReturn([
-                102, 103
-            ]);
-
-        $this->expectException(GitlabRepositoryNotInProjectException::class);
-
-        $this->deletor->deleteRepositoryInProject(
-            $this->gitlab_repository,
-            $this->project,
-            $this->user
-        );
-    }
-
-    public function testItDeletesIntegrationIfRepositoryIsIntegratedInMultipleProject(): void
-    {
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
-            ->with($this->user, $this->project)
-            ->andReturnTrue();
-
-        $this->gitlab_repository_project_dao->shouldReceive('searchProjectsTheGitlabRepositoryIsIntegratedIn')
-            ->andReturn([
-                101, 103
-            ]);
-
-        $this->gitlab_repository_project_dao->shouldReceive('removeGitlabRepositoryIntegrationInProject')
-            ->once();
-
-        $this->gitlab_repository_dao->shouldNotReceive('deleteGitlabRepository');
-
-        $this->deletor->deleteRepositoryInProject(
-            $this->gitlab_repository,
-            $this->project,
-            $this->user
-        );
-    }
-
-    public function testItDeletesAllGitlabRepositoryDataIfRepositoryIsIntegratedInOneProject(): void
-    {
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
-            ->with($this->user, $this->project)
-            ->andReturnTrue();
-
-        $this->gitlab_repository_project_dao->shouldReceive('searchProjectsTheGitlabRepositoryIsIntegratedIn')
-            ->andReturn([
-                101
-            ]);
-
-        $this->gitlab_repository_project_dao->shouldReceive('removeGitlabRepositoryIntegrationInProject')
-            ->once();
 
         $credentials = CredentialsTestBuilder::get()->build();
 
@@ -255,19 +176,18 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($credentials, $this->gitlab_repository);
 
         $this->gitlab_repository_dao->shouldReceive('deleteGitlabRepository')->once();
-        $this->gitlab_bot_api_token_dao->shouldReceive('deleteGitlabBotToken')->once();
+        $this->gitlab_bot_api_token_dao->shouldReceive('deleteIntegrationToken')->once();
 
         $this->commit_tuleap_reference_dao
-            ->shouldReceive('deleteCommitsInGitlabRepository')
+            ->shouldReceive('deleteCommitsInIntegration')
             ->with(1)
             ->once();
 
-        $this->merge_request_dao->shouldReceive('deleteAllMergeRequestWithRepositoryId')->once();
-        $this->tag_info_dao->shouldReceive('deleteTagsInGitlabRepository')->once();
+        $this->merge_request_dao->shouldReceive('deleteAllMergeRequestInIntegration')->once();
+        $this->tag_info_dao->shouldReceive('deleteTagsInIntegration')->once();
 
-        $this->deletor->deleteRepositoryInProject(
+        $this->deletor->deleteRepositoryIntegration(
             $this->gitlab_repository,
-            $this->project,
             $this->user
         );
     }

@@ -28,7 +28,6 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\InstanceBaseURLBuilder;
 
@@ -38,10 +37,6 @@ class InvalidCredentialsNotifier
      * @var MailBuilder
      */
     private $mail_builder;
-    /**
-     * @var GitlabRepositoryProjectRetriever
-     */
-    private $repository_project_retriever;
     /**
      * @var InstanceBaseURLBuilder
      */
@@ -56,17 +51,15 @@ class InvalidCredentialsNotifier
     private $logger;
 
     public function __construct(
-        GitlabRepositoryProjectRetriever $repository_project_retriever,
         MailBuilder $mail_builder,
         InstanceBaseURLBuilder $instance_base_url,
         GitlabBotApiTokenDao $dao,
         LoggerInterface $logger
     ) {
-        $this->repository_project_retriever = $repository_project_retriever;
-        $this->mail_builder                 = $mail_builder;
-        $this->instance_base_url            = $instance_base_url;
-        $this->dao                          = $dao;
-        $this->logger                       = $logger;
+        $this->mail_builder      = $mail_builder;
+        $this->instance_base_url = $instance_base_url;
+        $this->dao               = $dao;
+        $this->logger            = $logger;
     }
 
     public function notifyGitAdministratorsThatCredentialsAreInvalid(
@@ -77,48 +70,41 @@ class InvalidCredentialsNotifier
             return;
         }
 
-        $at_least_one_email_has_been_sent = false;
-
-        $projects = $this->repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn($repository);
-        foreach ($projects as $project) {
-            $git_service = $project->getService(\GitPlugin::SERVICE_SHORTNAME);
-            if (! ($git_service instanceof GitService)) {
-                continue;
-            }
-
-            $emails = array_filter(
-                array_map(
-                    function (\PFUser $user): ?string {
-                        return $user->isAlive() ? $user->getEmail() : null;
-                    },
-                    $project->getAdmins()
-                )
-            );
-
-            $url = $this->instance_base_url->build() . GitService::getServiceUrlForProject($project);
-
-            $body = sprintf(
-                'It appears that the access token for %s is invalid. Tuleap cannot perform actions on it. Please check configuration on %s',
-                $repository->getGitlabRepositoryUrl(),
-                $url,
-            );
-
-            $notification = new Notification(
-                $emails,
-                'Invalid GitLab credentials',
-                '',
-                $body,
-                $url,
-                'Git',
-            );
-
-            $this->mail_builder->buildAndSendEmail($project, $notification, new \MailEnhancer());
-            $at_least_one_email_has_been_sent = true;
+        $project     = $repository->getProject();
+        $git_service = $project->getService(\GitPlugin::SERVICE_SHORTNAME);
+        if (! ($git_service instanceof GitService)) {
+            return;
         }
 
-        if ($at_least_one_email_has_been_sent) {
-            $this->logger->info("Notification has been sent to project administrators to warn them that the token appears to be invalid");
-            $this->dao->storeTheFactWeAlreadySendEmailForInvalidToken($repository->getId());
-        }
+        $emails = array_filter(
+            array_map(
+                function (\PFUser $user): ?string {
+                    return $user->isAlive() ? $user->getEmail() : null;
+                },
+                $project->getAdmins()
+            )
+        );
+
+        $url = $this->instance_base_url->build() . GitService::getServiceUrlForProject($project);
+
+        $body = sprintf(
+            'It appears that the access token for %s is invalid. Tuleap cannot perform actions on it. Please check configuration on %s',
+            $repository->getGitlabRepositoryUrl(),
+            $url,
+        );
+
+        $notification = new Notification(
+            $emails,
+            'Invalid GitLab credentials',
+            '',
+            $body,
+            $url,
+            'Git',
+        );
+
+        $this->mail_builder->buildAndSendEmail($project, $notification, new \MailEnhancer());
+
+        $this->logger->info("Notification has been sent to project administrators to warn them that the token appears to be invalid");
+        $this->dao->storeTheFactWeAlreadySendEmailForInvalidToken($repository->getId());
     }
 }

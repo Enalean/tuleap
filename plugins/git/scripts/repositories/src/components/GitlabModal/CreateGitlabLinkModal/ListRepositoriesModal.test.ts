@@ -208,6 +208,7 @@ describe("ListRepositoriesModal", () => {
                 gitlab_data: {
                     gitlab_repository_id: 1,
                     gitlab_repository_url: "https://example.com/MyPath/1",
+                    is_webhook_configured: true,
                 },
                 normalized_path: "My Path / Repository",
             },
@@ -257,6 +258,7 @@ describe("ListRepositoriesModal", () => {
                 gitlab_data: {
                     gitlab_repository_id: 152,
                     gitlab_repository_url: "https://example.com/MyPath/152",
+                    is_webhook_configured: true,
                 },
                 normalized_path: "my-path/repository",
             },

@@ -117,9 +117,10 @@ class WebhookCreator
         $base_url = $this->instance_base_url->build();
 
         $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
+        $integration_id       = $gitlab_repository->getId();
 
         $webhook_configuration = [
-            'url'                     => "$base_url/plugins/gitlab/repository/webhook",
+            'url'                     => "$base_url/plugins/gitlab/integration/$integration_id/webhook",
             'token'                   => $secret->getString(),
             'push_events'             => true,
             'merge_requests_events'   => true,

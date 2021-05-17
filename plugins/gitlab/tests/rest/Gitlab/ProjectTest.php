@@ -34,8 +34,8 @@ class ProjectTest extends TestBase
             )
         );
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetGitLabRepositories(): void
@@ -46,25 +46,27 @@ class ProjectTest extends TestBase
             )
         );
 
-        $this->assertGETGitLabRepositories($response);
+        self::assertGETGitLabRepositories($response);
     }
 
     private function assertGETGitLabRepositories(Response $response): void
     {
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
 
-        $this->assertEquals(1, (int) (string) $response->getHeader('X-Pagination-Size'));
+        self::assertEquals(1, (int) (string) $response->getHeader('X-Pagination-Size'));
 
         $gitlab_repositories = $response->json();
-        $this->assertCount(1, $gitlab_repositories);
+        self::assertCount(1, $gitlab_repositories);
 
         $gitlab_repository = $gitlab_repositories[0];
-        $this->assertArrayHasKey('id', $gitlab_repository);
-        $this->assertArrayHasKey('gitlab_repository_id', $gitlab_repository);
-        $this->assertEquals('path/repo01', $gitlab_repository['name']);
-        $this->assertEquals('desc', $gitlab_repository['description']);
-        $this->assertEquals('https://example.com/path/repo01', $gitlab_repository['gitlab_repository_url']);
-        $this->assertEquals(15412, $gitlab_repository['gitlab_repository_id']);
-        $this->assertEquals($this->gitlab_repository_id, $gitlab_repository['id']);
+        self::assertArrayHasKey('id', $gitlab_repository);
+        self::assertArrayHasKey('gitlab_repository_id', $gitlab_repository);
+        self::assertEquals('path/repo01', $gitlab_repository['name']);
+        self::assertEquals('desc', $gitlab_repository['description']);
+        self::assertEquals('https://example.com/path/repo01', $gitlab_repository['gitlab_repository_url']);
+        self::assertEquals(15412, $gitlab_repository['gitlab_repository_id']);
+        self::assertEquals($this->gitlab_repository_id, $gitlab_repository['id']);
+        self::assertFalse($gitlab_repository['allow_artifact_closure']);
+        self::assertFalse($gitlab_repository['is_webhook_configured']);
     }
 }

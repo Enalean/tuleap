@@ -79,7 +79,7 @@ class PostPushWebhookCloseArtifactHandler
     public function handleArtifactClosure(
         WebhookTuleapReference $tuleap_reference,
         PostPushCommitWebhookData $post_push_commit_webhook_data,
-        GitlabRepository $gitlab_repository
+        GitlabRepository $gitlab_repository_integration
     ): void {
         if ($tuleap_reference->getCloseArtifactKeyword() === null) {
             return;
@@ -89,7 +89,7 @@ class PostPushWebhookCloseArtifactHandler
             $artifact = $this->artifact_retriever->retrieveArtifactById($tuleap_reference);
 
             $action_enabled_for_repository_in_project = $this->repository_project_dao->isArtifactClosureActionEnabledForRepositoryInProject(
-                $gitlab_repository->getId(),
+                $gitlab_repository_integration->getId(),
                 (int) $artifact->getTracker()->getGroupId()
             );
 
@@ -127,7 +127,7 @@ class PostPushWebhookCloseArtifactHandler
                 $post_push_commit_webhook_data,
                 $tuleap_reference,
                 $status_semantic->getField(),
-                $gitlab_repository
+                $gitlab_repository_integration
             );
         } catch (ArtifactNotFoundException $e) {
             $this->logger->error("|  |  |_ Artifact #{$tuleap_reference->getId()} not found");

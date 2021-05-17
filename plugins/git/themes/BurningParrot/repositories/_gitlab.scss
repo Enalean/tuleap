@@ -36,6 +36,11 @@
     margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
+.git-gitlab-integration-not-well-configured {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+    color: var(--tlp-ui-warning);
+}
+
 .gitlab-avatar {
     display: block;
     width: 100%;

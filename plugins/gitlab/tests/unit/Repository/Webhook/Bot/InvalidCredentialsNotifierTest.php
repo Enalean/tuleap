@@ -30,7 +30,6 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
@@ -48,7 +47,9 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $credentials = CredentialsTestBuilder::get()->withEmailAlreadySent()->build();
@@ -60,7 +61,6 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')->never();
 
         $notifier = new InvalidCredentialsNotifier(
-            Mockery::mock(GitlabRepositoryProjectRetriever::class),
             $mail_builder,
             new InstanceBaseURLBuilder(),
             $dao,
@@ -72,25 +72,20 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingIfGitIsNotActivatedInProject(): void
     {
+        $project = Mockery::mock(Project::class, ['getService' => null]);
+
         $repository = new GitlabRepository(
             1,
             2,
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $project,
+            false
         );
 
         $credentials = CredentialsTestBuilder::get()->withoutEmailAlreadySent()->build();
-
-        $project = Mockery::mock(Project::class, ['getService' => null]);
-
-        $project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
-        $project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->once()
-            ->andReturn([$project]);
 
         $mail_builder = Mockery::mock(\MailBuilder::class);
         $mail_builder->shouldReceive('buildAndSendEmail')->never();
@@ -99,7 +94,6 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')->never();
 
         $notifier = new InvalidCredentialsNotifier(
-            $project_retriever,
             $mail_builder,
             new InstanceBaseURLBuilder(),
             $dao,
@@ -109,81 +103,49 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($repository, $credentials);
     }
 
-    public function testItWarnsProjectAdministratorsForEachProjectTheRepositoryIsIntegratedIn(): void
+    public function testItWarnsProjectAdministratorsForProjectTheRepositoryIsIntegratedIn(): void
     {
+        $credentials = CredentialsTestBuilder::get()->withoutEmailAlreadySent()->build();
+
+        $admin_1 = UserTestBuilder::anActiveUser()->withEmail('morpheus@example.com')->build();
+        $admin_2 = UserTestBuilder::anActiveUser()->withEmail('neo@example.com')->build();
+        $admin_3 = UserTestBuilder::aUser()
+            ->withStatus(PFUser::STATUS_SUSPENDED)
+            ->withEmail('cypher@example.com')
+            ->build();
+
+        $git_service = Mockery::mock(GitService::class);
+        $project     = Mockery::mock(
+            Project::class,
+            [
+                'getService'           => $git_service,
+                'getAdmins'            => [$admin_1, $admin_2, $admin_3],
+                'getUnixNameLowerCase' => 'reloaded',
+            ]
+        );
+
         $repository = new GitlabRepository(
             1,
             2,
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            $project,
+            false
         );
-
-        $credentials = CredentialsTestBuilder::get()->withoutEmailAlreadySent()->build();
-
-        $admin_1 = UserTestBuilder::anActiveUser()->withEmail('morpheus@example.com')->build();
-        $admin_2 = UserTestBuilder::anActiveUser()->withEmail('neo@example.com')->build();
-        $admin_3 = UserTestBuilder::anActiveUser()->withEmail('trinity@example.com')->build();
-        $admin_4 = UserTestBuilder::aUser()
-            ->withStatus(PFUser::STATUS_SUSPENDED)
-            ->withEmail('cypher@example.com')
-            ->build();
-
-        $git_service_1 = Mockery::mock(GitService::class);
-        $git_service_2 = Mockery::mock(GitService::class);
-
-        $project_1 = Mockery::mock(
-            Project::class,
-            [
-                'getService'           => $git_service_1,
-                'getAdmins'            => [$admin_1, $admin_2],
-                'getUnixNameLowerCase' => 'reloaded',
-            ]
-        );
-        $project_2 = Mockery::mock(
-            Project::class,
-            [
-                'getService'           => $git_service_2,
-                'getAdmins'            => [$admin_1, $admin_3, $admin_4],
-                'getUnixNameLowerCase' => 'revolution',
-            ]
-        );
-
-        $project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
-        $project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->once()
-            ->andReturn([$project_1, $project_2]);
 
         $mail_builder = Mockery::mock(\MailBuilder::class);
         $mail_builder
             ->shouldReceive('buildAndSendEmail')
             ->with(
-                $project_1,
+                $project,
                 Mockery::on(
                     function (Notification $notification) {
                         return $notification->getEmails() === ['morpheus@example.com', 'neo@example.com']
                             && $notification->getSubject() === 'Invalid GitLab credentials'
                             && $notification->getTextBody() === 'It appears that the access token for the_full_url is invalid. Tuleap cannot perform actions on it. Please check configuration on https://tuleap.example.com/plugins/git/reloaded'
                             && $notification->getGotoLink() === 'https://tuleap.example.com/plugins/git/reloaded'
-                            && $notification->getServiceName() === 'Git';
-                    }
-                ),
-                Mockery::type(\MailEnhancer::class),
-            )
-            ->once();
-        $mail_builder
-            ->shouldReceive('buildAndSendEmail')
-            ->with(
-                $project_2,
-                Mockery::on(
-                    function (Notification $notification) {
-                        return $notification->getEmails() === ['morpheus@example.com', 'trinity@example.com']
-                            && $notification->getSubject() === 'Invalid GitLab credentials'
-                            && $notification->getTextBody() === 'It appears that the access token for the_full_url is invalid. Tuleap cannot perform actions on it. Please check configuration on https://tuleap.example.com/plugins/git/revolution'
-                            && $notification->getGotoLink() === 'https://tuleap.example.com/plugins/git/revolution'
                             && $notification->getServiceName() === 'Git';
                     }
                 ),
@@ -205,7 +167,6 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $instance_base_url = Mockery::mock(InstanceBaseURLBuilder::class, ['build' => 'https://tuleap.example.com']);
         $notifier          = new InvalidCredentialsNotifier(
-            $project_retriever,
             $mail_builder,
             $instance_base_url,
             $dao,

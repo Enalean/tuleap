@@ -25,64 +25,28 @@ use Tuleap\DB\DataAccessObject;
 
 class GitlabRepositoryProjectDao extends DataAccessObject
 {
-    /**
-     * @return int[]
-     */
-    public function searchProjectsTheGitlabRepositoryIsIntegratedIn(int $repository_id): array
-    {
-        $sql = "SELECT project_id FROM plugin_gitlab_repository_project WHERE id = ?";
-
-        return $this->getDB()->column($sql, [$repository_id]);
-    }
-
-    public function removeGitlabRepositoryIntegrationInProject(int $repository_id, int $project_id): void
-    {
-        $this->getDB()->delete(
-            'plugin_gitlab_repository_project',
-            [
-                'id'         => $repository_id,
-                'project_id' => $project_id
-            ]
-        );
-    }
-
-    public function isGitlabRepositoryIntegratedInProject(int $repository_id, int $project_id): bool
+    public function isGitlabRepositoryIntegratedInProject(int $integration_id, int $project_id): bool
     {
         $sql = "SELECT NULL
-                FROM plugin_gitlab_repository_project
+                FROM plugin_gitlab_repository_integration
                 WHERE id = ?
                     AND project_id = ?";
 
-        $rows = $this->getDB()->run($sql, $repository_id, $project_id);
+        $rows = $this->getDB()->run($sql, $integration_id, $project_id);
 
         return count($rows) > 0;
     }
 
-    public function isArtifactClosureActionEnabledForRepositoryInProject(int $repository_id, int $project_id): bool
+    public function isArtifactClosureActionEnabledForRepositoryInProject(int $integration_id, int $project_id): bool
     {
         $sql = "SELECT NULL
-                FROM plugin_gitlab_repository_project
+                FROM plugin_gitlab_repository_integration
                 WHERE id = ?
                     AND project_id = ?
                     AND allow_artifact_closure = 1";
 
-        $rows = $this->getDB()->run($sql, $repository_id, $project_id);
+        $rows = $this->getDB()->run($sql, $integration_id, $project_id);
 
         return count($rows) > 0;
-    }
-
-    public function addGitlabRepositoryIntegrationInProject(
-        int $repository_id,
-        int $project_id,
-        int $allow_artifact_closure
-    ): void {
-        $this->getDB()->insert(
-            'plugin_gitlab_repository_project',
-            [
-                'id'                     => $repository_id,
-                'project_id'             => $project_id,
-                'allow_artifact_closure' => $allow_artifact_closure,
-            ]
-        );
     }
 }

@@ -27,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
@@ -51,11 +50,6 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryDao
      */
     private $gitlab_repository_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectDao
-     */
-    private $gitlab_repository_project_dao;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookCreator
@@ -84,11 +78,10 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->gitlab_repository_factory     = Mockery::mock(GitlabRepositoryFactory::class);
-        $this->gitlab_repository_dao         = Mockery::mock(GitlabRepositoryDao::class);
-        $this->gitlab_repository_project_dao = Mockery::mock(GitlabRepositoryProjectDao::class);
-        $this->webhook_creator               = Mockery::mock(WebhookCreator::class);
-        $this->token_inserter                = Mockery::mock(GitlabBotApiTokenInserter::class);
+        $this->gitlab_repository_factory = Mockery::mock(GitlabRepositoryFactory::class);
+        $this->gitlab_repository_dao     = Mockery::mock(GitlabRepositoryDao::class);
+        $this->webhook_creator           = Mockery::mock(WebhookCreator::class);
+        $this->token_inserter            = Mockery::mock(GitlabBotApiTokenInserter::class);
 
         $this->credentials = CredentialsTestBuilder::get()->build();
 
@@ -96,7 +89,6 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             $this->gitlab_repository_factory,
             $this->gitlab_repository_dao,
-            $this->gitlab_repository_project_dao,
             $this->webhook_creator,
             $this->token_inserter
         );
@@ -119,47 +111,12 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturnTrue();
 
         $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath');
-        $this->gitlab_repository_project_dao->shouldNotReceive('isGitlabRepositoryIntegratedInProject');
-        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
         $this->gitlab_repository_dao->shouldNotReceive('createGitlabRepository');
         $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId');
-        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
         $this->webhook_creator->shouldNotReceive('addWebhookInGitlabProject');
 
         $this->expectException(GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException::class);
 
-        $this->creator->integrateGitlabRepositoryInProject(
-            $this->credentials,
-            $this->gitlab_project,
-            $this->project,
-            GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration()
-        );
-    }
-
-    public function testItAddsRepositoryInProjectIfAtLeastOneIntegrationAlreadyExists(): void
-    {
-        $this->gitlab_repository_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
-            ->once()
-            ->andReturnFalse();
-
-        $gitlab_repository = $this->buildGitlabRepository();
-
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->once()
-            ->with(12569, 'https://example.com/root/project01')
-            ->andReturn($gitlab_repository);
-
-        $this->gitlab_repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
-            ->once()
-            ->with(1, 101)
-            ->andReturnFalse();
-
-        $this->gitlab_repository_project_dao->shouldReceive('addGitlabRepositoryIntegrationInProject')->once();
-
-        $this->gitlab_repository_dao->shouldNotReceive('createGitlabRepository');
-        $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId');
-        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
-        $this->webhook_creator->shouldNotReceive('addWebhookInGitlabProject');
         $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,
             $this->gitlab_project,
@@ -174,22 +131,13 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
+        $this->gitlab_repository_dao->shouldReceive('isTheGitlabRepositoryAlreadyIntegratedInProject')
             ->once()
-            ->with(12569, 'https://example.com/root/project01')
-            ->andReturn(
-                $this->buildGitlabRepository()
-            );
-
-        $this->gitlab_repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
-            ->once()
-            ->with(1, 101)
+            ->with(101, 12569, 'https://example.com/root/project01')
             ->andReturnTrue();
 
-        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
         $this->gitlab_repository_dao->shouldNotReceive('createGitlabRepository');
         $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId');
-        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
         $this->webhook_creator->shouldNotReceive('addWebhookInGitlabProject');
 
         $this->expectException(GitlabRepositoryAlreadyIntegratedInProjectException::class);
@@ -202,34 +150,24 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItCreatesTheWholeRepositoryIntegrationIfThisIsTheFirstTimeTheGitlabRepositoryIsIntegrated(): void
+    public function testItCreatesTheWholeRepositoryIntegration(): void
     {
+        $configuration = GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
+
         $this->gitlab_repository_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
             ->once()
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
+        $this->gitlab_repository_dao->shouldReceive('isTheGitlabRepositoryAlreadyIntegratedInProject')
             ->once()
-            ->with(12569, 'https://example.com/root/project01')
-            ->andReturn(null);
-
-
-        $this->gitlab_repository_project_dao->shouldNotReceive('isGitlabRepositoryIntegratedInProject');
-        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
-
-        $this->gitlab_repository_dao->shouldReceive('createGitlabRepository')
-            ->once()
-            ->andReturn(1);
+            ->with(101, 12569, 'https://example.com/root/project01')
+            ->andReturnFalse();
 
         $gitlab_repository = $this->buildGitlabRepository();
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabProjectAndId')
+        $this->gitlab_repository_factory->shouldReceive('createRepositoryIntegration')
             ->once()
-            ->with($this->gitlab_project, 1)
+            ->with($this->gitlab_project, $this->project, $configuration)
             ->andReturn($gitlab_repository);
-
-        $this->gitlab_repository_project_dao->shouldReceive('addGitlabRepositoryIntegrationInProject')
-            ->once()
-            ->with(1, 101, 0);
 
         $this->webhook_creator->shouldReceive('generateWebhookInGitlabProject')
             ->once()
@@ -244,7 +182,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->credentials,
             $this->gitlab_project,
             $this->project,
-            GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration()
+            $configuration
         );
 
         $this->assertSame($gitlab_repository, $result);
@@ -259,6 +197,8 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Desc',
             'https://example.com/root/project01',
             new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
     }
 }

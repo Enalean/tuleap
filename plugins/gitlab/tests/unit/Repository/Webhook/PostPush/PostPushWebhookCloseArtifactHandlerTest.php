@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
 use Mockery;
+use Project;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Semantic_Status;
@@ -102,7 +103,17 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
-        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
         $artifact = Mockery::mock(Artifact::class);
@@ -159,7 +170,17 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
-        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
 
         $this->artifact_retriever->shouldReceive('retrieveArtifactById')
             ->once()
@@ -187,7 +208,17 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
-        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
         $artifact = Mockery::mock(Artifact::class);
@@ -231,7 +262,17 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
-        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
         $artifact = Mockery::mock(Artifact::class);
@@ -293,7 +334,17 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
-        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
 
         $this->artifact_retriever->shouldNotReceive('retrieveArtifactById');
         $this->repository_project_dao->shouldNotReceive('isArtifactClosureActionEnabledForRepositoryInProject');
@@ -320,7 +371,17 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "john-snow@example.com",
             "John Snow"
         );
-        $repository   = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
         $artifact = Mockery::mock(Artifact::class);

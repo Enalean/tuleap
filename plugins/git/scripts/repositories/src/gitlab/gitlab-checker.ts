@@ -27,3 +27,15 @@ export function isGitlabRepository(repository: Repository): boolean {
         Object.prototype.hasOwnProperty.call(repository.gitlab_data, "gitlab_repository_id")
     );
 }
+
+export function isGitlabRepositoryWellConfigured(repository: Repository): boolean {
+    return (
+        Object.prototype.hasOwnProperty.call(repository, "gitlab_data") &&
+        repository.gitlab_data !== null &&
+        repository.gitlab_data !== undefined &&
+        Object.prototype.hasOwnProperty.call(repository.gitlab_data, "gitlab_repository_url") &&
+        Object.prototype.hasOwnProperty.call(repository.gitlab_data, "gitlab_repository_id") &&
+        Object.prototype.hasOwnProperty.call(repository.gitlab_data, "is_webhook_configured") &&
+        repository.gitlab_data.is_webhook_configured
+    );
+}

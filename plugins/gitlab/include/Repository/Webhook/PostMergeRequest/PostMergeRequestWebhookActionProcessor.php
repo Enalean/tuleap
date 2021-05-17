@@ -26,7 +26,6 @@ use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
 class PostMergeRequestWebhookActionProcessor
@@ -39,10 +38,6 @@ class PostMergeRequestWebhookActionProcessor
      * @var MergeRequestTuleapReferenceDao
      */
     private $merge_request_reference_dao;
-    /**
-     * @var GitlabRepositoryProjectRetriever
-     */
-    private $gitlab_repository_project_retriever;
     /**
      * @var PostMergeRequestBotCommenter
      */
@@ -66,7 +61,6 @@ class PostMergeRequestWebhookActionProcessor
 
     public function __construct(
         MergeRequestTuleapReferenceDao $merge_request_reference_dao,
-        GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         LoggerInterface $logger,
         PostMergeRequestBotCommenter $commenter,
         PreviouslySavedReferencesRetriever $previously_saved_references_retriever,
@@ -75,7 +69,6 @@ class PostMergeRequestWebhookActionProcessor
         GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever
     ) {
         $this->merge_request_reference_dao              = $merge_request_reference_dao;
-        $this->gitlab_repository_project_retriever      = $gitlab_repository_project_retriever;
         $this->logger                                   = $logger;
         $this->commenter                                = $commenter;
         $this->previously_saved_references_retriever    = $previously_saved_references_retriever;
@@ -84,48 +77,43 @@ class PostMergeRequestWebhookActionProcessor
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
     }
 
-    public function process(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $webhook_data): void
+    public function process(GitlabRepository $gitlab_repository_integration, PostMergeRequestWebhookData $webhook_data): void
     {
-        $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
-            $gitlab_repository
-        );
-
         $old_references = $this->previously_saved_references_retriever->retrievePreviousReferences(
             $webhook_data,
-            $gitlab_repository
+            $gitlab_repository_integration
         );
         $new_references = $this->cross_reference_creator->createCrossReferencesFromMergeRequest(
             $webhook_data,
-            $gitlab_repository,
-            $projects
+            $gitlab_repository_integration,
         );
 
         $already_save_merge_request = $this->getAlreadySaveMergeRequest(
-            $gitlab_repository,
+            $gitlab_repository_integration,
             $webhook_data
         );
 
         if ($this->shouldWeSaveMergeRequestData($new_references, $already_save_merge_request)) {
-            $this->saveMergeRequestData($gitlab_repository, $webhook_data);
+            $this->saveMergeRequestData($gitlab_repository_integration, $webhook_data);
         }
 
         if ($this->shouldWeSaveAuthorData($new_references, $already_save_merge_request)) {
-            $this->saveMergeRequestAuthorData($gitlab_repository, $webhook_data);
+            $this->saveMergeRequestAuthorData($gitlab_repository_integration, $webhook_data);
         }
 
         if ($this->shouldWeAddCommentOnMergeRequest($old_references, $new_references)) {
-            $this->commenter->addCommentOnMergeRequest($webhook_data, $gitlab_repository, $new_references);
+            $this->commenter->addCommentOnMergeRequest($webhook_data, $gitlab_repository_integration, $new_references);
         }
     }
 
     private function saveMergeRequestData(
-        GitlabRepository $gitlab_repository,
+        GitlabRepository $gitlab_repository_integration,
         PostMergeRequestWebhookData $webhook_data
     ): void {
         $merge_request_id = $webhook_data->getMergeRequestId();
 
         $this->merge_request_reference_dao->saveGitlabMergeRequestInfo(
-            $gitlab_repository->getId(),
+            $gitlab_repository_integration->getId(),
             $merge_request_id,
             $webhook_data->getTitle(),
             $webhook_data->getDescription(),
@@ -137,12 +125,12 @@ class PostMergeRequestWebhookActionProcessor
     }
 
     private function saveMergeRequestAuthorData(
-        GitlabRepository $gitlab_repository,
+        GitlabRepository $gitlab_repository_integration,
         PostMergeRequestWebhookData $webhook_data
     ): void {
         try {
             $this->logger->info("Try to get author data of merge request #{$webhook_data->getMergeRequestId()}");
-            $author_data = $this->author_data_retriever->retrieveAuthorData($gitlab_repository, $webhook_data);
+            $author_data = $this->author_data_retriever->retrieveAuthorData($gitlab_repository_integration, $webhook_data);
 
             if ($author_data && isset($author_data['name'])) {
                 $author_name  = $author_data['name'];
@@ -151,7 +139,7 @@ class PostMergeRequestWebhookActionProcessor
                 $this->logger->info("|_ Author name of merge request #{$webhook_data->getMergeRequestId()} is: $author_name");
 
                 $this->merge_request_reference_dao->setAuthorData(
-                    $gitlab_repository->getId(),
+                    $gitlab_repository_integration->getId(),
                     $webhook_data->getMergeRequestId(),
                     $author_name,
                     $author_email
@@ -165,11 +153,11 @@ class PostMergeRequestWebhookActionProcessor
     }
 
     private function getAlreadySaveMergeRequest(
-        GitlabRepository $gitlab_repository,
+        GitlabRepository $gitlab_repository_integration,
         PostMergeRequestWebhookData $webhook_data
     ): ?GitlabMergeRequest {
         return $this->gitlab_merge_request_reference_retriever->getGitlabMergeRequestInRepositoryWithId(
-            $gitlab_repository,
+            $gitlab_repository_integration,
             $webhook_data->getMergeRequestId()
         );
     }

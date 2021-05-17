@@ -195,7 +195,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->gitlab_repository_factory
@@ -260,7 +262,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $another_repository = new GitlabRepository(
@@ -269,7 +273,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more hot chocolate, we crave sugar',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->gitlab_repository_factory
@@ -383,7 +389,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $another_repository = new GitlabRepository(
@@ -392,7 +400,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more hot chocolate, we crave sugar',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->gitlab_repository_factory
@@ -513,7 +523,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->gitlab_repository_factory
@@ -593,7 +605,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->gitlab_repository_factory
@@ -668,7 +682,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->gitlab_repository_factory
@@ -742,7 +758,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->gitlab_repository_factory

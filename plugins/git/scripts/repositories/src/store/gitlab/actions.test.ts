@@ -205,9 +205,8 @@ describe("action", () => {
             );
 
             const credentials: GitLabDataWithToken = {
-                gitlab_bot_api_token: "AZERTY1234",
-                gitlab_repository_id: 10,
-                gitlab_repository_url: "https://example.com",
+                gitlab_api_token: "AZERTY1234",
+                gitlab_integration_id: 10,
             };
 
             await updateBotApiTokenGitlab(context, credentials);
@@ -229,9 +228,8 @@ describe("action", () => {
             );
 
             const credentials: GitLabDataWithToken = {
-                gitlab_bot_api_token: "AZERTY1234",
-                gitlab_repository_id: 10,
-                gitlab_repository_url: "https://example.com",
+                gitlab_api_token: "AZERTY1234",
+                gitlab_integration_id: 10,
             };
 
             await expect(updateBotApiTokenGitlab(context, credentials)).rejects.toEqual({

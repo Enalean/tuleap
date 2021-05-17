@@ -64,7 +64,9 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            \Project::buildForTest(),
+            false
         );
 
         $this->client   = Mockery::mock(ClientWrapper::class);

@@ -58,10 +58,10 @@ class PreviouslySavedReferencesRetriever
      */
     public function retrievePreviousReferences(
         PostMergeRequestWebhookData $webhook_data,
-        GitlabRepository $gitlab_repository
+        GitlabRepository $gitlab_repository_integration
     ): array {
         $previously_saved_merge_request_row = $this->merge_request_reference_dao->searchMergeRequestInRepositoryWithId(
-            $gitlab_repository->getId(),
+            $gitlab_repository_integration->getId(),
             $webhook_data->getMergeRequestId()
         );
         if (! $previously_saved_merge_request_row) {

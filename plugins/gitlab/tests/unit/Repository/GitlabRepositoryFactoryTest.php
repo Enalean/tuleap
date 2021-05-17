@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
+use ProjectManager;
 
 final class GitlabRepositoryFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -31,10 +32,12 @@ final class GitlabRepositoryFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesGitlabIntegrationsForProject(): void
     {
-        $dao = Mockery::mock(GitlabRepositoryDao::class);
+        $dao             = Mockery::mock(GitlabRepositoryDao::class);
+        $project_manager = Mockery::mock(ProjectManager::class);
 
         $factory = new GitlabRepositoryFactory(
-            $dao
+            $dao,
+            $project_manager
         );
 
         $project = Project::buildForTest();
@@ -45,15 +48,20 @@ final class GitlabRepositoryFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 [
                     [
-                        'id'                    => 1,
-                        'gitlab_repository_id'  => 1254652,
-                        'name'                  => 'proj/test01',
-                        'description'           => '',
-                        'gitlab_repository_url' => 'https://example.com/proj/test01',
-                        'last_push_date'        => 1603371803,
+                        'id'                     => 1,
+                        'gitlab_repository_id'   => 1254652,
+                        'name'                   => 'proj/test01',
+                        'description'            => '',
+                        'gitlab_repository_url'  => 'https://example.com/proj/test01',
+                        'last_push_date'         => 1603371803,
+                        'project_id'             => 101,
+                        'allow_artifact_closure' => 1,
                     ]
                 ]
             );
+
+        $project_manager->shouldReceive('getProject')
+            ->andReturn(Project::buildForTest());
 
         $gitlab_repositories = $factory->getGitlabRepositoriesForProject($project);
 

@@ -64,7 +64,7 @@ class PostPushCommitArtifactUpdater
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
         \Tracker_FormElement_Field_List $status_field,
-        GitlabRepository $gitlab_repository
+        GitlabRepository $gitlab_repository_integration
     ): void {
         try {
             if (! $artifact->isOpen()) {
@@ -84,7 +84,7 @@ class PostPushCommitArtifactUpdater
                     $this->getTuleapUserNameFromGitlabCommitter($commit),
                     $commit,
                     $tuleap_reference,
-                    $gitlab_repository,
+                    $gitlab_repository_integration,
                     $artifact
                 ),
                 $tracker_workflow_user

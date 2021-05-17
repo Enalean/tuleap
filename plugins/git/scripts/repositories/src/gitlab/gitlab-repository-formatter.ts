@@ -33,6 +33,7 @@ export function formatRepository(repository: GitLabRepository): FormattedGitLabR
         gitlab_data: {
             gitlab_repository_url: repository.gitlab_repository_url,
             gitlab_repository_id: repository.gitlab_repository_id,
+            is_webhook_configured: repository.is_webhook_configured,
         },
     };
 }

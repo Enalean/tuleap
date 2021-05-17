@@ -25,6 +25,7 @@ use DateTimeImmutable;
 use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
@@ -92,7 +93,9 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
     }
 

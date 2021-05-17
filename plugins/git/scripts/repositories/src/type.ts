@@ -92,10 +92,16 @@ export interface PermissionsRepository {
 export interface GitLabData {
     gitlab_repository_url: string;
     gitlab_repository_id: number;
+    is_webhook_configured: boolean;
 }
 
-export interface GitLabDataWithToken extends GitLabData {
-    gitlab_bot_api_token: string;
+export interface GitLabDataWithToken {
+    gitlab_integration_id: number | string;
+    gitlab_api_token: string;
+}
+
+export interface GitLabDataIntegrationId {
+    gitlab_integration_id: number | string;
 }
 
 export interface Folder {
@@ -124,6 +130,7 @@ export interface GitLabRepository {
     id: number;
     last_push_date: string;
     name: string;
+    is_webhook_configured: boolean;
 }
 
 export interface RepositoryOwner {

@@ -23,6 +23,7 @@ namespace Tuleap\Gitlab\Repository;
 
 use DateTimeImmutable;
 use Project;
+use ProjectManager;
 use Tuleap\Gitlab\API\GitlabProject;
 
 class GitlabRepositoryFactory
@@ -31,10 +32,15 @@ class GitlabRepositoryFactory
      * @var GitlabRepositoryDao
      */
     private $dao;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
-    public function __construct(GitlabRepositoryDao $dao)
+    public function __construct(GitlabRepositoryDao $dao, ProjectManager $project_manager)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
+        $this->project_manager = $project_manager;
     }
 
     /**
@@ -69,42 +75,69 @@ class GitlabRepositoryFactory
         return $this->getInstanceFromRow($row);
     }
 
-    public function getGitlabRepositoryByGitlabRepositoryIdAndPath(int $gitlab_repository_id, string $http_path): ?GitlabRepository
+    /**
+     * @return GitlabRepository[]
+     */
+    public function getGitlabRepositoriesByGitlabRepositoryIdAndPath(int $gitlab_repository_id, string $http_path): array
     {
-        $row = $this->dao->searchGitlabRepositoryByGitlabRepositoryIdAndPath($gitlab_repository_id, $http_path);
-        if ($row === null) {
-            return null;
+        $rows = $this->dao->searchGitlabRepositoriesByGitlabRepositoryIdAndPath($gitlab_repository_id, $http_path);
+        if ($rows === null) {
+            return [];
         }
 
-        return $this->getInstanceFromRow($row);
+        $gitlab_repositories = [];
+        foreach ($rows as $row) {
+            $gitlab_repositories[] = $this->getInstanceFromRow($row);
+        }
+
+        return $gitlab_repositories;
     }
 
-    public function getGitlabRepositoryByGitlabProjectAndId(
+    public function createRepositoryIntegration(
         GitlabProject $gitlab_project,
-        int $id
+        Project $project,
+        GitlabRepositoryCreatorConfiguration $configuration
     ): GitlabRepository {
+        $id = $this->dao->createGitlabRepository(
+            $gitlab_project->getId(),
+            $gitlab_project->getPathWithNamespace(),
+            $gitlab_project->getDescription(),
+            $gitlab_project->getWebUrl(),
+            $gitlab_project->getLastActivityAt()->getTimestamp(),
+            (int) $project->getID(),
+            $configuration->isRepositoryIntegrationAllowingArtifactClosure()
+        );
+
         return new GitlabRepository(
             $id,
             $gitlab_project->getId(),
             $gitlab_project->getPathWithNamespace(),
             $gitlab_project->getDescription(),
             $gitlab_project->getWebUrl(),
-            $gitlab_project->getLastActivityAt(),
+            (new DateTimeImmutable())->setTimestamp(
+                $gitlab_project->getLastActivityAt()->getTimestamp()
+            ),
+            $project,
+            $configuration->isRepositoryIntegrationAllowingArtifactClosure()
         );
     }
 
     /**
-     * @param array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int} $row
+     * @param array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int} $row
      */
     private function getInstanceFromRow(array $row): GitlabRepository
     {
+        $project = $this->project_manager->getProject($row['project_id']);
+
         return new GitlabRepository(
             $row['id'],
             $row['gitlab_repository_id'],
             $row['name'],
             (string) $row['description'],
             $row['gitlab_repository_url'],
-            (new DateTimeImmutable())->setTimestamp($row['last_push_date'])
+            (new DateTimeImmutable())->setTimestamp($row['last_push_date']),
+            $project,
+            (bool) $row['allow_artifact_closure']
         );
     }
 }

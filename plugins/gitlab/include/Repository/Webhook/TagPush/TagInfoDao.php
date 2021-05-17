@@ -26,15 +26,15 @@ use Tuleap\DB\DataAccessObject;
 class TagInfoDao extends DataAccessObject
 {
     public function saveGitlabTagInfo(
-        int $repository_id,
+        int $integration_id,
         string $commit_sha1,
         string $tag_name,
         string $tag_message
     ): void {
         $sql = '
-            INSERT INTO plugin_gitlab_tag_info
+            INSERT INTO plugin_gitlab_repository_integration_tag_info
                 (
-                     repository_id,
+                     integration_id,
                      commit_sha1,
                      tag_name,
                      tag_message
@@ -44,7 +44,7 @@ class TagInfoDao extends DataAccessObject
 
         $this->getDB()->run(
             $sql,
-            $repository_id,
+            $integration_id,
             $commit_sha1,
             $tag_name,
             $tag_message,
@@ -54,36 +54,36 @@ class TagInfoDao extends DataAccessObject
     /**
      * @psalm-return null|array{commit_sha1: string, tag_name: string, tag_message: string}
      */
-    public function searchTagInRepositoryWithTagName(int $repository_id, string $tag_name): ?array
+    public function searchTagInRepositoryWithTagName(int $integration_id, string $tag_name): ?array
     {
         $sql = "
             SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
                    tag_name,
                    tag_message
-            FROM plugin_gitlab_tag_info
-            WHERE repository_id = ?
+            FROM plugin_gitlab_repository_integration_tag_info
+            WHERE integration_id = ?
                 AND tag_name = ?
         ";
 
-        return $this->getDB()->row($sql, $repository_id, $tag_name);
+        return $this->getDB()->row($sql, $integration_id, $tag_name);
     }
 
-    public function deleteTagsInGitlabRepository(int $repository_id): void
+    public function deleteTagsInIntegration(int $integration_id): void
     {
         $this->getDB()->delete(
-            'plugin_gitlab_tag_info',
+            'plugin_gitlab_repository_integration_tag_info',
             [
-                'repository_id' => $repository_id,
+                'integration_id' => $integration_id,
             ]
         );
     }
 
-    public function deleteTagInGitlabRepository(int $repository_id, string $tag_name): void
+    public function deleteTagInGitlabRepository(int $integration_id, string $tag_name): void
     {
         $this->getDB()->delete(
-            'plugin_gitlab_tag_info',
+            'plugin_gitlab_repository_integration_tag_info',
             [
-                'repository_id' => $repository_id,
+                'integration_id' => $integration_id,
                 'tag_name' => $tag_name,
             ]
         );

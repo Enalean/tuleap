@@ -82,18 +82,15 @@ describe("Gitlab Api Querier", () => {
     });
 
     describe("deleteIntegrationGitlab", () => {
-        it("Given project id and repository id, Then api is queried to delete", async () => {
-            const project_id = 101;
-            const repository_id = 1;
+        it("Given integration id, Then api is queried to delete", async () => {
+            const integration_id = 1;
 
             const tlpDelete = jest.spyOn(tlp, "del");
             mockFetchSuccess(tlpDelete);
 
-            await deleteIntegrationGitlab({ project_id, repository_id });
+            await deleteIntegrationGitlab({ integration_id: integration_id });
 
-            expect(tlpDelete).toHaveBeenCalledWith(
-                "/api/v1/gitlab_repositories/" + repository_id + "?project_id=" + project_id
-            );
+            expect(tlpDelete).toHaveBeenCalledWith("/api/v1/gitlab_repositories/" + integration_id);
         });
     });
 
@@ -143,9 +140,8 @@ describe("Gitlab Api Querier", () => {
 
             const body = {
                 update_bot_api_token: {
-                    gitlab_bot_api_token: "AZERTY12345",
-                    gitlab_repository_id: 20,
-                    gitlab_repository_url: "https://example.com",
+                    gitlab_api_token: "AZERTY12345",
+                    gitlab_integration_id: 20,
                 },
             } as GitLabRepositoryUpdate;
 

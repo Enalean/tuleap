@@ -51,28 +51,28 @@ class TagPushWebhookActionProcessor
         $this->db_transaction_executor    = $db_transaction_executor;
     }
 
-    public function process(GitlabRepository $gitlab_repository, TagPushWebhookData $tag_push_webhook_data): void
+    public function process(GitlabRepository $gitlab_repository_integration, TagPushWebhookData $tag_push_webhook_data): void
     {
-        $this->db_transaction_executor->execute(function () use ($gitlab_repository, $tag_push_webhook_data) {
+        $this->db_transaction_executor->execute(function () use ($gitlab_repository_integration, $tag_push_webhook_data) {
             if ($tag_push_webhook_data->getAfter() === self::NO_REFERENCE) {
                 $this->push_webhook_delete_action->deleteTagReferences(
-                    $gitlab_repository,
+                    $gitlab_repository_integration,
                     $tag_push_webhook_data
                 );
                 return;
             } elseif ($tag_push_webhook_data->getBefore() === self::NO_REFERENCE) {
                 $this->push_webhook_create_action->createTagReferences(
-                    $gitlab_repository,
+                    $gitlab_repository_integration,
                     $tag_push_webhook_data
                 );
                 return;
             } else {
                 $this->push_webhook_delete_action->deleteTagReferences(
-                    $gitlab_repository,
+                    $gitlab_repository_integration,
                     $tag_push_webhook_data
                 );
                 $this->push_webhook_create_action->createTagReferences(
-                    $gitlab_repository,
+                    $gitlab_repository_integration,
                     $tag_push_webhook_data
                 );
                 return;

@@ -33,7 +33,6 @@ import type { GitlabState } from "./state";
 import type { ActionContext } from "vuex";
 import type {
     GitLabCredentials,
-    GitLabData,
     GitLabDataWithToken,
     GitLabRepository,
     Repository,
@@ -207,11 +206,11 @@ export async function updateBotApiTokenGitlab(
 
 export async function regenerateGitlabWebhook(
     context: ActionContext<GitlabState, GitlabState>,
-    gitlab_data: GitLabData
+    integration_id: number | string
 ): Promise<void> {
     const body: GitLabRepositoryUpdate = {
         generate_new_secret: {
-            ...gitlab_data,
+            gitlab_integration_id: integration_id,
         },
     };
 

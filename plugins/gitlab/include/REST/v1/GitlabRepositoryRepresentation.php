@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
+use Project;
+use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -60,19 +62,39 @@ class GitlabRepositoryRepresentation
      */
     public $last_push_date;
 
+    /**
+     * @var MinimalProjectRepresentation
+     */
+    public $project;
+
+    /**
+     * @var bool
+     */
+    public $allow_artifact_closure;
+    /**
+     * @var bool
+     */
+    public $is_webhook_configured;
+
     public function __construct(
         int $id,
         int $gitlab_repository_id,
         string $name,
         string $description,
         string $gitlab_repository_url,
-        int $last_push_date_timestamp
+        int $last_push_date_timestamp,
+        Project $project,
+        bool $allow_artifact_closure,
+        bool $is_webhook_configured
     ) {
-        $this->id                    = JsonCast::toInt($id);
-        $this->gitlab_repository_id  = JsonCast::toInt($gitlab_repository_id);
-        $this->name                  = $name;
-        $this->description           = $description;
-        $this->gitlab_repository_url = $gitlab_repository_url;
-        $this->last_push_date        = JsonCast::toDate($last_push_date_timestamp);
+        $this->id                     = JsonCast::toInt($id);
+        $this->gitlab_repository_id   = JsonCast::toInt($gitlab_repository_id);
+        $this->name                   = $name;
+        $this->description            = $description;
+        $this->gitlab_repository_url  = $gitlab_repository_url;
+        $this->last_push_date         = JsonCast::toDate($last_push_date_timestamp);
+        $this->project                = new MinimalProjectRepresentation($project);
+        $this->allow_artifact_closure = JsonCast::toBoolean($allow_artifact_closure);
+        $this->is_webhook_configured  = JsonCast::toBoolean($is_webhook_configured);
     }
 }

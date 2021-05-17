@@ -151,7 +151,9 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'root/project01',
                     '',
                     'https://example.com/root/project01',
-                    new DateTimeImmutable()
+                    new DateTimeImmutable(),
+                    $project,
+                    false
                 )
             );
 
@@ -189,7 +191,9 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'root/project01',
                     '',
                     'https://example.com/root/project01',
-                    new DateTimeImmutable()
+                    new DateTimeImmutable(),
+                    $project,
+                    false
                 )
             );
 
@@ -227,7 +231,9 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'root/project01',
                     '',
                     'https://example.com/root/project01',
-                    new DateTimeImmutable()
+                    new DateTimeImmutable(),
+                    $project,
+                    false
                 )
             );
 

@@ -139,6 +139,11 @@
                         v-bind:class="{ 'git-gitlab-icon-align-to-date': !is_admin }"
                         data-test="git-repository-card-gitlab-icon"
                     ></i>
+                    <i
+                        v-if="!isGitlabRepositoryWellConfigured"
+                        class="fas fa-exclamation-triangle git-gitlab-integration-not-well-configured"
+                        v-bind:title="$gettext('Webhook must be regenerated.')"
+                    ></i>
                 </section>
             </a>
         </div>
@@ -147,7 +152,7 @@
 <script>
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
-import { isGitlabRepository } from "../gitlab/gitlab-checker";
+import { isGitlabRepository, isGitlabRepositoryWellConfigured } from "../gitlab/gitlab-checker";
 import { mapActions, mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
 import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter";
@@ -171,6 +176,9 @@ export default {
     computed: {
         isGitlabRepository() {
             return isGitlabRepository(this.repository);
+        },
+        isGitlabRepositoryWellConfigured() {
+            return isGitlabRepositoryWellConfigured(this.repository);
         },
         hasRepositoryDescription() {
             return this.repository.description !== DEFAULT_DESCRIPTION;

@@ -35,7 +35,6 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
@@ -52,10 +51,6 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabProjectBuilder
      */
     private $project_builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectRetriever
-     */
-    private $project_retriever;
     /**
      * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
@@ -81,7 +76,6 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->repository_factory     = Mockery::mock(GitlabRepositoryFactory::class);
         $this->project_builder        = Mockery::mock(GitlabProjectBuilder::class);
-        $this->project_retriever      = Mockery::mock(GitlabRepositoryProjectRetriever::class);
         $this->permissions_manager    = Mockery::mock(GitPermissionsManager::class);
         $this->bot_api_token_inserter = Mockery::mock(GitlabBotApiTokenInserter::class);
         $this->webhook_creator        = Mockery::mock(WebhookCreator::class);
@@ -90,7 +84,6 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updater = new BotApiTokenUpdater(
             $this->repository_factory,
             $this->project_builder,
-            $this->project_retriever,
             $this->permissions_manager,
             $this->bot_api_token_inserter,
             $this->webhook_creator,
@@ -102,13 +95,12 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $patch = new ConcealedBotApiTokenPatchRepresentation(
             123,
-            'https://gitlab.example.com/repo/full_url',
             new ConcealedString('My New Token'),
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturnNull();
 
         $this->expectException(RestException::class);
@@ -117,44 +109,28 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updater->update($patch, Mockery::mock(\PFUser::class));
     }
 
-    public function test404IfUserIsNotGitAdminOfAtLeastOneProjectWhereTheGitlabRepositoryIsIntegrated(): void
+    public function test404IfUserIsNotGitAdminOfTheProjectWhereTheGitlabRepositoryIsIntegrated(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
         $patch = new ConcealedBotApiTokenPatchRepresentation(
             123,
-            'https://gitlab.example.com/repo/full_url',
             new ConcealedString('My New Token'),
         );
 
         $repository = Mockery::mock(GitlabRepository::class);
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
         $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $repository->shouldReceive('getProject')->andReturn($project_a);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
             ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
             ->andReturnFalse();
 
         $this->expectException(RestException::class);
@@ -170,7 +146,6 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $token = new ConcealedString('My New Token');
         $patch = new ConcealedBotApiTokenPatchRepresentation(
             123,
-            'https://gitlab.example.com/repo/full_url',
             $token,
         );
 
@@ -183,31 +158,16 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
         $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $repository->shouldReceive('getProject')->andReturn($project_a);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
             ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
             ->andReturnTrue();
 
         $this->project_builder
@@ -238,7 +198,6 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $token = new ConcealedString('My New Token');
         $patch = new ConcealedBotApiTokenPatchRepresentation(
             123,
-            'https://gitlab.example.com/repo/full_url',
             $token,
         );
 
@@ -251,31 +210,16 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
         $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $repository->shouldReceive('getProject')->andReturn($project_a);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
             ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
             ->andReturnTrue();
 
         $this->project_builder
@@ -306,7 +250,6 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $token = new ConcealedString('My New Token');
         $patch = new ConcealedBotApiTokenPatchRepresentation(
             123,
-            'https://gitlab.example.com/repo/full_url',
             $token,
         );
 
@@ -319,31 +262,16 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
         $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $repository->shouldReceive('getProject')->andReturn($project_a);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
             ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
             ->andReturnTrue();
 
         $expected_credentials = Mockery::on(
@@ -383,7 +311,6 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $token = new ConcealedString('My New Token');
         $patch = new ConcealedBotApiTokenPatchRepresentation(
             123,
-            'https://gitlab.example.com/repo/full_url',
             $token,
         );
 
@@ -396,31 +323,16 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
         $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $repository->shouldReceive('getProject')->andReturn($project_a);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
             ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
             ->andReturnTrue();
 
         $expected_credentials = Mockery::on(

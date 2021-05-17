@@ -25,12 +25,12 @@ use Tuleap\DB\DataAccessObject;
 class GitlabBotApiTokenDao extends DataAccessObject
 {
 
-    public function storeToken(int $repository_id, string $encrypted_token): void
+    public function storeToken(int $integration_id, string $encrypted_token): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
-            'plugin_gitlab_bot_api_token',
+            'plugin_gitlab_repository_integration_token',
             [
-                'repository_id'                           => $repository_id,
+                'integration_id'                          => $integration_id,
                 'token'                                   => $encrypted_token,
                 'is_email_already_send_for_invalid_token' => false,
             ],
@@ -41,15 +41,15 @@ class GitlabBotApiTokenDao extends DataAccessObject
         );
     }
 
-    public function storeTheFactWeAlreadySendEmailForInvalidToken(int $repository_id): void
+    public function storeTheFactWeAlreadySendEmailForInvalidToken(int $integration_id): void
     {
         $this->getDB()->update(
-            'plugin_gitlab_bot_api_token',
+            'plugin_gitlab_repository_integration_token',
             [
                 'is_email_already_send_for_invalid_token' => true,
             ],
             [
-                'repository_id' => $repository_id,
+                'integration_id' => $integration_id,
             ]
         );
     }
@@ -57,20 +57,20 @@ class GitlabBotApiTokenDao extends DataAccessObject
     /**
      * @return array{token: string, is_email_already_send_for_invalid_token: bool}|null
      */
-    public function getBotAPIToken(int $repository_id): ?array
+    public function getBotAPIToken(int $integration_id): ?array
     {
         $sql = 'SELECT *
-                FROM plugin_gitlab_bot_api_token
-                WHERE repository_id = ?';
+                FROM plugin_gitlab_repository_integration_token
+                WHERE integration_id = ?';
 
-        return $this->getDB()->row($sql, $repository_id);
+        return $this->getDB()->row($sql, $integration_id);
     }
 
-    public function deleteGitlabBotToken(int $repository_id): void
+    public function deleteIntegrationToken(int $integration_id): void
     {
         $this->getDB()->delete(
-            'plugin_gitlab_bot_api_token',
-            ['repository_id' => $repository_id]
+            'plugin_gitlab_repository_integration_token',
+            ['integration_id' => $integration_id]
         );
     }
 }

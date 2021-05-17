@@ -26,7 +26,7 @@ use Tuleap\DB\DataAccessObject;
 class CommitTuleapReferenceDao extends DataAccessObject
 {
     public function saveGitlabCommitInfo(
-        int $repository_id,
+        int $integration_id,
         string $commit_sha1,
         int $commit_date,
         string $commit_title,
@@ -35,9 +35,9 @@ class CommitTuleapReferenceDao extends DataAccessObject
         string $commit_author_email
     ): void {
         $sql = '
-            INSERT INTO plugin_gitlab_commit_info
+            INSERT INTO plugin_gitlab_repository_integration_commit_info
                 (
-                     repository_id,
+                     integration_id,
                      commit_sha1,
                      commit_date,
                      commit_title,
@@ -50,7 +50,7 @@ class CommitTuleapReferenceDao extends DataAccessObject
 
         $this->getDB()->run(
             $sql,
-            $repository_id,
+            $integration_id,
             $commit_sha1,
             $commit_date,
             $commit_title,
@@ -63,7 +63,7 @@ class CommitTuleapReferenceDao extends DataAccessObject
     /**
      * @psalm-return array{commit_sha1: string, commit_date: int, commit_title: string, author_name: string, author_email: string}
      */
-    public function searchCommitInRepositoryWithSha1(int $repository_id, string $commit_sha1): ?array
+    public function searchCommitInRepositoryWithSha1(int $integration, string $commit_sha1): ?array
     {
         $sql = "
             SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
@@ -72,20 +72,20 @@ class CommitTuleapReferenceDao extends DataAccessObject
                    commit_branch,
                    author_name,
                    author_email
-            FROM plugin_gitlab_commit_info
-            WHERE repository_id = ?
+            FROM plugin_gitlab_repository_integration_commit_info
+            WHERE integration_id = ?
                 AND commit_sha1 = UNHEX(?)
         ";
 
-        return $this->getDB()->row($sql, $repository_id, $commit_sha1);
+        return $this->getDB()->row($sql, $integration, $commit_sha1);
     }
 
-    public function deleteCommitsInGitlabRepository(int $repository_id): void
+    public function deleteCommitsInIntegration(int $integration_id): void
     {
         $this->getDB()->delete(
-            'plugin_gitlab_commit_info',
+            'plugin_gitlab_repository_integration_commit_info',
             [
-                'repository_id' => $repository_id,
+                'integration_id' => $integration_id,
             ]
         );
     }

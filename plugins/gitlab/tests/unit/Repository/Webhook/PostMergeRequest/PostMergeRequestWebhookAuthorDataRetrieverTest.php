@@ -23,6 +23,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
@@ -64,7 +65,9 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $merge_request_webhook_data = new PostMergeRequestWebhookData(
@@ -98,7 +101,9 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
             'winter-is-coming',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $merge_request_webhook_data = new PostMergeRequestWebhookData(
