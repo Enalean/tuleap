@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
+use League\CommonMark\MarkdownConverter;
 
 final class TableTLPExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var CommonMarkConverter
+     * @var MarkdownConverter
      */
     private $converter;
 
@@ -37,7 +37,7 @@ final class TableTLPExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
         $environment = Environment::createCommonMarkEnvironment();
 
         $environment->addExtension(new TableTLPExtension());
-        $this->converter = new CommonMarkConverter([], $environment);
+        $this->converter = new MarkdownConverter($environment);
     }
 
     public function testRendersTableWithTheTLPClass(): void

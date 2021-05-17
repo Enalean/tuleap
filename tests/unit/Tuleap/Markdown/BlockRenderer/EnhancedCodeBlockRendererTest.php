@@ -24,8 +24,8 @@ namespace Tuleap\Markdown\BlockRenderer;
 
 use League\CommonMark\Block\Element\FencedCode;
 use League\CommonMark\Block\Renderer\FencedCodeRenderer;
-use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
+use League\CommonMark\MarkdownConverter;
 use Mockery;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
@@ -34,7 +34,7 @@ class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var CommonMarkConverter
+     * @var MarkdownConverter
      */
     private $converter;
     /**
@@ -51,7 +51,7 @@ class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             FencedCode::class,
             new EnhancedCodeBlockRenderer($this->code_block_features, new FencedCodeRenderer())
         );
-        $this->converter = new CommonMarkConverter([], $environment);
+        $this->converter = new MarkdownConverter($environment);
     }
 
     public function testItDoesNotConvertFencedCodesThatAreNotMermaid(): void

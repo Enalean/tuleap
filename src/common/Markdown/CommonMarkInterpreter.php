@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Markdown;
 
 use Codendi_HTMLPurifier;
-use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\ExtensionInterface;
+use League\CommonMark\MarkdownConverter;
 
 final class CommonMarkInterpreter implements ContentInterpretor
 {
@@ -34,11 +34,11 @@ final class CommonMarkInterpreter implements ContentInterpretor
      */
     private $html_purifier;
     /**
-     * @var CommonMarkConverter
+     * @var MarkdownConverter
      */
     private $converter;
 
-    private function __construct(Codendi_HTMLPurifier $html_purifier, CommonMarkConverter $converter)
+    private function __construct(Codendi_HTMLPurifier $html_purifier, MarkdownConverter $converter)
     {
         $this->html_purifier = $html_purifier;
         $this->converter     = $converter;
@@ -52,8 +52,9 @@ final class CommonMarkInterpreter implements ContentInterpretor
         foreach ($extensions as $extension) {
             $environment->addExtension($extension);
         }
+        $environment->mergeConfig(['max_nesting_level' => 10]);
 
-        return new self($html_purifier, new CommonMarkConverter(['max_nesting_level' => 10], $environment));
+        return new self($html_purifier, new MarkdownConverter($environment));
     }
 
     public function getInterpretedContent(string $content): string
