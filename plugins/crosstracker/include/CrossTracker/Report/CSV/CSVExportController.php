@@ -207,17 +207,18 @@ class CSVExportController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)
+    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report): void
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
         if (
-            $widget['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE
+            $widget !== null
+            && $widget['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE
             && $widget['user_id'] !== (int) $user->getId()
         ) {
             throw new ForbiddenException();
         }
 
-        if ($widget['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {
+        if ($widget !== null && $widget['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {
             $project = $this->project_manager->getProject($widget['project_id']);
             try {
                 $url_verification = new URLVerification();
