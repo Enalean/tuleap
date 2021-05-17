@@ -2010,8 +2010,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $contributor_field_id
         );
         if ($matching_ids_result) {
-            $matching_ids['id']                = implode(',', array_column(iterator_to_array($matching_ids_result), 'id'));
-            $matching_ids['last_changeset_id'] = implode(',', array_column(iterator_to_array($matching_ids_result), 'last_changeset_id'));
+            $matching_ids_result_array         = iterator_to_array($matching_ids_result);
+            $matching_ids['id']                = implode(',', array_column($matching_ids_result_array, 'id'));
+            $matching_ids['last_changeset_id'] = implode(',', array_column($matching_ids_result_array, 'last_changeset_id'));
         }
 
         return $matching_ids;
