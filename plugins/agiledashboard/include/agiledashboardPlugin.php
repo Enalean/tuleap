@@ -353,7 +353,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
             $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
             $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
-                $event->getTemplateProject(),
+                $event->getJustCreatedProject(),
                 UserManager::instance()->getCurrentUser()
             );
 
