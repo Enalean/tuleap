@@ -32,7 +32,7 @@ class WebhookTuleapReference
     private $id;
 
     /**
-     * Supported key: 'resolve(s)'
+     * Supported keys: 'resolves', 'closes' or 'fixes'
      * @var string | null
      */
     private $close_artifact_keyword;

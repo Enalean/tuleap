@@ -26,6 +26,7 @@ use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class PostPushTuleapArtifactCommentBuilder
 {
@@ -33,11 +34,13 @@ class PostPushTuleapArtifactCommentBuilder
         string $user_name,
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
-        GitlabRepository $gitlab_repository
+        GitlabRepository $gitlab_repository,
+        Artifact $artifact
     ): string {
         if (
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::RESOLVES_KEYWORD &&
-            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::CLOSES_KEYWORD
+            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::CLOSES_KEYWORD &&
+            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::FIXES_KEYWORD
         ) {
             return "";
         }
@@ -45,6 +48,8 @@ class PostPushTuleapArtifactCommentBuilder
         $action_word = "solved";
         if ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::CLOSES_KEYWORD) {
             $action_word = "closed";
+        } elseif ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::FIXES_KEYWORD) {
+            $action_word = "{$artifact->getTracker()->getItemName()} fixed";
         }
 
         return "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository->getName()}/{$commit->getSha1()}";

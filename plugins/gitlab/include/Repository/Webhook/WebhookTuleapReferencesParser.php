@@ -23,9 +23,10 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 class WebhookTuleapReferencesParser
 {
-    private const CLOSED_KEYWORDS_REGEX = "resolves\s?|closes\s?";
+    private const CLOSED_KEYWORDS_REGEX = "resolves\s?|closes\s?|fixes\s?";
     public const  RESOLVES_KEYWORD      = "resolves";
     public const  CLOSES_KEYWORD        = "closes";
+    public const  FIXES_KEYWORD         = "fixes";
 
     public function extractCollectionOfTuleapReferences(
         string $message
@@ -43,6 +44,8 @@ class WebhookTuleapReferencesParser
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::RESOLVES_KEYWORD);
                 } elseif ($close_artifact_keyword === self::CLOSES_KEYWORD) {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::CLOSES_KEYWORD);
+                } elseif ($close_artifact_keyword === self::FIXES_KEYWORD) {
+                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::FIXES_KEYWORD);
                 } else {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, null);
                 }

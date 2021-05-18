@@ -84,7 +84,8 @@ class PostPushCommitArtifactUpdater
                     $this->getTuleapUserNameFromGitlabCommitter($commit),
                     $commit,
                     $tuleap_reference,
-                    $gitlab_repository
+                    $gitlab_repository,
+                    $artifact
                 ),
                 $tracker_workflow_user
             );
