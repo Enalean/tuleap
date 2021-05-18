@@ -170,4 +170,16 @@ describe("EditRemainingEffort", () => {
         await wrapper.vm.$nextTick();
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-60");
     });
+
+    it("emits the `editor-closed` event after saving", async () => {
+        const wrapper = await getWrapper();
+
+        const value = 42;
+        wrapper.setData({ value });
+        await wrapper.vm.$nextTick();
+        wrapper.trigger("keyup.enter");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.emitted("editor-closed")).toBeTruthy();
+    });
 });

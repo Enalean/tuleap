@@ -38,4 +38,21 @@ describe("CardWithRemainingEffort", () => {
         expect(wrapper.findComponent(ParentCardRemainingEffort).exists()).toBe(true);
         expect(wrapper.findComponent(EditCardButtons).exists()).toBe(true);
     });
+
+    it("focuses the card when receiving the `editor-closed` event", () => {
+        const wrapper = shallowMount(CardWithRemainingEffort, {
+            attachTo: document.body,
+            propsData: {
+                card: { id: 43, remaining_effort: 2.5 },
+            },
+        });
+
+        const parent_card = wrapper.findComponent(ParentCard);
+        parent_card.vm.$emit("editor-closed");
+
+        if (!(document.activeElement instanceof HTMLElement)) {
+            throw new Error("Active element should be the CardWithRemainingEffort element");
+        }
+        expect(document.activeElement.dataset.test).toBe("card-with-remaining-effort");
+    });
 });

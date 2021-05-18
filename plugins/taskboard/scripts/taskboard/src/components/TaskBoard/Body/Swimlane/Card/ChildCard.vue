@@ -27,11 +27,14 @@
         v-bind:draggable="!card.is_in_edit_mode"
         tabindex="0"
         data-navigation="card"
+        ref="childCard"
+        data-test="child-card"
     >
-        <base-card v-bind:card="card" />
+        <base-card v-bind:card="card" v-on:editor-closed="focusCard" />
         <edit-card-buttons
             class="taskboard-card-cancel-save-buttons-for-child"
             v-bind:card="card"
+            v-on:editor-closed="focusCard"
         />
     </div>
 </template>
@@ -53,5 +56,13 @@ export default class ChildCard extends Vue {
 
     @Prop({ required: true })
     readonly card!: Card;
+
+    focusCard(): void {
+        const card = this.$refs.childCard;
+        if (!(card instanceof HTMLElement)) {
+            throw new Error("Did not get the expected child card element, is the ref valid?");
+        }
+        card.focus();
+    }
 }
 </script>

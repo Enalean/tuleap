@@ -26,6 +26,7 @@ import BaseCard from "./BaseCard.vue";
 
 function getWrapper(card: Card, are_closed_items_displayed: boolean): Wrapper<ChildCard> {
     return shallowMount(ChildCard, {
+        attachTo: document.body,
         propsData: {
             card,
         },
@@ -114,5 +115,22 @@ describe("ChildCard", () => {
             expect(wrapper.classes()).not.toContain("taskboard-draggable-item");
             expect(wrapper.attributes("draggable")).toBe("false");
         });
+    });
+
+    it("focuses the card when receiving the `editor-closed` event", () => {
+        const card: Card = {
+            id: 43,
+            assignees: [] as User[],
+            is_open: false,
+        } as Card;
+        const wrapper = getWrapper(card, true);
+
+        const base_card = wrapper.findComponent(BaseCard);
+        base_card.vm.$emit("editor-closed");
+
+        if (!(document.activeElement instanceof HTMLElement)) {
+            throw new Error("Active element should be the ChildCard element");
+        }
+        expect(document.activeElement.dataset.test).toBe("child-card");
     });
 });

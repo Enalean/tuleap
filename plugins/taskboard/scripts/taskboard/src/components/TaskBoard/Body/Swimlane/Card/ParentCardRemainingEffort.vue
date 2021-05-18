@@ -32,7 +32,12 @@
         draggable="true"
         data-shortcut="edit-remaining-effort"
     >
-        <edit-remaining-effort v-if="is_in_edit_mode" v-bind:card="card" />
+        <edit-remaining-effort
+            v-if="is_in_edit_mode"
+            v-bind:card="card"
+            v-on:editor-closed="$emit('editor-closed')"
+            data-test="edit-remaining-effort"
+        />
         <template v-else>{{ card.remaining_effort.value }}</template>
         <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
         <i class="fa" aria-hidden="true" v-bind:class="icon"></i>

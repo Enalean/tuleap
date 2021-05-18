@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <base-card class="taskboard-card-parent" v-bind:card="card">
+    <base-card
+        class="taskboard-card-parent"
+        v-bind:card="card"
+        v-on:editor-closed="$emit('editor-closed')"
+    >
         <template v-slot:initial_effort>
             <card-initial-effort v-bind:card="card" />
         </template>

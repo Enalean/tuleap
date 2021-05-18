@@ -22,11 +22,36 @@ import AddButton from "./AddButton.vue";
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 
 describe("AddButton", () => {
+    it("displays the button if not in add mode", async () => {
+        const wrapper = shallowMount(AddButton, {
+            localVue: await createTaskboardLocalVue(),
+            propsData: {
+                label: "Lorem",
+                is_in_add_mode: false,
+            },
+        });
+
+        expect(wrapper.find("[data-test=add-in-place-button]").exists()).toBe(true);
+    });
+
+    it("does not display the button if in add mode", async () => {
+        const wrapper = shallowMount(AddButton, {
+            localVue: await createTaskboardLocalVue(),
+            propsData: {
+                label: "Lorem",
+                is_in_add_mode: true,
+            },
+        });
+
+        expect(wrapper.find("[data-test=add-in-place-button]").exists()).toBe(false);
+    });
+
     it("propagates the click event", async () => {
         const wrapper = shallowMount(AddButton, {
             localVue: await createTaskboardLocalVue(),
             propsData: {
                 label: "Lorem",
+                is_in_add_mode: false,
             },
         });
 
@@ -39,6 +64,7 @@ describe("AddButton", () => {
             localVue: await createTaskboardLocalVue(),
             propsData: {
                 label: "Lorem",
+                is_in_add_mode: false,
             },
         });
 

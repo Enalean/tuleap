@@ -100,4 +100,13 @@ describe("ParentCardRemainingEffort", () => {
 
         expect(wrapper.html()).toEqual("");
     });
+
+    it("sends a `editor-closed` event when the edition of remaining effort is closed", async () => {
+        const wrapper = await getWrapper({ value: 666, is_in_edit_mode: true } as RemainingEffort);
+
+        const edit_remaining_effort = wrapper.findComponent(EditRemainingEffort);
+        edit_remaining_effort.vm.$emit("editor-closed");
+
+        expect(wrapper.emitted("editor-closed")).toBeTruthy();
+    });
 });

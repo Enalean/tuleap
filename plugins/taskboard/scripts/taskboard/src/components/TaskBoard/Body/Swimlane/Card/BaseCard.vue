@@ -132,11 +132,14 @@ export default class BaseCard extends Vue {
             tracker: this.tracker,
         };
         this.saveCard(payload);
+
+        this.$emit("editor-closed");
     }
 
     cancel(): void {
         this.removeCardFromEditMode(this.card);
         this.label = this.card.label;
+        this.$emit("editor-closed");
     }
 
     switchToEditMode(): void {
