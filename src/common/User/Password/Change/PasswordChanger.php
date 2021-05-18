@@ -68,7 +68,6 @@ class PasswordChanger
 
     /**
      * @throws \Tuleap\User\Password\Reset\TokenDataAccessException
-     * @throws \Tuleap\User\SessionDataAccessException
      */
     public function changePassword(\PFUser $user, ConcealedString $new_password): void
     {

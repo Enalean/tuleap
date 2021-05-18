@@ -66,7 +66,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $session_identifier = '1.random_string';
 
-        $this->session_dao->shouldReceive('searchById')->with('1', self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(false);
+        $this->session_dao->shouldReceive('searchById')->with('1', self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS)->andReturns(null);
 
         $this->expectException(\Tuleap\User\InvalidSessionException::class);
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS, 'User agent');
@@ -133,7 +133,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
-        $this->session_dao->shouldReceive('create')->andReturns(null);
+        $this->session_dao->shouldReceive('create')->andThrow(new \RuntimeException('Something really bad happened, could not create the session in the DB'));
         $user    = \Mockery::spy(\PFUser::class);
         $request = \Mockery::spy(\HTTPRequest::class);
 

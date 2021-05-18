@@ -23,8 +23,8 @@ use Exception;
 
 class SessionNotCreatedException extends Exception
 {
-    public function __construct($message = 'Session not created')
+    public function __construct(?\Throwable $previous = null, $message = 'Session not created')
     {
-        parent::__construct($message, 3300);
+        parent::__construct($message, 3300, $previous);
     }
 }
