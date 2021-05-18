@@ -136,13 +136,14 @@ class BindListUserValueGetter
                     $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                     $sql[] = "(
-                        SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
-                            FROM tracker_artifact AS a
-                            INNER JOIN user
-                                ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker_id )
-                            $user_id_sql
-                            $keyword_sql
-                            ORDER BY $order_by_sql
+                        SELECT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
+                        FROM user
+                        JOIN (
+                            SELECT DISTINCT tracker_artifact.submitted_by FROM tracker_artifact WHERE tracker_id = $tracker_id
+                        ) AS tracker_submitted_by ON (user.user_id = tracker_submitted_by.submitted_by)
+                        $user_id_sql
+                        $keyword_sql
+                        ORDER BY $order_by_sql
                     )";
                     break;
                 case 'artifact_modifiers':
@@ -154,14 +155,17 @@ class BindListUserValueGetter
                     $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                     $sql[] = "(
-                        SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
-                            FROM tracker_artifact AS a
-                            INNER JOIN tracker_changeset c ON a.id = c.artifact_id
-                            INNER JOIN user
-                                ON ( user.user_id = c.submitted_by AND a.tracker_id = $tracker_id )
-                            $user_id_sql
-                            $keyword_sql
-                            ORDER BY $order_by_sql
+                        SELECT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
+                        FROM user
+                        JOIN (
+                            SELECT DISTINCT tracker_changeset.submitted_by
+                            FROM tracker_changeset
+                            JOIN tracker_artifact ON (tracker_artifact.id = tracker_changeset.artifact_id)
+                            WHERE tracker_id = $tracker_id
+                        ) AS tracker_modified_by ON (user.user_id = tracker_modified_by.submitted_by)
+                        $user_id_sql
+                        $keyword_sql
+                        ORDER BY $order_by_sql
                     )";
                     break;
                 default:
