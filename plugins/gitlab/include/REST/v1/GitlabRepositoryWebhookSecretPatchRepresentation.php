@@ -33,7 +33,7 @@ final class GitlabRepositoryWebhookSecretPatchRepresentation
     public $gitlab_repository_id;
 
     /**
-     * @var string {@required true}
+     * @var string {@required true} {@pattern /^https:\/\//i}
      */
     public $gitlab_repository_url;
 }

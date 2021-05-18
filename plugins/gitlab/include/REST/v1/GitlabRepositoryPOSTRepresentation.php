@@ -32,7 +32,7 @@ class GitlabRepositoryPOSTRepresentation
     public $project_id;
 
     /**
-     * @var string
+     * @var string {@pattern /^https:\/\//i}
      */
     public $gitlab_server_url;
 
