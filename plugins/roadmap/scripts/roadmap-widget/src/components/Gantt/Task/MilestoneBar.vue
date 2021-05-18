@@ -34,6 +34,7 @@
                 stroke="#6BE0C5"
                 stroke-linejoin="round"
                 class="roadmap-gantt-task-bar-milestone-border"
+                v-bind:class="border_classes"
             />
             <path
                 d="M8 5 C11 2 11 2 14 5 L17 8 C20 11 20 11 17 14 L14 17 C11 20 11 20 8 17 L5 14 C2 11 2 11 5 8Z"
@@ -75,6 +76,12 @@ export default class MilestoneBar extends Vue {
 
     get style(): string {
         return `left: ${this.left}px;`;
+    }
+
+    get border_classes(): string {
+        return this.task.are_dates_implied
+            ? "roadmap-gantt-task-bar-milestone-border-with-dates-implied"
+            : "";
     }
 }
 </script>

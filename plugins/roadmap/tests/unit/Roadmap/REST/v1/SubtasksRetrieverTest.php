@@ -74,6 +74,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                             "",
                             new \DateTimeImmutable('@1234567890'),
                             new \DateTimeImmutable('@1234567891'),
+                            false,
                             [],
                             new ProjectReference($artifact->getTracker()->getProject()),
                         );
