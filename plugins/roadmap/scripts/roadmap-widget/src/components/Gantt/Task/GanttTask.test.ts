@@ -110,6 +110,16 @@ describe("GanttTask", () => {
         expect(task_bar.props("width")).toBe(Styles.MILESTONE_WIDTH_IN_PX);
     });
 
+    it("If end < start, it does not display the bar", () => {
+        const wrapper = mountGanttTask({
+            start: new Date(2020, 3, 5),
+            end: new Date(2020, 1, 5),
+        } as Task);
+
+        const task_bar = wrapper.findComponent(TaskBar);
+        expect(task_bar.exists()).toBe(false);
+    });
+
     it("Doesn't know yet where to put a task without start and end date, so it puts it at the beginning of the period", () => {
         const wrapper = mountGanttTask({ start: null, end: null } as Task);
 

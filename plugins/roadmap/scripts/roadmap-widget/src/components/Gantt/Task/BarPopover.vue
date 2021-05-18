@@ -53,6 +53,12 @@
                         <td>
                             <p v-if="task.end" class="roadmap-gantt-task-popover-value">
                                 {{ end_date }}
+                                <template v-if="is_end_date_in_error">
+                                    <br />
+                                    <translate class="roadmap-gantt-task-popover-value-error">
+                                        End date is lesser than start date!
+                                    </translate>
+                                </template>
                             </p>
                             <p v-else class="roadmap-gantt-task-popover-value-undefined">
                                 <translate>Undefined</translate>
@@ -86,6 +92,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { Task } from "../../../type";
 import { State } from "vuex-class";
+import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
 
 @Component
 export default class BarPopover extends Vue {
@@ -127,8 +134,8 @@ export default class BarPopover extends Vue {
         return this.formatter.format(date);
     }
 
-    get should_we_display_progress_information(): boolean {
-        return this.task.progress !== null || this.is_progress_in_error;
+    get is_end_date_in_error(): boolean {
+        return !doesTaskHaveEndDateGreaterOrEqualToStartDate(this.task);
     }
 
     get is_progress_in_error(): boolean {

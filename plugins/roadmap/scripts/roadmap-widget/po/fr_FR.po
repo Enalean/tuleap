@@ -21,6 +21,9 @@ msgstr "Une erreur est survenue lors de la récupération des enfants."
 msgid "End date"
 msgstr "Date de fin"
 
+msgid "End date is lesser than start date!"
+msgstr "La date de fin est inférieure à la date de début !"
+
 msgid "Linked to"
 msgstr "Lié à"
 

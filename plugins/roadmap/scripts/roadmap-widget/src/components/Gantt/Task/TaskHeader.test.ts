@@ -23,6 +23,7 @@ import type { Task } from "../../../type";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { TasksState } from "../../../store/tasks/type";
 import HeaderLink from "./HeaderLink.vue";
+import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
 
 describe("TaskHeader", () => {
     it("Displays link to the task", () => {
@@ -44,6 +45,7 @@ describe("TaskHeader", () => {
         const wrapper = shallowMount(TaskHeader, {
             propsData: {
                 task,
+                popover_element_id: "id",
             },
             mocks: {
                 $store: createStoreMock({
@@ -60,6 +62,33 @@ describe("TaskHeader", () => {
         expect(wrapper.findComponent(HeaderLink).exists()).toBeTruthy();
     });
 
+    it("should display a warning icon if task has end date < start date", () => {
+        const task: Task = {
+            id: 123,
+            start: new Date("2020-04-14T22:00:00.000Z"),
+            end: new Date("2020-04-10T22:00:00.000Z"),
+        } as Task;
+
+        const wrapper = shallowMount(TaskHeader, {
+            propsData: {
+                task,
+                popover_element_id: "id",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    },
+                    getters: {
+                        "tasks/does_at_least_one_task_have_subtasks": false,
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(HeaderInvalidIcon).exists()).toBe(true);
+    });
+
     it("does not need to display the project for parent tasks", () => {
         const task: Task = {
             id: 123,
@@ -69,6 +98,7 @@ describe("TaskHeader", () => {
         const wrapper = shallowMount(TaskHeader, {
             propsData: {
                 task,
+                popover_element_id: "id",
             },
             mocks: {
                 $store: createStoreMock({
@@ -94,6 +124,7 @@ describe("TaskHeader", () => {
         const wrapper = shallowMount(TaskHeader, {
             propsData: {
                 task,
+                popover_element_id: "id",
             },
             mocks: {
                 $store: createStoreMock({
@@ -120,6 +151,7 @@ describe("TaskHeader", () => {
         const wrapper = shallowMount(TaskHeader, {
             propsData: {
                 task,
+                popover_element_id: "id",
             },
             mocks: {
                 $store: createStoreMock({
@@ -145,6 +177,7 @@ describe("TaskHeader", () => {
         const wrapper = shallowMount(TaskHeader, {
             propsData: {
                 task,
+                popover_element_id: "id",
             },
             mocks: {
                 $store: createStoreMock({
@@ -170,6 +203,7 @@ describe("TaskHeader", () => {
             const wrapper = shallowMount(TaskHeader, {
                 propsData: {
                     task,
+                    popover_element_id: "id",
                 },
                 mocks: {
                     $store: createStoreMock({
@@ -196,6 +230,7 @@ describe("TaskHeader", () => {
             const wrapper = shallowMount(TaskHeader, {
                 propsData: {
                     task,
+                    popover_element_id: "id",
                 },
                 mocks: {
                     $store: createStoreMock({

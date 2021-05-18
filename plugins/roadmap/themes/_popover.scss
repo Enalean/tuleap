@@ -32,12 +32,25 @@
         background: var(--tlp-theme-dark-background-color-darker);
     }
 
+
     &.tlp-popover[data-popper-placement='left-end'],
     &.tlp-popover[data-popper-placement='right-end'] {
         &.tlp-popover-shown {
             transform: translateY(7px);
         }
+    }
 
+    &.tlp-popover[data-popper-placement='left'],
+    &.tlp-popover[data-popper-placement='right'] {
+        &.tlp-popover-shown {
+            transform: translateY(0);
+        }
+    }
+
+    &.tlp-popover[data-popper-placement='left'],
+    &.tlp-popover[data-popper-placement='right'],
+    &.tlp-popover[data-popper-placement='left-end'],
+    &.tlp-popover[data-popper-placement='right-end'] {
         > .roadmap-gantt-task-popover-arrow {
             background: var(--tlp-theme-dark-background-color);
         }

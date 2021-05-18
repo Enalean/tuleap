@@ -42,11 +42,15 @@
                         v-if="isTaskRow(row)"
                         v-bind:key="'header-task-' + row.task.id"
                         v-bind:task="row.task"
+                        v-bind:popover_element_id="getIdForPopover(row.task)"
                     />
                     <subtask-header
                         v-else-if="isSubtaskRow(row)"
                         v-bind:key="'header-task-' + row.parent.id + '-subtask-' + row.subtask.id"
                         v-bind:row="row"
+                        v-bind:popover_element_id="
+                            getIdForPopoverForSubtask(row.parent, row.subtask)
+                        "
                     />
                     <subtask-message-header
                         v-else-if="isErrorRow(row) || isEmptySubtasksRow(row)"

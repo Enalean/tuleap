@@ -73,24 +73,6 @@ describe("task-retriever", () => {
             expect(tasks.length).toBe(0);
         });
 
-        it("Removes tasks that have end date lesser than start date because we don't know how to display them yet", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
-                {
-                    id: 6422,
-                    xref: "epic #6422",
-                    title: "Do this",
-                    html_url: "/plugins/tracker/?aid=6422",
-                    color_name: "panther-pink",
-                    start: "2020-03-01T10:00:00+01:00",
-                    end: "2019-03-14T10:00:00+01:00",
-                },
-            ]);
-
-            const tasks = await retrieveTasks();
-
-            expect(tasks.length).toBe(0);
-        });
-
         it("Marks a task as a milestone if it does not have a start date", async () => {
             jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
                 {
@@ -220,6 +202,25 @@ describe("task-retriever", () => {
             expect(tasks[0].has_subtasks).toBe(true);
         });
 
+        it("should consider a task with end date < start date as not having sub tasks", async () => {
+            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                {
+                    id: 6422,
+                    xref: "epic #6422",
+                    title: "Do this",
+                    html_url: "/plugins/tracker/?aid=6422",
+                    color_name: "panther-pink",
+                    start: "2020-03-20T10:00:00+01:00",
+                    end: "2020-03-14T10:00:00+01:00",
+                    dependencies: { _is_child: [124] },
+                },
+            ]);
+
+            const tasks = await retrieveTasks();
+
+            expect(tasks[0].has_subtasks).toBe(false);
+        });
+
         it("should init the task as not showing subtasks", async () => {
             jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
                 {
@@ -280,6 +281,35 @@ describe("task-retriever", () => {
 
                 expect(tasks[0].id).toBe(1232);
                 expect(tasks[1].id).toBe(1231);
+            });
+
+            it("should put tasks with end date < start date at the end", async () => {
+                jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                    {
+                        id: 1231,
+                        title: "Do this",
+                        start: "2020-03-16T10:00:00+01:00",
+                        end: "2020-03-15T10:00:00+01:00",
+                    },
+                    {
+                        id: 1232,
+                        title: "Do that",
+                        start: "2020-03-16T10:00:00+01:00",
+                        end: "2020-03-14T10:00:00+01:00",
+                    },
+                    {
+                        id: 1233,
+                        title: "Do it",
+                        start: "2020-03-14T10:00:00+01:00",
+                        end: "2020-03-16T10:00:00+01:00",
+                    },
+                ]);
+
+                const tasks = await retrieveTasks();
+
+                expect(tasks[0].id).toBe(1233);
+                expect(tasks[1].id).toBe(1232);
+                expect(tasks[2].id).toBe(1231);
             });
         });
     });
