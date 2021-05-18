@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Tracker\Semantic\Timeframe;
 
-namespace Tuleap\Tracker\REST;
-
-use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
-
-class SemanticTimeframeWithDurationRepresentation implements IRepresentSemanticTimeframe
+interface IRepresentSemanticTimeframe
 {
-    /**
-     * @var int
-     */
-    public $start_date_field_id;
-
-    /**
-     * @var int
-     */
-    public $duration_field_id;
-
-    public function __construct(int $start_date_field_id, int $duration_field_id)
-    {
-        $this->start_date_field_id = JsonCast::toInt($start_date_field_id);
-        $this->duration_field_id   = JsonCast::toInt($duration_field_id);
-    }
 }

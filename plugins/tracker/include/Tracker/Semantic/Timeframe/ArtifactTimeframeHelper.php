@@ -69,7 +69,7 @@ class ArtifactTimeframeHelper
             return false;
         }
 
-        return $timeframe_semantic->isDurationField($field) || $timeframe_semantic->isEndDateField($field);
+        return $field->getId() !== $start_date_field->getId() && $timeframe_semantic->isUsedInSemantics($field);
     }
 
     public function getEndDateArtifactHelperForReadOnlyView(PFUser $user, Artifact $artifact): string

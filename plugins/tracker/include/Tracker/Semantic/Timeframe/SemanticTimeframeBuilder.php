@@ -50,7 +50,7 @@ class SemanticTimeframeBuilder
     {
         $row = $this->dao->searchByTrackerId((int) $tracker->getId());
         if ($row === null) {
-            return new SemanticTimeframe($tracker, null, null, null);
+            return new SemanticTimeframe($tracker, new TimeframeNotConfigured());
         }
 
         $start_date_field = $this->form_element_factory->getUsedDateFieldById(
@@ -58,25 +58,27 @@ class SemanticTimeframeBuilder
             (int) $row['start_date_field_id']
         );
 
-        $duration_field = null;
-        if ($row['duration_field_id'] !== null) {
+        if ($start_date_field !== null && $row['duration_field_id'] !== null) {
             $duration_field = $this->form_element_factory->getUsedFieldByIdAndType(
                 $tracker,
                 (int) $row['duration_field_id'],
                 ['int', 'float', 'computed']
             );
-            assert($duration_field === null || $duration_field instanceof Tracker_FormElement_Field_Numeric);
+            assert($duration_field instanceof Tracker_FormElement_Field_Numeric);
+
+            return new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date_field, $duration_field));
         }
 
-        $end_date_field = null;
-        if ($row['end_date_field_id'] !== null) {
+        if ($start_date_field !== null && $row['end_date_field_id'] !== null) {
             $end_date_field = $this->form_element_factory->getUsedDateFieldById(
                 $tracker,
                 (int) $row['end_date_field_id']
             );
-            assert($end_date_field === null || $end_date_field instanceof Tracker_FormElement_Field_Date);
+            assert($end_date_field instanceof Tracker_FormElement_Field_Date);
+
+            return new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
         }
 
-        return new SemanticTimeframe($tracker, $start_date_field, $duration_field, $end_date_field);
+        return new SemanticTimeframe($tracker, new TimeframeNotConfigured());
     }
 }

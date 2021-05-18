@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
 
-class SemanticTimeframeWithEndDateRepresentation
+class SemanticTimeframeWithEndDateRepresentation implements IRepresentSemanticTimeframe
 {
     /**
      * @var int
@@ -36,7 +37,7 @@ class SemanticTimeframeWithEndDateRepresentation
      */
     public $end_date_field_id;
 
-    public function build(int $start_date_field_id, int $end_date_field_id): void
+    public function __construct(int $start_date_field_id, int $end_date_field_id)
     {
         $this->start_date_field_id = JsonCast::toInt($start_date_field_id);
         $this->end_date_field_id   = JsonCast::toInt($end_date_field_id);

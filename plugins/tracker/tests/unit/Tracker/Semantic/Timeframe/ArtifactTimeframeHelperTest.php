@@ -50,18 +50,17 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
-        $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $tracker                    = Mockery::mock(\Tracker::class);
         $semantic                   = Mockery::mock(SemanticTimeframe::class);
-        $start_date_field           = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field           = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getId' => 1001]);
 
         $duration_field->shouldReceive('getTracker')->andReturn($tracker);
         $semantic_timeframe_builder->shouldReceive('getSemantic')->with($tracker)->andReturn($semantic);
         $semantic->shouldReceive('isDefined')->andReturnTrue();
-        $semantic->shouldReceive('isDurationField')->andReturnFalse();
-        $semantic->shouldReceive('isEndDateField')->andReturnFalse();
+        $semantic->shouldReceive('isUsedInSemantics')->with($duration_field)->andReturnFalse();
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
-        $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnFalse();
+        $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
         $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
 
@@ -81,7 +80,7 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('getTracker')->andReturn($tracker);
         $semantic_timeframe_builder->shouldReceive('getSemantic')->with($tracker)->andReturn($semantic);
         $semantic->shouldReceive('isDefined')->andReturnTrue();
-        $semantic->shouldReceive('isDurationField')->andReturnTrue();
+        $semantic->shouldReceive('isUsedInSemantics')->with($duration_field)->andReturnTrue();
         $semantic->shouldReceive('isEndDateField')->andReturnFalse();
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnFalse();
@@ -96,16 +95,15 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
-        $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $tracker                    = Mockery::mock(\Tracker::class);
         $semantic                   = Mockery::mock(SemanticTimeframe::class);
-        $start_date_field           = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field           = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getId' => 1001]);
 
         $duration_field->shouldReceive('getTracker')->andReturn($tracker);
         $semantic_timeframe_builder->shouldReceive('getSemantic')->with($tracker)->andReturn($semantic);
         $semantic->shouldReceive('isDefined')->andReturnTrue();
-        $semantic->shouldReceive('isDurationField')->andReturnTrue();
-        $semantic->shouldReceive('isEndDateField')->andReturnFalse();
+        $semantic->shouldReceive('isUsedInSemantics')->with($duration_field)->andReturnTrue();
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
@@ -119,21 +117,40 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
-        $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
+        $end_date_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $tracker                    = Mockery::mock(\Tracker::class);
         $semantic                   = Mockery::mock(SemanticTimeframe::class);
-        $start_date_field           = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field           = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getId' => 1001]);
 
-        $duration_field->shouldReceive('getTracker')->andReturn($tracker);
+        $end_date_field->shouldReceive('getTracker')->andReturn($tracker);
         $semantic_timeframe_builder->shouldReceive('getSemantic')->with($tracker)->andReturn($semantic);
         $semantic->shouldReceive('isDefined')->andReturnTrue();
-        $semantic->shouldReceive('isDurationField')->andReturnFalse();
-        $semantic->shouldReceive('isEndDateField')->andReturnTrue();
+        $semantic->shouldReceive('isUsedInSemantics')->with($end_date_field)->andReturnTrue();
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
         $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
 
-        $this->assertTrue($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
+        $this->assertTrue($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $end_date_field));
+    }
+
+    public function testItShouldNotDisplayTheHelperOnStartDateField(): void
+    {
+        $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
+        $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
+        $user                       = Mockery::mock(\PFUser::class);
+        $tracker                    = Mockery::mock(\Tracker::class);
+        $semantic                   = Mockery::mock(SemanticTimeframe::class);
+        $start_date_field           = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getId' => 1001]);
+
+        $start_date_field->shouldReceive('getTracker')->andReturn($tracker);
+        $semantic_timeframe_builder->shouldReceive('getSemantic')->with($tracker)->andReturn($semantic);
+        $semantic->shouldReceive('isDefined')->andReturnTrue();
+        $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
+        $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
+
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+
+        $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $start_date_field));
     }
 }

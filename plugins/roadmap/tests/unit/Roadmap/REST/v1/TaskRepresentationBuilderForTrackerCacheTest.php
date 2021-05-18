@@ -26,6 +26,9 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\IComputeProgression;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -105,7 +108,7 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
         $tracker->method('getTitleField')->willReturn($title_field);
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
-            new SemanticTimeframe($tracker, null, null, null)
+            new SemanticTimeframe($tracker, new TimeframeNotConfigured())
         );
 
         self::assertNull($this->cache->getRepresentationBuilderForTracker($tracker, $this->user));
@@ -126,7 +129,7 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
         $end_date->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
-            new SemanticTimeframe($tracker, $start_date, null, $end_date)
+            new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date, $end_date))
         );
 
         self::assertNull($this->cache->getRepresentationBuilderForTracker($tracker, $this->user));
@@ -147,7 +150,7 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
         $end_date->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
-            new SemanticTimeframe($tracker, $start_date, null, $end_date)
+            new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date, $end_date))
         );
 
         self::assertNull($this->cache->getRepresentationBuilderForTracker($tracker, $this->user));
@@ -168,7 +171,7 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
         $duration->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
-            new SemanticTimeframe($tracker, $start_date, $duration, null)
+            new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date, $duration))
         );
 
         self::assertNull($this->cache->getRepresentationBuilderForTracker($tracker, $this->user));
@@ -193,7 +196,7 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
         $duration->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
-            new SemanticTimeframe($tracker, $start_date, $duration, null)
+            new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date, $duration))
         );
 
         self::assertInstanceOf(
@@ -226,7 +229,7 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
         $this->semantic_timeframe_builder
             ->expects(self::once())
             ->method('getSemantic')
-            ->willReturn(new SemanticTimeframe($tracker, $start_date, $duration, null));
+            ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date, $duration)));
 
         self::assertEquals(
             $this->cache->getRepresentationBuilderForTracker($tracker, $this->user),

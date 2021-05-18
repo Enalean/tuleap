@@ -22,6 +22,8 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Chart_Field_Exception;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -132,9 +134,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
                 $this->tracker,
-                $this->field_start_date,
-                null,
-                null
+                new TimeframeNotConfigured()
             )
         );
 
@@ -162,9 +162,10 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
                 $this->tracker,
-                $this->field_start_date,
-                $this->field_duration,
-                null
+                new TimeframeWithDuration(
+                    $this->field_start_date,
+                    $this->field_duration,
+                )
             )
         );
 
@@ -195,9 +196,10 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
                 $this->tracker,
-                $this->field_start_date,
-                $this->field_duration,
-                null
+                new TimeframeWithDuration(
+                    $this->field_start_date,
+                    $this->field_duration,
+                )
             )
         );
 
@@ -225,9 +227,7 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
                 $this->tracker,
-                null,
-                $this->field_duration,
-                null
+                new TimeframeNotConfigured()
             )
         );
 
@@ -256,9 +256,10 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
                 $this->tracker,
-                $this->field_start_date,
-                $this->field_duration,
-                null
+                new TimeframeWithDuration(
+                    $this->field_start_date,
+                    $this->field_duration,
+                )
             )
         );
 
@@ -289,9 +290,10 @@ class ChartConfigurationFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn(
             new SemanticTimeframe(
                 $this->tracker,
-                $this->field_start_date,
-                $this->field_duration,
-                null
+                new TimeframeWithDuration(
+                    $this->field_start_date,
+                    $this->field_duration,
+                )
             )
         );
 
