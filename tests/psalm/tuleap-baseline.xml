@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.7.1@cd53e047a58f71f646dd6bf45476076ab07b5d44">
+<files psalm-version="4.7.2@83a0325c0a95c0ab531d6b90c877068b464377b5">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <MissingReturnType occurrences="4">
       <code>buildServices</code>
@@ -490,7 +490,6 @@
     <MissingParamType occurrences="10">
       <code>$kanban_is_activated</code>
       <code>$kanban_title</code>
-      <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
@@ -3785,7 +3784,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType occurrences="82">
       <code>burning_parrot_compatible_page</code>
@@ -5661,7 +5659,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$event_retriever-&gt;getField()</code>
     </ArgumentTypeCoercion>
-    <MissingParamType occurrences="22">
+    <MissingParamType occurrences="21">
       <code>$cardwall</code>
       <code>$group_id</code>
       <code>$id</code>
@@ -5683,10 +5681,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
-      <code>$version</code>
     </MissingParamType>
-    <MissingReturnType occurrences="37">
+    <MissingReturnType occurrences="36">
       <code>agiledashboard_event_get_card_fields</code>
       <code>agiledashboard_event_index_page</code>
       <code>agiledashboard_event_is_cardwall_enabled</code>
@@ -5698,7 +5694,6 @@
       <code>agiledashboard_event_rest_resources</code>
       <code>agiledashboard_export_xml</code>
       <code>appendCardwallParameter</code>
-      <code>buildRightVersionOfMilestonesCardwallResource</code>
       <code>canIncludeStylesheets</code>
       <code>canUseStandardJavsacript</code>
       <code>cssfile</code>
@@ -6014,11 +6009,10 @@
       <code>$report_id</code>
       <code>$report_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="8">
       <code>addTrackersToReport</code>
       <code>create</code>
       <code>delete</code>
-      <code>searchCrossTrackerWidgetByCrossTrackerReportId</code>
       <code>searchReportById</code>
       <code>searchReportTrackersById</code>
       <code>searchTrackersIdUsedByCrossTrackerByProjectId</code>
@@ -6063,9 +6057,8 @@
       <code>$report</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="5">
       <code>checkQueryIsValid</code>
-      <code>checkUserIsAllowedToSeeReport</code>
       <code>getExpertQueryFromRoute</code>
       <code>optionsId</code>
       <code>sendAllowHeaders</code>
@@ -6075,11 +6068,6 @@
       <code>$this-&gt;representation_factory</code>
       <code>CrossTrackerArtifactRepresentationFactory</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVExportController.php">
-    <MissingReturnType occurrences="1">
-      <code>checkUserIsAllowedToSeeReport</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentation.php">
     <MissingReturnType occurrences="2">
@@ -11729,10 +11717,7 @@
   <file src="plugins/docman/include/Docman_Widget_Embedded.class.php">
     <DeprecatedFunction occurrences="16">
       <code>db_ei($id)</code>
-      <code>db_ei($id)</code>
       <code>db_ei($plugin_docman_widget_embedded['item_id'])</code>
-      <code>db_ei($this-&gt;owner_id)</code>
-      <code>db_ei($this-&gt;owner_id)</code>
       <code>db_ei($this-&gt;owner_id)</code>
       <code>db_ei($this-&gt;owner_id)</code>
       <code>db_ei($this-&gt;owner_id)</code>
@@ -11740,15 +11725,10 @@
       <code>db_es($this-&gt;owner_type)</code>
       <code>db_es($this-&gt;owner_type)</code>
       <code>db_es($this-&gt;owner_type)</code>
-      <code>db_es($this-&gt;owner_type)</code>
-      <code>db_es($this-&gt;owner_type)</code>
       <code>db_escape_string($plugin_docman_widget_embedded['item_id'])</code>
       <code>db_escape_string($plugin_docman_widget_embedded['title'])</code>
       <code>db_escape_string($plugin_docman_widget_embedded['title'])</code>
       <code>db_insertid($res)</code>
-      <code>db_insertid($res)</code>
-      <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -12585,7 +12565,6 @@
       <code>$nbVersions</code>
       <code>$offset</code>
       <code>$offset</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -15066,25 +15045,14 @@
       <code>db_ei($id_message)</code>
       <code>db_ei($id_message)</code>
       <code>db_ei($list_id)</code>
-      <code>db_ei($list_id)</code>
-      <code>db_ei($list_id)</code>
-      <code>db_ei($list_id)</code>
-      <code>db_ei($list_id)</code>
       <code>db_ei($topic)</code>
-      <code>db_error($result)</code>
       <code>db_error($result)</code>
       <code>db_error($result)</code>
       <code>db_es($match)</code>
       <code>db_es($msg['cached_html'])</code>
       <code>db_fetch_array($res)</code>
-      <code>db_fetch_array($res)</code>
-      <code>db_fetch_array($result)</code>
-      <code>db_fetch_array($result)</code>
       <code>db_fetch_array($result)</code>
       <code>db_numrows($res)</code>
-      <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -15096,7 +15064,6 @@
       <code>$author</code>
       <code>$body</code>
       <code>$body</code>
-      <code>$group_id</code>
       <code>$group_id</code>
       <code>$hp</code>
       <code>$id_message</code>
@@ -15110,16 +15077,10 @@
       <code>$list_id</code>
       <code>$list_id</code>
       <code>$list_id</code>
-      <code>$list_id</code>
-      <code>$list_id</code>
-      <code>$list_id</code>
       <code>$msg</code>
       <code>$p</code>
       <code>$p</code>
-      <code>$p</code>
-      <code>$p</code>
       <code>$parentId</code>
-      <code>$parents</code>
       <code>$parents</code>
       <code>$purgeCache</code>
       <code>$purgeCache</code>
@@ -15152,7 +15113,6 @@
       <code>$message</code>
     </PossiblyUndefinedVariable>
     <TooManyArguments occurrences="3">
-      <code>db_error($result)</code>
       <code>db_error($result)</code>
       <code>db_error($result)</code>
       <code>plugin_forumml_reply($hp, $msg['subject'], $msg['id_message'], $id_parent, $body, $msg['sender'], $current_user)</code>
@@ -15200,9 +15160,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$this-&gt;id</code>
     </InvalidScalarArgument>
-    <MissingReturnType occurrences="1">
-      <code>getDownloads</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/FileResource.php">
     <InvalidScalarArgument occurrences="1">
@@ -15378,7 +15335,6 @@
   <file src="plugins/frs/include/frsPlugin.php">
     <MissingParamType occurrences="4">
       <code>$id</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -17072,18 +17028,6 @@
       <code>stream</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/Git/Hook/ExtractCrossReferences.class.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$push_details-&gt;getRepository()-&gt;getProject()-&gt;getId()</code>
-      <code>$push_details-&gt;getUser()-&gt;getId()</code>
-    </InvalidScalarArgument>
-    <MissingParamType occurrences="1">
-      <code>$commit_sha1</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>execute</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/Git/Hook/LogPushes.class.php">
     <InvalidScalarArgument occurrences="1">
       <code>$push_details-&gt;getUser()-&gt;getId()</code>
@@ -18186,12 +18130,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/ReferenceManager.class.php">
-    <MissingParamType occurrences="1">
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>splitRepositoryAndSha1</code>
-    </MissingReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>$last_slash_position</code>
     </PossiblyFalseArgument>
@@ -21692,7 +21630,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$repository_retriever</code>
       <code>$repository_retriever</code>
     </MissingParamType>
@@ -22479,8 +22416,6 @@
       <code>db_ei($this-&gt;owner_id)</code>
       <code>db_ei($this-&gt;owner_id)</code>
       <code>db_ei($this-&gt;owner_id)</code>
-      <code>db_ei($this-&gt;owner_id)</code>
-      <code>db_es($this-&gt;owner_type)</code>
       <code>db_es($this-&gt;owner_type)</code>
       <code>db_es($this-&gt;owner_type)</code>
       <code>db_es($this-&gt;owner_type)</code>
@@ -22491,9 +22426,7 @@
       <code>db_escape_string($chart['title'])</code>
       <code>db_fetch_array($res)</code>
       <code>db_insertid($res)</code>
-      <code>db_insertid($res)</code>
       <code>db_numrows($res)</code>
-      <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -23361,7 +23294,6 @@
       <code>$engine</code>
       <code>$observed_field</code>
       <code>$type</code>
-      <code>$type</code>
     </MissingParamType>
     <MissingPropertyType occurrences="4">
       <code>$labels</code>
@@ -24216,8 +24148,6 @@
       <code>$job</code>
       <code>$job</code>
       <code>$job</code>
-      <code>$job_id</code>
-      <code>$job_id</code>
       <code>$job_id</code>
     </MissingParamType>
     <MissingReturnType occurrences="7">
@@ -26114,21 +26044,11 @@
       <code>process</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/mediawiki/include/mediawiki-init.php">
-    <InvalidGlobal occurrences="1">
-      <code>global $gfplugins;</code>
-    </InvalidGlobal>
-    <UndefinedFunction occurrences="1">
-      <code>register_plugin($MediaWikiPluginObject)</code>
-    </UndefinedFunction>
-  </file>
   <file src="plugins/mediawiki/include/mediawikiPlugin.php">
     <MissingParamType occurrences="33">
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -27472,7 +27392,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType occurrences="21">
       <code>approve_pending_project</code>
@@ -27498,6 +27417,53 @@
       <code>system_event_get_types_for_default_queue</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/AsynchronousCreation/CreateProgramIncrementsRunner.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $artifact_id</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/ArtifactLinkValueAdapter.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $replication_data-&gt;getArtifact()-&gt;getID()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/DescriptionValueAdapter.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $field_description_data-&gt;getId()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/EndPeriodValueAdapter.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $end_period_field_data-&gt;getId()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/ReplicationDataAdapter.php">
+    <RedundantCastGivenDocblockType occurrences="2">
+      <code>(int) $source_artifact-&gt;getId()</code>
+      <code>(int) $source_artifact-&gt;getSubmittedOn()</code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/StartDateValueValueAdapter.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $field_start_date_data-&gt;getId()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/StatusValueAdapter.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $field_status_data-&gt;getId()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/TitleFieldAdapter.php">
+    <RedundantCast occurrences="1">
+      <code>(int) $replication_tracker_data-&gt;getTrackerId()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/TitleValueAdapter.php">
+    <RedundantCast occurrences="2">
+      <code>(int) $field_title_data-&gt;getId()</code>
+      <code>(int) $field_title_data-&gt;getId()</code>
+    </RedundantCast>
+  </file>
   <file src="plugins/project_ownership/include/Notification/Sender.php">
     <MissingParamType occurrences="3">
       <code>$project_id</code>
@@ -27522,20 +27488,12 @@
       <code>hasAvatar</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/project_ownership/include/ProjectAdmin/ProjectOwnerPresenterBuilder.php">
-    <MissingReturnType occurrences="1">
-      <code>build</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/project_ownership/include/ProjectOwner/ProjectOwnerDAO.php">
     <MissingParamType occurrences="3">
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$user_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>save</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/project_ownership/include/ProjectOwner/ProjectOwnerUpdater.php">
     <InvalidScalarArgument occurrences="1">
@@ -27543,11 +27501,6 @@
     </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>updateProjectOwner</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/project_ownership/include/ProjectOwner/UserWithStarBadgeFinder.php">
-    <MissingReturnType occurrences="1">
-      <code>findBadgedUser</code>
     </MissingReturnType>
   </file>
   <file src="plugins/project_ownership/include/REST/ProjectOwnershipRepresentation.php">
@@ -27867,7 +27820,6 @@
       <code>$link_type_id</code>
       <code>$link_type_id</code>
       <code>$link_type_id</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$project</code>
@@ -29431,99 +29383,6 @@
       <code>importCompatRefXML</code>
       <code>registerExtraReferences</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/AsynchronousCreation/CreateProgramIncrementsRunner.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $artifact_id</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/ArtifactLinkValueAdapter.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $replication_data-&gt;getArtifact()-&gt;getID()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/DescriptionValueAdapter.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $field_description_data-&gt;getId()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/EndPeriodValueAdapter.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $end_period_field_data-&gt;getId()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/ReplicationDataAdapter.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $source_artifact-&gt;getId()</code>
-      <code>(int) $source_artifact-&gt;getSubmittedOn()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/Source/SourceArtifactNatureAnalyzer.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $artifact-&gt;getId()</code>
-      <code>(int) $artifact-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/StartDateValueValueAdapter.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $field_start_date_data-&gt;getId()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/StatusValueAdapter.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $field_status_data-&gt;getId()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/TitleFieldAdapter.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $replication_tracker_data-&gt;getTrackerId()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Backlog/ProgramIncrement/TitleValueAdapter.php">
-    <RedundantCast occurrences="2">
-      <code>(int) $field_title_data-&gt;getId()</code>
-      <code>(int) $field_title_data-&gt;getId()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Program/Backlog/AsynchronousCreation/ArtifactCreatedHandler.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $event-&gt;getArtifact()-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/program_management/include/Program/Backlog/ProgramIncrement/Source/Fields/Field.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $this-&gt;field-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/program_management/include/Program/Backlog/ProgramIncrement/Source/Fields/SynchronizedFieldFromProgramAndTeamTrackersCollection.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $field-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/program_management/include/Program/Backlog/ProgramIncrement/Team/TeamProjectsCollectionBuilder.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $project-&gt;getID()</code>
-    </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $row['team_project_id']</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/program_management/include/Program/Backlog/TrackerCollectionFactory.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $project-&gt;getID()</code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/program_management/include/Program/PlanningConfiguration/Planning.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $this-&gt;id</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/program_management/include/Project.php">
-    <RedundantCastGivenDocblockType occurrences="3">
-      <code>(int) $this-&gt;id</code>
-      <code>(string) $this-&gt;name</code>
-      <code>(string) $this-&gt;public_name</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">
     <UndefinedClass occurrences="5">
@@ -34355,9 +34214,6 @@
       <code>redirect</code>
       <code>redirectUrlAfterArtifactSubmission</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $artifact-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Action/CreateArtifactFromModal.class.php">
     <MissingReturnType occurrences="4">
@@ -34667,8 +34523,6 @@
       <code>$fields_data</code>
       <code>$format</code>
       <code>$hierarchy</code>
-      <code>$linked_artifact_id</code>
-      <code>$linked_artifact_id</code>
       <code>$linked_artifact_id</code>
       <code>$linked_artifact_id</code>
       <code>$parent</code>
@@ -35817,7 +35671,6 @@
     </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$nature</code>
-      <code>$nature</code>
       <code>$tracker_id</code>
     </MissingParamType>
     <MissingPropertyType occurrences="5">
@@ -36344,7 +36197,6 @@
     </MissingReturnType>
     <NullableReturnStatement occurrences="1">
       <code>null</code>
-      <code>null</code>
     </NullableReturnStatement>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_Followup_Item.class.php">
@@ -36712,12 +36564,7 @@
     <MissingClosureReturnType occurrences="1">
       <code>function () use ($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="55">
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
+    <MissingParamType occurrences="53">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -36740,17 +36587,11 @@
       <code>$limit</code>
       <code>$limit</code>
       <code>$limit</code>
-      <code>$limit</code>
-      <code>$limit</code>
-      <code>$nb_max</code>
       <code>$offset</code>
       <code>$offset</code>
       <code>$offset</code>
       <code>$offset</code>
       <code>$offset</code>
-      <code>$offset</code>
-      <code>$offset</code>
-      <code>$project_id</code>
       <code>$reverse_order</code>
       <code>$start_date</code>
       <code>$start_date</code>
@@ -37191,7 +37032,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/ClientWrapper.php">
     <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $response-&gt;getStatusCode()</code>
       <code>(int) $response-&gt;getStatusCode()</code>
     </RedundantCastGivenDocblockType>
   </file>
@@ -37715,8 +37555,6 @@
     <MissingParamType occurrences="5">
       <code>$existing_nature</code>
       <code>$existing_nature</code>
-      <code>$existing_nature</code>
-      <code>$existing_nature</code>
       <code>$nature_by_plugin</code>
       <code>$target_artifact_id</code>
       <code>$target_artifact_id</code>
@@ -37986,9 +37824,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseArgument>
-    <PossiblyFalseReference occurrences="1">
-      <code>getRow</code>
-    </PossiblyFalseReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/NatureDeletor.php">
     <MissingParamType occurrences="1">
@@ -39052,7 +38887,6 @@
       <code>$parent_id</code>
       <code>$recipient</code>
       <code>$xmlMapping</code>
-      <code>$xmlMapping</code>
     </MissingParamType>
     <MissingPropertyType occurrences="5">
       <code>$cache_permissions</code>
@@ -39298,7 +39132,6 @@
       <code>$recipient</code>
       <code>$xmlMapping</code>
       <code>$xmlMapping</code>
-      <code>$xmlMapping</code>
     </MissingParamType>
     <MissingPropertyType occurrences="2">
       <code>$formElements</code>
@@ -39439,10 +39272,9 @@
     <InvalidReturnType occurrences="1">
       <code>bool</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="16">
+    <MissingParamType occurrences="15">
       <code>$advanced_criteria</code>
       <code>$changeset_value_id</code>
-      <code>$criteria</code>
       <code>$criteria</code>
       <code>$criteria_value</code>
       <code>$csv_value</code>
@@ -39608,7 +39440,6 @@
       <code>$prefill_edited_natures</code>
       <code>$prefill_edited_natures</code>
       <code>$prefill_nature</code>
-      <code>$prefill_parent</code>
       <code>$prefill_parent</code>
       <code>$prefill_removed_values</code>
       <code>$read_only</code>
@@ -39830,7 +39661,6 @@
     </ParamNameMismatch>
     <PossiblyNullReference occurrences="4">
       <code>getId</code>
-      <code>getValue</code>
       <code>getValue</code>
       <code>getValue</code>
       <code>getValue</code>
@@ -40212,9 +40042,8 @@
     <InvalidArgument occurrences="1">
       <code>$this</code>
     </InvalidArgument>
-    <MissingParamType occurrences="28">
+    <MissingParamType occurrences="27">
       <code>$bind</code>
-      <code>$criteria</code>
       <code>$default_values</code>
       <code>$field_value_from</code>
       <code>$field_value_to</code>
@@ -40346,10 +40175,9 @@
     <MissingPropertyType occurrences="1">
       <code>$default_values</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="18">
+    <MissingReturnType occurrences="17">
       <code>addValue</code>
       <code>exportToXml</code>
-      <code>fetchDecoratorsAsJavascript</code>
       <code>getBindValues</code>
       <code>getDao</code>
       <code>getDefaultRESTValues</code>
@@ -41121,11 +40949,9 @@
       <code>$timestamp</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="6">
       <code>accept</code>
       <code>arrayContainsNone</code>
-      <code>displayArtifactJavascript</code>
-      <code>displaySubmitJavascript</code>
       <code>getCachedValue</code>
       <code>getComputedValue</code>
       <code>getCurrentValue</code>
@@ -42666,11 +42492,6 @@
       <code>warnAlreadyHaveFullAccess</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Permission/Fields/ByField/ByFieldController.php">
-    <MissingReturnType occurrences="1">
-      <code>display</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/ByField/ByFieldGroupPermissions.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $this-&gt;field-&gt;getId()</code>
@@ -42680,11 +42501,6 @@
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$tracker-&gt;getGroupId()</code>
     </PossiblyInvalidPropertyAssignmentValue>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Permission/Fields/ByGroup/ByGroupController.php">
-    <MissingReturnType occurrences="1">
-      <code>display</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/ByGroup/ByGroupFieldsPermissions.php">
     <MissingPropertyType occurrences="2">
@@ -46705,13 +46521,12 @@
       <code>$this-&gt;tracker-&gt;id</code>
       <code>$this-&gt;tracker-&gt;id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="20">
+    <MissingReturnType occurrences="19">
       <code>deleteRulesBySourceTarget</code>
       <code>displayCheckbox</code>
       <code>displayChooseSourceAndTarget</code>
       <code>displayDefineDependencies</code>
       <code>displayDependenciesMatrix</code>
-      <code>displayRulesAsJavascript</code>
       <code>fieldHasSource</code>
       <code>fieldHasTarget</code>
       <code>fieldIsAForbiddenSource</code>
@@ -48740,7 +48555,6 @@
       <code>$att</code>
       <code>$extraction_path</code>
       <code>$extraction_path</code>
-      <code>$extraction_path</code>
       <code>$filepath</code>
       <code>$tracker_id</code>
     </MissingParamType>
@@ -49299,7 +49113,6 @@
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="2">
       <code>Workflow_Transition_ConditionsCollection</code>
-      <code>int</code>
       <code>int</code>
     </InvalidReturnType>
     <MissingPropertyType occurrences="2">
@@ -54339,6 +54152,394 @@
       <code>$description</code>
     </MissingPropertyType>
   </file>
+  <file src="src/common/Plugin/EventPluginCache.php">
+    <MissingParamType occurrences="1">
+      <code>$an_array</code>
+    </MissingParamType>
+  </file>
+  <file src="src/common/Plugin/EventPluginCacheInfo.php">
+    <MissingParamType occurrences="5">
+      <code>$an_array</code>
+      <code>$callback</code>
+      <code>$event</code>
+      <code>$plugin_id</code>
+      <code>$recall_event</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$callback</code>
+      <code>$event</code>
+      <code>$plugin_id</code>
+      <code>$recall_event</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Plugin/Plugin.php">
+    <MissingParamType occurrences="5">
+      <code>$group_id</code>
+      <code>$hook</code>
+      <code>$is_custom</code>
+      <code>$is_restricted</code>
+      <code>$name</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$filesystem_path</code>
+      <code>$id</code>
+      <code>$pluginInfo</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="22">
+      <code>_getPluginPath</code>
+      <code>_getThemePath</code>
+      <code>addServiceForProject</code>
+      <code>currentRequestIsForPlugin</code>
+      <code>deduceCallbackFromHook</code>
+      <code>getAdministrationOptions</code>
+      <code>getEtcTemplatesPath</code>
+      <code>getHooksAndCallbacks</code>
+      <code>getId</code>
+      <code>getPluginEtcRoot</code>
+      <code>getPluginInfo</code>
+      <code>getThemePath</code>
+      <code>isAllowed</code>
+      <code>isCustom</code>
+      <code>postInstall</code>
+      <code>removeOrphanWidgets</code>
+      <code>services_allowed_for_project</code>
+      <code>setAvailable</code>
+      <code>setIsCustom</code>
+      <code>setIsRestricted</code>
+      <code>setName</code>
+      <code>uninstall</code>
+    </MissingReturnType>
+    <RedundantPropertyInitializationCheck occurrences="1">
+      <code>isset($this-&gt;name)</code>
+    </RedundantPropertyInitializationCheck>
+  </file>
+  <file src="src/common/Plugin/PluginCacheInfo.php">
+    <MissingParamType occurrences="5">
+      <code>$class</code>
+      <code>$id</code>
+      <code>$is_restricted</code>
+      <code>$name</code>
+      <code>$path</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="5">
+      <code>$class</code>
+      <code>$id</code>
+      <code>$is_restricted</code>
+      <code>$name</code>
+      <code>$path</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Plugin/PluginConfigChecker.php">
+    <MissingParamType occurrences="3">
+      <code>$inc_file</code>
+      <code>$inc_file</code>
+      <code>$plugin_etc_root</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$app_user</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>checkFolder</code>
+      <code>checkFolderOwnedByAppUser</code>
+      <code>checkIncFile</code>
+      <code>checkIncFileOwnedByAppUser</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/PluginDependencySolver.php">
+    <MissingParamType occurrences="2">
+      <code>$method</code>
+      <code>$plugin_name</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>getMissingDependencies</code>
+      <code>getUnmetMissingDependencies</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/PluginDescriptor.php">
+    <MissingParamType occurrences="1">
+      <code>$path</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$description</code>
+      <code>$name</code>
+      <code>$version</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>getDescription</code>
+      <code>getFullName</code>
+      <code>getVersion</code>
+      <code>setVersionFromFile</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/PluginFactory.php">
+    <InvalidArgument occurrences="1">
+      <code>$this-&gt;getProject($project_id)</code>
+    </InvalidArgument>
+    <InvalidReturnStatement occurrences="1">
+      <code>isset($this-&gt;retrieved_plugins['available'][$plugin-&gt;getId()])</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>true</code>
+    </InvalidReturnType>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$plugin</code>
+    </LessSpecificReturnStatement>
+    <MissingParamType occurrences="35">
+      <code>$class_path</code>
+      <code>$criteria</code>
+      <code>$file_name</code>
+      <code>$file_name</code>
+      <code>$file_name</code>
+      <code>$file_path</code>
+      <code>$id</code>
+      <code>$id</code>
+      <code>$map</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$row</code>
+      <code>$usage</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$instance</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="31">
+      <code>_getClassNameForPluginName</code>
+      <code>_getCustomPluginsRoot</code>
+      <code>_getInstancePlugin</code>
+      <code>_getOfficialPluginsRoot</code>
+      <code>addProjectForPlugin</code>
+      <code>availablePlugin</code>
+      <code>classIsCustom</code>
+      <code>clearInstance</code>
+      <code>delProjectForPlugin</code>
+      <code>getAllPossiblePluginsDir</code>
+      <code>getAvailablePluginsWithoutOrder</code>
+      <code>getClassName</code>
+      <code>getClassPath</code>
+      <code>getNameForPlugin</code>
+      <code>getNotYetInstalledPlugins</code>
+      <code>getOfficialPluginPaths</code>
+      <code>getPluginById</code>
+      <code>getPluginByName</code>
+      <code>getPluginClassPath</code>
+      <code>getProjectsByPluginId</code>
+      <code>includeIfExists</code>
+      <code>isPluginAllowedForProject</code>
+      <code>isPluginInstalled</code>
+      <code>isProjectPluginRestricted</code>
+      <code>loadClass</code>
+      <code>pluginIsCustom</code>
+      <code>removePlugin</code>
+      <code>restrictProjectPluginUse</code>
+      <code>truncateProjectPlugin</code>
+      <code>tryPluginPaths</code>
+      <code>unavailablePlugin</code>
+    </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>Plugin</code>
+    </MoreSpecificReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>null</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/common/Plugin/PluginFileInfo.php">
+    <MissingParamType occurrences="4">
+      <code>$content</code>
+      <code>$incname</code>
+      <code>$name</code>
+      <code>$path</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="6">
+      <code>checkConfigurationFiles</code>
+      <code>cleanContentFromClosingPHPTag</code>
+      <code>getDefaultConfPath</code>
+      <code>getPropVal</code>
+      <code>loadProperties</code>
+      <code>saveProperties</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/PluginInfo.php">
+    <MissingParamType occurrences="4">
+      <code>$descriptor</code>
+      <code>$descriptor</code>
+      <code>$descriptor</code>
+      <code>$name</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$plugin</code>
+      <code>$pluginDescriptor</code>
+      <code>$propertyDescriptors</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="7">
+      <code>_addPropertyDescriptor</code>
+      <code>_removePropertyDescriptor</code>
+      <code>getPropertyDescriptorForName</code>
+      <code>getPropertyDescriptors</code>
+      <code>loadProperties</code>
+      <code>saveProperties</code>
+      <code>setPluginDescriptor</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/PluginLoader.php">
+    <MissingClosureParamType occurrences="2">
+      <code>$event</code>
+      <code>$params</code>
+    </MissingClosureParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$listener-&gt;callback</code>
+      <code>$listener-&gt;event</code>
+      <code>$listener-&gt;plugin_id</code>
+      <code>$listener-&gt;recall_event</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="5">
+      <code>getHooksCacheFile</code>
+      <code>getHooksOfAvailablePlugins</code>
+      <code>invalidateCache</code>
+      <code>loadPlugins</code>
+      <code>restoreOwnershipOnCacheFile</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/PluginManager.php">
+    <MissingParamType occurrences="31">
+      <code>$action</code>
+      <code>$content</code>
+      <code>$destination</code>
+      <code>$file</code>
+      <code>$id</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$plugin</code>
+      <code>$projectId</code>
+      <code>$projectIds</code>
+      <code>$projectIds</code>
+      <code>$projectIds</code>
+      <code>$restricted</code>
+      <code>$source</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$pluginHookPriorityManager</code>
+      <code>$plugins_name</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="31">
+      <code>_createEtc</code>
+      <code>_updateProjectForPlugin</code>
+      <code>addProjectForPlugin</code>
+      <code>availablePlugin</code>
+      <code>clearInstance</code>
+      <code>configureForgeUpgrade</code>
+      <code>copyDirectory</code>
+      <code>delProjectForPlugin</code>
+      <code>getAllPlugins</code>
+      <code>getAllowedProjects</code>
+      <code>getAvailablePluginByName</code>
+      <code>getAvailablePlugins</code>
+      <code>getEscapedReadme</code>
+      <code>getInstallReadme</code>
+      <code>getNameForPlugin</code>
+      <code>getNotYetInstalledPlugins</code>
+      <code>getPluginById</code>
+      <code>getPluginByName</code>
+      <code>getPostInstall</code>
+      <code>installAndActivate</code>
+      <code>installPlugin</code>
+      <code>isNameValid</code>
+      <code>isPluginAllowedForProject</code>
+      <code>isPluginAvailable</code>
+      <code>isProjectPluginRestricted</code>
+      <code>pluginIsCustom</code>
+      <code>setInstance</code>
+      <code>unavailablePlugin</code>
+      <code>uninstallForgeUpgrade</code>
+      <code>uninstallPlugin</code>
+      <code>updateProjectPluginRestriction</code>
+    </MissingReturnType>
+    <UndefinedVariable occurrences="2">
+      <code>$prjId</code>
+      <code>$prjId</code>
+    </UndefinedVariable>
+  </file>
+  <file src="src/common/Plugin/PluginResourceRestrictor.php">
+    <MissingParamType occurrences="1">
+      <code>$project_id</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="8">
+      <code>allowProjectOnPlugin</code>
+      <code>isPluginAllowedForProject</code>
+      <code>isPluginRestricted</code>
+      <code>revokeAllProjectsFromPlugin</code>
+      <code>revokeProjectsFromPlugin</code>
+      <code>searchAllowedProjectsOnPlugin</code>
+      <code>setPluginRestricted</code>
+      <code>unsetPluginRestricted</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/SerializedPluginProxy.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>new $class($id)</code>
+    </LessSpecificReturnStatement>
+    <MissingParamType occurrences="6">
+      <code>$class</code>
+      <code>$event_name</code>
+      <code>$id</code>
+      <code>$id</code>
+      <code>$path</code>
+      <code>$plugin_id</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$this-&gt;plugin_map[$id]-&gt;class</code>
+      <code>$this-&gt;plugin_map[$id]-&gt;is_restricted</code>
+      <code>$this-&gt;plugin_map[$id]-&gt;name</code>
+      <code>$this-&gt;plugin_map[$id]-&gt;path</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>addListener</code>
+      <code>getSerializablePluginCache</code>
+      <code>isPluginAvailableById</code>
+      <code>loadPluginFiles</code>
+    </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>\Plugin</code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="src/common/Project/Admin/Categories/CategoryCollection.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $root_id</code>
@@ -58030,8 +58231,7 @@
       <code>$referenceDao</code>
       <code>$tmpGroupIdForCallbackFunction</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="44">
-      <code>_buildReference</code>
+    <MissingReturnType occurrences="43">
       <code>_extractMatches</code>
       <code>_getCrossReferenceDao</code>
       <code>_getReferenceInstanceFromMatch</code>
@@ -59149,15 +59349,13 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/Password/PasswordValidatorPresenter.php">
-    <MissingParamType occurrences="3">
+    <MissingParamType occurrences="2">
       <code>$description</code>
       <code>$key</code>
-      <code>$regexp</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="3">
+    <MissingPropertyType occurrences="2">
       <code>$description</code>
       <code>$key</code>
-      <code>$regexp</code>
     </MissingPropertyType>
   </file>
   <file src="src/common/User/Password/Reset/Creator.php">
@@ -60913,20 +61111,6 @@
       <code>extra_plugin_field</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/account/TimezonesCollection.class.php">
-    <MissingParamType occurrences="2">
-      <code>$current_timezone</code>
-      <code>$timezone</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$timezones</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>getTimezonePresenters</code>
-      <code>getTimezones</code>
-      <code>isValidTimezone</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/admin/AdminPageRenderer.php">
     <MissingParamType occurrences="14">
       <code>$is_framed</code>
@@ -61078,9 +61262,6 @@
     <MissingParamType occurrences="1">
       <code>$language_id</code>
     </MissingParamType>
-    <PossiblyFalseReference occurrences="1">
-      <code>getRow</code>
-    </PossiblyFalseReference>
   </file>
   <file src="src/common/admin/Homepage/HeadlinePresenter.php">
     <MissingParamType occurrences="2">
@@ -62854,7 +63035,6 @@
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$project_id</code>
       <code>$project_name</code>
       <code>$project_status</code>
       <code>$shortname</code>
@@ -63143,16 +63323,6 @@
       <code>$user_id</code>
       <code>$user_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
-      <code>create</code>
-      <code>deleteAllSessionsByUserIdButTheCurrentOne</code>
-      <code>deleteSessionById</code>
-      <code>deleteSessionByUserId</code>
-      <code>searchById</code>
-    </MissingReturnType>
-    <PossiblyFalseReference occurrences="1">
-      <code>getRow</code>
-    </PossiblyFalseReference>
   </file>
   <file src="src/common/dao/SvnCommitsDao.class.php">
     <MissingParamType occurrences="5">
@@ -64309,7 +64479,6 @@
       <code>$this-&gt;_group</code>
       <code>$this-&gt;_group</code>
       <code>$this-&gt;_line</code>
-      <code>$this-&gt;_line</code>
       <code>$this-&gt;_tag</code>
       <code>$this-&gt;_tag</code>
     </UndefinedThisPropertyFetch>
@@ -64523,11 +64692,10 @@
       <code>$instance</code>
       <code>$validator</code>
     </MissingParamType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>_get</code>
       <code>clearInstance</code>
       <code>getScheme</code>
-      <code>isFromTrustedProxy</code>
       <code>isOriginalProtocolSecure</code>
       <code>reverseProxyForwardsOriginalProtocol</code>
       <code>setInstance</code>
@@ -65281,7 +65449,6 @@
       <code>warning_for_services_which_configuration_is_not_inherited</code>
     </MissingReturnType>
     <NullArgument occurrences="3">
-      <code>null</code>
       <code>null</code>
       <code>null</code>
       <code>null</code>
@@ -66204,394 +66371,6 @@
     <MissingReturnType occurrences="1">
       <code>getUGroupIdAccordingToMapping</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/EventPluginCache.php">
-    <MissingParamType occurrences="1">
-      <code>$an_array</code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/plugin/EventPluginCacheInfo.php">
-    <MissingParamType occurrences="5">
-      <code>$an_array</code>
-      <code>$callback</code>
-      <code>$event</code>
-      <code>$plugin_id</code>
-      <code>$recall_event</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$callback</code>
-      <code>$event</code>
-      <code>$plugin_id</code>
-      <code>$recall_event</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/plugin/Plugin.class.php">
-    <MissingParamType occurrences="5">
-      <code>$group_id</code>
-      <code>$hook</code>
-      <code>$is_custom</code>
-      <code>$is_restricted</code>
-      <code>$name</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$filesystem_path</code>
-      <code>$id</code>
-      <code>$pluginInfo</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="22">
-      <code>_getPluginPath</code>
-      <code>_getThemePath</code>
-      <code>addServiceForProject</code>
-      <code>currentRequestIsForPlugin</code>
-      <code>deduceCallbackFromHook</code>
-      <code>getAdministrationOptions</code>
-      <code>getEtcTemplatesPath</code>
-      <code>getHooksAndCallbacks</code>
-      <code>getId</code>
-      <code>getPluginEtcRoot</code>
-      <code>getPluginInfo</code>
-      <code>getThemePath</code>
-      <code>isAllowed</code>
-      <code>isCustom</code>
-      <code>postInstall</code>
-      <code>removeOrphanWidgets</code>
-      <code>services_allowed_for_project</code>
-      <code>setAvailable</code>
-      <code>setIsCustom</code>
-      <code>setIsRestricted</code>
-      <code>setName</code>
-      <code>uninstall</code>
-    </MissingReturnType>
-    <RedundantPropertyInitializationCheck occurrences="1">
-      <code>isset($this-&gt;name)</code>
-    </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="src/common/plugin/PluginCacheInfo.php">
-    <MissingParamType occurrences="5">
-      <code>$class</code>
-      <code>$id</code>
-      <code>$is_restricted</code>
-      <code>$name</code>
-      <code>$path</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="5">
-      <code>$class</code>
-      <code>$id</code>
-      <code>$is_restricted</code>
-      <code>$name</code>
-      <code>$path</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/plugin/PluginConfigChecker.php">
-    <MissingParamType occurrences="3">
-      <code>$inc_file</code>
-      <code>$inc_file</code>
-      <code>$plugin_etc_root</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$app_user</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>checkFolder</code>
-      <code>checkFolderOwnedByAppUser</code>
-      <code>checkIncFile</code>
-      <code>checkIncFileOwnedByAppUser</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/PluginDependencySolver.class.php">
-    <MissingParamType occurrences="2">
-      <code>$method</code>
-      <code>$plugin_name</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>getMissingDependencies</code>
-      <code>getUnmetMissingDependencies</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/PluginDescriptor.class.php">
-    <MissingParamType occurrences="1">
-      <code>$path</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$description</code>
-      <code>$name</code>
-      <code>$version</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>getDescription</code>
-      <code>getFullName</code>
-      <code>getVersion</code>
-      <code>setVersionFromFile</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/PluginFactory.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;getProject($project_id)</code>
-    </InvalidArgument>
-    <InvalidReturnStatement occurrences="1">
-      <code>isset($this-&gt;retrieved_plugins['available'][$plugin-&gt;getId()])</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
-    <LessSpecificReturnStatement occurrences="1">
-      <code>$plugin</code>
-    </LessSpecificReturnStatement>
-    <MissingParamType occurrences="35">
-      <code>$class_path</code>
-      <code>$criteria</code>
-      <code>$file_name</code>
-      <code>$file_name</code>
-      <code>$file_name</code>
-      <code>$file_path</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$map</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$row</code>
-      <code>$usage</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$instance</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="31">
-      <code>_getClassNameForPluginName</code>
-      <code>_getCustomPluginsRoot</code>
-      <code>_getInstancePlugin</code>
-      <code>_getOfficialPluginsRoot</code>
-      <code>addProjectForPlugin</code>
-      <code>availablePlugin</code>
-      <code>classIsCustom</code>
-      <code>clearInstance</code>
-      <code>delProjectForPlugin</code>
-      <code>getAllPossiblePluginsDir</code>
-      <code>getAvailablePluginsWithoutOrder</code>
-      <code>getClassName</code>
-      <code>getClassPath</code>
-      <code>getNameForPlugin</code>
-      <code>getNotYetInstalledPlugins</code>
-      <code>getOfficialPluginPaths</code>
-      <code>getPluginById</code>
-      <code>getPluginByName</code>
-      <code>getPluginClassPath</code>
-      <code>getProjectsByPluginId</code>
-      <code>includeIfExists</code>
-      <code>isPluginAllowedForProject</code>
-      <code>isPluginInstalled</code>
-      <code>isProjectPluginRestricted</code>
-      <code>loadClass</code>
-      <code>pluginIsCustom</code>
-      <code>removePlugin</code>
-      <code>restrictProjectPluginUse</code>
-      <code>truncateProjectPlugin</code>
-      <code>tryPluginPaths</code>
-      <code>unavailablePlugin</code>
-    </MissingReturnType>
-    <MoreSpecificReturnType occurrences="1">
-      <code>Plugin</code>
-    </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>null</code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/common/plugin/PluginFileInfo.class.php">
-    <MissingParamType occurrences="4">
-      <code>$content</code>
-      <code>$incname</code>
-      <code>$name</code>
-      <code>$path</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="6">
-      <code>checkConfigurationFiles</code>
-      <code>cleanContentFromClosingPHPTag</code>
-      <code>getDefaultConfPath</code>
-      <code>getPropVal</code>
-      <code>loadProperties</code>
-      <code>saveProperties</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/PluginInfo.class.php">
-    <MissingParamType occurrences="4">
-      <code>$descriptor</code>
-      <code>$descriptor</code>
-      <code>$descriptor</code>
-      <code>$name</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$plugin</code>
-      <code>$pluginDescriptor</code>
-      <code>$propertyDescriptors</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="7">
-      <code>_addPropertyDescriptor</code>
-      <code>_removePropertyDescriptor</code>
-      <code>getPropertyDescriptorForName</code>
-      <code>getPropertyDescriptors</code>
-      <code>loadProperties</code>
-      <code>saveProperties</code>
-      <code>setPluginDescriptor</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/PluginLoader.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$event</code>
-      <code>$params</code>
-    </MissingClosureParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$listener-&gt;callback</code>
-      <code>$listener-&gt;event</code>
-      <code>$listener-&gt;plugin_id</code>
-      <code>$listener-&gt;recall_event</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="5">
-      <code>getHooksCacheFile</code>
-      <code>getHooksOfAvailablePlugins</code>
-      <code>invalidateCache</code>
-      <code>loadPlugins</code>
-      <code>restoreOwnershipOnCacheFile</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/PluginManager.class.php">
-    <MissingParamType occurrences="31">
-      <code>$action</code>
-      <code>$content</code>
-      <code>$destination</code>
-      <code>$file</code>
-      <code>$id</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$projectId</code>
-      <code>$projectIds</code>
-      <code>$projectIds</code>
-      <code>$projectIds</code>
-      <code>$restricted</code>
-      <code>$source</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$pluginHookPriorityManager</code>
-      <code>$plugins_name</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="31">
-      <code>_createEtc</code>
-      <code>_updateProjectForPlugin</code>
-      <code>addProjectForPlugin</code>
-      <code>availablePlugin</code>
-      <code>clearInstance</code>
-      <code>configureForgeUpgrade</code>
-      <code>copyDirectory</code>
-      <code>delProjectForPlugin</code>
-      <code>getAllPlugins</code>
-      <code>getAllowedProjects</code>
-      <code>getAvailablePluginByName</code>
-      <code>getAvailablePlugins</code>
-      <code>getEscapedReadme</code>
-      <code>getInstallReadme</code>
-      <code>getNameForPlugin</code>
-      <code>getNotYetInstalledPlugins</code>
-      <code>getPluginById</code>
-      <code>getPluginByName</code>
-      <code>getPostInstall</code>
-      <code>installAndActivate</code>
-      <code>installPlugin</code>
-      <code>isNameValid</code>
-      <code>isPluginAllowedForProject</code>
-      <code>isPluginAvailable</code>
-      <code>isProjectPluginRestricted</code>
-      <code>pluginIsCustom</code>
-      <code>setInstance</code>
-      <code>unavailablePlugin</code>
-      <code>uninstallForgeUpgrade</code>
-      <code>uninstallPlugin</code>
-      <code>updateProjectPluginRestriction</code>
-    </MissingReturnType>
-    <UndefinedVariable occurrences="2">
-      <code>$prjId</code>
-      <code>$prjId</code>
-    </UndefinedVariable>
-  </file>
-  <file src="src/common/plugin/PluginResourceRestrictor.class.php">
-    <MissingParamType occurrences="1">
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="8">
-      <code>allowProjectOnPlugin</code>
-      <code>isPluginAllowedForProject</code>
-      <code>isPluginRestricted</code>
-      <code>revokeAllProjectsFromPlugin</code>
-      <code>revokeProjectsFromPlugin</code>
-      <code>searchAllowedProjectsOnPlugin</code>
-      <code>setPluginRestricted</code>
-      <code>unsetPluginRestricted</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/plugin/SerializedPluginProxy.php">
-    <LessSpecificReturnStatement occurrences="1">
-      <code>new $class($id)</code>
-    </LessSpecificReturnStatement>
-    <MissingParamType occurrences="6">
-      <code>$class</code>
-      <code>$event_name</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$path</code>
-      <code>$plugin_id</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$this-&gt;plugin_map[$id]-&gt;class</code>
-      <code>$this-&gt;plugin_map[$id]-&gt;is_restricted</code>
-      <code>$this-&gt;plugin_map[$id]-&gt;name</code>
-      <code>$this-&gt;plugin_map[$id]-&gt;path</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>addListener</code>
-      <code>getSerializablePluginCache</code>
-      <code>isPluginAvailableById</code>
-      <code>loadPluginFiles</code>
-    </MissingReturnType>
-    <MoreSpecificReturnType occurrences="1">
-      <code>\Plugin</code>
-    </MoreSpecificReturnType>
   </file>
   <file src="src/common/realTime/Client.php">
     <MissingReturnType occurrences="1">
@@ -73466,6 +73245,7 @@
   </file>
   <file src="src/common/wiki/lib/WikiEntry.class.php">
     <DeprecatedFunction occurrences="29">
+      <code>db_affected_rows($res)</code>
       <code>db_ei($gid)</code>
       <code>db_ei($this-&gt;gid)</code>
       <code>db_ei($this-&gt;gid)</code>
@@ -73539,7 +73319,7 @@
     </MissingReturnType>
   </file>
   <file src="src/common/wiki/lib/WikiPage.class.php">
-    <DeprecatedFunction occurrences="39">
+    <DeprecatedFunction occurrences="36">
       <code>db_ei($this-&gt;id)</code>
       <code>db_ei($this-&gt;id)</code>
       <code>db_ei($this-&gt;id)</code>
@@ -73550,11 +73330,9 @@
       <code>db_ei(self::$gid)</code>
       <code>db_ei(self::$gid)</code>
       <code>db_ei(self::$gid)</code>
-      <code>db_ei(self::$gid)</code>
       <code>db_ei(time())</code>
       <code>db_es($admin_page)</code>
       <code>db_es($default_page)</code>
-      <code>db_es($excluded_page)</code>
       <code>db_es($this-&gt;pagename)</code>
       <code>db_es($this-&gt;pagename)</code>
       <code>db_fetch_array($res)</code>
@@ -73563,7 +73341,7 @@
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
-      <code>db_fetch_array($res)</code>
+      <code>db_numrows($res)</code>
       <code>db_numrows($res)</code>
       <code>db_numrows($res)</code>
       <code>db_numrows($res)</code>
@@ -74038,13 +73816,6 @@
       <code>getFieldError</code>
       <code>register_valid</code>
     </MissingReturnType>
-    <UndefinedGlobalVariable occurrences="5">
-      <code>$HTML</code>
-      <code>$HTML</code>
-      <code>$HTML</code>
-      <code>$HTML</code>
-      <code>$HTML</code>
-    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/admin/admin_utils.php">
     <MissingParamType occurrences="2">
@@ -74089,7 +73860,6 @@
   <file src="src/www/admin/index.php">
     <DeprecatedFunction occurrences="5">
       <code>db_fetch_array($res_count)</code>
-      <code>db_fetch_array()</code>
       <code>db_fetch_array()</code>
       <code>db_numrows($res_count)</code>
       <code>db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'")</code>
@@ -78392,6 +78162,12 @@
   </file>
   <file src="src/www/softwaremap/trove_list.php">
     <DeprecatedFunction occurrences="25">
+      <code>db_ei($form_cat)</code>
+      <code>db_ei($form_cat)</code>
+      <code>db_ei($form_cat)</code>
+      <code>db_ei($form_cat)</code>
+      <code>db_ei($form_cat)</code>
+      <code>db_ei_implode($prj_list_categorized)</code>
       <code>db_fetch_array($res_count)</code>
       <code>db_fetch_array($res_grp)</code>
       <code>db_fetch_array($res_nb)</code>
@@ -78408,6 +78184,7 @@
       <code>db_query($query_projlist)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
+      <code>db_query('SELECT * FROM trove_cat WHERE trove_cat_id=' . db_ei($form_cat))</code>
       <code>db_query('SELECT FOUND_ROWS() as nb')</code>
     </DeprecatedFunction>
     <UndefinedGlobalVariable occurrences="1">
@@ -78887,7 +78664,6 @@
       <code>1800</code>
     </InvalidScalarArgument>
     <MissingPropertyType occurrences="2">
-      <code>$arh-&gt;scope</code>
       <code>$arh-&gt;scope</code>
       <code>$arh-&gt;scope</code>
     </MissingPropertyType>
