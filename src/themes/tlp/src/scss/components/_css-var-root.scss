@@ -54,6 +54,7 @@
     --tlp-theme-color-transparent-85: #{transparentize($tlp-theme-color, .85)};
     --tlp-theme-color-transparent-90: #{transparentize($tlp-theme-color, .9)};
 
+    --tlp-ui-info-darker-10: #{darken($tlp-ui-info, 10%)};
     --tlp-ui-info-lighter-20: #{mix($tlp-ui-info, $tlp-ui-white, 80%)};
     --tlp-ui-info-transparent-90: #{transparentize($tlp-ui-info, .9)};
 

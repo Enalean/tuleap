@@ -38,13 +38,13 @@
 }
 
 .siteadmin-platform-banner-importance-standard {
-    @include radio($tlp-ui-info);
+    @include radio(var(--tlp-ui-info));
 }
 
 .siteadmin-platform-banner-importance-warning {
-    @include radio($tlp-ui-warning);
+    @include radio(var(--tlp-ui-warning));
 }
 
 .siteadmin-platform-banner-importance-critical {
-    @include radio($tlp-ui-danger);
+    @include radio(var(--tlp-ui-danger));
 }
