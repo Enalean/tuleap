@@ -32,12 +32,12 @@
 }
 
 .systemevents-namespace {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }
 
 .systemevents-parameters {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 14px;
 }
 
@@ -80,7 +80,7 @@
 .system-event-status-done,
 .system-event-status-warning,
 .system-event-status-error {
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     font-weight: bold;
     text-align: center;
 }

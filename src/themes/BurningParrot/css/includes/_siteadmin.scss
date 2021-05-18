@@ -49,7 +49,7 @@
 }
 
 .siteadmin-custom-site-content-empty-icon {
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: 100px;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .siteadmin-custom-site-content-keys {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }
 

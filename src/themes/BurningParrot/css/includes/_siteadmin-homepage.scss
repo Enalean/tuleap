@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'global-variables';
+
 #siteadmin-homepage-container {
     display: flex;
     align-items: flex-start;
-    padding: $top-floating-buttons-space 0 0;
+    padding: global-variables.$top-floating-buttons-space 0 0;
 }
 
 .siteadmin-homepage-column {
@@ -90,7 +92,7 @@
 
 .siteadmin-homepage-users-icon,
 .siteadmin-homepage-projects-icon {
-    fill: transparentize($tlp-theme-color, .8);
+    fill: var(--tlp-theme-color-transparent-80);
 }
 
 .siteadmin-homepage-validation-count {
@@ -99,12 +101,12 @@
     font-weight: 300;
 
     &:not(.tlp-text-warning) {
-        color: transparentize($tlp-theme-color, .8);
+        color: var(--tlp-theme-color-transparent-80);
     }
 }
 
 .siteadmin-homepage-no-validation {
-    color: transparentize($tlp-theme-color, .6);
+    color: var(--tlp-theme-color-transparent-70);
     text-align: center;
 }
 
@@ -121,7 +123,7 @@
 .siteadmin-homepage-statistics,
 .siteadmin-homepage-system-events {
     > .tlp-pane-container > .tlp-pane-section:last-child {
-        border-top: 1px solid $tlp-ui-border-light;
+        border-top: 1px solid var(--tlp-ui-border-light);
     }
 }
 
@@ -136,7 +138,7 @@
     margin: 0;
 
     > .tlp-pane-container > .tlp-pane-section:last-child {
-        border-top: 1px solid $tlp-ui-border-light;
+        border-top: 1px solid var(--tlp-ui-border-light);
     }
 }
 
@@ -145,7 +147,7 @@
     cursor: pointer;
 
     &:hover {
-        background: transparentize($tlp-theme-color, .95);
+        background: var(--tlp-theme-color-transparent-90);
     }
 }
 
@@ -163,17 +165,17 @@
     margin: var(--tlp-small-spacing) 0;
 
     &.flag-error {
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
         font-size: 50px;
     }
 
     &.flag-warning {
-        color: $tlp-ui-warning;
+        color: var(--tlp-ui-warning);
         font-size: 36px;
     }
 
     &.flag-success {
-        color: $tlp-ui-success;
+        color: var(--tlp-ui-success);
         font-size: 26px;
     }
 }
@@ -230,7 +232,7 @@
 
 .siteadmin-homepage-users-legend-text-span,
 .siteadmin-homepage-projects-legend-text-span {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
     line-height: 18px;
     cursor: default;
@@ -253,7 +255,7 @@
 
 .siteadmin-homepage-users-legend-color-active,
 .siteadmin-homepage-projects-legend-color-active {
-    background-color: $tlp-ui-success;
+    background-color: var(--tlp-ui-success);
 }
 
 .siteadmin-homepage-users-legend-color-suspended,
@@ -262,17 +264,17 @@
 }
 
 .siteadmin-homepage-users-legend-color-restricted {
-    background-color: $tlp-ui-warning;
+    background-color: var(--tlp-ui-warning);
 }
 
 .siteadmin-homepage-users-legend-color-deleted,
 .siteadmin-homepage-projects-legend-color-deleted {
-    background-color: $tlp-ui-danger;
+    background-color: var(--tlp-ui-danger);
 }
 
 .siteadmin-homepage-users-legend-color-waiting,
 .siteadmin-homepage-projects-legend-color-pending {
-    background-color: $tlp-ui-info;
+    background-color: var(--tlp-ui-info);
 }
 
 .siteadmin-homepage-users-slice-path,
@@ -293,11 +295,11 @@
 .siteadmin-homepage-users-slice-active,
 .siteadmin-homepage-projects-slice-active {
     > path {
-        fill: $tlp-ui-success;
+        fill: var(--tlp-ui-success);
     }
 
     > text {
-        fill: darken($tlp-ui-success, 10%);
+        fill: var(--tlp-ui-success-darker-10);
     }
 }
 
@@ -314,32 +316,32 @@
 
 .siteadmin-homepage-users-slice-restricted {
     > path {
-        fill: $tlp-ui-warning;
+        fill: var(--tlp-ui-warning);
     }
 
     > text {
-        fill: darken($tlp-ui-warning, 10%);
+        fill: var(--tlp-ui-warning-darker-10);
     }
 }
 
 .siteadmin-homepage-users-slice-deleted,
 .siteadmin-homepage-projects-slice-deleted {
     > path {
-        fill: $tlp-ui-danger;
+        fill: var(--tlp-ui-danger);
     }
 
     > text {
-        fill: darken($tlp-ui-danger, 10%);
+        fill: var(--tlp-ui-danger-darker-10);
     }
 }
 
 .siteadmin-homepage-users-slice-waiting,
 .siteadmin-homepage-projects-slice-pending {
     > path {
-        fill: $tlp-ui-info;
+        fill: var(--tlp-ui-info);
     }
 
     > text {
-        fill: darken($tlp-ui-info, 10%);
+        fill: var(--tlp-ui-info-darker-10);
     }
 }

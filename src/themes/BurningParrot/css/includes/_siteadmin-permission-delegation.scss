@@ -59,8 +59,8 @@
 #siteadmin-permission-delegation-group-details-users-empty,
 #siteadmin-permission-delegation-group-details-perms-empty {
     padding: var(--tlp-large-spacing);
-    background: $tlp-theme-background-color;
-    color: transparentize($tlp-theme-color, .7);
+    background: var(--tlp-theme-background-color);
+    color: var(--tlp-theme-color-transparent-70);
     font-style: italic;
     text-align: center;
 }
