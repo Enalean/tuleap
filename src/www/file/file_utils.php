@@ -406,24 +406,23 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         $type_name[$key] = $hp->purify($name, CODENDI_PURIFIER_JS_QUOTE);
     }
     $url_news = "/file/showfiles.php?group_id=" . $group_id;
-    echo '<script type="text/javascript">';
-    echo "var processor_id = ['" . implode("', '", $processor_id) . "'];";
-    echo "var processor_name = ['" . implode("', '", $processor_name) . "'];";
-    echo "var type_id = ['" . implode("', '", $type_id) . "'];";
-    echo "var type_name = ['" . implode("', '", $type_name) . "'];";
-    echo "var group_id = " . $hp->purify($group_id, CODENDI_PURIFIER_JS_QUOTE) . ";";
-    echo "var relname = '" . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var choose = '" . $hp->purify($GLOBALS['Language']->getText('file_file_utils', 'must_choose_one'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var browse = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'browse'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var local_file = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'local_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var scp_ftp_files = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'scp_ftp_files'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var upload_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var add_file_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var add_change_log_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var view_change_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'view_change'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var refresh_files_list = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'refresh_file_list'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var release_mode = '" . $hp->purify($is_update ? 'edition' : 'creation', CODENDI_PURIFIER_JS_QUOTE) . "';";
-    echo "var ftp_scp_upload_enabled = " . (ForgeConfig::areUnixGroupsAvailableOnSystem() ? 'true' : 'false') . ";";
+    $script   = "var processor_id = ['" . implode("', '", $processor_id) . "'];";
+    $script  .= "var processor_name = ['" . implode("', '", $processor_name) . "'];";
+    $script  .= "var type_id = ['" . implode("', '", $type_id) . "'];";
+    $script  .= "var type_name = ['" . implode("', '", $type_name) . "'];";
+    $script  .= "var group_id = " . $hp->purify($group_id, CODENDI_PURIFIER_JS_QUOTE) . ";";
+    $script  .= "var relname = '" . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var choose = '" . $hp->purify($GLOBALS['Language']->getText('file_file_utils', 'must_choose_one'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var browse = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'browse'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var local_file = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'local_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var scp_ftp_files = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'scp_ftp_files'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var upload_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var add_file_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var add_change_log_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var view_change_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'view_change'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var refresh_files_list = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'refresh_file_list'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var release_mode = '" . $hp->purify($is_update ? 'edition' : 'creation', CODENDI_PURIFIER_JS_QUOTE) . "';";
+    $script  .= "var ftp_scp_upload_enabled = " . (ForgeConfig::areUnixGroupsAvailableOnSystem() ? 'true' : 'false') . ";";
 
     if ($is_update) {
         $pm  = PermissionsManager::instance();
@@ -443,12 +442,12 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             }
             $ugroups_name[] = $hp->purify($project_names[$row['ugroup_id']], CODENDI_PURIFIER_JS_QUOTE);
         }
-        echo "var ugroups_name = ' " . implode(", ", $ugroups_name) . " ';";
-        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm'), CODENDI_PURIFIER_JS_QUOTE) . " ';";
+        $script .= "var ugroups_name = ' " . implode(", ", $ugroups_name) . " ';";
+        $script .= "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm'), CODENDI_PURIFIER_JS_QUOTE) . " ';";
     } else {
-        echo "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions'), CODENDI_PURIFIER_JS_QUOTE) . " ';";
+        $script .= "var default_permissions_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions'), CODENDI_PURIFIER_JS_QUOTE) . " ';";
     }
-    echo '</script>';
+    $GLOBALS['Response']->includeFooterJavascriptSnippet($script);
     //set variables for news template
     $relname = $GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname');
     if (! $is_update) {
@@ -611,9 +610,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         echo '<option value="' . $hp->purify($file) . '">' . $hp->purify($file, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
         $file_list_js[] = $hp->purify($file, CODENDI_PURIFIER_JS_QUOTE);
     }
-    echo '<script type="text/javascript">';
-    echo "var available_ftp_files = ['" . implode("', '", $file_list_js) . "'];";
-    echo '</script>';
+    $GLOBALS['Response']->includeFooterJavascriptSnippet("var available_ftp_files = ['" . implode("', '", $file_list_js) . "'];");
 
     ?>
                                 </select>
