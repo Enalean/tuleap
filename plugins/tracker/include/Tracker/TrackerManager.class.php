@@ -30,6 +30,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
 use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
@@ -973,6 +974,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             ProjectManager::instance(),
             $this->getCreationDataChecker(),
             new LegacyTrackerMigrationDao(),
+            new KeepReverseCrossReferenceDAO(),
             $mail_logger,
             new Tracker_Migration_MigrationLogger(
                 $backend_logger,
