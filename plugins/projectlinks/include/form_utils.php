@@ -296,15 +296,12 @@ function form_End(
 
     // write date code if needed, but only once
     if ($gFormUsedDateBox && (! $gPageDateCodeWritten)) {
-        print "<script type='text/javascript' language='javascript' src='/scripts/datechooser.js'></script>\n";
         $gPageDateCodeWritten = true;
     }
     // Write form validation code
-    print "<script type='text/javascript' language='javascript'>\n";
-    print "<!--\n";
-    print "function Validate" . $gFormName . "()\n";
-    print "{\n";
-    print "var result = true;\n";
+    $script         = "function Validate" . $gFormName . "()\n";
+    $script        .= "{\n";
+    $script        .= "var result = true;\n";
     $EmitEmailCode  = false;
     $EmitNumberCode = false;
     foreach ($gValidationCollection as $valItemKey => $valItem) {
@@ -325,43 +322,43 @@ function form_End(
                     . $jsItemErrEnd;
         switch ($valItem->Test) {
             case FORM_VAL_IS_NOT_ZERO_LENGTH:
-                print $jsItemPresent;
+                $script .= $jsItemPresent;
                 break;
             case FORM_VAL_IS_EMAIL:
                 $EmitEmailCode = true;
-                print $jsItemPresent;
-                print "else if (!isEmailAddr($jsItemRef))"
+                $script       .= $jsItemPresent;
+                $script       .= "else if (!isEmailAddr($jsItemRef))"
                     . $jsItemErrStart
                     . dgettext('tuleap-projectlinks', 'must be a valid email address')
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_NUMBER:
                 $EmitNumberCode = true;
-                print $jsItemPresent . " else " . $jsItemNumeric;
+                $script        .= $jsItemPresent . " else " . $jsItemNumeric;
                 break;
             case FORM_VAL_IS_LT:
                 $EmitNumberCode = true;
-                print $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef>=" . $valItem->Param . ")"
+                $script        .= $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef>=" . $valItem->Param . ")"
                     . $jsItemErrStart
                     . sprintf(dgettext('tuleap-projectlinks', 'must be less than %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_GT:
                 $EmitNumberCode = true;
-                print $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef<=" . $valItem->Param . ")"
+                $script        .= $jsItemPresent . " else " . $jsItemNumeric . " else if ($jsItemRef<=" . $valItem->Param . ")"
                     . $jsItemErrStart
                     . sprintf(dgettext('tuleap-projectlinks', 'must be greater than %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_EQ:
-                $cmp = is_string($valItem->Param) ? "'" . $valItem->Param . "'" : $valItem->Param;
-                print "if ($jsItemRef!=$cmp)"
+                $cmp     = is_string($valItem->Param) ? "'" . $valItem->Param . "'" : $valItem->Param;
+                $script .= "if ($jsItemRef!=$cmp)"
                     . $jsItemErrStart
                     . sprintf(dgettext('tuleap-projectlinks', 'must be %1$s'), $valItem->Param)
                     . $jsItemErrEnd;
                 break;
             case FORM_VAL_IS_CHECKED:
-                print "if (!" . form_JS_ElementRef($valItem->ParamName) . ".checked)"
+                $script .= "if (!" . form_JS_ElementRef($valItem->ParamName) . ".checked)"
                     . $jsItemErrStart
                     . dgettext('tuleap-projectlinks', 'must be checked')
                     . $jsItemErrEnd;
@@ -371,22 +368,21 @@ function form_End(
                 break;
         }
     }
-    print "return result;\n";
-    print "}\n";
+    $script .= "return result;\n";
+    $script .= "}\n";
     if ($EmitEmailCode) {
-        print "function isEmailAddr(str)\n";
-        print "{\n";
-        print "    return str.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/);\n";
-        print "}\n";
+        $script .= "function isEmailAddr(str)\n";
+        $script .= "{\n";
+        $script .= "    return str.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/);\n";
+        $script .= "}\n";
     }
     if ($EmitNumberCode) {
-        print "function isNumber(str)\n";
-        print "{\n";
-        print "    return str.match(/^[+-]?[0-9]+[\.]?[0-9]*$/);\n";
-        print "}\n";
+        $script .= "function isNumber(str)\n";
+        $script .= "{\n";
+        $script .= "    return str.match(/^[+-]?[0-9]+[\.]?[0-9]*$/);\n";
+        $script .= "}\n";
     }
-    print "//-->\n";
-    print "</script>\n";
+    $GLOBALS['Response']->includeFooterJavascriptSnippet($script);
     $gInForm = false;
 }
 
@@ -446,8 +442,7 @@ function form_FocusFirstTextBox()
         trigger_error("form_FocusFirstTextBox() outside of form");
     }
     if (strlen($gFirstFormTextBox) > 0) {
-        print "<script type='text/javascript' language='javascript'>" .
-            form_JS_ElementRef($gFirstFormTextBox) . ".focus();</script>\n";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet(form_JS_ElementRef($gFirstFormTextBox) . ".focus();");
     }
 }
 
@@ -628,19 +623,16 @@ function form_SelectAllCheckbox($GroupName = "", $isChecked = false)
     if (! $gFormSelectAllCodeWritten) {
         $gFormSelectAllCodeWritten = true;
 
-        print "<script type='text/javascript' language='javascript'>\n";
-        print "<!--\n";
-        print "function formSelectDeselectAll(_element, formname, elementname)\n";
-        print "{\n";
-        print " var el = document.forms[formname].elements;\n";
-        print " for (var i = 0; i < el.length; i++) {\n";
-        print "  if (el[i] != _element && el[i].type == 'checkbox' && ((el[i].name == elementname) ||(elementname == ''))) {\n";
-        print "   el[i].checked = _element.checked;\n";
-        print "  }\n";
-        print " }\n";
-        print "}\n";
-        print "//-->\n";
-        print "</script>\n";
+        $script  = "function formSelectDeselectAll(_element, formname, elementname)\n";
+        $script .= "{\n";
+        $script .= " var el = document.forms[formname].elements;\n";
+        $script .= " for (var i = 0; i < el.length; i++) {\n";
+        $script .= "  if (el[i] != _element && el[i].type == 'checkbox' && ((el[i].name == elementname) ||(elementname == ''))) {\n";
+        $script .= "   el[i].checked = _element.checked;\n";
+        $script .= "  }\n";
+        $script .= " }\n";
+        $script .= "}\n";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($script);
     }
     print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'" . ($isChecked ? " CHECKED" : "") . " Title='" . dgettext('tuleap-projectlinks', 'Select All') . "'>\n";
 }
@@ -982,8 +974,6 @@ function form_TableEnd()
 function form_JS_ElementRef($Elementname)
 {
     // Used to reference a (current) form item in javascript, e.g.:
-    //
-    //     print "<script type='text/javascript'>".form_JS_ElementRef("item_name").".value=3;</script>";
     global $gFormName, $gInForm;
 
     if (! $gInForm) {
