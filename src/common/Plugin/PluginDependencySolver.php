@@ -21,7 +21,7 @@
 /**
  * This class is responsible of detecting if there are unmet dependencies in plugin
  */
-class PluginDependencySolver
+class PluginDependencySolver // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     /** @var PluginManager */
@@ -56,6 +56,8 @@ class PluginDependencySolver
      * Get plugin names that should already be installed for the given plugin name
      *
      * @return array of strings
+     *
+     * @throws \Tuleap\Plugin\InvalidPluginNameException
      */
     public function getUnmetInstalledDependencies($plugin_name)
     {

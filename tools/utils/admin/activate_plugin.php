@@ -27,4 +27,6 @@ if ($sys_user !== 'codendiadm') {
     exit(1);
 }
 
+fwrite(STDERR, 'This command is deprecated, you should use `tuleap plugin:install` instead' . PHP_EOL);
+
 PluginManager::instance()->installAndActivate($argv[1]);

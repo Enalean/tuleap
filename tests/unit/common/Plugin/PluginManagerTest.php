@@ -135,18 +135,19 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInstallPlugin(): void
     {
         $root = \org\bovigo\vfs\vfsStream::setup()->url();
-        ForgeConfig::set('sys_pluginsroot', $root . '/test/custom/');
-        ForgeConfig::set('sys_custompluginsroot', $root . '/test/custom/');
+        ForgeConfig::set('sys_pluginsroot', $root . '/usr/share/tuleap/plugins');
+        ForgeConfig::set('sys_custompluginsroot', $root . '/etc/tuleap/plugins');
 
-        mkdir($root . '/test');
-        mkdir($root . '/test/custom');
+        mkdir($root . '/usr/share/tuleap/plugins', 0755, true);
+        mkdir($root . '/etc/tuleap/plugins', 0755, true);
 
         //The plugins
-        $plugin = \Mockery::spy(\Plugin::class);
+        $plugin = \Mockery::spy(\Plugin::class, ['getDependencies' => []]);
 
         //The plugin factory
         $plugin_factory = \Mockery::spy(\PluginFactory::class);
         $plugin_factory->shouldReceive('createPlugin')->with('New_Plugin')->once()->andReturns($plugin);
+        $plugin_factory->shouldReceive('instantiatePlugin')->andReturn($plugin);
 
         $plugin_factory->shouldReceive('getAllPossiblePluginsDir')->andReturns([
             __DIR__ . '/test'
@@ -170,7 +171,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($plugin, $pm->installPlugin('New_Plugin'));
 
         // Plugin dir was created in "/etc"
-        $this->assertDirectoryExists($root . '/test/custom/New_Plugin');
+        $this->assertDirectoryExists($root . '/etc/tuleap/plugins');
     }
 
     public function testIsNameValid(): void

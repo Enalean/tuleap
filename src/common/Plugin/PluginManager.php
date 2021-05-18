@@ -22,11 +22,10 @@
 use Tuleap\DAO\DBTablesDao;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Plugin\InvalidPluginNameException;
+use Tuleap\Plugin\UnableToCreatePluginException;
 
-/**
- * PluginManager
- */
-class PluginManager
+class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var ContentInterpretor
@@ -46,6 +45,11 @@ class PluginManager
     private $forgeupgrade_config;
 
     public $pluginHookPriorityManager;
+
+    /**
+     * @var array<int, string>
+     */
+    private $plugins_name = [];
 
     public function __construct(
         PluginFactory $plugin_factory,
@@ -121,36 +125,77 @@ class PluginManager
         $this->site_cache->invalidatePluginBasedCaches();
     }
 
-    public function installAndActivate($name)
+    /**
+     * @throws InvalidPluginNameException
+     * @throws UnableToCreatePluginException
+     */
+    public function installAndActivate(string $name): Plugin
     {
         $plugin = $this->plugin_factory->getPluginByName($name);
         if (! $plugin) {
+            $this->getPluginDuringInstall($name); // ensures the plugin actually exists
             $plugin = $this->installPlugin($name);
         }
-        if (! $this->plugin_factory->isPluginAvailable($plugin)) {
-            $this->plugin_factory->availablePlugin($plugin);
-        }
+        $this->recursivelyActivatePlugin($plugin);
         $this->site_cache->invalidatePluginBasedCaches();
+        return $plugin;
     }
 
-    public function installPlugin($name)
+    /**
+     * @throws InvalidPluginNameException
+     */
+    private function recursivelyActivatePlugin(Plugin $plugin): void
     {
-        $plugin = false;
-        if ($this->isNameValid($name)) {
-            $name = $this->getValidatedName($name);
-            if (! $this->plugin_factory->isPluginInstalled($name)) {
-                $this->executeSqlStatements('install', $name);
-                $plugin = $this->plugin_factory->createPlugin($name);
-                if ($plugin instanceof Plugin) {
-                    $this->_createEtc($name);
-                    $this->configureForgeUpgrade($name);
-                    $plugin->postInstall();
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', 'Unable to create plugin');
-                }
+        foreach ($plugin->getDependencies() as $dependency_name) {
+            $dependency = $this->getPluginByName($dependency_name);
+            if (! $dependency) {
+                throw new InvalidPluginNameException($dependency_name);
+            }
+            $this->recursivelyActivatePlugin($dependency);
+        }
+        $this->plugin_factory->availablePlugin($plugin);
+    }
+
+    /**
+     * @throws InvalidPluginNameException
+     * @throws UnableToCreatePluginException
+     */
+    public function installPlugin(string $name): Plugin
+    {
+        if (! $this->isNameValid($name)) {
+            throw new InvalidPluginNameException($name);
+        }
+        $name = $this->getValidatedName($name);
+        if ($this->plugin_factory->isPluginInstalled($name)) {
+            return $this->plugin_factory->getPluginByName($name);
+        }
+
+        $this->installPluginDependencies($name);
+
+        $this->executeSqlStatements('install', $name);
+        $plugin = $this->plugin_factory->createPlugin($name);
+        if (! $plugin) {
+            throw new UnableToCreatePluginException($name);
+        }
+
+        $this->createEtc($name);
+        $this->configureForgeUpgrade($name);
+        $plugin->postInstall();
+        return $plugin;
+    }
+
+    /**
+     * @throws InvalidPluginNameException
+     * @throws UnableToCreatePluginException
+     */
+    private function installPluginDependencies(string $name): void
+    {
+        $plugin = $this->getPluginDuringInstall($name);
+        foreach ($plugin->getDependencies() as $dependency_name) {
+            if (! $this->plugin_factory->isPluginInstalled($dependency_name)) {
+                $this->installPlugin($dependency_name);
             }
         }
-        return $plugin;
     }
 
     public function uninstallPlugin(Plugin $plugin)
@@ -251,7 +296,7 @@ class PluginManager
         }
     }
 
-    public function _createEtc($name)
+    private function createEtc(string $name): void
     {
         if (! is_dir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name)) {
             mkdir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name, 0700);
@@ -288,9 +333,19 @@ class PluginManager
         }
     }
 
-    public function getNotYetInstalledPlugins()
+    public function getNotYetInstalledPlugins(): array
     {
-        return $this->plugin_factory->getNotYetInstalledPlugins();
+        $col = [];
+        foreach ($this->plugin_factory->getNotYetInstalledPlugins() as $plugin) {
+            $descriptor = $plugin->getPluginInfo()->getPluginDescriptor();
+            $col[]      = [
+                'name'        => $plugin->getName(),
+                'full_name'   => $descriptor->getFullName(),
+                'description' => $descriptor->getDescription(),
+                'version'     => $descriptor->getVersion()
+            ];
+        }
+        return $col;
     }
 
     public function isNameValid($name)
@@ -330,12 +385,8 @@ class PluginManager
         return $this->plugin_factory->pluginIsCustom($plugin);
     }
 
-    public $plugins_name;
-    public function getNameForPlugin($plugin)
+    public function getNameForPlugin(Plugin $plugin): string
     {
-        if (! $this->plugins_name) {
-            $this->plugins_name = [];
-        }
         if (! isset($this->plugins_name[$plugin->getId()])) {
             $this->plugins_name[$plugin->getId()] = $this->plugin_factory->getNameForPlugin($plugin);
         }
@@ -347,7 +398,10 @@ class PluginManager
         return $this->plugin_factory->getProjectsByPluginId($plugin);
     }
 
-    public function _updateProjectForPlugin($action, $plugin, $projectIds)
+    /**
+     * @param list<int>|int $projectIds
+     */
+    private function updateProjectForPlugin(string $action, Plugin $plugin, $projectIds): void
     {
         $success     = true;
         $successOnce = false;
@@ -370,10 +424,10 @@ class PluginManager
         } elseif (is_numeric($projectIds)) {
             switch ($action) {
                 case 'add':
-                    $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
+                    $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $projectIds);
                     break;
                 case 'del':
-                    $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
+                    $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $projectIds);
                     break;
             }
             $successOnce = $success;
@@ -384,14 +438,20 @@ class PluginManager
         }
     }
 
-    public function addProjectForPlugin($plugin, $projectIds)
+    /**
+     * @param list<int>|int $projectIds
+     */
+    public function addProjectForPlugin(Plugin $plugin, $projectIds): void
     {
-        $this->_updateProjectForPlugin('add', $plugin, $projectIds);
+        $this->updateProjectForPlugin('add', $plugin, $projectIds);
     }
 
-    public function delProjectForPlugin($plugin, $projectIds)
+    /**
+     * @param list<int>|int $projectIds
+     */
+    public function delProjectForPlugin(Plugin $plugin, $projectIds)
     {
-        $this->_updateProjectForPlugin('del', $plugin, $projectIds);
+        $this->updateProjectForPlugin('del', $plugin, $projectIds);
     }
 
     public function isProjectPluginRestricted($plugin)
@@ -421,12 +481,15 @@ class PluginManager
      * of installation use case. It bypass all caches and do not check availability
      * of the plugin.
      *
-     * @param string $name The name of the plugin (docman, tracker, …)
-     * @return Plugin
+     * @throws InvalidPluginNameException
      */
-    public function getPluginDuringInstall($name)
+    public function getPluginDuringInstall(string $name): Plugin
     {
-        return $this->plugin_factory->instantiatePlugin(0, $name);
+        $plugin = $this->plugin_factory->instantiatePlugin(0, $name);
+        if (! $plugin) {
+            throw new InvalidPluginNameException($name);
+        }
+        return $plugin;
     }
 
     private function copyDirectory($source, $destination)

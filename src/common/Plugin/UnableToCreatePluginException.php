@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,24 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-class docPlugin extends Plugin // phpcs:ignore
+namespace Tuleap\Plugin;
+
+final class UnableToCreatePluginException extends \Exception
 {
-    /**
-     * @var bool
-     */
-    private $is_custom = false;
-
-    public function isCustom(): bool
+    public function __construct(string $plugin_name)
     {
-        return $this->is_custom;
-    }
-
-    public function setIsCustom($is_custom): void
-    {
-        $this->is_custom = $is_custom;
+        parent::__construct(sprintf('unable to create plugin %s', $plugin_name));
     }
 }
