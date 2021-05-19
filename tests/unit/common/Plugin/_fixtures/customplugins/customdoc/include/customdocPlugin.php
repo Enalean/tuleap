@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class customdocPlugin // phpcs:ignore
+class customdocPlugin extends Plugin// phpcs:ignore
 {
     /**
      * @var bool
@@ -32,7 +32,7 @@ class customdocPlugin // phpcs:ignore
         return $this->is_custom;
     }
 
-    public function setIsCustom(bool $is_custom): void
+    public function setIsCustom($is_custom): void
     {
         $this->is_custom = $is_custom;
     }

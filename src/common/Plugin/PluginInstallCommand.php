@@ -1,0 +1,68 @@
+<?php
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Plugin;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+final class PluginInstallCommand extends Command
+{
+    public const NAME = 'plugin:install';
+    /**
+     * @var \PluginManager
+     */
+    private $plugin_manager;
+
+    public function __construct(\PluginManager $plugin_manager)
+    {
+        parent::__construct(self::NAME);
+        $this->plugin_manager = $plugin_manager;
+    }
+
+    protected function configure(): void
+    {
+        $this->setDescription("Install and activate plugins with their dependencies")
+            ->addArgument('plugins', InputArgument::IS_ARRAY, 'List of plugins (space separated)');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $plugin_names = $input->getArgument('plugins');
+        assert(is_array($plugin_names));
+
+        if (posix_getuid() === 0) {
+            throw new \RuntimeException('Must be run by `codendiadm`');
+        }
+
+        foreach ($plugin_names as $plugin_name) {
+            $output->write("Install $plugin_name...");
+            $this->plugin_manager->installAndActivate($plugin_name);
+            $output->writeln("[OK]");
+        }
+
+        return 0;
+    }
+}

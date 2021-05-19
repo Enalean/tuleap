@@ -70,7 +70,7 @@ class create_test_envPlugin extends Plugin
 
     public function getDependencies()
     {
-        return ['botmattermost', 'tracker'];
+        return ['tracker'];
     }
 
     public function getHooksAndCallbacks()

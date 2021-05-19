@@ -40,6 +40,7 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Plugin\PluginInstallCommand;
 use Tuleap\User\Profile\ForceRegenerationDefaultAvatarCommand;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Password\PasswordSanityChecker;
@@ -246,6 +247,13 @@ $CLI_command_collector->addCommand(
             UserManager::instance(),
             new UserDao()
         );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    PluginInstallCommand::NAME,
+    static function (): PluginInstallCommand {
+        return new PluginInstallCommand(PluginManager::instance());
     }
 );
 
