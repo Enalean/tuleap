@@ -153,8 +153,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     public function burning_parrot_get_stylesheets($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($_SERVER['REQUEST_URI'] === '/') {
-            $variant                 = $params['variant'];
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('bp-style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('bp-style.css');
         }
     }
 

@@ -25,12 +25,8 @@ const entry_points = {
     "fp-style": "./themes/FlamingParrot/css/style.scss",
     "open-id-connect-client": "./scripts/open-id-connect-client.js",
     "user-account-style": "./themes/Account/style.scss",
+    "bp-style": "./themes/BurningParrot/css/style.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`bp-style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {
