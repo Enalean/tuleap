@@ -29,7 +29,7 @@ use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -131,7 +131,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
         $layout->includeFooterJavascriptFile($this->taskboard_assets->getFileURL('taskboard.js'));
 
-        $layout->addCssAsset(new CssAsset($this->taskboard_assets, 'taskboard'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->taskboard_assets, 'taskboard-style'));
 
         $service->displayHeader(
             $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard"),

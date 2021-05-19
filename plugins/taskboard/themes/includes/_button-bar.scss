@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
+
 .taskboard-button-bar {
     display: flex;
     position: sticky;
@@ -34,7 +36,7 @@
 
 .taskboard-button-bar-left {
     position: sticky;
-    left: calc(#{$sidebar-expanded-width} + var(--tlp-medium-spacing));
+    left: calc(#{global-variables.$sidebar-expanded-width} + var(--tlp-medium-spacing));
 
     &.taskboard-fullscreen {
         left: 0;
@@ -43,7 +45,7 @@
 
 .sidebar-collapsed {
     .taskboard-button-bar-left {
-        left: calc(#{$sidebar-collapsed-width} + var(--tlp-medium-spacing));
+        left: calc(#{global-variables.$sidebar-collapsed-width} + var(--tlp-medium-spacing));
 
         &.taskboard-fullscreen {
             left: 0;

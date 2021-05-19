@@ -20,18 +20,12 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-const entry_points = {
-    taskboard: "./scripts/taskboard/index.ts",
-};
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`taskboard-${color}`] = `./themes/taskboard-${color}.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            taskboard: "./scripts/taskboard/index.ts",
+            "taskboard-style": "./themes/taskboard.scss",
+        },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/taskboard/"),

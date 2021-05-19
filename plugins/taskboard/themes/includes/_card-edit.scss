@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
 @mixin pencil-background($color) {
     background: $color;
     box-shadow: 0 0 8px 2px $color;
@@ -32,7 +34,7 @@
     align-items: center;
     justify-content: flex-end;
     transition: color ease-in-out 100ms;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
 
     > .taskboard-card-assignees-avatars:last-child {
         margin: -3px 0 8px 5px;
@@ -43,7 +45,7 @@
 
         &:hover,
         &:focus {
-            color: darken($tlp-theme-color, 15%);
+            color: var(--tlp-theme-color-darker-15);
         }
     }
 
@@ -92,7 +94,7 @@
     $assignee-negative-margin: -3px;
 
     > .taskboard-card-edit-trigger {
-        @include pencil-background(var(--secondary-color, #{$tlp-ui-white}));
+        @include pencil-background(var(--secondary-color, var(--tlp-ui-white)));
         display: flex;
         position: absolute;
         z-index: 10;
@@ -106,7 +108,7 @@
         border: 0;
         border-radius: 50%;
         opacity: 0;
-        color: var(--text-color, var(--card-text-color, $tlp-ui-dimmed));
+        color: var(--text-color, var(--card-text-color, var(--tlp-ui-dimmed)));
         font-size: 14px;
         cursor: pointer;
 
@@ -116,7 +118,7 @@
         }
 
         &:focus {
-            background: lighten($tlp-theme-color, 50%);
+            background: var(--tlp-theme-color-lighter-50);
         }
     }
 
@@ -139,12 +141,12 @@
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-edit-mode,
 .taskboard-card.taskboard-card-edit-mode {
     margin: 0;
-    border: 1px solid $tlp-theme-color;
-    background: mix($tlp-theme-background-color, $tlp-theme-color, 90%);
+    border: 1px solid var(--tlp-theme-color);
+    background: var(--tlp-theme-background-color-lighter-10);
 
     &::before,
     >.taskboard-card-progress {
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
     }
 
     > .taskboard-card-edit-trigger {
@@ -160,15 +162,15 @@
 
         /* stylelint-disable-next-line selector-max-compound-selectors */
         > .taskboard-card-xref {
-            color: $tlp-theme-color;
+            color: var(--tlp-theme-color);
         }
     }
 
     /* stylelint-disable-next-line selector-max-compound-selectors */
     > .taskboard-card-content > .taskboard-card-info > .taskboard-card-inital-effort {
-        border-color: $tlp-theme-color;
-        background: transparentize($tlp-theme-color, .9);
-        color: $tlp-theme-color;
+        border-color: var(--tlp-theme-color);
+        background: var(--tlp-theme-color-transparent-90);
+        color: var(--tlp-theme-color);
     }
 
     > .taskboard-card-accessibility {
@@ -177,10 +179,10 @@
 }
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not([class*='taskboard-card-background-']) > .taskboard-card-edit-trigger {
-    @include pencil-background($tlp-theme-background-color);
+    @include pencil-background(var(--tlp-theme-background-color));
 
     &:focus {
-        background: lighten($tlp-theme-color, 90%);
+        background: var(--tlp-theme-color-lighter-10);
     }
 }
 
@@ -195,11 +197,11 @@
 
     &.taskboard-card-is-just-saved {
         animation: pulse-card 500ms ease-in-out;
-        border-color: $tlp-ui-success;
-        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success-lighter-90);
 
         &.taskboard-card-editable:not(.taskboard-card-edit-mode) > .taskboard-card-edit-trigger {
-            @include pencil-background(mix($tlp-ui-white, $tlp-ui-success, 90%));
+            @include pencil-background(var(--tlp-ui-success-lighter-90));
         }
     }
 }
@@ -273,7 +275,7 @@
         margin: 0 2px;
     }
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.tlp-badge-#{$color-name}::before {
             color: darken(map-get($colors, 'primary'), 10%);
         }
@@ -300,7 +302,7 @@
     resize: none;
 
     &:focus {
-        border-color: transparentize($tlp-theme-color, .65);
+        border-color: var(--tlp-theme-color-transparent-70);
     }
 }
 
@@ -333,18 +335,18 @@
 
 @keyframes blink-card {
     0% {
-        border-color: $tlp-ui-info;
-        background: transparentize($tlp-ui-info, .9);
+        border-color: var(--tlp-ui-info);
+        background: var(--tlp-ui-info-transparent-90);
     }
 
     50% {
         border-color: transparent;
-        background: $tlp-ui-white;
+        background: var(--tlp-ui-white);
     }
 
     100% {
-        border-color: $tlp-ui-info;
-        background: transparentize($tlp-ui-info, .9);
+        border-color: var(--tlp-ui-info);
+        background: var(--tlp-ui-info-transparent-90);
     }
 }
 
