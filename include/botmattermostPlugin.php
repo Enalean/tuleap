@@ -83,12 +83,11 @@ class BotMattermostPlugin extends Plugin
     public function burning_parrot_get_stylesheets(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $variant                 = $params['variant'];
             $asset                   = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/botmattermost/',
                 '/assets/botmattermost'
             );
-            $params['stylesheets'][] = $asset->getFileURL('style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $asset->getFileURL('botmattermost-style.css');
         }
     }
 

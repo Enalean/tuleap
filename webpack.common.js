@@ -22,12 +22,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 let entry_points = {
     modals: "./scripts/modals.js",
+    "botmattermost-style": "./themes/botmattermost.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {
