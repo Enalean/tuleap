@@ -23,12 +23,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 let entry_points = {
     "velocity-chart": "./scripts/velocity-chart/src/index.js",
     "style-fp": "./themes/FlamingParrot/css/style.scss",
+    "velocity-style": "./themes/BurningParrot/css/velocity.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry_points[`velocity-${color}`] = `./themes/BurningParrot/css/velocity-${color}.scss`;
-}
 
 module.exports = [
     {

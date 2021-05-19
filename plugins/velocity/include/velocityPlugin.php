@@ -163,10 +163,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burningParrotGetStylesheets(array $params)
     {
-        $variant = $params['variant'];
-
         if ($this->isAPlanningOverviewRequest()) {
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('velocity-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('velocity-style.css');
         }
     }
 

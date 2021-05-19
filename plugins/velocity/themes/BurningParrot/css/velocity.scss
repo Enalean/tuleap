@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/tlp/src/scss/variables/variables-green';
+@use './includes/velocity-chart';
 
-@import './velocity';
+.misconfigured-semantic-display-comma:last-child {
+    display: none;
+}
