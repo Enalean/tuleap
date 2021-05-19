@@ -39,13 +39,13 @@
     flex-direction: column;
     align-items: center;
     margin: 0 0 var(--tlp-medium-spacing);
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: 14px;
     text-align: center;
 }
 
 .program-to-be-planned-title {
     margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
     font-weight: 600;
 }

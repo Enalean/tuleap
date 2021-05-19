@@ -119,10 +119,12 @@
     --tlp-ui-border-normal: #{$tlp-ui-border-normal};
     --tlp-ui-border-dark: #{$tlp-ui-border-dark};
 
+    --tlp-ui-border-normal-transparent-25: #{transparentize($tlp-ui-border-normal, .25)};
     --tlp-ui-border-normal-transparent-50: #{transparentize($tlp-ui-border-normal, .5)};
 
     --tlp-ui-border-dark-lighter-20: #{mix($tlp-ui-border-dark, $tlp-ui-white, 80%)};
     --tlp-ui-border-dark-darker-05: #{darken($tlp-ui-border-dark, 5%)};
+    --tlp-ui-border-dark-darker-20: #{darken($tlp-ui-border-dark, 20%)};
     --tlp-ui-border-dark-transparent-20: #{transparentize($tlp-ui-border-dark, .2)};
     --tlp-ui-border-dark-transparent-40: #{transparentize($tlp-ui-border-dark, .4)};
 
