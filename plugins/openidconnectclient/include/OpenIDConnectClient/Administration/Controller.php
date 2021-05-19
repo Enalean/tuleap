@@ -25,7 +25,7 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
@@ -129,7 +129,7 @@ class Controller
         );
 
         $this->admin_page_renderer->addJavascriptAsset(new JavascriptAsset($this->assets, 'open-id-connect-client.js'));
-        $this->admin_page_renderer->addCssAsset(new CssAsset($this->assets, 'bp-style'));
+        $this->admin_page_renderer->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'bp-style'));
 
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-openidconnectclient', 'OpenID Connect'),
