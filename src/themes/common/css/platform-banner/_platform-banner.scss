@@ -50,15 +50,15 @@ $illustration-left: 9px;
 }
 
 .platform-banner-importance-standard {
-    @include megaphone($tlp-ui-info);
+    @include megaphone(var(--tlp-ui-info));
 }
 
 .platform-banner-importance-warning {
-    @include megaphone($tlp-ui-warning);
+    @include megaphone(var(--tlp-ui-warning));
 }
 
 .platform-banner-importance-critical {
-    @include megaphone($tlp-ui-danger);
+    @include megaphone(var(--tlp-ui-danger));
 }
 
 .platform-banner-illustration {
@@ -76,21 +76,21 @@ $illustration-left: 9px;
 
 .platform-banner-message-container > p {
     margin: 0;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     font-size: .875rem;
     font-weight: 500;
     line-height: 1.375rem;
     text-align: center;
 
     a {
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
         text-decoration: underline;
     }
 }
 
 #platform-banner-close {
     display: table-cell;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     cursor: pointer;
 
     &:hover {

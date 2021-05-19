@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../tlp/src/scss/variables/colors/common-colors';
+
 %color-area {
     display: block;
     height: 25px;
     border-radius: 3px;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             border-color: map-get($colors, 'primary');
             background: map-get($colors, 'primary');
@@ -43,7 +45,7 @@
 .project-labels-table-name-icon {
     margin: 0 5px 0 0;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.project-labels-table-name-icon-#{$color-name} {
             color: map-get($colors, 'primary');
         }

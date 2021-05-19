@@ -82,7 +82,13 @@
 
     --tlp-ui-white-darker-02: #{darken($tlp-ui-white, 2%)};
     --tlp-ui-white-darker-10: #{darken($tlp-ui-white, 10%)};
-    --tlp-ui-white-transparent-10: #{transparentize($tlp-ui-success, .1)};
+    --tlp-ui-white-transparent-10: #{transparentize($tlp-ui-white, .1)};
+    --tlp-ui-white-transparent-80: #{transparentize($tlp-ui-white, .8)};
+
+    --tlp-backdrop-color: #{transparentize($tlp-ui-black, .5)};
+
+    --tlp-theme-orange: #{$tlp-theme-orange};
+    --tlp-theme-orange-lighter-05: #{lighten($tlp-theme-orange, 5%)};
 
     // Alerts
     --tlp-alert-danger-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-ui-danger, 25%), 23%), 15%)};
@@ -96,11 +102,14 @@
     // Dark
     --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};
     --tlp-ui-dimmed-on-dark-background: #{$tlp-ui-border-dark};
+    --tlp-theme-color-on-dark-background: #{lighten($tlp-theme-color, 20%)};
     --tlp-theme-dark-background-color: #{$tlp-theme-sidebar-background-color};
+    --tlp-theme-dark-background-color-transparent-30: #{transparentize($tlp-theme-sidebar-background-color, .3)};
     --tlp-theme-dark-background-color-transparent-70: #{transparentize($tlp-theme-sidebar-background-color, .7)};
     --tlp-theme-dark-background-color-transparent-85: #{transparentize($tlp-theme-sidebar-background-color, .85)};
     --tlp-theme-dark-background-color-transparent-90: #{transparentize($tlp-theme-sidebar-background-color, .9)};
     --tlp-theme-dark-background-color-darker: #{color.scale($tlp-theme-sidebar-background-color, $lightness: -20%)};
+    --tlp-theme-dark-background-color-darker-10: #{color.scale($tlp-theme-sidebar-background-color, $lightness: -10%)};
     --tlp-theme-dark-background-color-lighter-05: #{color.scale($tlp-theme-sidebar-background-color, $lightness: 5%)};
     --tlp-theme-dark-background-color-lighter-10: #{color.scale($tlp-theme-sidebar-background-color, $lightness: 10%)};
     --tlp-typo-default-text-color-on-dark-background: #{$tlp-ui-border-normal};
@@ -115,6 +124,7 @@
     --tlp-ui-border-dark-lighter-20: #{mix($tlp-ui-border-dark, $tlp-ui-white, 80%)};
     --tlp-ui-border-dark-darker-05: #{darken($tlp-ui-border-dark, 5%)};
     --tlp-ui-border-dark-transparent-20: #{transparentize($tlp-ui-border-dark, .2)};
+    --tlp-ui-border-dark-transparent-40: #{transparentize($tlp-ui-border-dark, .4)};
 
     // density
     @if $tlp-density == $tlp-density-condensed {
@@ -143,4 +153,7 @@
     --tlp-shadow-focus: #{$tlp-shadow-focus};
     --tlp-shadow-theme-color: #{transparentize($tlp-theme-color, .15)};
     --tlp-shadow-danger-color: #{transparentize($tlp-ui-danger, .15)};
+
+    // radius
+    --tlp-card-radius: #{$tlp-card-radius};
 }

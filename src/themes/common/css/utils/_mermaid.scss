@@ -91,7 +91,7 @@ tlp-mermaid-diagram {
     align-items: center;
     justify-content: center;
     padding: var(--tlp-x-large-spacing);
-    background: transparentize($tlp-ui-black, .5);
+    background: var(--tlp-backdrop-color);
     cursor: zoom-out;
 
     > .diagram-mermaid {

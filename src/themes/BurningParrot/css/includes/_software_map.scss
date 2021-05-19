@@ -42,16 +42,16 @@
 }
 
 .softwaremap-list-results-trovecat {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .softwaremap-list-results-trovecat-icon {
     margin: 0 3px 0 0;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
 }
 
 .softwaremap-list-results-trovecat-not-categorized {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-style: italic;
 }
 
@@ -61,5 +61,5 @@
 
 .softwaremap-list-filter-go-up-icon {
     margin: 0 9px 0 12px;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
 }

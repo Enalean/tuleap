@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'global-variables';
+
 .project-sidebar-header-name {
     display: flex;
     align-items: center;
@@ -31,14 +33,14 @@
     padding: var(--tlp-small-spacing);
     transition: background 100ms;
     border-radius: 4px;
-    color: $tlp-ui-border-normal;
+    color: var(--tlp-ui-border-normal);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.3125rem;
     text-decoration: none;
 
     &:hover {
-        background: darken($tlp-theme-sidebar-background-color, 5%);
+        background: var(--tlp-theme-dark-background-color-darker);
         text-decoration: none;
     }
 }
@@ -52,20 +54,20 @@
     height: 24px;
     margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     font-size: .6rem;
     line-height: 0;
     cursor: help;
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
         text-shadow: 0 0 1px rgba(0, 0, 0, .2);
     }
 
     &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
-        background: darken($tlp-theme-sidebar-background-color, 5%);
+        background: var(--tlp-theme-dark-background-color-darker);
     }
 
     &.fa-tlp-lock-plus-r,
@@ -84,8 +86,8 @@
         height: 24px;
         padding: 6.5px;
         border-radius: 50%;
-        background-color: $tlp-ui-warning;
-        color: $tlp-ui-white;
+        background-color: var(--tlp-ui-warning);
+        color: var(--tlp-ui-white);
         font-size: .6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, .5);
     }
@@ -99,7 +101,7 @@
     display: flex;
     align-items: center;
     margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    color: $tlp-ui-border-dark;
+    color: var(--tlp-ui-border-dark);
     cursor: help;
 
     > .project-sidebar-project-flags-icon {
@@ -110,13 +112,13 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        background: $tlp-ui-dimmed;
+        background: var(--tlp-ui-dimmed);
 
         > .tuleap-svg {
             height: 12px;
 
             > path {
-                fill: $tlp-ui-border-normal;
+                fill: var(--tlp-ui-border-normal);
             }
         }
     }
@@ -167,16 +169,16 @@
     display: flex;
     position: relative;
     align-items: center;
-    height: $navbar-height;
+    height: global-variables.$navbar-height;
     padding: 0 var(--tlp-medium-spacing);
     border-left: 3px solid transparent;
-    color: $tlp-ui-border-dark;
+    color: var(--tlp-ui-border-dark);
     font-size: .8125rem;
     text-decoration: none;
 
     &:hover,
     &:focus {
-        background: darken($tlp-theme-sidebar-background-color, 2%);
+        background: var(--tlp-theme-dark-background-color-darker);
         text-decoration: none;
     }
 
@@ -186,8 +188,8 @@
     }
 
     &.active {
-        border-left-color: $tlp-theme-color;
-        background: darken($tlp-theme-sidebar-background-color, 2%);
+        border-left-color: var(--tlp-theme-color);
+        background: var(--tlp-theme-dark-background-color-darker);
 
         &::before {
             content: '';
@@ -199,7 +201,7 @@
             transform: translateY(-50%);
             border-width: 10px 10px 10px 0;
             border-style: solid;
-            border-color: transparent $tlp-theme-background-color transparent transparent;
+            border-color: transparent var(--tlp-theme-background-color) transparent transparent;
         }
     }
 }
@@ -220,7 +222,7 @@
 }
 
 .project-sidebar-nav-item-label {
-    max-width: $sidebar-expanded-width - 60px;
+    max-width: global-variables.$sidebar-expanded-width - 60px;
     overflow: hidden;
     line-height: 20px;
     text-overflow: ellipsis;
@@ -237,8 +239,8 @@
     margin: 0 auto var(--tlp-medium-spacing);
     transition: background 100ms;
     border-radius: 50px;
-    background: darken($tlp-theme-sidebar-background-color, 2%);
-    color: transparentize($tlp-ui-border-dark, .4);
+    background: var(--tlp-theme-dark-background-color-darker-10);
+    color: var(--tlp-ui-border-dark-transparent-40);
     font-size: 12px;
     cursor: pointer;
 
@@ -253,6 +255,6 @@
     }
 
     &:hover {
-        background: darken($tlp-theme-sidebar-background-color, 4%);
+        background: var(--tlp-theme-dark-background-color-darker);
     }
 }

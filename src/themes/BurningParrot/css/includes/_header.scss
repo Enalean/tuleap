@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'global-variables';
+
 /* stylelint-disable selector-no-qualifying-type */
 body.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + #{$extra-platform-banner-white-space-height});
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + #{global-variables.$extra-platform-banner-white-space-height});
 
     + header > .header-container {
         padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) 0 0;
@@ -47,8 +49,8 @@ header {
     }
 
     &.pinned {
-        background: $tlp-ui-white;
-        box-shadow: 0 1px 2px transparentize($tlp-theme-sidebar-background-color, .9);
+        background: var(--tlp-ui-white);
+        box-shadow: 0 1px 2px var(--tlp-theme-dark-background-color-lighter-10);
 
         > .header-container {
             padding: 0 var(--tlp-medium-spacing) 0 0;

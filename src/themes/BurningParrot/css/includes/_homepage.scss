@@ -21,11 +21,11 @@ $homepage-small-screen-width: 850px;
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 body.homepage > #main-container {
-    background: linear-gradient(to bottom, $tlp-theme-background-color 300px, $tlp-theme-sidebar-background-color 300px);
+    background: linear-gradient(to bottom, var(--tlp-theme-background-color) 300px, var(--tlp-theme-dark-background-color) 300px);
 
     /* stylelint-disable-next-line selector-no-qualifying-type */
     > main > #feedback {
-        background: $tlp-theme-background-color;
+        background: var(--tlp-theme-background-color);
     }
 }
 
@@ -34,7 +34,7 @@ body.homepage > #main-container {
     position: relative;
     flex-direction: column;
     align-items: center;
-    background-image: linear-gradient(to bottom, $tlp-theme-background-color, $tlp-ui-white 50%);
+    background-image: linear-gradient(to bottom, var(--tlp-theme-background-color), var(--tlp-ui-white) 50%);
 
     @media screen and (max-width: $homepage-small-screen-width) {
         padding: 40px 20px;
@@ -86,18 +86,18 @@ body.homepage > #main-container {
 
 .homepage-welcome-standard-logo-tulip {
     margin: 0 18px 0 0;
-    fill: $tlp-theme-color;
+    fill: var(--tlp-theme-color);
 }
 
 .homepage-welcome-standard-logo-tuleap {
     position: relative;
     top: 8px;
-    fill: $tlp-theme-sidebar-background-color;
+    fill: var(--tlp-theme-dark-background-color);
 }
 
 .homepage-welcome-title {
     margin: 0 0 30px;
-    color: $tlp-theme-sidebar-background-color;
+    color: var(--tlp-theme-dark-background-color);
     font-size: 30px;
     font-weight: 600;
     line-height: 38px;
@@ -105,7 +105,7 @@ body.homepage > #main-container {
 
 .homepage-welcome-text {
     margin: 0 0 30px;
-    color: $tlp-theme-sidebar-background-color;
+    color: var(--tlp-theme-dark-background-color);
     font-size: 18px;
     line-height: 30px;
 
@@ -135,9 +135,9 @@ body.homepage > #main-container {
     align-items: center;
     width: 380px;
     padding: 30px 40px 40px;
-    border: 1px solid $tlp-theme-color;
+    border: 1px solid var(--tlp-theme-color);
     border-radius: 4px;
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
     box-shadow: 0 8px 15px 0 transparentize(#000000, .95);
 }
 
@@ -145,13 +145,13 @@ body.homepage > #main-container {
     width: 100%;
 
     > .tlp-form-element > .tlp-input {
-        border-color: $tlp-theme-color;
+        border-color: var(--tlp-theme-color);
     }
 }
 
 .homepage-sign-in-title {
     margin: 0 0 40px;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 40px;
     font-weight: 400;
 }
@@ -175,7 +175,7 @@ body.homepage > #main-container {
 
 .homepage-already-signed-in-title {
     margin: 0 0 40px;
-    color: $tlp-theme-sidebar-background-color;
+    color: var(--tlp-theme-dark-background-color);
     line-height: 38px;
     text-align: center;
 }
@@ -195,21 +195,21 @@ body.homepage > #main-container {
 }
 
 .homepage-background-illustration-background {
-    fill: $tlp-theme-sidebar-background-color;
+    fill: var(--tlp-theme-dark-background-color);
 }
 
 .homepage-background-stroke {
-    stroke: $tlp-theme-color;
+    stroke: var(--tlp-theme-color);
 }
 
 .homepage-background-dark-circle {
-    stroke: $tlp-theme-color;
-    fill: $tlp-theme-sidebar-background-color;
+    stroke: var(--tlp-theme-color);
+    fill: var(--tlp-theme-dark-background-color);
 }
 
 .homepage-background-light-circle {
-    stroke: $tlp-theme-color;
-    fill: $tlp-ui-white;
+    stroke: var(--tlp-theme-color);
+    fill: var(--tlp-ui-white);
 }
 
 .homepage-bottom-content {
@@ -250,10 +250,10 @@ body.homepage > #main-container {
     margin: 10px;
     padding: 30px;
     overflow: hidden;
-    border: 1px solid $tlp-theme-color;
+    border: 1px solid var(--tlp-theme-color);
     border-radius: 3px;
-    background: $tlp-theme-sidebar-background-color;
-    color: $tlp-ui-white;
+    background: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-ui-white);
 }
 
 .homepage-statistic-main {
@@ -272,7 +272,7 @@ body.homepage > #main-container {
 
 .homepage-statistic-label {
     opacity: .6;
-    color: $tlp-ui-border-dark;
+    color: var(--tlp-ui-border-dark);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: .5px;
@@ -285,7 +285,7 @@ body.homepage > #main-container {
     z-index: 2;
     align-items: center;
     margin: 0 0 0 20px;
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .homepage-statistic-growth-plus {
@@ -321,7 +321,7 @@ body.homepage > #main-container {
 
 .homepage-news-container-title {
     margin: 0 0 40px;
-    color: lighten($tlp-theme-color, 3%);
+    color: var(--tlp-theme-color-lighter-10);
     font-size: 42px;
 }
 
@@ -331,7 +331,7 @@ body.homepage > #main-container {
 
 .homepage-news-title {
     margin: 0 0 7px;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     font-size: 24px;
     line-height: 32px;
     text-transform: none;
@@ -341,14 +341,14 @@ body.homepage > #main-container {
     display: flex;
     align-items: center;
     margin: 0 0 var(--tlp-small-spacing);
-    color: $tlp-ui-border-dark;
+    color: var(--tlp-ui-border-dark);
     font-size: 13px;
 
     > .homepage-news-info-user {
         display: flex;
         align-items: center;
         margin: 0 10px 0 0;
-        color: $tlp-ui-border-dark;
+        color: var(--tlp-ui-border-dark);
 
         > .tlp-avatar-mini {
             margin: 0 5px 0 0;
@@ -364,7 +364,7 @@ body.homepage > #main-container {
     }
 
     > .homepage-news-info-project {
-        color: $tlp-ui-border-dark;
+        color: var(--tlp-ui-border-dark);
 
         > .fa-archive {
             margin: 0 5px 0 0;
@@ -373,7 +373,7 @@ body.homepage > #main-container {
 }
 
 .homepage-news-content {
-    color: transparentize($tlp-ui-white, .25);
+    color: var(--tlp-typo-default-text-color-on-dark-background);
     line-height: 28px;
 }
 
@@ -381,5 +381,5 @@ body.homepage > #main-container {
     position: relative;
     z-index: 3;
     background: none;
-    background-image: linear-gradient(to bottom, $tlp-theme-sidebar-background-color, darken($tlp-theme-sidebar-background-color, 5%));
+    background-image: linear-gradient(to bottom, var(--tlp-theme-dark-background-color), var(--tlp-theme-dark-background-color-darker-10));
 }

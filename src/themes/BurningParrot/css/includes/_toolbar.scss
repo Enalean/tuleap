@@ -22,19 +22,19 @@
     flex-wrap: wrap;
     padding: 15px var(--tlp-medium-spacing) 0;
     border: 0;
-    border-bottom: 1px solid darken($tlp-theme-background-color, 5%);
-    background: $tlp-theme-background-color;
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    background: var(--tlp-theme-background-color);
     font-size: 13px;
 
     > a {
         margin: 0 var(--tlp-large-spacing) 15px 0;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         font-weight: normal;
         text-decoration: none;
     }
 
     > a:hover,
     > a:focus {
-        color: darken($tlp-ui-dimmed, 20%);
+        color: var(--tlp-ui-dimmed-darker-10);
     }
 }

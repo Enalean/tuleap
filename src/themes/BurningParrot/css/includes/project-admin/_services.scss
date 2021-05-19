@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../global-variables';
+
 .project-admin-services-icon {
     margin: 0 5px 0 0;
 }
@@ -44,18 +46,18 @@
     justify-content: center;
     height: 110px;
     padding: 0 var(--tlp-medium-spacing);
-    border-bottom: 1px solid $tlp-ui-border-normal;
-    background: $tlp-theme-background-color;
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    background: var(--tlp-theme-background-color);
 }
 
 .project-admin-services-modal-preview-sidebar {
     display: flex;
     align-items: center;
     justify-content: stretch;
-    width: $sidebar-expanded-width;
+    width: global-variables.$sidebar-expanded-width;
     height: 70px;
     border-radius: 4px;
-    background: $tlp-theme-sidebar-background-color;
+    background: var(--tlp-theme-dark-background-color);
 
     > .project-sidebar-nav-item {
         flex: 1 1 auto;

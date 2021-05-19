@@ -409,7 +409,6 @@ const webpack_config_legacy_combined = {
     optimization: optimization_target_with_prototypejs_support,
 };
 
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 const theme_entry_points = {
     "common-theme/style": "./themes/common/css/style.scss",
     "common-theme/print": "./themes/common/css/print.scss",
@@ -419,12 +418,8 @@ const theme_entry_points = {
         "./themes/BurningParrot/css/project-registration/project-registration.scss",
     "project-registration-creation-style":
         "./themes/BurningParrot/css/project-registration-creation/project-creation-modal.scss",
+    "BurningParrot/burning-parrot": "./themes/BurningParrot/css/burning-parrot.scss",
 };
-for (const color of colors) {
-    theme_entry_points[
-        `BurningParrot/burning-parrot-${color}`
-    ] = `./themes/BurningParrot/css/burning-parrot-${color}.scss`;
-}
 
 const project_background_themes = [
     "aerial-water",

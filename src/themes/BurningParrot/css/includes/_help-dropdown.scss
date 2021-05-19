@@ -36,8 +36,8 @@
         padding: 0;
         overflow: visible;
         border-radius: 50%;
-        border-color: $tlp-theme-sidebar-background-color;
-        background: $tlp-theme-sidebar-background-color;
+        border-color: var(--tlp-theme-dark-background-color);
+        background: var(--tlp-theme-dark-background-color);
 
         > .fa {
             font-size: 20px;
@@ -59,9 +59,9 @@
 
         &.new-release-note-available {
             animation: pulse 300ms ease-in-out 1s 3 both;
-            border-color: $tlp-ui-warning;
-            background: $tlp-ui-warning;
-            color: $tlp-ui-white;
+            border-color: var(--tlp-ui-warning);
+            background: var(--tlp-ui-warning);
+            color: var(--tlp-ui-white);
 
             > .fa-star {
                 display: inline-block;
@@ -80,30 +80,30 @@
     }
 
     .tlp-dropdown-menu {
-        border-color: $tlp-theme-sidebar-background-color;
-        background: $tlp-theme-sidebar-background-color;
+        border-color: var(--tlp-theme-dark-background-color);
+        background: var(--tlp-theme-dark-background-color);
 
         &::before {
             display: none;
         }
 
         &::after {
-            border-top-color: $tlp-theme-sidebar-background-color;
+            border-top-color: var(--tlp-theme-dark-background-color);
         }
 
         .help-dropdown-link {
             &.tlp-dropdown-menu-item {
-                background: $tlp-theme-sidebar-background-color;
-                color: $tlp-ui-border-dark;
+                background: var(--tlp-theme-dark-background-color);
+                color: var(--tlp-ui-border-dark);
                 font-size: 13px;
 
                 &:hover {
-                    background: darken($tlp-theme-sidebar-background-color, 3%);
+                    background: var(--tlp-theme-dark-background-color-darker);
                 }
             }
 
             &.help-dropdown-link-highlight {
-                color: $tlp-ui-warning;
+                color: var(--tlp-ui-warning);
             }
 
             > .review-link-icon {
@@ -113,7 +113,7 @@
 
         .tlp-dropdown-menu-separator {
             opacity: .1;
-            background: $tlp-ui-border-dark;
+            background: var(--tlp-ui-border-dark);
         }
 
         .tlp-dropdown-menu-item-alt {
@@ -125,7 +125,7 @@
             > a {
                 margin: 0 10px 0 0;
                 opacity: .6;
-                color: $tlp-ui-border-dark;
+                color: var(--tlp-ui-border-dark);
             }
         }
     }

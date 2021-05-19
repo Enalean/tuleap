@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../../../tlp/src/scss/variables/names';
+
 .project-admin-permission-per-group {
     display: flex;
     align-items: flex-start;
@@ -32,11 +34,11 @@
 }
 
 .permission-per-group-public-news {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .permission-per-group-private-news {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 .permission-per-group-header-tooltip {
@@ -69,7 +71,7 @@
 }
 
 .permission-per-group-table > tbody > tr > td {
-    @each $badge in $badge-names {
+    @each $badge in names.$badge-names {
         > .#{$badge} {
             margin: 1px 2px 1px 0;
         }

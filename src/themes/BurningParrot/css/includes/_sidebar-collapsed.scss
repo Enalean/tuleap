@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+@use 'global-variables';
 
 .has-sidebar {
-    padding: 0 0 0 $sidebar-expanded-width;
+    padding: 0 0 0 global-variables.$sidebar-expanded-width;
 }
 
 .sidebar-collapsed {
-    padding: 0 0 0 $sidebar-collapsed-width;
+    padding: 0 0 0 global-variables.$sidebar-collapsed-width;
 
     .sidebar {
-        width: $sidebar-collapsed-width;
+        width: global-variables.$sidebar-collapsed-width;
     }
 
     .project-sidebar-nav-item {
@@ -58,8 +59,8 @@
     }
 
     #logo {
-        width: $sidebar-collapsed-width;
-        background: $tlp-theme-color url('/images/organization_logo_small.png') no-repeat center center;
+        width: global-variables.$sidebar-collapsed-width;
+        background: var(--tlp-theme-color) url('/images/organization_logo_small.png') no-repeat center center;
     }
 
     .project-sidebar-title,
