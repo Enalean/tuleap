@@ -29,12 +29,8 @@ let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "widget-timetracking": "./scripts/personal-timetracking-widget/src/index.js",
     "timetracking-overview": "./scripts/timetracking-overview-widget/src/index.js",
+    "style-bp": "./themes/BurningParrot/css/style.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry_points[`style-bp-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {
