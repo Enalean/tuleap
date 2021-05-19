@@ -87,6 +87,10 @@
     }
 }
 
+.roadmap-gantt-task-bar-with-dates-implied {
+    border-style: dashed;
+}
+
 .roadmap-gantt-task-bar-with-progress-in-error,
 .roadmap-gantt-task-bar-progress-error-outside-bar {
     font-size: .6875rem;
@@ -125,6 +129,10 @@
     display: flex;
     top: math.round((roadmap-variables.$task-height - roadmap-variables.$task-milestone-height) / 2);
     align-items: center;
+}
+
+.roadmap-gantt-task-bar-milestone-border-with-dates-implied {
+    stroke-dasharray: 2;
 }
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {

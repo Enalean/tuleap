@@ -71,7 +71,8 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
         $end_date    = $time_period->getEndDate();
         $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
-        $progress_result = $this->progress_calculator->computeProgression($artifact, $user);
+        $progress_result   = $this->progress_calculator->computeProgression($artifact, $user);
+        $are_dates_implied = false;
 
         return new TaskRepresentation(
             $artifact->getId(),
@@ -83,6 +84,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             $progress_result->getErrorMessage(),
             $start,
             $end,
+            $are_dates_implied,
             $this->dependencies_retriever->getDependencies($artifact),
             new ProjectReference($artifact->getTracker()->getProject()),
         );

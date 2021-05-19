@@ -124,8 +124,18 @@ export default class TaskBar extends Vue {
         return "roadmap-gantt-task-bar-container-" + this.task.color_name;
     }
 
-    get bar_classes(): string {
-        return this.is_progress_in_error ? "roadmap-gantt-task-bar-with-progress-in-error" : "";
+    get bar_classes(): string[] {
+        const classes = [];
+
+        if (this.is_progress_in_error) {
+            classes.push("roadmap-gantt-task-bar-with-progress-in-error");
+        }
+
+        if (this.task.are_dates_implied) {
+            classes.push("roadmap-gantt-task-bar-with-dates-implied");
+        }
+
+        return classes;
     }
 
     get is_progress_in_error(): boolean {

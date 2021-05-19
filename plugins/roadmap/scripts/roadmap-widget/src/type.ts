@@ -48,6 +48,7 @@ export interface Task {
     readonly is_expanded: boolean;
     readonly subtasks: Task[];
     readonly parent: Task | undefined;
+    readonly are_dates_implied: boolean;
 }
 
 export type TimeScale = "month" | "quarter" | "week";
