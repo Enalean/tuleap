@@ -31,7 +31,11 @@
                 class="tlp-button-small tlp-button-primary tlp-button-outline tlp-table-actions-element"
                 v-on:click="setAreVoidTrackersHidden"
             >
-                <i v-bind:class="[are_void_trackers_hidden ? 'fa fa-eye' : 'fa fa-eye-slash']"></i>
+                <i
+                    class="fas tlp-button-icon"
+                    v-bind:class="[are_void_trackers_hidden ? 'fa-eye' : 'fa-eye-slash']"
+                    aria-hidden="true"
+                ></i>
                 {{ display_button_text }}
             </button>
             <time-tracking-overview-user-list v-if="has_users" data-test="user-list-component" />
