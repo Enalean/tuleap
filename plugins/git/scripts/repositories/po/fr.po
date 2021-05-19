@@ -264,6 +264,9 @@ msgstr "Mis à jour %{ formatted_last_update_date }"
 msgid "Users forks"
 msgstr "Forks des utilisateurs"
 
+msgid "Webhook must be regenerated."
+msgstr "Le webhook doit être regénéré."
+
 msgid ""
 "Wow, wait a minute. You are about to unlink the GitLab repository "
 "%{ label }. Please confirm your action."

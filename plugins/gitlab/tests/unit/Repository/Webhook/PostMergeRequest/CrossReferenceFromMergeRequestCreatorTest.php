@@ -76,7 +76,9 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -91,8 +93,6 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             10
         );
 
-        $projects = [Mockery::mock(Project::class)];
-
         $this->reference_manager
             ->shouldReceive('insertCrossReference')
             ->never();
@@ -102,7 +102,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             ->with('0 Tuleap references found in merge request 2')
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository, $projects);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
     }
 
     public function testItDoesNothingIfTheReferenceIsNotFound(): void
@@ -113,7 +113,9 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -127,8 +129,6 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10
         );
-
-        $projects = [Mockery::mock(Project::class)];
 
         $this->tuleap_reference_retriever
             ->shouldReceive('retrieveTuleapReference')
@@ -146,7 +146,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->logger
             ->shouldReceive('info')
             ->with(
-                '|_ Reference to Tuleap artifact #42 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+                '|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.'
             )
             ->once();
         $this->logger
@@ -156,7 +156,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             )
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository, $projects);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
     }
 
     public function testItDoesNothingIfTheReferencedArtifactIsNotFound(): void
@@ -167,7 +167,9 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -181,8 +183,6 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10
         );
-
-        $projects = [Mockery::mock(Project::class)];
 
         $this->tuleap_reference_retriever
             ->shouldReceive('retrieveTuleapReference')
@@ -200,7 +200,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->logger
             ->shouldReceive('info')
             ->with(
-                '|_ Reference to Tuleap artifact #42 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+                '|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.'
             )
             ->once();
         $this->logger
@@ -208,10 +208,10 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             ->with('Tuleap artifact #42 not found, no cross-reference will be added.')
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository, $projects);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
     }
 
-    public function testItSavesReferenceInEachIntegratedProject(): void
+    public function testItSavesReferenceInIntegratedProject(): void
     {
         $repository = new GitlabRepository(
             1,
@@ -219,7 +219,9 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -233,10 +235,6 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             (new \DateTimeImmutable())->setTimestamp(1611315112),
             10
         );
-
-        $project_1 = Mockery::mock(Project::class, ['getID' => 111]);
-        $project_2 = Mockery::mock(Project::class, ['getID' => 112]);
-        $projects  = [$project_1, $project_2];
 
         $this->tuleap_reference_retriever
             ->shouldReceive('retrieveTuleapReference')
@@ -280,7 +278,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
                         return $cross_reference->getRefSourceId() === 'root/repo01/2'
                             && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
                             && $cross_reference->getRefSourceKey() === 'gitlab_mr'
-                            && $cross_reference->getRefSourceGid() === 111
+                            && $cross_reference->getRefSourceGid() === 101
                             && $cross_reference->getRefTargetId() === 42
                             && $cross_reference->getRefTargetGid() === 110;
                     }
@@ -296,49 +294,13 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
                         return $cross_reference->getRefSourceId() === 'root/repo01/2'
                             && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
                             && $cross_reference->getRefSourceKey() === 'gitlab_mr'
-                            && $cross_reference->getRefSourceGid() === 112
-                            && $cross_reference->getRefTargetId() === 42
-                            && $cross_reference->getRefTargetGid() === 110;
-                    }
-                )
-            )
-            ->once();
-
-        $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->with(
-                Mockery::on(
-                    function (\CrossReference $cross_reference) {
-                        return $cross_reference->getRefSourceId() === 'root/repo01/2'
-                            && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
-                            && $cross_reference->getRefSourceKey() === 'gitlab_mr'
-                            && $cross_reference->getRefSourceGid() === 111
+                            && $cross_reference->getRefSourceGid() === 101
                             && $cross_reference->getRefTargetId() === 66
                             && $cross_reference->getRefTargetGid() === 110;
                     }
                 )
             )
             ->once();
-
-        $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->with(
-                Mockery::on(
-                    function (\CrossReference $cross_reference) {
-                        return $cross_reference->getRefSourceId() === 'root/repo01/2'
-                            && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
-                            && $cross_reference->getRefSourceKey() === 'gitlab_mr'
-                            && $cross_reference->getRefSourceGid() === 112
-                            && $cross_reference->getRefTargetId() === 66
-                            && $cross_reference->getRefTargetGid() === 110;
-                    }
-                )
-            )
-            ->once();
-
-        $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->never();
 
         $this->logger
             ->shouldReceive('info')
@@ -347,7 +309,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->logger
             ->shouldReceive('info')
             ->with(
-                '|_ Reference to Tuleap artifact #42 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+                '|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.'
             )
             ->once();
         $this->logger
@@ -359,7 +321,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->logger
             ->shouldReceive('info')
             ->with(
-                '|_ Reference to Tuleap artifact #66 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+                '|_ Reference to Tuleap artifact #66 found, cross-reference will be added in project the GitLab repository is integrated in.'
             )
             ->once();
         $this->logger
@@ -369,6 +331,6 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             )
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository, $projects);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
     }
 }

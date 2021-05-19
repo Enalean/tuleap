@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { isGitlabRepository } from "./gitlab-checker";
+import { isGitlabRepository, isGitlabRepositoryWellConfigured } from "./gitlab-checker";
 import type { Repository } from "../type";
 
 describe("gitlabChecker", () => {
@@ -46,6 +46,52 @@ describe("gitlabChecker", () => {
                 gitlab_data: { gitlab_repository_id: 14589, gitlab_repository_url: "example.com" },
             } as Repository;
             expect(isGitlabRepository(repo)).toBeTruthy();
+        });
+    });
+
+    describe("isGitlabRepositoryWellConfigured", () => {
+        it("When repository hasn't gitlab_data, Then return false", () => {
+            expect(isGitlabRepositoryWellConfigured({} as Repository)).toBeFalsy();
+        });
+        it("When repository has gitlab_data but null, Then return false", () => {
+            const repo = { gitlab_data: null } as Repository;
+            expect(isGitlabRepositoryWellConfigured(repo)).toBeFalsy();
+        });
+        it("When repository has gitlab_data but empty, Then return false", () => {
+            const repo = { gitlab_data: {} } as Repository;
+            expect(isGitlabRepositoryWellConfigured(repo)).toBeFalsy();
+        });
+        it("When repository has gitlab_data but only gitlab_repository_url, Then return false", () => {
+            const repo = { gitlab_data: { gitlab_repository_url: "example.com" } } as Repository;
+            expect(isGitlabRepositoryWellConfigured(repo)).toBeFalsy();
+        });
+        it("When repository has gitlab_data but only gitlab_repository_id, Then return false", () => {
+            const repo = { gitlab_data: { gitlab_repository_id: 14589 } } as Repository;
+            expect(isGitlabRepositoryWellConfigured(repo)).toBeFalsy();
+        });
+        it("When repository has gitlab_data but only is_webhook_configured, Then return false", () => {
+            const repo = { gitlab_data: { is_webhook_configured: true } } as Repository;
+            expect(isGitlabRepositoryWellConfigured(repo)).toBeFalsy();
+        });
+        it("When repository has gitlab_data and webhook is configured, Then return true", () => {
+            const repo = {
+                gitlab_data: {
+                    gitlab_repository_id: 14589,
+                    gitlab_repository_url: "example.com",
+                    is_webhook_configured: true,
+                },
+            } as Repository;
+            expect(isGitlabRepositoryWellConfigured(repo)).toBeTruthy();
+        });
+        it("When repository has gitlab_data webhook is not configured, Then return false", () => {
+            const repo = {
+                gitlab_data: {
+                    gitlab_repository_id: 14589,
+                    gitlab_repository_url: "example.com",
+                    is_webhook_configured: false,
+                },
+            } as Repository;
+            expect(isGitlabRepositoryWellConfigured(repo)).toBeFalsy();
         });
     });
 });

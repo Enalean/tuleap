@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
@@ -82,6 +83,8 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->dao
@@ -110,6 +113,8 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->dao
@@ -136,6 +141,8 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->dao
@@ -164,6 +171,8 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->dao
@@ -184,7 +193,65 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->once();
 
+        $this->dao
+            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->with(6)
+            ->andReturnFalse();
+
         $this->logger->shouldReceive('info')->with("Deleting previous hook for the_full_url")->once();
+
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
+    }
+
+    public function testItRemovesOldWebhookFromServerAndDbAndInAnotherIntegrations(): void
+    {
+        $repository = new GitlabRepository(
+            1,
+            2,
+            'winter-is-coming',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+
+        $this->dao
+            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->with(1)
+            ->once()
+            ->andReturn(['gitlab_webhook_id' => 6]);
+
+        $this->gitlab_api_client
+            ->shouldReceive('deleteUrl')
+            ->with(
+                $this->credentials,
+                '/projects/2/hooks/6'
+            );
+
+        $this->dao
+            ->shouldReceive('deleteGitlabRepositoryWebhook')
+            ->with(1)
+            ->once();
+
+        $this->dao
+            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->with(6)
+            ->andReturnTrue();
+
+        $this->dao
+            ->shouldReceive('deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne')
+            ->with(6)
+            ->once();
+
+        $this->logger->shouldReceive('info')->with("Deleting previous hook for the_full_url")->once();
+
+        $this->logger->shouldReceive('warning')
+            ->with(
+                "The webhook is used by another integrations (it may come from old integration). " .
+                "It will be deleted on GitLab side and configuration must be regenerated for these integrations."
+            )
+            ->once();
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
     }
@@ -198,6 +265,8 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->dao
@@ -228,6 +297,11 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('info')
             ->with('Unable to delete the hook. Ignoring error: Error returned by the GitLab server: Not found')
             ->once();
+
+        $this->dao
+            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->with(1)
+            ->andReturnFalse();
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
     }

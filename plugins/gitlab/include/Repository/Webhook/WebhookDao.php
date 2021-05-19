@@ -26,31 +26,50 @@ use Tuleap\DB\DataAccessObject;
 class WebhookDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{repository_id:int, webhook_secret:string, gitlab_webhook_id: int}
+     * @psalm-return array{integration_id:int, webhook_secret:string, gitlab_webhook_id: int}
      */
-    public function getGitlabRepositoryWebhook(int $repository_id): ?array
+    public function getGitlabRepositoryWebhook(int $integration_id): ?array
     {
         $sql = 'SELECT *
-                FROM plugin_gitlab_repository_webhook_secret
-                WHERE repository_id = ?';
+                FROM plugin_gitlab_repository_integration_webhook
+                WHERE integration_id = ?';
 
-        return $this->getDB()->row($sql, $repository_id);
+        return $this->getDB()->row($sql, $integration_id);
     }
 
-    public function deleteGitlabRepositoryWebhook(int $repository_id): void
+    public function isIntegrationWebhookUsedByIntegrations(int $gitlab_webhook_id): bool
+    {
+        $sql = 'SELECT NULL
+                FROM plugin_gitlab_repository_integration_webhook
+                WHERE gitlab_webhook_id = ?';
+
+        $rows = $this->getDB()->run($sql, $gitlab_webhook_id);
+
+        return count($rows) > 0;
+    }
+
+    public function deleteGitlabRepositoryWebhook(int $integration_id): void
     {
         $this->getDB()->delete(
-            'plugin_gitlab_repository_webhook_secret',
-            ['repository_id' => $repository_id]
+            'plugin_gitlab_repository_integration_webhook',
+            ['integration_id' => $integration_id]
         );
     }
 
-    public function storeWebhook(int $repository_id, int $webhook_id, string $encrypted_secret): void
+    public function deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne(int $gitlab_webhook_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_gitlab_repository_integration_webhook',
+            ['gitlab_webhook_id' => $gitlab_webhook_id]
+        );
+    }
+
+    public function storeWebhook(int $integration_id, int $webhook_id, string $encrypted_secret): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
-            'plugin_gitlab_repository_webhook_secret',
+            'plugin_gitlab_repository_integration_webhook',
             [
-                'repository_id'     => $repository_id,
+                'integration_id'    => $integration_id,
                 'webhook_secret'    => $encrypted_secret,
                 'gitlab_webhook_id' => $webhook_id,
             ],

@@ -30,15 +30,10 @@ final class GitlabRepositoryBotApiTokenPatchRepresentation
     /**
      * @var int {@required true}
      */
-    public $gitlab_repository_id;
+    public $gitlab_integration_id;
 
     /**
      * @var string {@required true} {@pattern /^https:\/\//i}
      */
-    public $gitlab_repository_url;
-
-    /**
-     * @var string {@required true}
-     */
-    public $gitlab_bot_api_token;
+    public $gitlab_api_token;
 }

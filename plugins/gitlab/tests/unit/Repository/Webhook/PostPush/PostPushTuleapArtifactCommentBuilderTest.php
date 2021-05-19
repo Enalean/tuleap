@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
 use Tracker;
+use Project;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -43,7 +44,16 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user"
         );
         $reference  = new WebhookTuleapReference(12, null);
-        $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
         $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
         $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
@@ -52,6 +62,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             $repository,
             $artifact
         );
+
         self::assertEquals("", $comment);
     }
 
@@ -67,7 +78,16 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user"
         );
         $reference  = new WebhookTuleapReference(12, "solved");
-        $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
         $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
         $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
@@ -91,7 +111,16 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user"
         );
         $reference  = new WebhookTuleapReference(12, "resolves");
-        $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
         $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
         $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
@@ -115,7 +144,16 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user"
         );
         $reference  = new WebhookTuleapReference(12, "closes");
-        $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
         $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
         $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
@@ -139,7 +177,16 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user"
         );
         $reference  = new WebhookTuleapReference(12, "fixes");
-        $repository = new GitlabRepository(1, 12, "MyRepo", "", "https://example", new DateTimeImmutable());
+        $repository = new GitlabRepository(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
 
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getItemName')->willReturn("tracker_isetta");

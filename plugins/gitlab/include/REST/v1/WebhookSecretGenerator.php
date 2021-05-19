@@ -28,7 +28,6 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
@@ -39,10 +38,6 @@ class WebhookSecretGenerator
      * @var GitlabRepositoryFactory
      */
     private $repository_factory;
-    /**
-     * @var GitlabRepositoryProjectRetriever
-     */
-    private $project_retriever;
     /**
      * @var GitPermissionsManager
      */
@@ -58,13 +53,11 @@ class WebhookSecretGenerator
 
     public function __construct(
         GitlabRepositoryFactory $repository_factory,
-        GitlabRepositoryProjectRetriever $project_retriever,
         GitPermissionsManager $permissions_manager,
         CredentialsRetriever $credentials_retriever,
         WebhookCreator $webhook_creator
     ) {
         $this->repository_factory    = $repository_factory;
-        $this->project_retriever     = $project_retriever;
         $this->permissions_manager   = $permissions_manager;
         $this->credentials_retriever = $credentials_retriever;
         $this->webhook_creator       = $webhook_creator;
@@ -74,9 +67,8 @@ class WebhookSecretGenerator
         GitlabRepositoryWebhookSecretPatchRepresentation $patch_representation,
         \PFUser $current_user
     ): void {
-        $repository = $this->repository_factory->getGitlabRepositoryByGitlabRepositoryIdAndPath(
-            $patch_representation->gitlab_repository_id,
-            $patch_representation->gitlab_repository_url,
+        $repository = $this->repository_factory->getGitlabRepositoryById(
+            $patch_representation->gitlab_integration_id,
         );
         if (! $repository) {
             throw new RestException(404);
@@ -120,12 +112,6 @@ class WebhookSecretGenerator
 
     private function isUserAllowedToUpdateBotApiToken(\PFUser $current_user, GitlabRepository $repository): bool
     {
-        foreach ($this->project_retriever->getProjectsGitlabRepositoryIsIntegratedIn($repository) as $project) {
-            if ($this->permissions_manager->userIsGitAdmin($current_user, $project)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject());
     }
 }

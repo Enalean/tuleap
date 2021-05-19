@@ -63,8 +63,10 @@ describe("RegenerateGitlabWebhook", () => {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
                     gitlab_repository_id: 12,
+                    is_webhook_configured: false,
                 } as GitLabData,
                 normalized_path: "my/repo",
+                integration_id: 1,
             } as Repository,
         });
         await wrapper.vm.$nextTick();
@@ -77,10 +79,7 @@ describe("RegenerateGitlabWebhook", () => {
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
-        expect(store.dispatch).toHaveBeenCalledWith("gitlab/regenerateGitlabWebhook", {
-            gitlab_repository_id: 12,
-            gitlab_repository_url: "https://example.com/my/repo",
-        });
+        expect(store.dispatch).toHaveBeenCalledWith("gitlab/regenerateGitlabWebhook", 1);
     });
 
     it("When user submit but there are errors, Then nothing happens", async () => {
@@ -92,6 +91,7 @@ describe("RegenerateGitlabWebhook", () => {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
                     gitlab_repository_id: 12,
+                    is_webhook_configured: false,
                 },
                 normalized_path: "my/repo",
             },
@@ -112,6 +112,7 @@ describe("RegenerateGitlabWebhook", () => {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
                     gitlab_repository_id: 12,
+                    is_webhook_configured: false,
                 },
                 normalized_path: "my/repo",
             },
@@ -145,6 +146,7 @@ describe("RegenerateGitlabWebhook", () => {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
                     gitlab_repository_id: 12,
+                    is_webhook_configured: false,
                 },
                 normalized_path: "my/repo",
             },

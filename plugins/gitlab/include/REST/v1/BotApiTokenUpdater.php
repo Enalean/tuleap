@@ -31,7 +31,6 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -47,10 +46,6 @@ class BotApiTokenUpdater
      * @var GitlabRepositoryFactory
      */
     private $repository_factory;
-    /**
-     * @var GitlabRepositoryProjectRetriever
-     */
-    private $project_retriever;
     /**
      * @var GitPermissionsManager
      */
@@ -71,7 +66,6 @@ class BotApiTokenUpdater
     public function __construct(
         GitlabRepositoryFactory $repository_factory,
         GitlabProjectBuilder $project_builder,
-        GitlabRepositoryProjectRetriever $project_retriever,
         GitPermissionsManager $permissions_manager,
         GitlabBotApiTokenInserter $bot_api_token_inserter,
         WebhookCreator $webhook_creator,
@@ -79,7 +73,6 @@ class BotApiTokenUpdater
     ) {
         $this->project_builder        = $project_builder;
         $this->repository_factory     = $repository_factory;
-        $this->project_retriever      = $project_retriever;
         $this->permissions_manager    = $permissions_manager;
         $this->bot_api_token_inserter = $bot_api_token_inserter;
         $this->webhook_creator        = $webhook_creator;
@@ -88,9 +81,8 @@ class BotApiTokenUpdater
 
     public function update(ConcealedBotApiTokenPatchRepresentation $patch_representation, \PFUser $current_user): void
     {
-        $repository = $this->repository_factory->getGitlabRepositoryByGitlabRepositoryIdAndPath(
-            $patch_representation->gitlab_repository_id,
-            $patch_representation->gitlab_repository_url,
+        $repository = $this->repository_factory->getGitlabRepositoryById(
+            $patch_representation->gitlab_integration_id,
         );
         if (! $repository) {
             throw new RestException(404);
@@ -137,12 +129,6 @@ class BotApiTokenUpdater
 
     private function isUserAllowedToUpdateBotApiToken(\PFUser $current_user, GitlabRepository $repository): bool
     {
-        foreach ($this->project_retriever->getProjectsGitlabRepositoryIsIntegratedIn($repository) as $project) {
-            if ($this->permissions_manager->userIsGitAdmin($current_user, $project)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject());
     }
 }

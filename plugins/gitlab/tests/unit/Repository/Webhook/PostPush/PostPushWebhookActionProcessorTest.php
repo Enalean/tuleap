@@ -30,7 +30,6 @@ use Reference;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
@@ -49,11 +48,6 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectRetriever
-     */
-    private $gitlab_repository_project_retriever;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
@@ -84,16 +78,14 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->logger = Mockery::mock(LoggerInterface::class);
 
-        $this->gitlab_repository_project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
-        $this->commit_tuleap_reference_dao         = Mockery::mock(CommitTuleapReferenceDao::class);
-        $this->reference_manager                   = Mockery::mock(ReferenceManager::class);
-        $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
-        $this->commenter                           = Mockery::mock(PostPushCommitBotCommenter::class);
-        $this->close_artifact_handler              = Mockery::mock(PostPushWebhookCloseArtifactHandler::class);
+        $this->commit_tuleap_reference_dao = Mockery::mock(CommitTuleapReferenceDao::class);
+        $this->reference_manager           = Mockery::mock(ReferenceManager::class);
+        $this->tuleap_reference_retriever  = Mockery::mock(TuleapReferenceRetriever::class);
+        $this->commenter                   = Mockery::mock(PostPushCommitBotCommenter::class);
+        $this->close_artifact_handler      = Mockery::mock(PostPushWebhookCloseArtifactHandler::class);
 
         $this->processor = new PostPushWebhookActionProcessor(
             new WebhookTuleapReferencesParser(),
-            $this->gitlab_repository_project_retriever,
             $this->commit_tuleap_reference_dao,
             $this->reference_manager,
             $this->tuleap_reference_retriever,
@@ -111,7 +103,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostPushWebhookData(
@@ -130,13 +124,6 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 )
             ]
         );
-
-        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->once()
-            ->with($gitlab_repository)
-            ->andReturn([
-                Project::buildForTest()
-            ]);
 
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->once()
@@ -183,7 +170,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->once();
         $this->logger
             ->shouldReceive('info')
-            ->with("|  |_ Tuleap artifact #123 found, cross-reference will be added for each project the GitLab repository is integrated in.")
+            ->with("|  |_ Tuleap artifact #123 found, cross-reference will be added in project the GitLab repository is integrated in.")
             ->once();
         $this->logger
             ->shouldReceive('error')
@@ -230,7 +217,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostPushWebhookData(
@@ -249,13 +238,6 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 )
             ]
         );
-
-        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->once()
-            ->with($gitlab_repository)
-            ->andReturn([
-                Project::buildForTest()
-            ]);
 
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->once()
@@ -284,7 +266,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->once();
         $this->logger
             ->shouldReceive('info')
-            ->with("|  |_ Tuleap artifact #123 found, cross-reference will be added for each project the GitLab repository is integrated in.")
+            ->with("|  |_ Tuleap artifact #123 found, cross-reference will be added in project the GitLab repository is integrated in.")
             ->once();
         $this->logger
             ->shouldReceive('info')
@@ -323,7 +305,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostPushWebhookData(
@@ -347,13 +331,6 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->once()
             ->with(123)
             ->andThrow(new TuleapReferencedArtifactNotFoundException(123));
-
-        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->once()
-            ->with($gitlab_repository)
-            ->andReturn([
-                Project::buildForTest()
-            ]);
 
         $this->commit_tuleap_reference_dao->shouldReceive('saveGitlabCommitInfo')
             ->never();
@@ -392,7 +369,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostPushWebhookData(
@@ -416,13 +395,6 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->once()
             ->with(123)
             ->andThrow(new TuleapReferenceNotFoundException());
-
-        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->once()
-            ->with($gitlab_repository)
-            ->andReturn([
-                Project::buildForTest()
-            ]);
 
         $this->commit_tuleap_reference_dao->shouldReceive('saveGitlabCommitInfo')
             ->never();

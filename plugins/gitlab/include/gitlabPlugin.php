@@ -42,8 +42,8 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
+use Tuleap\Gitlab\Repository\IntegrationWebhookController;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
@@ -75,7 +75,6 @@ use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookDeleteAction;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
-use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HttpClientFactory;
@@ -180,6 +179,7 @@ class gitlabPlugin extends Plugin
     {
         $event->getRouteCollector()->addGroup('/plugins/gitlab', function (FastRoute\RouteCollector $r) {
             $r->post('/repository/webhook', $this->getRouteHandler('routePostGitlabRepositoryWebhook'));
+            $r->post('/integration/{integration_id:\d+}/webhook', $this->getRouteHandler('routePostIntegrationWebhook'));
         });
     }
 
@@ -204,15 +204,9 @@ class gitlabPlugin extends Plugin
             new WebhookTuleapReferencesParser(),
         );
 
-        $gitlab_repository_project_retriever = new GitlabRepositoryProjectRetriever(
-            new GitlabRepositoryProjectDao(),
-            ProjectManager::instance()
-        );
-
         $comment_sender = new CommentSender(
             $gitlab_api_client,
             new InvalidCredentialsNotifier(
-                $gitlab_repository_project_retriever,
                 new MailBuilder(
                     TemplateRendererFactory::build(),
                     new MailFilter(
@@ -249,9 +243,7 @@ class gitlabPlugin extends Plugin
                 new TagPushWebhookDataBuilder(),
                 $logger
             ),
-            new WebhookRepositoryRetriever(
-                $this->getGitlabRepositoryFactory()
-            ),
+            $this->getGitlabRepositoryFactory(),
             new SecretChecker(
                 new SecretRetriever(
                     new WebhookDao(),
@@ -262,7 +254,6 @@ class gitlabPlugin extends Plugin
                 new GitlabRepositoryDao(),
                 new PostPushWebhookActionProcessor(
                     new WebhookTuleapReferencesParser(),
-                    $gitlab_repository_project_retriever,
                     new CommitTuleapReferenceDao(),
                     $reference_manager,
                     $tuleap_reference_retriever,
@@ -283,7 +274,6 @@ class gitlabPlugin extends Plugin
                 ),
                 new PostMergeRequestWebhookActionProcessor(
                     $merge_request_reference_dao,
-                    $gitlab_repository_project_retriever,
                     $logger,
                     new PostMergeRequestBotCommenter(
                         $comment_sender,
@@ -317,13 +307,157 @@ class gitlabPlugin extends Plugin
                         ),
                         new WebhookTuleapReferencesParser(),
                         $tuleap_reference_retriever,
-                        $gitlab_repository_project_retriever,
                         ReferenceManager::instance(),
                         new TagInfoDao(),
                         $logger
                     ),
                     new TagPushWebhookDeleteAction(
-                        $gitlab_repository_project_retriever,
+                        new TagInfoDao(),
+                        new CrossReferenceManager(),
+                        $logger
+                    ),
+                    new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
+                    )
+                ),
+                $logger,
+            ),
+            $logger,
+            HTTPFactoryBuilder::responseFactory(),
+            new SapiEmitter(),
+            new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::SERVICE_NAME)
+        );
+    }
+
+    public function routePostIntegrationWebhook(): IntegrationWebhookController
+    {
+        $logger            = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
+        $reference_manager = ReferenceManager::instance();
+
+        $request_factory       = HTTPFactoryBuilder::requestFactory();
+        $stream_factory        = HTTPFactoryBuilder::streamFactory();
+        $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
+        $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+
+        $tuleap_reference_retriever = new TuleapReferenceRetriever(
+            EventManager::instance(),
+            $reference_manager
+        );
+
+        $merge_request_reference_dao = new MergeRequestTuleapReferenceDao();
+
+        $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
+            new WebhookTuleapReferencesParser(),
+        );
+
+        $comment_sender = new CommentSender(
+            $gitlab_api_client,
+            new InvalidCredentialsNotifier(
+                new MailBuilder(
+                    TemplateRendererFactory::build(),
+                    new MailFilter(
+                        UserManager::instance(),
+                        new ProjectAccessChecker(
+                            new RestrictedUserCanAccessProjectVerifier(),
+                            EventManager::instance()
+                        ),
+                        new MailLogger()
+                    ),
+                ),
+                new InstanceBaseURLBuilder(),
+                new GitlabBotApiTokenDao(),
+                $logger,
+            ),
+        );
+
+        $commenter = new PostPushCommitBotCommenter(
+            $comment_sender,
+            new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+            $logger,
+            new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+            TemplateRendererFactory::build(),
+        );
+
+        return new IntegrationWebhookController(
+            new WebhookDataExtractor(
+                new PostPushWebhookDataBuilder(
+                    new PostPushCommitWebhookDataExtractor(
+                        $logger
+                    )
+                ),
+                new PostMergeRequestWebhookDataBuilder($logger),
+                new TagPushWebhookDataBuilder(),
+                $logger
+            ),
+            $this->getGitlabRepositoryFactory(),
+            new SecretChecker(
+                new SecretRetriever(
+                    new WebhookDao(),
+                    new KeyFactory()
+                )
+            ),
+            new WebhookActions(
+                new GitlabRepositoryDao(),
+                new PostPushWebhookActionProcessor(
+                    new WebhookTuleapReferencesParser(),
+                    new CommitTuleapReferenceDao(),
+                    $reference_manager,
+                    $tuleap_reference_retriever,
+                    $logger,
+                    $commenter,
+                    new PostPushWebhookCloseArtifactHandler(
+                        new PostPushCommitArtifactUpdater(
+                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory()),
+                            UserManager::instance(),
+                            $logger
+                        ),
+                        new ArtifactRetriever(Tracker_ArtifactFactory::instance()),
+                        UserManager::instance(),
+                        Tracker_Semantic_StatusFactory::instance(),
+                        new GitlabRepositoryProjectDao(),
+                        $logger
+                    )
+                ),
+                new PostMergeRequestWebhookActionProcessor(
+                    $merge_request_reference_dao,
+                    $logger,
+                    new PostMergeRequestBotCommenter(
+                        $comment_sender,
+                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        $logger,
+                        new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+                        TemplateRendererFactory::build()
+                    ),
+                    new PreviouslySavedReferencesRetriever(
+                        $references_from_merge_request_data_extractor,
+                        $tuleap_reference_retriever,
+                        $merge_request_reference_dao,
+                    ),
+                    new CrossReferenceFromMergeRequestCreator(
+                        $references_from_merge_request_data_extractor,
+                        $tuleap_reference_retriever,
+                        ReferenceManager::instance(),
+                        $logger,
+                    ),
+                    new PostMergeRequestWebhookAuthorDataRetriever(
+                        $gitlab_api_client,
+                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory()))
+                    ),
+                    new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
+                ),
+                new TagPushWebhookActionProcessor(
+                    new TagPushWebhookCreateAction(
+                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        new GitlabTagRetriever(
+                            $gitlab_api_client
+                        ),
+                        new WebhookTuleapReferencesParser(),
+                        $tuleap_reference_retriever,
+                        ReferenceManager::instance(),
+                        new TagInfoDao(),
+                        $logger
+                    ),
+                    new TagPushWebhookDeleteAction(
                         new TagInfoDao(),
                         new CrossReferenceManager(),
                         $logger
@@ -391,7 +525,8 @@ class gitlabPlugin extends Plugin
     private function getGitlabRepositoryFactory(): GitlabRepositoryFactory
     {
         return new GitlabRepositoryFactory(
-            new GitlabRepositoryDao()
+            new GitlabRepositoryDao(),
+            ProjectManager::instance()
         );
     }
 
@@ -437,7 +572,7 @@ class gitlabPlugin extends Plugin
     {
         $gitlab_repository_dao = new GitlabRepositoryDao();
         $gitlab_organizer      = new GitlabCrossReferenceOrganizer(
-            new GitlabRepositoryFactory($gitlab_repository_dao),
+            new GitlabRepositoryFactory($gitlab_repository_dao, ProjectManager::instance()),
             new GitlabCommitFactory(new CommitTuleapReferenceDao()),
             new GitlabCommitCrossReferenceEnhancer(
                 \UserManager::instance(),

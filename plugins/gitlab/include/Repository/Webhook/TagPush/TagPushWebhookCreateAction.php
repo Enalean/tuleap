@@ -32,7 +32,6 @@ use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
@@ -51,10 +50,6 @@ class TagPushWebhookCreateAction
      * @var WebhookTuleapReferencesParser
      */
     private $tuleap_references_parser;
-    /**
-     * @var GitlabRepositoryProjectRetriever
-     */
-    private $gitlab_repository_project_retriever;
     /**
      * @var LoggerInterface
      */
@@ -77,24 +72,24 @@ class TagPushWebhookCreateAction
         GitlabTagRetriever $gitlab_tag_retriever,
         WebhookTuleapReferencesParser $tuleap_references_parser,
         TuleapReferenceRetriever $tuleap_reference_retriever,
-        GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         ReferenceManager $reference_manager,
         TagInfoDao $tag_info_dao,
         LoggerInterface $logger
     ) {
-        $this->credentials_retriever               = $credentials_retriever;
-        $this->gitlab_tag_retriever                = $gitlab_tag_retriever;
-        $this->tuleap_references_parser            = $tuleap_references_parser;
-        $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
-        $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
-        $this->reference_manager                   = $reference_manager;
-        $this->tag_info_dao                        = $tag_info_dao;
-        $this->logger                              = $logger;
+        $this->credentials_retriever      = $credentials_retriever;
+        $this->gitlab_tag_retriever       = $gitlab_tag_retriever;
+        $this->tuleap_references_parser   = $tuleap_references_parser;
+        $this->tuleap_reference_retriever = $tuleap_reference_retriever;
+        $this->reference_manager          = $reference_manager;
+        $this->tag_info_dao               = $tag_info_dao;
+        $this->logger                     = $logger;
     }
 
-    public function createTagReferences(GitlabRepository $gitlab_repository, TagPushWebhookData $tag_push_webhook_data): void
-    {
-        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
+    public function createTagReferences(
+        GitlabRepository $gitlab_repository_integration,
+        TagPushWebhookData $tag_push_webhook_data
+    ): void {
+        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
         if ($credentials === null) {
             //Do nothing, not able to query the GitLab API
             $this->logger->warning("No credentials found for the repository, tag reference cannot be extracted.");
@@ -103,13 +98,9 @@ class TagPushWebhookCreateAction
 
         $tag_name = $tag_push_webhook_data->getTagName();
 
-        $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
-            $gitlab_repository
-        );
-
         $gitlab_tag_from_api = $this->gitlab_tag_retriever->getTagFromGitlabAPI(
             $credentials,
-            $gitlab_repository,
+            $gitlab_repository_integration,
             $tag_name
         );
 
@@ -127,15 +118,14 @@ class TagPushWebhookCreateAction
                 $external_reference = $this->tuleap_reference_retriever->retrieveTuleapReference($tuleap_reference->getId());
 
                 $this->logger->info(
-                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added for each project the GitLab repository is integrated in."
+                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added in project the GitLab repository is integrated in."
                 );
 
-                $this->saveReferenceInEachIntegratedProject(
-                    $gitlab_repository,
+                $this->saveReferenceInIntegratedProject(
+                    $gitlab_repository_integration,
                     $tuleap_reference,
                     $tag_push_webhook_data,
-                    $external_reference,
-                    $projects
+                    $external_reference
                 );
 
                 $valid_tuleap_references[] = $tuleap_reference;
@@ -146,7 +136,7 @@ class TagPushWebhookCreateAction
 
         if (! empty($valid_tuleap_references)) {
             $this->saveTagData(
-                $gitlab_repository,
+                $gitlab_repository_integration,
                 $gitlab_tag_from_api
             );
         }
@@ -155,40 +145,37 @@ class TagPushWebhookCreateAction
     /**
      * @param Project[] $projects
      */
-    private function saveReferenceInEachIntegratedProject(
-        GitlabRepository $gitlab_repository,
+    private function saveReferenceInIntegratedProject(
+        GitlabRepository $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,
         TagPushWebhookData $tag_push_webhook_data,
-        \Reference $external_reference,
-        array $projects
+        \Reference $external_reference
     ): void {
-        foreach ($projects as $project) {
-            $cross_reference = new CrossReference(
-                $gitlab_repository->getName() . '/' . $tag_push_webhook_data->getTagName(),
-                $project->getID(),
-                GitlabTagReference::NATURE_NAME,
-                GitlabTagReference::REFERENCE_NAME,
-                $tuleap_reference->getId(),
-                $external_reference->getGroupId(),
-                $external_reference->getNature(),
-                $external_reference->getKeyword(),
-                0
-            );
+        $cross_reference = new CrossReference(
+            $gitlab_repository_integration->getName() . '/' . $tag_push_webhook_data->getTagName(),
+            (int) $gitlab_repository_integration->getProject()->getID(),
+            GitlabTagReference::NATURE_NAME,
+            GitlabTagReference::REFERENCE_NAME,
+            $tuleap_reference->getId(),
+            $external_reference->getGroupId(),
+            $external_reference->getNature(),
+            $external_reference->getKeyword(),
+            0
+        );
 
-            $this->reference_manager->insertCrossReference($cross_reference);
-        }
+        $this->reference_manager->insertCrossReference($cross_reference);
     }
 
-    private function saveTagData(GitlabRepository $gitlab_repository, GitlabTag $gitlab_tag_from_api): void
+    private function saveTagData(GitlabRepository $gitlab_repository_integration, GitlabTag $gitlab_tag_from_api): void
     {
         $tag_name = $gitlab_tag_from_api->getName();
 
         $this->tag_info_dao->saveGitlabTagInfo(
-            $gitlab_repository->getId(),
+            $gitlab_repository_integration->getId(),
             $gitlab_tag_from_api->getCommitSha1(),
             $tag_name,
             $gitlab_tag_from_api->getMessage(),
         );
-        $this->logger->info("Tag data for $tag_name saved in database");
+        $this->logger->info("Tag data for $tag_name saved in database for the integration #" . $gitlab_repository_integration->getId());
     }
 }

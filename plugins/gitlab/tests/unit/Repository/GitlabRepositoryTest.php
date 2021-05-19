@@ -28,7 +28,7 @@ class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testGetGitlabServerUrl()
+    public function testGetGitlabServerUrl(): void
     {
         $repository = new GitlabRepository(
             1,
@@ -36,7 +36,9 @@ class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'smartoid/browser',
             'Next gen browser',
             'https://gitlab.example.com/smartoid/browser',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            \Project::buildForTest(),
+            false
         );
 
         self::assertEquals('https://gitlab.example.com/', $repository->getGitlabServerUrl());

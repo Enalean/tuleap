@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
@@ -70,7 +71,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -103,7 +106,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -141,7 +146,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -185,7 +192,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(
@@ -229,7 +238,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'root/repo01',
             '',
             'https://example.com/root/repo01',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $webhook_data = new PostMergeRequestWebhookData(

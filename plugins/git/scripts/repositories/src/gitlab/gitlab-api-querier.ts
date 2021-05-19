@@ -19,12 +19,12 @@
 
 import type { GitLabCredentials } from "../type";
 import { del, get, patch, post, recursiveGet } from "tlp";
-import type { GitLabData, GitLabDataWithToken, Repository } from "../type";
+import type { GitLabDataWithToken, Repository } from "../type";
 import type { RepositoryCallback } from "../api/rest-querier";
+import type { GitLabDataIntegrationId } from "../type";
 
 export interface GitLabRepositoryDeletion {
-    repository_id: number;
-    project_id: number;
+    integration_id: number;
 }
 
 export interface GitLabRepositoryCreation {
@@ -37,7 +37,7 @@ export interface GitLabRepositoryCreation {
 
 export interface GitLabRepositoryUpdate {
     update_bot_api_token?: GitLabDataWithToken;
-    generate_new_secret?: GitLabData;
+    generate_new_secret?: GitLabDataIntegrationId;
 }
 
 export function getAsyncGitlabRepositoryList(credentials: GitLabCredentials): Promise<Response> {
@@ -51,10 +51,7 @@ export function deleteIntegrationGitlab(
     repository_deletion: GitLabRepositoryDeletion
 ): Promise<Response> {
     return del(
-        "/api/v1/gitlab_repositories/" +
-            encodeURIComponent(repository_deletion.repository_id) +
-            "?project_id=" +
-            encodeURIComponent(repository_deletion.project_id)
+        "/api/v1/gitlab_repositories/" + encodeURIComponent(repository_deletion.integration_id)
     );
 }
 

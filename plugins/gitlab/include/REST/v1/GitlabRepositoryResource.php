@@ -53,8 +53,6 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
@@ -149,10 +147,10 @@ final class GitlabRepositoryResource
                     DBFactory::getMainTuleapDBConnection()
                 ),
                 new GitlabRepositoryFactory(
-                    new GitlabRepositoryDao()
+                    new GitlabRepositoryDao(),
+                    ProjectManager::instance()
                 ),
                 new GitlabRepositoryDao(),
-                new GitlabRepositoryProjectDao(),
                 new WebhookCreator(
                     new KeyFactory(),
                     new WebhookDao(),
@@ -181,6 +179,11 @@ final class GitlabRepositoryResource
                 $configuration
             );
 
+            $webhook_dao         = new WebhookDao();
+            $integration_webhook = $webhook_dao->getGitlabRepositoryWebhook(
+                $integrated_gitlab_repository->getId()
+            );
+
             return new GitlabRepositoryRepresentation(
                 $integrated_gitlab_repository->getId(),
                 $integrated_gitlab_repository->getGitlabRepositoryId(),
@@ -188,6 +191,9 @@ final class GitlabRepositoryResource
                 $integrated_gitlab_repository->getDescription(),
                 $integrated_gitlab_repository->getGitlabRepositoryUrl(),
                 $integrated_gitlab_repository->getLastPushDate()->getTimestamp(),
+                $integrated_gitlab_repository->getProject(),
+                $integrated_gitlab_repository->isArtifactClosureAllowed(),
+                $integration_webhook !== null
             );
         } catch (
             GitlabResponseAPIException |
@@ -206,13 +212,12 @@ final class GitlabRepositoryResource
     /**
      * Update GitLab integration
      *
-     * <p>To update the bot api token, used by Tuleap to communicate with GitLab:</p>
+     * <p>To update the API token, used by Tuleap to communicate with GitLab:</p>
      * <pre>
      * {<br>
      *   &nbsp;"update_bot_api_token": {<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_bot_api_token" : "The new token",<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_id" : 145896<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_url" : "https://example.com/project/url"<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_api_token" : "The new token",<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_integration_id" : 145896<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -225,8 +230,7 @@ final class GitlabRepositoryResource
      * <pre>
      * {<br>
      *   &nbsp;"generate_new_secret": {<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_id" : 145896<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_url" : "https://example.com/project/url"<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_integration_id" : 145896<br>
      *   &nbsp;}<br>
      * }<br>
      * </pre>
@@ -258,13 +262,10 @@ final class GitlabRepositoryResource
         if ($patch_representation->update_bot_api_token) {
             $bot_api_token_updater = new BotApiTokenUpdater(
                 new GitlabRepositoryFactory(
-                    new GitlabRepositoryDao()
-                ),
-                new GitlabProjectBuilder($gitlab_api_client),
-                new GitlabRepositoryProjectRetriever(
-                    new GitlabRepositoryProjectDao(),
+                    new GitlabRepositoryDao(),
                     ProjectManager::instance()
                 ),
+                new GitlabProjectBuilder($gitlab_api_client),
                 $this->getGitPermissionsManager(),
                 new GitlabBotApiTokenInserter(
                     new GitlabBotApiTokenDao(),
@@ -287,9 +288,8 @@ final class GitlabRepositoryResource
 
             $bot_api_token_updater->update(
                 new ConcealedBotApiTokenPatchRepresentation(
-                    $patch_representation->update_bot_api_token->gitlab_repository_id,
-                    $patch_representation->update_bot_api_token->gitlab_repository_url,
-                    new ConcealedString($patch_representation->update_bot_api_token->gitlab_bot_api_token),
+                    $patch_representation->update_bot_api_token->gitlab_integration_id,
+                    new ConcealedString($patch_representation->update_bot_api_token->gitlab_api_token),
                 ),
                 $current_user,
             );
@@ -298,10 +298,7 @@ final class GitlabRepositoryResource
         if ($patch_representation->generate_new_secret) {
             $generator = new WebhookSecretGenerator(
                 new GitlabRepositoryFactory(
-                    new GitlabRepositoryDao()
-                ),
-                new GitlabRepositoryProjectRetriever(
-                    new GitlabRepositoryProjectDao(),
+                    new GitlabRepositoryDao(),
                     ProjectManager::instance()
                 ),
                 $this->getGitPermissionsManager(),
@@ -349,8 +346,7 @@ final class GitlabRepositoryResource
      * @url    DELETE {id}
      * @access protected
      *
-     * @param int $id         Id of the GitLab repository integration
-     * @param int $project_id Id of the project the GitLab repository integration must be removed. {@from path} {@required true}
+     * @param int $id Id of the GitLab repository integration
      *
      * @status 204
      *
@@ -358,24 +354,22 @@ final class GitlabRepositoryResource
      * @throws RestException 401
      * @throws RestException 404
      */
-    protected function deleteGitlabRepository(int $id, int $project_id): void
+    protected function deleteGitlabRepository(int $id): void
     {
         $this->optionsId($id);
 
         $repository_factory = new GitlabRepositoryFactory(
-            new GitlabRepositoryDao()
+            new GitlabRepositoryDao(),
+            ProjectManager::instance()
         );
 
-        $gitlab_repository = $repository_factory->getGitlabRepositoryById($id);
+        $gitlab_repository_integration = $repository_factory->getGitlabRepositoryById($id);
 
-        if ($gitlab_repository === null) {
+        if ($gitlab_repository_integration === null) {
             throw new RestException(404, "Repository #$id not found.");
         }
 
-        $project = $this->getProjectById($project_id);
-
-        $current_user = UserManager::instance()->getCurrentUser();
-
+        $current_user          = UserManager::instance()->getCurrentUser();
         $request_factory       = HTTPFactoryBuilder::requestFactory();
         $stream_factory        = HTTPFactoryBuilder::streamFactory();
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
@@ -386,7 +380,6 @@ final class GitlabRepositoryResource
             new DBTransactionExecutorWithConnection(
                 DBFactory::getMainTuleapDBConnection()
             ),
-            new GitlabRepositoryProjectDao(),
             new WebhookDeletor(
                 new WebhookDao(),
                 $gitlab_api_client,
@@ -401,9 +394,8 @@ final class GitlabRepositoryResource
         );
 
         try {
-            $deletor->deleteRepositoryInProject(
-                $gitlab_repository,
-                $project,
+            $deletor->deleteRepositoryIntegration(
+                $gitlab_repository_integration,
                 $current_user
             );
         } catch (GitUserNotAdminException $exception) {

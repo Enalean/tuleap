@@ -93,7 +93,7 @@ import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import type { FetchWrapperError, Modal } from "tlp";
 import { createModal } from "tlp";
-import type { GitLabData, Repository } from "../../../type";
+import type { Repository } from "../../../type";
 import { namespace } from "vuex-class";
 
 const gitlab = namespace("gitlab");
@@ -101,7 +101,7 @@ const gitlab = namespace("gitlab");
 @Component
 export default class RegenerateGitlabWebhook extends Vue {
     @gitlab.Action
-    readonly regenerateGitlabWebhook!: (gitlab_data: GitLabData) => Promise<void>;
+    readonly regenerateGitlabWebhook!: (integration_id: number | string) => Promise<void>;
 
     @gitlab.State
     readonly regenerate_gitlab_webhook_repository!: Repository;
@@ -187,7 +187,8 @@ export default class RegenerateGitlabWebhook extends Vue {
         this.is_updating_webhook = true;
 
         try {
-            await this.regenerateGitlabWebhook(this.repository.gitlab_data);
+            await this.regenerateGitlabWebhook(this.repository.integration_id);
+            this.repository.gitlab_data.is_webhook_configured = true;
             this.onSuccessRegenerateGitlabWebhook();
             if (this.modal) {
                 this.modal.hide();

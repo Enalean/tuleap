@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ use Tuleap\Gitlab\Repository\Webhook\EventNotAllowedException;
 use Tuleap\Gitlab\Repository\Webhook\InvalidValueFormatException;
 use Tuleap\Gitlab\Repository\Webhook\MissingEventHeaderException;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
-use Tuleap\Gitlab\Repository\Webhook\RepositoryNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
@@ -42,8 +41,9 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Gitlab\Repository\Webhook\EmptyBranchNameException;
+use Tuleap\Request\NotFoundException;
 
-class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
+class IntegrationWebhookController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
     /**
      * @var WebhookDataExtractor
@@ -97,32 +97,31 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->logger->info("Previous GitLab webhook received.");
-        $current_time = new DateTimeImmutable();
+        $this->logger->info("GitLab webhook received.");
+        $current_time   = new DateTimeImmutable();
+        $integration_id = (int) $request->getAttribute('integration_id');
 
         try {
-            $webhook_data        = $this->webhook_data_extractor->retrieveWebhookData($request);
-            $gitlab_integrations = $this->gitlab_repository_factory->getGitlabRepositoriesByGitlabRepositoryIdAndPath(
-                $webhook_data->getGitlabProjectId(),
-                $webhook_data->getGitlabWebUrl()
-            );
-
-            foreach ($gitlab_integrations as $gitlab_integration) {
-                $this->secret_checker->checkSecret(
-                    $gitlab_integration,
-                    $request
-                );
-
-                $this->webhook_actions->performActions(
-                    $gitlab_integration,
-                    $webhook_data,
-                    $current_time
+            $gitlab_repository = $this->gitlab_repository_factory->getGitlabRepositoryById($integration_id);
+            if ($gitlab_repository === null) {
+                throw new NotFoundException(
+                    dgettext('tuleap-gitlab', 'The GitLab repository integration cannot be found.')
                 );
             }
+
+            $this->secret_checker->checkSecret(
+                $gitlab_repository,
+                $request
+            );
+
+            $webhook_data = $this->webhook_data_extractor->retrieveWebhookData($request);
+            $this->webhook_actions->performActions(
+                $gitlab_repository,
+                $webhook_data,
+                $current_time
+            );
+
             return $this->response_factory->createResponse(200);
-        } catch (RepositoryNotFoundException $exception) {
-            $this->logger->error($exception->getMessage());
-            return $this->response_factory->createResponse(404);
         } catch (
             MissingKeyException |
             EventNotAllowedException |

@@ -32,12 +32,7 @@ final class ConcealedBotApiTokenPatchRepresentation
     /**
      * @var int
      */
-    public $gitlab_repository_id;
-
-    /**
-     * @var string
-     */
-    public $gitlab_repository_url;
+    public $gitlab_integration_id;
 
     /**
      * @var ConcealedString
@@ -45,12 +40,10 @@ final class ConcealedBotApiTokenPatchRepresentation
     public $gitlab_bot_api_token;
 
     public function __construct(
-        int $gitlab_repository_id,
-        string $gitlab_repository_url,
+        int $gitlab_integration_id,
         ConcealedString $gitlab_bot_api_token
     ) {
-        $this->gitlab_repository_id  = $gitlab_repository_id;
-        $this->gitlab_repository_url = $gitlab_repository_url;
+        $this->gitlab_integration_id = $gitlab_integration_id;
         $this->gitlab_bot_api_token  = $gitlab_bot_api_token;
     }
 }

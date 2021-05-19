@@ -59,6 +59,9 @@ msgstr "Référence vers une demande de fusion GitLab"
 msgid "Reference to a GitLab tag"
 msgstr "Référence vers une étiquette GitLab"
 
+msgid "The GitLab repository integration cannot be found."
+msgstr "L'intégration du dépôt GitLab n'a pas été trouvée."
+
 #, php-format
 msgid ""
 "The project reference based on the keyword '%s' is overriding the system "

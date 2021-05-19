@@ -141,9 +141,8 @@ export default class ConfirmReplaceTokenModal extends Vue {
 
         try {
             await this.updateBotApiTokenGitlab({
-                gitlab_bot_api_token: this.gitlab_new_token,
-                gitlab_repository_id: this.repository.gitlab_data?.gitlab_repository_id,
-                gitlab_repository_url: this.repository.gitlab_data?.gitlab_repository_url,
+                gitlab_integration_id: this.repository.integration_id,
+                gitlab_api_token: this.gitlab_new_token,
             });
 
             this.$emit("on-success-edit-token");

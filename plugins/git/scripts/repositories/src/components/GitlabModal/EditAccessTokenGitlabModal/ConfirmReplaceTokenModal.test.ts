@@ -63,6 +63,7 @@ describe("ConfirmReplaceTokenModal", () => {
                     gitlab_repository_id: 12,
                 },
                 normalized_path: "my/repo",
+                integration_id: 1,
             },
             gitlab_new_token: "AZRERT123",
         };
@@ -79,9 +80,8 @@ describe("ConfirmReplaceTokenModal", () => {
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
         expect(store.dispatch).toHaveBeenCalledWith("gitlab/updateBotApiTokenGitlab", {
-            gitlab_bot_api_token: "AZRERT123",
-            gitlab_repository_id: 12,
-            gitlab_repository_url: "https://example.com/my/repo",
+            gitlab_api_token: "AZRERT123",
+            gitlab_integration_id: 1,
         });
 
         const on_success_edit_token = wrapper.emitted()["on-success-edit-token"];
@@ -97,7 +97,7 @@ describe("ConfirmReplaceTokenModal", () => {
             repository: {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
-                    gitlab_repository_id: 12,
+                    gitlab_repository_id: 1,
                 },
                 normalized_path: "my/repo",
             },

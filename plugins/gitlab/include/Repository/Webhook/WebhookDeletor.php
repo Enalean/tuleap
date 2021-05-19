@@ -57,7 +57,9 @@ class WebhookDeletor
         ?Credentials $credentials,
         GitlabRepository $gitlab_repository
     ): void {
-        $row = $this->dao->getGitlabRepositoryWebhook($gitlab_repository->getId());
+        $integration_id = $gitlab_repository->getId();
+
+        $row = $this->dao->getGitlabRepositoryWebhook($integration_id);
         if (! $row) {
             return;
         }
@@ -68,7 +70,7 @@ class WebhookDeletor
         }
 
         if (! $credentials) {
-            $this->dao->deleteGitlabRepositoryWebhook($gitlab_repository->getId());
+            $this->dao->deleteGitlabRepositoryWebhook($integration_id);
             return;
         }
 
@@ -80,7 +82,15 @@ class WebhookDeletor
                 $credentials,
                 "/projects/$gitlab_repository_id/hooks/$previous_webhook_id"
             );
-            $this->dao->deleteGitlabRepositoryWebhook($gitlab_repository->getId());
+            $this->dao->deleteGitlabRepositoryWebhook($integration_id);
+
+            if ($this->dao->isIntegrationWebhookUsedByIntegrations($previous_webhook_id)) {
+                $this->logger->warning(
+                    "The webhook is used by another integrations (it may come from old integration). " .
+                    "It will be deleted on GitLab side and configuration must be regenerated for these integrations."
+                );
+                $this->dao->deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne($previous_webhook_id);
+            }
         } catch (GitlabRequestException $e) {
             // Ignore errors. It is not big deal if we cannot remove the hook.
             // Maybe it has already been manually deleted on GitLab side?

@@ -25,7 +25,6 @@ use Project;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 
@@ -40,11 +39,6 @@ class GitlabRepositoryCreator
      * @var GitlabRepositoryFactory
      */
     private $gitlab_repository_factory;
-
-    /**
-     * @var GitlabRepositoryProjectDao
-     */
-    private $gitlab_repository_project_dao;
 
     /**
      * @var GitlabRepositoryDao
@@ -64,16 +58,14 @@ class GitlabRepositoryCreator
         DBTransactionExecutor $db_transaction_executor,
         GitlabRepositoryFactory $gitlab_repository_factory,
         GitlabRepositoryDao $gitlab_repository_dao,
-        GitlabRepositoryProjectDao $gitlab_repository_project_dao,
         WebhookCreator $webhook_creator,
         GitlabBotApiTokenInserter $token_inserter
     ) {
-        $this->db_transaction_executor       = $db_transaction_executor;
-        $this->gitlab_repository_factory     = $gitlab_repository_factory;
-        $this->gitlab_repository_dao         = $gitlab_repository_dao;
-        $this->gitlab_repository_project_dao = $gitlab_repository_project_dao;
-        $this->webhook_creator               = $webhook_creator;
-        $this->token_inserter                = $token_inserter;
+        $this->db_transaction_executor   = $db_transaction_executor;
+        $this->gitlab_repository_factory = $gitlab_repository_factory;
+        $this->gitlab_repository_dao     = $gitlab_repository_dao;
+        $this->webhook_creator           = $webhook_creator;
+        $this->token_inserter            = $token_inserter;
     }
 
     /**
@@ -91,6 +83,7 @@ class GitlabRepositoryCreator
                 $gitlab_repository_id  = $gitlab_project->getId();
                 $gitlab_web_url        = $gitlab_project->getWebUrl();
                 $gitlab_name_with_path = $gitlab_project->getPathWithNamespace();
+                $project_id            = (int) $project->getID();
 
                 if (
                     $this->gitlab_repository_dao->isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(
@@ -102,18 +95,17 @@ class GitlabRepositoryCreator
                     throw new GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException($gitlab_name_with_path);
                 }
 
-                $already_existing_gitlab_repository = $this->gitlab_repository_factory->getGitlabRepositoryByGitlabRepositoryIdAndPath(
+                $already_existing_gitlab_repository = $this->gitlab_repository_dao->isTheGitlabRepositoryAlreadyIntegratedInProject(
+                    $project_id,
                     $gitlab_repository_id,
                     $gitlab_web_url
                 );
-                if ($already_existing_gitlab_repository !== null) {
-                    $this->addAlreadyIntegratedGitlabRepositoryInProject(
-                        $already_existing_gitlab_repository,
-                        $project,
-                        $configuration
-                    );
 
-                    return $already_existing_gitlab_repository;
+                if ($already_existing_gitlab_repository === true) {
+                    throw new GitlabRepositoryAlreadyIntegratedInProjectException(
+                        $gitlab_repository_id,
+                        $project_id
+                    );
                 }
 
                 return $this->createGitlabRepositoryIntegration(
@@ -126,59 +118,19 @@ class GitlabRepositoryCreator
         );
     }
 
-    /**
-     * @throws GitlabRepositoryAlreadyIntegratedInProjectException
-     */
-    private function addAlreadyIntegratedGitlabRepositoryInProject(
-        GitlabRepository $already_existing_gitlab_repository,
-        Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration
-    ): void {
-        $repository_id = $already_existing_gitlab_repository->getId();
-        $project_id    = (int) $project->getID();
-
-
-        if ($this->gitlab_repository_project_dao->isGitlabRepositoryIntegratedInProject($repository_id, $project_id)) {
-            throw new GitlabRepositoryAlreadyIntegratedInProjectException(
-                $repository_id,
-                $project_id
-            );
-        }
-
-        $this->gitlab_repository_project_dao->addGitlabRepositoryIntegrationInProject(
-            $repository_id,
-            $project_id,
-            (int) $configuration->isRepositoryIntegrationAllowingArtifactClosure()
-        );
-    }
-
     private function createGitlabRepositoryIntegration(
         Credentials $credentials,
         GitlabProject $gitlab_project,
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration
     ): GitlabRepository {
-        $id = $this->gitlab_repository_dao->createGitlabRepository(
-            $gitlab_project->getId(),
-            $gitlab_project->getPathWithNamespace(),
-            $gitlab_project->getDescription(),
-            $gitlab_project->getWebUrl(),
-            $gitlab_project->getLastActivityAt()->getTimestamp(),
-        );
-
-        $gitlab_repository = $this->gitlab_repository_factory->getGitlabRepositoryByGitlabProjectAndId(
+        $gitlab_repository = $this->gitlab_repository_factory->createRepositoryIntegration(
             $gitlab_project,
-            $id
-        );
-
-        $this->gitlab_repository_project_dao->addGitlabRepositoryIntegrationInProject(
-            $id,
-            (int) $project->getID(),
-            (int) $configuration->isRepositoryIntegrationAllowingArtifactClosure()
+            $project,
+            $configuration
         );
 
         $this->webhook_creator->generateWebhookInGitlabProject($credentials, $gitlab_repository);
-
         $this->token_inserter->insertToken($gitlab_repository, $credentials->getBotApiToken()->getToken());
 
         return $gitlab_repository;

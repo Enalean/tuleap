@@ -87,7 +87,6 @@
 <script lang="ts">
 import type { FetchWrapperError, Modal } from "tlp";
 import { createModal } from "tlp";
-import { getProjectId } from "../../../repository-list-presenter";
 import { deleteIntegrationGitlab } from "../../../gitlab/gitlab-api-querier";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
@@ -176,8 +175,7 @@ export default class UnlinkRepositoryGitlabModal extends Vue {
         this.is_loading = true;
         try {
             await deleteIntegrationGitlab({
-                repository_id: Number(this.repository.integration_id),
-                project_id: getProjectId(),
+                integration_id: Number(this.repository.integration_id),
             });
 
             this.$store.commit("removeRepository", this.repository);

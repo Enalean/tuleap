@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
@@ -60,7 +61,9 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             'path/repo01',
             'description',
             'https://example.com/path/repo01',
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $this->secret_retriever = Mockery::mock(SecretRetriever::class);

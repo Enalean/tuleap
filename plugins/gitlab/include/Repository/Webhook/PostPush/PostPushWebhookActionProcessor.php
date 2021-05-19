@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use CrossReference;
-use Project;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
@@ -30,7 +29,6 @@ use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
@@ -47,11 +45,6 @@ class PostPushWebhookActionProcessor
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var GitlabRepositoryProjectRetriever
-     */
-    private $gitlab_repository_project_retriever;
 
     /**
      * @var ReferenceManager
@@ -78,7 +71,6 @@ class PostPushWebhookActionProcessor
 
     public function __construct(
         WebhookTuleapReferencesParser $commit_tuleap_references_parser,
-        GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         CommitTuleapReferenceDao $commit_tuleap_reference_dao,
         ReferenceManager $reference_manager,
         TuleapReferenceRetriever $tuleap_reference_retriever,
@@ -86,33 +78,28 @@ class PostPushWebhookActionProcessor
         PostPushCommitBotCommenter $commenter,
         PostPushWebhookCloseArtifactHandler $close_artifact_handler
     ) {
-        $this->commit_tuleap_references_parser     = $commit_tuleap_references_parser;
-        $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
-        $this->commit_tuleap_reference_dao         = $commit_tuleap_reference_dao;
-        $this->reference_manager                   = $reference_manager;
-        $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
-        $this->logger                              = $logger;
-        $this->commenter                           = $commenter;
-        $this->close_artifact_handler              = $close_artifact_handler;
+        $this->commit_tuleap_references_parser = $commit_tuleap_references_parser;
+        $this->commit_tuleap_reference_dao     = $commit_tuleap_reference_dao;
+        $this->reference_manager               = $reference_manager;
+        $this->tuleap_reference_retriever      = $tuleap_reference_retriever;
+        $this->logger                          = $logger;
+        $this->commenter                       = $commenter;
+        $this->close_artifact_handler          = $close_artifact_handler;
     }
 
-    public function process(GitlabRepository $gitlab_repository, PostPushWebhookData $webhook_data): void
+    public function process(GitlabRepository $gitlab_repository_integration, PostPushWebhookData $webhook_data): void
     {
         foreach ($webhook_data->getCommits() as $commit_webhook_data) {
-            $this->parseCommitReferences($gitlab_repository, $commit_webhook_data);
+            $this->parseCommitReferences($gitlab_repository_integration, $commit_webhook_data);
         }
     }
 
     private function parseCommitReferences(
-        GitlabRepository $gitlab_repository,
+        GitlabRepository $gitlab_repository_integration,
         PostPushCommitWebhookData $commit_webhook_data
     ): void {
         $references_collection = $this->commit_tuleap_references_parser->extractCollectionOfTuleapReferences(
             $commit_webhook_data->getMessage()
-        );
-
-        $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
-            $gitlab_repository
         );
 
         $good_references = [];
@@ -128,21 +115,20 @@ class PostPushWebhookActionProcessor
                 assert($external_reference instanceof \Reference);
 
                 $this->logger->info(
-                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added for each project the GitLab repository is integrated in."
+                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added in project the GitLab repository is integrated in."
                 );
 
-                $this->saveReferenceInEachIntegratedProject(
-                    $gitlab_repository,
+                $this->saveReferenceInIntegratedProject(
+                    $gitlab_repository_integration,
                     $tuleap_reference,
                     $commit_webhook_data,
                     $external_reference,
-                    $projects
                 );
 
                 $this->close_artifact_handler->handleArtifactClosure(
                     $tuleap_reference,
                     $commit_webhook_data,
-                    $gitlab_repository
+                    $gitlab_repository_integration
                 );
 
                 $good_references[] = $tuleap_reference;
@@ -153,43 +139,37 @@ class PostPushWebhookActionProcessor
 
         if (! empty($good_references)) {
             // Save commit data if there is at least 1 good artifact reference in the commit message
-            $this->saveCommitData($gitlab_repository, $commit_webhook_data);
-            $this->commenter->addCommentOnCommit($commit_webhook_data, $gitlab_repository, $good_references);
+            $this->saveCommitData($gitlab_repository_integration, $commit_webhook_data);
+            $this->commenter->addCommentOnCommit($commit_webhook_data, $gitlab_repository_integration, $good_references);
         }
     }
 
-    /**
-     * @param Project[] $projects
-     */
-    private function saveReferenceInEachIntegratedProject(
-        GitlabRepository $gitlab_repository,
+    private function saveReferenceInIntegratedProject(
+        GitlabRepository $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,
         PostPushCommitWebhookData $commit_webhook_data,
-        \Reference $external_reference,
-        array $projects
+        \Reference $external_reference
     ): void {
-        foreach ($projects as $project) {
-            $cross_reference = new CrossReference(
-                $gitlab_repository->getName() . '/' . $commit_webhook_data->getSha1(),
-                $project->getID(),
-                GitlabCommitReference::NATURE_NAME,
-                GitlabCommitReference::REFERENCE_NAME,
-                $tuleap_reference->getId(),
-                $external_reference->getGroupId(),
-                $external_reference->getNature(),
-                $external_reference->getKeyword(),
-                0
-            );
+        $cross_reference = new CrossReference(
+            $gitlab_repository_integration->getName() . '/' . $commit_webhook_data->getSha1(),
+            (int) $gitlab_repository_integration->getProject()->getID(),
+            GitlabCommitReference::NATURE_NAME,
+            GitlabCommitReference::REFERENCE_NAME,
+            $tuleap_reference->getId(),
+            $external_reference->getGroupId(),
+            $external_reference->getNature(),
+            $external_reference->getKeyword(),
+            0
+        );
 
-            $this->reference_manager->insertCrossReference($cross_reference);
-        }
+        $this->reference_manager->insertCrossReference($cross_reference);
     }
 
-    private function saveCommitData(GitlabRepository $gitlab_repository, PostPushCommitWebhookData $commit_webhook_data): void
+    private function saveCommitData(GitlabRepository $gitlab_repository_integration, PostPushCommitWebhookData $commit_webhook_data): void
     {
         $commit_sha1 = $commit_webhook_data->getSha1();
         $this->commit_tuleap_reference_dao->saveGitlabCommitInfo(
-            $gitlab_repository->getId(),
+            $gitlab_repository_integration->getId(),
             $commit_sha1,
             $commit_webhook_data->getCommitDate(),
             $commit_webhook_data->getTitle(),

@@ -38,7 +38,6 @@ use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
@@ -64,10 +63,6 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tuleap_reference_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectRetriever
-     */
-    private $gitlab_repository_project_retriever;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
      */
     private $reference_manager;
@@ -88,20 +83,18 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->credentials_retriever               = Mockery::mock(CredentialsRetriever::class);
-        $this->gitlab_tag_retriever                = Mockery::mock(GitlabTagRetriever::class);
-        $this->tuleap_references_parser            = new WebhookTuleapReferencesParser();
-        $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
-        $this->gitlab_repository_project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
-        $this->reference_manager                   = Mockery::mock(ReferenceManager::class);
-        $this->tag_info_dao                        = Mockery::mock(TagInfoDao::class);
+        $this->credentials_retriever      = Mockery::mock(CredentialsRetriever::class);
+        $this->gitlab_tag_retriever       = Mockery::mock(GitlabTagRetriever::class);
+        $this->tuleap_references_parser   = new WebhookTuleapReferencesParser();
+        $this->tuleap_reference_retriever = Mockery::mock(TuleapReferenceRetriever::class);
+        $this->reference_manager          = Mockery::mock(ReferenceManager::class);
+        $this->tag_info_dao               = Mockery::mock(TagInfoDao::class);
 
         $this->action = new TagPushWebhookCreateAction(
             $this->credentials_retriever,
             $this->gitlab_tag_retriever,
             $this->tuleap_references_parser,
             $this->tuleap_reference_retriever,
-            $this->gitlab_repository_project_retriever,
             $this->reference_manager,
             $this->tag_info_dao,
             new NullLogger()
@@ -116,7 +109,9 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "root/repo01",
             "",
             "https://example.com/root/repo01",
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
@@ -148,12 +143,6 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($credentials, $gitlab_repository, "v1.0.2")
             ->andReturn($gitlab_tag);
-
-        $project = Project::buildForTest();
-        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->once()
-            ->with($gitlab_repository)
-            ->andReturn([$project]);
 
         $tuleap_reference = new Reference(
             2337,
@@ -199,7 +188,9 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "root/repo01",
             "",
             "https://example.com/root/repo01",
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
@@ -233,7 +224,9 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "root/repo01",
             "",
             "https://example.com/root/repo01",
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
@@ -266,12 +259,6 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($credentials, $gitlab_repository, "v1.0.2")
             ->andReturn($gitlab_tag);
 
-        $project = Project::buildForTest();
-        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->once()
-            ->with($gitlab_repository)
-            ->andReturn([$project]);
-
         $this->reference_manager->shouldNotReceive('insertCrossReference');
         $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
 
@@ -289,7 +276,9 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "root/repo01",
             "",
             "https://example.com/root/repo01",
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
@@ -321,12 +310,6 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($credentials, $gitlab_repository, "v1.0.2")
             ->andReturn($gitlab_tag);
-
-        $project = Project::buildForTest();
-        $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->once()
-            ->with($gitlab_repository)
-            ->andReturn([$project]);
 
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->with(1337)

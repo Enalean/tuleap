@@ -31,7 +31,6 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
@@ -45,10 +44,6 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
      */
     private $repository_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectRetriever
-     */
-    private $project_retriever;
     /**
      * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
@@ -69,14 +64,12 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->repository_factory    = Mockery::mock(GitlabRepositoryFactory::class);
-        $this->project_retriever     = Mockery::mock(GitlabRepositoryProjectRetriever::class);
         $this->permissions_manager   = Mockery::mock(GitPermissionsManager::class);
         $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
         $this->webhook_creator       = Mockery::mock(WebhookCreator::class);
 
         $this->generator = new WebhookSecretGenerator(
             $this->repository_factory,
-            $this->project_retriever,
             $this->permissions_manager,
             $this->credentials_retriever,
             $this->webhook_creator,
@@ -87,12 +80,11 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
 
-        $patch->gitlab_repository_id  = 123;
-        $patch->gitlab_repository_url = 'https://gitlab.example.com/repo/full_url';
+        $patch->gitlab_integration_id = 123;
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturnNull();
 
         $this->expectException(RestException::class);
@@ -101,43 +93,27 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->generator->regenerate($patch, Mockery::mock(\PFUser::class));
     }
 
-    public function test404IfUserIsNotGitAdminOfAtLeastOneProjectWhereTheGitlabRepositoryIsIntegrated(): void
+    public function test404IfUserIsNotGitAdminOfTheProjectWhereTheGitlabRepositoryIsIntegrated(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
         $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
 
-        $patch->gitlab_repository_id  = 123;
-        $patch->gitlab_repository_url = 'https://gitlab.example.com/repo/full_url';
+        $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(GitlabRepository::class);
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
-        $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $project = Mockery::mock(Project::class);
+        $repository->shouldReceive('getProject')->andReturn($project);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
+            ->with($user, $project)
             ->andReturnFalse();
 
         $this->expectException(RestException::class);
@@ -152,8 +128,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
 
-        $patch->gitlab_repository_id  = 123;
-        $patch->gitlab_repository_url = 'https://gitlab.example.com/repo/full_url';
+        $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
             GitlabRepository::class,
@@ -164,31 +139,16 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
-        $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $project = Mockery::mock(Project::class);
+        $repository->shouldReceive('getProject')->andReturn($project);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
+            ->with($user, $project)
             ->andReturnTrue();
 
         $this->credentials_retriever
@@ -208,8 +168,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
 
-        $patch->gitlab_repository_id  = 123;
-        $patch->gitlab_repository_url = 'https://gitlab.example.com/repo/full_url';
+        $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
             GitlabRepository::class,
@@ -220,31 +179,16 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
-        $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $project = Mockery::mock(Project::class);
+        $repository->shouldReceive('getProject')->andReturn($project);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
+            ->with($user, $project)
             ->andReturnTrue();
 
         $credentials = CredentialsTestBuilder::get()->build();
@@ -271,8 +215,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
 
-        $patch->gitlab_repository_id  = 123;
-        $patch->gitlab_repository_url = 'https://gitlab.example.com/repo/full_url';
+        $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
             GitlabRepository::class,
@@ -283,31 +226,16 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
-        $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $project = Mockery::mock(Project::class);
+        $repository->shouldReceive('getProject')->andReturn($project);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
+            ->with($user, $project)
             ->andReturnTrue();
 
         $credentials = CredentialsTestBuilder::get()->build();
@@ -335,8 +263,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
 
-        $patch->gitlab_repository_id  = 123;
-        $patch->gitlab_repository_url = 'https://gitlab.example.com/repo/full_url';
+        $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
             GitlabRepository::class,
@@ -347,31 +274,16 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
-            ->with(123, "https://gitlab.example.com/repo/full_url")
+            ->shouldReceive('getGitlabRepositoryById')
+            ->with(123)
             ->andReturn($repository);
 
-        $project_a = Mockery::mock(Project::class);
-        $project_b = Mockery::mock(Project::class);
-
-        $this->project_retriever
-            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
-            ->with($repository)
-            ->andReturn(
-                [
-                    $project_a,
-                    $project_b,
-                ]
-            );
+        $project = Mockery::mock(Project::class);
+        $repository->shouldReceive('getProject')->andReturn($project);
 
         $this->permissions_manager
             ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_a)
-            ->andReturnFalse();
-
-        $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
-            ->with($user, $project_b)
+            ->with($user, $project)
             ->andReturnTrue();
 
         $credentials = CredentialsTestBuilder::get()->build();

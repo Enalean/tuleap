@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository;
 
 use DateTimeImmutable;
+use Project;
 
 /**
  * @psalm-immutable
@@ -57,6 +58,14 @@ class GitlabRepository
      * @var DateTimeImmutable
      */
     private $last_push_date;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var bool
+     */
+    private $allow_artifact_closure;
 
     public function __construct(
         int $id,
@@ -64,14 +73,18 @@ class GitlabRepository
         string $name,
         string $description,
         string $gitlab_repository_url,
-        DateTimeImmutable $last_push_date
+        DateTimeImmutable $last_push_date,
+        Project $project,
+        bool $allow_artifact_closure
     ) {
-        $this->id                    = $id;
-        $this->gitlab_repository_id  = $gitlab_repository_id;
-        $this->name                  = $name;
-        $this->description           = $description;
-        $this->gitlab_repository_url = $gitlab_repository_url;
-        $this->last_push_date        = $last_push_date;
+        $this->id                     = $id;
+        $this->gitlab_repository_id   = $gitlab_repository_id;
+        $this->name                   = $name;
+        $this->description            = $description;
+        $this->gitlab_repository_url  = $gitlab_repository_url;
+        $this->last_push_date         = $last_push_date;
+        $this->project                = $project;
+        $this->allow_artifact_closure = $allow_artifact_closure;
     }
 
     public function getId(): int
@@ -107,5 +120,15 @@ class GitlabRepository
     public function getLastPushDate(): DateTimeImmutable
     {
         return $this->last_push_date;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    public function isArtifactClosureAllowed(): bool
+    {
+        return $this->allow_artifact_closure;
     }
 }

@@ -24,8 +24,10 @@ namespace Tuleap\Gitlab\REST\v1;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use ProjectManager;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -80,12 +82,19 @@ final class GitlabProjectResource extends AuthenticatedResource
         $project = $this->getProject($id, $user);
 
         $gitlab_repository_factory = new GitlabRepositoryFactory(
-            new GitlabRepositoryDao()
+            new GitlabRepositoryDao(),
+            ProjectManager::instance()
         );
+
+        $webhook_dao = new WebhookDao();
 
         $gitlab_repositories                 = $gitlab_repository_factory->getGitlabRepositoriesForProject($project);
         $gitlab_repositories_representations = [];
         foreach ($gitlab_repositories as $gitlab_repository) {
+            $integration_webhook = $webhook_dao->getGitlabRepositoryWebhook(
+                $gitlab_repository->getId()
+            );
+
             $gitlab_repositories_representations[] = new GitlabRepositoryRepresentation(
                 $gitlab_repository->getId(),
                 $gitlab_repository->getGitlabRepositoryId(),
@@ -93,6 +102,9 @@ final class GitlabProjectResource extends AuthenticatedResource
                 $gitlab_repository->getDescription(),
                 $gitlab_repository->getGitlabRepositoryUrl(),
                 $gitlab_repository->getLastPushDate()->getTimestamp(),
+                $gitlab_repository->getProject(),
+                $gitlab_repository->isArtifactClosureAllowed(),
+                $integration_webhook !== null
             );
         }
 
@@ -112,7 +124,7 @@ final class GitlabProjectResource extends AuthenticatedResource
      */
     private function getProject(int $id, PFUser $user): Project
     {
-        $project = \ProjectManager::instance()->getProject($id);
+        $project = ProjectManager::instance()->getProject($id);
         ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
 
         return $project;

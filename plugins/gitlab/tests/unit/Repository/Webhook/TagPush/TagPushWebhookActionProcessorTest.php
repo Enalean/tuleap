@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -67,7 +68,9 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "root/repo01",
             "",
             "https://example.com/root/repo01",
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
@@ -102,7 +105,9 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "root/repo01",
             "",
             "https://example.com/root/repo01",
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
@@ -137,7 +142,9 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "root/repo01",
             "",
             "https://example.com/root/repo01",
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
         );
 
         $tag_webhook_data = new TagPushWebhookData(
