@@ -27,7 +27,7 @@ use PFUser;
 use program_managementPlugin;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -111,7 +111,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
         $assets = $this->getAssets();
-        $layout->addCssAsset(new CssAsset($assets, 'program_management'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'program-management-style'));
 
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management.js'));

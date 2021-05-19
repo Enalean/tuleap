@@ -1,4 +1,4 @@
-@import 'steps';
+@use 'steps';
 
 .current-test {
     display: flex;
@@ -13,80 +13,80 @@
 
     &.passed > .tlp-pane-container {
         > .current-test-header {
-            background: $tlp-ui-success;
+            background: var(--tlp-ui-success);
         }
 
         > .current-test-latest-result {
-            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-success;
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), var(--tlp-ui-success);
         }
 
         > .current-test-automated-message {
-            color: $tlp-ui-success;
+            color: var(--tlp-ui-success);
         }
 
         .current-test-latest-result {
             code {
-                color: $tlp-ui-success;
+                color: var(--tlp-ui-success);
             }
         }
     }
 
     &.failed > .tlp-pane-container {
         > .current-test-header {
-            background: $tlp-ui-danger;
+            background: var(--tlp-ui-danger);
         }
 
         > .current-test-latest-result {
-            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-danger;
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), var(--tlp-ui-danger);
         }
 
         > .current-test-automated-message {
-            color: $tlp-ui-danger;
+            color: var(--tlp-ui-danger);
         }
 
         .current-test-latest-result {
             code {
-                color: $tlp-ui-danger;
+                color: var(--tlp-ui-danger);
             }
         }
     }
 
     &.blocked > .tlp-pane-container {
         > .current-test-header {
-            background: $tlp-ui-info;
+            background: var(--tlp-ui-info);
         }
 
         > .current-test-latest-result {
-            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-info;
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), var(--tlp-ui-info);
         }
 
         > .current-test-automated-message {
-            color: $tlp-ui-info;
+            color: var(--tlp-ui-info);
         }
 
         .current-test-latest-result {
             code {
-                color: $tlp-ui-info;
+                color: var(--tlp-ui-info);
             }
         }
     }
 
     &.notrun > .tlp-pane-container {
         > .current-test-header {
-            background: $tlp-ui-dimmed;
+            background: var(--tlp-ui-dimmed);
         }
 
         > .current-test-latest-result {
-            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-dimmed;
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), var(--tlp-ui-dimmed);
         }
 
         > .current-test-automated-message {
-            color: $tlp-ui-dimmed;
+            color: var(--tlp-ui-dimmed);
         }
 
         .current-test-latest-result {
             code {
-                color: $tlp-ui-dimmed;
+                color: var(--tlp-ui-dimmed);
             }
         }
     }
@@ -118,7 +118,7 @@
 
 .current-test-header-title {
     margin: 0;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     font-size: 24px;
 }
 
@@ -179,13 +179,13 @@
         border-radius: 50%;
         background-color: transparent;
         box-shadow: none;
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
         font-size: 20px;
 
         &:hover,
         &:focus {
-            background: transparentize($tlp-ui-white, .9);
-            box-shadow: $tlp-button-shadow-hover;
+            background: var(--tlp-ui-white-transparent-80);
+            box-shadow: var(--tlp-button-shadow-hover);
         }
     }
 }
@@ -195,15 +195,15 @@
     flex: 0 0 auto;
     background-blend-mode: overlay, normal;
     mix-blend-mode: normal;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
 
     a {
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
         text-decoration: underline;
     }
 
     code {
-        background: transparentize($tlp-ui-white, .2);
+        background: var(--tlp-ui-white-transparent-10);
     }
 }
 
@@ -212,11 +212,11 @@
 }
 
 .artifact-link-graph-dot {
-    fill: $tlp-ui-white;
+    fill: var(--tlp-ui-white);
 }
 
 .artifact-link-graph-path {
-    stroke: $tlp-ui-white;
+    stroke: var(--tlp-ui-white);
 }
 
 .current-test-content {
@@ -244,7 +244,7 @@ execution-with-steps.current-test-content {
 }
 
 .current-test-footer-section {
-    border-top: 1px solid $tlp-ui-border-light;
+    border-top: 1px solid var(--tlp-ui-border-light);
 }
 
 .current-test-footer-section-closed-campaign {
@@ -252,8 +252,8 @@ execution-with-steps.current-test-content {
     align-items: center;
     justify-content: center;
     min-height: 100px;
-    background: $tlp-theme-color-dimmed-background;
-    color: $tlp-ui-dimmed;
+    background: var(--tlp-theme-color-dimmed-background);
+    color: var(--tlp-ui-dimmed);
     font-size: .875rem;
     line-height: 1.375rem;
 }
@@ -272,14 +272,14 @@ execution-with-steps.current-test-content {
     padding: 8px 12px;
     overflow: auto;
     transition: border-color ease-out 150ms;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 3px;
 
     &:focus,
     &.cke_focus { // stylelint-disable-line selector-class-pattern
         min-height: 64px; // magic value to display 2 line of text (padding + 2 line-height of <p>)
         border-radius: 0 3px 3px;
-        border-color: $tlp-theme-color;
+        border-color: var(--tlp-theme-color);
     }
 
     p {
@@ -309,9 +309,9 @@ execution-with-steps.current-test-content {
     font-size: 25px;
 
     &.tlp-button-secondary {
-        border-color: $tlp-ui-dimmed;
-        background: $tlp-ui-dimmed;
-        color: $tlp-ui-white;
+        border-color: var(--tlp-ui-dimmed);
+        background: var(--tlp-ui-dimmed);
+        color: var(--tlp-ui-white);
     }
 }
 
@@ -333,7 +333,7 @@ execution-with-steps.current-test-content {
 }
 
 .current-test-description-empty-state {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-style: italic;
 }
 

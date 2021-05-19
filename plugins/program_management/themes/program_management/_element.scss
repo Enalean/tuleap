@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .element-card-#{$color-name} {
         --card-color: #{map-get($colors, 'primary')};
     }
@@ -40,7 +42,7 @@
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
     border-radius: 3px;
-    background: var(--secondary-color, #{$tlp-ui-white});
+    background: var(--secondary-color, var(--tlp-ui-white));
     box-shadow:
         0 1px 4px rgba(0, 0, 0, .08),
         0 1px 2px rgba(0, 0, 0, .1),
@@ -193,13 +195,13 @@
 .backlog-items-container {
     width: 95%;
     margin: 0 0 0 var(--tlp-small-spacing);
-    background: $tlp-ui-border-light;
+    background: var(--tlp-ui-border-light);
 }
 
 .backlog-items-children-container {
     padding: 8px;
-    border-right: 1px solid $tlp-ui-border-normal;
-    border-left: 1px solid $tlp-ui-border-normal;
+    border-right: 1px solid var(--tlp-ui-border-normal);
+    border-left: 1px solid var(--tlp-ui-border-normal);
 
     .element-card {
         margin: var(--tlp-small-spacing) 0 0 0;
@@ -209,13 +211,13 @@
 .backlog-items-children-container-handle {
     position: relative;
     height: 13px;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-top: 0;
     border-radius: 0 0 3px 3px;
     cursor: pointer;
 
     &:hover {
-        background: lighten($tlp-theme-background-color, 3%);
+        background: var(--tlp-theme-background-color-lighter-03);
     }
 }
 
@@ -224,13 +226,13 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: darken($tlp-ui-border-dark, 20%);
+    color: var(--tlp-ui-border-dark-darker-20);
     font-size: 8px;
     font-weight: 900;
 }
 
 .element-card-user-story-closed {
-    border-color: transparentize($tlp-ui-border-normal, .5);
+    border-color: var(--tlp-ui-border-normal-transparent-50);
     opacity: .5;
     background: transparent;
 }

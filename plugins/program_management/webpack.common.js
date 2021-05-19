@@ -23,14 +23,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const entry_points = {
     program_management: "./scripts/program_management/index.ts",
     artifact_additional_action: "./scripts/artifact-additional-action/src/index.ts",
+    "program-management-style": "./themes/program_management.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[
-        `program_management-${color}`
-    ] = `./themes/BurningParrot/program_management-${color}.scss`;
-}
 
 module.exports = [
     {

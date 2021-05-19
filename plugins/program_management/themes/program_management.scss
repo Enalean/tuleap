@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+@use 'program_management/project-header-background';
+@use 'program_management/backlog';
+@use 'program_management/element';
+@use 'program_management/program-increment';
+@use '~@tuleap/drag-and-drop';
 
-@import '../../../../../src/themes/tlp/src/scss/variables/variables-blue';
+.program-management-title-header {
+    margin: 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
+}
 
-@import 'testmanagement';
+.planning-divider {
+    display: flex;
+    justify-content: center;
+    width: 60px;
+    padding: 65px 0 0;
+}
+
+.planning-arrows {
+    opacity: .4;
+    fill: var(--tlp-theme-background-color-darker-20);
+}
+
+.program-management-error-modal-link {
+    cursor: pointer;
+}

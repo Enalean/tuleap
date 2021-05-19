@@ -17,5 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../src/themes/tlp/src/scss/variables/variables-orange';
-@import 'project-admin/project-admin';
+@use './includes/velocity-chart';
+
+.misconfigured-semantic-display-comma:last-child {
+    display: none;
+}

@@ -23,7 +23,7 @@ namespace Tuleap\ProjectOwnership\ProjectAdmin;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
@@ -76,7 +76,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $layout->addCssAsset(
-            new CssAsset(
+            new CssAssetWithoutVariantDeclinaisons(
                 new IncludeAssets(
                     __DIR__ . '/../../../../src/www/assets/project_ownership',
                     '/assets/project_ownership'

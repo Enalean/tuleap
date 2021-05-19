@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean,  2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/tlp/src/scss/variables/variables-grey';
+@use '~@tuleap/plugin-tracker-artifact-modal';
+@use 'includes/colors';
+@use 'includes/socket';
+@use 'includes/artifact-links-graph';
+@use 'includes/graph';
+@use 'includes/campaign';
+@use 'includes/execution-list';
+@use 'includes/presence';
+@use 'includes/execution-details-modal';
+@use 'includes/administration';
+@use 'includes/project-header-background';
 
-@import 'testmanagement';
+.loader {
+    width: 26px;
+    height: 26px;
+    margin: 0 auto;
+    background-image: url('../../../../../src/www/themes/BurningParrot/images/spinner.gif');
+}
+
+.testmanagement-button-update-status {
+    width: 100%;
+}

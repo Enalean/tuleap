@@ -21,12 +21,12 @@
     margin: 0 var(--tlp-small-spacing) var(--tlp-large-spacing) 0;
     border: 1px hidden;
     border-radius: 4px;
-    box-shadow: 0 3px 4px rgba($tlp-ui-border-normal, .25);
+    box-shadow: 0 3px 4px var(--tlp-ui-border-normal-transparent-25);
 }
 
 .program-increment-title {
     margin: 0 0 var(--tlp-medium-spacing) 0;
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
     font-weight: 600;
 }
 
@@ -45,14 +45,14 @@
     top: 44px;
     align-items: center;
     transition: background .1s linear;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 4px;
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
     cursor: pointer;
 
     &:hover {
         transition: background .1s linear;
-        background: darken($tlp-ui-white, 2%);
+        background: var(--tlp-ui-white-darker-02);
     }
 
     &:not(:last-child) {
@@ -63,12 +63,12 @@
 
 .program-increment-header-label {
     flex: 0 0 auto;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .program-increment-header-dates {
     margin: 0 var(--tlp-small-spacing) 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }
 
@@ -81,20 +81,20 @@
     display: flex;
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-top: 0;
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
 }
 
 .program-increment-content {
     position: relative;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-top: 0;
     border-radius: 0 0 4px 4px;
-    background: darken($tlp-ui-white, 2%);
+    background: var(--tlp-ui-white-darker-02);
 
     &:last-child {
-        border-bottom: 1px solid $tlp-ui-border-normal;
+        border-bottom: 1px solid var(--tlp-ui-border-normal);
     }
 }
 
@@ -123,7 +123,7 @@
     align-items: baseline;
     justify-content: center;
     margin: 0 0 var(--tlp-large-spacing) 0;
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 
     > .drop-not-accepted-icon {
         margin: 0 var(--tlp-small-spacing) 0 0;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,34 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.oauth2-server-authorization-form {
-    width: 100%;
-    max-width: 720px;
-    margin: 60px auto 0;
+#to-be-planned-backlog-error {
+    margin: var(--tlp-large-spacing);
 }
 
-.oauth2-server-authorization-form-actions {
+.program-backlog {
     display: flex;
-    align-items: baseline;
-    justify-content: flex-end;
+    margin: var(--tlp-large-spacing) 0 0 0;
 }
 
-.oauth2-server-authorization-form-action-authorize {
-    margin: 0 0 0 var(--tlp-medium-spacing);
+.to-be-planned {
+    flex: 1 1 50%;
 }
 
-.oauth2-server-scope-label {
+.program-increment {
+    flex: 1 1 50%;
+}
+
+.program-increment-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 var(--tlp-medium-spacing);
+    color: var(--tlp-theme-color-transparent-70);
+    font-size: 14px;
+    text-align: center;
+}
+
+.program-to-be-planned-title {
+    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    color: var(--tlp-typo-default-text-color);
     font-weight: 600;
-}
-
-.oauth2-server-scope-description {
-    display: block;
-    color: $tlp-ui-dimmed;
-    line-height: 20px;
-}
-
-@media screen and (max-width: 800px) {
-    .oauth2-server-scope-description {
-        display: none;
-    }
 }

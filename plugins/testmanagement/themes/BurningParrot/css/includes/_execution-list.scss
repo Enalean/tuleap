@@ -1,42 +1,44 @@
-@import 'link_issue_modal';
-@import 'current-execution';
+@use 'link_issue_modal';
+@use 'current-execution';
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-spacing) + 40px);
 
 .test-campaign {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$breadcrumb-height} - #{$height-testmanagement-header});
+    height: calc(100vh - #{global-variables.$breadcrumb-height} - #{$height-testmanagement-header});
     overflow: hidden;
 }
 
 .sidebar-collapsed .test-campaign {
-    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$height-testmanagement-header});
+    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{$height-testmanagement-header});
 }
 
 .has-visible-project-banner .test-campaign {
-    height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height} - #{$height-testmanagement-header});
+    height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - #{$height-testmanagement-header});
 }
 
 .has-visible-project-banner.sidebar-collapsed .test-campaign {
-    height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$height-testmanagement-header});
+    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - #{$height-testmanagement-header});
 }
 
 .has-visible-platform-banner {
     .test-campaign {
-        height: calc(100vh - #{$breadcrumb-height} - #{$height-testmanagement-header} - #{$platform-banner-base-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{$height-testmanagement-header} - #{global-variables.$platform-banner-base-height});
     }
 
     &.sidebar-collapsed .test-campaign {
-        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$height-testmanagement-header} - #{$platform-banner-base-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{$height-testmanagement-header} - #{global-variables.$platform-banner-base-height});
     }
 
     &.has-visible-project-banner .test-campaign {
-        height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$height-testmanagement-header} - #{$extra-platform-banner-white-space-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{$height-testmanagement-header} - #{global-variables.$extra-platform-banner-white-space-height});
     }
 
     &.has-visible-project-banner.sidebar-collapsed .test-campaign {
-        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$height-testmanagement-header} - #{$extra-platform-banner-white-space-height});
+        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - #{global-variables.$platform-banner-base-height} - #{$height-testmanagement-header} - #{global-variables.$extra-platform-banner-white-space-height});
     }
 }
 
@@ -80,7 +82,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     }
 
     &:focus-visible {
-        box-shadow: $tlp-shadow-focus;
+        box-shadow: var(--tlp-shadow-focus);
     }
 }
 
@@ -111,13 +113,13 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     padding: 0;
     border: 0;
     background-color: unset;
-    color: $tlp-swatch-graffiti-yellow;
+    color: swatch-colors.$tlp-swatch-graffiti-yellow;
     font-size: 22px;
     cursor: pointer;
 
     &:hover,
     &:focus {
-        color: darken($tlp-swatch-graffiti-yellow, 20%);
+        color: swatch-colors.$tlp-swatch-graffiti-yellow-secondary;
     }
 }
 
@@ -151,29 +153,29 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     > .tests-passed {
         display: table-cell;
         padding: 2px;
-        background: $tlp-ui-success;
-        color: $tlp-ui-white;
+        background: var(--tlp-ui-success);
+        color: var(--tlp-ui-white);
     }
 
     > .tests-failed {
         display: table-cell;
         padding: 2px;
-        background: $tlp-ui-danger;
-        color: $tlp-ui-white;
+        background: var(--tlp-ui-danger);
+        color: var(--tlp-ui-white);
     }
 
     > .tests-blocked {
         display: table-cell;
         padding: 2px;
-        background: $tlp-ui-info;
-        color: $tlp-ui-white;
+        background: var(--tlp-ui-info);
+        color: var(--tlp-ui-white);
     }
 
     > .tests-notrun {
         display: table-cell;
         padding: 2px;
-        background: $tlp-ui-dimmed;
-        color: $tlp-ui-white;
+        background: var(--tlp-ui-dimmed);
+        color: var(--tlp-ui-white);
     }
 }
 
@@ -191,19 +193,19 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
 .test-status-icon {
     &.passed {
-        color: $tlp-ui-success;
+        color: var(--tlp-ui-success);
     }
 
     &.failed {
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
     }
 
     &.blocked {
-        color: $tlp-ui-info;
+        color: var(--tlp-ui-info);
     }
 
     &.notrun {
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 }
 
@@ -251,7 +253,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
     &:focus-within {
         transition: border-color .15s linear;
-        border: 1px solid $tlp-theme-color;
+        border: 1px solid var(--tlp-theme-color);
     }
 
     > .tests-list-filter-search {
@@ -297,7 +299,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
         }
 
         &.filtered-status {
-            color: $tlp-ui-border-dark;
+            color: var(--tlp-ui-border-dark);
         }
     }
 }
@@ -305,7 +307,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 #filters-dropdown-menu {
     right: -18px;
     margin: 44px 0 0;
-    border-bottom: 1px solid $tlp-ui-border-normal;
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
     border-top-style: none;
     box-shadow: none;
 
@@ -324,7 +326,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
         &:last-child {
             margin: 0;
             padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) var(--tlp-medium-spacing);
-            border-top: 1px solid $tlp-ui-border-light;
+            border-top: 1px solid var(--tlp-ui-border-light);
         }
 
         > .tests-filter-option-title {
@@ -343,8 +345,8 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 .tests-list-category {
     margin: 0;
     padding: 5px 10px;
-    background: $tlp-theme-background-color;
-    color: $tlp-theme-color;
+    background: var(--tlp-theme-background-color);
+    color: var(--tlp-theme-color);
     font-size: 13px;
     font-weight: 600;
     letter-spacing: .3px;
@@ -358,32 +360,32 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     cursor: pointer;
 
     &.passed {
-        border-left: 3px solid $tlp-ui-success;
-        background: transparentize($tlp-ui-success, .96);
-        color: $tlp-ui-success;
+        border-left: 3px solid var(--tlp-ui-success);
+        background: var(--tlp-ui-success-color-transparent-90);
+        color: var(--tlp-ui-success);
     }
 
     &.failed {
-        border-left: 3px solid $tlp-ui-danger;
-        background: transparentize($tlp-ui-danger, .96);
-        color: $tlp-ui-danger;
+        border-left: 3px solid var(--tlp-ui-danger);
+        background: var(--tlp-ui-danger-color-transparent-90);
+        color: var(--tlp-ui-danger);
     }
 
     &.blocked {
-        border-left: 3px solid $tlp-ui-info;
-        background: transparentize($tlp-ui-info, .96);
-        color: $tlp-ui-info;
+        border-left: 3px solid var(--tlp-ui-info);
+        background: var(--tlp-ui-info-transparent-90);
+        color: var(--tlp-ui-info);
     }
 
     &.notrun {
         border-left: 3px solid transparent;
         background: transparent;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 
     &:hover,
     &:focus {
-        background: transparentize($tlp-theme-color, .93);
+        background: var(--tlp-theme-color-transparent-90);
         text-decoration: none;
     }
 
@@ -416,7 +418,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     min-height: 100%;
     margin: 0;
     overflow: hidden;
-    color: transparentize($tlp-theme-color, .5);
+    color: var(--tlp-theme-color-transparent-50);
     font-size: 24px;
 }
 
@@ -430,11 +432,11 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
 @keyframes test-is-back-in-viewport {
     0% {
-        background: transparentize($tlp-theme-color, .9);
+        background: var(--tlp-theme-color-transparent-90);
     }
 
     80% {
-        background: transparentize($tlp-theme-color, .9);
+        background: var(--tlp-theme-color-transparent-90);
     }
 
     100% {
