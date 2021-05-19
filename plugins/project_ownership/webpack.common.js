@@ -20,18 +20,11 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-const entry_points = {};
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[
-        `project-ownership-project-admin-${color}`
-    ] = `./themes/BurningParrot/project-ownership-project-admin-${color}.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            "project-ownership-project-admin": "./themes/project-admin.scss",
+        },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/project_ownership/")
