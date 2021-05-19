@@ -83,7 +83,7 @@ class BindStaticValueDao extends DataAccessObject
         $label       = $this->da->quoteSmart($label);
         $description = $this->da->quoteSmart($description);
         $rank        = $this->da->escapeInt(
-            $this->prepareRanking('tracker_field_list_bind_static_value', 0, $field_id, $rank, 'id', 'field_id')
+            $this->prepareRanking('tracker_field_list_bind_static_value', 0, (int) $field_id, $rank, 'id', 'field_id')
         );
         $is_hidden   = $this->da->escapeInt($is_hidden);
 
@@ -139,7 +139,7 @@ class BindStaticValueDao extends DataAccessObject
         $label       = $this->da->quoteSmart($label);
         $description = $this->da->quoteSmart($description);
         $rank        = $this->da->escapeInt(
-            $this->prepareRanking('tracker_field_list_bind_static_value', $id, $field_id, $rank, 'id', 'field_id')
+            $this->prepareRanking('tracker_field_list_bind_static_value', (int) $id, (int) $field_id, $rank, 'id', 'field_id')
         );
         $is_hidden   = $this->da->escapeInt($is_hidden);
 

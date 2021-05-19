@@ -138,7 +138,7 @@ class TrackerDao extends DataAccessObject
 
         if ($this->update($sql)) {
             $hierarchy_dao = new HierarchyDAO();
-            $hierarchy_dao->deleteParentChildAssociationsForTracker($tracker_id);
+            $hierarchy_dao->deleteParentChildAssociationsForTracker((int) $tracker_id);
             return true;
         } else {
             return false;

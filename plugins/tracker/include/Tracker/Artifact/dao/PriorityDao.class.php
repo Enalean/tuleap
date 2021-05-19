@@ -188,7 +188,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
                 $new_ranks = [];
                 foreach (array_values($list_of_artifact_ids) as $position => $id) {
                     $id       = $this->da->escapeInt($id);
-                    $new_rank = $this->da->escapeInt($rank + $position);
+                    $new_rank = $this->da->escapeInt(((int) $rank) + $position);
 
                     $new_ranks[] = "WHEN artifact_id = $id THEN $new_rank";
                 }

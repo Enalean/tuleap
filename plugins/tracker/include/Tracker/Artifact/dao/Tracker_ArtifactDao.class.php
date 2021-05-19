@@ -498,10 +498,9 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function getArtifactsBySubmittedOnDate($trackerId, $date)
     {
         $trackerId = $this->da->escapeInt($trackerId);
-        $date      = $this->da->escapeInt($date);
         $halfDay   = 60 * 60 * 12;
-        $minDate   = $date - $halfDay;
-        $maxDate   = $date + $halfDay;
+        $minDate   = $this->da->escapeInt($date - $halfDay);
+        $maxDate   = $this->da->escapeInt($date + $halfDay);
         $sql       = "SELECT id AS artifact_id FROM
                        tracker_artifact
                        WHERE DATE(FROM_UNIXTIME(submitted_on)) BETWEEN DATE(FROM_UNIXTIME(" . $minDate . ")) AND DATE(FROM_UNIXTIME(" . $maxDate . "))
