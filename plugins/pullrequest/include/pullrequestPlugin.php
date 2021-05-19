@@ -180,9 +180,9 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             '/assets/pullrequest'
         );
 
-        $css_assets = new \Tuleap\Layout\CssAsset(
+        $css_assets = new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons(
             $assets,
-            'repository'
+            'repository-style'
         );
         $retriever->addStylesheet($css_assets);
 

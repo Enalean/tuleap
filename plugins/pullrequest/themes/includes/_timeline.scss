@@ -20,8 +20,8 @@
 .pull-request-timeline {
     flex: 1 1 auto;
     padding: var(--tlp-medium-spacing);
-    background-color: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
-    background-image: linear-gradient(to bottom, $tlp-ui-white, transparent 30%);
+    background-color: var(--tlp-theme-background-color-lighter-50);
+    background-image: linear-gradient(to bottom, var(--tlp-ui-white), transparent 30%);
 }
 
 #timeline {
@@ -50,9 +50,9 @@
     display: flex;
     align-self: stretch;
     padding: var(--tlp-small-spacing);
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 4px;
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
 }
 
 .pull-request-add-comment-area {
@@ -96,9 +96,9 @@
         position: relative;
         flex: 1;
         padding: var(--tlp-medium-spacing);
-        border: 1px solid $tlp-ui-border-normal;
+        border: 1px solid var(--tlp-ui-border-normal);
         border-radius: 4px;
-        background: $tlp-ui-white;
+        background: var(--tlp-ui-white);
 
         &::before {
             content: '';
@@ -110,7 +110,7 @@
             transform: translate(-100%, -50%);
             border-width: 7px $arrow-width 7px 0;
             border-style: solid;
-            border-color: transparent $tlp-theme-color transparent transparent;
+            border-color: transparent var(--tlp-theme-color) transparent transparent;
         }
 
         &::after {
@@ -121,7 +121,7 @@
             width: 4px;
             height: 100%;
             border-radius: 4px 0 0 4px;
-            background: $tlp-theme-color;
+            background: var(--tlp-theme-color);
         }
 
         > .pull-request-event-content-info {
@@ -149,7 +149,7 @@
         > .pull-request-event-content {
             &::before {
                 z-index: 2;
-                border-color: transparent $tlp-ui-white transparent transparent;
+                border-color: transparent var(--tlp-ui-white) transparent transparent;
             }
 
             &::after {
@@ -161,12 +161,12 @@
                 transform: translate(-100%, -50%);
                 border-width: 7px $arrow-width 7px 0;
                 border-style: solid;
-                border-color: transparent $tlp-ui-border-normal transparent transparent;
+                border-color: transparent var(--tlp-ui-border-normal) transparent transparent;
                 background: none;
             }
 
             p {
-                color: $tlp-ui-dimmed;
+                color: var(--tlp-ui-dimmed);
                 font-style: italic;
             }
         }
@@ -178,7 +178,7 @@
         &.is-outdated,
         &.timeline-event {
             > .pull-request-event-content::before {
-                border-color: transparent transparent transparent $tlp-ui-white;
+                border-color: transparent transparent transparent var(--tlp-ui-white);
             }
 
             > .pull-request-event-content::after {
@@ -186,7 +186,7 @@
                 left: auto;
                 transform: translate(100%, -50%);
                 border-width: 7px 0 7px $arrow-width;
-                border-color: transparent transparent transparent $tlp-ui-border-normal;
+                border-color: transparent transparent transparent var(--tlp-ui-border-normal);
             }
         }
 
@@ -204,7 +204,7 @@
                 left: 100%;
                 transform: translate(0, -50%);
                 border-width: 7px 0 7px $arrow-width;
-                border-color: transparent transparent transparent $tlp-theme-color;
+                border-color: transparent transparent transparent var(--tlp-theme-color);
             }
 
             &::after {

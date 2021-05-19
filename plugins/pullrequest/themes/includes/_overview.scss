@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import './reviewers';
-@import './timeline';
+@use './reviewers';
+@use './timeline';
 
 .pull-request-reviewers-timeline {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
     align-self: stretch;
-    border-left: 1px solid $tlp-ui-border-light;
+    border-left: 1px solid var(--tlp-ui-border-light);
 
     @media screen and (max-width: 1200px) {
         margin: var(--tlp-medium-spacing) 0 0;
-        border-top: 1px solid $tlp-ui-border-light;
+        border-top: 1px solid var(--tlp-ui-border-light);
         border-left: 0;
     }
 }

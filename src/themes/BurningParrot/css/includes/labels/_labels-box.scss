@@ -17,19 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../global-variables';
+@use '../../../../tlp/src/scss/variables/colors/common-colors';
+
 /* stylelint-disable selector-class-pattern */
 .select2-selection.item-labels-box-select2 > .select2-selection__rendered > .select2-selection__choice {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.select-item-label-color-#{$color-name} {
             border-color: map-get($colors, 'primary');
             background: map-get($colors, 'primary');
-            color: $tlp-ui-white;
+            color: var(--tlp-ui-white);
 
             > .select2-selection__choice__remove {
                 &::before {
-                    color: $tlp-ui-white;
+                    color: var(--tlp-ui-white);
                 }
             }
 
@@ -52,19 +55,19 @@
 }
 
 .item-labels-box-select2-results > .select2-results > .select2-results__options > .select2-results__option {
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.select-item-label-color-#{$color-name} {
             color: map-get($colors, 'primary');
         }
     }
 
     &.select2-results__option--highlighted {
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
 
-        @each $color-name, $colors in $tlp-swatch-color-map {
+        @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
             &.select-item-label-color-#{$color-name} {
                 background: map-get($colors, 'primary');
-                color: $tlp-ui-white;
+                color: var(--tlp-ui-white);
             }
         }
     }
@@ -139,6 +142,8 @@
 /* stylelint-disable selector-no-qualifying-type */
 span.select2 {
     > .selection > .item-labels-box-select2 > .select2-selection__rendered > .select2-selection__choice > .select2-selection__choice__remove { //stylelint-disable-line selector-max-compound-selectors
+        margin: 0 5px 0 0;
+
         &::before { //stylelint-disable-line selector-max-compound-selectors
             content: '\f02b'; // fa-tag
             font-family: 'Font Awesome 5 Free';

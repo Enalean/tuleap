@@ -46,13 +46,9 @@ const webpack_config_main_angular_app = {
 
 const entry_points = {
     "create-pullrequest-button": "./scripts/create-pullrequest-button/src/index.js",
+    "repository-style": "./themes/repository.scss",
+    "pull-requests-style": "./themes/pull-requests.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`pull-requests-${color}`] = `./themes/pull-requests-${color}.scss`;
-    entry_points[`repository-${color}`] = `./themes/repository-${color}.scss`;
-}
 
 module.exports = [
     webpack_config_main_angular_app,

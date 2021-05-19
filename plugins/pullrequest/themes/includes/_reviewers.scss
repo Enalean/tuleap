@@ -2,8 +2,8 @@
     display: flex;
     align-items: center;
     padding: var(--tlp-medium-spacing);
-    border-bottom: 1px solid $tlp-ui-border-light;
-    background: $tlp-ui-white;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
+    background: var(--tlp-ui-white);
 
     .tlp-label {
         margin: 0 5px 0 0;
