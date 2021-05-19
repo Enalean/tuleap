@@ -46,7 +46,7 @@
                     required
                     v-model="gitlab_server"
                     placeholder="https://example.com"
-                    pattern="(https?)://.+"
+                    pattern="https://.+"
                     maxlength="255"
                     data-test="add_gitlab_server"
                 />
