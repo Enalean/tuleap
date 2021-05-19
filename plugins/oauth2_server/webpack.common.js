@@ -31,12 +31,8 @@ const entry_points = {
     "administration-style": "./themes/administration.scss",
     "user-preferences": "./scripts/src/user-preferences.ts",
     "user-preferences-style": "./themes/user-preferences.scss",
+    "authorization-form-style": "./themes/authorization-form.scss",
 };
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`authorization-form-${color}`] = `./themes/authorization-form-${color}.scss`;
-}
 
 module.exports = [
     {

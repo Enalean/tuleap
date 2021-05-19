@@ -17,5 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../src/themes/tlp/src/scss/variables/variables-blue';
-@import './authorization-form';
+.oauth2-server-authorization-form {
+    width: 100%;
+    max-width: 720px;
+    margin: 60px auto 0;
+}
+
+.oauth2-server-authorization-form-actions {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+}
+
+.oauth2-server-authorization-form-action-authorize {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
+.oauth2-server-scope-label {
+    font-weight: 600;
+}
+
+.oauth2-server-scope-description {
+    display: block;
+    color: var(--tlp-ui-dimmed);
+    line-height: 20px;
+}
+
+@media screen and (max-width: 800px) {
+    .oauth2-server-scope-description {
+        display: none;
+    }
+}
