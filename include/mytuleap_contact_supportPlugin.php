@@ -141,8 +141,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
     public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $asset                   = $this->getIncludeAssets();
-        $variant                 = $params['variant'];
-        $params['stylesheets'][] = $asset->getFileURL('style-burningparrot-' . $variant->getName() . '.css');
+        $params['stylesheets'][] = $asset->getFileURL('style-burningparrot.css');
     }
 
     private function getIncludeAssets(): IncludeAssets

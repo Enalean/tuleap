@@ -19,7 +19,7 @@
 
 .contact-support-modal > .tlp-modal-body {
     border-radius: 0 0 3px 3px;
-    background: $tlp-theme-background-color;
+    background: var(--tlp-theme-background-color);
 }
 
 
@@ -68,9 +68,9 @@
     }
 
     &.thank-you {
-        border-color: $tlp-ui-success;
-        background: $tlp-ui-success;
-        color: $tlp-ui-white;
+        border-color: var(--tlp-ui-success);
+        background: var(--tlp-ui-success);
+        color: var(--tlp-ui-white);
 
         > .thank-you-text {
             display: inline-block;

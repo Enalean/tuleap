@@ -25,12 +25,8 @@ let entry_points = {
     "help-page": "./scripts/help-page.ts",
     "modal-burning-parrot": "./scripts/modal-burning-parrot.ts",
     "modal-flaming-parrot": "./scripts/modal-flaming-parrot.ts",
+    "style-burningparrot": "./themes/BurningParrot/css/mytuleap-contact-support.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry_points[`style-burningparrot-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {
