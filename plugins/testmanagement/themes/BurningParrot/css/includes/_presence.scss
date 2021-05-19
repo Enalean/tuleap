@@ -9,7 +9,7 @@
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     overflow: hidden;
-    border-bottom: 1px solid $tlp-ui-border-light;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
 }
 
 .step {
@@ -125,7 +125,7 @@
     display: flex;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid $tlp-ui-border-light;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
 
     &:last-child {
         border: 0;
@@ -134,7 +134,7 @@
     .position {
         width: 30px;
         margin: 0 var(--tlp-medium-spacing) 0 0;
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
         font-size: 14px;
         text-align: right;
     }

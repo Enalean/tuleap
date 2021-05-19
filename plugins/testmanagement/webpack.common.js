@@ -86,17 +86,11 @@ const webpack_config_for_vue_components = {
     },
 };
 
-const entry_points = {
-    flamingparrot: "./themes/FlamingParrot/css/style.scss",
-};
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry_points[`burningparrot-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
-
 const webpack_config_for_themes = {
-    entry: entry_points,
+    entry: {
+        flamingparrot: "./themes/FlamingParrot/css/style.scss",
+        "testmanagement-style": "./themes/BurningParrot/css/testmanagement.scss",
+    },
     context,
     output,
     module: {

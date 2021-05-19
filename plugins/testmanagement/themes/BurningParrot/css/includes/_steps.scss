@@ -5,56 +5,56 @@
 .steps-maindescription {
     margin: var(--tlp-medium-spacing) 0 0;
     padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    border-bottom: 1px solid $tlp-ui-border-light;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
 }
 
 .steps-step {
     display: flex;
     align-items: baseline;
-    border-bottom: 1px solid $tlp-ui-border-light;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
 
     &:last-child {
         border-bottom: 0;
     }
 
     &.passed {
-        background: transparentize($tlp-ui-success, .96);
+        background: var(--tlp-ui-success-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: $tlp-ui-success;
+                color: var(--tlp-ui-success);
             }
 
             > .steps-step-expected-arrow {
-                fill: $tlp-ui-success;
+                fill: var(--tlp-ui-success);
             }
         }
     }
 
     &.failed {
-        background: transparentize($tlp-ui-danger, .96);
+        background: var(--tlp-ui-danger-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: $tlp-ui-danger;
+                color: var(--tlp-ui-danger);
             }
 
             > .steps-step-expected-arrow {
-                fill: $tlp-ui-danger;
+                fill: var(--tlp-ui-danger);
             }
         }
     }
 
     &.blocked {
-        background: transparentize($tlp-ui-info, .96);
+        background: var(--tlp-ui-info-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: $tlp-ui-info;
+                color: var(--tlp-ui-info);
             }
 
             > .steps-step-expected-arrow {
-                fill: $tlp-ui-info;
+                fill: var(--tlp-ui-info);
             }
         }
     }
@@ -64,11 +64,11 @@
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: $tlp-ui-dimmed;
+                color: var(--tlp-ui-dimmed);
             }
 
             > .steps-step-expected-arrow {
-                fill: $tlp-ui-dimmed;
+                fill: var(--tlp-ui-dimmed);
             }
         }
     }
@@ -129,17 +129,17 @@
 }
 
 .steps-step-action-fail {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 .steps-step-action-block {
-    color: $tlp-ui-info;
+    color: var(--tlp-ui-info);
 }
 
 .steps-step-action-notrun {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .steps-step-action-disabled {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }

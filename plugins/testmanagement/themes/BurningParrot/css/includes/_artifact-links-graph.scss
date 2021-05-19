@@ -1,4 +1,5 @@
-@import '../../src/themes/common/css/utils/colors';
+@use '../../src/themes/common/css/utils/colors';
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 .artifact-links-graph-modal {
     height: 70vh;
@@ -13,8 +14,8 @@
 
 .link {
     stroke-width: 1.5px;
-    stroke: $tlp-ui-dimmed;
-    fill: $tlp-ui-dimmed;
+    stroke: var(--tlp-ui-dimmed);
+    fill: var(--tlp-ui-dimmed);
 }
 
 circle {
@@ -26,7 +27,7 @@ circle {
         stroke-width: 5px;
     }
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             stroke: darken(map-get($colors, 'primary'), 20%);
         }
@@ -72,7 +73,7 @@ text {
     }
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .#{$color-name} {
         fill: darken(map-get($colors, 'primary'), 20%);
     }
