@@ -46,7 +46,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetAllPlugins(): void
     {
         //The plugins
-        $plugins = \Mockery::spy(\Collection::class);
+        $plugins = [];
 
         //The plugin factory
         $plugin_factory = \Mockery::spy(\PluginFactory::class);

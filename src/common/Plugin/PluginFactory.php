@@ -318,9 +318,9 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @return array of all plugins
+     * @return Plugin[]
      */
-    public function getAllPlugins()
+    public function getAllPlugins(): array
     {
         $all_plugins = [];
         $dar         = $this->plugin_dao->searchAll();

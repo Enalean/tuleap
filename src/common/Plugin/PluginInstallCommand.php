@@ -26,6 +26,7 @@ namespace Tuleap\Plugin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class PluginInstallCommand extends Command
@@ -45,24 +46,40 @@ final class PluginInstallCommand extends Command
     protected function configure(): void
     {
         $this->setDescription("Install and activate plugins with their dependencies")
+            ->addOption('all', '', InputOption::VALUE_NONE, 'Install all plugins')
             ->addArgument('plugins', InputArgument::IS_ARRAY, 'List of plugins (space separated)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $plugin_names = $input->getArgument('plugins');
-        assert(is_array($plugin_names));
-
         if (posix_getuid() === 0) {
             throw new \RuntimeException('Must be run by `codendiadm`');
         }
 
-        foreach ($plugin_names as $plugin_name) {
-            $output->write("Install $plugin_name...");
-            $this->plugin_manager->installAndActivate($plugin_name);
-            $output->writeln("[OK]");
+        $plugin_names = $input->getArgument('plugins');
+        assert(is_array($plugin_names));
+        if (count($plugin_names) !== 0) {
+            foreach ($plugin_names as $plugin_name) {
+                $this->installPlugin($output, $plugin_name);
+            }
+            return 0;
         }
 
-        return 0;
+        if ($input->getOption('all') === true) {
+            foreach (array_merge($this->plugin_manager->getAllPlugins(), $this->plugin_manager->getNotYetInstalledPlugins()) as $plugin) {
+                $this->installPlugin($output, $plugin->getName());
+            }
+            return 0;
+        }
+
+        $output->writeln('You must either list plugins or use `--all` option');
+        return 1;
+    }
+
+    private function installPlugin(OutputInterface $output, string $plugin_name): void
+    {
+        $output->write("Install $plugin_name...");
+        $this->plugin_manager->installAndActivate($plugin_name);
+        $output->writeln("[OK]");
     }
 }

@@ -354,24 +354,32 @@ class PluginsAdministrationViews extends Views
 
     private function getAvailablePluginsPresenter()
     {
-        $plugins = $this->plugin_manager->getNotYetInstalledPlugins();
+        $plugins = [];
 
-        foreach ($plugins as $key => $plugin) {
-            $plugins[$key]['is_there_readme'] = false;
-            $readme                           = $this->getFormattedReadme($plugin['name']);
+        foreach ($this->plugin_manager->getNotYetInstalledPlugins() as $key => $plugin) {
+            $descriptor       = $plugin->getPluginInfo()->getPluginDescriptor();
+            $plugin_presenter = [
+                'name'                        => $plugin->getName(),
+                'full_name'                   => $descriptor->getFullName(),
+                'description'                 => $descriptor->getDescription(),
+                'version'                     => $descriptor->getVersion(),
+                'is_there_readme'             => false,
+                'is_there_unmet_dependencies' => false,
+            ];
 
+            $readme = $this->getFormattedReadme($plugin->getName());
             if (! empty($readme)) {
-                $plugins[$key]['is_there_readme'] = true;
-                $plugins[$key]['readme']          = $readme;
+                $plugin_presenter['is_there_readme'] = true;
+                $plugin_presenter['readme']          = $readme;
             }
 
-            $plugins[$key]['is_there_unmet_dependencies'] = false;
-            $dependencies                                 = $this->dependency_solver->getUnmetInstalledDependencies($plugin['name']);
-
+            $dependencies = $this->dependency_solver->getUnmetInstalledDependencies($plugin->getName());
             if (! empty($dependencies)) {
-                $plugins[$key]['is_there_unmet_dependencies'] = true;
-                $plugins[$key]['unmet_dependencies']          = $dependencies;
+                $plugin_presenter['is_there_unmet_dependencies'] = true;
+                $plugin_presenter['unmet_dependencies']          = $dependencies;
             }
+
+            $plugins[] = $plugin_presenter;
         }
 
         return new AvailablePluginsPresenter($plugins, new CSRFSynchronizerToken('/plugins/pluginsadministration/'));
