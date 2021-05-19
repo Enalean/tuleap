@@ -47,7 +47,7 @@
 
 .pull-request-summary-creation-date {
     margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 
     > .fa-calendar {
         margin: 0 3px 0 0;

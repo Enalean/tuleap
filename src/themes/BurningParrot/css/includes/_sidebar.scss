@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'global-variables';
+
 .sidebar {
     display: flex;
     position: fixed;
@@ -24,9 +26,9 @@
     top: 0;
     left: 0;
     flex-direction: column;
-    width: $sidebar-expanded-width;
+    width: global-variables.$sidebar-expanded-width;
     height: 100vh;
-    background: $tlp-theme-sidebar-background-color;
+    background: var(--tlp-theme-dark-background-color);
 }
 
 .sidebar-collapser-icon::before {
@@ -50,11 +52,11 @@
 
         > .sidebar-about-logo > .tuleap-logo,
         > .sidebar-about-logo-without-product-name > .tuleap-logo {
-            fill: lighten($tlp-theme-orange, 5%);
+            fill: var(--tlp-theme-orange-lighter-05);
         }
 
         > .sidebar-about-version {
-            color: lighten($tlp-theme-color, 5%);
+            color: var(--tlp-theme-color-lighter-10);
             text-decoration: none;
         }
     }
@@ -69,7 +71,7 @@
 
         > .tuleap-logo {
             transition: fill 100ms;
-            fill: $tlp-theme-orange;
+            fill: var(--tlp-theme-orange);
         }
     }
 
@@ -92,14 +94,14 @@
 .sidebar-copyright,
 .sidebar-copyright a {
     transition: color 100ms;
-    color: transparentize($tlp-ui-border-dark, .4);
+    color: var(--tlp-ui-dimmed);
     font-size: 13px;
     line-height: 20px;
 }
 
 .sidebar-about:hover > .sidebar-about-version,
 .sidebar-copyright a:hover {
-    color: transparentize($tlp-ui-white, .2);
+    color: var(--tlp-typo-default-text-color-on-dark-background);
     text-decoration: none;
 }
 

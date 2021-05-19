@@ -19,15 +19,15 @@
 
 $step-transition-duration: 75ms;
 
-$step-background: $tlp-ui-white;
-$step-color: $tlp-theme-sidebar-background-color;
-$step-active-color: $tlp-theme-color;
-$step-active-background: transparentize($tlp-theme-color, .9);
+$step-background: var(--tlp-ui-white);
+$step-color: var(--tlp-theme-dark-background-color);
+$step-active-color: var(--tlp-theme-color);
+$step-active-background: var(--tlp-theme-color-transparent-90);
 
-$switch-menu-background: $tlp-ui-white;
-$switch-menu-item-color: $tlp-theme-color;
-$switch-menu-item-hover-background: transparentize($tlp-theme-color, .93);
-$switch-menu-item-hover-color: $tlp-theme-color;
+$switch-menu-background: var(--tlp-ui-white);
+$switch-menu-item-color: var(--tlp-theme-color);
+$switch-menu-item-hover-background: var(--tlp-theme-color-transparent-90);
+$switch-menu-item-hover-color: var(--tlp-theme-color);
 
 .breadcrumb-container {
     display: flex;
@@ -133,7 +133,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 .breadcrumb-switch-menu {
     border-radius: 4px;
     background: $switch-menu-background;
-    box-shadow: $tlp-dropdown-shadow;
+    box-shadow: var(--tlp-dropdown-shadow);
 }
 
 .breadcrumb-dropdown-item {
@@ -175,7 +175,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 .breadcrumb-dropdown-separator {
     display: block;
     margin: var(--tlp-small-spacing) 0;
-    border-top: 1px solid $tlp-ui-border-light;
+    border-top: 1px solid var(--tlp-ui-border-light);
 
     &:first-child {
         display: none;
@@ -185,8 +185,8 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 .breadcrumb-dropdown-section-title {
     margin: var(--tlp-small-spacing) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
-    border-top: 1px solid $tlp-ui-border-light;
-    color: $tlp-ui-dimmed;
+    border-top: 1px solid var(--tlp-ui-border-light);
+    color: var(--tlp-ui-dimmed);
     font-size: .65rem;
     font-weight: 600;
     letter-spacing: .5px;
@@ -207,19 +207,19 @@ $switch-menu-item-hover-color: $tlp-theme-color;
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
     font-size: .7rem;
     cursor: help;
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
     }
 
     &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
-        background: transparentize($tlp-theme-sidebar-background-color, .9);
-        color: transparentize($tlp-theme-sidebar-background-color, .2);
+        background: var(--tlp-theme-dark-background-color-transparent-90);
+        color: var(--tlp-theme-dark-background-color-lighter-10);
     }
 }
 
@@ -233,21 +233,21 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
     &[data-privacy-icon='fa-lock'],
     &[data-privacy-icon='fa-tlp-lock-plus-r'] {
-        background: transparentize($tlp-theme-color, .9);
-        color: darken($tlp-theme-color, 3%);
+        background: var(--tlp-theme-color-transparent-90);
+        color: var(--tlp-theme-color);
 
         > .fas {
-            color: darken($tlp-theme-color, 3%);
+            color: var(--tlp-theme-color);
         }
     }
 
     &[data-privacy-icon='fa-lock-open'],
     &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
-        background: transparentize($tlp-theme-sidebar-background-color, .9);
-        color: transparentize($tlp-theme-sidebar-background-color, .2);
+        background: var(--tlp-theme-dark-background-color-transparent-90);
+        color: var(--tlp-theme-dark-background-color-lighter-10);
 
         > .fas {
-            color: transparentize($tlp-theme-sidebar-background-color, .2);
+            color: var(--tlp-theme-dark-background-color-lighter-10);
         }
     }
 

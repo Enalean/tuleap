@@ -21,7 +21,7 @@
 .admin-sidebar-section {
     flex: 0 0 auto;
     padding: var(--tlp-medium-spacing) 0;
-    border-top: 1px solid lighten($tlp-theme-sidebar-background-color, 5%);
+    border-top: 1px solid var(--tlp-theme-dark-background-color-lighter-05);
 
     &:first-child {
         border-top: 0;
@@ -36,7 +36,7 @@
     display: flex;
     align-items: center;
     margin: 0 var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
-    color: transparentize(#ffffff, .65);
+    color: var(--tlp-ui-border-normal-transparent-50);
     font-size: 14px;
     font-weight: 600;
     letter-spacing: .5px;
@@ -56,7 +56,7 @@
 }
 
 .tlp-search.tlp-search-small.admin-sidebar-search {
-    border-color: darken($tlp-theme-sidebar-background-color, 3%);
+    border-color: var(--tlp-theme-dark-background-color-darker-10);
     background: transparentize(#ffffff, .95) url('../images/admin-sidebar-search-background.png') no-repeat 10px center;
     color: transparentize(#ffffff, .2);
 
@@ -80,11 +80,11 @@
     white-space: nowrap;
 
     &:not(.tlp-text-warning) {
-        color: $tlp-ui-border-dark;
+        color: var(--tlp-ui-border-dark);
     }
 
     &:hover {
-        background: darken($tlp-theme-sidebar-background-color, 3%);
+        background: var(--tlp-theme-dark-background-color-darker);
         text-decoration: none;
     }
 }

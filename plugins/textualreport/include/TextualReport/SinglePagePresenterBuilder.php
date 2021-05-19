@@ -27,6 +27,7 @@ use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetWithDensityVariants;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ThemeVariation;
 
@@ -89,7 +90,7 @@ class SinglePagePresenterBuilder
         $css_assets = [
             new CssAssetWithDensityVariants($assets, 'tlp-vars'),
             new CssAsset($assets, 'tlp'),
-            new CssAsset($assets, 'BurningParrot/burning-parrot'),
+            new CssAssetWithoutVariantDeclinaisons($assets, 'BurningParrot/burning-parrot'),
         ];
 
         $stylesheets = '';

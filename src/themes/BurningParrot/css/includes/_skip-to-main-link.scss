@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-skip-to-main-color: $tlp-theme-sidebar-background-color;
-
 @import '../../../common/css/utils/skip-to-main-link';
 
 .skip-to-main-link {
-    border-color: $tlp-skip-to-main-color;
+    border-color: var(--tlp-theme-dark-background-color);
 
     a,
     a:focus {
-        background: $tlp-skip-to-main-color;
+        background: var(--tlp-theme-dark-background-color);
     }
 }

@@ -363,8 +363,7 @@ class StatisticsPlugin extends Plugin
     public function burning_parrot_get_stylesheets(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $variant                 = $params['variant'];
-            $params['stylesheets'][] = $this->getAssets()->getFileURL('style-bp-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('style-bp.css');
         }
     }
 

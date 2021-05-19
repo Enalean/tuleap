@@ -19,6 +19,7 @@
 
 @use '../../../../themes/common/css/project-background/background' with ($project-background-images-path: '../../common/images/project-background/');
 @use 'sass:map';
+@use 'global-variables';
 
 body {
     @import '../../../common/css/project-background/project-background';
@@ -61,13 +62,13 @@ body {
             padding: calc(var(--tlp-medium-spacing) - 2px) var(--tlp-large-spacing) var(--tlp-medium-spacing);
             border: 0;
             border-top: 2px solid transparent;
-            color: $tlp-ui-white;
+            color: var(--tlp-ui-white);
 
             &:hover,
             &:focus,
             &.tlp-tab-active {
                 @include background.background-for-links();
-                border-top-color: $tlp-ui-white;
+                border-top-color: var(--tlp-ui-white);
             }
 
             &:hover > .tlp-tab-menu,
@@ -91,47 +92,47 @@ body {
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
     .breadcrumb-item:not(.breadcrumb-item-disabled):focus-within > .breadcrumb-link {
         @include background.background-for-links();
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
     }
 
     .breadcrumb-switchable:hover > .breadcrumb-link::after,
     .breadcrumb-switchable:focus-within > .breadcrumb-link::after {
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
     }
 
     .breadcrumb-project-privacy-icon {
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
-            background: $tlp-ui-white;
-            color: $tlp-theme-sidebar-background-color;
+            background: var(--tlp-ui-white);
+            color: var(--tlp-theme-dark-background-color);
         }
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
             @include background.background-for-links();
-            color: $tlp-ui-white;
+            color: var(--tlp-ui-white);
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
         @include background.background-for-links();
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
 
         > .fas {
             background: none;
-            color: $tlp-ui-white;
+            color: var(--tlp-ui-white);
         }
     }
 
     .project-administration-content,
     .dashboard-widgets-container {
-        background: $tlp-theme-background-color;
+        background: var(--tlp-theme-background-color);
     }
 
     .dashboard-project-header-members,
     .dashboard-project-header-access {
-        border-color: $tlp-ui-white;
-        background: transparentize($tlp-ui-white, .8);
+        border-color: var(--tlp-ui-white);
+        background: var(--tlp-ui-white-transparent-80);
     }
 }
 
@@ -180,7 +181,7 @@ body {
 
     &:focus + .project-admin-background-card,
     &:checked + .project-admin-background-card {
-        border-color: $tlp-theme-color;
+        border-color: var(--tlp-theme-color);
     }
 }
 
@@ -198,22 +199,22 @@ body {
     padding: var(--tlp-small-spacing);
     transition: opacity 300ms ease-in-out;
     opacity: 0;
-    background: transparentize($tlp-theme-sidebar-background-color, .3);
-    color: $tlp-ui-white;
+    background: var(--tlp-theme-dark-background-color-transparent-30);
+    color: var(--tlp-ui-white);
     font-size: .75rem;
 }
 
 .project-admin-background-preview {
     flex-grow: 1;
-    border-radius: $tlp-card-radius;
+    border-radius: var(--tlp-card-radius);
 }
 
 .project-admin-background-preview-0 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $tlp-theme-background-color;
-    color: $tlp-ui-dimmed;
+    background: var(--tlp-theme-background-color);
+    color: var(--tlp-ui-dimmed);
     font-size: .875rem;
 }
 
@@ -224,12 +225,12 @@ body {
 
         position: fixed;
         bottom: 0;
-        left: $sidebar-expanded-width;
-        width: calc(100% - #{$sidebar-expanded-width});
+        left: global-variables.$sidebar-expanded-width;
+        width: calc(100% - #{global-variables.$sidebar-expanded-width});
         padding: var(--tlp-large-spacing);
         animation: footerAppear ease-out 150ms;
         border-top: 0;
-        background: transparentize($tlp-ui-white, .1);
+        background: var(--tlp-ui-white-transparent-10);
         box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
         text-align: center;
         @keyframes footerAppear {
@@ -240,6 +241,6 @@ body {
 }
 
 .sidebar-collapsed #project-admin-background-submit-section.pinned > .project-admin-background-submit-button-container {
-    left: $sidebar-collapsed-width;
-    width: calc(100% - #{$sidebar-collapsed-width});
+    left: global-variables.$sidebar-collapsed-width;
+    width: calc(100% - #{global-variables.$sidebar-collapsed-width});
 }

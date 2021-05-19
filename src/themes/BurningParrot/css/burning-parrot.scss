@@ -1,0 +1,47 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../../node_modules/smooth-scrollbar/dist/smooth-scrollbar';
+
+@use 'includes/smooth-scrollbar-overrides';
+@use 'includes/structure';
+@use 'includes/switch-to';
+@use 'includes/siteadmin';
+@use 'includes/resource_restrictor';
+@use 'includes/autocomplete';
+@use 'includes/homepage';
+@use 'includes/profile';
+@use 'includes/toggler';
+@use 'includes/modals';
+@use 'includes/breadcrumb';
+@use 'includes/skip-to-main-link';
+@use 'includes/project-admin';
+@use 'includes/software_map';
+@use 'includes/error';
+@use 'includes/ckeditor';
+@use 'includes/project-banner';
+@use 'includes/project-background';
+@use 'includes/cross-ref-tooltip';
+@use 'includes/help-dropdown';
+@use 'includes/project-privacy-popover';
+@use 'includes/invite-buddies';
+@use 'includes/platform-banner';
+@use 'includes/browser-unsupported';
+@use 'includes/lists';
+@use 'includes/mermaid';

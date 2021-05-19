@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'global-variables';
+
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     padding: 0;
-    background: $tlp-theme-background-color;
-    font-family: $tlp-font-family;
+    background: var(--tlp-theme-background-color);
+    font-family: var(--tlp-font-family);
 }
 
 #main-container {
@@ -54,7 +56,7 @@ main {
 }
 
 main[role=main]:not(.tlp-framed) > #feedback {
-    padding: calc(#{$top-floating-buttons-space} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
+    padding: calc(#{global-variables.$top-floating-buttons-space} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
 
     &:empty {
         padding: 0;
@@ -62,7 +64,7 @@ main[role=main]:not(.tlp-framed) > #feedback {
 }
 
 main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty) {
-    padding: calc(#{$top-floating-buttons-space} - #{$breadcrumb-height} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
+    padding: calc(#{global-variables.$top-floating-buttons-space} - #{global-variables.$breadcrumb-height} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
 }
 
 .full-width + #main-container > main[role=main]:not(.tlp-framed) > #feedback:not(:empty) {
@@ -88,7 +90,7 @@ main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty)
 .empty-pane-text,
 .empty-page-text-with-small-text {
     margin: 0 0 60px;
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: 30px;
     line-height: 44px;
     text-align: center;
@@ -99,7 +101,7 @@ main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty)
 }
 
 .empty-page-small-text {
-    color: transparentize($tlp-theme-color, .7);
+    color: var(--tlp-theme-color-transparent-70);
     font-size: var(--tlp-medium-spacing);
     line-height: 20px;
     text-align: center;

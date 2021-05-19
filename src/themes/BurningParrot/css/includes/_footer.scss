@@ -4,7 +4,7 @@ $footer-white: #e5e8e9;
     display: flex;
     justify-content: center;
     padding: 15px 0;
-    background: $tlp-theme-sidebar-background-color;
+    background: var(--tlp-theme-dark-background-color);
     color: transparentize($footer-white, .4);
 }
 
@@ -30,7 +30,7 @@ $footer-white: #e5e8e9;
         text-decoration: none;
 
         &:hover {
-            color: $tlp-theme-color;
+            color: var(--tlp-theme-color);
         }
     }
 }

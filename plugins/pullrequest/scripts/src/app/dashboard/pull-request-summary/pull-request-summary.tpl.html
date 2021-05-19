@@ -17,7 +17,8 @@
                 class="pull-request-summary-author"
             ></a>
             <span class="pull-request-summary-creation-date">
-                <i class="fas fa-calendar-alt"></i>{{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+                <i class="fas fa-calendar-alt"></i>
+                {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
             </span>
             <pull-request-refs
                 class="pull-request-summary-refs"

@@ -17,23 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'global-variables';
+
 #logo {
     display: inline-block;
     flex: 0 0 auto;
-    width: $sidebar-expanded-width;
-    height: $navbar-height;
-    background: $tlp-theme-color url('/images/organization_logo.png') no-repeat center center;
+    width: global-variables.$sidebar-expanded-width;
+    height: global-variables.$navbar-height;
+    background: var(--tlp-theme-color) url('/images/organization_logo.png') no-repeat center center;
 }
 
 .sidebar > #logo {
-    background-color: darken($tlp-theme-sidebar-background-color, 5%);
+    background-color: var(--tlp-theme-dark-background-color-darker);
 }
 
 .logo-svg-link {
     display: flex;
     align-items: center;
-    height: $navbar-height;
-    min-height: $navbar-height;
+    height: global-variables.$navbar-height;
+    min-height: global-variables.$navbar-height;
 }
 
 /* stylelint-disable selector-no-qualifying-type */
@@ -43,21 +45,21 @@ header.pinned .logo-svg-link {
 /* stylelint-enable selector-no-qualifying-type */
 
 .logo-svg-fill-theme-color {
-    fill: $tlp-theme-color;
+    fill: var(--tlp-theme-color);
 }
 
 .logo-svg-fill-default-text-color {
-    fill: $tlp-theme-sidebar-background-color;
+    fill: var(--tlp-theme-dark-background-color);
 }
 
 .sidebar > .logo-svg-link {
     justify-content: center;
-    width: $sidebar-expanded-width;
+    width: global-variables.$sidebar-expanded-width;
     margin: 0;
-    background: darken($tlp-theme-sidebar-background-color, 5%);
+    background: var(--tlp-theme-dark-background-color-darker);
 
     .logo-svg-fill-default-text-color {
-        fill: $tlp-ui-white;
+        fill: var(--tlp-ui-white);
     }
 }
 
@@ -71,7 +73,7 @@ header.pinned .logo-svg-link {
 
 .sidebar-collapsed {
     .logo-svg-link {
-        width: $sidebar-collapsed-width;
+        width: global-variables.$sidebar-collapsed-width;
     }
 
     .logo-svg-normal {

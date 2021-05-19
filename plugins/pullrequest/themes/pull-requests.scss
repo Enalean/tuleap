@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../tlp/src/scss/variables/variables-purple';
+@use '../node_modules/codemirror/lib/codemirror';
+@use '../node_modules/codemirror/addon/merge/merge';
 
-$navbar-background: #ffffff;
+@use './includes/dashboard';
+@use './includes/pull-request';
+@use './includes/overview';
+@use './includes/commits';
+@use './includes/files';
+@use './includes/file-diff';
+@use './includes/tuleap-username';
+@use './includes/pull-request-refs';
 
-@import 'includes';
+@use '../../../src/themes/BurningParrot/css/includes/labels/labels-box';

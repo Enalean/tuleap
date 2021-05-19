@@ -64,7 +64,7 @@
 }
 
 .pull-request-commits-list-commit-metadata-authored-name-link {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     cursor: pointer;
 
     &:hover {
@@ -73,7 +73,7 @@
 }
 
 .pull-request-commits-list-commit-metadata-authored-date {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .pull-request-commits-list-commit-metadata-authored-icon {

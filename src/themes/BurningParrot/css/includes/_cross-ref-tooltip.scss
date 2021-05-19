@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$dimmed-white-over-dark-background: $tlp-ui-border-dark;
+@use '../../../tlp/src/scss/variables/colors/common-colors';
 
 .codendi-tooltip {
     position: absolute;
@@ -25,9 +25,9 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
     margin: var(--tlp-medium-spacing) 0 0;
     padding: var(--tlp-medium-spacing);
     border-radius: 4px;
-    background-color: $tlp-theme-sidebar-background-color;
-    box-shadow: 0 20px 30px transparentize($tlp-theme-sidebar-background-color, .8), 0 5px 10px transparentize($tlp-theme-sidebar-background-color, .8);
-    color: $tlp-ui-white;
+    background-color: var(--tlp-theme-dark-background-color);
+    box-shadow: 0 20px 30px var(--tlp-theme-dark-background-color-transparent-85), 0 5px 10px var(--tlp-theme-dark-background-color-transparent-85);
+    color: var(--tlp-ui-white);
     font-size: 12px;
     font-weight: 600;
     line-height: 14px;
@@ -41,7 +41,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
         height: 0;
         border-width: 0 10px 10px;
         border-style: solid;
-        border-color: transparent transparent $tlp-theme-sidebar-background-color transparent;
+        border-color: transparent transparent var(--tlp-theme-dark-background-color) transparent;
 
     }
 
@@ -62,7 +62,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
     label {
         display: block;
         margin: 0 var(--tlp-small-spacing) 0 0;
-        color: $dimmed-white-over-dark-background;
+        color: var(--tlp-ui-dimmed-on-dark-background);
         font-size: inherit;
         font-weight: inherit;
         line-height: inherit;
@@ -107,7 +107,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
     padding: 0;
 
     &::before {
-        border-color: transparent transparent darken($tlp-theme-sidebar-background-color, 8%) transparent;
+        border-color: transparent transparent var(--tlp-theme-dark-background-color-darker) transparent;
     }
 }
 
@@ -117,7 +117,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
     padding: var(--tlp-medium-spacing);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    background: darken($tlp-theme-sidebar-background-color, 8%);
+    background: var(--tlp-theme-dark-background-color-darker);
     font-size: 16px;
     line-height: 20px;
 
@@ -140,7 +140,7 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
     > table > tbody > tr {
         > th {
             padding: 0 var(--tlp-small-spacing) 0 0;
-            color: $dimmed-white-over-dark-background;
+            color: var(--tlp-ui-dimmed-on-dark-background);
             font-weight: 600;
             text-align: right;
             vertical-align: top;
@@ -155,12 +155,12 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
 }
 
 .crossref-tooltip-header-user-name {
-    color: $dimmed-white-over-dark-background;
+    color: var(--tlp-ui-dimmed-on-dark-background);
     font-size: 12px;
     line-height: 12px;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in common-colors.$tlp-swatch-color-map {
     .crossref-tooltip-header-prefix-circle-#{$color-name} {
         display: flex;
         align-items: center;
@@ -169,6 +169,6 @@ $dimmed-white-over-dark-background: $tlp-ui-border-dark;
         height: 28px;
         border-radius: 50%;
         background: map-get($colors, 'primary');
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
     }
 }

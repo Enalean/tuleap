@@ -65,17 +65,17 @@
 
     /* stylelint-disable-next-line selector-class-pattern */
     &.pull-request-file-status-A {
-        color: $tlp-ui-success;
+        color: var(--tlp-ui-success);
     }
 
     /* stylelint-disable-next-line selector-class-pattern */
     &.pull-request-file-status-M {
-        color: $tlp-ui-warning;
+        color: var(--tlp-ui-warning);
     }
 
     /* stylelint-disable-next-line selector-class-pattern */
     &.pull-request-file-status-D {
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
     }
 }
 

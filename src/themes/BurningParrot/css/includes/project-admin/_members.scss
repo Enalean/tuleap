@@ -55,7 +55,7 @@ $small-screen-size: 1200px;
 
 .project-admin-members-uemails {
     width: 25%;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
 }
 
 .project-admin-members-account-status {
@@ -74,8 +74,8 @@ $small-screen-size: 1200px;
     > tbody {
         > .project-admin-members-import-warning {
             > .project-admin-members-import-warning-line {
-                background: transparentize($tlp-ui-warning, .9);
-                color: darken($tlp-ui-warning, 10%);
+                background: var(--tlp-ui-warning-transparent-90);
+                color: var(--tlp-ui-warning-darker-10);
             }
         }
     }
@@ -90,7 +90,7 @@ $small-screen-size: 1200px;
 }
 
 .file-input-error {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 #import-members-spinner {

@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$profile-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
-$theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
+$profile-header-background: var(--tlp-theme-dark-background-color);
+$theme-color-on-dark-background: var(--tlp-theme-color-on-dark-background);
 $profile-max-width: 720px;
 
 .body-user-profile {
-    background: linear-gradient(to bottom, $profile-header-background 0, $profile-header-background 200px, $tlp-theme-background-color 200px);
+    background: linear-gradient(to bottom, $profile-header-background 0, $profile-header-background 195px, var(--tlp-theme-background-color) 195px);
 
     header:not(.pinned) {
         #logo {
@@ -31,7 +31,7 @@ $profile-max-width: 720px;
         }
 
         .logo-svg-fill-default-text-color {
-            fill: $tlp-ui-white;
+            fill: var(--tlp-ui-white);
         }
     }
 
@@ -44,11 +44,11 @@ $profile-max-width: 720px;
     #nav-dropdown-user-content,
     #nav-dropdown-new-content {
         > .tlp-popover-arrow {
-            background: lighten($tlp-theme-sidebar-background-color, 10%);
+            background: var(--tlp-theme-dark-background-color-lighter-10);
         }
 
         > .tlp-popover-header {
-            background: lighten($tlp-theme-sidebar-background-color, 10%);
+            background: var(--tlp-theme-dark-background-color-lighter-10);
         }
     }
 }
@@ -57,9 +57,9 @@ $profile-max-width: 720px;
     display: flex;
     justify-content: center;
     padding: 0 var(--tlp-jumbo-spacing) var(--tlp-jumbo-spacing);
-    border-bottom: 5px solid $tlp-theme-color;
+    border-bottom: 5px solid var(--tlp-theme-color);
     background: $profile-header-background;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
 }
 
 .user-profile-basic-information {
@@ -117,7 +117,7 @@ $profile-max-width: 720px;
 
 .user-profile-additional-information-label {
     margin: 0 5px 0 0;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .user-profile-additional-information-label-icon {
@@ -182,7 +182,7 @@ $profile-max-width: 720px;
     display: block;
     max-width: 500px;
     overflow: hidden;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     line-height: 20px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -195,11 +195,11 @@ $profile-max-width: 720px;
 .user-profile-projects-tumbleweed,
 .user-profile-projects-stem,
 .user-profile-projects-earth {
-    stroke: $tlp-theme-color;
+    stroke: var(--tlp-theme-color);
 }
 
 .user-profile-projects-flower {
-    fill: $tlp-theme-color;
+    fill: var(--tlp-theme-color);
 }
 
 @media screen and (max-width: 800px) {
