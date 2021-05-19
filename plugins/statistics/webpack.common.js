@@ -24,12 +24,8 @@ let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "disk-usage-pie": "./scripts/disk-usage-pie/src/disk-usage-pie-chart.js",
     admin: "./scripts/admin.js",
+    "style-bp": "./themes/BurningParrot/css/statistics.scss",
 };
-
-const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
-for (const color of colors_burning_parrot) {
-    entry_points[`style-bp-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-}
 
 module.exports = [
     {
