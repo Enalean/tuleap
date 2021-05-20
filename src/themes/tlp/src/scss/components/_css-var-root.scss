@@ -47,6 +47,8 @@
 
     --tlp-theme-background-color-darker-20: #{darken($tlp-theme-background-color, 20%)};
 
+    --tlp-theme-background-color-transparent-50: #{transparentize($tlp-theme-background-color, .5)};
+
     --tlp-theme-color-darker-15: #{darken($tlp-theme-color, 15%)};
     --tlp-theme-color-lighter-10: #{ mix($tlp-theme-color, $tlp-ui-white, 10%)};
     --tlp-theme-color-lighter-50: #{ mix($tlp-theme-color, $tlp-ui-white, 50%)};
@@ -82,6 +84,8 @@
     --tlp-ui-success-color-transparent-95: #{transparentize($tlp-ui-success, .95)};
 
     --tlp-ui-dimmed-darker-10: #{darken($tlp-ui-dimmed, 10%)};
+    --tlp-ui-dimmed-lighter-70: #{mix($tlp-ui-dimmed, $tlp-ui-white, 30%)};
+    --tlp-ui-dimmed-lighter-95: #{mix($tlp-ui-dimmed, $tlp-ui-white, 5%)};
     --tlp-ui-dimmed-transparent-50: #{transparentize($tlp-ui-dimmed, .5)};
 
     --tlp-ui-white-darker-02: #{darken($tlp-ui-white, 2%)};

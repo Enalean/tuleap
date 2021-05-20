@@ -22,19 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use Tuleap\Layout\CssAsset;
-use Tuleap\Project\ProjectAccessChecker;
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use PFUser;
+use Planning;
 use Project;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
+use ProjectManager;
 use TemplateRenderer;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Codendi_Request;
-use ProjectManager;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\ProjectMilestones\Milestones\ProjectMilestonesDao;
-use CSRFSynchronizerToken;
-use Planning;
-use PFUser;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 
 class ProjectMilestonesWidgetRetriever
 {
@@ -120,7 +120,9 @@ class ProjectMilestonesWidgetRetriever
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAsset($this->getAssets(), 'style')]);
+        return new CssAssetCollection(
+            [new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'projectmilestones-style')]
+        );
     }
 
     private function getAssets(): IncludeAssets

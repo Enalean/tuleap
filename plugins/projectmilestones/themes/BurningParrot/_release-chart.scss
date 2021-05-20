@@ -16,6 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+@use '../../../../plugins/tracker/themes/default/css/includes/burndown-chart';
+
+$timeline-color: var(--tlp-theme-color-lighter-10);
 
 .release-charts-row {
     display: flex;
@@ -55,24 +58,24 @@
     .chart-y-axis > .tick > text,
     .chart-x-axis > .tick > text {
         opacity: .8;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 }
 
 .release-line-scale,
 .release-chart .ideal-line > path {
     stroke-width: 1px;
-    stroke: $tlp-ui-border-normal;
+    stroke: var(--tlp-ui-border-normal);
     fill: transparent;
 }
 
 .release-chart-badge-container {
     animation: shadow-pulse 2s infinite cubic-bezier(.65, .47, .76, 1);
-    fill: $remaining-effort-color;
+    fill: burndown-chart.$remaining-effort-color;
 }
 
 .release-chart-badge-value {
-    fill: $tlp-ui-white;
+    fill: var(--tlp-ui-white);
     font-size: 13px;
     font-weight: 600;
 }
@@ -81,13 +84,13 @@
     align-self: center;
     margin: 0 7px 0 0;
     opacity: .9;
-    fill: $remaining-effort-color;
+    fill: burndown-chart.$remaining-effort-color;
     font-size: 15px;
 }
 
 @keyframes shadow-pulse {
     from {
-        filter: drop-shadow(0 0 0 $remaining-effort-color);
+        filter: drop-shadow(0 0 0 burndown-chart.$remaining-effort-color);
     }
 
     to {
@@ -97,50 +100,50 @@
 
 .release-widget-pie-chart-ttm-slice > path {
     stroke-width: 1.5px;
-    stroke: $tlp-ui-white;
+    stroke: var(--tlp-ui-white);
 }
 
 .release-widget-pie-chart-ttm-slice-blocked {
     > path {
-        fill: $blocked;
+        fill: var(--tlp-ui-info);
     }
 
     > text {
-        fill: $blocked;
-        text-shadow: $tlp-ui-white 1px 1px, $tlp-ui-white -1px 1px, $tlp-ui-white -1px -1px, $tlp-ui-white 1px -1px, $tlp-ui-white 2px 2px, $tlp-ui-white -2px 2px, $tlp-ui-white -2px -2px, $tlp-ui-white 2px -2px, $tlp-ui-white 3px 3px, $tlp-ui-white -3px 3px, $tlp-ui-white -3px -3px, $tlp-ui-white 3px -3px;
+        fill: var(--tlp-ui-info);
+        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
     }
 }
 
 .release-widget-pie-chart-ttm-slice-notrun {
     > path {
-        fill: $notrun;
+        fill: var(--tlp-ui-dimmed);
     }
 
     > text {
-        fill: $notrun;
-        text-shadow: $tlp-ui-white 1px 1px, $tlp-ui-white -1px 1px, $tlp-ui-white -1px -1px, $tlp-ui-white 1px -1px, $tlp-ui-white 2px 2px, $tlp-ui-white -2px 2px, $tlp-ui-white -2px -2px, $tlp-ui-white 2px -2px, $tlp-ui-white 3px 3px, $tlp-ui-white -3px 3px, $tlp-ui-white -3px -3px, $tlp-ui-white 3px -3px;
+        fill: var(--tlp-ui-dimmed);
+        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
     }
 }
 
 .release-widget-pie-chart-ttm-slice-passed {
     > path {
-        fill: $passed;
+        fill: var(--tlp-ui-success);
     }
 
     > text {
-        fill: $passed;
-        text-shadow: $tlp-ui-white 1px 1px, $tlp-ui-white -1px 1px, $tlp-ui-white -1px -1px, $tlp-ui-white 1px -1px, $tlp-ui-white 2px 2px, $tlp-ui-white -2px 2px, $tlp-ui-white -2px -2px, $tlp-ui-white 2px -2px, $tlp-ui-white 3px 3px, $tlp-ui-white -3px 3px, $tlp-ui-white -3px -3px, $tlp-ui-white 3px -3px;
+        fill: var(--tlp-ui-success);
+        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
     }
 }
 
 .release-widget-pie-chart-ttm-slice-failed {
     > path {
-        fill: $failed;
+        fill: var(--tlp-ui-danger);
     }
 
     > text {
-        fill: $failed;
-        text-shadow: $tlp-ui-white 1px 1px, $tlp-ui-white -1px 1px, $tlp-ui-white -1px -1px, $tlp-ui-white 1px -1px, $tlp-ui-white 2px 2px, $tlp-ui-white -2px 2px, $tlp-ui-white -2px -2px, $tlp-ui-white 2px -2px, $tlp-ui-white 3px 3px, $tlp-ui-white -3px 3px, $tlp-ui-white -3px -3px, $tlp-ui-white 3px -3px;
+        fill: var(--tlp-ui-danger);
+        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
     }
 }
 
@@ -151,7 +154,7 @@
 
 .release-widget-pie-chart-ttm-legend {
     padding: 0 0 0 var(--tlp-small-spacing);
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
     line-height: 20px;
     cursor: default;
@@ -182,19 +185,19 @@
     opacity: .8;
 
     &.release-widget-pie-chart-ttm-legend-color-passed {
-        background-color: $passed;
+        background-color: var(--tlp-ui-success);
     }
 
     &.release-widget-pie-chart-ttm-legend-color-blocked {
-        background-color: $blocked;
+        background-color: var(--tlp-ui-info);
     }
 
     &.release-widget-pie-chart-ttm-legend-color-notrun {
-        background-color: $notrun;
+        background-color: var(--tlp-ui-dimmed);
     }
 
     &.release-widget-pie-chart-ttm-legend-color-failed {
-        background-color: $failed;
+        background-color: var(--tlp-ui-danger);
     }
 }
 
