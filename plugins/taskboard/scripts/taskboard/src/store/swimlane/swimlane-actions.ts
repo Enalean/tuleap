@@ -23,7 +23,6 @@ import type { ActionContext } from "vuex";
 import type { RefreshCardActionPayload, SwimlaneState } from "./type";
 import type { RootState } from "../type";
 import type { UserPreference, UserPreferenceValue } from "../user/type";
-import { isSoloCard } from "./swimlane-helpers";
 import { injectDefaultPropertiesInCard } from "../../helpers/card-default";
 
 export * from "./drag-drop-actions";
@@ -139,7 +138,10 @@ export function refreshCardAndParent(
 ): Promise<void> {
     const refreshCard = (refreshed_card: Card): void =>
         context.commit("refreshCard", { refreshed_card });
-    if (isSoloCard(payload.swimlane)) {
+    const is_solo_card = !context.getters.is_there_at_least_one_children_to_display(
+        payload.swimlane
+    );
+    if (is_solo_card) {
         return getUpdatedCard(payload.card.id, context.rootState.milestone_id).then(
             refreshCard,
             (error) => context.dispatch("error/handleModalError", error, { root: true })

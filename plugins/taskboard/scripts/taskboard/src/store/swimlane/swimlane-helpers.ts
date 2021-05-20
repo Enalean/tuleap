@@ -61,7 +61,3 @@ export function findCard(state: SwimlaneState, card: Card): Card {
 
     throw new Error("Could not find card with id=" + card.id);
 }
-
-export function isSoloCard(swimlane: Swimlane): boolean {
-    return swimlane.card.has_children === false;
-}

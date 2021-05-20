@@ -47,6 +47,7 @@ function getWrapper(
                 getters: {
                     "column/accepted_trackers_ids": (): number[] => [],
                     can_add_in_place: (): boolean => can_add_in_place,
+                    "swimlane/is_there_at_least_one_children_to_display": (): boolean => true,
                 },
             }),
         },

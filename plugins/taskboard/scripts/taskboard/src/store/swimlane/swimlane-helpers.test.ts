@@ -170,37 +170,4 @@ describe(`swimlane-helpers`, () => {
             expect(() => helpers.findCard(state, unknown_card)).toThrow();
         });
     });
-
-    describe(`isSoloCard`, () => {
-        it(`Given a swimlane with children, it will return false`, () => {
-            const swimlane: Swimlane = {
-                card: { id: 13, has_children: true },
-                children_cards: [{ id: 104 }, { id: 125 }],
-                is_loading_children_cards: false,
-            } as Swimlane;
-
-            expect(helpers.isSoloCard(swimlane)).toBe(false);
-        });
-
-        it(`Given a swimlane that has children but the user can't see them,
-            it will return true`, () => {
-            const swimlane: Swimlane = {
-                card: { id: 45, has_children: true } as Card,
-                children_cards: [],
-                is_loading_children_cards: false,
-            } as Swimlane;
-
-            expect(helpers.isSoloCard(swimlane)).toBe(false);
-        });
-
-        it(`Given a swimlane without children, it will return true`, () => {
-            const swimlane: Swimlane = {
-                card: { id: 14, has_children: false } as Card,
-                children_cards: [],
-                is_loading_children_cards: false,
-            };
-
-            expect(helpers.isSoloCard(swimlane)).toBe(true);
-        });
-    });
 });
