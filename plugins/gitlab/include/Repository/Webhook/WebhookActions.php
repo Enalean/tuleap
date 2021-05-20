@@ -25,7 +25,7 @@ use DateTimeImmutable;
 use LogicException;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
@@ -36,7 +36,7 @@ use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookData;
 class WebhookActions
 {
     /**
-     * @var GitlabRepositoryDao
+     * @var GitlabRepositoryIntegrationDao
      */
     private $gitlab_repository_dao;
     /**
@@ -57,7 +57,7 @@ class WebhookActions
     private $tag_push_webhook_action_processor;
 
     public function __construct(
-        GitlabRepositoryDao $gitlab_repository_dao,
+        GitlabRepositoryIntegrationDao $gitlab_repository_dao,
         PostPushWebhookActionProcessor $post_push_webhook_action_processor,
         PostMergeRequestWebhookActionProcessor $post_merge_request_action_processor,
         TagPushWebhookActionProcessor $tag_push_webhook_action_processor,
@@ -98,7 +98,7 @@ class WebhookActions
         GitlabRepositoryIntegration $gitlab_repository_integration,
         DateTimeImmutable $webhook_reception_date
     ): void {
-        $this->gitlab_repository_dao->updateLastPushDateForRepository(
+        $this->gitlab_repository_dao->updateLastPushDateForIntegration(
             $gitlab_repository_integration->getId(),
             $webhook_reception_date->getTimestamp()
         );

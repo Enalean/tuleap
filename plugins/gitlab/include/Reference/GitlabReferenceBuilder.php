@@ -26,7 +26,7 @@ use Reference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 
 class GitlabReferenceBuilder
 {
@@ -36,14 +36,14 @@ class GitlabReferenceBuilder
     private $reference_dao;
 
     /**
-     * @var GitlabRepositoryFactory
+     * @var GitlabRepositoryIntegrationFactory
      */
-    private $gitlab_repository_factory;
+    private $repository_integration_factory;
 
-    public function __construct(ReferenceDao $reference_dao, GitlabRepositoryFactory $gitlab_repository_factory)
+    public function __construct(ReferenceDao $reference_dao, GitlabRepositoryIntegrationFactory $repository_integration_factory)
     {
-        $this->reference_dao             = $reference_dao;
-        $this->gitlab_repository_factory = $gitlab_repository_factory;
+        $this->reference_dao                  = $reference_dao;
+        $this->repository_integration_factory = $repository_integration_factory;
     }
 
     public function buildGitlabReference(Project $project, string $keyword, string $value): ?Reference
@@ -67,7 +67,7 @@ class GitlabReferenceBuilder
             return null;
         }
 
-        $repository = $this->gitlab_repository_factory->getGitlabRepositoryByNameInProject(
+        $repository = $this->repository_integration_factory->getIntegrationByNameInProject(
             $project,
             $repository_name
         );

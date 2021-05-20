@@ -30,7 +30,7 @@ use Project;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
@@ -41,9 +41,9 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationFactory
      */
-    private $repository_factory;
+    private $repository_integration_factory;
     /**
      * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
@@ -63,13 +63,13 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->repository_factory    = Mockery::mock(GitlabRepositoryFactory::class);
-        $this->permissions_manager   = Mockery::mock(GitPermissionsManager::class);
-        $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
-        $this->webhook_creator       = Mockery::mock(WebhookCreator::class);
+        $this->repository_integration_factory = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
+        $this->permissions_manager            = Mockery::mock(GitPermissionsManager::class);
+        $this->credentials_retriever          = Mockery::mock(CredentialsRetriever::class);
+        $this->webhook_creator                = Mockery::mock(WebhookCreator::class);
 
         $this->generator = new WebhookSecretGenerator(
-            $this->repository_factory,
+            $this->repository_integration_factory,
             $this->permissions_manager,
             $this->credentials_retriever,
             $this->webhook_creator,
@@ -82,8 +82,8 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $patch->gitlab_integration_id = 123;
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturnNull();
 
@@ -103,8 +103,8 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $repository = Mockery::mock(GitlabRepositoryIntegration::class);
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -138,8 +138,8 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -178,8 +178,8 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -225,8 +225,8 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -273,8 +273,8 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 

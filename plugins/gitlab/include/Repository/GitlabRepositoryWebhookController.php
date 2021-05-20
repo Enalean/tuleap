@@ -61,9 +61,9 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
     private $logger;
 
     /**
-     * @var GitlabRepositoryFactory
+     * @var GitlabRepositoryIntegrationFactory
      */
-    private $gitlab_repository_factory;
+    private $repository_integration_factory;
 
     /**
      * @var SecretChecker
@@ -77,7 +77,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
 
     public function __construct(
         WebhookDataExtractor $webhook_data_extractor,
-        GitlabRepositoryFactory $gitlab_repository_factory,
+        GitlabRepositoryIntegrationFactory $repository_integration_factory,
         SecretChecker $secret_checker,
         WebhookActions $webhook_actions,
         LoggerInterface $logger,
@@ -87,12 +87,12 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
     ) {
         parent::__construct($emitter, ...$middleware_stack);
 
-        $this->webhook_data_extractor    = $webhook_data_extractor;
-        $this->gitlab_repository_factory = $gitlab_repository_factory;
-        $this->secret_checker            = $secret_checker;
-        $this->response_factory          = $response_factory;
-        $this->logger                    = $logger;
-        $this->webhook_actions           = $webhook_actions;
+        $this->webhook_data_extractor         = $webhook_data_extractor;
+        $this->repository_integration_factory = $repository_integration_factory;
+        $this->secret_checker                 = $secret_checker;
+        $this->response_factory               = $response_factory;
+        $this->logger                         = $logger;
+        $this->webhook_actions                = $webhook_actions;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -102,7 +102,7 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
 
         try {
             $webhook_data        = $this->webhook_data_extractor->retrieveWebhookData($request);
-            $gitlab_integrations = $this->gitlab_repository_factory->getGitlabRepositoriesByGitlabRepositoryIdAndPath(
+            $gitlab_integrations = $this->repository_integration_factory->getIntegrationsByGitlabRepositoryIdAndPath(
                 $webhook_data->getGitlabProjectId(),
                 $webhook_data->getGitlabWebUrl()
             );

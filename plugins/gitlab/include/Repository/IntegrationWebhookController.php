@@ -61,9 +61,9 @@ class IntegrationWebhookController extends DispatchablePSR15Compatible implement
     private $logger;
 
     /**
-     * @var GitlabRepositoryFactory
+     * @var GitlabRepositoryIntegrationFactory
      */
-    private $gitlab_repository_factory;
+    private $repository_integration_factory;
 
     /**
      * @var SecretChecker
@@ -77,7 +77,7 @@ class IntegrationWebhookController extends DispatchablePSR15Compatible implement
 
     public function __construct(
         WebhookDataExtractor $webhook_data_extractor,
-        GitlabRepositoryFactory $gitlab_repository_factory,
+        GitlabRepositoryIntegrationFactory $repository_integration_factory,
         SecretChecker $secret_checker,
         WebhookActions $webhook_actions,
         LoggerInterface $logger,
@@ -87,12 +87,12 @@ class IntegrationWebhookController extends DispatchablePSR15Compatible implement
     ) {
         parent::__construct($emitter, ...$middleware_stack);
 
-        $this->webhook_data_extractor    = $webhook_data_extractor;
-        $this->gitlab_repository_factory = $gitlab_repository_factory;
-        $this->secret_checker            = $secret_checker;
-        $this->response_factory          = $response_factory;
-        $this->logger                    = $logger;
-        $this->webhook_actions           = $webhook_actions;
+        $this->webhook_data_extractor         = $webhook_data_extractor;
+        $this->repository_integration_factory = $repository_integration_factory;
+        $this->secret_checker                 = $secret_checker;
+        $this->response_factory               = $response_factory;
+        $this->logger                         = $logger;
+        $this->webhook_actions                = $webhook_actions;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -102,7 +102,7 @@ class IntegrationWebhookController extends DispatchablePSR15Compatible implement
         $integration_id = (int) $request->getAttribute('integration_id');
 
         try {
-            $gitlab_repository = $this->gitlab_repository_factory->getGitlabRepositoryById($integration_id);
+            $gitlab_repository = $this->repository_integration_factory->getIntegrationById($integration_id);
             if ($gitlab_repository === null) {
                 throw new NotFoundException(
                     dgettext('tuleap-gitlab', 'The GitLab repository integration cannot be found.')

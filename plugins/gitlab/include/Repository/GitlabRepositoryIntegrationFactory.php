@@ -26,10 +26,10 @@ use Project;
 use ProjectManager;
 use Tuleap\Gitlab\API\GitlabProject;
 
-class GitlabRepositoryFactory
+class GitlabRepositoryIntegrationFactory
 {
     /**
-     * @var GitlabRepositoryDao
+     * @var GitlabRepositoryIntegrationDao
      */
     private $dao;
     /**
@@ -37,7 +37,7 @@ class GitlabRepositoryFactory
      */
     private $project_manager;
 
-    public function __construct(GitlabRepositoryDao $dao, ProjectManager $project_manager)
+    public function __construct(GitlabRepositoryIntegrationDao $dao, ProjectManager $project_manager)
     {
         $this->dao             = $dao;
         $this->project_manager = $project_manager;
@@ -46,18 +46,18 @@ class GitlabRepositoryFactory
     /**
      * @return GitlabRepositoryIntegration[]
      */
-    public function getGitlabRepositoriesForProject(Project $project): array
+    public function getAllIntegrationsInProject(Project $project): array
     {
         $gitlab_repositories = [];
-        foreach ($this->dao->getGitlabRepositoriesForProject((int) $project->getID()) as $row) {
+        foreach ($this->dao->searchAllIntegrationsInProject((int) $project->getID()) as $row) {
             $gitlab_repositories[] = $this->getInstanceFromRow($row);
         }
         return $gitlab_repositories;
     }
 
-    public function getGitlabRepositoryByNameInProject(Project $project, string $gitlab_repository_name): ?GitlabRepositoryIntegration
+    public function getIntegrationByNameInProject(Project $project, string $gitlab_repository_name): ?GitlabRepositoryIntegration
     {
-        $row = $this->dao->getGitlabRepositoryByNameInProject($gitlab_repository_name, (int) $project->getID());
+        $row = $this->dao->searchIntegrationByNameInProject($gitlab_repository_name, (int) $project->getID());
         if ($row === null) {
             return null;
         }
@@ -65,9 +65,9 @@ class GitlabRepositoryFactory
         return $this->getInstanceFromRow($row);
     }
 
-    public function getGitlabRepositoryById(int $id): ?GitlabRepositoryIntegration
+    public function getIntegrationById(int $id): ?GitlabRepositoryIntegration
     {
-        $row = $this->dao->searchGitlabRepositoryById($id);
+        $row = $this->dao->searchIntegrationById($id);
         if ($row === null) {
             return null;
         }
@@ -78,9 +78,9 @@ class GitlabRepositoryFactory
     /**
      * @return GitlabRepositoryIntegration[]
      */
-    public function getGitlabRepositoriesByGitlabRepositoryIdAndPath(int $gitlab_repository_id, string $http_path): array
+    public function getIntegrationsByGitlabRepositoryIdAndPath(int $gitlab_repository_id, string $http_path): array
     {
-        $rows = $this->dao->searchGitlabRepositoriesByGitlabRepositoryIdAndPath($gitlab_repository_id, $http_path);
+        $rows = $this->dao->searchIntegrationsByGitlabRepositoryIdAndPath($gitlab_repository_id, $http_path);
         if ($rows === null) {
             return [];
         }
@@ -98,7 +98,7 @@ class GitlabRepositoryFactory
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration
     ): GitlabRepositoryIntegration {
-        $id = $this->dao->createGitlabRepository(
+        $id = $this->dao->createGitlabRepositoryIntegration(
             $gitlab_project->getId(),
             $gitlab_project->getPathWithNamespace(),
             $gitlab_project->getDescription(),
@@ -133,7 +133,7 @@ class GitlabRepositoryFactory
             $row['id'],
             $row['gitlab_repository_id'],
             $row['name'],
-            (string) $row['description'],
+            $row['description'],
             $row['gitlab_repository_url'],
             (new DateTimeImmutable())->setTimestamp($row['last_push_date']),
             $project,

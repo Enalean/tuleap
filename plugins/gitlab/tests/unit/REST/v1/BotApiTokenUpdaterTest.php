@@ -34,7 +34,7 @@ use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
@@ -44,9 +44,9 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationFactory
      */
-    private $repository_factory;
+    private $repository_integration_factory;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabProjectBuilder
      */
@@ -74,15 +74,15 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->repository_factory     = Mockery::mock(GitlabRepositoryFactory::class);
-        $this->project_builder        = Mockery::mock(GitlabProjectBuilder::class);
-        $this->permissions_manager    = Mockery::mock(GitPermissionsManager::class);
-        $this->bot_api_token_inserter = Mockery::mock(GitlabBotApiTokenInserter::class);
-        $this->webhook_creator        = Mockery::mock(WebhookCreator::class);
-        $this->logger                 = Mockery::mock(LoggerInterface::class);
+        $this->repository_integration_factory = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
+        $this->project_builder                = Mockery::mock(GitlabProjectBuilder::class);
+        $this->permissions_manager            = Mockery::mock(GitPermissionsManager::class);
+        $this->bot_api_token_inserter         = Mockery::mock(GitlabBotApiTokenInserter::class);
+        $this->webhook_creator                = Mockery::mock(WebhookCreator::class);
+        $this->logger                         = Mockery::mock(LoggerInterface::class);
 
         $this->updater = new BotApiTokenUpdater(
-            $this->repository_factory,
+            $this->repository_integration_factory,
             $this->project_builder,
             $this->permissions_manager,
             $this->bot_api_token_inserter,
@@ -98,8 +98,8 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ConcealedString('My New Token'),
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturnNull();
 
@@ -120,8 +120,8 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $repository = Mockery::mock(GitlabRepositoryIntegration::class);
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -157,8 +157,8 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -209,8 +209,8 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -261,8 +261,8 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 
@@ -322,8 +322,8 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryById')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationById')
             ->with(123)
             ->andReturn($repository);
 

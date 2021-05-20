@@ -33,7 +33,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CreationMetadataPresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -47,9 +47,9 @@ class GitlabCrossReferenceOrganizer
      */
     private $project_manager;
     /**
-     * @var GitlabRepositoryFactory
+     * @var GitlabRepositoryIntegrationFactory
      */
-    private $gitlab_repository_factory;
+    private $repository_integration_factory;
     /**
      * @var GitlabCommitFactory
      */
@@ -80,7 +80,7 @@ class GitlabCrossReferenceOrganizer
     private $gitlab_tag_factory;
 
     public function __construct(
-        GitlabRepositoryFactory $gitlab_repository_factory,
+        GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitlabCommitFactory $gitlab_commit_factory,
         GitlabCommitCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
         GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever,
@@ -90,7 +90,7 @@ class GitlabCrossReferenceOrganizer
         \UserManager $user_manager,
         \UserHelper $user_helper
     ) {
-        $this->gitlab_repository_factory                = $gitlab_repository_factory;
+        $this->repository_integration_factory           = $repository_integration_factory;
         $this->gitlab_commit_factory                    = $gitlab_commit_factory;
         $this->gitlab_cross_reference_enhancer          = $gitlab_cross_reference_enhancer;
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
@@ -128,7 +128,7 @@ class GitlabCrossReferenceOrganizer
             return;
         }
 
-        $repository = $this->gitlab_repository_factory->getGitlabRepositoryByNameInProject(
+        $repository = $this->repository_integration_factory->getIntegrationByNameInProject(
             $project,
             $repository_name
         );

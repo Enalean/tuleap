@@ -47,9 +47,9 @@ use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDeletor;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
@@ -146,11 +146,11 @@ final class GitlabRepositoryResource
                 new DBTransactionExecutorWithConnection(
                     DBFactory::getMainTuleapDBConnection()
                 ),
-                new GitlabRepositoryFactory(
-                    new GitlabRepositoryDao(),
+                new GitlabRepositoryIntegrationFactory(
+                    new GitlabRepositoryIntegrationDao(),
                     ProjectManager::instance()
                 ),
-                new GitlabRepositoryDao(),
+                new GitlabRepositoryIntegrationDao(),
                 new WebhookCreator(
                     new KeyFactory(),
                     new WebhookDao(),
@@ -261,8 +261,8 @@ final class GitlabRepositoryResource
 
         if ($patch_representation->update_bot_api_token) {
             $bot_api_token_updater = new BotApiTokenUpdater(
-                new GitlabRepositoryFactory(
-                    new GitlabRepositoryDao(),
+                new GitlabRepositoryIntegrationFactory(
+                    new GitlabRepositoryIntegrationDao(),
                     ProjectManager::instance()
                 ),
                 new GitlabProjectBuilder($gitlab_api_client),
@@ -297,8 +297,8 @@ final class GitlabRepositoryResource
 
         if ($patch_representation->generate_new_secret) {
             $generator = new WebhookSecretGenerator(
-                new GitlabRepositoryFactory(
-                    new GitlabRepositoryDao(),
+                new GitlabRepositoryIntegrationFactory(
+                    new GitlabRepositoryIntegrationDao(),
                     ProjectManager::instance()
                 ),
                 $this->getGitPermissionsManager(),
@@ -358,12 +358,12 @@ final class GitlabRepositoryResource
     {
         $this->optionsId($id);
 
-        $repository_factory = new GitlabRepositoryFactory(
-            new GitlabRepositoryDao(),
+        $repository_integration_factory = new GitlabRepositoryIntegrationFactory(
+            new GitlabRepositoryIntegrationDao(),
             ProjectManager::instance()
         );
 
-        $gitlab_repository_integration = $repository_factory->getGitlabRepositoryById($id);
+        $gitlab_repository_integration = $repository_integration_factory->getIntegrationById($id);
 
         if ($gitlab_repository_integration === null) {
             throw new RestException(404, "Repository #$id not found.");
@@ -385,7 +385,7 @@ final class GitlabRepositoryResource
                 $gitlab_api_client,
                 BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
             ),
-            new GitlabRepositoryDao(),
+            new GitlabRepositoryIntegrationDao(),
             new GitlabBotApiTokenDao(),
             new CommitTuleapReferenceDao(),
             new MergeRequestTuleapReferenceDao(),

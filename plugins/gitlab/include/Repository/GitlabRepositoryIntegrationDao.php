@@ -23,12 +23,12 @@ namespace Tuleap\Gitlab\Repository;
 
 use Tuleap\DB\DataAccessObject;
 
-class GitlabRepositoryDao extends DataAccessObject
+class GitlabRepositoryIntegrationDao extends DataAccessObject
 {
     /**
      * @psalm-return list<array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}>
      */
-    public function getGitlabRepositoriesForProject(int $project_id): array
+    public function searchAllIntegrationsInProject(int $project_id): array
     {
         $sql = 'SELECT plugin_gitlab_repository_integration.*
                 FROM plugin_gitlab_repository_integration
@@ -40,7 +40,7 @@ class GitlabRepositoryDao extends DataAccessObject
     /**
      * @psalm-return array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}
      */
-    public function getGitlabRepositoryByNameInProject(string $name, int $project_id): ?array
+    public function searchIntegrationByNameInProject(string $name, int $project_id): ?array
     {
         $sql = 'SELECT plugin_gitlab_repository_integration.*
                 FROM plugin_gitlab_repository_integration
@@ -53,7 +53,7 @@ class GitlabRepositoryDao extends DataAccessObject
     /**
      * @psalm-return array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}
      */
-    public function searchGitlabRepositoryById(int $id): ?array
+    public function searchIntegrationById(int $id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_gitlab_repository_integration
@@ -65,7 +65,7 @@ class GitlabRepositoryDao extends DataAccessObject
     /**
      * @psalm-return list<array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}>
      */
-    public function searchGitlabRepositoriesByGitlabRepositoryIdAndPath(
+    public function searchIntegrationsByGitlabRepositoryIdAndPath(
         int $gitlab_repository_id,
         string $http_path
     ): ?array {
@@ -77,16 +77,16 @@ class GitlabRepositoryDao extends DataAccessObject
         return $this->getDB()->run($sql, $gitlab_repository_id, $http_path);
     }
 
-    public function updateLastPushDateForRepository(int $repository_id, int $last_update_date): void
+    public function updateLastPushDateForIntegration(int $integration_id, int $last_update_date): void
     {
         $this->getDB()->update(
             'plugin_gitlab_repository_integration',
             ['last_push_date' => $last_update_date],
-            ['id' => $repository_id]
+            ['id' => $integration_id]
         );
     }
 
-    public function deleteGitlabRepository(int $integration_id): void
+    public function deleteIntegration(int $integration_id): void
     {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration',
@@ -94,7 +94,7 @@ class GitlabRepositoryDao extends DataAccessObject
         );
     }
 
-    public function createGitlabRepository(
+    public function createGitlabRepositoryIntegration(
         int $gitlab_repository_id,
         string $name,
         string $description,

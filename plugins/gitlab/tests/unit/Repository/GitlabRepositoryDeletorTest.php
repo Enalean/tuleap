@@ -57,9 +57,9 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $db_transaction_executor;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationDao
      */
-    private $gitlab_repository_dao;
+    private $repository_integration_dao;
 
     /**
      * @var Project
@@ -108,7 +108,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->db_transaction_executor     = new DBTransactionExecutorPassthrough();
         $this->webhook_deletor             = Mockery::mock(WebhookDeletor::class);
         $this->commit_tuleap_reference_dao = Mockery::mock(CommitTuleapReferenceDao::class);
-        $this->gitlab_repository_dao       = Mockery::mock(GitlabRepositoryDao::class);
+        $this->repository_integration_dao  = Mockery::mock(GitlabRepositoryIntegrationDao::class);
         $this->gitlab_bot_api_token_dao    = Mockery::mock(GitlabBotApiTokenDao::class);
         $this->merge_request_dao           = Mockery::mock(MergeRequestTuleapReferenceDao::class);
         $this->tag_info_dao                = Mockery::mock(TagInfoDao::class);
@@ -118,7 +118,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->git_permissions_manager,
             $this->db_transaction_executor,
             $this->webhook_deletor,
-            $this->gitlab_repository_dao,
+            $this->repository_integration_dao,
             $this->gitlab_bot_api_token_dao,
             $this->commit_tuleap_reference_dao,
             $this->merge_request_dao,
@@ -175,7 +175,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with($credentials, $this->gitlab_repository_integration);
 
-        $this->gitlab_repository_dao->shouldReceive('deleteGitlabRepository')->once();
+        $this->repository_integration_dao->shouldReceive('deleteIntegration')->once();
         $this->gitlab_bot_api_token_dao->shouldReceive('deleteIntegrationToken')->once();
 
         $this->commit_tuleap_reference_dao
