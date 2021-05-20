@@ -27,7 +27,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\InstanceBaseURLBuilder;
 
 class WebhookCreator
@@ -78,10 +78,12 @@ class WebhookCreator
      * @throws \Tuleap\Gitlab\API\GitlabRequestException
      * @throws \Tuleap\Gitlab\API\GitlabResponseAPIException
      */
-    public function generateWebhookInGitlabProject(Credentials $credentials, GitlabRepository $gitlab_repository): void
-    {
-        $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($credentials, $gitlab_repository);
-        $this->createNewGitlabWebhook($credentials, $gitlab_repository);
+    public function generateWebhookInGitlabProject(
+        Credentials $credentials,
+        GitlabRepositoryIntegration $gitlab_repository_integration
+    ): void {
+        $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($credentials, $gitlab_repository_integration);
+        $this->createNewGitlabWebhook($credentials, $gitlab_repository_integration);
     }
 
     /**
@@ -91,14 +93,14 @@ class WebhookCreator
      */
     private function createNewGitlabWebhook(
         Credentials $credentials,
-        GitlabRepository $gitlab_repository
+        GitlabRepositoryIntegration $gitlab_repository_integration
     ): void {
         $secret = new ConcealedString(\sodium_bin2hex(\random_bytes(32)));
 
-        $webhook_id = $this->askGitlabToCreateANewWebhook($credentials, $gitlab_repository, $secret);
+        $webhook_id = $this->askGitlabToCreateANewWebhook($credentials, $gitlab_repository_integration, $secret);
 
         $this->dao->storeWebhook(
-            $gitlab_repository->getId(),
+            $gitlab_repository_integration->getId(),
             $webhook_id,
             SymmetricCrypto::encrypt($secret, $this->key_factory->getEncryptionKey())
         );
@@ -111,13 +113,13 @@ class WebhookCreator
      */
     private function askGitlabToCreateANewWebhook(
         Credentials $credentials,
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         ConcealedString $secret
     ): int {
         $base_url = $this->instance_base_url->build();
 
-        $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
-        $integration_id       = $gitlab_repository->getId();
+        $gitlab_repository_id = $gitlab_repository_integration->getGitlabRepositoryId();
+        $integration_id       = $gitlab_repository_integration->getId();
 
         $webhook_configuration = [
             'url'                     => "$base_url/plugins/gitlab/integration/$integration_id/webhook",
@@ -128,7 +130,7 @@ class WebhookCreator
             'enable_ssl_verification' => true
         ];
 
-        $this->logger->info("Creating new hook for " . $gitlab_repository->getGitlabRepositoryUrl());
+        $this->logger->info("Creating new hook for " . $gitlab_repository_integration->getGitlabRepositoryUrl());
 
         $webhook = $this->gitlab_api_client->postUrl(
             $credentials,

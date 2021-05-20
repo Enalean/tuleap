@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentPresenter;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
@@ -75,14 +75,14 @@ class PostPushCommitBotCommenter
      */
     public function addCommentOnCommit(
         PostPushCommitWebhookData $commit,
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         array $references
     ): void {
         if (count($references) === 0) {
             return;
         }
 
-        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
+        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
 
         if (! $credentials) {
             $this->logger->debug("Comment can't be added on commit #{$commit->getSha1()} because there is no bot API token.");
@@ -95,9 +95,9 @@ class PostPushCommitBotCommenter
         $comment  = $renderer->renderToString("gitlab-bot-comment-commit", new BotCommentPresenter($reference_presenters));
 
         try {
-            $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/repository/commits/{$commit->getSha1()}/comments";
+            $url = "/projects/{$gitlab_repository_integration->getGitlabRepositoryId()}/repository/commits/{$commit->getSha1()}/comments";
             $this->comment_sender->sendComment(
-                $gitlab_repository,
+                $gitlab_repository_integration,
                 $credentials,
                 $url,
                 ["note" => $comment]

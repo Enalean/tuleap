@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference\Commit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 
 class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -91,11 +91,11 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|GitlabRepository
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|GitlabRepositoryIntegration
      */
     private function getMockedGitlabRepository()
     {
-        $repository = \Mockery::mock(GitlabRepository::class);
+        $repository = \Mockery::mock(GitlabRepositoryIntegration::class);
         $repository->shouldReceive('getId')->andReturn(2);
         return $repository;
     }

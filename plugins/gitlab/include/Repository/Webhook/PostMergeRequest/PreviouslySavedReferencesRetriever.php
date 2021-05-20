@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
 class PreviouslySavedReferencesRetriever
@@ -58,7 +58,7 @@ class PreviouslySavedReferencesRetriever
      */
     public function retrievePreviousReferences(
         PostMergeRequestWebhookData $webhook_data,
-        GitlabRepository $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration
     ): array {
         $previously_saved_merge_request_row = $this->merge_request_reference_dao->searchMergeRequestInRepositoryWithId(
             $gitlab_repository_integration->getId(),

@@ -25,7 +25,7 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
 class PostMergeRequestWebhookActionProcessor
@@ -77,7 +77,7 @@ class PostMergeRequestWebhookActionProcessor
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
     }
 
-    public function process(GitlabRepository $gitlab_repository_integration, PostMergeRequestWebhookData $webhook_data): void
+    public function process(GitlabRepositoryIntegration $gitlab_repository_integration, PostMergeRequestWebhookData $webhook_data): void
     {
         $old_references = $this->previously_saved_references_retriever->retrievePreviousReferences(
             $webhook_data,
@@ -107,7 +107,7 @@ class PostMergeRequestWebhookActionProcessor
     }
 
     private function saveMergeRequestData(
-        GitlabRepository $gitlab_repository_integration,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         PostMergeRequestWebhookData $webhook_data
     ): void {
         $merge_request_id = $webhook_data->getMergeRequestId();
@@ -125,7 +125,7 @@ class PostMergeRequestWebhookActionProcessor
     }
 
     private function saveMergeRequestAuthorData(
-        GitlabRepository $gitlab_repository_integration,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         PostMergeRequestWebhookData $webhook_data
     ): void {
         try {
@@ -153,7 +153,7 @@ class PostMergeRequestWebhookActionProcessor
     }
 
     private function getAlreadySaveMergeRequest(
-        GitlabRepository $gitlab_repository_integration,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         PostMergeRequestWebhookData $webhook_data
     ): ?GitlabMergeRequest {
         return $this->gitlab_merge_request_reference_retriever->getGitlabMergeRequestInRepositoryWithId(

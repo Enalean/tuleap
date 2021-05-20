@@ -44,7 +44,7 @@ class GitlabRepositoryFactory
     }
 
     /**
-     * @return GitlabRepository[]
+     * @return GitlabRepositoryIntegration[]
      */
     public function getGitlabRepositoriesForProject(Project $project): array
     {
@@ -55,7 +55,7 @@ class GitlabRepositoryFactory
         return $gitlab_repositories;
     }
 
-    public function getGitlabRepositoryByNameInProject(Project $project, string $gitlab_repository_name): ?GitlabRepository
+    public function getGitlabRepositoryByNameInProject(Project $project, string $gitlab_repository_name): ?GitlabRepositoryIntegration
     {
         $row = $this->dao->getGitlabRepositoryByNameInProject($gitlab_repository_name, (int) $project->getID());
         if ($row === null) {
@@ -65,7 +65,7 @@ class GitlabRepositoryFactory
         return $this->getInstanceFromRow($row);
     }
 
-    public function getGitlabRepositoryById(int $id): ?GitlabRepository
+    public function getGitlabRepositoryById(int $id): ?GitlabRepositoryIntegration
     {
         $row = $this->dao->searchGitlabRepositoryById($id);
         if ($row === null) {
@@ -76,7 +76,7 @@ class GitlabRepositoryFactory
     }
 
     /**
-     * @return GitlabRepository[]
+     * @return GitlabRepositoryIntegration[]
      */
     public function getGitlabRepositoriesByGitlabRepositoryIdAndPath(int $gitlab_repository_id, string $http_path): array
     {
@@ -97,7 +97,7 @@ class GitlabRepositoryFactory
         GitlabProject $gitlab_project,
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration
-    ): GitlabRepository {
+    ): GitlabRepositoryIntegration {
         $id = $this->dao->createGitlabRepository(
             $gitlab_project->getId(),
             $gitlab_project->getPathWithNamespace(),
@@ -108,7 +108,7 @@ class GitlabRepositoryFactory
             $configuration->isRepositoryIntegrationAllowingArtifactClosure()
         );
 
-        return new GitlabRepository(
+        return new GitlabRepositoryIntegration(
             $id,
             $gitlab_project->getId(),
             $gitlab_project->getPathWithNamespace(),
@@ -125,11 +125,11 @@ class GitlabRepositoryFactory
     /**
      * @param array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int} $row
      */
-    private function getInstanceFromRow(array $row): GitlabRepository
+    private function getInstanceFromRow(array $row): GitlabRepositoryIntegration
     {
         $project = $this->project_manager->getProject($row['project_id']);
 
-        return new GitlabRepository(
+        return new GitlabRepositoryIntegration(
             $row['id'],
             $row['gitlab_repository_id'],
             $row['name'],

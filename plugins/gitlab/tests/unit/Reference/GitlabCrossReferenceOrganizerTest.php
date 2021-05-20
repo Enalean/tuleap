@@ -35,7 +35,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTag;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -189,7 +189,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturn($project);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -203,10 +203,10 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
-            ->andReturn($repository);
+            ->andReturn($integration);
 
         $this->gitlab_commit_factory->shouldReceive('getGitlabCommitInRepositoryWithSha1')
-            ->with($repository, '14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->with($integration, '14a9b6c0c0c965977cf2af2199f93df82afcdea3')
             ->andReturn(null);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
@@ -256,7 +256,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(2)
             ->andReturn($another_project);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -267,7 +267,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $another_repository = new GitlabRepository(
+        $another_integration = new GitlabRepositoryIntegration(
             2,
             3,
             'winter-is-coming',
@@ -281,12 +281,12 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
-            ->andReturn($repository);
+            ->andReturn($integration);
 
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($another_project, 'samwell-tarly/winter-is-coming')
-            ->andReturn($another_repository);
+            ->andReturn($another_integration);
 
         $john_snow_commit = new GitlabCommit(
             '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
@@ -307,11 +307,11 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->gitlab_commit_factory->shouldReceive('getGitlabCommitInRepositoryWithSha1')
-            ->with($repository, '14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->with($integration, '14a9b6c0c0c965977cf2af2199f93df82afcdea3')
             ->andReturn($john_snow_commit);
 
         $this->gitlab_commit_factory->shouldReceive('getGitlabCommitInRepositoryWithSha1')
-            ->with($another_repository, 'be35d127acb88876ee4fdbf02188d372dc61e98d')
+            ->with($another_integration, 'be35d127acb88876ee4fdbf02188d372dc61e98d')
             ->andReturn($samwell_tarly_commit);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
@@ -383,7 +383,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(2)
             ->andReturn($another_project);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -394,7 +394,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $another_repository = new GitlabRepository(
+        $another_integration = new GitlabRepositoryIntegration(
             2,
             3,
             'winter-is-coming',
@@ -408,12 +408,12 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
-            ->andReturn($repository);
+            ->andReturn($integration);
 
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($another_project, 'samwell-tarly/winter-is-coming')
-            ->andReturn($another_repository);
+            ->andReturn($another_integration);
 
         $john_snow_merge_request = new GitlabMergeRequest(
             'The title of the MR 14',
@@ -433,13 +433,13 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_merge_request_reference_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($repository, 14)
+            ->with($integration, 14)
             ->andReturn($john_snow_merge_request)
             ->once();
 
         $this->gitlab_merge_request_reference_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($another_repository, 26)
+            ->with($another_integration, 26)
             ->andReturn($samwell_tarly_merge_request)
             ->once();
 
@@ -517,7 +517,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturn($project);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -531,7 +531,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
-            ->andReturn($repository);
+            ->andReturn($integration);
 
         $john_snow_merge_request = new GitlabMergeRequest(
             'The title of the MR 14',
@@ -543,7 +543,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_merge_request_reference_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($repository, 14)
+            ->with($integration, 14)
             ->andReturn($john_snow_merge_request)
             ->once();
 
@@ -599,7 +599,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturn($project);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -613,7 +613,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
-            ->andReturn($repository);
+            ->andReturn($integration);
 
         $john_snow_merge_request = new GitlabMergeRequest(
             'The title of the MR 14',
@@ -625,7 +625,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_merge_request_reference_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($repository, 14)
+            ->with($integration, 14)
             ->andReturn($john_snow_merge_request)
             ->once();
 
@@ -676,7 +676,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturn($project);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -690,7 +690,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
-            ->andReturn($repository);
+            ->andReturn($integration);
 
         $john_snow_merge_request = new GitlabMergeRequest(
             'The title of the MR 14',
@@ -702,7 +702,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_merge_request_reference_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($repository, 14)
+            ->with($integration, 14)
             ->andReturn($john_snow_merge_request)
             ->once();
 
@@ -752,7 +752,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturn($project);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -766,7 +766,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
-            ->andReturn($repository);
+            ->andReturn($integration);
 
         $gitlab_tag = new GitlabTag(
             'sha1',
@@ -776,7 +776,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_tag_factory
             ->shouldReceive('getGitlabTagInRepositoryWithTagName')
-            ->with($repository, "v1.0.2")
+            ->with($integration, "v1.0.2")
             ->andReturn($gitlab_tag)
             ->once();
 

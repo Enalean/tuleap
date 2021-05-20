@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class TagPushWebhookActionProcessor
 {
@@ -51,7 +51,7 @@ class TagPushWebhookActionProcessor
         $this->db_transaction_executor    = $db_transaction_executor;
     }
 
-    public function process(GitlabRepository $gitlab_repository_integration, TagPushWebhookData $tag_push_webhook_data): void
+    public function process(GitlabRepositoryIntegration $gitlab_repository_integration, TagPushWebhookData $tag_push_webhook_data): void
     {
         $this->db_transaction_executor->execute(function () use ($gitlab_repository_integration, $tag_push_webhook_data) {
             if ($tag_push_webhook_data->getAfter() === self::NO_REFERENCE) {

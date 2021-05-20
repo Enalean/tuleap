@@ -77,7 +77,7 @@ class GitlabRepositoryCreator
         GitlabProject $gitlab_project,
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration
-    ): GitlabRepository {
+    ): GitlabRepositoryIntegration {
         return $this->db_transaction_executor->execute(
             function () use ($credentials, $gitlab_project, $project, $configuration) {
                 $gitlab_repository_id  = $gitlab_project->getId();
@@ -123,7 +123,7 @@ class GitlabRepositoryCreator
         GitlabProject $gitlab_project,
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration
-    ): GitlabRepository {
+    ): GitlabRepositoryIntegration {
         $gitlab_repository = $this->gitlab_repository_factory->createRepositoryIntegration(
             $gitlab_project,
             $project,

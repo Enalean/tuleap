@@ -21,7 +21,7 @@
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 
 class CredentialsRetriever
@@ -36,14 +36,14 @@ class CredentialsRetriever
         $this->token_retriever = $token_retriever;
     }
 
-    public function getCredentials(GitlabRepository $repository): ?Credentials
+    public function getCredentials(GitlabRepositoryIntegration $repository_integration): ?Credentials
     {
-        $token = $this->token_retriever->getBotAPIToken($repository);
+        $token = $this->token_retriever->getBotAPIToken($repository_integration);
 
         if (! $token) {
             return null;
         }
 
-        return new Credentials($repository->getGitlabServerUrl(), $token);
+        return new Credentials($repository_integration->getGitlabServerUrl(), $token);
     }
 }

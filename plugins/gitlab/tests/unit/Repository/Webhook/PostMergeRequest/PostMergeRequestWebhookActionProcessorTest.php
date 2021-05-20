@@ -32,7 +32,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
@@ -111,7 +111,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItProcessesActionsForPostMergeRequestWebhook(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -141,7 +141,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->merge_request_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($gitlab_repository, 2)
+            ->with($integration, 2)
             ->andReturn(null);
 
         $this->merge_request_reference_dao
@@ -239,7 +239,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->author_retriever
             ->shouldReceive('retrieveAuthorData')
-            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->with($integration, $merge_request_webhook_data)
             ->once()
             ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
@@ -266,17 +266,17 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->shouldReceive('addCommentOnMergeRequest')
             ->with(
                 $merge_request_webhook_data,
-                $gitlab_repository,
+                $integration,
                 [new WebhookTuleapReference(45)]
             )
             ->once();
 
-        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+        $this->processor->process($integration, $merge_request_webhook_data);
     }
 
     public function testItDoesNotWriteACommentIfReferencesAreTheSameThanPreviousOnes(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -313,7 +313,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->merge_request_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($gitlab_repository, 2)
+            ->with($integration, 2)
             ->andReturn(new GitlabMergeRequest(
                 'My Title TULEAP-58',
                 'TULEAP-666 TULEAP-45',
@@ -425,7 +425,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->author_retriever
             ->shouldReceive('retrieveAuthorData')
-            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->with($integration, $merge_request_webhook_data)
             ->once()
             ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
@@ -448,12 +448,12 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->shouldReceive('addCommentOnMergeRequest')
             ->never();
 
-        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+        $this->processor->process($integration, $merge_request_webhook_data);
     }
 
     public function testItWritesACommentIfSomeReferencesAreRemoved(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -490,7 +490,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->merge_request_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($gitlab_repository, 2)
+            ->with($integration, 2)
             ->andReturn(new GitlabMergeRequest(
                 'My Title TULEAP-58',
                 'TULEAP-666 TULEAP-45',
@@ -591,7 +591,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->author_retriever
             ->shouldReceive('retrieveAuthorData')
-            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->with($integration, $merge_request_webhook_data)
             ->once()
             ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
@@ -618,17 +618,17 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->shouldReceive('addCommentOnMergeRequest')
             ->with(
                 $merge_request_webhook_data,
-                $gitlab_repository,
+                $integration,
                 [new WebhookTuleapReference(58)]
             )
             ->once();
 
-        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+        $this->processor->process($integration, $merge_request_webhook_data);
     }
 
     public function testItProcessesActionsForPostMergeRequestWebhookAlreadyIntegrated(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -658,7 +658,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->merge_request_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($gitlab_repository, 2)
+            ->with($integration, 2)
             ->andReturn(null);
 
         $this->merge_request_reference_dao
@@ -717,7 +717,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->author_retriever
             ->shouldReceive('retrieveAuthorData')
-            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->with($integration, $merge_request_webhook_data)
             ->once()
             ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
@@ -744,12 +744,12 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->shouldReceive('addCommentOnMergeRequest')
             ->once();
 
-        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+        $this->processor->process($integration, $merge_request_webhook_data);
     }
 
     public function testItProcessesActionsForPostMergeRequestWebhookAlreadyIntegratedAndLogErrorIfCantGetAuthor(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -779,7 +779,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->merge_request_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($gitlab_repository, 2)
+            ->with($integration, 2)
             ->andReturn(null);
 
         $this->merge_request_reference_dao
@@ -840,7 +840,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->author_retriever
             ->shouldReceive('retrieveAuthorData')
-            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->with($integration, $merge_request_webhook_data)
             ->andThrow($exception)
             ->once();
 
@@ -861,12 +861,12 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->shouldReceive('addCommentOnMergeRequest')
             ->once();
 
-        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+        $this->processor->process($integration, $merge_request_webhook_data);
     }
 
     public function testIDoesNotSaveMergeRequestDataIfNoReferencesAreFound(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -896,7 +896,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->merge_request_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($gitlab_repository, 2)
+            ->with($integration, 2)
             ->andReturn(null);
 
         $this->logger
@@ -912,12 +912,12 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->shouldReceive('addCommentOnMergeRequest')
             ->never();
 
-        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+        $this->processor->process($integration, $merge_request_webhook_data);
     }
 
     public function testItUpdatesSavedMergeRequestDataIfNoReferencesAreFoundButMergeRequestWasAlreadySaved(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -959,7 +959,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->merge_request_retriever
             ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
-            ->with($gitlab_repository, 2)
+            ->with($integration, 2)
             ->andReturn(new GitlabMergeRequest(
                 'My Title TULEAP-58',
                 'TULEAP-666 TULEAP-45',
@@ -985,7 +985,7 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->author_retriever
             ->shouldReceive('retrieveAuthorData')
-            ->with($gitlab_repository, $merge_request_webhook_data)
+            ->with($integration, $merge_request_webhook_data)
             ->never();
 
         $this->logger
@@ -1007,6 +1007,6 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->shouldReceive('addCommentOnMergeRequest')
             ->never();
 
-        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+        $this->processor->process($integration, $merge_request_webhook_data);
     }
 }

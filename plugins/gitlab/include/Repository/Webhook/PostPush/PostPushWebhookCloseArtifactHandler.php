@@ -27,7 +27,7 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Artifact\ArtifactNotFoundException;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use UserManager;
@@ -79,7 +79,7 @@ class PostPushWebhookCloseArtifactHandler
     public function handleArtifactClosure(
         WebhookTuleapReference $tuleap_reference,
         PostPushCommitWebhookData $post_push_commit_webhook_data,
-        GitlabRepository $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration
     ): void {
         if ($tuleap_reference->getCloseArtifactKeyword() === null) {
             return;

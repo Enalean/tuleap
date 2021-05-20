@@ -37,7 +37,7 @@ use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
@@ -103,7 +103,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSavesTheTagReference(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -130,7 +130,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->credentials_retriever->shouldReceive('getCredentials')
             ->once()
-            ->with($gitlab_repository)
+            ->with($integration)
             ->andReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
@@ -141,7 +141,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
             ->once()
-            ->with($credentials, $gitlab_repository, "v1.0.2")
+            ->with($credentials, $integration, "v1.0.2")
             ->andReturn($gitlab_tag);
 
         $tuleap_reference = new Reference(
@@ -175,14 +175,14 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $this->action->createTagReferences(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }
 
     public function testItDoesNothingIfThereIsNoCrendentialForRepository(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -204,21 +204,21 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->credentials_retriever->shouldReceive('getCredentials')
             ->once()
-            ->with($gitlab_repository)
+            ->with($integration)
             ->andReturnNull();
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
         $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }
 
     public function testItDoesNothingIfThereIsNoReferenceInTagMessage(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -245,7 +245,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->credentials_retriever->shouldReceive('getCredentials')
             ->once()
-            ->with($gitlab_repository)
+            ->with($integration)
             ->andReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
@@ -256,21 +256,21 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
             ->once()
-            ->with($credentials, $gitlab_repository, "v1.0.2")
+            ->with($credentials, $integration, "v1.0.2")
             ->andReturn($gitlab_tag);
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
         $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }
 
     public function testItDoesNothingIfThereIsNoValidReferencesInTagMessage(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -297,7 +297,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->credentials_retriever->shouldReceive('getCredentials')
             ->once()
-            ->with($gitlab_repository)
+            ->with($integration)
             ->andReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
@@ -308,7 +308,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
             ->once()
-            ->with($credentials, $gitlab_repository, "v1.0.2")
+            ->with($credentials, $integration, "v1.0.2")
             ->andReturn($gitlab_tag);
 
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
@@ -321,7 +321,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }

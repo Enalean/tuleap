@@ -27,7 +27,7 @@ use Project;
 /**
  * @psalm-immutable
  */
-class GitlabRepository
+class GitlabRepositoryIntegration
 {
     /**
      * @var int

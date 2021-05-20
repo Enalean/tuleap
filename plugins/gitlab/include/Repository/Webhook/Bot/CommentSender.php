@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class CommentSender
 {
@@ -49,7 +49,7 @@ class CommentSender
      * @throws \Tuleap\Gitlab\API\GitlabResponseAPIException
      */
     public function sendComment(
-        GitlabRepository $repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         Credentials $credentials,
         string $url,
         array $comment_data
@@ -62,7 +62,7 @@ class CommentSender
             );
         } catch (GitlabRequestException $e) {
             if ($e->getErrorCode() === 401) {
-                $this->notifier->notifyGitAdministratorsThatCredentialsAreInvalid($repository, $credentials);
+                $this->notifier->notifyGitAdministratorsThatCredentialsAreInvalid($gitlab_repository_integration, $credentials);
             }
             throw $e;
         }

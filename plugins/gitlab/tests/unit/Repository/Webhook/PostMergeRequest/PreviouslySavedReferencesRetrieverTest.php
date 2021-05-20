@@ -28,7 +28,7 @@ use Project;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
@@ -65,7 +65,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItReturnsEmptyArrayIfNothingFoundInDatabase(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -94,13 +94,13 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             ->andReturn([]);
 
         self::assertEmpty(
-            $this->retriever->retrievePreviousReferences($webhook_data, $repository)
+            $this->retriever->retrievePreviousReferences($webhook_data, $integration)
         );
     }
 
     public function testItReturnsEmptyArrayIfNoReferencesAreFoundInThePreviouslySavedData(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -134,13 +134,13 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             );
 
         self::assertEmpty(
-            $this->retriever->retrievePreviousReferences($webhook_data, $repository)
+            $this->retriever->retrievePreviousReferences($webhook_data, $integration)
         );
     }
 
     public function testItReturnsEmptyArrayIfReferenceIsNotFound(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -180,13 +180,13 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             ->andThrow(TuleapReferenceNotFoundException::class);
 
         self::assertEmpty(
-            $this->retriever->retrievePreviousReferences($webhook_data, $repository)
+            $this->retriever->retrievePreviousReferences($webhook_data, $integration)
         );
     }
 
     public function testItReturnsEmptyArrayIfReferencedArtifactIsNotFound(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -226,13 +226,13 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             ->andThrow(Mockery::mock(TuleapReferencedArtifactNotFoundException::class));
 
         self::assertEmpty(
-            $this->retriever->retrievePreviousReferences($webhook_data, $repository)
+            $this->retriever->retrievePreviousReferences($webhook_data, $integration)
         );
     }
 
     public function testItReturnsPreviousReferences(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -280,7 +280,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 new WebhookTuleapReference(8),
                 new WebhookTuleapReference(58),
             ],
-            $this->retriever->retrievePreviousReferences($webhook_data, $repository)
+            $this->retriever->retrievePreviousReferences($webhook_data, $integration)
         );
     }
 }

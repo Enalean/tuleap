@@ -26,7 +26,7 @@ use GitPermissionsManager;
 use Luracast\Restler\RestException;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -110,7 +110,7 @@ class WebhookSecretGenerator
         }
     }
 
-    private function isUserAllowedToUpdateBotApiToken(\PFUser $current_user, GitlabRepository $repository): bool
+    private function isUserAllowedToUpdateBotApiToken(\PFUser $current_user, GitlabRepositoryIntegration $repository): bool
     {
         return $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject());
     }

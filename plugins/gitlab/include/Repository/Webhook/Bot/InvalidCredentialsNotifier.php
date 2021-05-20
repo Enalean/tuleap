@@ -27,7 +27,7 @@ use Notification;
 use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\InstanceBaseURLBuilder;
 
@@ -63,14 +63,14 @@ class InvalidCredentialsNotifier
     }
 
     public function notifyGitAdministratorsThatCredentialsAreInvalid(
-        GitlabRepository $repository,
+        GitlabRepositoryIntegration $repository_integration,
         Credentials $credentials
     ): void {
         if ($credentials->getBotApiToken()->isEmailAlreadySendForInvalidToken()) {
             return;
         }
 
-        $project     = $repository->getProject();
+        $project     = $repository_integration->getProject();
         $git_service = $project->getService(\GitPlugin::SERVICE_SHORTNAME);
         if (! ($git_service instanceof GitService)) {
             return;
@@ -89,7 +89,7 @@ class InvalidCredentialsNotifier
 
         $body = sprintf(
             'It appears that the access token for %s is invalid. Tuleap cannot perform actions on it. Please check configuration on %s',
-            $repository->getGitlabRepositoryUrl(),
+            $repository_integration->getGitlabRepositoryUrl(),
             $url,
         );
 
@@ -105,6 +105,6 @@ class InvalidCredentialsNotifier
         $this->mail_builder->buildAndSendEmail($project, $notification, new \MailEnhancer());
 
         $this->logger->info("Notification has been sent to project administrators to warn them that the token appears to be invalid");
-        $this->dao->storeTheFactWeAlreadySendEmailForInvalidToken($repository->getId());
+        $this->dao->storeTheFactWeAlreadySendEmailForInvalidToken($repository_integration->getId());
     }
 }

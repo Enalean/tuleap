@@ -29,7 +29,7 @@ use PFUser;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
@@ -41,7 +41,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingIfEmailIsAlreadySent(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -67,14 +67,14 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(LoggerInterface::class),
         );
 
-        $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($repository, $credentials);
+        $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($integration, $credentials);
     }
 
     public function testItDoesNothingIfGitIsNotActivatedInProject(): void
     {
         $project = Mockery::mock(Project::class, ['getService' => null]);
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -100,7 +100,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(LoggerInterface::class),
         );
 
-        $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($repository, $credentials);
+        $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($integration, $credentials);
     }
 
     public function testItWarnsProjectAdministratorsForProjectTheRepositoryIsIntegratedIn(): void
@@ -124,7 +124,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -173,6 +173,6 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($repository, $credentials);
+        $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($integration, $credentials);
     }
 }

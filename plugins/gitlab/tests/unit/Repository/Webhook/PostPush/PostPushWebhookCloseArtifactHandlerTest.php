@@ -32,7 +32,7 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Artifact\ArtifactNotFoundException;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -104,7 +104,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "John Snow"
         );
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -154,7 +154,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->handler->handleArtifactClosure(
             $reference,
             $webhook_data,
-            $repository
+            $integration
         );
     }
 
@@ -171,7 +171,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "John Snow"
         );
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -192,7 +192,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->handler->handleArtifactClosure(
             $reference,
             $webhook_data,
-            $repository
+            $integration
         );
     }
 
@@ -209,7 +209,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "John Snow"
         );
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -246,7 +246,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->handler->handleArtifactClosure(
             $reference,
             $webhook_data,
-            $repository
+            $integration
         );
     }
 
@@ -263,7 +263,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "John Snow"
         );
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -312,13 +312,13 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
                 $webhook_data,
                 $reference,
                 $status_semantic->getField(),
-                $repository
+                $integration
             );
 
         $this->handler->handleArtifactClosure(
             $reference,
             $webhook_data,
-            $repository
+            $integration
         );
     }
 
@@ -335,7 +335,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "John Snow"
         );
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -355,7 +355,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->handler->handleArtifactClosure(
             $reference,
             $webhook_data,
-            $repository
+            $integration
         );
     }
 
@@ -372,7 +372,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             "John Snow"
         );
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -404,7 +404,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->handler->handleArtifactClosure(
             $reference,
             $webhook_data,
-            $repository
+            $integration
         );
     }
 }

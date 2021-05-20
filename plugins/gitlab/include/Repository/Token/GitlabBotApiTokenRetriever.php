@@ -20,7 +20,7 @@
 
 namespace Tuleap\Gitlab\Repository\Token;
 
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
@@ -41,9 +41,9 @@ class GitlabBotApiTokenRetriever
         $this->key_factory = $key_factory;
     }
 
-    public function getBotAPIToken(GitlabRepository $gitlab_repository): ?GitlabBotApiToken
+    public function getBotAPIToken(GitlabRepositoryIntegration $repository_integration): ?GitlabBotApiToken
     {
-        $row = $this->dao->getBotAPIToken($gitlab_repository->getId());
+        $row = $this->dao->getBotAPIToken($repository_integration->getId());
 
         if (! $row) {
             return null;

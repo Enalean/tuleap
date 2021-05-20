@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
 use Reference;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
@@ -97,7 +97,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItProcessesActionsForPostPushWebhookWithoutAnyCloseArtifactKeyword(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -206,12 +206,12 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->shouldReceive('handleArtifactClosure')
             ->once();
 
-        $this->processor->process($gitlab_repository, $webhook_data);
+        $this->processor->process($integration, $webhook_data);
     }
 
     public function testItProcessesActionsForPostPushWebhookWithCloseArtifactKeyword(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -294,12 +294,12 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->shouldReceive('handleArtifactClosure')
             ->once();
 
-        $this->processor->process($gitlab_repository, $webhook_data);
+        $this->processor->process($integration, $webhook_data);
     }
 
     public function testItDoesNothingIfArtifactDoesNotExist(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -358,12 +358,12 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
 
-        $this->processor->process($gitlab_repository, $webhook_data);
+        $this->processor->process($integration, $webhook_data);
     }
 
     public function testItDoesNothingIfArtReferenceNotFound(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -422,6 +422,6 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
 
-        $this->processor->process($gitlab_repository, $webhook_data);
+        $this->processor->process($integration, $webhook_data);
     }
 }

@@ -26,7 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
@@ -39,9 +39,9 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GitlabRepository
+     * @var GitlabRepositoryIntegration
      */
-    private $gitlab_repository;
+    private $gitlab_repository_integration;
 
     /**
      * @var SecretChecker
@@ -55,7 +55,7 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->gitlab_repository = new GitlabRepository(
+        $this->gitlab_repository_integration = new GitlabRepositoryIntegration(
             1,
             123456,
             'path/repo01',
@@ -84,7 +84,7 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(SecretHeaderNotFoundException::class);
 
         $this->secret_checker->checkSecret(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $request
         );
     }
@@ -104,13 +104,13 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->secret_retriever->shouldReceive('getWebhookSecretForRepository')
             ->once()
-            ->with($this->gitlab_repository)
+            ->with($this->gitlab_repository_integration)
             ->andReturn(new ConcealedString('anotherSecret'));
 
         $this->expectException(SecretHeaderNotMatchingException::class);
 
         $this->secret_checker->checkSecret(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $request
         );
     }
@@ -130,11 +130,11 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->secret_retriever->shouldReceive('getWebhookSecretForRepository')
             ->once()
-            ->with($this->gitlab_repository)
+            ->with($this->gitlab_repository_integration)
             ->andReturn(new ConcealedString('secret'));
 
         $this->secret_checker->checkSecret(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $request
         );
 

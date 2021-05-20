@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\MergeRequest;
 
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 
 class GitlabMergeRequestReferenceRetriever
@@ -37,10 +37,12 @@ class GitlabMergeRequestReferenceRetriever
         $this->merge_request_tuleap_reference_dao = $merge_request_tuleap_reference_dao;
     }
 
-    public function getGitlabMergeRequestInRepositoryWithId(GitlabRepository $repository, int $merge_request_id): ?GitlabMergeRequest
-    {
+    public function getGitlabMergeRequestInRepositoryWithId(
+        GitlabRepositoryIntegration $repository_integration,
+        int $merge_request_id
+    ): ?GitlabMergeRequest {
         $row = $this->merge_request_tuleap_reference_dao->searchMergeRequestInRepositoryWithId(
-            $repository->getId(),
+            $repository_integration->getId(),
             $merge_request_id
         );
 

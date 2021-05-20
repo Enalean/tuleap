@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\Secret;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class SecretChecker
 {
@@ -44,7 +44,7 @@ class SecretChecker
      * @throws SecretHeaderNotMatchingException
      */
     public function checkSecret(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         ServerRequestInterface $http_request
     ): void {
         $webhook_secret_header = $http_request->getHeaderLine(self::GITLAB_TOKEN_HEADER);
@@ -53,7 +53,7 @@ class SecretChecker
         }
 
         $webhook_secret = $this->secret_retriever->getWebhookSecretForRepository(
-            $gitlab_repository
+            $gitlab_repository_integration
         );
 
         if (! hash_equals($webhook_secret_header, $webhook_secret->getString())) {
