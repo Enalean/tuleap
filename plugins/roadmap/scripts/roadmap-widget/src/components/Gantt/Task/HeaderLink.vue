@@ -21,14 +21,15 @@
 <template>
     <a v-bind:href="task.html_url" class="roadmap-gantt-task-header-link" v-bind:class="link_class">
         <span class="roadmap-gantt-task-header-xref">
-            <span v-if="should_display_project">
+            <span v-if="should_display_project" class="roadmap-gantt-task-header-xref-project">
                 {{ task.project.label }}
-                <i
-                    class="fas fa-arrow-right roadmap-gantt-task-header-xref-separator"
-                    aria-hidden="true"
-                ></i>
             </span>
-            {{ task.xref }}
+            <i
+                v-if="should_display_project"
+                class="fas fa-arrow-right roadmap-gantt-task-header-xref-separator"
+                aria-hidden="true"
+            ></i>
+            <span class="roadmap-gantt-task-header-xref-reference">{{ task.xref }}</span>
         </span>
         <span class="roadmap-gantt-task-header-title">{{ task.title }}</span>
     </a>

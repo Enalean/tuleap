@@ -108,14 +108,27 @@ $caret-width: 20px;
 }
 
 .roadmap-gantt-task-header-xref {
-    display: inline-block;
-    margin: 0 0 2px;
+    display: flex;
+    align-items: baseline;
+    margin: 0 var(--tlp-small-spacing) 2px 0;
     font-size: .625rem;
     line-height: .75rem;
 }
 
+.roadmap-gantt-task-header-xref-project {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .roadmap-gantt-task-header-xref-separator {
+    flex: 0 0 auto;
     margin: 0 2px;
+    font-size: .7em;
+}
+
+.roadmap-gantt-task-header-xref-reference {
+    flex: 0 0 auto;
 }
 
 .roadmap-gantt-task-header-title {
